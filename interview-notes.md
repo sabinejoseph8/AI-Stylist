@@ -1,0 +1,165 @@
+# My AI Stylist project story
+
+## Who I am building for and why
+
+I am building an AI personal stylist for women and men in the United States. I want customers to explain what they need in a natural conversation, use clothing they already own, and refine one look at a time. A visible notebook helps them see and correct what the stylist has understood.
+
+## Key decisions and tradeoffs
+
+I chose real shopping links, with purchases completed on retailer websites. My planned revenue model is affiliate commissions on qualifying purchases. Affiliate program selection and approvals are still dependencies, and customer preferences must govern recommendations.
+
+I require an account before styling, but the stylist collects initial preferences during the first conversation instead of requiring a separate questionnaire. Customers choose what to save to their profile or digital wardrobe. Saving a look does not save its related notebook notes or conversation history.
+
+## Notebook design decision, 9 October 2026
+
+I compared generated concept examples of an open and collapsed notebook and selected the collapsed state when a conversation starts. This gives the notes a compact place in the consultation while keeping the summary, uncertain details, and supplied item thumbnail visible. The tradeoff is that customers expand the notebook to see all fields, the full reference photo, and detailed feedback. They can open it at any time, and the compact summary still updates as the stylist listens.
+
+## Look display decision, 9 October 2026
+
+I chose a coordinated collage as the main look display so customers can see how the selected pieces work together. Individual item details, prices, and retailer shopping links stay below the collage, so customers can inspect and shop each piece. The collage uses the selected item images and preserves garment details.
+
+## Text style decision, 9 October 2026
+
+I compared two typography concepts and chose elegant book-style headings with simple printed text for notes and controls. The headings support the fashion journal style, while the notes, prices, captions, and buttons remain straightforward to read. Detailed rendering and accessibility still need to be checked in a working prototype.
+
+## Navigation decision, 9 October 2026
+
+I chose four main mobile destinations: Stylist, Wardrobe, Saved looks, and Profile. Shopping links sit with the relevant look, and the shopping list is reachable from the app header. This keeps the main menu focused on styling and personal collections while keeping shopping close to the recommended items.
+
+## Delivery decision, 9 October 2026
+
+I chose a website designed for phones for the first version. Customers will access it through their phone browser. App Store and Google Play distribution would need a separate later decision. At that stage, I had confirmed the delivery approach. I later chose Supabase + Render, React + TypeScript and Node.js + TypeScript, as recorded below.
+
+## Account access decision, 9 October 2026
+
+I chose to offer email/password with password recovery alongside Google and Apple sign-in in the first version. Customers can choose their preferred method, and authentication is still required before using the stylist. This adds provider configuration and identity-handling work, which must be planned and checked before launch. None of these sign-in methods has been implemented yet.
+
+## Technical planning and launch scope, 9 October 2026
+
+I asked for a secure architecture that can grow, with technical decisions and system patterns kept in tech-spec.md. I also asked for a phased progress plan with focused automated tests and clear manual verification. I chose one simultaneous consultation for the first launch. That gives the team a concrete initial capacity target while keeping the design extensible. I initially did not know my prototype budget, so I requested a cost estimate before paid work. After reviewing it, I approved a $25 limit for the first private experiment. The voice/avatar connection, live notes, recommendation gate and real product sourcing still need evidence; I have not approved unproven technology choices as settled decisions.
+
+## Supabase responsibility decision, 9 October 2026
+
+I approved Supabase for accounts, saved preferences, wardrobe photos and saved looks. This gives these core responsibilities a shared platform. The separate save choices and privacy boundaries still apply. I later selected Render for the website and conversation service. Optional Supabase uses and operational settings remain under review; the services have not been configured or tested yet.
+
+## Voice provider decision, 9 October 2026
+
+I decided not to use ElevenLabs for this project. OpenAI Realtime and Tavus remain the candidates to test for the voice and realistic avatar experience. The team must verify the actual Tavus voice provider and any fallback against my decision. A failed integration is not a reason to introduce ElevenLabs automatically. The voice/avatar connection and its performance still need a working prototype.
+
+## Discovery planning, 9 October 2026
+
+I asked the team to proceed with Task 1a so I could review a concrete technical and cost proposal before paid setup. I approved a $25 total allowance for the first small experiment, subject to available free avatar minutes and actual account settings. The allowance covers up to $10 OpenAI, $7 hosting and $8 reserve. I subsequently approved the hosting, website/server tools and private-prototype memory tradeoff, as recorded below. A larger trial still needs a separate spending decision.
+
+The planning work highlighted a privacy tradeoff: clearing my app's notebook does not by itself clear an external provider's transcripts or logs. Before I speak into a prototype or use its camera, the team must inspect the actual recording, retention and voice-provider settings and explain the remaining retention. The media connection and notebook timing are still unproven; this planning work is not a completed feature or a resolved bug.
+
+## MVP hosting decision, 9 October 2026
+
+I chose Supabase + Render for the MVP. Supabase will handle accounts, saved preferences, wardrobe photos and saved looks; Render will host the website and conversation service. I already have Supabase Pro. This setup keeps managed account and data tools while reducing the proposed hosting platforms from three to two. An additional Supabase project may still add charges, so the team needs to check available compute credit and show my existing subscription separately from new experiment costs. My $25 initial experiment allowance remains unchanged. I reviewed the website/server tools and private-prototype restart tradeoff separately afterward. The production budget remains undecided. No deployment or account setup has been completed.
+
+## Website tools and prototype memory decision, 9 October 2026
+
+I approved React + TypeScript for the website and Node.js + TypeScript for the conversation service. React fits the interactive notebook and look screens; TypeScript helps catch data-handling mistakes across the website and server. I accepted a simpler temporary-memory approach for the private prototype only. If the server restarts, active notes, feedback and unsaved reference images are lost, while explicitly saved Supabase records remain. The app must explain the interruption and stop old recommendations. This lets us test the difficult voice/avatar path first. I still need to review recovery before customer launch; this choice does not approve permanent conversation storage. These approvals complete Task 1a planning, not a working prototype or a resolved bug.
+
+## How I prioritized technical risk, 9 October 2026
+
+I chose to test the hardest part before building the full app: whether natural voice, a realistic avatar, interruptions and live notebook updates can work together. I separated an approved tool choice from evidence that the integration works. OpenAI Realtime and Tavus remain candidates until the prototype demonstrates the experience I want, and ElevenLabs remains excluded.
+
+I also separated the private experiment from customer launch. Accepting lost unsaved notes after a server restart helps keep the first experiment small, but I still need to review recovery before customers use the MVP. I kept the $25 experiment limit unchanged and required account and privacy checks before real-person media. My existing Supabase Pro plan does not automatically mean an additional project has no cost.
+
+## Major bugs and how I fixed them
+
+I have started an isolated prototype, but I have no confirmed customer-app bugs or fixes to report yet. The voice/avatar connection, notebook timing, preference validation and restart recovery are known risks to investigate. I will record actual bugs, their customer impact, the fix and the verification evidence as development progresses.
+
+## Current stage, 9 October 2026
+
+I completed Task 1a, the planning and decision-review group. My product and design specifications remain approved baselines v1.0. The technical decision document is tech-spec.md v0.10, and the phased progress plan is docs/progress.md v0.7. Remaining technical proposals and launch risks still need review or working evidence.
+
+My approved setup is a website designed for phones, using React + TypeScript, with a Node.js + TypeScript conversation service. Render will host the website and service. Supabase will handle accounts, saved preferences, wardrobe photos and saved looks. Account access includes email/password with recovery, Google and Apple sign-in. The first launch targets one simultaneous consultation.
+
+The planning improvement is a clearer record of what I have approved, what still needs evidence, and what is limited to the private prototype. My temporary-note decision does not approve saving conversations permanently or losing notes during customer use without a separate review.
+
+I approved Task 1b, the small private voice/avatar experiment. A local simulation now tests interruption, cancellation and delayed events without sending my voice or photos to a provider. Its 43 focused automated checks, type check and build pass, and its desktop preview works. The customer app, real voice/avatar integration and phone experience are still unbuilt or unverified. These local files have not been published to GitHub.
+
+## First voice/avatar experiment, 9 October 2026
+
+I kept the first implementation focused on the biggest media risk. The local demo labels its scripted captions and silent test frames as simulated. Its notebook-style panel shows test behavior, while customer preference extraction remains in Task 1c. I can interrupt the simulated response and inject a delayed event to check that canceled work stays canceled.
+
+The important tradeoff is evidence quality: passing local tests helps with state handling, but it does not prove a realistic face, lip sync or natural voice interruption. I kept Task 1b open until account access, provider privacy and voice settings, spending controls and a real phone test are ready. When actual playback position is unknown, the design holds the session rather than guessing how much I heard. No paid provider call or new hosting service was created.
+
+One practical issue was opening the HTML source as a file, which did not run the application. Using the local preview server fixed access. The initial checks also caught a command typing error and a host-header test-client issue; both were corrected and the focused checks passed. These were prototype development findings, not customer-impacting bugs.
+
+## A media sequencing issue I caught early, 9 October 2026
+
+While preparing the real media connection, I checked the local demo against Tavus's current audio streaming contract. The demo sent its end-of-stream marker after waiting for playback to finish. I had that order corrected so the renderer receives completion after generation and queue drain, while playback remains a separate check. Three new regression checks brought the focused suite to 43 passing tests; type checking and the build also passed. This was a prototype sequencing fix, not a customer-reported bug or proof that real lip synchronization works.
+
+I also established private API access for both candidate providers and an $8 monthly OpenAI project limit within my existing experiment allowance. Model listing and privacy-control inspection help prepare the experiment, but I kept actual audio, avatar quality, cancellation and phone checks open until they have working evidence.
+
+## My first audible avatar connection, 9 October 2026
+
+I asked for a repeat of the private scripted test. On the repeat, I heard the generated sentence and saw the stock avatar's mouth move. This gave me evidence that the candidate voice-to-avatar path can work for a buffered desktop clip. It did not prove natural conversation, accurate lip synchronization or the phone experience, so I kept Task 1b open.
+
+I kept my microphone and camera off and used a fixed test sentence. The team added private rooms, recording-off settings, short call limits and a durable usage ledger. Two attempts retained reservations of $4 and ten avatar minutes; these are conservative limits rather than actual bills. Both rooms were verified ended. The focused automated suite now has 68 passing checks, with type checking and build passing.
+
+The first run uncovered a cleanup bug: Tavus returned an empty successful end response, but the prototype tried to parse it as JSON. This made the page report that cleanup needed verification even though the room had ended. I had the team verify the provider status, preserve the usage reservation, fix the parsing assumption and add regression checks. The repeat then closed with provider verification. I still need actual billing reconciliation, provider privacy/consent review before human media, natural interruption and physical-phone checks.
+
+## Checking cost and privacy before real conversations, 9 October 2026
+
+I checked the actual provider dashboards after the scripted tests. Tavus showed 1.9 of 20 free minutes used, and OpenAI showed about two cents for two prototype requests. My eight-dollar OpenAI project limit remained enforced, auto-reload stayed off and optional sharing was disabled. I kept conservative experiment reservations separate from the bill.
+
+The review exposed a remaining privacy dependency: switching recording off does not establish whether Tavus keeps other content or logs, uses content for improvement, or removes backups after deletion. Its detailed Data Management Policy needs access approval, and the public statements did not settle my Free Audio Echo configuration. I kept human microphone and camera use disabled under my existing preflight requirements and had a specific support question prepared. It has not been sent. This is an unresolved finding, not a completed privacy feature or a new architecture decision.
+
+## Checking my devices while provider answers are pending, 9 October 2026
+
+I chose to continue my private experiment while Tavus's privacy answers were pending, then approved a local camera preview and microphone meter. The check keeps my media on my computer and does not record or upload it. It stops when I leave the page, press Stop, or reach two minutes. The team also tested canceled permissions and late device grants so stopping cannot silently reopen my camera.
+
+The focused suite now has 76 passing checks, with type checking and build passing. The browser is waiting for permission; I have not yet confirmed the actual camera image, microphone response or hardware cleanup. This makes progress on device readiness but does not yet let me converse with the stylist or resolve the provider privacy questions.
+
+### My local device check worked
+
+I confirmed that I could see myself and that the microphone meter moved when I spoke. The page also stopped automatically after two minutes, and pressing Stop returned the preview and meter to Off. This verifies the local device check, while real conversation with the stylist and phone testing remain open. My camera and microphone were not sent to a provider during this check.
+
+## What I learned from Tavus support
+
+I brought the provider's reply into the project record. Support said my two scripted tests were not recorded, but recording being off does not mean there are no retained conversation records. It also said self-serve allows anonymized data for training with no opt-out, while no-training commitments, Zero Data Retention and a DPA require Enterprise. There was no fixed backup purge deadline.
+
+This made the tradeoff clearer: I can continue my authorized private prototype, but I have not approved an Enterprise purchase or the customer-launch privacy position. I kept the launch risk open and recorded the difference between ending a call and deleting its data. I did not treat deletion as reversing any model training or promise that clearing my app removes all vendor backups.
+
+## Moving from a fixed sentence to spoken input
+
+I continued the voice experiment with a two-exchange prototype: I can select Talk, speak briefly, and send the message to OpenAI; the generated answer is routed to the Tavus avatar. I chose a buffered test so I can check the complete input-to-avatar path before attempting continuous conversation. This introduces a pause before answers and is not yet the final interaction.
+
+I kept the microphone and reply lengths bounded and reused my existing budget safeguards. The prototype only reuses an assistant reply after I confirm that I heard it completely. If I interrupt, it ends the test and clears the temporary conversation instead of guessing how much I heard. Camera stays off, and the screen explains the provider data flow and Tavus training terms.
+
+The team fixed an asset-loading issue that would have blocked the microphone worklet under the strict browser policy, and made sure replacing playback interrupts the old renderer queue first. The prototype now passes 112 focused synthetic or mocked checks, type checking and build. The page is ready, but I have not yet accepted an actual spoken exchange, confirmed follow-up or live interruption. No new provider call or reservation was used to build it.
+
+## Making the test allowance visible
+
+I selected Play script on the earlier fixed-sentence page while preparing for the spoken test. The review found that all four conservative test reservations had been used, even though Tavus displayed only 2.9 actual minutes. I kept those two numbers separate and did not reset the ledger to get past the limit.
+
+The team added a visible allowance status to both test pages, disabled Start when no attempts remain or cleanup is unresolved, and linked the fixed-sentence page to the spoken test. The 116 focused checks, type check and build pass. The first human spoken exchange still needs verification after the allowance is reviewed.
+
+I approved one additional spoken test capped at two dollars and five minutes from my existing experiment allowance. The change preserves the previous reservations and allows exactly one spoken attempt, while leaving the fixed-sentence test capped. The team verified the guard with 119 passing focused tests, type checking and build; no extra funding or service upgrade was introduced.
+
+## Making the prototype test easier to follow
+
+I found that the avatar could connect while I was still looking for its panel. The fifth attempt ended before I spoke, so I did not count it as a successful conversation. I checked that its room had closed and separated the conservative reservation totals from actual displayed usage: 3.2 free Tavus minutes and $0.03 of OpenAI usage at this check. The precise stop cause was not recorded.
+
+I improved the test page with preparation instructions, the avatar location, a visible countdown and clearer automatic stop messages. I kept the tab-leaving stop and provider time limit. The 120 focused automated checks, type checking and build passed, but I still need a real spoken exchange and phone verification. Another test needs a reviewed allowance amendment.
+
+I approved one further private spoken test by moving $2 from my reserve, keeping my overall $25 prototype budget unchanged. I preserved the five earlier reservation records and restricted the amendment to one spoken attempt. I chose to start it myself when ready on the page, so the short room timer would not run while I searched for the avatar. All 124 focused automated checks passed, along with type checking and build. Real conversation acceptance is still pending.
+
+## First accepted spoken avatar response
+
+I tested the private spoken prototype with a wedding in November, emerald green and a preference for a structured look. The prototype reached two exchanges and generated a reply asking about sleeve length. I confirmed hearing the reply and seeing the avatar mouth move. The room then reached its time limit and its closure was checked. This proved a basic spoken response loop, but I still need to verify interruptions during playback, precise timing and phone behavior. I also learned that the interface must explain when a short test cannot accept another reply.
+
+## Preparing phone testing without resetting limits
+
+I chose my iPhone for the next device test and approved Supabase to preserve the prototype's test-limit records across hosting restarts. I kept this separate from conversation content: the proposed storage holds reservations and cleanup state, not audio or transcripts. I prepared restricted database functions and an adapter that stops when state is missing or uncertain. The 129 focused mocked checks, type checking and build passed. The actual database setup and remote private-access checks are still pending, so I have not claimed a phone deployment.
+
+I created a separate AI Stylist Supabase project after reviewing and approving its additional $10 monthly charge. I disabled automatic table exposure and enabled automatic row security. The prototype test-limit storage was applied, and live checks showed ordinary users could not access it while the server functions had the intended permissions. The existing test history still needs import, and remote phone deployment remains pending.
+
+## Preserving history and protecting the phone preview
+
+I preserved every existing prototype reservation when moving its test-limit records to Supabase. I compared the imported records against the originals, verified that a fresh connection retained the history and confirmed that another unapproved attempt stayed blocked. I disabled the one-time importer after use.
+
+I prepared password protection for the private Render preview and made a server restart stop microphone capture and playback. I kept this separate from the future customer account system. The 135 focused checks, type checking and build passed, but GitHub publication, Render deployment and iPhone acceptance are still pending.

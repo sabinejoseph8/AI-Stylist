@@ -1,0 +1,25 @@
+# Private Task 1b preview only. No deployment or paid plan is implied by this file.
+services:
+  - type: web
+    name: ai-stylist-private-preview
+    rootDir: prototypes/voice-avatar
+    runtime: node
+    plan: free
+    region: oregon
+    buildCommand: npm ci && npm run build
+    startCommand: node src/server.ts --preview --spoken
+    healthCheckPath: /healthz
+    autoDeployTrigger: off
+    envVars:
+      - key: NODE_VERSION
+        value: 24.20.0
+      - key: PREVIEW_PASSWORD
+        generateValue: true
+      - key: SUPABASE_URL
+        sync: false
+      - key: SUPABASE_SECRET_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
+      - key: TAVUS_API_KEY
+        sync: false
