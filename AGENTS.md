@@ -6,22 +6,22 @@ This repository contains the AI Personal Stylist project.
 
 **Where the plan lives**
 
-The agreed plan is in docs/. Read the files a task needs before starting it.
+The product and design drafts are in Project Memory/. The phased build plan and supporting documents are referenced under docs/. Read the files a task needs before starting it. Product alignment is pending; create the technical specification only after Sabine agrees to the product spec.
 
 - docs/progress.md: the phased build plan, with tasks, automated tests and manual checks. Work from this file.
-- docs/product-spec.md: what the app must do.
-- docs/design.md: colours, type, spacing, components and screens.
+- Project Memory/product-spec.md: what the app must do.
+- Project Memory/design.md: colours, type, spacing, components and screens.
 - docs/tech-spec.md: architecture, data model, interfaces, security, hosting and testing.
-- docs/mvp.md: the MVP scoping document, with the success criteria, risks and decisions behind the plan. Use it for why something was decided, and keep it up to date as the project progresses (see Project memory). If it disagrees with the four plan files above, they win, since they are the agreed versions: update the MVP document to match.
+- docs/mvp.md: the MVP scoping document, with the success criteria, risks and decisions behind the plan. Use it for why something was decided, and keep it up to date as the project progresses (see Project memory). If it disagrees with the agreed versions of the four plan files above, those agreed versions win: update the MVP document to match. Drafts require Sabine's approval before they become agreed versions.
 
 If the docs and the code disagree, or a task needs a decision the docs don't make, stop and ask Sabine. Don't change an agreed decision on your own.
 
 **Project memory**
 
-These five files in docs/ are the project memory: the key to understanding the project and continuing it effectively.
+These five project documents are the project memory: the key to understanding the project and continuing it effectively.
 
-- docs/product-spec.md: core requirements and goals.
-- docs/design.md: design principles, colour, type and spacing tokens, and component anatomy.
+- Project Memory/product-spec.md: core requirements and goals.
+- Project Memory/design.md: design principles, colour, type and spacing tokens, and component anatomy.
 - docs/tech-spec.md: key technical decisions and system patterns to stay consistent with.
 - docs/progress.md: current focus, recent changes, what's left to build, current status and known issues.
 - docs/mvp.md: the MVP scope, success criteria, risks and decisions. Record new or changed decisions, risks, assumptions and spike results here as the project progresses.
