@@ -31,13 +31,25 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 777 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 800 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
 ### Protected deadlines and replacement evidence
 
 Four additional loopback checks verify deadline expiry while closure is pending, failed closure retaining a hold without retries, startup expiry retiring a late reservation without a provider, and old extraction/provider results staying isolated from a replacement notebook. All 777 tests across 57 files, type checking and build pass. These use synthetic services and injected allowances. D21/D22, Task 1c and Phase 1 remain partial. No paid call, allowance change or deployment occurred.
+
+
+
+### Official-schema fixture checks
+
+Eight synthetic checks cover the documented session envelope, transcript deltas and completion events with token/duration usage metadata. Only transcript text reaches the note coordinator; metadata is not converted into preferences or confidence. Missing event/item IDs and contentless/unmapped deltas hold the session, and cancellation rejects a late completion. All 785 tests across 58 files, type checking and build pass. These fixtures establish conservative decoder behavior, not live model acceptance. Current session.updated documentation is retrieved; dedicated transcription startup and the conflicting delay descriptions remain unresolved. Task 1c and Phase 1 remain partial. No paid request, allowance change or deployment occurred.
+
+
+
+### Separate notebook allowance preparation
+
+Prepared a simulation-only allowance with a strict notes-only ledger, explicit bounded fixture amounts, lifetime attempt accounting and injected compare-and-swap persistence. It has no credentials, URL, RPC, initialization, amendment, automatic refund or retry. Missing/legacy/corrupt records, unresolved runs, failed writes and failed closure hold further work. Fifteen checks cover replacement adapter instances sharing an in-memory store, concurrent owners, a write succeeding before its response fails, failed closure, malformed records and an exhausted allowance blocking provider construction. No actual database or server restart was exercised. Fixture approval is not spending authorization. All 800 tests across 59 files, type checking and build pass. No remote data, nine-trial legacy history or deployment was changed; Task 1c and Phase 1 remain partial.
 
 ## Current work and dependency order
 
@@ -57,9 +69,9 @@ Four additional loopback checks verify deadline expiry while closure is pending,
 
 ## Exact next action
 
-All 777 checks across 57 files, type checking and build pass. Protected deadline, pending/failed closure and replacement isolation checks are complete with synthetic services. Next reconcile the official session-update acknowledgment and dedicated transcription connection startup contract with the disabled adapter. The Python Responses create reference and transcript delta/completed schemas are now retrieved; the generic connect reference does not establish transcription-specific startup. Delta content/index are optional in the general schema, so retain the conservative rejection of contentless/unmapped events until the selected model contract is resolved. Add representative schema fixtures and record any remaining mismatch before preparing a real activation adapter. See docs/notebook-provider-contract-review.md.
+All 800 checks across 59 files, type checking and build pass. Official-schema-shaped transcript fixtures and the separate simulation-only notes allowance are implemented. Next exercise the protected browser/provider chain with this separate allowance and shared injected compare-and-swap store, including pending reservation at page exit, late write success, replacement after closure and uncertain closure. Current tests establish the allowance in isolation and exhaustion at the protected owner, not its full browser lifecycle or actual durable database behavior. Keep this preparation unattached to the application server.
 
-Keep providers disabled, preserve pending/failed allowance holds and never reuse/reset the nine closed legacy reservations. A real notes-only experiment needs a dedicated reviewed durable allowance adapter and a separately authorized amount. The original application server does not attach the simulation harness. No keys, paid calls or deployment are included. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
+The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. Do not cycle through the same failed documentation URLs or guess a live endpoint. A real notes-only experiment still needs a reviewed dedicated durable store and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled and preserve cleanup holds. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 

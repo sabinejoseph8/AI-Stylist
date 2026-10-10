@@ -381,3 +381,13 @@ I then ran the browser lifecycle checks through that protected connection. Leavi
 ## Keeping expired sessions separate from new work
 
 I tested expiration through the protected notebook connection, including a slow or failed reservation closure. I kept replacement blocked until cleanup succeeded and prevented retries when its outcome was uncertain. I also checked that old model results could not change a fresh notebook. All 777 automated checks, type checking and build passed. I narrowed the remaining API documentation gaps without starting a paid trial or calling simulated results live acceptance.
+
+
+## Checking the provider contract before activation
+
+I compared the notebook preparation with official API schemas and added eight synthetic compatibility checks. I ensured that billing and language metadata could not become customer preferences, and that incomplete events could not invent note text. I recorded a documentation conflict about delay support and the unresolved transcription startup details instead of guessing. All 785 checks, type checking and build passed. I kept the live provider disabled and preserved the closed experiment history.
+
+
+## Separating the next experiment allowance
+
+I prepared a separate notebook allowance so a future experiment could not reuse the closed voice-test history. I tested concurrent starts, uncertain writes, failed closure and usage carried between adapter instances sharing a simulated store. The preparation refuses missing or legacy records and cannot initialize or increase an allowance. I kept fixture amounts separate from permission to spend. All 800 checks, type checking and build passed; no remote database, provider test or deployment changed.
