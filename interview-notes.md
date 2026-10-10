@@ -197,3 +197,8 @@ I separated stopping speech from safely continuing the conversation. If I interr
 ## Preparing continuous microphone input
 
 I added the microphone capture component needed for hands-free conversation. It sends small audio frames instead of waiting for a complete recording, and it stops if the next part of the system cannot accept them. I checked delayed permissions, device loss, page exit, the time limit and cleanup with mocked devices. I kept voice quality and the actual phone conversation as separate checks, since passing automated tests does not prove the full live experience. The component still needs the network and provider connection before it can be used on the conversation page.
+
+
+## Connecting automatic capture to the avatar probe
+
+I connected the streaming microphone to a separate private check that sends a short spoken request after a pause, without requiring Send. I also connected detected speech during the reply to the safe end control. I kept whole-reply confirmation for a follow-up and stopped the room on interruption, because I cannot yet prove exactly what the customer heard. I documented the risks of background noise, speaker echo and pauses splitting a sentence. Automated checks passed, but this new behavior still needs a real phone check before I can claim it works.

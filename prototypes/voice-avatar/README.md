@@ -85,3 +85,8 @@ Render deployment is prepared, not deployed. The root render.yaml uses prototype
 Preview browser access uses HTTP Basic username stylist and the private generated password. This protects this experiment only. The future Supabase customer account flow is not built. Health exposes only an ok flag. Missing password/origin/durable ledger blocks startup; ledger outage blocks paid work and there is no file fallback. On a server restart, local media stops and temporary context clears. Unclosed durable reservations still require provider cleanup review.
 
 Before phone acceptance, verify denied anonymous page/API access, wrong Host/Origin rejection, cookie protection and no credential leakage in the deployed browser bundle, then use Safari on a real iPhone. Verify local device permissions and Stop first without provider use. Any new avatar test needs a separate allowance review. Latest checks: 135/135 synthetic/mocked tests, type checking and build pass.
+
+
+## Automatic capture and spoken-stop probe
+
+With the existing explicit `--spoken` startup mode, open `/handsfree.html`. It uses the same protected access, durable reservations and bounded two-exchange room. Start microphone sends short clips automatically after a pause; generation is still buffered. Detected speech during processing or playback ends the room, with no conversational resume. Confirm a whole reply explicitly before a normal follow-up. Noise, speaker echo and hesitation remain physical-device risks. No eighth attempt is approved or enabled. See docs/task-1b-voice-avatar.md for the gated manual check.

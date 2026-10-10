@@ -18,6 +18,12 @@ describe('spoken HTTP boundary, mocked service only', () => {
     expect(response.headers.get('content-security-policy')).toContain('wss://*.daily.co'); expect(response.headers.get('content-security-policy')).not.toContain('unsafe-eval');
     expect(response.headers.get('content-security-policy')).not.toContain("script-src 'self' data:");
   });
+  it('gives the automatic capture page the same constrained microphone and provider policy', async () => {
+    const response = await fetch(`${base}/handsfree.html`);
+    expect(response.headers.get('permissions-policy')).toBe('microphone=(self), camera=(), geolocation=()');
+    expect(response.headers.get('content-security-policy')).toContain('wss://*.daily.co');
+    expect(response.headers.get('content-security-policy')).not.toContain('unsafe-eval');
+  });
   it('requires owner token and same origin for every mutation', async () => {
     expect((await post('turn', { sessionId: SESSION, audio: 'fixture' }, 'https://other.example')).status).toBe(403);
     expect((await post('turn', { sessionId: SESSION, audio: 'fixture' }, base, '')).status).toBe(403); expect(service.turn).not.toHaveBeenCalled();

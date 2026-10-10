@@ -53,7 +53,7 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'no-referrer');
-    const spokenPage = req.url === '/spoken.html';
+    const spokenPage = req.url === '/spoken.html' || req.url === '/handsfree.html';
     const scriptedPage = req.url === '/scripted.html' || spokenPage;
     const devicePage = req.url === '/devices.html';
     const dailyDomains = 'https://*.daily.co https://*.dailywebrtc.com https://*.dailywebrtc.net';
