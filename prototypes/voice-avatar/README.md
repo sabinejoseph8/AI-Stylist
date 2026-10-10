@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-327 tests across 30 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+346 tests across 31 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -154,8 +154,12 @@ Sabine reported all steps in the complete notebook review worked. The local simu
 
 Added LookRelease, a synthetic discovery gate binding an immutable sample description to its exact validation ticket, session and notebook revision. Display and speech use the same permit. A pending, blocked, unknown, malformed, timed-out, stale or copied approval cannot authorize either path. A description cannot be swapped after checking. Speech starts at most once per permit; each queued frame must recheck permission immediately before enqueue, and the transport receives an abort signal. Notebook edits, captured corrections, reference changes, saved-preference fixture changes, clearing, a new check and ending synchronously revoke the permit. Frames already heard cannot be undone.
 
-The notebook now uses this shared permit for the illustrated sample and its description. Browser checks verified hidden-during-check, release after confirmed fixture values, and immediate disappearance after enabling Avoid emerald green. Synthetic transport tests verify queued-frame cancellation, exceptions and changes inside the start callback. 327 tests across 30 files, type checking and build pass. No real speech output, independent AI validator, database transaction, second-tab synchronization or remote renderer cleanup is established. The provider speech adapter must honor abort and separately verify cleanup; this is still an open Task 1c gate. No paid call or Render deployment occurred.
+The notebook now uses this shared permit for the illustrated sample and its description. Browser checks verified hidden-during-check, release after confirmed fixture values, and immediate disappearance after enabling Avoid emerald green. Synthetic transport tests verify queued-frame cancellation, exceptions and changes inside the start callback. 346 tests across 31 files, type checking and build pass. No real speech output, independent AI validator, database transaction, second-tab synchronization or remote renderer cleanup is established. The provider speech adapter must honor abort and separately verify cleanup; this is still an open Task 1c gate. No paid call or Render deployment occurred.
 
 ### Disabled transcription preparation
 
 PreparedLiveTranscription accepts an injected simulated wire only. No live connector or route is enabled. Tests feed synthetic deltas into the notebook coordinator, exercise frame/turn bounds and reject delayed old completions. Status does not claim remote cleanup or live latency. See ../../docs/task-1c-live-transcription-proposal.md for approval and remaining integration gates.
+
+### Simulated note session owner
+
+NoteSessionProbe connects injected capture and transcription events to the guarded note coordinator. It cancels and clears the session on end/failure, protects against late acquisition/extraction and records unverified cleanup. It does not expose an authenticated live route or construct a real capture/transport/extraction adapter. The 346-test Phase 1 suite remains synthetic/mocked.

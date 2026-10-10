@@ -19,3 +19,7 @@ The notebook sample now uses a shared display/speech permit with immediate inval
 ### Disabled live transcription preparation
 
 Sabine approved simulated-test preparation. The server-only protocol adapter is ready for further integration and has no live connector, route or key access. All 327 tests, type checking and build pass. Live extraction, microphone integration and representative measurements remain open.
+
+### Note session integration preparation
+
+The disabled in-process note session probe now owns capture, transcription, note updates and cancellation together. All 346 tests, type checking and build pass. No provider connection or microphone capture is enabled; see docs/task-1c-live-transcription-proposal.md for remaining integration gates.

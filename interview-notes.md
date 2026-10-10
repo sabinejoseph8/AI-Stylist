@@ -268,3 +268,7 @@ I required the same current approval to control both a look's display and its sp
 ## Preparing speech input without spending on another trial
 
 I approved preparing live transcription with simulated provider events before activating another paid test. I checked that incremental text reaches the notebook before a turn completes, that a final transcript can correct partial text, and that a late completion from an old turn cannot revive outdated notes. I also required explicit connection readiness, bounded audio and transport queues, and clear cancellation behavior. All 327 automated checks, type checking and build passed. The connection remains disabled, so these results do not claim real recognition quality, measured live speed or verified remote cleanup.
+
+## Owning the full note session lifecycle
+
+I connected the simulated capture source, transcription events and notebook controls under one session owner. Ending or clearing the session now cancels the whole chain, including extraction that is still running. I tested delayed source acquisition and late results so they could not restart capture or refill a cleared notebook. I also required cleanup failures to remain visible rather than claiming the provider connection had been verified closed. All 346 automated checks, type checking and build passed. The work remains a disabled simulation; real audio recognition and physical-device timing still need validation.
