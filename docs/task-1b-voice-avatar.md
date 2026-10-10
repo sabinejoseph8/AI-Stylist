@@ -282,3 +282,11 @@ Prepared a Render Free private-preview configuration, pinned Node 24.20.0, manua
 Sabine completed GitHub permission review and password confirmation. GitHub CLI authentication succeeded for the repository owner. The prepared publication contains source, tests and project documents only; the credential scan found no private keys or test ledgers. Task 1b remains in progress, with no additional provider attempt or Render secret transfer approved by this connection.
 
 Published the prepared source, tests and project documents to the existing public AI-Stylist repository after Sabine completed authorization. Private configuration, credentials, media and lifetime test ledgers were excluded. Render deployment and physical-phone acceptance remain pending; the six-attempt cap is unchanged.
+
+## Render private configuration handoff
+
+Sabine explicitly approved sending the existing OpenAI, Tavus and Supabase API keys to Render private server settings. Imported only those keys, the Supabase project URL and pinned Node version into the new-service form. The form targets the public AI-Stylist repository, main branch, prototypes/voice-avatar, Node, Oregon, Free ($0/month), manual deploys and /healthz. No service has been submitted yet. PREVIEW_PASSWORD is prepared with an empty value for Sabine to generate herself. Key values are masked and are not included in screenshots or project files. The six-attempt cap remains unchanged.
+
+## Hosted preview evidence
+
+Render Free deployment succeeded and is live. Unauthenticated spoken-page access returned 401 with a Basic authentication challenge; the health endpoint returned {ok:true}. No media/provider attempt was started. Authenticated browser and physical iPhone acceptance remain pending.

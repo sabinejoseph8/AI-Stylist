@@ -163,3 +163,7 @@ I created a separate AI Stylist Supabase project after reviewing and approving i
 I preserved every existing prototype reservation when moving its test-limit records to Supabase. I compared the imported records against the originals, verified that a fresh connection retained the history and confirmed that another unapproved attempt stayed blocked. I disabled the one-time importer after use.
 
 I prepared password protection for the private Render preview and made a server restart stop microphone capture and playback. I kept this separate from the future customer account system. The 135 focused checks, type checking and build passed, but GitHub publication, Render deployment and iPhone acceptance are still pending.
+
+## Preparing a private phone preview
+
+I published the reviewed prototype without credentials or private test records, then deployed it on Render Free. I kept the spending history in Supabase so a server restart would not create a fresh test allowance. I verified that the hosted preview rejects access without its password and that its health check responds. I still need to verify the experience on my physical iPhone; deployment success alone does not prove the conversation works there.
