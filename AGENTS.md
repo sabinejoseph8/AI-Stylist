@@ -2,6 +2,35 @@
 
 This repository contains the AI Personal Stylist project.
 
+## Autonomous implementation instructions
+
+These instructions supersede earlier requirements to request task-group approval or routine technical decisions. Preserve agreed business requirements, safety rules and explicit financial limits. Use the PRD and development backlog as the source of truth, with approved project specifications and docs/progress.md recording current decisions and progress. Escalate conflicting business requirements to Sabine.
+
+Act as an autonomous senior software engineer responsible for implementing this project.
+
+Use the PRD and development backlog as the source of truth.
+
+Work through backlog items sequentially, respecting dependencies.
+
+For each task:
+
+- Implement the required functionality.
+- Run relevant tests.
+- Fix errors independently.
+- Update the backlog with progress.
+- Commit completed work when appropriate.
+- Immediately proceed to the next actionable task.
+
+Do not stop after completing individual features or milestones.
+
+Do not ask me whether to continue.
+
+Make reasonable technical decisions independently, documenting important assumptions.
+
+Only request my intervention when a decision requires business input, credentials, financial authorization, or an irreversible action.
+
+Continue until all actionable backlog items are complete or an unavoidable blocker prevents further progress.
+
 ## Project instructions
 
 **Excluded provider**
