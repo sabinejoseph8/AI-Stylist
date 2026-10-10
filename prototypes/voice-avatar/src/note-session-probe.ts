@@ -23,10 +23,10 @@ export class NoteSessionProbe {
  private session:number;
  private unsubscribe:()=>void;
  private changed:(receipt:number|null)=>void;
- constructor(options:{simulation?:boolean;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void}){
+ constructor(options:{simulation?:boolean;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void}){
    if(options.simulation!==true)throw Error('Live note session is disabled.');
    this.notebook=options.notebook;this.capture=options.capture;this.changed=options.changed;this.session=this.notebook.snapshot().session;
-   this.notes=new PartialNoteCoordinator({notebook:options.notebook,extract:options.extract,changed:receipt=>{
+   this.notes=new PartialNoteCoordinator({notebook:options.notebook,extract:options.extract,invalidated:()=>{if(!this.ended){try{options.invalidated?.();}catch{this.shutdown('display-held');}}},changed:receipt=>{
      if(this.ended)return;
      if(receipt===null){this.shutdown('extraction-held');return;}
      try{this.changed(receipt);}catch{this.shutdown('display-held');}

@@ -29,6 +29,11 @@ export class NotebookState {
     if(!note || event.session!==this.session || !Number.isSafeInteger(event.sequence) || event.sequence<=note.sequence || event.baseRevision!==note.revision || typeof event.value!=='string' || !event.value.trim() || event.value.length>160) return false;
     this.notes[event.field]={value:event.value.trim(),status:event.confirmed?'confirmed':'tentative',revision:note.revision+1,sequence:event.sequence,source:'speech'};this.changed();return true;
   }
+  retractSpeech(session:number,field:Field,baseRevision:number):boolean {
+    const note=this.notes[field];
+    if(!note||session!==this.session||note.revision!==baseRevision||note.source!=='speech'||!note.value)return false;
+    this.notes[field]={...note,value:'',status:'missing',revision:note.revision+1};this.changed();return true;
+  }
   edit(field:Field,value:string){
     if(typeof value!=='string'||value.length>160)throw Error('Keep the note within 160 characters.');
     const previous=this.notes[field];if(!previous)throw Error('Unknown note.');

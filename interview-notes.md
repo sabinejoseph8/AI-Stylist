@@ -280,3 +280,7 @@ I added a strict contract for turning speech fragments into styling notes. The p
 ## Choosing a bounded extraction experiment
 
 I approved a fixed GPT-4.1 mini version to prepare the notebook extraction experiment. I kept that approval separate from paid activation and a production model decision. The adapter requests a strict structure and checks the response again in the application, so a refusal, incomplete reply, old result or unsupported note cannot be treated as a confirmed preference. I required cancellation without retries or silent model changes. All 396 automated checks, type checking and build passed with simulated responses. Actual model interpretation, provider compatibility and live timing still need validation.
+
+## Removing notes when recognition changes its mind
+
+I found an edge case where speech recognition could rewrite an earlier phrase but leave a note based on the old words. I fixed it by tracking the exact notes captured during the current turn and clearing those notes immediately when their transcript is revised. Customer edits and confirmations remain protected, and a look approved using the old notes loses its approval. All 408 automated checks, type checking and build passed. Real speech recognition and device timing still need validation.

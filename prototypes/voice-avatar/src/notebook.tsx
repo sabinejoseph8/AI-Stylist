@@ -37,6 +37,7 @@ function App(){
   const [renderReceipt,setRenderReceipt]=useState<number|null>(null);
   const [speech]=useState(()=>new PartialNoteCoordinator({notebook:state,syntheticFixture:true,nextSequence:()=>++sequence.current,
     extract:async input=>phrases.filter(([, ,text])=>input.text.includes(text)).map(([field,value,evidence,confirmed])=>({field,value,evidence,confirmed})),
+    invalidated:()=>{setSnap(state.snapshot());setRenderReceipt(null);setNotice('Speech changed. Obsolete notes cleared while the correction is checked.');},
     changed:receipt=>{setSnap(state.snapshot());setNotice('Styling notes updated. Confirm uncertain details.');setRenderReceipt(receipt);}}));
   // A committed React update plus the next frame is a browser render acknowledgment,
   // not proof of physical display timing or representative live latency.
