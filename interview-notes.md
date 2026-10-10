@@ -192,3 +192,8 @@ I confirmed that I could hear the generated reply and see the avatar mouth move 
 ## Preparing safe recovery after an interruption
 
 I separated stopping speech from safely continuing the conversation. If I interrupt the stylist, the system must not assume I heard the rest of her reply. I added and tested a guarded recovery step for a fresh conversation context, including checks that late or duplicate callbacks cannot restart old speech. This is a component for the next integration step, not a working hands-free conversation. I kept the existing phone preview and the remaining live timing checks clearly separate.
+
+
+## Preparing continuous microphone input
+
+I added the microphone capture component needed for hands-free conversation. It sends small audio frames instead of waiting for a complete recording, and it stops if the next part of the system cannot accept them. I checked delayed permissions, device loss, page exit, the time limit and cleanup with mocked devices. I kept voice quality and the actual phone conversation as separate checks, since passing automated tests does not prove the full live experience. The component still needs the network and provider connection before it can be used on the conversation page.
