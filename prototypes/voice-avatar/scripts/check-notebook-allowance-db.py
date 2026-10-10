@@ -117,6 +117,10 @@ try:
         raise RuntimeError('Rollback changed the synthetic legacy sentinel.')
     sql(migration.read_text())
     sql('set role service_role; select public.stylist_notebook_allowance_read();', False)
+    composition = command(['node', str(Path(__file__).with_name('check-notebook-owner-db.ts')), '--local-docker', name])
+    if composition.returncode:
+        raise RuntimeError('Local TypeScript composition checks failed: ' + composition.stderr[-1500:])
+    print(composition.stdout.strip())
     print(f'{checks} isolated PostgreSQL checks passed. No Supabase connection or actual allowance was used.')
 finally:
     if created:

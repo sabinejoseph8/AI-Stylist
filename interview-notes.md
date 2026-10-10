@@ -406,3 +406,8 @@ I added a shared rule allowing only one reservation append or closure, so approv
 ## Bounding persistence and preserving rollback history
 
 I prepared the notebook database request path with fixed endpoints, size limits and a deadline. I checked that uncertain writes stayed blocked, that a late confirmed reservation was retired after the browser left, and that old voice-test records could not be used as a fallback. I also tested a rollback that refuses to remove initialized history. All 869 prototype checks, 50 isolated database checks, type checking and build passed. The new request path remains simulated, and Supabase has not been changed.
+
+
+### Checking recovery against a real local database
+
+I wanted to know what would happen if a test reservation was saved but the server never received confirmation. I connected the prepared notebook server components to an isolated local PostgreSQL database and deliberately lost that confirmation. The original owner and a separate fresh Node process both refused another test, preserving the unresolved record. I also checked a lost closure confirmation, a customer leaving during startup and two owners competing for the same reservation. Only one competing owner could start. These checks use synthetic data and providers; they do not prove hosted Supabase authentication or recovery of a real avatar connection. I kept those acceptance requirements open. The existing 869 tests, type checking and build pass, alongside 50 database checks and seven composition scenarios.
