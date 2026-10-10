@@ -276,3 +276,7 @@ I connected the simulated capture source, transcription events and notebook cont
 ## Keeping extracted notes faithful to the customer
 
 I added a strict contract for turning speech fragments into styling notes. The prototype preserves the customer's wording and rejects unsupported changes such as inferring fall from November or treating an unspecified dollar amount as a confirmed USD spending limit. It keeps extracted values tentative and preserves negation. I also added bounded prior context so a phrase split across partial transcripts can still be assigned to the right field, while requiring evidence from the new fragment. All 368 automated checks, type checking and build passed. These checks validate the contract, not an actual model's recognition or interpretation quality.
+
+## Choosing a bounded extraction experiment
+
+I approved a fixed GPT-4.1 mini version to prepare the notebook extraction experiment. I kept that approval separate from paid activation and a production model decision. The adapter requests a strict structure and checks the response again in the application, so a refusal, incomplete reply, old result or unsupported note cannot be treated as a confirmed preference. I required cancellation without retries or silent model changes. All 396 automated checks, type checking and build passed with simulated responses. Actual model interpretation, provider compatibility and live timing still need validation.

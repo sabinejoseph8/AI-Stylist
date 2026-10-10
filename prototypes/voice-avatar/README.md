@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-368 tests across 32 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+396 tests across 33 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -154,7 +154,7 @@ Sabine reported all steps in the complete notebook review worked. The local simu
 
 Added LookRelease, a synthetic discovery gate binding an immutable sample description to its exact validation ticket, session and notebook revision. Display and speech use the same permit. A pending, blocked, unknown, malformed, timed-out, stale or copied approval cannot authorize either path. A description cannot be swapped after checking. Speech starts at most once per permit; each queued frame must recheck permission immediately before enqueue, and the transport receives an abort signal. Notebook edits, captured corrections, reference changes, saved-preference fixture changes, clearing, a new check and ending synchronously revoke the permit. Frames already heard cannot be undone.
 
-The notebook now uses this shared permit for the illustrated sample and its description. Browser checks verified hidden-during-check, release after confirmed fixture values, and immediate disappearance after enabling Avoid emerald green. Synthetic transport tests verify queued-frame cancellation, exceptions and changes inside the start callback. 368 tests across 32 files, type checking and build pass. No real speech output, independent AI validator, database transaction, second-tab synchronization or remote renderer cleanup is established. The provider speech adapter must honor abort and separately verify cleanup; this is still an open Task 1c gate. No paid call or Render deployment occurred.
+The notebook now uses this shared permit for the illustrated sample and its description. Browser checks verified hidden-during-check, release after confirmed fixture values, and immediate disappearance after enabling Avoid emerald green. Synthetic transport tests verify queued-frame cancellation, exceptions and changes inside the start callback. 396 tests across 33 files, type checking and build pass. No real speech output, independent AI validator, database transaction, second-tab synchronization or remote renderer cleanup is established. The provider speech adapter must honor abort and separately verify cleanup; this is still an open Task 1c gate. No paid call or Render deployment occurred.
 
 ### Disabled transcription preparation
 
@@ -166,4 +166,12 @@ NoteSessionProbe connects injected capture and transcription events to the guard
 
 ### Structured extraction contract
 
-The model-independent schema, decoder and simulated request adapter preserve literal user evidence and return only tentative notes. Prior context identifies fields but cannot supply new evidence. All 368 Phase 1 tests pass with type checking and build. Real extraction model selection and integration are pending.
+The model-independent schema, decoder and simulated request adapter preserve literal user evidence and return only tentative notes. Prior context identifies fields but cannot supply new evidence. All 368 Phase 1 tests pass with type checking and build. Sabine approved pinned GPT-4.1 mini preparation with simulated responses; live integration remains pending.
+
+## Approved pinned extraction adapter, 10 October 2026
+
+Sabine approved GPT-4.1 mini preparation with simulated responses only. Added a server request builder pinned to gpt-4.1-mini-2025-04-14 and a Responses wire decoder. Requests specify strict JSON schema under text.format, store:false, no tools, no streaming and a 2,048-token output ceiling. store:false requests no Responses application-state storage; it does not promise zero retention or alter provider training policies. The protocol version uses a single-value enum in the provider schema, with the application decoder retaining its exact version check. [Structured Outputs](https://developers.openai.com/api/docs/guides/structured-outputs), [Responses migration and storage](https://developers.openai.com/api/docs/guides/migrate-to-responses).
+
+The decoder accepts one completed assistant text message from the pinned model. It rejects refusals, failed/incomplete/cancelled results, tool outputs, multiple messages, invalid JSON, wrong turns and unsupported evidence. Notes stay tentative. The simulated transport forwards cancellation, discards late results, redacts errors and performs no retries or model fallback. The existing coordinator owns the 1.5-second extraction deadline. No API client, credentials, live endpoint or activation path was added; simulation must be explicit.
+
+All 396 focused tests across 33 files, type checking and build pass, including 28 new adapter checks. A simulated transcription envelope flows through the session owner and this adapter into tentative notebook notes; ending clears the session. Tests also cover the deadline and ignored late responses. This proves local contract handling only, not provider schema acceptance, account availability, semantic quality, live latency or physical-device behavior. No paid call, additional allowance or Render deployment occurred. All nine prior trials remain closed. Task 1c and Phase 1 remain incomplete.

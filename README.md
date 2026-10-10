@@ -27,3 +27,7 @@ The disabled in-process note session probe now owns capture, transcription, note
 ### Structured extraction preparation
 
 Added strict literal-evidence decoding with a separate untrusted input/context envelope and tentative-only note updates. All 368 tests, type checking and build pass. No model or paid extraction request is enabled.
+
+## Pinned extraction preparation
+
+Sabine approved GPT-4.1 mini preparation. The disabled adapter validates simulated Responses envelopes and returns tentative notes only. All 396 tests, type checking and build pass. No provider call or deployment occurred. See [the scoped decision and evidence](docs/task-1c-extraction-model-proposal.md).
