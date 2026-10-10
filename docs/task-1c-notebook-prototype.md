@@ -34,7 +34,7 @@ Observed on the computer preview: initial collapsed notebook, progressive sample
 
 ## Complete review instructions for Sabine
 
-Read these before starting. No instructions from chat are needed during the review. The same guide is available on the page under **How to review this prototype**.
+Read these before starting. No instructions from chat are needed during the review. All 18 steps are available at the top of the page under **Read full test instructions**, and also under **How to review this prototype** below the look area.
 
 Open the computer-only preview at http://127.0.0.1:4320/notebook.html. It does not work on your iPhone yet and has not been deployed to Render.
 
@@ -73,3 +73,7 @@ Report what you liked about the notebook and any step that behaved differently. 
 ## Remaining Task 1c gates
 
 Real partial speech extraction, real voice edits, notes appearing during an actual conversation, timing instrumentation and representative p95 measurements, production recommendation display/speech gating, image recognition, physical camera/reference acceptance and accessibility review remain pending. A synthetic clause timer does not prove A02's two-second target. Task 1c stays unchecked. Task 1b recovery still needs Tavus clarification and later separately approved test allowance.
+
+## Instruction visibility correction, 10 October 2026
+
+Sabine could not find the full instructions. The original on-page section contained only a seven-step summary, although it had been described as the complete guide. Replaced that summary with the complete 18-step guide and added a prominent expandable Read full test instructions control above the prototype notice. Both locations share one instruction component. Browser inspection verified all 18 numbered steps and four section headings, and the top guide is left open for Sabine. 265/265 tests, type checking and build pass. No provider call or deployment occurred.

@@ -246,3 +246,7 @@ I tested the prepared audio, session and memory components together using simula
 While waiting for Tavus to clarify safe conversation recovery, I approved independent work on the styling notebook. I chose to make it reviewable with simulated speech instead of waiting for the voice integration. The notebook shows missing and uncertain details, lets me correct them, and keeps an actual selected item image visible even when collapsed. A newer budget correction cannot be overwritten by an older result.
 
 I also checked that an unvalidated sample stays hidden, that changing a note invalidates its old approval, and that unknown image matches are explained rather than invented. Camera showing remains local and requires a confirmed still before the notebook reference changes. All 265 automated checks, type checking and the build passed. Computer browser checks passed, but I still need to review the notebook and camera behavior myself. Real speech extraction, actual recommendation checks and timing remain future integration work.
+
+## Making test instructions easier to find
+
+When I could not find the full review instructions, I identified that the page only contained a short checklist. I added a clear control at the top and put all 18 steps there, with the same complete guide available below. This lets me read everything before testing. Browser inspection confirmed the guide was complete, and all 265 checks, type checking and the build still passed.

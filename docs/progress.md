@@ -618,3 +618,7 @@ Added three combined synthetic checks using the real streaming bridge, paced out
 ## Task 1c preparation authorized while Task 1b waits, 10 October 2026
 
 Sabine approved starting the independent notebook prototype before Task 1b completes. Implemented a local notebook page, editable and uncertain notes, progressive synthetic clauses, stale-correction rejection, image confirmation/thumbnail, local camera ownership and version-bound synthetic look checks. The full [Task 1c evidence and complete review guide](task-1c-notebook-prototype.md) records scope and remaining acceptance. 265/265 tests, type checking and build pass. Computer browser checks and a synthetic image selection passed; physical camera, accessibility and actual speech/timing remain pending. Nothing new is deployed and no paid call or allowance change occurred. Task 1b, Task 1c and Phase 1 stay unchecked. Later task groups remain unapproved.
+
+### Task 1c instruction visibility fix, 10 October 2026
+
+Sabine reported that the full review instructions were missing. The prior on-page content was a shortened checklist. Added all 18 steps behind a prominent top-of-page Read full test instructions control and reused the same complete guide in the lower section. Browser inspection verified the complete numbered guide and left it open. 265/265 tests, type checking and build pass. Notebook review remains pending.
