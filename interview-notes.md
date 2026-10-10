@@ -181,3 +181,7 @@ I also confirmed that switching away from the Safari page stops the camera and m
 ## Preparing the remaining phone voice test
 
 After completing the local device checks, I approved one additional private phone voice test. I kept earlier test records intact and added a separate allowance amendment instead of resetting the history. Automated checks and a live database check confirm that the next unapproved attempt stays blocked. I will verify avatar playback and the explicit interrupt-and-end control on my iPhone before calling those checks complete.
+
+## Interrupting the avatar on my phone
+
+I tried the private voice test on my iPhone and pressed Interrupt and end during the avatar response. Her sound stopped and the page confirmed the connection closed. The durable record also showed the test was closed. This verified the explicit stop control; it did not establish natural spoken interruptions or resuming a conversation afterward.
