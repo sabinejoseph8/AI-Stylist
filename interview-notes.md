@@ -202,3 +202,8 @@ I added the microphone capture component needed for hands-free conversation. It 
 ## Connecting automatic capture to the avatar probe
 
 I connected the streaming microphone to a separate private check that sends a short spoken request after a pause, without requiring Send. I also connected detected speech during the reply to the safe end control. I kept whole-reply confirmation for a follow-up and stopped the room on interruption, because I cannot yet prove exactly what the customer heard. I documented the risks of background noise, speaker echo and pauses splitting a sentence. Automated checks passed, but this new behavior still needs a real phone check before I can claim it works.
+
+
+## Keeping the next voice check within its allowance
+
+I approved one more bounded phone check for automatic capture and spoken stopping. I preserved all seven earlier test records, verified the separate amendment and checked that the next unapproved attempt stays blocked. I kept approval, deployment and actual phone acceptance as distinct milestones.

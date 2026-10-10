@@ -24,6 +24,10 @@ describe('safe experiment budget display', () => {
     read.mockResolvedValue({runs:[{closed:false}]});
     expect(await (await fetch(`${base}/api/experiment-budget`,{headers:{Cookie:cookie}})).json()).toMatchObject({remainingAttempts:3,cleanupPending:true});
   });
+  it('shows only the single approved automatic trial and keeps scripted attempts exhausted', async () => {
+    read.mockResolvedValue({ spokenExtension: {}, reserveTransfer: {}, phoneTrial: {}, automaticTrial: {}, runs: Array.from({ length: 7 }, () => ({ closed: true })) });
+    expect(await (await fetch(`${base}/api/experiment-budget`, { headers: { Cookie: cookie } })).json()).toEqual({ remainingAttempts: 1, remainingScriptedAttempts: 0, cleanupPending: false, reservedCents: 1400 });
+  });
   it('fails closed on missing or corrupt ledger and requires local ownership',async()=>{
     read.mockRejectedValue(new Error('private-file-path'));
     expect((await fetch(`${base}/api/experiment-budget`)).status).toBe(403);

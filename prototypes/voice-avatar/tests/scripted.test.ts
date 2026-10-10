@@ -103,6 +103,36 @@ describe('scripted test budget reservations', () => {
     const outcomes = await Promise.allSettled([budget.reserve(),new ExperimentBudget(path).reserve()]);
     expect(outcomes.filter(r => r.status==='fulfilled')).toHaveLength(1); expect((await budget.read()).runs).toHaveLength(1);
   });
+  it('preserves seven records, permits one automatic trial and refuses a ninth attempt', async () => {
+    const { budget } = await ledger(); for (let i = 0; i < 4; i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approvePhoneTrial(); await budget.closeVerified(await budget.reserve('spoken'));
+    const previous = await budget.read(); await budget.approveAutomaticTrial();
+    const amended = await budget.read(); expect(amended.runs).toEqual(previous.runs);
+    expect(amended.phoneTrial).toEqual(previous.phoneTrial);
+    await expect(budget.reserve()).rejects.toThrow('limit');
+    await budget.closeVerified(await budget.reserve('spoken'));
+    expect((await budget.read()).runs).toHaveLength(8);
+    await expect(budget.reserve('spoken')).rejects.toThrow('limit');
+    await expect(budget.approveAutomaticTrial()).rejects.toThrow();
+  });
+  it('refuses an automatic amendment before seven closed attempts', async () => {
+    const { budget } = await ledger(); await expect(budget.approveAutomaticTrial()).rejects.toThrow();
+    for (let i = 0; i < 4; i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approvePhoneTrial(); await budget.reserve('spoken');
+    await expect(budget.approveAutomaticTrial()).rejects.toThrow();
+  });
+  it('rejects modified automatic-trial metadata', async () => {
+    const { path, budget } = await ledger(); for (let i = 0; i < 4; i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approvePhoneTrial(); await budget.closeVerified(await budget.reserve('spoken')); await budget.approveAutomaticTrial();
+    const data = await budget.read(); data.automaticTrial!.extraAttempts = 2 as 1; await writeFile(path, JSON.stringify(data));
+    await expect(budget.reserve('spoken')).rejects.toThrow('review');
+  });
   it('rejects modified amounts and unknown cleanup IDs', async () => {
     const { path,budget } = await ledger(); await expect(budget.closeVerified('unknown')).rejects.toThrow();
     const id = await budget.reserve(); const data = await budget.read(); data.runs[0]!.cents=0; await writeFile(path,JSON.stringify(data));
