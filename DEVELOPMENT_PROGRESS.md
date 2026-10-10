@@ -21,8 +21,9 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Consolidated the simulated transports and notebook probe into one prepared session factory. External cancellation, disconnect, extraction failure and cleanup failure have focused checks.
 - Connected the combined factory to the disabled private browser bridge. Seven new checks cover two turns, confirmation, late extraction, disconnect, failed cleanup, immediate provider-failure notification and provider-acknowledged readiness.
 - Updated the visible local rehearsal to use the combined socket/extraction components. Implementer browser verification passed Emerald green, Blue correction, confirmation and end/clear.
+- Added combined seven-field, missing/ambiguous-value and budget-correction scenarios. Confirmed-only fixture checks hold tentative notes and owned items; a spoken budget reduction invalidates a passed ticket and blocks an over-budget sample after confirmation.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 711 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 714 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -42,7 +43,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-The combined simulated factory is integrated through the disabled browser bridge and visible local rehearsal. Next add combined seven-field scenarios, including missing/uncertain values, a budget correction and confirmation-based look gating. Keep these synthetic and preserve the existing notebook/recommendation separation. Live activation needs a separately approved test allowance; conversational resume additionally needs the Tavus technical reply. All live trial, source permission and Phase 1 exit blockers above remain.
+The combined simulated factory is integrated through the disabled browser bridge and visible local rehearsal. Combined seven-field, ambiguity, correction and confirmed-only fixture-gating scenarios now pass. Next exercise pagehide/visibility and late capture-permission completion through the new combined factory and browser lifecycle, including cancellation during extraction. Keep these synthetic and preserve the existing notebook/recommendation separation. Live activation needs a separately approved test allowance; conversational resume additionally needs the Tavus technical reply. All live trial, source permission and Phase 1 exit blockers above remain.
 
 ## Session handoff
 

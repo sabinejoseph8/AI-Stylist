@@ -518,3 +518,7 @@ D21/D22 remain partial. The shared simulation-only session factory composes the 
 ## Incremental evidence: combined browser/provider bridge
 
 D21/D22/D24 remain partial. The prepared combined session is integrated through the disabled private browser bridge and the local visible rehearsal. Two turns, confirmation, late correction protection, disconnect cancellation, cleanup holds, provider-failure notification and delayed readiness have seven new focused checks. All 711 tests across 50 files, type checking and build pass; implementer browser verification passed the two-color correction/confirmation/end flow. This is synthetic integration evidence, not live recognition, latency or customer acceptance.
+
+### Combined seven-field scenario evidence
+
+All 714 automated checks across 51 files, type checking and build pass. Three new synthetic scenarios cover all seven tentative fields, missing/ambiguous timing and budget values, confirmation-based fixture holds, and a budget correction invalidating the old release ticket. An over-budget sample remains blocked after confirming the lower maximum; owned items hold until matching exists. This does not prove live model quality or a production preference validator. Next: combined browser page-lifecycle and late-permission cleanup checks.
