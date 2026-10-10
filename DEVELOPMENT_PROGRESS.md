@@ -28,9 +28,10 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Reviewed current official provider guides and recorded compatibility plus unresolved full-reference/connection checks in docs/notebook-provider-contract-review.md.
 - Added a disabled private notebook server owner with 23 synthetic access, cancellation, concurrency, deadline, cleanup and partial-extraction integration checks. No legacy allowance or actual durable records are used.
 - Connected the protected owner to an explicitly simulated loopback bridge. Seventeen new tests cover access, readiness, two turns, late startup, pending/failed closure, stale identity and disposal.
+- Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 766 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 773 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -50,7 +51,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-The protected owner is connected to the simulation-only loopback harness; all 766 checks, type checking and build pass. Next exercise this protected harness with the prepared browser lifecycle and synthetic devices, including hidden page, late permission and device loss. Keep all providers disabled and preserve pending/failed allowance cleanup holds. The original application server does not attach this harness. Official guide comparison is in docs/notebook-provider-contract-review.md; full event/Responses reference retrieval and the dedicated connection startup contract remain unresolved before live activation. A new notes-only durable allowance needs a dedicated reviewed adapter and a separately authorized amount. Never reuse/reset the nine closed legacy reservations. No keys, paid calls or deployment are included. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
+The protected owner is connected to the simulation-only loopback harness; all 773 checks, type checking and build pass. Protected browser lifecycle and synthetic-device checks now pass, including hidden page, late permission and device loss. Next verify pending and failed closure under the protected owner deadline and session replacement, then retry retrieval of the complete official event/connection contract before a real activation adapter is prepared. Keep all providers disabled and preserve pending/failed allowance cleanup holds. The original application server does not attach this harness. Official guide comparison is in docs/notebook-provider-contract-review.md; full event/Responses reference retrieval and the dedicated connection startup contract remain unresolved before live activation. A new notes-only durable allowance needs a dedicated reviewed adapter and a separately authorized amount. Never reuse/reset the nine closed legacy reservations. No keys, paid calls or deployment are included. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 

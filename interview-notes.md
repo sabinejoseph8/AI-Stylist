@@ -374,3 +374,5 @@ I then checked actual prepared extraction behind the private gate. Partial text 
 ## Connecting private access to notebook transport
 
 I connected the protected session owner to a simulated browser connection. I waited for the allowance and provider configuration before showing Ready. I tested what happens if the browser leaves during startup, cleanup takes time or closure fails. A late reservation was retired without opening a provider, and uncertain cleanup kept the session blocked without a retry. I also rejected an old session ID on a replacement connection. All 766 checks, type checking and the build passed. I kept this separate from hosted authentication and live provider acceptance.
+
+I then ran the browser lifecycle checks through that protected connection. Leaving or hiding the page, losing the device or connection, and granting microphone permission after the session ended all stopped capture and settled the simulated reservation once. Pending model work was canceled and late results could not restore notes. The suite reached 773 passing checks with type checking and build passing. I kept physical-phone and real-provider evidence separate.
