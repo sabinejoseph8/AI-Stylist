@@ -258,3 +258,5 @@ I finished the complete 18-step notebook review and confirmed that all steps wor
 ## Protecting edits during partial speech
 
 I continued preparing the notebook while Tavus's recovery answer was pending. I required partial speech updates to preserve a customer's newer touch edits throughout the same turn, rather than letting a later fragment overwrite them. I also kept extraction results tentative and required evidence from the customer's submitted words. I added timing instrumentation that separates completed, failed and canceled work, so slow results cannot quietly disappear from the measurement. The 282 automated checks, type checking and build pass. This is tested groundwork; real speech integration and live speed acceptance still need evidence.
+
+I then connected the notebook's canned conversation to that coordinator, so the prototype exercises the partial-text processing path rather than writing each field directly. Browser checks confirmed captured notes, uncertainty and protection of the corrected budget. I kept simulated acceptance separate from evidence that a real voice conversation meets our speed target.

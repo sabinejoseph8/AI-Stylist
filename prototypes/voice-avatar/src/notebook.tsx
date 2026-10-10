@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {FIELDS,NotebookState,checkFixture} from './notebook-state.ts';
 import type {Field,Capture} from './notebook-state.ts';
 import {NotebookCamera} from './notebook-camera.ts';
+import {PartialNoteCoordinator} from './partial-note-coordinator.ts';
 import './notebook.css';
 import {REVIEW_SECTIONS} from './notebook-review-guide.ts';
 
@@ -28,23 +29,31 @@ function App(){
   const video=useRef<HTMLVideoElement|null>(null),dialog=useRef<HTMLDialogElement|null>(null),zoom=useRef<HTMLDialogElement|null>(null),editOrigin=useRef<HTMLButtonElement|null>(null);
   const camera=useRef(new NotebookCamera(constraints=>navigator.mediaDevices.getUserMedia(constraints)));
   const update=(message?:string)=>{setSnap(state.snapshot());if(message)setNotice(message);};
+  const turnNumber=useRef(0);
+  const [renderReceipt,setRenderReceipt]=useState<number|null>(null);
+  const [speech]=useState(()=>new PartialNoteCoordinator({notebook:state,syntheticFixture:true,nextSequence:()=>++sequence.current,
+    extract:async input=>phrases.filter(([, ,text])=>input.text.includes(text)).map(([field,value,evidence,confirmed])=>({field,value,evidence,confirmed})),
+    changed:receipt=>{setSnap(state.snapshot());setNotice('Styling notes updated. Confirm uncertain details.');setRenderReceipt(receipt);}}));
+  // A committed React update plus the next frame is a browser render acknowledgment,
+  // not proof of physical display timing or representative live latency.
+  useEffect(()=>{if(renderReceipt===null)return;const frame=requestAnimationFrame(()=>speech.acknowledgeRendered(renderReceipt));return()=>cancelAnimationFrame(frame);},[snap,renderReceipt,speech]);
   const later=(fn:()=>void,ms:number)=>{const id=setTimeout(fn,ms);timers.current.push(id);};
-  const stopSimulation=()=>{timers.current.forEach(clearTimeout);timers.current=[];setPlaying(false);};
+  const stopSimulation=()=>{speech.cancel();timers.current.forEach(clearTimeout);timers.current=[];setPlaying(false);};
   const revoke=(url:string)=>{URL.revokeObjectURL(url);urls.current.delete(url);};
   const stopCamera=(message='Camera is off. Your confirmed photo remains in the notebook.')=>{clearTimeout(cameraTimer.current);camera.current.stop();if(video.current)video.current.srcObject=null;setCameraOn(false);setCameraPending(false);setCameraMessage(message);};
   useEffect(()=>{
     const hide=()=>{if(document.hidden){stopSimulation();stopCamera('Camera stopped when you left this page.');}};
-    const exit=()=>{uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();setSnap(state.snapshot());setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
+    const exit=()=>{uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);setSnap(state.snapshot());setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
     document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',exit);
     return()=>{exit();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',exit);};
   },[]);
   useEffect(()=>{if(editing)dialog.current?.showModal();else if(dialog.current?.open)dialog.current.close();},[editing]);
   useEffect(()=>{if(enlarged)zoom.current?.showModal();else if(zoom.current?.open)zoom.current.close();},[enlarged]);
   function startStory(){
-    stopSimulation();setPlaying(true);const initial=state.snapshot();
-    phrases.forEach(([field,value,text,confirmed],i)=>{
-      const event:Capture={session:initial.session,field,baseRevision:initial.notes[field].revision,sequence:++sequence.current,value,confirmed};
-      later(()=>{setCaption(text);state.capture(event);update(i===phrases.length-1?'Description captured. Confirm the date and budget meaning.':'Styling notes updated.');},(i+1)*1100);
+    stopSimulation();setPlaying(true);const turnId=`sample_${++turnNumber.current}`;let cumulative='';
+    phrases.forEach(([, ,text],i)=>{
+      cumulative+=`${cumulative?' ':''}${text}`;const partial=cumulative;
+      later(()=>{setCaption(text);speech.accept({version:1,eventId:`${turnId}_${i}`,turnId,sequence:i,role:'user',text:partial,final:i===phrases.length-1});},(i+1)*1100);
     });
     later(()=>{setPlaying(false);setCaption('Simulated turn finished. Would you prefer a dress or a pantsuit?');},6600);
   }
@@ -79,7 +88,7 @@ function App(){
   function captureStill(){const v=video.current;if(!v?.videoWidth||!v.videoHeight)return;const canvas=document.createElement('canvas');const scale=Math.min(1,1280/v.videoWidth);canvas.width=Math.round(v.videoWidth*scale);canvas.height=Math.round(v.videoHeight*scale);canvas.getContext('2d')?.drawImage(v,0,0,canvas.width,canvas.height);const epoch=uploadEpoch.current;
     canvas.toBlob(blob=>{if(blob&&epoch===uploadEpoch.current)void prepareFile(new File([blob],'camera-item.jpg',{type:'image/jpeg'}));},'image/jpeg',0.85);
   }
-  function clear(){stopSimulation();stopCamera();uploadEpoch.current++;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();setPhoto(null);setPendingPhoto(null);setPhotoError('');setEnlarged(false);state.clear();setExcludeGreen(false);setCaption('A simulated conversation will appear here.');update('Session cleared. No notebook content was saved.');}
+  function clear(){stopSimulation();stopCamera();uploadEpoch.current++;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();setPhoto(null);setPendingPhoto(null);setPhotoError('');setEnlarged(false);state.clear();speech.reset();setRenderReceipt(null);setExcludeGreen(false);setCaption('A simulated conversation will appear here.');update('Session cleared. No notebook content was saved.');}
   function runCheck(){const ticket=state.beginCheck(),snapshot=state.snapshot();update();const mode=checkMode;later(()=>{
     if(mode==='timeout')state.timeout(ticket);
     else if(mode==='malformed')state.completeCheck(ticket,{outcome:'unknown',reason:'The check returned an invalid result. No look was released.'});

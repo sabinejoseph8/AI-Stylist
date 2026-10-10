@@ -9,3 +9,5 @@ See [the phased plan](docs/progress.md) for actual evidence and open checks. The
 ### Partial speech groundwork
 
 The provider-independent partial-note coordinator and bounded timing metadata pass 282 tests with the rest of Phase 1, plus type checking and build. They are not yet wired into the notebook UI or a provider. Live speech extraction, actual render timing and recommendation speech gating remain open. See docs/task-1c-notebook-prototype.md.
+
+The coordinator is now connected to the notebook's canned conversation fixture. Browser checks confirm captured and uncertain notes and stale-budget correction rejection. This remains simulated extraction, with no real microphone or provider connection.
