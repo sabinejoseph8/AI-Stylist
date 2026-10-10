@@ -216,3 +216,7 @@ The stylist answered my phone request without my pressing Send. By the time I re
 ## Making the repeat test self-contained
 
 I approved one repeat of the automatic speech check using the last $2 reserve, keeping the initial experiment allocation at $25. I asked for complete instructions before starting so I could interrupt the avatar while she was still speaking without checking the chat. I kept earlier test records and allowed only this single repeat. This preparation does not prove the interruption works; I still need to report what happened on my iPhone.
+
+## Confirming spoken interruption on iPhone
+
+I repeated the automatic speech check with all instructions available before I began. I spoke while the avatar was still replying and confirmed that my words stopped her mid-reply. The app ended the test, and the saved test ledger confirmed the connection closed. This validated spoken interrupt-and-end on my iPhone. It does not yet validate resuming the conversation or precise interruption timing. I kept those limitations separate from the successful result.
