@@ -296,3 +296,7 @@ I prepared the private-preview network control bridge and tested it using real l
 ## Moving notebook updates without moving unrelated data
 
 I prepared the notebook update path across the private connection. I chose to send only the seven structured notes and the revisions needed to reject stale updates, rather than entire session snapshots containing references or other private context. I tested corrections, an old connection's delayed publisher and disconnect cleanup. I also required a render receipt to match the current update before acknowledging it. All 476 automated checks, type checking and build passed with simulated providers and local sockets. The visible notebook is not connected to this path yet, so I have not claimed real speech or display timing acceptance.
+
+## Connecting the visible notebook to validated updates
+
+I connected the visible notebook's simulated conversation to the structured update decoder and revision checks. I required render acknowledgments to match the exact current update after React commits it, and kept their sequence numbers unique across session clears. Browser checks confirmed the sample, the $350 correction, a touch color edit, clearing and a fresh sample. All 487 automated checks, type checking and build passed. The update path runs locally in the page; actual networked speech and physical display timing still need validation.

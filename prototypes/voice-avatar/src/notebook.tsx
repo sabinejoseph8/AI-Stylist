@@ -3,6 +3,7 @@ import {createRoot} from 'react-dom/client';
 import {FIELDS,NotebookState,checkFixture} from './notebook-state.ts';
 import type {Field,Capture} from './notebook-state.ts';
 import {NotebookCamera} from './notebook-camera.ts';
+import {NotebookPresentation} from './notebook-presentation.ts';
 import {PartialNoteCoordinator} from './partial-note-coordinator.ts';
 import {LookRelease} from './look-release.ts';
 import type {LookPermit} from './look-release.ts';
@@ -22,7 +23,8 @@ const phrases:[Field,string,string,boolean][]=[
 ];
 const fixture={occasion:'Outdoor wedding',color:'Emerald green',style:'Elegant',lookType:'Dress',newItemCents:32000,currency:'USD' as const,excludedColors:[]};
 function App(){
-  const [snap,setSnap]=useState(state.snapshot()),[open,setOpen]=useState(false),[notice,setNotice]=useState('Your notebook is ready.'),[caption,setCaption]=useState('A simulated conversation will appear here.'),[playing,setPlaying]=useState(false);
+  const [presentation]=useState(()=>new NotebookPresentation());
+  const [snap,setSnap]=useState(()=>presentation.present(state.snapshot(),null)!.snapshot),[open,setOpen]=useState(false),[notice,setNotice]=useState('Your notebook is ready.'),[caption,setCaption]=useState('A simulated conversation will appear here.'),[playing,setPlaying]=useState(false);
   const [editing,setEditing]=useState<Field|null>(null),[draft,setDraft]=useState(''),[budgetAmount,setBudgetAmount]=useState('350'),[budgetScope,setBudgetScope]=useState(false);
   const [photo,setPhoto]=useState<Photo|null>(null),[pendingPhoto,setPendingPhoto]=useState<Photo|null>(null),[photoError,setPhotoError]=useState(''),[enlarged,setEnlarged]=useState(false);
   const [cameraOn,setCameraOn]=useState(false),[cameraPending,setCameraPending]=useState(false),[cameraMessage,setCameraMessage]=useState('Camera is off. Photo upload is always available.');
@@ -32,23 +34,24 @@ function App(){
   const timers=useRef<ReturnType<typeof setTimeout>[]>([]),sequence=useRef(0),uploadEpoch=useRef(0),urls=useRef(new Set<string>()),cameraTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   const video=useRef<HTMLVideoElement|null>(null),dialog=useRef<HTMLDialogElement|null>(null),zoom=useRef<HTMLDialogElement|null>(null),editOrigin=useRef<HTMLButtonElement|null>(null);
   const camera=useRef(new NotebookCamera(constraints=>navigator.mediaDevices.getUserMedia(constraints)));
-  const update=(message?:string)=>{setSnap(state.snapshot());if(message)setNotice(message);};
+  const presentSnapshot=(receipt:number|null=null)=>{const result=presentation.present(state.snapshot(),receipt);if(!result){setNotice('Notebook update held. Clear the session before continuing.');return;}setSnap(result.snapshot);setRenderReceipt(result.sequence);};
+  const update=(message?:string)=>{presentSnapshot();if(message)setNotice(message);};
   const turnNumber=useRef(0);
   const [renderReceipt,setRenderReceipt]=useState<number|null>(null);
   const [speech]=useState(()=>new PartialNoteCoordinator({notebook:state,syntheticFixture:true,nextSequence:()=>++sequence.current,
     extract:async input=>phrases.filter(([, ,text])=>input.text.includes(text)).map(([field,value,evidence,confirmed])=>({field,value,evidence,confirmed})),
-    invalidated:()=>{setSnap(state.snapshot());setRenderReceipt(null);setNotice('Speech changed. Obsolete notes cleared while the correction is checked.');},
-    changed:receipt=>{setSnap(state.snapshot());setNotice('Styling notes updated. Confirm uncertain details.');setRenderReceipt(receipt);}}));
+    invalidated:()=>{presentSnapshot();setNotice('Speech changed. Obsolete notes cleared while the correction is checked.');},
+    changed:receipt=>{presentSnapshot(receipt);setNotice('Styling notes updated. Confirm uncertain details.');}}));
   // A committed React update plus the next frame is a browser render acknowledgment,
   // not proof of physical display timing or representative live latency.
-  useEffect(()=>{if(renderReceipt===null)return;const frame=requestAnimationFrame(()=>speech.acknowledgeRendered(renderReceipt));return()=>cancelAnimationFrame(frame);},[snap,renderReceipt,speech]);
+  useEffect(()=>{if(renderReceipt===null)return;const frame=requestAnimationFrame(()=>{const receipt=presentation.rendered(renderReceipt);if(receipt!==null)speech.acknowledgeRendered(receipt);});return()=>cancelAnimationFrame(frame);},[snap,renderReceipt,speech,presentation]);
   const later=(fn:()=>void,ms:number)=>{const id=setTimeout(fn,ms);timers.current.push(id);};
   const stopSimulation=()=>{speech.cancel();timers.current.forEach(clearTimeout);timers.current=[];setPlaying(false);};
   const revoke=(url:string)=>{URL.revokeObjectURL(url);urls.current.delete(url);};
   const stopCamera=(message='Camera is off. Your confirmed photo remains in the notebook.')=>{clearTimeout(cameraTimer.current);camera.current.stop();if(video.current)video.current.srcObject=null;setCameraOn(false);setCameraPending(false);setCameraMessage(message);};
   useEffect(()=>{
     const hide=()=>{if(document.hidden){lookRelease.end();setLookPermit(null);stopSimulation();stopCamera('Camera stopped when you left this page.');}};
-    const exit=()=>{lookRelease.end();uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);setSnap(state.snapshot());setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
+    const exit=()=>{lookRelease.end();uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);presentSnapshot();presentation.disconnect();setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
     document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',exit);
     return()=>{exit();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',exit);};
   },[]);
