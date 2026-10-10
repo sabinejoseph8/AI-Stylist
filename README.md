@@ -11,3 +11,7 @@ See [the phased plan](docs/progress.md) for actual evidence and open checks. The
 The provider-independent partial-note coordinator and bounded timing metadata pass 282 tests with the rest of Phase 1, plus type checking and build. They are not yet wired into the notebook UI or a provider. Live speech extraction, actual render timing and recommendation speech gating remain open. See docs/task-1c-notebook-prototype.md.
 
 The coordinator is now connected to the notebook's canned conversation fixture. Browser checks confirm captured and uncertain notes and stale-budget correction rejection. This remains simulated extraction, with no real microphone or provider connection.
+
+### Shared look release preparation
+
+The notebook sample now uses a shared display/speech permit with immediate invalidation on edits, new checks and session changes. All 303 tests, type checking and build pass. Speech cancellation is verified with a synthetic transport; no actual recommendation audio or production validator is connected.

@@ -14,13 +14,16 @@ const empty = ():Record<Field,Note> => Object.fromEntries(FIELDS.map(([id])=>[id
 /** Local synthetic prototype state. No extraction API, persistence or profile writes. */
 export class NotebookState {
   private notes=empty();
+  private listeners=new Set<()=>void>();
+  subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
+  private notify(){for(const listener of [...this.listeners])listener();}
   private session=1;
   private revision=0;
   private reference:Reference|null=null;
   private checkId=0;
   private gate:{ticket:CheckTicket;state:'checking'|'passed'|'held';reason:string}|null=null;
   snapshot(){return {session:this.session,revision:this.revision,notes:Object.fromEntries(FIELDS.map(([id])=>[id,{...this.notes[id]}])) as Record<Field,Note>,reference:this.reference?{...this.reference}:null,gate:this.gate?{...this.gate,ticket:{...this.gate.ticket}}:null};}
-  private changed(){this.revision++;this.gate=null;}
+  private changed(){this.revision++;this.gate=null;this.notify();}
   capture(event:Capture):boolean {
     const note=this.notes[event.field];
     if(!note || event.session!==this.session || !Number.isSafeInteger(event.sequence) || event.sequence<=note.sequence || event.baseRevision!==note.revision || typeof event.value!=='string' || !event.value.trim() || event.value.length>160) return false;
@@ -39,7 +42,7 @@ export class NotebookState {
   preferencesChanged(){this.changed();}
   beginCheck():CheckTicket {
     const ticket=Object.freeze({id:++this.checkId,revision:this.revision,session:this.session});
-    this.gate={ticket,state:'checking',reason:'Checking your preferences'};return ticket;
+    this.gate={ticket,state:'checking',reason:'Checking your preferences'};this.notify();return ticket;
   }
   completeCheck(ticket:CheckTicket,result:CheckResult):boolean{
     if(!this.gate || this.gate.state!=='checking' || ticket.id!==this.gate.ticket.id || ticket.session!==this.session || ticket.revision!==this.revision) return false;

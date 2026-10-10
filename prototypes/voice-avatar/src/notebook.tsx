@@ -4,6 +4,8 @@ import {FIELDS,NotebookState,checkFixture} from './notebook-state.ts';
 import type {Field,Capture} from './notebook-state.ts';
 import {NotebookCamera} from './notebook-camera.ts';
 import {PartialNoteCoordinator} from './partial-note-coordinator.ts';
+import {LookRelease} from './look-release.ts';
+import type {LookPermit} from './look-release.ts';
 import './notebook.css';
 import {REVIEW_SECTIONS} from './notebook-review-guide.ts';
 
@@ -24,6 +26,8 @@ function App(){
   const [editing,setEditing]=useState<Field|null>(null),[draft,setDraft]=useState(''),[budgetAmount,setBudgetAmount]=useState('350'),[budgetScope,setBudgetScope]=useState(false);
   const [photo,setPhoto]=useState<Photo|null>(null),[pendingPhoto,setPendingPhoto]=useState<Photo|null>(null),[photoError,setPhotoError]=useState(''),[enlarged,setEnlarged]=useState(false);
   const [cameraOn,setCameraOn]=useState(false),[cameraPending,setCameraPending]=useState(false),[cameraMessage,setCameraMessage]=useState('Camera is off. Photo upload is always available.');
+  const [lookRelease]=useState(()=>new LookRelease(state));
+  const [lookPermit,setLookPermit]=useState<LookPermit|null>(null);
   const [excludeGreen,setExcludeGreen]=useState(false),[checkMode,setCheckMode]=useState('normal');
   const timers=useRef<ReturnType<typeof setTimeout>[]>([]),sequence=useRef(0),uploadEpoch=useRef(0),urls=useRef(new Set<string>()),cameraTimer=useRef<ReturnType<typeof setTimeout>|undefined>(undefined);
   const video=useRef<HTMLVideoElement|null>(null),dialog=useRef<HTMLDialogElement|null>(null),zoom=useRef<HTMLDialogElement|null>(null),editOrigin=useRef<HTMLButtonElement|null>(null);
@@ -42,8 +46,8 @@ function App(){
   const revoke=(url:string)=>{URL.revokeObjectURL(url);urls.current.delete(url);};
   const stopCamera=(message='Camera is off. Your confirmed photo remains in the notebook.')=>{clearTimeout(cameraTimer.current);camera.current.stop();if(video.current)video.current.srcObject=null;setCameraOn(false);setCameraPending(false);setCameraMessage(message);};
   useEffect(()=>{
-    const hide=()=>{if(document.hidden){stopSimulation();stopCamera('Camera stopped when you left this page.');}};
-    const exit=()=>{uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);setSnap(state.snapshot());setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
+    const hide=()=>{if(document.hidden){lookRelease.end();setLookPermit(null);stopSimulation();stopCamera('Camera stopped when you left this page.');}};
+    const exit=()=>{lookRelease.end();uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);setSnap(state.snapshot());setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
     document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',exit);
     return()=>{exit();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',exit);};
   },[]);
@@ -89,12 +93,15 @@ function App(){
     canvas.toBlob(blob=>{if(blob&&epoch===uploadEpoch.current)void prepareFile(new File([blob],'camera-item.jpg',{type:'image/jpeg'}));},'image/jpeg',0.85);
   }
   function clear(){stopSimulation();stopCamera();uploadEpoch.current++;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();setPhoto(null);setPendingPhoto(null);setPhotoError('');setEnlarged(false);state.clear();speech.reset();setRenderReceipt(null);setExcludeGreen(false);setCaption('A simulated conversation will appear here.');update('Session cleared. No notebook content was saved.');}
-  function runCheck(){const ticket=state.beginCheck(),snapshot=state.snapshot();update();const mode=checkMode;later(()=>{
-    if(mode==='timeout')state.timeout(ticket);
-    else if(mode==='malformed')state.completeCheck(ticket,{outcome:'unknown',reason:'The check returned an invalid result. No look was released.'});
-    else state.completeCheck(ticket,checkFixture(snapshot,{...fixture,excludedColors:excludeGreen?['Emerald green']:[]}));
-    update();
-  },1800);}
+  function runCheck(){
+    const ticket=lookRelease.begin({id:'emerald_sample',description:'A dress, neutral shoes and a small bag. Fixture item-price estimate: USD 320. Shipping, tax and real availability are not verified.'});
+    setLookPermit(null);const snapshot=state.snapshot();update();const mode=checkMode;
+    later(()=>{
+      const result=mode==='timeout'?{outcome:'unknown' as const,reason:'The check timed out. No look was released.'}:mode==='malformed'?{outcome:'unknown' as const,reason:'The check returned an invalid result. No look was released.'}:checkFixture(snapshot,{...fixture,excludedColors:excludeGreen?['Emerald green']:[]});
+      setLookPermit(lookRelease.complete(ticket,result));update();
+    },1800);
+  }
+  const releasedLook=lookPermit?lookRelease.visual(lookPermit):null;
   const pendingCount=FIELDS.filter(([id])=>snap.notes[id].status==='tentative').length;
   const summary=FIELDS.filter(([id])=>snap.notes[id].value).map(([id])=>snap.notes[id].value).join(' · ')||'Your occasion, colors and ideas will appear here.';
   return <main className="consultation">
@@ -121,7 +128,7 @@ function App(){
       </div>
     </section></div>
     <section className="look-area" aria-labelledby="look-title"><p className="eyebrow">One look at a time</p><h2 id="look-title">The next chapter.</h2><p>A look appears here only after its current preference check passes.</p><div className="check-controls"><label>Simulated check<select value={checkMode} onChange={e=>setCheckMode(e.target.value)}><option value="normal">Normal fixture check</option><option value="timeout">Timeout</option><option value="malformed">Invalid result</option></select></label><button className="primary" onClick={runCheck}>Check sample look</button></div>
-      {snap.gate?.state==='checking'?<div className="held-look" role="status"><span aria-hidden="true">◎</span><h3>Checking your preferences</h3><p>The candidate stays hidden while we check.</p></div>:state.canPresent()?<article className="sample-look"><span className="eyebrow">Synthetic sample · no shopping links</span><div className="look-collage" aria-label="Illustrated sample of an emerald dress, neutral shoes and small bag"><svg viewBox="0 0 320 300" role="img" aria-label="Simplified garment illustration, not real product photography"><path d="M100 30 L130 18 L150 55 L170 18 L200 30 L184 110 L225 265 L75 265 L116 110Z" fill="#146356"/><path d="M130 18 Q150 45 170 18" fill="none" stroke="#0e4c42" strokeWidth="5"/><path d="M250 208 Q265 225 293 227 L301 246 L250 246Z" fill="#b28c66"/><path d="M245 100 H301 V140 H245Z" fill="#c5ae8e"/><path d="M258 100 V88 Q272 70 287 88 V100" fill="none" stroke="#8a6e4c" strokeWidth="4"/></svg></div><h3>Emerald, elegantly</h3><p>A dress, neutral shoes and a small bag. Fixture item-price estimate: USD 320. Shipping, tax and real availability are not verified.</p><p>{snap.gate?.reason}</p></article>:<div className="held-look"><span aria-hidden="true">✧</span><h3>{snap.gate?'A little clarification first':'Room for your next look'}</h3><p>{snap.gate?.reason||'Confirm your notes, then check the sample. No candidate has been released.'}</p></div>}
+      {snap.gate?.state==='checking'?<div className="held-look" role="status"><span aria-hidden="true">◎</span><h3>Checking your preferences</h3><p>The candidate stays hidden while we check.</p></div>:releasedLook?<article className="sample-look"><span className="eyebrow">Synthetic sample · no shopping links</span><div className="look-collage" aria-label="Illustrated sample of an emerald dress, neutral shoes and small bag"><svg viewBox="0 0 320 300" role="img" aria-label="Simplified garment illustration, not real product photography"><path d="M100 30 L130 18 L150 55 L170 18 L200 30 L184 110 L225 265 L75 265 L116 110Z" fill="#146356"/><path d="M130 18 Q150 45 170 18" fill="none" stroke="#0e4c42" strokeWidth="5"/><path d="M250 208 Q265 225 293 227 L301 246 L250 246Z" fill="#b28c66"/><path d="M245 100 H301 V140 H245Z" fill="#c5ae8e"/><path d="M258 100 V88 Q272 70 287 88 V100" fill="none" stroke="#8a6e4c" strokeWidth="4"/></svg></div><h3>Emerald, elegantly</h3><p>{releasedLook.description}</p><p>{snap.gate?.reason}</p></article>:<div className="held-look"><span aria-hidden="true">✧</span><h3>{snap.gate?'A little clarification first':'Room for your next look'}</h3><p>{snap.gate?.reason||'Confirm your notes, then check the sample. No candidate has been released.'}</p></div>}
       <details className="test-guide"><summary>How to review this prototype</summary><ReviewGuide/></details>
     </section></div><p className="session-status" role="status" aria-live="polite" aria-atomic="true">{notice}</p>
     <footer>Private session notes · No profile or wardrobe saving in this prototype</footer>
