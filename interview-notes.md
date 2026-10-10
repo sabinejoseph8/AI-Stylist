@@ -171,3 +171,7 @@ I published the reviewed prototype without credentials or private test records, 
 ## A phone test exposed a microphone-meter issue
 
 My iPhone showed the camera successfully, but the microphone meter stayed flat in both the app browser and Safari. I treated that as a failed check instead of assuming the microphone worked because permission was granted. I prepared a silent audio-output connection, earlier audio activation and clearer meter diagnostics. The existing 135 automated checks, type checking and build passed. After the compatibility update was deployed, I refreshed Safari on my iPhone and confirmed that the numeric microphone level rises above zero when I speak. That resolved the observed meter symptom; I still need to check device cleanup and the remaining phone conversation behavior.
+
+## Verifying device cleanup on my iPhone
+
+After confirming the microphone meter worked, I checked that pressing Stop removed the camera preview and changed the status to Off. I also let the check run for two minutes and confirmed both devices automatically turned off with the expected message. I kept this local device verification separate from the avatar conversation checks, which still need further testing.

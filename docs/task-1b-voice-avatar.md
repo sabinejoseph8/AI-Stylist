@@ -298,3 +298,7 @@ Sabine reported seeing the camera but no microphone-meter movement, first in the
 ## Physical iPhone meter confirmation
 
 Render deployed the microphone-meter compatibility update successfully. After refreshing the page in iPhone Safari and starting the device check, Sabine answered Yes when asked whether the numeric microphone level rises above 0% while speaking. Her earlier camera preview confirmation and this microphone-meter confirmation establish these two private device checks on her iPhone. Manual Stop and two-minute cleanup on iPhone, avatar playback, interruptions and full phone conversation remain unverified. No provider call was started, no additional allowance was approved, and Task 1b remains unchecked.
+
+## Physical iPhone device cleanup confirmed
+
+Sabine confirmed that pressing Stop removes the camera preview and changes the status to Off. She then restarted the check, left it open, and reported that both devices automatically turned off with the message “Two-minute check finished.” Camera preview, microphone-meter movement, manual Stop and the two-minute automatic stop are now confirmed on her physical iPhone. Phone tab-switch cleanup, avatar playback, interruption and conversation acceptance remain pending. This device check sent no media to Tavus or OpenAI and did not use another provider attempt. Task 1b remains unchecked.
