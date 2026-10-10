@@ -31,7 +31,13 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 773 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 777 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+
+
+
+### Protected deadlines and replacement evidence
+
+Four additional loopback checks verify deadline expiry while closure is pending, failed closure retaining a hold without retries, startup expiry retiring a late reservation without a provider, and old extraction/provider results staying isolated from a replacement notebook. All 777 tests across 57 files, type checking and build pass. These use synthetic services and injected allowances. D21/D22, Task 1c and Phase 1 remain partial. No paid call, allowance change or deployment occurred.
 
 ## Current work and dependency order
 
@@ -51,7 +57,9 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-The protected owner is connected to the simulation-only loopback harness; all 773 checks, type checking and build pass. Protected browser lifecycle and synthetic-device checks now pass, including hidden page, late permission and device loss. Next verify pending and failed closure under the protected owner deadline and session replacement, then retry retrieval of the complete official event/connection contract before a real activation adapter is prepared. Keep all providers disabled and preserve pending/failed allowance cleanup holds. The original application server does not attach this harness. Official guide comparison is in docs/notebook-provider-contract-review.md; full event/Responses reference retrieval and the dedicated connection startup contract remain unresolved before live activation. A new notes-only durable allowance needs a dedicated reviewed adapter and a separately authorized amount. Never reuse/reset the nine closed legacy reservations. No keys, paid calls or deployment are included. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
+All 777 checks across 57 files, type checking and build pass. Protected deadline, pending/failed closure and replacement isolation checks are complete with synthetic services. Next reconcile the official session-update acknowledgment and dedicated transcription connection startup contract with the disabled adapter. The Python Responses create reference and transcript delta/completed schemas are now retrieved; the generic connect reference does not establish transcription-specific startup. Delta content/index are optional in the general schema, so retain the conservative rejection of contentless/unmapped events until the selected model contract is resolved. Add representative schema fixtures and record any remaining mismatch before preparing a real activation adapter. See docs/notebook-provider-contract-review.md.
+
+Keep providers disabled, preserve pending/failed allowance holds and never reuse/reset the nine closed legacy reservations. A real notes-only experiment needs a dedicated reviewed durable allowance adapter and a separately authorized amount. The original application server does not attach the simulation harness. No keys, paid calls or deployment are included. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 
