@@ -3,6 +3,7 @@ import {createServer} from 'node:http';
 import {isDeepStrictEqual} from 'node:util';
 import {WebSocket} from 'ws';
 import {PreparedNoteAllowance} from '../src/prepared-note-allowance.ts';
+import {createPreparedNotePersistenceTransport} from '../src/prepared-note-persistence-transport.ts';
 import type {PreparedNoteLedger} from '../src/prepared-note-allowance.ts';
 import {attachProtectedSimulatedNoteBridge} from '../src/protected-note-network-bridge.ts';
 import {PreparedBrowserNoteSession} from '../src/note-browser-session.ts';
@@ -20,7 +21,14 @@ function persistence(){
 }
 async function setup(store=persistence()){
  const providers:(EventTarget&{readyState:number;bufferedAmount:number;close:ReturnType<typeof vi.fn>;send:(value:string)=>void})[]=[];
- const allowance=new PreparedNoteAllowance({simulation:true,persistence:store});
+ const rpcFetch=vi.fn(async(url:string,init:RequestInit)=>{
+  if(url==='https://fixture.supabase.co/rest/v1/rpc/stylist_notebook_allowance_read')return Response.json(await store.read());
+  if(url!=='https://fixture.supabase.co/rest/v1/rpc/stylist_notebook_allowance_change')throw Error('Unexpected fixture endpoint.');
+  const {expected,replacement}=JSON.parse(init.body as string) as {expected:PreparedNoteLedger;replacement:PreparedNoteLedger};
+  return Response.json(await store.compareAndSwap(expected,replacement));
+ });
+ const transport=createPreparedNotePersistenceTransport({simulation:true,url:'https://fixture.supabase.co',fetch:rpcFetch});
+ const allowance=new PreparedNoteAllowance({simulation:true,persistence:transport});
  const createTransports=vi.fn(()=>{
   const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:vi.fn(),send:(value:string)=>{if(JSON.parse(value).type==='session.update')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));}});
   providers.push(socket);return{socket,fetch:vi.fn(async()=>{throw Error('No extraction expected.');})};
@@ -37,14 +45,14 @@ async function setup(store=persistence()){
  }
  async function denied(){const ws=new WebSocket(url,{headers});clients.push(ws);ws.on('error',()=>{});return new Promise<number>(resolve=>ws.on('unexpected-response',(_req,res)=>{res.resume();resolve(res.statusCode!);ws.terminate();}));}
  cleanups.push(async()=>{for(const binding of bindings)binding.dispose();for(const ws of clients)ws.terminate();bridge.dispose();server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));});
- return{store,allowance,providers,createTransports,bridge,connect,denied};
+ return{store,allowance,providers,createTransports,bridge,connect,denied,rpcFetch};
 }
-describe('separate notes allowance through protected browser lifecycle',()=>{
+describe('bounded persistence and separate allowance through protected browser lifecycle',()=>{
  it('retires a late successful reservation after page exit without opening a provider',async()=>{
   const store=persistence(),write=store.compareAndSwap.getMockImplementation()!;let release!:(value:boolean)=>void;
   store.compareAndSwap.mockImplementationOnce(async(a,b)=>{const result=await write(a,b);return new Promise<boolean>(resolve=>{release=()=>resolve(result);});});
   const s=await setup(store),client=s.connect();await vi.waitFor(()=>expect(store.snapshot().runs).toHaveLength(1));client.page.dispatchEvent(new Event('pagehide'));await vi.waitFor(()=>expect(client.ws.readyState).toBe(WebSocket.CLOSED));expect(await s.denied()).toBe(409);expect(s.createTransports).not.toHaveBeenCalled();
-  release(true);await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));expect(store.snapshot().runs[0]!.closed).toBe(true);expect(store.compareAndSwap).toHaveBeenCalledTimes(2);expect(s.createTransports).not.toHaveBeenCalled();expect(client.session.snapshot().connection.notes).toBeNull();
+  release(true);await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));expect(store.snapshot().runs[0]!.closed).toBe(true);expect(store.compareAndSwap).toHaveBeenCalledTimes(2);expect(s.rpcFetch).toHaveBeenCalledTimes(4);expect(s.createTransports).not.toHaveBeenCalled();expect(client.session.snapshot().connection.notes).toBeNull();
  });
  it('holds an uncertain reservation write and preserves the open record across a new adapter',async()=>{
   const store=persistence(),write=store.compareAndSwap.getMockImplementation()!;store.compareAndSwap.mockImplementationOnce(async(a,b)=>{await write(a,b);throw Error('private sentinel');});

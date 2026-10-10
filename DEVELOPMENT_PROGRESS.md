@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 823 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 869 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -65,6 +65,14 @@ Implemented a shared pure validator permitting exactly one open append or one cl
 
 Prepared supabase/notebook-allowance-preparation.sql with a private table, row security, private privilege-elevating implementations and server-only invoker RPC wrappers. It neither initializes an allowance nor changes any legacy budget object. Forty-two checks passed in a pinned isolated PostgreSQL 17 container with no network or host ports: transition invariants, missing records, actual role denials, server reads/changes, stale and concurrent compare-and-swap, attempt caps and an unchanged synthetic legacy sentinel. Fixed a migration CASE-expression syntax error and changed the test sentinel comparison to semantic JSON equality. The temporary container was removed. No actual Supabase configuration, records or spending allowance changed. Remote privileges, database recovery and transport verification remain open; this is not hosted acceptance.
 
+
+
+### Bounded notebook persistence transport
+
+Prepared an explicitly simulated transport for only the two notebook RPC wrappers, with exact HTTPS project destination validation, 16 KiB request/response limits, strict JSON and response checks, an eight-second deadline, late-body cancellation and no default fetch, credentials, redirects, retries, initializer or legacy fallback. Forty new checks cover the boundary and timeout behavior. Six new protected-owner checks cover reservation/closure, uncertain writes, failed closure, browser departure, late responses and invalid snapshots. Existing six browser lifecycle/shared-store checks now run through this transport too. A missing synthetic capture cleanup source in the new test fixture was corrected; all 869 prototype checks across 63 files, type checking and build pass.
+
+Prepared an unapplied rollback that refuses any initialized allowance and uses no CASCADE. Fifty isolated PostgreSQL checks now pass, including refused rollback preserving history, empty rollback removal, unchanged synthetic legacy data and reinstallation without automatic seeding. The temporary container was removed. No actual Supabase configuration, records, allowance or deployment changed. Transport calls remain injected simulations, not hosted RPC acceptance.
+
 ## Current work and dependency order
 
 1. Preserve the implemented catalog and combined notebook discovery evidence without treating it as a full feature launch.
@@ -83,9 +91,9 @@ Prepared supabase/notebook-allowance-preparation.sql with a private table, row s
 
 ## Exact next action
 
-All 823 prototype checks across 61 files, type checking and build pass. Forty-two separate local PostgreSQL checks also pass; the temporary isolated container was removed. The notebook allowance now has full synthetic browser integration, a shared pure transition validator and an unapplied migration with private storage/server-only RPC wrappers. No actual Supabase records or legacy reservations changed.
+All 869 prototype checks across 63 files, type checking and build pass. Fifty separate local PostgreSQL checks pass, including history-preserving rollback; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Next prepare a bounded persistence transport with injected simulated requests for the two new notebook RPC wrappers. Enforce exact HTTPS Supabase project destinations, fixed RPC names, strict JSON/content/size checks, an eight-second deadline, late-body cancellation, no redirects, retry, credential loader, default fetch, initializer or legacy fallback. Test failed/uncertain writes through the protected owner and preserve its cleanup holds. See docs/notebook-allowance-storage-plan.md. Keep it unattached to the application server and do not apply the migration remotely.
+Next connect the prepared TypeScript allowance/transport/owner chain to the isolated PostgreSQL test harness using injected RPC responses backed by local SQL execution. Verify actual transaction history for reserve/closure, a lost write acknowledgment and fresh-owner recovery holds. Keep the Docker database temporary and without network/ports; use only synthetic records and retain cleanup in finally. This will verify composition against local SQL, not Supabase HTTP authentication or deployment. Keep all preparation unattached to the application server and do not apply either migration or rollback remotely.
 
 The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 

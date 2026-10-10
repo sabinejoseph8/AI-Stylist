@@ -16,6 +16,10 @@ function validate(value:unknown):PreparedNoteLedger{
  if(r.some(v=>!object(v)||!exact(v,['id','closed'])||!validId(v.id)||typeof v.closed!=='boolean')||new Set(r.map(v=>v.id)).size!==r.length||r.filter(v=>!v.closed).length>1)throw Error();
  return structuredClone(value) as PreparedNoteLedger;
 }
+/** Validates a detached snapshot without exposing stored data in errors. */
+export function validatePreparedNoteLedger(value:unknown):PreparedNoteLedger{
+ try{return validate(value);}catch{throw Error('Notebook allowance requires review.');}
+}
 /** Shared preparation contract for a future locked database transition.
  * Accepts exactly one append or one closure; returns a detached validated copy.
  * This does not authorize a new approval or implement database locking. */

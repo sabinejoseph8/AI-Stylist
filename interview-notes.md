@@ -401,3 +401,8 @@ I connected the separate simulated allowance to the protected notebook flow. I c
 ## Verifying the database rules before deployment
 
 I added a shared rule allowing only one reservation append or closure, so approval amounts and earlier history stayed intact. I prepared the separate database migration and tested it in an isolated local PostgreSQL container. The first run caught a syntax error, which I fixed. I also corrected a test that compared JSON formatting instead of its meaning. All 42 local database checks and 823 prototype checks passed, along with type checking and build. I verified access restrictions and competing reservations without changing Supabase or the actual test history.
+
+
+## Bounding persistence and preserving rollback history
+
+I prepared the notebook database request path with fixed endpoints, size limits and a deadline. I checked that uncertain writes stayed blocked, that a late confirmed reservation was retired after the browser left, and that old voice-test records could not be used as a fallback. I also tested a rollback that refuses to remove initialized history. All 869 prototype checks, 50 isolated database checks, type checking and build passed. The new request path remains simulated, and Supabase has not been changed.

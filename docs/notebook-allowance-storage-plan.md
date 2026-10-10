@@ -28,7 +28,7 @@ Sources: [Supabase database functions](https://supabase.com/docs/guides/database
 
 ## Verification required before activation
 
-1. The migration now runs in an isolated pinned PostgreSQL 17 Docker container with no network or exposed ports. All 42 SQL transition, privilege and concurrency checks passed locally. Supabase-specific project configuration and rollback/recovery review remain required before remote application.
+1. The migration now runs in an isolated pinned PostgreSQL 17 Docker container with no network or exposed ports. All 50 SQL transition, privilege, concurrency and rollback checks passed locally. Rollback refuses initialized history and removes only empty preparation objects; reinstallation does not seed an allowance. Supabase-specific project configuration and recovery review remain required before remote application.
 2. Run database tests for malformed records, immutable approval/history, concurrent reservation, stale compare-and-swap, exhausted allowance and exactly one allowed closure transition.
 3. Verify anonymous and ordinary authenticated users cannot read or mutate records or call privileged functions. Verify permitted server access through the intended wrapper only.
 4. Verify a fresh server reads the same closed/open history and refuses a new attempt when an unresolved record exists.
@@ -38,6 +38,6 @@ Sources: [Supabase database functions](https://supabase.com/docs/guides/database
 
 ## Exact next implementation action
 
-The shared pure transition validator, unapplied migration and local database check script are prepared. Next prepare the bounded server persistence transport with injected simulated requests and no credentials. Keep the migration unapplied remotely and all providers disabled. Remote application, initialization and live trial remain separate security/financial gates.
+The shared pure transition validator, unapplied migration/rollback, bounded simulated persistence transport and local database check script are prepared. Next exercise the TypeScript owner/transport chain against isolated local SQL-backed injected responses. Keep the migration unapplied remotely and all providers disabled. Remote application, initialization and live trial remain separate security/financial gates.
 
 Run local database checks explicitly from the prototype folder with `python3 scripts/check-notebook-allowance-db.py --local-docker`. The official image is pinned by digest; the script never pulls images, connects to Supabase, exposes a port or seeds an actual allowance. It creates synthetic roles/data in a temporary container and removes it in a finally block. The selected image must already be available locally.

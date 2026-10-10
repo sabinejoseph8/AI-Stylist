@@ -105,6 +105,18 @@ try:
         raise RuntimeError('Exposed wrappers must use caller privileges.')
     if sql("select relrowsecurity from pg_class where oid='stylist_notebook_private.allowance'::regclass;") != 't':
         raise RuntimeError('Row security missing.')
+    rollback = migration.with_name('notebook-allowance-preparation-rollback.sql').read_text()
+    sql(rollback, False)  # initialized history must prevent destructive rollback
+    if json.loads(sql('select ledger from stylist_notebook_private.allowance;')) != stored:
+        raise RuntimeError('Refused rollback changed reservation history.')
+    sql('delete from stylist_notebook_private.allowance;')  # isolated synthetic fixture only
+    sql(rollback)
+    if sql("select to_regnamespace('stylist_notebook_private') is null and to_regprocedure('public.stylist_notebook_allowance_read()') is null and to_regprocedure('public.stylist_notebook_allowance_change(jsonb,jsonb)') is null;") != 't':
+        raise RuntimeError('Empty preparation rollback left objects behind.')
+    if json.loads(sql('select ledger from public.stylist_prototype_budget;')) != {'synthetic_legacy': True, 'closed_attempts': 9}:
+        raise RuntimeError('Rollback changed the synthetic legacy sentinel.')
+    sql(migration.read_text())
+    sql('set role service_role; select public.stylist_notebook_allowance_read();', False)
     print(f'{checks} isolated PostgreSQL checks passed. No Supabase connection or actual allowance was used.')
 finally:
     if created:
