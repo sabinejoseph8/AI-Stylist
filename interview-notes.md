@@ -320,3 +320,7 @@ I found that allowing another turn immediately after the server command acknowle
 ## Protecting an edit while the stylist is taking notes
 
 I found that a customer could open an edit dialog, receive a newer note during speech and accidentally overwrite it with an older draft. I made the visible notebook and prepared server use the same version checks. The notebook now preserves the draft, explains the conflict and offers an explicit way to load the latest value. I reproduced the race in the browser, verified recovery and checked normal save, confirm and cancel. All 584 automated checks, type checking and build passed. Speech is still simulated, and no paid call or deployment was needed for this fix.
+
+## Making connection status understandable
+
+I prepared clear session messages so the notebook can distinguish waiting for a connection, acquiring capture, recording simulated audio and finishing transcript processing. I made cleanup uncertainty explicit and prevented private error text from entering these messages. Six added checks brought the suite to 590 passing tests, with type checking and build also passing. These messages are prepared in the session helper; the visible notebook still needs its connection binding, so I have not claimed a live speech integration.

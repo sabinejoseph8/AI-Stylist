@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-584 tests across 42 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+590 tests across 42 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -241,3 +241,9 @@ The disabled capture orchestrator now supports bounded repeated turns. A later a
 ### Visible notebook edit protection, 10 October 2026
 
 The notebook and prepared server owner now share epoch/field revision checks for customer edits and confirmations. An edit dialog opened before a newer speech note arrives holds the old draft and offers Load latest note. Agent browser checks verified conflict recovery, normal save, confirmation, cancellation and returned focus. All 584 checks across 42 files, type checking and build pass. The running local page contains this fix; speech remains simulated and Render was not redeployed.
+
+## Prepared session status, 10 October 2026
+
+PreparedBrowserNoteSession exposes status() and includes the result in snapshot(). Fixed local messages distinguish connecting, ready, requesting the simulated capture source, waiting for turn acknowledgment, active capture, pending command, processing, ended and cleanup-held. Processing remains until matching provider readiness, including final extraction settlement. The first shutdown cause is preserved. Cleanup exceptions override ordinary ended text so the helper never claims the device cleanup succeeded. Messages never contain provider errors, transcript text or note values, and make no remote deletion claim. These are read-only projections, not UI notifications; a future page binding must refresh them on connection and capture state changes. The running notebook has not been connected to this helper.
+
+Six additional checks cover transitions, commit/readiness ordering, repeated shutdown, redacted errors and timeout. All 590 tests across 42 files, type checking and build pass. No live media, paid provider call, allowance change or deployment occurred. Task 1c and Phase 1 remain incomplete.

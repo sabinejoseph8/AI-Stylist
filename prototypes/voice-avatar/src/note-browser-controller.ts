@@ -90,5 +90,5 @@ export class NoteBrowserController {
    try{this.socket.close();}catch{/* Local data remains cleared; no remote cleanup claim. */}
    try{this.changed(null);}catch{/* No stale content retained in controller. */}
  }
- snapshot(){return{ended:this.ended,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),liveEnabled:false as const};}
+ snapshot(){return{ended:this.ended,ready:this.sessionId!==null,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),liveEnabled:false as const};}
 }
