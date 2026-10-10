@@ -8,6 +8,13 @@ All nine approved provider attempts are consumed and verified closed. No further
 
 The latest local and published preparation includes incremental output, cancellation after audio delivery, confirmed-only conversation memory and guarded recovery. It is not deployed or enabled on the phone page. Live recovery requires Tavus's pending technical reply about verified renderer cleanup, transport integration and separately approved physical testing. No customer accounts, live styling notes, looks or shopping are built.
 
+
+### Task 1c local notebook preview
+
+Sabine approved independent notebook preparation while Task 1b waits. notebook.html provides simulated progressive notes, touch edits, a simulated budget correction, confirmed local image references and camera-only preview. It uses no microphone, provider calls, shopping or permanent saves. A synthetic look stays hidden until its current fixture check passes. Real speech extraction, recommendation validation and device acceptance remain pending.
+
+The currently running computer-only review is http://127.0.0.1:4320/notebook.html. For a later fresh local run, the existing default server command serves notebook.html on port 4318; do not enable --spoken or --scripted for notebook review. Read the [complete Task 1c guide](../../docs/task-1c-notebook-prototype.md) before starting. This page has not been deployed to Render.
+
 ### Automated checks
 
 From this prototype directory, with installed dependencies and Node 24:
@@ -18,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-236 tests across 24 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+265 tests across 27 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 

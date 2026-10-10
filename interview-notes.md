@@ -240,3 +240,9 @@ I found and fixed a cleanup gap in the streaming preparation: audio can still be
 ## Checking interruption and recovery together
 
 I tested the prepared audio, session and memory components together using simulated provider responses. I checked that interrupted audio could not return, an unheard reply could not become confirmed memory, and a late recovery response could not reopen an ended session. All 236 automated checks passed, along with type checking and the build. I also separated the current prototype status from earlier implementation notes so historical test allowances would not be mistaken for permission to spend again. Actual conversation recovery still needs Tavus clarification and a later approved device test.
+
+## Making the stylist’s understanding visible
+
+While waiting for Tavus to clarify safe conversation recovery, I approved independent work on the styling notebook. I chose to make it reviewable with simulated speech instead of waiting for the voice integration. The notebook shows missing and uncertain details, lets me correct them, and keeps an actual selected item image visible even when collapsed. A newer budget correction cannot be overwritten by an older result.
+
+I also checked that an unvalidated sample stays hidden, that changing a note invalidates its old approval, and that unknown image matches are explained rather than invented. Camera showing remains local and requires a confirmed still before the notebook reference changes. All 265 automated checks, type checking and the build passed. Computer browser checks passed, but I still need to review the notebook and camera behavior myself. Real speech extraction, actual recommendation checks and timing remain future integration work.

@@ -56,12 +56,14 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
     const spokenPage = req.url === '/spoken.html' || req.url === '/handsfree.html';
     const scriptedPage = req.url === '/scripted.html' || spokenPage;
     const devicePage = req.url === '/devices.html';
+    const notebookPage = new URL(req.url ?? '/', origin).pathname === '/notebook.html';
     const dailyDomains = 'https://*.daily.co https://*.dailywebrtc.com https://*.dailywebrtc.net';
     res.setHeader('Content-Security-Policy', scriptedPage
       ? `default-src 'self'; connect-src 'self' ${dailyDomains} https://prod-ks.pluot.blue wss://*.daily.co wss://*.dailywebrtc.com wss://*.dailywebrtc.net; script-src 'self' ${dailyDomains}; worker-src 'self' blob:; media-src 'self' blob:; style-src 'self' 'unsafe-inline'; img-src 'self' data:; frame-src 'self'; object-src 'none'; base-uri 'none'; frame-ancestors 'none'`
       : "default-src 'self'; connect-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'");
     if (devicePage) res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; media-src 'self' blob:; img-src 'self' data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'");
-    res.setHeader('Permissions-Policy', devicePage ? 'microphone=(self), camera=(self), geolocation=()' : spokenPage ? 'microphone=(self), camera=(), geolocation=()' : 'microphone=(), camera=(), geolocation=()');
+    if (notebookPage) res.setHeader('Content-Security-Policy', "default-src 'none'; script-src 'self'; style-src 'self'; connect-src 'none'; media-src 'self' blob:; img-src 'self' blob: data:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'");
+    res.setHeader('Permissions-Policy', notebookPage ? 'microphone=(), camera=(self), geolocation=()' : devicePage ? 'microphone=(self), camera=(self), geolocation=()' : spokenPage ? 'microphone=(self), camera=(), geolocation=()' : 'microphone=(), camera=(), geolocation=()');
     const json = (status: number, body: unknown) => {
       res.writeHead(status, { 'Content-Type': 'application/json' }); res.end(JSON.stringify(body));
     };
