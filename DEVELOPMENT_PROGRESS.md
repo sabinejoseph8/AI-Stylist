@@ -25,9 +25,11 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Combined browser lifecycle checks cover pagehide/visibility, delayed permission, provider failure, device loss, actual connection loss and late extraction. Fixed cleanup notification ordering and independent terminal capture release.
 - docs/phase-1-readiness.md reconciles P1 evidence and the remaining live/rights/privacy gates.
 - Session replacement checks isolate old extraction/provider events, reject stale render receipts and refuse a new connection after failed cleanup. Combined budget correction revokes visual and speech-frame permissions.
+- Reviewed current official provider guides and recorded compatibility plus unresolved full-reference/connection checks in docs/notebook-provider-contract-review.md.
+- Added a disabled private notebook server owner with 21 synthetic access, cancellation, concurrency, deadline and cleanup checks. No legacy allowance or actual durable records are used.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 726 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 747 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -47,7 +49,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-The combined simulated factory is integrated through the disabled browser bridge and visible local rehearsal. Combined seven-field, ambiguity, correction and confirmed-only fixture-gating scenarios now pass. Combined page-lifecycle, late-permission and pending-extraction cancellation checks now pass. Session replacement isolation and combined display/speech permission revocation now pass. The bounded notes-only trial plan and complete future manual script are prepared in docs/combined-notes-live-trial-plan.md. Next prepare a disabled notes-only server owner that composes the existing private access gate, durable allowance interface and combined note session using injected simulations; test denial before authentication/allowance and exactly-once cleanup. Confirm current provider contracts before implementing a real activation path. Keep implementation disabled; do not load credentials, deploy or start provider calls without the applicable authorization. Keep these synthetic and preserve the existing notebook/recommendation separation. Live activation needs a separately approved test allowance; conversational resume additionally needs the Tavus technical reply. All live trial, source permission and Phase 1 exit blockers above remain.
+The disabled notes-only server owner is prepared and its 21 synthetic checks pass. Official guide comparison is recorded in docs/notebook-provider-contract-review.md. Models/configuration match the fetched guides, but full event/Responses reference retrieval failed; strict wire metadata and dedicated connection startup still need verification. Next exercise authenticated partial-note extraction and cancellation through the disabled server owner with simulated transports, including pending extraction at exit and late completion. Keep all providers disabled. A future notes-only durable allowance needs a dedicated reviewed adapter and a new authorized amount; never reuse or reset the nine closed legacy reservations. No keys, paid calls, activation or deployment are included. Task 1c, the Tavus recovery reply, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 

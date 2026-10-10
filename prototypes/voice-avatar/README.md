@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-726 tests across 53 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+747 tests across 54 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -281,3 +281,9 @@ Combined preference scenarios cover all seven fields, missing/ambiguous values a
 The combined lifecycle checks include late permission after page exit/provider failure, device loss and pending extraction cancellation. Cleanup notification waits until the shutdown stack settles; final capture release is attempted even if stopping throws. See ../../docs/phase-1-readiness.md for the remaining live evidence and dependencies.
 
 Combined replacement checks isolate old provider/extraction events and stale receipts; failed cleanup refuses a replacement. A combined budget correction revokes the synthetic look visual permit and speech-frame authorization. No real recommendation playback is performed by these tests.
+
+## Disabled notebook server owner
+
+Prepared a simulation-only owner that checks the exact request boundary and private credentials before reserving an allowance or constructing transports. It owns one startup/session at a time, closes a late reservation after cancellation, stops at the deadline, and verifies capture/socket cleanup before closing the reservation exactly once. Uncertain reservation writes, failed transport construction, failed cleanup or failed durable closure retain a hold without retries. An explicit notes-only simulation purpose prevents accidental use of the existing legacy allowance object. This is method-compatible ledger preparation, not a new durable notes allowance, live route or production authentication system.
+
+Twenty-one new focused checks passed. Current cumulative evidence is 747 tests across 54 files, type checking and build. No credentials, actual ledger, provider requests or deployment were used. D21/D22 and Task 1c remain partial; Phase 1 remains open. Next verify current official provider contracts and document mismatches before preparing any real activation path.
