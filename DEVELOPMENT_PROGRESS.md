@@ -24,8 +24,9 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added combined seven-field, missing/ambiguous-value and budget-correction scenarios. Confirmed-only fixture checks hold tentative notes and owned items; a spoken budget reduction invalidates a passed ticket and blocks an over-budget sample after confirmation.
 - Combined browser lifecycle checks cover pagehide/visibility, delayed permission, provider failure, device loss, actual connection loss and late extraction. Fixed cleanup notification ordering and independent terminal capture release.
 - docs/phase-1-readiness.md reconciles P1 evidence and the remaining live/rights/privacy gates.
+- Session replacement checks isolate old extraction/provider events, reject stale render receipts and refuse a new connection after failed cleanup. Combined budget correction revokes visual and speech-frame permissions.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 722 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 726 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -45,7 +46,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-The combined simulated factory is integrated through the disabled browser bridge and visible local rehearsal. Combined seven-field, ambiguity, correction and confirmed-only fixture-gating scenarios now pass. Combined page-lifecycle, late-permission and pending-extraction cancellation checks now pass. Next verify session replacement isolation through the combined bridge: an ended session must not publish notes, readiness or render receipts into a fresh connection, and failed cleanup must prevent replacement. Keep these synthetic and preserve the existing notebook/recommendation separation. Live activation needs a separately approved test allowance; conversational resume additionally needs the Tavus technical reply. All live trial, source permission and Phase 1 exit blockers above remain.
+The combined simulated factory is integrated through the disabled browser bridge and visible local rehearsal. Combined seven-field, ambiguity, correction and confirmed-only fixture-gating scenarios now pass. Combined page-lifecycle, late-permission and pending-extraction cancellation checks now pass. Session replacement isolation and combined display/speech permission revocation now pass. Next prepare the bounded combined-note live-trial activation plan and complete manual script, specifying authentication, allowance enforcement, cancellation, transcript privacy and measurable acceptance. Keep implementation disabled; do not load credentials, deploy or start provider calls without the applicable authorization. Keep these synthetic and preserve the existing notebook/recommendation separation. Live activation needs a separately approved test allowance; conversational resume additionally needs the Tavus technical reply. All live trial, source permission and Phase 1 exit blockers above remain.
 
 ## Session handoff
 

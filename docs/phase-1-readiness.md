@@ -11,7 +11,7 @@ Phase 1 remains incomplete. This page separates current evidence from launch cla
 | P1-01: interruption and cancellation | Private desktop/iPhone reply and interrupt-and-end accepted; synthetic streaming/recovery checks pass. | Supported Tavus queue-clear acknowledgment and a representative live resume test. Stopping the call is not conversational resume. |
 | P1-02: notes before turn end | Combined simulated socket, strict extraction, browser bridge and seven-field scenarios pass; visible local rehearsal checked. | Actual partial speech through the selected provider and notes appearing during continuous speech. |
 | P1-03: correction precedence | Touch edits, late extraction, revision checks and a spoken budget correction are covered by simulated tests. | Real recognition and extraction of the correction on the target phone. |
-| P1-04: validation before display/speech | Fixture gate rejects unknown, stale and over-budget results. A correction invalidates an old passed ticket. | Integrated real recommendation and speech release path; independent preference validation with approved product data. |
+| P1-04: validation before display/speech | Fixture gate rejects unknown, stale and over-budget results. A combined correction invalidates the old passed ticket, visual permit and per-frame speech authorization. | Integrated real recommendation and speech release path; independent preference validation with approved product data. |
 | P1-05: stable image reference | Notebook photo/camera fixture review accepted; local iPhone device controls accepted. | Connected real garment interpretation and reference consistency through look generation. Device preview alone does not establish this. |
 | P1-06: timing | Bounded timing metadata and p95 calculation have synthetic tests. | Representative live input-to-render samples and failure counts against the agreed two-second p95 target. |
 | P1-07: excluded provider | Guard tests reject ElevenLabs or unknown provider/fallback settings. | Continue checking actual selected service configuration before any new real trial. |
@@ -31,3 +31,5 @@ Task 1e still needs actual feasibility findings, performance measurements and ag
 ## Independent preparation
 
 Continue deterministic failure checks and implementation that does not depend on these live decisions. Keep fixtures explicitly synthetic, preserve all approved financial limits, and update the backlog and persistent progress after each increment. No new business requirement or acceptance target is introduced by this page.
+
+Latest deterministic evidence: 726 tests across 53 files, type checking and build pass. Replacement isolation and cleanup holds are covered through the combined bridge; these do not establish remote deletion or production multi-customer isolation.
