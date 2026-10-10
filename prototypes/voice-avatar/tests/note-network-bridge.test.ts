@@ -1,3 +1,4 @@
+import {NoteBrowserController} from '../src/note-browser-controller.ts';
 import {afterEach,describe,it,expect,vi} from 'vitest';
 import {createServer} from 'node:http';
 import {WebSocket} from 'ws';
@@ -32,4 +33,26 @@ describe('disabled simulated note network bridge',()=>{
  it('cleans up an initial invalid snapshot without leaving an owned session',async()=>{let ended=false;const disconnected=vi.fn(()=>{ended=true;}),s=await setup(publish=>{const bad=new NotebookState().snapshot();bad.notes.color.value='invalid missing value';publish(bad,null);return{beginTurn:async()=>true,commit:()=>true,acknowledgeRendered:()=>true,receive:()=>true,end:()=>{ended=true;},disconnected,snapshot:()=>({ended,reason:'ended',transcription:null})};});const ws=new WebSocket(s.url,{headers});ws.on('error',()=>{});await closed(ws);expect(disconnected).toHaveBeenCalledTimes(1);expect(s.bridge.snapshot().active).toBe(false);});
  it('ends an idle connection at the existing 85-second deadline',async()=>{const s=await setup();vi.useFakeTimers();const {ws}=await connect(s.url),done=closed(ws);await vi.advanceTimersByTimeAsync(85000);await done;expect(s.probe.disconnected).toHaveBeenCalledTimes(1);expect(s.bridge.snapshot().active).toBe(false);vi.useRealTimers();});
  it('disposes the attachment and existing session without exposing credentials',async()=>{const s=await setup(),{ws}=await connect(s.url),done=closed(ws);s.bridge.dispose();await done;expect(s.bridge.snapshot()).toMatchObject({networkAttached:false,closed:true,active:false});expect(s.probe.end).toHaveBeenCalledTimes(1);expect(JSON.stringify(s.bridge.snapshot())).not.toContain(preview.password);});
+});
+
+describe('browser controller with real loopback socket and simulated providers',()=>{
+ it('carries customer edits, confirmations and disconnect cleanup through the owner',async()=>{
+   const notebook=new NotebookState();notebook.capture({session:1,field:'color',baseRevision:0,sequence:1,value:'green',confirmed:false});
+   let probe!:NoteSessionProbe;
+   const s=await setup(publish=>{probe=new NoteSessionProbe({simulation:true,notebook,capture:{start:async()=>true,stop:vi.fn()},wire:{bufferedAmount:0,send:()=>true,close:vi.fn()},extract:async()=>[],changed:receipt=>publish(notebook.snapshot(),receipt),invalidated:()=>publish(notebook.snapshot(),null)});publish(notebook.snapshot(),null);return probe;});
+   const ws=new WebSocket(s.url,{headers}),changed=vi.fn(),controller=new NoteBrowserController({simulation:true,socket:{send:value=>ws.send(value),close:()=>ws.close(),get bufferedAmount(){return ws.bufferedAmount;}},changed});
+   ws.on('message',data=>controller.receive(JSON.parse(data.toString())));ws.on('close',()=>controller.disconnected());ws.on('error',()=>controller.disconnected());
+   await vi.waitFor(()=>expect(controller.snapshot().notes?.notes.color.status).toBe('tentative'));
+   expect(controller.confirm('color')).toBe(true);
+   await vi.waitFor(()=>{expect(controller.snapshot().pending).toBe(false);expect(controller.snapshot().notes?.notes.color.status).toBe('confirmed');});
+   expect(controller.edit('color','Blue')).toBe(true);
+   await vi.waitFor(()=>{expect(controller.snapshot().pending).toBe(false);expect(controller.snapshot().notes?.notes.color.value).toBe('Blue');});
+   expect(notebook.snapshot().notes.color).toMatchObject({value:'Blue',revision:3,source:'touch'});
+   controller.stop();await vi.waitFor(()=>expect(probe.snapshot().ended).toBe(true));expect(notebook.snapshot().notes.color.status).toBe('missing');expect(controller.snapshot().notes).toBeNull();
+ });
+ it('ends a stale customer command instead of overwriting a newer server value',async()=>{
+   const notebook=new NotebookState();let probe!:NoteSessionProbe;
+   const s=await setup(publish=>{probe=new NoteSessionProbe({simulation:true,notebook,capture:{start:async()=>true,stop:vi.fn()},wire:{bufferedAmount:0,send:()=>true,close:vi.fn()},extract:async()=>[],changed:receipt=>publish(notebook.snapshot(),receipt),invalidated:()=>publish(notebook.snapshot(),null)});return probe;});
+   const {ws,ready}=await connect(s.url);notebook.edit('color','Newer');const done=closed(ws);ws.send(JSON.stringify({version:1,sessionId:ready.sessionId,sequence:1,type:'edit',field:'color',value:'Stale',expectedRevision:0}));await done;await vi.waitFor(()=>expect(probe.snapshot().ended).toBe(true));expect(notebook.snapshot().notes.color.value).toBe('');
+ });
 });

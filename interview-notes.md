@@ -300,3 +300,7 @@ I prepared the notebook update path across the private connection. I chose to se
 ## Connecting the visible notebook to validated updates
 
 I connected the visible notebook's simulated conversation to the structured update decoder and revision checks. I required render acknowledgments to match the exact current update after React commits it, and kept their sequence numbers unique across session clears. Browser checks confirmed the sample, the $350 correction, a touch color edit, clearing and a fresh sample. All 487 automated checks, type checking and build passed. The update path runs locally in the page; actual networked speech and physical display timing still need validation.
+
+## Protecting customer edits across the connection
+
+I prepared server checks so an edit or confirmation applies only to the exact note version the customer saw. This prevents a delayed action from silently replacing a newer preference. I also prepared the browser controller without activating microphone or provider access. I tested edits, confirmations, acknowledgment order, disconnect cleanup and deadlines, including real local sockets with simulated providers. All 517 automated checks, type checking and build passed. A stale network command currently ends and clears the private simulation; production recovery still needs a decision. The running notebook remains an in-process simulation, so I have not claimed a live speech integration or another phone test.

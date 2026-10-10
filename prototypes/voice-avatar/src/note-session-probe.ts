@@ -1,4 +1,5 @@
-import {NotebookState} from './notebook-state.ts';
+import {FIELDS,NotebookState} from './notebook-state.ts';
+import type {Field} from './notebook-state.ts';
 import {PreparedLiveTranscription} from './live-transcription.ts';
 import type {TranscriptionWire} from './live-transcription.ts';
 import {PartialNoteCoordinator} from './partial-note-coordinator.ts';
@@ -23,9 +24,10 @@ export class NoteSessionProbe {
  private session:number;
  private unsubscribe:()=>void;
  private changed:(receipt:number|null)=>void;
+ private invalidated:()=>void;
  constructor(options:{simulation?:boolean;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void}){
    if(options.simulation!==true)throw Error('Live note session is disabled.');
-   this.notebook=options.notebook;this.capture=options.capture;this.changed=options.changed;this.session=this.notebook.snapshot().session;
+   this.notebook=options.notebook;this.capture=options.capture;this.changed=options.changed;this.invalidated=options.invalidated??(()=>{});this.session=this.notebook.snapshot().session;
    this.notes=new PartialNoteCoordinator({notebook:options.notebook,extract:options.extract,invalidated:()=>{if(!this.ended){try{options.invalidated?.();}catch{this.shutdown('display-held');}}},changed:receipt=>{
      if(this.ended)return;
      if(receipt===null){this.shutdown('extraction-held');return;}
@@ -58,6 +60,20 @@ export class NoteSessionProbe {
    ++this.generation;this.capturing=false;
    try{this.capture.stop();}catch{this.shutdown('capture-cleanup-held');return false;}
    return this.transcription.commit();
+ }
+ /** A touch command may change only the exact field version the client saw. */
+ edit(field:Field,value:string,expectedRevision:number):boolean{
+   if(!this.currentField(field,expectedRevision)||typeof value!=='string'||value.length>160)return false;
+   try{this.notebook.edit(field,value);this.invalidated();return !this.ended;}
+   catch{this.shutdown('display-held');return false;}
+ }
+ confirm(field:Field,expectedRevision:number):boolean{
+   if(!this.currentField(field,expectedRevision)||!this.notebook.snapshot().notes[field].value)return false;
+   try{this.notebook.confirm(field);this.invalidated();return !this.ended;}
+   catch{this.shutdown('display-held');return false;}
+ }
+ private currentField(field:Field,revision:number):boolean{
+   return !this.ended&&FIELDS.some(([id])=>id===field)&&Number.isSafeInteger(revision)&&revision>=0&&this.notebook.snapshot().session===this.session&&this.notebook.snapshot().notes[field].revision===revision;
  }
  acknowledgeRendered(receipt:number){return !this.ended&&this.notes.acknowledgeRendered(receipt);}
  private shutdown(reason:string){

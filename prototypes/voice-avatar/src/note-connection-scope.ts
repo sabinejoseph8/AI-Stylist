@@ -1,6 +1,8 @@
+import {FIELDS} from './notebook-state.ts';
+import type {Field} from './notebook-state.ts';
 import {randomUUID} from 'node:crypto';
 import type {NoteSessionProbe} from './note-session-probe.ts';
-export type NoteConnectionProbe=Pick<NoteSessionProbe,'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
+export type NoteConnectionProbe=Pick<NoteSessionProbe,'edit'|'confirm'|'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
 type Probe=NoteConnectionProbe;
 type Lease={owner:object;id:string;probe:Probe;sequence:number;commands:number};
 const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
@@ -44,15 +46,19 @@ export class NoteConnectionScope {
  async command(owner:object,value:unknown):Promise<boolean>{
    if(!object(value))return false;
    const lease=this.owned(owner,value.sessionId);if(!lease)return false;
-   const fields=value.type==='begin'?['version','sessionId','sequence','type','turnId']:value.type==='rendered'?['version','sessionId','sequence','type','receipt']:['version','sessionId','sequence','type'];
+   const fields=value.type==='edit'?['version','sessionId','sequence','type','field','value','expectedRevision']:value.type==='confirm'?['version','sessionId','sequence','type','field','expectedRevision']:value.type==='begin'?['version','sessionId','sequence','type','turnId']:value.type==='rendered'?['version','sessionId','sequence','type','receipt']:['version','sessionId','sequence','type'];
    if(!exact(value,fields)||value.version!==1||!Number.isSafeInteger(value.sequence)||(value.sequence as number)<=lease.sequence||(lease.commands>=256&&value.type!=='end')
-      ||!['begin','commit','rendered','end'].includes(value.type as string))return false;
+      ||!['begin','commit','rendered','edit','confirm','end'].includes(value.type as string))return false;
    if(value.type==='begin'&&(typeof value.turnId!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(value.turnId)))return false;
    if(value.type==='rendered'&&(!Number.isSafeInteger(value.receipt)||(value.receipt as number)<1))return false;
+   if(['edit','confirm'].includes(value.type as string)&&(!FIELDS.some(([id])=>id===value.field)||!Number.isSafeInteger(value.expectedRevision)||(value.expectedRevision as number)<0))return false;
+   if(value.type==='edit'&&(typeof value.value!=='string'||value.value.length>160))return false;
    lease.sequence=value.sequence as number;lease.commands++;
    try{
      let accepted=false;
      if(value.type==='begin')accepted=await lease.probe.beginTurn(value.turnId as string);
+     else if(value.type==='edit')accepted=lease.probe.edit(value.field as Field,value.value as string,value.expectedRevision as number);
+     else if(value.type==='confirm')accepted=lease.probe.confirm(value.field as Field,value.expectedRevision as number);
      else if(value.type==='commit')accepted=lease.probe.commit();
      else if(value.type==='rendered')accepted=lease.probe.acknowledgeRendered(value.receipt as number);
      else{lease.probe.end();this.reap();return true;}
