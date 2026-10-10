@@ -15,7 +15,9 @@ export function createPreparedNoteProviderSession(options:{simulation?:boolean;s
  const stop=()=>{
   if(ended)return;ended=true;options.signal.removeEventListener('abort',stop);
   controller.abort();probe?.end();binding?.stop();
-  try{options.stopped?.();}catch{/* Owners are already stopped. */}
+  // A probe may call us while its own shutdown is still on the stack.
+  // Notify after that stack settles so the lease sees final cleanup failures.
+  queueMicrotask(()=>{try{options.stopped?.();}catch{/* Owners are already stopped. */}});
  };
  const extract=createPreparedOpenAINoteExtractor({simulation:true,request:createPreparedNoteExtractionTransport({simulation:true,fetch:options.fetch})});
  try{

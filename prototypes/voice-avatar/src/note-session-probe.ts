@@ -98,7 +98,9 @@ export class NoteSessionProbe {
    if(this.ended)return;this.ended=true;this.reason=reason;this.turnId=null;this.committedTurn=null;this.settledTurn=null;this.providerCommitted=false;this.capturing=false;this.acquiring=false;++this.generation;
    this.unsubscribe();this.notes.cancel();this.controller.abort();
    if(this.transcription?.snapshot().cleanupFailed)this.reason='cleanup-unverified';
-   try{this.capture.stop();this.capture.end?.();}catch{this.reason='capture-cleanup-held';}
+   try{this.capture.stop();}catch{this.reason='capture-cleanup-held';}
+   // Try the terminal release independently even if stopping capture failed.
+   try{this.capture.end?.();}catch{this.reason='capture-cleanup-held';}
    this.notebook.clear();
    try{this.changed(null);}catch{/* Ended state and media cancellation remain committed. */}
  }
