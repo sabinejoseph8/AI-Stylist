@@ -264,3 +264,7 @@ I then connected the notebook's canned conversation to that coordinator, so the 
 ## One approval for showing and speaking a look
 
 I required the same current approval to control both a look's display and its spoken description. If a customer changes their budget, preferences or reference item, that approval is revoked immediately. I tested old approvals, changed descriptions and queued simulated speech so an earlier result could not continue recommending a look after a correction. All 303 automated checks, type checking and build passed. The browser also showed the approved sample disappearing after a preference changed. Real avatar playback cancellation and the independent AI validator still need integration evidence.
+
+## Preparing speech input without spending on another trial
+
+I approved preparing live transcription with simulated provider events before activating another paid test. I checked that incremental text reaches the notebook before a turn completes, that a final transcript can correct partial text, and that a late completion from an old turn cannot revive outdated notes. I also required explicit connection readiness, bounded audio and transport queues, and clear cancellation behavior. All 327 automated checks, type checking and build passed. The connection remains disabled, so these results do not claim real recognition quality, measured live speed or verified remote cleanup.

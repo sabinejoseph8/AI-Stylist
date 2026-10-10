@@ -15,3 +15,7 @@ The coordinator is now connected to the notebook's canned conversation fixture. 
 ### Shared look release preparation
 
 The notebook sample now uses a shared display/speech permit with immediate invalidation on edits, new checks and session changes. All 303 tests, type checking and build pass. Speech cancellation is verified with a synthetic transport; no actual recommendation audio or production validator is connected.
+
+### Disabled live transcription preparation
+
+Sabine approved simulated-test preparation. The server-only protocol adapter is ready for further integration and has no live connector, route or key access. All 327 tests, type checking and build pass. Live extraction, microphone integration and representative measurements remain open.
