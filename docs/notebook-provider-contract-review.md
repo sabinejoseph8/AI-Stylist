@@ -37,3 +37,12 @@ Prepare a separately scoped notes-only durable allowance adapter with simulated 
 
 
 Separate allowance preparation now exists with injected simulated persistence. Next connect it through the protected browser lifecycle tests. This does not resolve the connection/configuration gaps or authorize a live call.
+
+
+### Dedicated connection follow-up, 10 October 2026
+
+Rechecked the current [transcription guide](https://developers.openai.com/api/docs/guides/realtime-transcription) and [WebSocket guide](https://developers.openai.com/api/docs/guides/voice-websockets). The transcription configuration remains a transcription-type session using session.update. The linked Realtime connection example uses a conversational-model query; the GPT-Live example uses its different session.start protocol. These retrieved examples still do not settle startup for the selected dedicated transcription model.
+
+Found an official [archived speech-transcription cookbook](https://developers.openai.com/cookbook/examples/speech_transcription_methods) using an intent=transcription query, a beta header and transcription_session.update with an older model. Its archive warning and legacy protocol make it insufficient evidence to apply that startup to the selected current session. The [create transcription session reference](https://developers.openai.com/api/reference/resources/realtime/subresources/transcription_sessions/methods/create) is explicitly deprecated in favor of GA and creates browser ephemeral tokens. It is not an accepted server-owned startup contract. Preserve the model and disabled preparation; do not guess, silently migrate protocols, or treat the deprecated route as the live solution. The delay discrepancy remains open. No account entitlement or usage was checked.
+
+Prepared four narrow clarification questions in docs/notebook-transcription-startup-questions.md. They have not been sent; contacting support requires Sabine's authorization. This review does not authorize a provider test or remote configuration change.

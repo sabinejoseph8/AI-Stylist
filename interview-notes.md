@@ -421,3 +421,8 @@ I extended the local checks from the notebook server to its browser connection. 
 ### Preserving customer corrections across the connected notebook
 
 I checked the complete local path from synthetic speech events through extraction, browser notes and database reservations. Notes appeared progressively and stayed tentative until confirmed. An older extraction result could not undo a customer's touch correction, including when the final transcript arrived. Leaving the page canceled pending extraction, cleared notes and prevented a late response from bringing them back. These three additional checks bring the local browser/database scenarios to ten. I kept live speech quality, timing and hosted acceptance separate from this synthetic evidence.
+
+
+### Distinguishing confirmed cleanup from uncertainty
+
+I checked what happens when the transcription provider disconnects, extraction returns invalid data or microphone permission arrives after the customer leaves. The local checks stop capture, clear temporary notes and close the database reservation only after verified cleanup. I also made simulated provider cleanup fail: the reservation stayed open and another test was blocked. I fixed a type annotation in the new test harness, then reran the checks. I revisited the connection documentation and found that an older intent-based example is archived and the token endpoint is deprecated. I kept the selected integration disabled and drafted four precise clarification questions instead of treating those examples as current proof. Fourteen local browser/database scenarios now pass, alongside the seven owner scenarios, 50 SQL checks and existing 869 tests.

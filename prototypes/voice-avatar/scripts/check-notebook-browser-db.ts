@@ -12,7 +12,7 @@ import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
 
 type Database = {reset:()=>Promise<string>;read:()=>Promise<PreparedNoteLedger>;sql:(query:string)=>Promise<string>;literal:(value:unknown)=>string};
-type Fault = 'none'|'reserve-pending'|'closure-pending'|'closure-failed'|'reserve-ack-lost';
+type Fault = 'none'|'reserve-pending'|'closure-pending'|'closure-failed'|'reserve-ack-lost'|'provider-close-failed';
 const preview={origin:'https://fixture.onrender.com',password:'synthetic_local_password_123456789'};
 const headers={Host:'fixture.onrender.com',Origin:preview.origin,Authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64')};
 async function until(check:()=>boolean,timeout=4000) {
@@ -24,6 +24,7 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
  let signalPending!:()=>void;
  const pending=new Promise<void>(resolve=>{signalPending=resolve;});
  let emit:(value:unknown)=>void=()=>{throw Error('Synthetic provider is not constructed.');};
+ let failProvider:()=>void=()=>{throw Error('Synthetic provider is not constructed.');};
  const gate=async()=>{const wait=new Promise<void>(resolve=>{release=resolve;});signalPending();await wait;};
  const fetch=async(url:string,init:RequestInit):Promise<Response>=>{
   calls++;
@@ -46,26 +47,33 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
  const server=createServer((_req,res)=>{res.writeHead(404);res.end();});
  const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,createTransports:()=>{
   providers++;
-  const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:()=>{closed++;},send:(value:string)=>{
+  const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:()=>{closed++;if(fault==='provider-close-failed')throw Error('Synthetic cleanup uncertainty.');},send:(value:string)=>{
    if(JSON.parse(value).type==='session.update')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));
   }});
   emit=value=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));
+  failProvider=()=>socket.dispatchEvent(new Event('error'));
   return {socket,fetch:extract??(async()=>{throw Error('No provider requests permitted.');})};
  }});
  await new Promise<void>((resolve,reject)=>{server.once('error',reject);server.listen(0,'127.0.0.1',resolve);});
  const address=server.address();if(!address||typeof address==='string')throw Error('Loopback listener unavailable.');
  const url=`ws://127.0.0.1:${address.port}/api/notebook-simulation`;
  const sockets:WebSocket[]=[],bindings:ReturnType<typeof bindSimulatedNoteLifecycle>[]=[];
- function connect(){
+ const permissionReleases:Array<()=>void>=[];
+ function connect(permissionPending=false){
   const socket=new WebSocket(url,{headers});sockets.push(socket);
   const events=new EventTarget(),page=new EventTarget(),visibility=Object.assign(new EventTarget(),{hidden:false});
   let starts=0,stops=0,frame:(pcm:ArrayBuffer)=>boolean=()=>false;
-  const capture={start:async(accept:(pcm:ArrayBuffer)=>boolean)=>{starts++;frame=accept;return true;},stop:()=>{stops++;}};
+  let releasePermission=()=>{};
+  const capture={start:async(accept:(pcm:ArrayBuffer)=>boolean)=>{
+   starts++;frame=accept;
+   if(permissionPending)return new Promise<boolean>(resolve=>{releasePermission=()=>resolve(true);permissionReleases.push(releasePermission);});
+   return true;
+  },stop:()=>{stops++;}};
   const session=new PreparedBrowserNoteSession({simulation:true,capture,socket:{send:value=>socket.send(value),close:()=>socket.close(),get bufferedAmount(){return socket.bufferedAmount;}},changed:()=>{}});
   const binding=bindSimulatedNoteLifecycle({simulation:true,session,socket:events,page,visibility,status:()=>{}});bindings.push(binding);
   socket.on('message',data=>events.dispatchEvent(new MessageEvent('message',{data:data.toString()})));
   socket.on('close',()=>events.dispatchEvent(new Event('close')));socket.on('error',()=>events.dispatchEvent(new Event('error')));
-  return {socket,session,page,visibility,captureCounts:()=>({starts,stops}),frame:()=>frame(new ArrayBuffer(960))};
+  return {socket,session,page,visibility,captureCounts:()=>({starts,stops}),frame:()=>frame(new ArrayBuffer(960)),permission:()=>releasePermission()};
  }
  async function denied(requestHeaders:Record<string,string>=headers){
   const socket=new WebSocket(url,{headers:requestHeaders});sockets.push(socket);socket.on('error',()=>{});
@@ -78,12 +86,13 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
  async function dispose(){
   release();
   for(const binding of bindings)binding.dispose();
+  for(const resolve of permissionReleases)resolve();
   for(const socket of sockets)socket.terminate();
   try{await until(()=>!bridge.snapshot().active||bridge.snapshot().held);}finally{
    bridge.dispose();server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()));
   }
  }
- return {bridge,pending,release:()=>release(),connect,denied,dispose,emit:(value:unknown)=>emit(value),counts:()=>({calls,providers,closed})};
+ return {bridge,pending,release:()=>release(),connect,denied,dispose,emit:(value:unknown)=>emit(value),failProvider:()=>failProvider(),counts:()=>({calls,providers,closed})};
 }
 export async function checkNotebookBrowserDb(db:Database){
  const fixtures:Awaited<ReturnType<typeof harness>>[]=[];
@@ -208,6 +217,38 @@ export async function checkNotebookBrowserDb(db:Database){
   await until(()=>lateResponse.bodyUsed);await until(()=>!late.bridge.snapshot().active);
   assert.equal(leavingDuringExtraction.session.snapshot().connection.notes,null);assert.equal(leavingDuringExtraction.frame(),false);
   assert.equal((await db.read()).runs[0]!.closed,true);assert.equal(late.counts().closed,1);await clear();
-  console.log('10 local SQL-backed loopback browser scenarios passed, including note extraction and correction. Devices and providers were synthetic.');
+  await db.reset();
+  const disconnected=await open('none',async(_url,init)=>{const input=fragment(init);return response(input.turnId,input.currentFragment);});
+  const recording=disconnected.connect();await until(()=>recording.session.status().state==='ready');
+  await begin(recording,'turn_1');disconnected.emit(delta(1,'green'));
+  await until(()=>recording.session.snapshot().connection.notes?.notes.color.value==='green');
+  disconnected.failProvider();await until(()=>recording.session.snapshot().ended);await until(()=>!disconnected.bridge.snapshot().active);
+  assert.equal(recording.session.snapshot().capturing,false);assert.equal(recording.session.snapshot().connection.notes,null);assert.equal(recording.frame(),false);
+  disconnected.emit(delta(2,'blue'));assert.equal(recording.session.snapshot().connection.notes,null);
+  assert.deepEqual(disconnected.counts(),{calls:4,providers:1,closed:1});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
+
+  await db.reset();
+  const invalid=await open('none',async()=>Response.json({private_fixture:'invalid_extraction'}));
+  const malformed=invalid.connect();await until(()=>malformed.session.status().state==='ready');await begin(malformed,'turn_1');invalid.emit(delta(1,'green'));
+  await until(()=>malformed.session.snapshot().ended);await until(()=>!invalid.bridge.snapshot().active);
+  assert.equal(malformed.session.snapshot().connection.notes,null);assert.equal(malformed.frame(),false);
+  assert.ok(!JSON.stringify(malformed.session.status()).includes('private_fixture'));
+  assert.deepEqual(invalid.counts(),{calls:4,providers:1,closed:1});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
+
+  await db.reset();
+  const delayed=await open(),permission=delayed.connect(true);await until(()=>permission.session.status().state==='ready');
+  const acquiring=permission.session.startTurn('turn_1');await until(()=>permission.captureCounts().starts===1);
+  permission.page.dispatchEvent(new Event('pagehide'));await until(()=>permission.session.snapshot().ended);
+  const stops=permission.captureCounts().stops;permission.permission();assert.equal(await acquiring,false);
+  assert.ok(permission.captureCounts().stops>stops);assert.equal(permission.frame(),false);
+  await until(()=>!delayed.bridge.snapshot().active);assert.equal(permission.session.snapshot().connection.notes,null);
+  assert.deepEqual(delayed.counts(),{calls:4,providers:1,closed:1});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
+  await db.reset();
+  const cleanupFailed=await open('provider-close-failed'),unverified=cleanupFailed.connect();await until(()=>unverified.session.status().state==='ready');
+  await begin(unverified,'turn_1');cleanupFailed.failProvider();await until(()=>cleanupFailed.bridge.snapshot().held);await until(()=>unverified.session.snapshot().ended);
+  assert.equal(unverified.session.snapshot().capturing,false);assert.equal(unverified.session.snapshot().connection.notes,null);assert.equal(unverified.frame(),false);
+  assert.equal(await cleanupFailed.denied(),409);assert.equal((await db.read()).runs[0]!.closed,false);
+  assert.deepEqual(cleanupFailed.counts(),{calls:2,providers:1,closed:1});await clear();
+  console.log('14 local SQL-backed loopback browser scenarios passed, including extraction, correction and failure cleanup. Devices and providers were synthetic.');
  }finally{await clear();}
 }
