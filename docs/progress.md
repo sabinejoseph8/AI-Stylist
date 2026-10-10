@@ -534,3 +534,7 @@ Render deployed the microphone-meter compatibility update successfully. After re
 ## Physical iPhone device cleanup confirmed
 
 Sabine confirmed that pressing Stop removes the camera preview and changes the status to Off. She then restarted the check, left it open, and reported that both devices automatically turned off with the message “Two-minute check finished.” Camera preview, microphone-meter movement, manual Stop and the two-minute automatic stop are now confirmed on her physical iPhone. Phone tab-switch cleanup, avatar playback, interruption and conversation acceptance remain pending. This device check sent no media to Tavus or OpenAI and did not use another provider attempt. Task 1b remains unchecked.
+
+## Physical iPhone tab-switch cleanup confirmed
+
+Sabine confirmed that switching to another Safari tab stops the device check and shows “Stopped because you left this page” with the camera off. All planned local-only iPhone device checks now have human confirmation. Phone avatar playback and interrupt-and-end acceptance remain pending; automatic conversational barge-in is not implemented. No additional provider test was started or approved. Private provider account telemetry is omitted from this public update. Task 1b remains unchecked.
