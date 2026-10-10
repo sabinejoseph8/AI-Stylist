@@ -1,6 +1,7 @@
 import {randomUUID} from 'node:crypto';
 import type {NoteSessionProbe} from './note-session-probe.ts';
-type Probe=Pick<NoteSessionProbe,'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
+export type NoteConnectionProbe=Pick<NoteSessionProbe,'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
+type Probe=NoteConnectionProbe;
 type Lease={owner:object;id:string;probe:Probe;sequence:number;commands:number};
 const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
 const exact=(v:Record<string,unknown>,keys:string[])=>Object.keys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k));

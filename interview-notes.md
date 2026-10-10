@@ -288,3 +288,7 @@ I found an edge case where speech recognition could rewrite an earlier phrase bu
 ## Keeping a notebook tied to its own connection
 
 I prepared a connection ownership guard so a second browser tab cannot take over the active notebook by copying a session ID or customer label. I required exact command shapes and increasing message sequences, then tested old commands, delayed starts and callbacks after the session ends. I also made cleanup failures hold the session slot. All 430 automated checks, type checking and build passed using simulated connections and providers. This is preparation for the authenticated network connection, not proof that customer authentication or real browser isolation is complete.
+
+## Checking the notebook connection over actual local sockets
+
+I prepared the private-preview network control bridge and tested it using real local WebSocket connections with simulated providers. I required the existing preview password, the expected site address and origin before a connection could own a session. I checked a second connection, replayed commands, malformed messages, a delayed start and the time limit. I also verified that disconnecting clears notes from the simulated session. All 453 automated checks, type checking and build passed. The bridge remains unattached to the running app; phone authentication, real provider transport and live timing still need validation.
