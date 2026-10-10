@@ -416,3 +416,8 @@ I wanted to know what would happen if a test reservation was saved but the serve
 ### Connecting browser cleanup to the database
 
 I extended the local checks from the notebook server to its browser connection. I verified that leaving the page stops simulated capture and clears notes, while the database reservation closes only after cleanup is verified. A delayed confirmation blocks a replacement connection. Failed closure, a lost acknowledgment and a real eight-second response timeout preserve the unresolved record and block new work. Incorrect access is refused before any database activity. The first run revealed a mistake in my test cleanup: I had expected a deliberately held connection slot to disappear. I corrected the test while preserving that protective behavior. Seven browser/database scenarios now pass alongside the seven owner scenarios, 50 SQL checks and existing 869 tests. These are local synthetic checks, so hosted and real-device acceptance remain open.
+
+
+### Preserving customer corrections across the connected notebook
+
+I checked the complete local path from synthetic speech events through extraction, browser notes and database reservations. Notes appeared progressively and stayed tentative until confirmed. An older extraction result could not undo a customer's touch correction, including when the final transcript arrived. Leaving the page canceled pending extraction, cleared notes and prevented a late response from bringing them back. These three additional checks bring the local browser/database scenarios to ten. I kept live speech quality, timing and hosted acceptance separate from this synthetic evidence.
