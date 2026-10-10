@@ -290,3 +290,7 @@ Sabine explicitly approved sending the existing OpenAI, Tavus and Supabase API k
 ## Hosted preview evidence
 
 Render Free deployment succeeded and is live. Unauthenticated spoken-page access returned 401 with a Basic authentication challenge; the health endpoint returned {ok:true}. No media/provider attempt was started. Authenticated browser and physical iPhone acceptance remain pending.
+
+## iPhone microphone-meter follow-up
+
+Sabine reported seeing the camera but no microphone-meter movement, first in the app browser and then in Safari. Her screenshot shows the check in its On state, so permission/startup completion alone is not microphone acceptance. Prepared a compatibility change: create/resume Web Audio in the original button gesture, connect the analyser through a zero-gain output, show numeric level and separate paused-input/paused-processing/no-signal states, and offer an explicit Resume microphone meter button. Media stays local, with no recording or provider transport. Existing 135 tests, type checking and build pass; these tests do not establish Safari meter behavior. Physical iPhone recheck is pending. This is a plausible compatibility fix, not a confirmed root cause. Apple Web Audio documentation demonstrates analyser-to-output graphs: https://developer.apple.com/library/archive/documentation/AudioVideo/Conceptual/Using_HTML5_Audio_Video/PlayingandSynthesizingSounds/PlayingandSynthesizingSounds.html.

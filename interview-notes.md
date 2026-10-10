@@ -167,3 +167,7 @@ I prepared password protection for the private Render preview and made a server 
 ## Preparing a private phone preview
 
 I published the reviewed prototype without credentials or private test records, then deployed it on Render Free. I kept the spending history in Supabase so a server restart would not create a fresh test allowance. I verified that the hosted preview rejects access without its password and that its health check responds. I still need to verify the experience on my physical iPhone; deployment success alone does not prove the conversation works there.
+
+## A phone test exposed a microphone-meter issue
+
+My iPhone showed the camera successfully, but the microphone meter stayed flat in both the app browser and Safari. I treated that as a failed check instead of assuming the microphone worked because permission was granted. I prepared a silent audio-output connection, earlier audio activation and clearer meter diagnostics. The existing automated checks pass, but I still need to retest on my phone before calling the issue fixed.
