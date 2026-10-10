@@ -102,3 +102,9 @@ streamSpokenReply, IncrementalEcho, startStreamedBridge and ContextRecovery are 
 ### Confirmed conversation context
 
 ConfirmedConversation is wired to the local SpokenService and keeps generated replies pending until explicit whole-reply confirmation. It retains one confirmed exchange within the existing two-turn limit and clears on end/replacement. ContextRecovery restores an immutable confirmed-only snapshot and waits for acknowledgment before releasing its hold. Timeout, stale context and unresolved cleanup remain blocking. 231 mocked/synthetic tests, type checking and build pass. These changes are not deployed to Render; live resume still requires Tavus clarification and transport integration.
+
+## Streaming lifecycle cleanup fix, 9 October 2026
+
+The prepared streaming bridge now retains its parent cancellation connection after all output frames are sent. Remote playback may continue after sending finishes, so ending the owning session must still send the interrupt. Cancellation releases the listener and repeated cancellation does not resend the interrupt. Completion racing with cancellation is rejected rather than reported as successful. Sending an interrupt still requires independent renderer/room cleanup verification.
+
+233/233 synthetic/mocked tests, type checking and build pass. Two new regression checks cover parent cancellation after output delivery and cancellation during final output handoff. No provider call, reservation, deployment or budget change occurred. The fix is local and published only; live recovery and physical acceptance remain pending Tavus clarification and integration. Task 1b remains unchecked.

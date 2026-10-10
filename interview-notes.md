@@ -232,3 +232,7 @@ I identified an unresolved vendor contract: the inspected Tavus speaking events 
 While waiting for Tavus's technical reply, I continued the work that did not require another paid test. I separated confirmed conversation history from generated replies and connected that memory to the local spoken service. An interrupted reply cannot become confirmed context, and late confirmations cannot restore discarded content. I kept the existing two-exchange prototype limit and cleared volatile content when the session ends.
 
 I also tightened recovery so it waits for acknowledgment that the confirmed context was restored. A stale context revision, failed restoration or timeout keeps recovery held and cleans up the replacement connection. All 231 synthetic automated checks, type checking and build passed. These controls are prepared in code; live recovery and phone acceptance still depend on the vendor contract and later testing.
+
+## Keeping stop controls active after audio is sent
+
+I found and fixed a cleanup gap in the streaming preparation: audio can still be playing after the server has finished sending it. I kept the session's stop connection active through that period and added checks for stopping after delivery and during the final handoff. All 233 automated checks, type checking and the build passed. This is preparation, not a deployed recovery feature. I am still waiting for Tavus to clarify how to verify old audio is cleared before resuming.

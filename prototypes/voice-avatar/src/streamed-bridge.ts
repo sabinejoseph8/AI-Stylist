@@ -21,19 +21,22 @@ export function startStreamedBridge(options: {
     else { rejectOutput(new Error('Streamed output stopped.')); if (state === 'held') controller.abort(); }
   });
   const epoch = echo.begin();
-  const cancel = () => { controller.abort(); echo.stop(); };
-  const onAbort = () => { echo.stop(); };
+  // Keep the lifecycle listener after all frames have been sent: the remote
+  // renderer may still be playing them when the room expires or the user ends.
+  const cancel = () => { controller.abort(); };
+  const onAbort = () => { echo.stop(); signal.removeEventListener('abort', onAbort); };
   signal.addEventListener('abort', onAbort, {once:true});
   const result = (async () => {
     try {
-      if (signal.aborted) throw new Error('Stream canceled.');
+      if (signal.aborted) { onAbort(); throw new Error('Stream canceled.'); }
       const generated = await streamSpokenReply(options.openaiKey, signal, options.audio, options.history, frame => echo.accept(epoch, frame));
       if (signal.aborted || !echo.finish(epoch)) throw new Error('Stream completion unavailable.');
       await output;
+      if (signal.aborted) throw new Error('Stream canceled.');
       return { ...generated, outputState: 'sent' as const, playbackConfirmed: false as const };
     } catch {
       cancel(); throw new Error('Streamed reply stopped. Room cleanup requires verification.');
-    } finally { signal.removeEventListener('abort', onAbort); }
+    }
   })();
   return {result, cancel, snapshot:()=>echo.snapshot()};
 }

@@ -29,4 +29,23 @@ describe('streamed output bridge, mocked generator and transport',()=>{
     const controller=new AbortController();controller.abort();const input=options(),bridge=startStreamedBridge({...input,signal:controller.signal});
     await expect(bridge.result).rejects.toThrow();expect(streamSpokenReply).not.toHaveBeenCalled();expect(input.send).not.toHaveBeenCalled();
   });
+  it('still interrupts remote playback when its parent ends after all frames were sent',async()=>{
+    vi.mocked(streamSpokenReply).mockImplementation(async(_key,_signal,_audio,_history,accept)=>{accept(frame(0));return {...generated,audioBytes:960};});
+    const controller=new AbortController(),input=options();
+    const bridge=startStreamedBridge({...input,signal:controller.signal});
+    await vi.advanceTimersByTimeAsync(20);await bridge.result;
+    controller.abort();
+    expect(input.send.mock.calls.filter(c=>c[0].event_type==='conversation.interrupt')).toHaveLength(1);
+    bridge.cancel();controller.abort();await vi.advanceTimersByTimeAsync(1000);
+    expect(input.send.mock.calls.filter(c=>c[0].event_type==='conversation.interrupt')).toHaveLength(1);
+  });
+  it('rejects completion if the parent ends while the final frame is handed off',async()=>{
+    vi.mocked(streamSpokenReply).mockImplementation(async(_key,_signal,_audio,_history,accept)=>{accept(frame(0));return {...generated,audioBytes:960};});
+    const controller=new AbortController(),input=options();
+    input.send.mockImplementation((message:{properties?:{done?:boolean}})=>{if(message.properties?.done) controller.abort();return true;});
+    const bridge=startStreamedBridge({...input,signal:controller.signal});const pending=bridge.result.catch(e=>e);
+    await vi.advanceTimersByTimeAsync(20);expect(await pending).toBeInstanceOf(Error);
+    expect(bridge.snapshot()).toMatchObject({active:false,queued:0});
+  });
+
 });
