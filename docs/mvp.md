@@ -3,6 +3,18 @@
 Updated: 10 October 2026
 Status: Working memory from approved requirements and actual findings. Phase 1 feasibility and launch are not approved by this file.
 
+## Current memory checkpoint, 10 October 2026
+
+894 prototype checks across 64 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, eight SQL-backed owner scenarios and fourteen SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+
+The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
+
+**Next action:** Exercise the internally checked candidate gate through the SQL-backed lifecycle with final extraction settlement and a second confirmed voice correction. Verify stale candidate denial, fresh candidate acceptance and queued speech cancellation. Then prepare a separate simulated saved-profile constraint source so candidate data cannot supply its own exclusions. Keep real provider activation, paid trials and deployment disabled.
+
+**Remaining gates:** Tavus recovery clarification, current dedicated transcription startup/delay contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. The unsent OpenAI clarification draft has no send authorization.
+
+This review reconciles all five memory files without changing approved scope or treating technical proposals as new business approvals. Supabase + Render remains the selected hosting; the private prototype exists, while customer accounts/isolation and complete app delivery remain pending.
+
 ## Purpose and audience
 
 A phone website for women and men shopping in the United States, combining owned clothing and real products into one personalized look at a time. Customers create an account, then describe their preferences naturally to a consistent photorealistic female AI stylist. Affiliate commissions are the intended revenue source. Retailer checkout remains external.

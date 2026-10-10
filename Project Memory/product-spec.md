@@ -2,7 +2,7 @@
 
 Status: Approved product baseline, v1.0  
 Approved by Sabine: 8 October 2026  
-Updated: 9 October 2026  
+Updated: 10 October 2026\
 Basis: AI Personal Stylist retailer-independent PRD and prioritized backlog v1.8, plus Sabine's subsequent instructions.  
 Related document: [Approved design specification](design.md)
 
@@ -29,7 +29,7 @@ The first version will serve both women and men in the United States, as confirm
 - The first version includes real product links customers can shop from on retailer websites. The app remains independent of any single retailer. Sample or synthetic catalog content may support development, but cannot satisfy the launch requirement for shoppable recommendations.
 - Sabine has selected **Supabase** as the platform and approved its role for accounts, saved preferences, wardrobe photos and saved looks on 9 October 2026. Supabase + Render is approved for MVP hosting on 9 October 2026, with Render for the website and conversation service. Remaining architecture and operational details are under technical review.
 
-This document is the agreed product baseline approved by Sabine on 8 October 2026. It specifies customer needs and observable behavior. Sabine separately approved design.md v1.0 on 9 October 2026. The [technical decision document v0.11](tech-spec.md) records the approved phone website delivery, Supabase + Render hosting, React + TypeScript website and Node.js + TypeScript service, alongside remaining proposals. Task 1a planning review is complete; Task 1b is approved and in progress; a local simulation and scripted desktop provider connection exist, with continuous conversation and phone verification still pending. These planning decisions do not change the agreed customer behavior in this product scope. Restart loss of unsaved notes is accepted only for the private prototype; customer MVP recovery must be reviewed before launch.
+This document is the agreed product baseline approved by Sabine on 8 October 2026. It specifies customer needs and observable behavior. Sabine separately approved design.md v1.0 on 9 October 2026. The [technical decision document v0.11](tech-spec.md) records the approved phone website delivery, Supabase + Render hosting, React + TypeScript website and Node.js + TypeScript service, alongside remaining proposals. Task 1a planning review is complete; Task 1b is approved and in progress; desktop and physical iPhone generated speech/avatar mouth movement, explicit interruption and bounded spoken interrupt-and-end are accepted. Continuous conversation after interruption, live notebook timing and the full mobile journey remain unverified. These planning decisions do not change the agreed customer behavior in this product scope. Restart loss of unsaved notes is accepted only for the private prototype; customer MVP recovery must be reviewed before launch.
 
 ## Customer journeys
 
@@ -184,7 +184,7 @@ Before launch, select product sources that permit the intended use of their prod
 
 Checkout and payment inside the app, a combined checkout across retailers, and retailer cart automation remain future work. Real product links and source-backed product information are required for the first version. Direct retailer integrations and the choice of product sources still need evaluation and are not assumed to be available. Affiliate program selection and approval are launch revenue dependencies, rather than an undecided revenue model. ASOS and FARFETCH are candidates; no partnership is assumed. The Rakuten inquiry remains pending explicit authorization to send.
 
-The technical specification, architecture proposal, proposed data model/interfaces and phased build tasks now exist in tech-spec.md and docs/progress.md. Security configuration, deployment and application implementation remain future work. Follow this approved product baseline and distinguish approved decisions from proposals and unverified implementation.
+The technical specification, architecture proposal, proposed data model/interfaces and phased build tasks now exist in tech-spec.md and docs/progress.md. A protected private prototype is deployed on Render, and the existing private-test ledger is verified in Supabase. Customer account/isolation implementation, the separate prepared notebook allowance and the complete application remain unbuilt or unverified; this private prototype does not establish customer-launch readiness. Follow this approved product baseline and distinguish approved decisions from proposals and unverified implementation.
 
 ## Product review confirmations
 
@@ -194,12 +194,18 @@ The technical specification, architecture proposal, proposed data model/interfac
 
 - 8 October 2026: Sabine confirmed the reviewed privacy and accessibility behavior without changes: customer-controlled saving, editing and deletion; separate camera and microphone permissions; no default retention of voice recordings or live camera streams; and typing, touch, captions, readable text and screen-reader support. At that review step, the full specification still awaited baseline approval.
 
+## Current product memory review, 10 October 2026
+
+Reviewed PS-01 through PS-09 and A01 through A21. The approved product baseline remains v1.0. No requirement, save-consent boundary, shopping promise, market or revenue decision changed.
+
+Sabine accepted the original local notebook review and seven-step local connection rehearsal. The notebook and synthetic candidate safeguards are discovery evidence, not completed real-time styling. Required accounts, saved-profile validation, real product links, live garment understanding, repeated look refinement and integrated accessibility remain launch requirements.
+
 ## Next planning steps
 
-1. Use the separately approved design.md v1.0 alongside this approved product baseline. Its working-prototype checks remain pending.
-2. Review tech-spec.md v0.11 with Sabine and use docs/progress.md for the phased build plan. Supabase is approved for accounts, saved preferences, wardrobe photos and saved looks; other proposed uses and remaining architecture choices still need review.
-3. Evaluate product sources and affiliate programs, including their availability and approval dependencies. No retailer partnership or affiliate approval is implied by product approval.
-4. Work from the existing docs/progress.md plan one approved task group at a time. Task 1a is complete as planning; Task 1b is authorized and its local simulation is implemented; continue provider/account preflight and actual media verification before calling it complete. docs/mvp.md remains scheduled for Task 1e, using approved scope and actual prototype findings.
+1. Continue actionable discovery under the autonomous rules in AGENTS.md, respecting phase dependencies. Task 1a planning is complete; Tasks 1b and 1c and Phase 1 remain incomplete.
+2. Use DEVELOPMENT_PROGRESS.md for the exact next implementation action and docs/progress.md for acceptance gates. Routine engineering decisions do not require renewed task-group approval.
+3. Resolve remaining media, live-note timing, source rights, customer privacy, recovery and financial gates before customer launch. Product approval is not approval of those unresolved decisions.
+4. Keep docs/mvp.md current; it already exists and records scope, findings, assumptions and risks. No Memory site has been established.
 
 ## Change record
 
@@ -252,3 +258,5 @@ The technical specification, architecture proposal, proposed data model/interfac
 - 9 October 2026, project memory review: Corrected the stale technical v0.7 reference and future-planning statements. Reconciled current tools, Task 1a completion, pending Task 1b approval and private-prototype-only restart scope. Retained PS-01 through PS-09 and all A01 through A21; approved product baseline v1.0 is unchanged.
 
 - 9 October 2026: Recorded Task 1b approval and current technical v0.10 pointer. Only local synthetic implementation/checks exist; all customer requirements and acceptance scenarios remain the approved v1.0 baseline.
+
+- 10 October 2026, project memory review: Reviewed all requirements and acceptance scenarios; refreshed prototype/phone status and autonomous planning pointers. Kept approved product v1.0 and customer behavior unchanged.

@@ -2,10 +2,10 @@
 
 Status: Approved design baseline, v1.0  
 Approved by Sabine: 9 October 2026  
-Updated: 9 October 2026  
+Updated: 10 October 2026\
 Related document: [Product specification](product-spec.md)
 
-This document is the agreed design baseline approved by Sabine on 9 October 2026, aligned with product-spec.md v1.0. It uses an original fashion journal direction because no reference screenshots were supplied. Generated concept comparisons supported the notebook and typography choices. Approval records the intended design; implementation, usability, and accessibility checks remain future work. The approved product specification governs customer behavior; this design does not change it.
+This document is the agreed design baseline approved by Sabine on 9 October 2026, aligned with product-spec.md v1.0. It uses an original fashion journal direction because no reference screenshots were supplied. Generated concept comparisons supported the notebook and typography choices. Approval records the intended design; a local notebook prototype review has passed, while integrated usability, physical-phone notebook and complete accessibility checks remain pending. The approved product specification governs customer behavior; this design does not change it.
 
 ## Established experience requirements
 
@@ -179,14 +179,18 @@ Use concise customer language, such as **What would you like to change?**, **Sav
 ## Design approval and prototype checks
 
 - [x] Sabine approved the design specification as the agreed baseline v1.0 on 9 October 2026.
-- [ ] Verify notebook readability and editing in a working prototype.
+- [x] Verify notebook readability and editing in the local simulated prototype: Sabine accepted the 18-step review on 10 October 2026. Integrated live/mobile acceptance remains separate.
 - [ ] Verify that the stylist, notes, photo reference, live camera controls, and one current look fit the mobile consultation flow.
 - [ ] Verify uploaded item details in expanded and collapsed states.
 - [ ] Verify feedback, repeated revisions, confirmation, and preference-conflict states.
 - [ ] Verify all screens, account access, conversational preference collection, navigation, real shopping links, affiliate disclosures, and recovery states against the approved product spec.
 - [ ] Check text contrast, focus, touch targets, captions, screen readers, and text scaling in the working prototype.
 
-The product specification and this design specification are approved. The concept images are illustrative, and no completed interface testing is claimed. The technical proposal is now tech-spec.md v0.11 and is under separate review; docs/progress.md contains the draft phased build plan. Phone website delivery, the sign-in methods, core Supabase roles, Supabase + Render MVP hosting, React + TypeScript website and Node.js + TypeScript service are approved. Task 1a planning is complete; Task 1b is approved and in progress. A local simulation applies the existing visual tokens; a desktop smoke check passed. A scripted desktop avatar/voice probe was observed; natural conversation, precise lip-sync, phone and full accessibility checks remain pending. Restart loss of unsaved notes is accepted only for the private prototype; customer MVP recovery still needs review. The existing interruption states remain the design baseline, and no new recovery behavior is approved by this memory review.
+The product and design specifications remain approved v1.0 baselines. Desktop and physical iPhone generated avatar speech/mouth movement and bounded interrupt-and-end are accepted. Sabine also accepted the local notebook review and connection rehearsal. These checks do not establish a complete mobile styling journey, live notebook timing, precise lip synchronization, conversational resume or a full accessibility audit. The protected phone prototype exists on Render; the notebook provider preparation remains disabled and separate. Customer MVP restart recovery remains open.
+
+## Current design memory review, 10 October 2026
+
+Reviewed principles, every visual token, component anatomy, screen, required state and accessibility rule. Retained the fashion journal appearance, collapsed notebook with progressive summary and actual photo thumbnail, Georgia-style headings, printed notes, coordinated collage and four navigation destinations. No visual redesign or new customer flow was approved. Simulated server look checks do not mean a live validated look screen or speech path has passed.
 
 ## Change record
 
@@ -221,3 +225,5 @@ The product specification and this design specification are approved. The concep
 ## Local notebook review, 10 October 2026
 
 Sabine completed the 18-step notebook prototype guide and reported that all steps worked. Record the local simulated notebook manual review as passed, including the review of editable/missing/uncertain notes, collapsed summary and photo reference, fixture-check feedback, clearing and keyboard/readability controls. This does not change the approved v1.0 design baseline or establish a full accessibility audit, physical iPhone acceptance, real speech updates or production readiness. No design change was requested in this review.
+
+- 10 October 2026, project memory review: Reconciled completed local notebook and phone experiment evidence with the remaining integrated/device/accessibility checks. Approved design v1.0 is unchanged.
