@@ -3,10 +3,12 @@ import type {PreviewConfig} from './preview-gate.ts';
 import type {ExperimentBudget} from './experiment-budget.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
 import type {ProbeCapture} from './note-session-probe.ts';
-import {NotebookState} from './notebook-state.ts';
+import {NotebookState, checkFixture} from './notebook-state.ts';
 import {LookRelease} from './look-release.ts';
 import type {LookDraft, LookPermit} from './look-release.ts';
-import type {CheckTicket, CheckResult} from './notebook-state.ts';
+import type {CheckTicket} from './notebook-state.ts';
+import {prepareSyntheticLook} from './synthetic-look-candidate.ts';
+import type {SyntheticLookCandidate} from './synthetic-look-candidate.ts';
 
 type Session = ReturnType<typeof createPreparedNoteProviderSession>;
 type SessionOptions = Parameters<typeof createPreparedNoteProviderSession>[0];
@@ -72,12 +74,25 @@ export function createPreparedNoteServerOwner(options: {
    if (ending || session.status().ended) {await finish(); return {status: 499 as const};}
    state = 'active';
    // Server-only capability: never serialize permits or add look commands to the
-   // notebook wire. A trusted checker must validate the exact captured draft.
+   // notebook wire. The narrow fixture checker receives the same immutable data
+   // that generates the sample description; no caller-supplied pass is accepted.
    const available = () => !ending && !controller.signal.aborted && state === 'active' && session?.probe.readyForLook() === true;
    const allowed = () => {if (available()) return true; release.end(); return false;};
+   let pendingLook: {ticket: CheckTicket; prepared: ReturnType<typeof prepareSyntheticLook>} | null = null;
    const looks = Object.freeze({
-    begin: (draft: LookDraft): CheckTicket | null => allowed() ? release.begin(draft) : null,
-    complete: (ticket: CheckTicket, result: CheckResult): LookPermit | null => allowed() ? release.complete(ticket, result) : null,
+    begin: (candidate: SyntheticLookCandidate): CheckTicket | null => {
+     if (!allowed()) return null;
+     // Even malformed replacement data revokes the previously approved sample.
+     release.end(); pendingLook = null;
+     let prepared: ReturnType<typeof prepareSyntheticLook>;
+     try {prepared = prepareSyntheticLook(candidate);} catch {return null;}
+     const ticket = release.begin(prepared.draft); pendingLook = {ticket, prepared}; return ticket;
+    },
+    complete: (ticket: CheckTicket): LookPermit | null => {
+     if (!allowed() || !pendingLook || pendingLook.ticket !== ticket) return null;
+     const pending = pendingLook; pendingLook = null;
+     return release.complete(ticket, checkFixture(notebook.snapshot(), pending.prepared.candidate));
+    },
     visual: (permit: LookPermit): LookDraft | null => allowed() ? release.visual(permit) : null,
     startSpeech: (permit: LookPermit, start: Parameters<LookRelease['startSpeech']>[1]): boolean => allowed() && release.startSpeech(permit, (draft, signal, authorizeFrame) => start(draft, signal, () => allowed() && authorizeFrame())),
    });

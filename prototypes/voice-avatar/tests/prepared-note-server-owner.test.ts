@@ -64,14 +64,14 @@ describe('disabled private notebook server owner', () => {
 });
 
 describe('server-owned synthetic look authorization', () => {
- const draft = {id: 'synthetic-look', description: 'Synthetic structured green look'};
- const passed = {outcome: 'passed' as const, reason: 'Trusted synthetic checker accepted this exact draft'};
+ const draft = {id:'synthetic-look',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const,excludedColors:[] as string[]};
  async function activeSession() {
   const s = setup(), active = await s.owner.start(request());
   if (active.status !== 200) throw Error('start');
   active.probe.receive({type: 'session.updated', session: {type: 'transcription', audio: {input: {format: {type: 'audio/pcm', rate: 24000}, transcription: {model: TRANSCRIPTION_MODEL}, turn_detection: null}}}});
+  for(const [field,value] of Object.entries({occasion:'wedding',season:'November; season not specified',color:'green',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'}))active.probe.edit(field as 'color',value,0);
   const ticket = active.looks.begin(draft); if (!ticket) throw Error('ticket');
-  const permit = active.looks.complete(ticket, passed); if (!permit) throw Error('permit');
+  const permit = active.looks.complete(ticket); if (!permit) throw Error('permit');
   return {...s, active, ticket, permit};
  }
  it('requires provider readiness and preserves exact ticket and permit identities', async () => {
@@ -79,15 +79,39 @@ describe('server-owned synthetic look authorization', () => {
   expect(active.looks.begin(draft)).toBeNull(); await active.end();
   const a = await activeSession();
   expect(a.active.looks.visual({...a.permit})).toBeNull();
-  expect(a.active.looks.visual(a.permit)).toEqual(draft);
+  expect(a.active.looks.visual(a.permit)).toMatchObject({id:draft.id,description:expect.stringContaining('Synthetic sample: green')});
   const ticket = a.active.looks.begin(draft)!;
-  expect(a.active.looks.complete({...ticket}, passed)).toBeNull();
-  expect(a.active.looks.complete(ticket, passed)).not.toBeNull(); await a.active.end();
+  expect(a.active.looks.complete({...ticket})).toBeNull();
+  expect(a.active.looks.complete(ticket)).not.toBeNull(); await a.active.end();
+ });
+ it.each([{color:'red'},{newItemCents:50001},{excludedColors:['green']}])('holds a conflicting synthetic candidate %j', async changes => {
+  const a=await activeSession(),ticket=a.active.looks.begin({...draft,...changes})!;
+  expect(a.active.looks.complete(ticket)).toBeNull(); expect(a.active.looks.visual(a.permit)).toBeNull();
+  expect(a.active.snapshot().gate?.state).toBe('held'); await a.active.end();
+ });
+ it('requires confirmed fields and does not accept a forged passed result', async () => {
+  const a=await activeSession(); a.active.probe.edit('budget','',1);
+  const ticket=a.active.looks.begin(draft)!;
+  const forged=a.active.looks.complete as (...args: unknown[]) => unknown;
+  expect(forged(ticket,{outcome:'passed',reason:'forged'})).toBeNull(); await a.active.end();
+ });
+ it('captures immutable candidate data and rejects description injection', async () => {
+  const a=await activeSession(), candidate={...draft,excludedColors:[] as string[]};
+  const ticket=a.active.looks.begin(candidate)!; candidate.color='red';candidate.excludedColors.push('green');
+  const permit=a.active.looks.complete(ticket)!;expect(permit).not.toBeNull();
+  expect(a.active.looks.visual(permit)?.description).toContain('Synthetic sample: green');
+  expect(a.active.looks.begin({...draft,description:'Unchecked text'} as never)).toBeNull();
+  expect(a.active.looks.visual(permit)).toBeNull(); await a.active.end();
+ });
+ it('rejects a result if notes change between candidate capture and validation', async () => {
+  const a=await activeSession(),ticket=a.active.looks.begin(draft)!;
+  a.active.probe.edit('budget','USD 100 maximum (items only)',1);
+  expect(a.active.looks.complete(ticket)).toBeNull(); await a.active.end();
  });
  it('revokes both display and queued speech immediately on a touch correction', async () => {
   const a = await activeSession(); let signal!: AbortSignal, frame!: () => boolean;
   expect(a.active.looks.startSpeech(a.permit, (_draft, abort, authorize) => {signal = abort; frame = authorize;})).toBe(true);
-  expect(frame()).toBe(true); expect(a.active.probe.edit('color', 'Blue', 0)).toBe(true);
+  expect(frame()).toBe(true); expect(a.active.probe.edit('color', 'Blue', 1)).toBe(true);
   expect(signal.aborted).toBe(true); expect(frame()).toBe(false); expect(a.active.looks.visual(a.permit)).toBeNull(); await a.active.end();
  });
  it('revokes before microphone permission resolves and blocks approval during capture', async () => {
@@ -104,7 +128,7 @@ describe('server-owned synthetic look authorization', () => {
   expect(await a.active.probe.beginTurn('pending')).toBe(true); for(let i=0;i<5;i++)expect(send(new ArrayBuffer(960))).toBe(true);
   expect(a.active.probe.commit()).toBe(true);
   expect(a.active.looks.begin(draft)).toBeNull();
-  expect(a.active.looks.complete(a.ticket, passed)).toBeNull(); await a.active.end();
+  expect(a.active.looks.complete(a.ticket)).toBeNull(); await a.active.end();
  });
  it('waits for final extraction settlement before permitting a fresh check', async () => {
   vi.useFakeTimers(); const a = await activeSession(); let send!: (pcm: ArrayBuffer) => boolean, respond!: (value: Response) => void;
@@ -118,7 +142,7 @@ describe('server-owned synthetic look authorization', () => {
   respond(Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:'t1',patches:[]})}]}]}));
   await vi.advanceTimersByTimeAsync(0);
   expect(a.active.probe.readyForLook()).toBe(true); expect(a.active.looks.visual(a.permit)).toBeNull();
-  const ticket=a.active.looks.begin(draft)!; expect(a.active.looks.complete(ticket,passed)).not.toBeNull(); await a.active.end();
+  const ticket=a.active.looks.begin(draft)!; expect(a.active.looks.complete(ticket)).not.toBeNull(); await a.active.end();
  });
  it('revokes synchronously while durable closure remains pending', async () => {
   const a = await activeSession(); let close!: () => void, signal!: AbortSignal;

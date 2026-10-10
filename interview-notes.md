@@ -430,3 +430,7 @@ I checked what happens when the transcription provider disconnects, extraction r
 ## Canceling a look as soon as preferences change
 
 I wanted the stylist to avoid showing or describing a look after the customer changed their requirements. I connected the simulated look approval to the server's own notebook and made starting a new voice turn cancel the old approval before microphone permission resolves. Changes and session closure cancel both the visible look and queued speech. I kept this internal so the browser cannot grant itself permission. My tests also check that a previous session cannot authorize a replacement session's look. This proves the simulated control flow, while real product validation and live speech remain separate work.
+
+## Checking the same look that the customer would hear
+
+I tightened the prototype so a caller cannot simply tell the server that a look passed. The server now copies the candidate, checks its attributes against the confirmed notebook and builds the sample description from those same attributes. My checks cover changes made during validation, prices above the budget, conflicting colors and attempts to inject a separate unchecked description. The tradeoff is deliberate: the fixture checker supports a small synthetic example, so it cannot establish suitability of real products or replace the independent preference agent planned for launch.
