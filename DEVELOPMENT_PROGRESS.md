@@ -17,8 +17,10 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - D03 searchable internal catalog implemented with four original illustrations and non-purchasable sample products. Agent browser verification passed all-items search, Blue search, image loading and empty-state recovery.
 - Phase 1d source-access/privacy desk research and X01 ASOS/FARFETCH public comparison recorded; permission and launch decisions remain open.
 - Prepared a disabled extraction HTTP transport with injected simulated requests, a 32 KiB request/response limit, strict destination/content checks and cancellation of late response bodies. All 24 new checks passed; no live route or credentials were added.
+- Prepared a disabled transcription socket binding: bounded input/output, send backpressure, cancellation, listener cleanup and redacted failures. Tested its complete simulated extraction/notebook chain and actual loopback WebSocket framing with a synthetic provider.
+- Consolidated the simulated transports and notebook probe into one prepared session factory. External cancellation, disconnect, extraction failure and cleanup failure have focused checks.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 674 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 704 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -38,4 +40,8 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-D02, D03 and X01 desk comparison are implemented. docs/mvp.md now records current scope/findings and open risks. The disabled extraction HTTP transport is implemented and tested. Next bind the prepared transcription protocol to an injected simulated socket lifecycle, with bounded incoming messages, cancellation, send backpressure and cleanup tests; integrate it with the existing session owner before considering live activation. All live trial, source permission and Phase 1 exit blockers above remain.
+D02, D03 and X01 desk comparison are implemented. docs/mvp.md now records current scope/findings and open risks. The disabled extraction HTTP transport and transcription socket lifecycle are implemented and tested, including the existing session owner and loopback framing. The combined session factory and shared cancellation owner are now implemented. Next integrate this factory into the existing disabled loopback browser bridge and verify two turns, touch confirmation, late extraction and disconnect through that combined path. Do not enable live routes or change allowances. Live activation later needs a separately approved test allowance; conversational resume additionally needs the Tavus technical reply. All live trial, source permission and Phase 1 exit blockers above remain.
+
+## Session handoff
+
+The source increments and progress evidence are saved locally and committed. Live providers remain disabled for these additions. No new allowance, provider trial, retailer application or Render deployment was made. The next implementation task above needs no renewed routine-development approval. Human intervention is required later for a new paid trial allowance, the Tavus recovery reply and source/privacy launch decisions. Phase 1 remains incomplete.

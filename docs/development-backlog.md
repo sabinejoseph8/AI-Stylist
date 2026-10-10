@@ -506,3 +506,11 @@ Baseline acceptance: Only enabled after documented approval and tested flow.
 ## Incremental evidence: extraction HTTP preparation
 
 D21 remains partial. The pinned extraction adapter now has a simulation-only bounded HTTP transport, with 24 focused tests including cancellation and a completed strict-decoder chain. Total phase evidence is 674 passing tests across 47 files, type checking and build. No paid request, credential access, live activation or Render deployment occurred. Next actionable dependency is transcription socket lifecycle integration.
+
+## Incremental evidence: transcription socket preparation
+
+D21/D22 remain partial. The simulated transcription socket lifecycle is implemented with 24 focused checks, including actual loopback framing and a combined synthetic extraction-to-notebook flow. Total phase evidence is 698 tests across 48 files, type checking and build. Physical-device/provider performance remains pending; no launch acceptance is inferred. Next: consolidate the combined session factory and cancellation owner.
+
+## Incremental evidence: combined provider session
+
+D21/D22 remain partial. The shared simulation-only session factory composes the prepared transports and note owner. Six new cancellation/failure checks bring the suite to 704 passing tests across 49 files, with type checking and build passing. No real-provider or physical-device acceptance is claimed. Next integrate the factory through the disabled loopback browser bridge.
