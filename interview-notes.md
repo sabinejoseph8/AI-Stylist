@@ -207,3 +207,8 @@ I connected the streaming microphone to a separate private check that sends a sh
 ## Keeping the next voice check within its allowance
 
 I approved one more bounded phone check for automatic capture and spoken stopping. I preserved all seven earlier test records, verified the separate amendment and checked that the next unapproved attempt stays blocked. I kept approval, deployment and actual phone acceptance as distinct milestones.
+
+
+## Checking what the phone test actually proved
+
+The stylist answered my phone request without my pressing Send. By the time I reached the planned interruption step, she had finished speaking. The page later showed a sound-triggered stop, and the test record confirmed the connection was closed. I kept the automatic reply as a confirmed result and left natural interruption unverified. I still need to distinguish a deliberate spoken stop from a possible noise or speaker-echo trigger before deciding what to improve.
