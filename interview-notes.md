@@ -254,3 +254,7 @@ When I could not find the full review instructions, I identified that the page o
 ## Completing the notebook prototype review
 
 I finished the complete 18-step notebook review and confirmed that all steps worked. This gave me confidence in the simulated notes, corrections, clothing reference, preference-check controls and session clearing before connecting real speech. I kept that acceptance separate from the remaining integration work: real extraction, recommendation speech gating and timing still need evidence. I did not treat a successful local prototype review as completion of the full app feature.
+
+## Protecting edits during partial speech
+
+I continued preparing the notebook while Tavus's recovery answer was pending. I required partial speech updates to preserve a customer's newer touch edits throughout the same turn, rather than letting a later fragment overwrite them. I also kept extraction results tentative and required evidence from the customer's submitted words. I added timing instrumentation that separates completed, failed and canceled work, so slow results cannot quietly disappear from the measurement. The 282 automated checks, type checking and build pass. This is tested groundwork; real speech integration and live speed acceptance still need evidence.
