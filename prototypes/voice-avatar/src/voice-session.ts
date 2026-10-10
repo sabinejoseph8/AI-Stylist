@@ -107,6 +107,19 @@ export class VoiceSession {
     const commands = this.interrupt(); this.state = 'held'; this.reason = reason; return commands;
   }
 
+  /** Transport callback only: call after the old Realtime connection has closed
+   * and a fresh, verified session is ready. This method does not open a session
+   * or restore history. Never seed the replacement with an unconfirmed reply.
+   * The epoch prevents a late reset callback from reviving a newer/ended session.
+   */
+  completeContextReset(heldEpoch: number): boolean {
+    if (this.state !== 'held' || !Number.isSafeInteger(heldEpoch) || heldEpoch !== this.epoch) {
+      this.rejected += 1; return false;
+    }
+    this.active = null; this.queue = []; this.seen.clear(); this.epoch += 1;
+    this.state = 'idle'; this.reason = ''; return true;
+  }
+
   end(): Command[] {
     const commands = this.interrupt();
     this.active = null; this.queue = []; this.seen.clear(); this.epoch += 1; this.state = 'ended'; return commands;

@@ -187,3 +187,8 @@ After completing the local device checks, I approved one additional private phon
 I tried the private voice test on my iPhone and pressed Interrupt and end during the avatar response. Her sound stopped and the page confirmed the connection closed. The durable record also showed the test was closed. This verified the explicit stop control; it did not establish natural spoken interruptions or resuming a conversation afterward.
 
 I confirmed that I could hear the generated reply and see the avatar mouth move on my iPhone before interrupting it. This gave me evidence that the bounded phone media path works. I kept precise timing, natural interruptions and continuous conversation as open checks instead of treating basic playback as proof of the complete stylist experience.
+
+
+## Preparing safe recovery after an interruption
+
+I separated stopping speech from safely continuing the conversation. If I interrupt the stylist, the system must not assume I heard the rest of her reply. I added and tested a guarded recovery step for a fresh conversation context, including checks that late or duplicate callbacks cannot restart old speech. This is a component for the next integration step, not a working hands-free conversation. I kept the existing phone preview and the remaining live timing checks clearly separate.

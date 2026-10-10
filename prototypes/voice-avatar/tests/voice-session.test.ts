@@ -53,6 +53,45 @@ describe('P1-01: interruption and stale output (synthetic transport)', () => {
     for (const position of [-1, 5, 21, NaN, Infinity]) expect(session.acknowledgePlayback(key, position)).toBe(false);
     expect(session.interrupt().at(-1)?.payload.audio_end_ms).toBe(10);
   });
+  it('can resume only after the transport confirms replacement of an unknown-playback context', () => {
+    const session = new VoiceSession('room'); const old = session.start('r1', 'i1');
+    session.enqueue({ ...old, eventId: 'old', pcm: SILENT_FRAME }); session.takeAudio();
+    session.interrupt(); const heldEpoch = session.snapshot().epoch;
+    expect(() => session.start('r2', 'i2')).toThrow();
+    expect(session.completeContextReset(heldEpoch)).toBe(true);
+    expect(session.snapshot()).toMatchObject({ state: 'idle', queued: 0, reason: '' });
+    const current = session.start('r2', 'i2');
+    session.enqueue({ ...old, eventId: 'late', pcm: SILENT_FRAME });
+    expect(session.acknowledgePlayback(old, 20)).toBe(false);
+    session.enqueue({ ...current, eventId: 'new', pcm: SILENT_FRAME });
+    expect(session.takeAudio()[0]?.payload).toMatchObject({ properties: { inference_id: 'r2' } });
+  });
+  it('rejects invalid or stale reset acknowledgments and consumes a valid acknowledgment once', () => {
+    const session = new VoiceSession('room'); session.start('r1', 'i1'); session.interrupt();
+    const heldEpoch = session.snapshot().epoch;
+    for (const epoch of [heldEpoch - 1, heldEpoch + 1, NaN, Infinity, 1.5]) {
+      expect(session.completeContextReset(epoch)).toBe(false);
+      expect(session.snapshot().state).toBe('held');
+    }
+    expect(session.completeContextReset(heldEpoch)).toBe(true);
+    expect(session.completeContextReset(heldEpoch)).toBe(false);
+  });
+  it('cannot reset an active response or revive an ended session', () => {
+    const session = new VoiceSession('room'); session.start('r1', 'i1');
+    expect(session.completeContextReset(session.snapshot().epoch)).toBe(false);
+    session.interrupt(); const heldEpoch = session.snapshot().epoch; session.end();
+    expect(session.completeContextReset(heldEpoch)).toBe(false);
+    expect(session.completeContextReset(session.snapshot().epoch)).toBe(false);
+    expect(session.snapshot().state).toBe('ended');
+  });
+  it('does not let an earlier context replacement release a later interruption', () => {
+    const session = new VoiceSession('room'); session.start('r1', 'i1'); session.interrupt();
+    const firstEpoch = session.snapshot().epoch; session.completeContextReset(firstEpoch);
+    session.start('r2', 'i2'); session.interrupt();
+    expect(session.completeContextReset(firstEpoch)).toBe(false);
+    expect(session.snapshot().state).toBe('held');
+    expect(session.completeContextReset(session.snapshot().epoch)).toBe(true);
+  });
   it('deduplicates incoming audio events', () => {
     const session = new VoiceSession('room'); const key = session.start('r1', 'i1');
     const frame = { ...key, eventId: 'same', pcm: SILENT_FRAME };
