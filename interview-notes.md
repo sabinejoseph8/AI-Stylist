@@ -236,3 +236,7 @@ I also tightened recovery so it waits for acknowledgment that the confirmed cont
 ## Keeping stop controls active after audio is sent
 
 I found and fixed a cleanup gap in the streaming preparation: audio can still be playing after the server has finished sending it. I kept the session's stop connection active through that period and added checks for stopping after delivery and during the final handoff. All 233 automated checks, type checking and the build passed. This is preparation, not a deployed recovery feature. I am still waiting for Tavus to clarify how to verify old audio is cleared before resuming.
+
+## Checking interruption and recovery together
+
+I tested the prepared audio, session and memory components together using simulated provider responses. I checked that interrupted audio could not return, an unheard reply could not become confirmed memory, and a late recovery response could not reopen an ended session. All 236 automated checks passed, along with type checking and the build. I also separated the current prototype status from earlier implementation notes so historical test allowances would not be mistaken for permission to spend again. Actual conversation recovery still needs Tavus clarification and a later approved device test.

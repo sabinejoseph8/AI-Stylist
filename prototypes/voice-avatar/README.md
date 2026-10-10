@@ -1,5 +1,29 @@
 # Task 1b: Private voice and avatar experiment
 
+## Current status, 9 October 2026
+
+Task 1b is approved and in progress. The source is published to GitHub, and a password-protected Render Free preview uses Supabase for its durable test-limit ledger. The deployed phone page supports two bounded, buffered exchanges and spoken interrupt-and-end. Sabine confirmed a generated avatar reply with mouth movement and intentional spoken interruption on iPhone. Continuous conversation recovery and precise latency/lip-sync measurements are not accepted.
+
+All nine approved provider attempts are consumed and verified closed. No further provider test is authorized. Do not reset the ledger, seed a replacement, use historical attempt counts below as current allowance, or start a paid test from old instructions. Reservation totals are not actual charges. Credentials and private records remain outside GitHub.
+
+The latest local and published preparation includes incremental output, cancellation after audio delivery, confirmed-only conversation memory and guarded recovery. It is not deployed or enabled on the phone page. Live recovery requires Tavus's pending technical reply about verified renderer cleanup, transport integration and separately approved physical testing. No customer accounts, live styling notes, looks or shopping are built.
+
+### Automated checks
+
+From this prototype directory, with installed dependencies and Node 24:
+
+```sh
+npm run test:phase-1
+npm run typecheck
+npm run build
+```
+
+236 tests across 24 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+
+See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
+
+# Historical implementation notes
+
 Updated 9 October 2026. Status: scripted desktop provider connection observed; natural conversation and phone acceptance pending.
 
 This isolated React/TypeScript and Node/TypeScript prototype has two modes. The default page at / is a silent local simulation. Explicit --scripted mode adds /scripted.html, which generates a fixed OpenAI Realtime voice clip and streams the buffered audio to a Tavus stock avatar. Sabine confirmed hearing the repeat and seeing the mouth move. This is not the customer app, a latency benchmark or proof of natural interruption. No customer notes, shopping, Supabase access or Render deployment exists.
@@ -108,3 +132,9 @@ ConfirmedConversation is wired to the local SpokenService and keeps generated re
 The prepared streaming bridge now retains its parent cancellation connection after all output frames are sent. Remote playback may continue after sending finishes, so ending the owning session must still send the interrupt. Cancellation releases the listener and repeated cancellation does not resend the interrupt. Completion racing with cancellation is rejected rather than reported as successful. Sending an interrupt still requires independent renderer/room cleanup verification.
 
 233/233 synthetic/mocked tests, type checking and build pass. Two new regression checks cover parent cancellation after output delivery and cancellation during final output handoff. No provider call, reservation, deployment or budget change occurred. The fix is local and published only; live recovery and physical acceptance remain pending Tavus clarification and integration. Task 1b remains unchecked.
+
+## Combined recovery checks, 9 October 2026
+
+Added three combined synthetic checks using the real streaming bridge, paced output queue, session coordinator, confirmed memory and recovery gate, with mocked generation and transport acknowledgments. They verify that interruption clears queued audio and rejects late frames; only confirmed memory is restored before a new response is accepted; unverified renderer cleanup blocks replacement; and ending during restoration disposes the replacement without reviving the session. These checks validate component coordination, not Tavus's actual cleanup guarantees.
+
+236/236 tests across 24 files, type checking and build pass. No provider calls, paid attempts, deployment or architecture changes occurred. Live recovery adapters and physical verification remain pending Tavus's technical reply and later test authorization. Task 1b remains unchecked.
