@@ -16,8 +16,9 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - D02 normalized catalog contract implemented, with two synthetic adapters and shared tests.
 - D03 searchable internal catalog implemented with four original illustrations and non-purchasable sample products. Agent browser verification passed all-items search, Blue search, image loading and empty-state recovery.
 - Phase 1d source-access/privacy desk research and X01 ASOS/FARFETCH public comparison recorded; permission and launch decisions remain open.
+- Prepared a disabled extraction HTTP transport with injected simulated requests, a 32 KiB request/response limit, strict destination/content checks and cancellation of late response bodies. All 24 new checks passed; no live route or credentials were added.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 650 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 674 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -37,4 +38,4 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-D02, D03 and X01 desk comparison are implemented. docs/mvp.md now records current scope/findings and open risks. Next implement the remaining disabled server-side extraction HTTP transport with injected simulated requests, bounded response/cancellation and no live activation; then continue the transcription wire integration. All live trial, source permission and Phase 1 exit blockers above remain.
+D02, D03 and X01 desk comparison are implemented. docs/mvp.md now records current scope/findings and open risks. The disabled extraction HTTP transport is implemented and tested. Next bind the prepared transcription protocol to an injected simulated socket lifecycle, with bounded incoming messages, cancellation, send backpressure and cleanup tests; integrate it with the existing session owner before considering live activation. All live trial, source permission and Phase 1 exit blockers above remain.

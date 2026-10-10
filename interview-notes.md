@@ -344,3 +344,7 @@ I completed all seven local connection rehearsal steps, including the ready stat
 ## Keeping retailer integration independent
 
 I prioritized the catalog contract because it had no unfinished implementation dependencies. I preserved product and variant identities, prices, evidence dates and permissions, and tested two different synthetic source formats against the same contract. I then added four original illustrations and searchable sample products, with no purchase links or inventory claims. Browser checks passed all-items search, Blue search, loaded artwork and empty results; all 650 tests, type checking and build passed. I also compared public retailer routes and found that one historical ASOS network listing was closed. I recorded missing permissions instead of treating a public feed advertisement as approval.
+
+## Preparing the notebook extraction connection
+
+I separated the model request from the notebook rules so I could test failures before spending more on live trials. I added strict limits on request and response sizes, rejected redirects and malformed responses, and made cancellation discard late responses. During testing, a fixture incorrectly included a confirmation flag that the strict schema forbids. I corrected the fixture while retaining the rule that model-generated notes stay tentative. All 674 checks, type checking and the build passed. This preparation does not prove live speech latency or a completed customer conversation.

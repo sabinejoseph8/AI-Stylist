@@ -502,3 +502,7 @@ User story: As a shopper I may check out in-app if supported.
 Technical tasks: Investigate explicit partner authorization and SDK/API.
 
 Baseline acceptance: Only enabled after documented approval and tested flow.
+
+## Incremental evidence: extraction HTTP preparation
+
+D21 remains partial. The pinned extraction adapter now has a simulation-only bounded HTTP transport, with 24 focused tests including cancellation and a completed strict-decoder chain. Total phase evidence is 674 passing tests across 47 files, type checking and build. No paid request, credential access, live activation or Render deployment occurred. Next actionable dependency is transcription socket lifecycle integration.
