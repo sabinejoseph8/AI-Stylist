@@ -1,4 +1,5 @@
 import {randomUUID} from 'node:crypto';
+import {isDeepStrictEqual} from 'node:util';
 
 const PURPOSE='notes-only-simulation' as const;
 type Run={id:string;closed:boolean};
@@ -15,6 +16,27 @@ function validate(value:unknown):PreparedNoteLedger{
  if(r.some(v=>!object(v)||!exact(v,['id','closed'])||!validId(v.id)||typeof v.closed!=='boolean')||new Set(r.map(v=>v.id)).size!==r.length||r.filter(v=>!v.closed).length>1)throw Error();
  return structuredClone(value) as PreparedNoteLedger;
 }
+/** Shared preparation contract for a future locked database transition.
+ * Accepts exactly one append or one closure; returns a detached validated copy.
+ * This does not authorize a new approval or implement database locking. */
+export function validatePreparedNoteTransition(previous:unknown,replacement:unknown):PreparedNoteLedger{
+ try{
+  const before=validate(previous),after=validate(replacement);
+  if(!isDeepStrictEqual(before.approval,after.approval))throw Error();
+  if(after.runs.length===before.runs.length+1){
+   if(before.runs.some(r=>!r.closed)||after.runs.at(-1)!.closed||!isDeepStrictEqual(before.runs,after.runs.slice(0,-1)))throw Error();
+  }else if(after.runs.length===before.runs.length){
+   let closures=0;
+   for(let i=0;i<before.runs.length;i++){
+    const a=before.runs[i]!,b=after.runs[i]!;
+    if(isDeepStrictEqual(a,b))continue;
+    if(a.id!==b.id||a.closed||!b.closed)throw Error();closures++;
+   }
+   if(closures!==1)throw Error();
+  }else throw Error();
+  return after;
+ }catch{throw Error('Notebook allowance transition requires review.');}
+}
 /** Explicit simulated persistence only. No key, URL, RPC, initializer, amendment or
  * retry exists. Fixture approval is not human authorization to spend. A future
  * live adapter must use a separately reviewed store and authorized allowance. */
@@ -30,7 +52,7 @@ export class PreparedNoteAllowance{
   if(this.held)throw Error('Notebook allowance requires review.');
   try{
    const previous=validate(await this.persistence.read()),next=structuredClone(previous);
-   update(next);validate(next);
+   update(next);validatePreparedNoteTransition(previous,next);
    if(await this.persistence.compareAndSwap(previous,next)!==true)throw Error();
   }catch{this.held=true;throw Error('Notebook allowance requires review.');}
  }

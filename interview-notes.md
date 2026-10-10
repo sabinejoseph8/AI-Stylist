@@ -391,3 +391,13 @@ I compared the notebook preparation with official API schemas and added eight sy
 ## Separating the next experiment allowance
 
 I prepared a separate notebook allowance so a future experiment could not reuse the closed voice-test history. I tested concurrent starts, uncertain writes, failed closure and usage carried between adapter instances sharing a simulated store. The preparation refuses missing or legacy records and cannot initialize or increase an allowance. I kept fixture amounts separate from permission to spend. All 800 checks, type checking and build passed; no remote database, provider test or deployment changed.
+
+
+## Checking allowance ownership through the browser
+
+I connected the separate simulated allowance to the protected notebook flow. I checked that leaving during a slow reservation did not start a provider later, that cleanup delays blocked replacement, and that two connections sharing one store could not both start. I kept uncertain writes blocked and recorded the database security and verification steps before activation. All 806 checks, type checking and build passed. No actual database or paid trial was changed.
+
+
+## Verifying the database rules before deployment
+
+I added a shared rule allowing only one reservation append or closure, so approval amounts and earlier history stayed intact. I prepared the separate database migration and tested it in an isolated local PostgreSQL container. The first run caught a syntax error, which I fixed. I also corrected a test that compared JSON formatting instead of its meaning. All 42 local database checks and 823 prototype checks passed, along with type checking and build. I verified access restrictions and competing reservations without changing Supabase or the actual test history.

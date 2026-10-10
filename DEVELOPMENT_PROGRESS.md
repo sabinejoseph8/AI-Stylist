@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 800 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 823 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -51,6 +51,20 @@ Eight synthetic checks cover the documented session envelope, transcript deltas 
 
 Prepared a simulation-only allowance with a strict notes-only ledger, explicit bounded fixture amounts, lifetime attempt accounting and injected compare-and-swap persistence. It has no credentials, URL, RPC, initialization, amendment, automatic refund or retry. Missing/legacy/corrupt records, unresolved runs, failed writes and failed closure hold further work. Fifteen checks cover replacement adapter instances sharing an in-memory store, concurrent owners, a write succeeding before its response fails, failed closure, malformed records and an exhausted allowance blocking provider construction. No actual database or server restart was exercised. Fixture approval is not spending authorization. All 800 tests across 59 files, type checking and build pass. No remote data, nine-trial legacy history or deployment was changed; Task 1c and Phase 1 remain partial.
 
+
+
+### Separate allowance connection integration
+
+Six loopback checks now exercise the separate PreparedNoteAllowance through the protected browser lifecycle. Page exit during a pending write retires a late successful reservation without a provider; uncertain writes and failed closure retain holds. Pending closure blocks replacement, confirmed closure permits a fresh reservation, hidden-page capture stops, and two bridges sharing a simulated compare-and-swap store permit only one provider owner. All 806 tests across 60 files, type checking and build pass. These are synthetic persistence/provider checks, not Supabase or physical-device acceptance. The unapplied storage design and database verification gates are in docs/notebook-allowance-storage-plan.md. No remote records, allowance or deployment changed.
+
+
+
+### Notebook allowance transition and database preparation
+
+Implemented a shared pure validator permitting exactly one open append or one closure, preserving approval, record order and IDs. Seventeen focused checks reject amendments, removal, reopening, duplicate IDs, no-op updates and combined transitions. The cumulative prototype suite is 823 tests across 61 files, with type checking and build passing.
+
+Prepared supabase/notebook-allowance-preparation.sql with a private table, row security, private privilege-elevating implementations and server-only invoker RPC wrappers. It neither initializes an allowance nor changes any legacy budget object. Forty-two checks passed in a pinned isolated PostgreSQL 17 container with no network or host ports: transition invariants, missing records, actual role denials, server reads/changes, stale and concurrent compare-and-swap, attempt caps and an unchanged synthetic legacy sentinel. Fixed a migration CASE-expression syntax error and changed the test sentinel comparison to semantic JSON equality. The temporary container was removed. No actual Supabase configuration, records or spending allowance changed. Remote privileges, database recovery and transport verification remain open; this is not hosted acceptance.
+
 ## Current work and dependency order
 
 1. Preserve the implemented catalog and combined notebook discovery evidence without treating it as a full feature launch.
@@ -69,9 +83,11 @@ Prepared a simulation-only allowance with a strict notes-only ledger, explicit b
 
 ## Exact next action
 
-All 800 checks across 59 files, type checking and build pass. Official-schema-shaped transcript fixtures and the separate simulation-only notes allowance are implemented. Next exercise the protected browser/provider chain with this separate allowance and shared injected compare-and-swap store, including pending reservation at page exit, late write success, replacement after closure and uncertain closure. Current tests establish the allowance in isolation and exhaustion at the protected owner, not its full browser lifecycle or actual durable database behavior. Keep this preparation unattached to the application server.
+All 823 prototype checks across 61 files, type checking and build pass. Forty-two separate local PostgreSQL checks also pass; the temporary isolated container was removed. The notebook allowance now has full synthetic browser integration, a shared pure transition validator and an unapplied migration with private storage/server-only RPC wrappers. No actual Supabase records or legacy reservations changed.
 
-The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. Do not cycle through the same failed documentation URLs or guess a live endpoint. A real notes-only experiment still needs a reviewed dedicated durable store and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled and preserve cleanup holds. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
+Next prepare a bounded persistence transport with injected simulated requests for the two new notebook RPC wrappers. Enforce exact HTTPS Supabase project destinations, fixed RPC names, strict JSON/content/size checks, an eight-second deadline, late-body cancellation, no redirects, retry, credential loader, default fetch, initializer or legacy fallback. Test failed/uncertain writes through the protected owner and preserve its cleanup holds. See docs/notebook-allowance-storage-plan.md. Keep it unattached to the application server and do not apply the migration remotely.
+
+The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 
