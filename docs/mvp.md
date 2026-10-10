@@ -76,3 +76,5 @@ On 10 October 2026, seven new combined loopback scenarios checked page exit, hid
 ## Combined replacement and release isolation
 
 Four additional synthetic integration checks verify old extraction/provider isolation after replacement, rejection of a prior connection render receipt, refusal of replacement after cleanup failure, and immediate visual/speech-frame permission revocation after a budget correction. All 726 tests across 53 files, type checking and build pass. No real playback or live cleanup is established. Next prepare a bounded combined-note trial plan and full manual instructions while leaving activation disabled.
+
+The next proposed real-input experiment is notes-only, with no avatar/camera/shopping. Its full future script and prerequisites are in docs/combined-notes-live-trial-plan.md. It needs a concrete new trial allowance before activation; safe avatar resume still separately awaits the Tavus technical reply. This is a proposal, not a change to the approved MVP scope or privacy terms.

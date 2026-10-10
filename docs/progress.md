@@ -769,3 +769,7 @@ Seven combined loopback scenarios cover pagehide, hidden state, permission grant
 ### Replacement isolation and display/speech revocation, 10 October 2026
 
 Three new combined bridge checks verify that old extraction/provider events cannot update a fresh connection, old render receipts are rejected, and failed provider cleanup prevents replacement. One combined extraction/fixture-release check verifies that a budget correction aborts existing speech authorization, rejects further frames and removes the old visual permit. All 726 tests across 53 files, type checking and build pass. No actual recommendation speech or provider call was made. Next prepare the bounded live-trial activation plan and full manual script; keep live activation disabled pending financial/security prerequisites.
+
+### Notes-only live-trial proposal
+
+Prepared docs/combined-notes-live-trial-plan.md with explicit disabled status, prerequisites, a complete future manual script and honest evidence limits. This notes-only experiment is separate from Tavus conversational resume. No trial allowance, model-cost estimate, live route, credential transfer or deployment is approved by the plan. Next prepare the disabled server owner with injected gate/budget/session interfaces and refusal/cleanup tests before considering activation.

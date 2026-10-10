@@ -530,3 +530,5 @@ On 10 October 2026, seven new combined loopback scenarios checked page exit, hid
 ## Combined replacement and release isolation
 
 Four additional synthetic integration checks verify old extraction/provider isolation after replacement, rejection of a prior connection render receipt, refusal of replacement after cleanup failure, and immediate visual/speech-frame permission revocation after a budget correction. All 726 tests across 53 files, type checking and build pass. No real playback or live cleanup is established. Next prepare a bounded combined-note trial plan and full manual instructions while leaving activation disabled.
+
+Prepared the notes-only private trial proposal and complete future manual instructions in docs/combined-notes-live-trial-plan.md. D21/D22 remain partial until actual partial speech and timing evidence exist. No provider trial is enabled or funded by this planning. Next: disabled server owner with private access and durable allowance interfaces, using simulations only.
