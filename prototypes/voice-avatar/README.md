@@ -145,3 +145,7 @@ The prepared streaming bridge now retains its parent cancellation connection aft
 Added three combined synthetic checks using the real streaming bridge, paced output queue, session coordinator, confirmed memory and recovery gate, with mocked generation and transport acknowledgments. They verify that interruption clears queued audio and rejects late frames; only confirmed memory is restored before a new response is accepted; unverified renderer cleanup blocks replacement; and ending during restoration disposes the replacement without reviving the session. These checks validate component coordination, not Tavus's actual cleanup guarantees.
 
 236/236 tests across 24 files, type checking and build pass. No provider calls, paid attempts, deployment or architecture changes occurred. Live recovery adapters and physical verification remain pending Tavus's technical reply and later test authorization. Task 1b remains unchecked.
+
+### Notebook manual review accepted, 10 October 2026
+
+Sabine reported all steps in the complete notebook review worked. The local simulated notebook review passed; actual speech/extraction, recommendation speech gating, measured timing and full device/accessibility acceptance remain pending. Task 1c stays in progress. No provider call or deployment was started by recording this result.

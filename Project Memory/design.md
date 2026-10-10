@@ -217,3 +217,7 @@ The product specification and this design specification are approved. The concep
 - 9 October 2026, project memory review: Reviewed all visual tokens, components, screens and pending prototype checks. Updated planning/approval status; kept the notebook, collage, typography, navigation, accessibility and approved design baseline v1.0 unchanged.
 
 - 9 October 2026: Recorded Task 1b local simulation and current technical v0.10 pointer. The notebook-style experiment panel is not the customer notebook implementation. No approved visual token, screen or component requirement changed.
+
+## Local notebook review, 10 October 2026
+
+Sabine completed the 18-step notebook prototype guide and reported that all steps worked. Record the local simulated notebook manual review as passed, including the review of editable/missing/uncertain notes, collapsed summary and photo reference, fixture-check feedback, clearing and keyboard/readability controls. This does not change the approved v1.0 design baseline or establish a full accessibility audit, physical iPhone acceptance, real speech updates or production readiness. No design change was requested in this review.

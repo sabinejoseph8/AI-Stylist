@@ -1,6 +1,6 @@
 # Task 1c: Notebook prototype and review
 
-Updated: 10 October 2026. Status: local prototype ready for review; Task 1c remains in progress.
+Updated: 10 October 2026. Status: local prototype manual review passed; Task 1c remains in progress.
 
 ## Authorization and scope
 
@@ -77,3 +77,9 @@ Real partial speech extraction, real voice edits, notes appearing during an actu
 ## Instruction visibility correction, 10 October 2026
 
 Sabine could not find the full instructions. The original on-page section contained only a seven-step summary, although it had been described as the complete guide. Replaced that summary with the complete 18-step guide and added a prominent expandable Read full test instructions control above the prototype notice. Both locations share one instruction component. Browser inspection verified all 18 numbered steps and four section headings, and the top guide is left open for Sabine. 265/265 tests, type checking and build pass. No provider call or deployment occurred.
+
+## Sabine's manual review result, 10 October 2026
+
+After receiving the complete 18-step guide in chat, Sabine reported: “finished, all steps worked.” The local notebook review is accepted on that basis, including the simulated note/edit flow, fixture validation controls, photo/reference and clearing/accessibility instructions. No failed step was reported. This is user-reported acceptance; device/browser and individual optional camera sub-checks were not separately identified. It does not establish physical iPhone acceptance, a complete accessibility audit, measured latency or live speech/image/validation integration.
+
+The prototype review is complete. Remaining Task 1c integration gates stay open; no overall task-group checkbox is ticked. Latest code checks remain 265 passing tests, type checking and build; documentation-only update, with no paid test or deployment.

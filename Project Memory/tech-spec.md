@@ -811,3 +811,7 @@ Images stay in local object URLs and require explicit reference confirmation. Re
 ### Notebook review instructions, 10 October 2026
 
 The complete 18-step manual notebook guide is now rendered from one shared instruction module at both the top and lower review section. This replaces a shortened on-page checklist that had incorrectly been described as complete. Native expandable controls expose the guide before testing. Browser inspection verified all numbered steps; 265 tests, type checking and build pass. No provider or architecture changes.
+
+### Notebook prototype manual acceptance, 10 October 2026
+
+Sabine reported “finished, all steps worked” after the complete 18-step local notebook guide was provided in chat. The simulated notebook manual review is accepted. This supports the prototype interaction direction and introduces no architecture change. Device/browser, individual optional camera sub-checks and exact measurements were not separately reported; actual partial speech, real recommendation/speech gating, timing and full accessibility/device acceptance remain open. Task 1c is not complete. Latest implementation checks remain 265 tests, type checking and build passing; no checks were rerun for this documentation-only result.

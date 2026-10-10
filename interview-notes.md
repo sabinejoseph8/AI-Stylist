@@ -250,3 +250,7 @@ I also checked that an unvalidated sample stays hidden, that changing a note inv
 ## Making test instructions easier to find
 
 When I could not find the full review instructions, I identified that the page only contained a short checklist. I added a clear control at the top and put all 18 steps there, with the same complete guide available below. This lets me read everything before testing. Browser inspection confirmed the guide was complete, and all 265 checks, type checking and the build still passed.
+
+## Completing the notebook prototype review
+
+I finished the complete 18-step notebook review and confirmed that all steps worked. This gave me confidence in the simulated notes, corrections, clothing reference, preference-check controls and session clearing before connecting real speech. I kept that acceptance separate from the remaining integration work: real extraction, recommendation speech gating and timing still need evidence. I did not treat a successful local prototype review as completion of the full app feature.
