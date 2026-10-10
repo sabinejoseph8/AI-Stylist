@@ -28,6 +28,10 @@ describe('safe experiment budget display', () => {
     read.mockResolvedValue({ spokenExtension: {}, reserveTransfer: {}, phoneTrial: {}, automaticTrial: {}, runs: Array.from({ length: 7 }, () => ({ closed: true })) });
     expect(await (await fetch(`${base}/api/experiment-budget`, { headers: { Cookie: cookie } })).json()).toEqual({ remainingAttempts: 1, remainingScriptedAttempts: 0, cleanupPending: false, reservedCents: 1400 });
   });
+  it('shows the one approved repeat without scripted access', async () => {
+    read.mockResolvedValue({ spokenExtension: {}, reserveTransfer: {}, phoneTrial: {}, automaticTrial: {}, repeatTrial: {}, runs: Array.from({length:8}, () => ({closed:true})) });
+    expect(await (await fetch(`${base}/api/experiment-budget`, {headers:{Cookie:cookie}})).json()).toEqual({remainingAttempts:1,remainingScriptedAttempts:0,cleanupPending:false,reservedCents:1600});
+  });
   it('fails closed on missing or corrupt ledger and requires local ownership',async()=>{
     read.mockRejectedValue(new Error('private-file-path'));
     expect((await fetch(`${base}/api/experiment-budget`)).status).toBe(403);

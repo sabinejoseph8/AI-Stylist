@@ -133,6 +133,27 @@ describe('scripted test budget reservations', () => {
     const data = await budget.read(); data.automaticTrial!.extraAttempts = 2 as 1; await writeFile(path, JSON.stringify(data));
     await expect(budget.reserve('spoken')).rejects.toThrow('review');
   });
+  it('preserves eight records and permits only one separately approved repeat', async () => {
+    const { path, budget } = await ledger();
+    await expect(budget.approveRepeatTrial()).rejects.toThrow();
+    for (let i=0; i<4; i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approvePhoneTrial(); await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveAutomaticTrial(); const eighth = await budget.reserve('spoken');
+    await expect(budget.approveRepeatTrial()).rejects.toThrow();
+    await budget.closeVerified(eighth); const previous = await budget.read();
+    await budget.approveRepeatTrial(); const amended = await budget.read();
+    const { repeatTrial, ...preserved } = amended; expect(preserved).toEqual(previous);
+    await expect(budget.approveRepeatTrial()).rejects.toThrow();
+    await expect(budget.reserve()).rejects.toThrow('limit');
+    const ninth = await budget.reserve('spoken');
+    await expect(budget.reserve('spoken')).rejects.toThrow('cleanup');
+    await budget.closeVerified(ninth); expect((await budget.read()).runs).toHaveLength(9);
+    await expect(budget.reserve('spoken')).rejects.toThrow('limit');
+    const altered = await budget.read(); altered.repeatTrial!.cents = 400 as 200;
+    await writeFile(path, JSON.stringify(altered)); await expect(budget.read()).rejects.toThrow('review');
+  });
   it('rejects modified amounts and unknown cleanup IDs', async () => {
     const { path,budget } = await ledger(); await expect(budget.closeVerified('unknown')).rejects.toThrow();
     const id = await budget.reserve(); const data = await budget.read(); data.runs[0]!.cents=0; await writeFile(path,JSON.stringify(data));

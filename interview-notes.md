@@ -212,3 +212,7 @@ I approved one more bounded phone check for automatic capture and spoken stoppin
 ## Checking what the phone test actually proved
 
 The stylist answered my phone request without my pressing Send. By the time I reached the planned interruption step, she had finished speaking. The page later showed a sound-triggered stop, and the test record confirmed the connection was closed. I kept the automatic reply as a confirmed result and left natural interruption unverified. I still need to distinguish a deliberate spoken stop from a possible noise or speaker-echo trigger before deciding what to improve.
+
+## Making the repeat test self-contained
+
+I approved one repeat of the automatic speech check using the last $2 reserve, keeping the initial experiment allocation at $25. I asked for complete instructions before starting so I could interrupt the avatar while she was still speaking without checking the chat. I kept earlier test records and allowed only this single repeat. This preparation does not prove the interruption works; I still need to report what happened on my iPhone.

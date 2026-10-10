@@ -90,3 +90,7 @@ Before phone acceptance, verify denied anonymous page/API access, wrong Host/Ori
 ## Automatic capture and spoken-stop probe
 
 With the existing explicit `--spoken` startup mode, open `/handsfree.html`. It uses the same protected access, durable reservations and bounded two-exchange room. Start microphone sends short clips automatically after a pause; generation is still buffered. Detected speech during processing or playback ends the room, with no conversational resume. Confirm a whole reply explicitly before a normal follow-up. Noise, speaker echo and hesitation remain physical-device risks. One eighth attempt is separately approved for the private iPhone automatic-capture/spoken-stop check; a ninth remains blocked. See docs/task-1b-voice-avatar.md for the gated manual check.
+
+### Separately approved repeat
+
+On 9 October 2026 Sabine approved exactly one ninth, spoken-only repeat of the automatic capture/spoken-stop check, capped at $2/five minutes from the final reserve. The overall experiment allocation stays $25 (OpenAI $18, hosting $7, reserve $0); recurring Supabase is separate. Apply prototype-repeat-trial.sql only once after eight verified closed records. No tenth attempt is allowed, no history may be reset, and hosted code cannot grant its own amendment. Give the complete test instructions before the user starts. Natural interruption acceptance remains pending.
