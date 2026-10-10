@@ -32,7 +32,7 @@ Task 1e still needs actual feasibility findings, performance measurements and ag
 
 Continue deterministic failure checks and implementation that does not depend on these live decisions. Keep fixtures explicitly synthetic, preserve all approved financial limits, and update the backlog and persistent progress after each increment. No new business requirement or acceptance target is introduced by this page.
 
-Latest deterministic evidence: 749 tests across 54 files, type checking and build pass. Replacement isolation and cleanup holds are covered through the combined bridge; these do not establish remote deletion or production multi-customer isolation.
+Latest deterministic evidence: 766 tests across 55 files, type checking and build pass. Replacement isolation and cleanup holds are covered through the combined bridge; these do not establish remote deletion or production multi-customer isolation.
 
 ## Disabled notebook server owner
 
@@ -43,3 +43,9 @@ Twenty-one new focused checks passed. Current cumulative evidence is 747 tests a
 ### Protected owner partial-note integration
 
 Two more deterministic checks exercise actual prepared extraction through the authenticated owner: tentative partial notes, a touch edit retained during the turn, cancellation while extraction is pending, late-result rejection, temporary-note clearing and exactly-once reservation closure. The owner now exposes a session-bound snapshot for presentation. All 749 tests across 54 files, type checking and build pass. No live request, allowance modification or deployment occurred. Next connect this owner to an explicitly simulated loopback harness without adding an application-server route.
+
+## Protected simulated browser connection
+
+Connected the disabled notebook server owner to the explicitly attached loopback harness. The bridge passes the original validated upgrade request to the private gate, uses a capture source bound to that connection, and waits for allowance reservation plus provider configuration before Ready. Commands, snapshots, readiness and termination stay bound to their originating connection. An aborted startup retires its late reservation without creating providers. The scope stays occupied while durable closure is pending; failed closure or provider cleanup retains a hold.
+
+Seventeen new loopback checks cover two turns and confirmation, stale extraction, disconnect cancellation, provider failure, delayed readiness, authentication/origin/host denial, exhausted allowance, startup cancellation, commands before Ready, pending/failed closure, disposal and old session IDs. All 766 checks across 55 files, type checking and build pass. These use synthetic providers and injected allowances, with no actual durable records, credentials, paid requests or deployment. D21/D22 remain partial; Task 1c and Phase 1 remain open.
