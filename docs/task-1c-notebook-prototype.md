@@ -173,3 +173,7 @@ All 517 automated checks across 39 files, type checking and build pass. Server e
 ## Simulated audio transport evidence, 10 October 2026
 
 All 540 automated checks across 40 files, type checking and build pass. Generated silent PCM crosses an actual loopback connection through the owned remote capture source into transcription preparation; simulated provider events return tentative notes. Invalid/replayed/skipped frames stop the session and clear notes. The visible notebook and its review instructions are unchanged. This does not establish real speech recognition, phone transport or a new human acceptance.
+
+## Capture orchestration evidence, 10 October 2026
+
+All 554 automated checks across 41 files, type checking and build pass. The injected one-turn capture orchestrator handles permission races, pre-ack frame discard, stop-before-commit and page-exit cleanup, including actual local sockets with simulated devices/providers. The visible notebook and its review instructions remain unchanged. Physical permission behavior, multiple-turn readiness and live speech recognition remain pending.

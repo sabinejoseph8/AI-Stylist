@@ -308,3 +308,7 @@ I prepared server checks so an edit or confirmation applies only to the exact no
 ## Preparing speech transport without spending another trial
 
 I connected the simulated browser controller to the notebook's owned audio source over real local sockets. I used generated silent audio frames and simulated transcript events, so I could check ordering, turn commits, returned notes and disconnect cleanup without another paid trial. I bounded frame size, sequence and total audio, and required an active owned turn before accepting input. Replayed or skipped frames end the simulation and clear notes. All 540 automated checks, type checking and build passed. The visible notebook still uses its local simulation; real microphone recognition and phone performance remain unproven.
+
+## Handling microphone permission races
+
+I prepared the capture controls so a delayed permission result cannot restart a session after the customer leaves. I kept capture acquisition in the explicit start action, discarded frames locally until the server acknowledged the turn, and stopped capture before commit. I tested permission denial, device loss, cleanup errors and page exit with a simulated device, including the full local socket path. All 554 automated checks, type checking and build passed. The helper covers one turn because a command acknowledgment alone does not prove the provider is ready for the next; multiple-turn readiness and actual Safari behavior still need integration and validation. No paid trial or real microphone was used.

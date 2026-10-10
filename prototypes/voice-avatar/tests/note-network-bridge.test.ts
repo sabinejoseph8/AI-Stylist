@@ -1,3 +1,4 @@
+import {PreparedBrowserNoteSession} from '../src/note-browser-session.ts';
 import {encodeNoteAudio} from '../src/note-audio-frame.ts';
 import type {PreparedRemoteNoteCapture} from '../src/note-remote-capture.ts';
 import {NoteBrowserController} from '../src/note-browser-controller.ts';
@@ -87,5 +88,19 @@ describe('owned audio frame failure cleanup',()=>{
    ws.send(encodeNoteAudio(new ArrayBuffer(960),0));await vi.waitFor(()=>expect(probe.snapshot().transcription?.audioBytes).toBe(960));
    const bad=encodeNoteAudio(new ArrayBuffer(960),kind==='replay'?0:kind==='gap'?2:1);if(kind==='version')new DataView(bad).setUint32(0,2);
    const done=closed(ws);ws.send(bad);await done;await vi.waitFor(()=>expect(probe.snapshot().ended).toBe(true));expect(notebook.snapshot().notes.color.status).toBe('missing');expect(close).toHaveBeenCalledTimes(1);expect(probe.snapshot().transcription?.audioBytes).toBe(960);
+ });
+});
+
+describe('browser capture orchestration over actual loopback transport',()=>{
+ it('discards pre-ack frames, commits delivered audio, returns notes and stops on page exit',async()=>{
+   const notebook=new NotebookState();let probe!:NoteSessionProbe;const s=await setup((publish,capture)=>{probe=new NoteSessionProbe({simulation:true,notebook,capture,wire:{bufferedAmount:0,send:()=>true,close:vi.fn()},extract:async()=>[{field:'color',value:'green',evidence:'green',confirmed:false}],changed:r=>publish(notebook.snapshot(),r)});publish(notebook.snapshot(),null);return probe;});
+   let accept!:(pcm:ArrayBuffer)=>boolean,stopped!:(reason:string)=>void;const capture={start:vi.fn(async(a:(pcm:ArrayBuffer)=>boolean,e:(reason:string)=>void)=>{accept=a;stopped=e;expect(accept(new ArrayBuffer(960))).toBe(true);return true;}),stop:vi.fn(()=>stopped?.('requested'))};
+   const ws=new WebSocket(s.url,{headers}),session=new PreparedBrowserNoteSession({simulation:true,capture,socket:{send:v=>ws.send(v),close:()=>ws.close(),get bufferedAmount(){return ws.bufferedAmount;}},changed:vi.fn()});
+   ws.on('message',data=>session.receive(JSON.parse(data.toString())));ws.on('close',()=>session.disconnected());ws.on('error',()=>session.disconnected());
+   await vi.waitFor(()=>expect(session.snapshot().connection.notes).not.toBeNull());probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:'gpt-live-transcribe'},turn_detection:null}}}});
+   expect(await session.startTurn('t1')).toBe(true);await vi.waitFor(()=>expect(session.snapshot().connection.pending).toBe(false));expect(probe.snapshot().transcription?.audioBytes).toBe(0);
+   for(let i=0;i<5;i++)expect(accept(new ArrayBuffer(960))).toBe(true);expect(session.commit()).toBe(true);await vi.waitFor(()=>expect(session.snapshot().connection.pending).toBe(false));expect(probe.snapshot().transcription?.audioBytes).toBe(4800);expect(accept(new ArrayBuffer(960))).toBe(false);
+   probe.receive({type:'input_audio_buffer.committed',event_id:'c1',item_id:'i1'});probe.receive({type:'conversation.item.input_audio_transcription.delta',event_id:'d1',item_id:'i1',content_index:0,delta:'green'});await vi.waitFor(()=>expect(session.snapshot().connection.notes?.notes.color.value).toBe('green'));
+   session.hidden();await vi.waitFor(()=>expect(probe.snapshot().ended).toBe(true));expect(capture.stop).toHaveBeenCalled();expect(session.snapshot().connection.notes).toBeNull();expect(notebook.snapshot().notes.color.status).toBe('missing');
  });
 });

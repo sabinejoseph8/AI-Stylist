@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-540 tests across 40 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+554 tests across 41 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -229,3 +229,7 @@ NoteSessionProbe now checks each customer edit/confirmation against the current 
 ### Bounded audio connection preparation, 10 October 2026
 
 The disabled network harness now accepts strict 968-byte simulated audio frames, with a format marker, increasing sequence and 960-byte PCM payload. A remote capture source feeds only the owning NoteSessionProbe while acquired. The browser controller waits for the begin acknowledgment, stops audio before commit and clears on disconnect. Actual local socket checks carry generated silent PCM into transcription preparation and return a tentative note from simulated transcript events. All 540 checks across 40 files, type checking and build pass. No actual microphone, provider socket, paid call or deployment was used. The running notebook remains an in-process simulation; capture orchestration and provider transport are still pending.
+
+### Browser capture orchestration preparation, 10 October 2026
+
+PreparedBrowserNoteSession owns an injected simulated capture source and controller. Capture starts in the explicit user action; pre-begin-ack frames are discarded locally. It stops capture before commit, cancels late permission results and clears on device loss, disconnect, deadline or caller-signaled page exit. All 554 tests across 41 files, type checking and build pass, including actual loopback integration with a simulated device and provider. This is one-turn preparation; provider-ready signaling is still needed for another turn. No browser listeners or actual microphone/socket are constructed, and the open notebook and Render are unchanged.
