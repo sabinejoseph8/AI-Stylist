@@ -272,3 +272,7 @@ I approved preparing live transcription with simulated provider events before ac
 ## Owning the full note session lifecycle
 
 I connected the simulated capture source, transcription events and notebook controls under one session owner. Ending or clearing the session now cancels the whole chain, including extraction that is still running. I tested delayed source acquisition and late results so they could not restart capture or refill a cleared notebook. I also required cleanup failures to remain visible rather than claiming the provider connection had been verified closed. All 346 automated checks, type checking and build passed. The work remains a disabled simulation; real audio recognition and physical-device timing still need validation.
+
+## Keeping extracted notes faithful to the customer
+
+I added a strict contract for turning speech fragments into styling notes. The prototype preserves the customer's wording and rejects unsupported changes such as inferring fall from November or treating an unspecified dollar amount as a confirmed USD spending limit. It keeps extracted values tentative and preserves negation. I also added bounded prior context so a phrase split across partial transcripts can still be assigned to the right field, while requiring evidence from the new fragment. All 368 automated checks, type checking and build passed. These checks validate the contract, not an actual model's recognition or interpretation quality.

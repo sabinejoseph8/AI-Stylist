@@ -4,7 +4,7 @@ import {NoteTiming} from './note-timing.ts';
 
 type Transcript = {version:1;eventId:string;turnId:string;sequence:number;role:'user'|'assistant';text:string;final:boolean};
 export type NotePatch = {field:Field;value:string;evidence:string;confirmed:boolean};
-export type ExtractionInput = Readonly<{turnId:string;text:string}>;
+export type ExtractionInput = Readonly<{turnId:string;text:string;context?:string}>;
 type Turn = {id:string;sequence:number;text:string;appliedText:string;final:boolean;expected:Record<Field,number>;inputAt:number};
 type Job = {id:number;turn:Turn;text:string;fullText:string;controller:AbortController;sample:number;timer:ReturnType<typeof setTimeout>};
 const fields=new Set<string>(FIELDS.map(([id])=>id));
@@ -96,7 +96,7 @@ export class PartialNoteCoordinator {
     this.job=job;this.extractionCount++;
     const current=()=>this.job?.id===id&&!controller.signal.aborted&&this.turn===turn&&this.notebook.snapshot().session===this.session;
     try{
-      const result=await this.extract(Object.freeze({turnId:turn.id,text}),controller.signal);
+      const result=await this.extract(Object.freeze({turnId:turn.id,text,context:fullText.startsWith(turn.appliedText)?turn.appliedText.slice(-1000):''}),controller.signal);
       if(!current())return;
       const parsed=patches(result,text);
       if(!parsed||!this.timing.extracted(sample)){this.counters.failures++;this.timing.finish(sample,'failed');this.changed(null);return;}

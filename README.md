@@ -23,3 +23,7 @@ Sabine approved simulated-test preparation. The server-only protocol adapter is 
 ### Note session integration preparation
 
 The disabled in-process note session probe now owns capture, transcription, note updates and cancellation together. All 346 tests, type checking and build pass. No provider connection or microphone capture is enabled; see docs/task-1c-live-transcription-proposal.md for remaining integration gates.
+
+### Structured extraction preparation
+
+Added strict literal-evidence decoding with a separate untrusted input/context envelope and tentative-only note updates. All 368 tests, type checking and build pass. No model or paid extraction request is enabled.
