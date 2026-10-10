@@ -284,3 +284,7 @@ I approved a fixed GPT-4.1 mini version to prepare the notebook extraction exper
 ## Removing notes when recognition changes its mind
 
 I found an edge case where speech recognition could rewrite an earlier phrase but leave a note based on the old words. I fixed it by tracking the exact notes captured during the current turn and clearing those notes immediately when their transcript is revised. Customer edits and confirmations remain protected, and a look approved using the old notes loses its approval. All 408 automated checks, type checking and build passed. Real speech recognition and device timing still need validation.
+
+## Keeping a notebook tied to its own connection
+
+I prepared a connection ownership guard so a second browser tab cannot take over the active notebook by copying a session ID or customer label. I required exact command shapes and increasing message sequences, then tested old commands, delayed starts and callbacks after the session ends. I also made cleanup failures hold the session slot. All 430 automated checks, type checking and build passed using simulated connections and providers. This is preparation for the authenticated network connection, not proof that customer authentication or real browser isolation is complete.
