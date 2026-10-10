@@ -39,7 +39,14 @@ export function createPreparedNoteServerOwner(options: {
    if (!preferences.snapshot()) return {status: 503 as const};
    state = 'starting';
    const controller = new AbortController(), notebook = new NotebookState(), release = new LookRelease(notebook);
-   const unsubscribePreferences = preferences.subscribe(() => notebook.preferencesChanged());
+   const unsubscribePreferences = preferences.subscribe(() => {
+    notebook.preferencesChanged(); // Revoke look and speech permissions synchronously.
+    if (!preferences.snapshot()) {stop(); return;}
+    if (state === 'active' && !ending) {
+     // Only revision/status and existing session notes cross this boundary.
+     try {hooks.publish?.(notebook.snapshot(), null);} catch {stop();}
+    }
+   });
    let reservation: string | undefined, session: Session | undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
    const detach = () => {clearTimeout(timer); unsubscribePreferences(); request.signal.removeEventListener('abort', stop);};

@@ -440,3 +440,10 @@ I tightened the prototype so a caller cannot simply tell the server that a look 
 I checked the full local flow with two simulated voice turns. The first produced a green preference, which stayed tentative until confirmation. Starting a correction canceled the green look and its queued speech. After confirming blue, the old green candidate was blocked and only a freshly checked blue sample could appear. The database reservation closed once when the session ended.
 
 I then separated saved color exclusions from candidate data. A proposed look cannot choose which exclusions apply to it. The server receives them from a separate simulated profile with a revision, and changing that profile immediately cancels old approvals. Invalid profile data holds new recommendations instead of assuming that no exclusions exist. I tested stale changes and cleanup, fixed a TypeScript declaration and reran all checks. The suite now has 907 passing checks, plus 50 local SQL checks, ten owner scenarios and fourteen browser scenarios. This remains synthetic preparation; real account ownership, saved-profile access and the complete independent preference agent are separate work.
+
+
+## Keeping private saved preferences out of browser commands
+
+I connected the simulated saved-preference source to the notebook browser flow. When those preferences change, the server cancels old look approvals immediately and sends the browser an updated notebook revision. The saved exclusions themselves stay on the server. I checked that the browser cannot save or replace them by inventing a command.
+
+I also tested malformed profile data while speech extraction or a database reservation was pending. Capture stops, notes clear and late results cannot restore the session. A replacement session receives its own updates, while the ended session stays cleared. I fixed a duplicate variable in the database test script and reran the checks. All 914 prototype tests, 50 local SQL checks, ten owner scenarios and seventeen browser scenarios pass, along with type checking and build. This remains simulated preparation; real account ownership and saved-profile access still need implementation.

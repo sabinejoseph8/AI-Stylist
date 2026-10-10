@@ -9,6 +9,7 @@ import {attachProtectedSimulatedNoteBridge} from '../src/protected-note-network-
 import {PreparedBrowserNoteSession} from '../src/note-browser-session.ts';
 import {bindSimulatedNoteLifecycle} from '../src/note-browser-lifecycle.ts';
 import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
+import {SimulatedPreferenceSource} from '../src/simulated-preference-source.ts';
 import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
 
 type Database = {reset:()=>Promise<string>;read:()=>Promise<PreparedNoteLedger>;sql:(query:string)=>Promise<string>;literal:(value:unknown)=>string};
@@ -19,7 +20,7 @@ async function until(check:()=>boolean,timeout=4000) {
  const deadline=Date.now()+timeout;
  while(!check()) {if(Date.now()>deadline)throw Error('Local browser check did not settle.');await new Promise(resolve=>setTimeout(resolve,10));}
 }
-async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>) {
+async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceSource) {
  let calls=0,providers=0,closed=0,closureGated=false,release:()=>void=()=>{};
  let signalPending!:()=>void;
  const pending=new Promise<void>(resolve=>{signalPending=resolve;});
@@ -45,7 +46,7 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
  const persistence=createPreparedNotePersistenceTransport({simulation:true,url:'https://fixture.supabase.co',fetch});
  const allowance=new PreparedNoteAllowance({simulation:true,persistence});
  const server=createServer((_req,res)=>{res.writeHead(404);res.end();});
- const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,createTransports:()=>{
+ const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,preferences,createTransports:()=>{
   providers++;
   const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:()=>{closed++;if(fault==='provider-close-failed')throw Error('Synthetic cleanup uncertainty.');},send:(value:string)=>{
    if(JSON.parse(value).type==='session.update')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));
@@ -71,9 +72,9 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
   },stop:()=>{stops++;}};
   const session=new PreparedBrowserNoteSession({simulation:true,capture,socket:{send:value=>socket.send(value),close:()=>socket.close(),get bufferedAmount(){return socket.bufferedAmount;}},changed:()=>{}});
   const binding=bindSimulatedNoteLifecycle({simulation:true,session,socket:events,page,visibility,status:()=>{}});bindings.push(binding);
-  socket.on('message',data=>events.dispatchEvent(new MessageEvent('message',{data:data.toString()})));
+  const messages:string[]=[];socket.on('message',data=>{messages.push(data.toString());events.dispatchEvent(new MessageEvent('message',{data:data.toString()}));});
   socket.on('close',()=>events.dispatchEvent(new Event('close')));socket.on('error',()=>events.dispatchEvent(new Event('error')));
-  return {socket,session,page,visibility,captureCounts:()=>({starts,stops}),frame:()=>frame(new ArrayBuffer(960)),permission:()=>releasePermission()};
+  return {messages,socket,session,page,visibility,captureCounts:()=>({starts,stops}),frame:()=>frame(new ArrayBuffer(960)),permission:()=>releasePermission()};
  }
  async function denied(requestHeaders:Record<string,string>=headers){
   const socket=new WebSocket(url,{headers:requestHeaders});sockets.push(socket);socket.on('error',()=>{});
@@ -96,7 +97,7 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
 }
 export async function checkNotebookBrowserDb(db:Database){
  const fixtures:Awaited<ReturnType<typeof harness>>[]=[];
- const open=async(fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>)=>{const fixture=await harness(db,fault,extract);fixtures.push(fixture);return fixture;};
+ const open=async(fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceSource)=>{const fixture=await harness(db,fault,extract,preferences);fixtures.push(fixture);return fixture;};
  const response=(turnId:string,text:string)=>Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId,patches:[{field:'color',value:text,evidence:text}]})}]}]});
  const fragment=(init:RequestInit)=>JSON.parse(JSON.parse(init.body as string).input[0].content[0].text) as {turnId:string;currentFragment:string};
  const delta=(index:number,text:string)=>({type:'conversation.item.input_audio_transcription.delta',event_id:`delta_${index}`,item_id:`item_${index}`,content_index:0,delta:text});
@@ -249,6 +250,39 @@ export async function checkNotebookBrowserDb(db:Database){
   assert.equal(unverified.session.snapshot().capturing,false);assert.equal(unverified.session.snapshot().connection.notes,null);assert.equal(unverified.frame(),false);
   assert.equal(await cleanupFailed.denied(),409);assert.equal((await db.read()).runs[0]!.closed,false);
   assert.deepEqual(cleanupFailed.counts(),{calls:2,providers:1,closed:1});await clear();
-  console.log('14 local SQL-backed loopback browser scenarios passed, including extraction, correction and failure cleanup. Devices and providers were synthetic.');
+  await db.reset();
+  const profile=new SimulatedPreferenceSource({simulation:true});let profileSignal:AbortSignal|undefined,resolveProfile!:(value:Response)=>void;
+  const profileFixture=await open('none',async(_url,init)=>{profileSignal=init.signal as AbortSignal;return new Promise(resolve=>{resolveProfile=resolve;});},profile);
+  const profileClient=profileFixture.connect();await until(()=>profileClient.session.status().state==='ready');await begin(profileClient,'turn_1');
+  profileFixture.emit(delta(1,'green'));await until(()=>Boolean(profileSignal));const priorRevision=profileClient.session.snapshot().connection.notes!.revision;
+  assert.equal(profile.replace(1,['private_profile_color']),true);
+  await until(()=>profileClient.session.snapshot().connection.notes!.revision>priorRevision);
+  assert.equal(profileClient.session.snapshot().capturing,true);assert.equal(profileSignal!.aborted,false);
+  resolveProfile(response('turn_1','green'));await until(()=>profileClient.session.snapshot().connection.notes?.notes.color.value==='green');
+  assert.ok(!profileClient.messages.join('').includes('private_profile_color'));assert.ok(!profileClient.messages.join('').includes('excludedColors'));
+  profileClient.session.stop();await until(()=>!profileFixture.bridge.snapshot().active);
+  const profileReplacement=profileFixture.connect();await until(()=>profileReplacement.session.status().state==='ready');const profileReplacementRevision=profileReplacement.session.snapshot().connection.notes!.revision;
+  profile.replace(2,['another_private_color']);await until(()=>profileReplacement.session.snapshot().connection.notes!.revision>profileReplacementRevision);
+  assert.equal(profileClient.session.snapshot().connection.notes,null);assert.equal(profileReplacement.session.snapshot().connection.notes!.notes.color.value,'');
+  profileReplacement.session.stop();await until(()=>!profileFixture.bridge.snapshot().active);
+  assert.deepEqual(profileFixture.counts(),{calls:8,providers:2,closed:2});assert.ok((await db.read()).runs.every(run=>run.closed));await clear();
+
+  await db.reset();
+  const brokenProfile=new SimulatedPreferenceSource({simulation:true});let brokenSignal:AbortSignal|undefined,resolveBroken!:(value:Response)=>void;
+  const brokenFixture=await open('none',async(_url,init)=>{brokenSignal=init.signal as AbortSignal;return new Promise(resolve=>{resolveBroken=resolve;});},brokenProfile);
+  const brokenClient=brokenFixture.connect();await until(()=>brokenClient.session.status().state==='ready');await begin(brokenClient,'turn_1');brokenFixture.emit(delta(1,'green'));await until(()=>Boolean(brokenSignal));
+  assert.equal(brokenProfile.replace(1,{}),false);await until(()=>brokenClient.session.snapshot().ended);await until(()=>!brokenFixture.bridge.snapshot().active);
+  assert.equal(brokenSignal!.aborted,true);assert.equal(brokenClient.session.snapshot().connection.notes,null);assert.equal(brokenClient.frame(),false);
+  const abandoned=response('turn_1','green');resolveBroken(abandoned);await until(()=>abandoned.bodyUsed);
+  const refused=brokenFixture.connect();await until(()=>refused.session.snapshot().ended);await until(()=>!brokenFixture.bridge.snapshot().active);
+  assert.deepEqual(brokenFixture.counts(),{calls:4,providers:1,closed:1});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
+
+  await db.reset();
+  const pendingProfile=new SimulatedPreferenceSource({simulation:true});const pendingProfileFixture=await open('reserve-pending',undefined,pendingProfile),pendingProfileClient=pendingProfileFixture.connect();
+  await pendingProfileFixture.pending;assert.equal(pendingProfile.replace(1,{}),false);
+  assert.equal(pendingProfileClient.session.snapshot().connection.ready,false);assert.equal(pendingProfileFixture.counts().providers,0);
+  pendingProfileFixture.release();await until(()=>pendingProfileClient.session.snapshot().ended);await until(()=>!pendingProfileFixture.bridge.snapshot().active);
+  assert.deepEqual(pendingProfileFixture.counts(),{calls:4,providers:0,closed:0});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
+  console.log('17 local SQL-backed loopback browser scenarios passed, including separate profile invalidation and isolation. Devices and providers were synthetic.');
  }finally{await clear();}
 }
