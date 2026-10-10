@@ -60,3 +60,7 @@ Routine technical decisions may be made autonomously under Sabine's 10 October i
 ## Remaining gates
 
 Phase 1 remains open. Its live media/notes/gating/timing findings, required rights/privacy resolution plan and final review must be complete before the full foundation build is treated as unlocked. No production deployment or public launch is authorized by autonomous development mode.
+
+## Combined notebook integration evidence
+
+On 10 October 2026, the prepared provider session was connected through the disabled private browser bridge and visible local rehearsal. Seven new integration checks cover two turns, confirmation, stale-response protection, cancellation, cleanup holds, immediate provider-failure notification and configuration-acknowledged readiness. Implementer browser verification passed the two-color correction, confirmation and End clearing. All 711 tests across 50 files, type checking and build pass. Live speech, measured timing, safe avatar resume, licensed products and customer launch remain unproven. The experiment allowance is unchanged.

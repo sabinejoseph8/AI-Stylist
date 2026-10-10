@@ -10,12 +10,14 @@ import type {NotebookState} from './notebook-state.ts';
 import type {NoteConnectionProbe} from './note-connection-scope.ts';
 /** Explicit test harness attachment only. Not called by the application server or
  * CLI. Factory must construct simulated providers. No provider socket or key. */
-export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture,turnReady:(turnId:string)=>void)=>NoteConnectionProbe}){
+export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;deferReady?:boolean;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture,turnReady:(turnId:string)=>void,ended:()=>void,ready:()=>void)=>NoteConnectionProbe}){
  if(options.simulation!==true)throw Error('Live notebook bridge is disabled.');
  const address=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let publisher:((snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void)|null=null;
  let readiness:((turnId:string)=>void)|null=null;
- const scope=new NoteConnectionScope({simulation:true,create:()=>{const bound=publisher,boundReady=readiness;return options.create((snapshot,receipt)=>bound?.(snapshot,receipt),new PreparedRemoteNoteCapture({simulation:true}),turnId=>boundReady?.(turnId));}});
+ let termination:(()=>void)|null=null;
+ let configurationReady:(()=>void)|null=null;
+ const scope=new NoteConnectionScope({simulation:true,create:()=>{const bound=publisher,boundReady=readiness,boundEnd=termination,boundConfigured=configurationReady;return options.create((snapshot,receipt)=>bound?.(snapshot,receipt),new PreparedRemoteNoteCapture({simulation:true}),turnId=>boundReady?.(turnId),()=>boundEnd?.(),()=>boundConfigured?.());}});
  const sockets=new WebSocketServer({noServer:true,maxPayload:1024,perMessageDeflate:false});
  let closed=false;
  const reject=(socket:import('node:stream').Duplex,status:number)=>{socket.end(`HTTP/1.1 ${status} Rejected\r\nConnection: close\r\nContent-Length: 0\r\n\r\n`);};
@@ -44,15 +46,22 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
    };
    let readyCount=0;
    readiness=turnId=>{if(ended)return;if(!id||typeof turnId!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(turnId)||++readyCount>16){finish();return;}send({version:1,type:'turn-ready',sessionId:id,turnId});};
-   publisher=publish;id=scope.open(owner);publisher=null;readiness=null;
+   let providerReady=options.deferReady!==true;
+   const completeReady=()=>{
+     if(ended||ready||!id||!providerReady)return;
+     if(!send({version:1,type:'ready',sessionId:id,simulation:true,liveEnabled:false}))return;
+     ready=true;
+     if(pending){const initial=pending as NoteUpdate;pending=null;updateSequence++;send({...initial,sessionId:id,sequence:updateSequence});}
+   };
+   configurationReady=()=>{providerReady=true;completeReady();};
+   publisher=publish;termination=finish;id=scope.open(owner);publisher=null;readiness=null;termination=null;configurationReady=null;
    if(ended){scope.disconnect(owner,id??'');return;}
    if(!id){finish();return;}
-   if(!send({version:1,type:'ready',sessionId:id,simulation:true,liveEnabled:false}))return;
-   ready=true;
-   if(pending){const initial=pending as NoteUpdate;pending=null;updateSequence++;send({...initial,sessionId:id,sequence:updateSequence});}
+   completeReady();
 
    ws.on('message',(data,binary)=>{
      if(ended)return;
+     if(!ready){finish();return;}
      if(binary){
        const bytes=Array.isArray(data)?Buffer.concat(data):Buffer.isBuffer(data)?data:Buffer.from(data);
        const frame=new ArrayBuffer(bytes.byteLength);new Uint8Array(frame).set(bytes);

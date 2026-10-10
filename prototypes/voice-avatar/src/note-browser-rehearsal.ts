@@ -1,5 +1,7 @@
 import {NotebookState} from './notebook-state.ts';
-import {NoteSessionProbe} from './note-session-probe.ts';
+import type {NoteSessionProbe} from './note-session-probe.ts';
+import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
+import {NOTE_EXTRACTION_MODEL} from './openai-note-extractor.ts';
 import {PreparedRemoteNoteCapture} from './note-remote-capture.ts';
 import {NoteConnectionScope} from './note-connection-scope.ts';
 import {PreparedBrowserNoteSession} from './note-browser-session.ts';
@@ -17,10 +19,15 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
  const later=(fn:()=>void,ms=0)=>{const timer=setTimeout(()=>{timers.delete(timer);if(!closed)fn();},ms);timers.add(timer);};
  const emit=(value:unknown)=>{if(!closed)events.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));};
  const publish=(receipt:number|null)=>{if(id&&!closed)emit(encodeNoteUpdate(id,++wireSequence,notebook.snapshot(),receipt));};
+ const provider=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:(_text:string)=>{},close:()=>{}});
+ const providerEvent=(value:unknown)=>provider.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));
  const scope=new NoteConnectionScope({simulation:true,create:()=>{
-   probe=new NoteSessionProbe({simulation:true,notebook,capture:remote,wire:{bufferedAmount:0,send:()=>true,close:()=>{}},
-     extract:async input=>[{field:'color',value:input.text.includes('blue')?'Blue':'Emerald green',evidence:input.text.includes('blue')?'blue':'emerald green',confirmed:false}],
-     changed:publish,invalidated:()=>publish(null),turnReady:turnId=>emit({version:1,type:'turn-ready',sessionId:id,turnId})});return probe;
+   const prepared=createPreparedNoteProviderSession({simulation:true,notebook,capture:remote,socket:provider,signal:new AbortController().signal,
+     fetch:async(_url,init)=>{
+       const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text),value=String(input.currentFragment).match(/emerald green|blue/i)?.[0];
+       return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:value?[{field:'color',value,evidence:value}]:[]})}]}]});
+     },changed:publish,invalidated:()=>publish(null),turnReady:turnId=>emit({version:1,type:'turn-ready',sessionId:id,turnId}),stopped:()=>stop()});
+   probe=prepared.probe;return probe;
  }});
  const stop=()=>{if(closed)return;closed=true;timers.forEach(clearTimeout);timers.clear();frame=null;scope.close();events.dispatchEvent(new Event('close'));};
  const session=new PreparedBrowserNoteSession({simulation:true,capture:{start:async accept=>{frame=accept;return true;},stop:()=>{frame=null;}},changed:options.changed,
@@ -32,7 +39,7 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
    }}});
  const binding=bindSimulatedNoteLifecycle({simulation:true,session,socket:events,page:options.page,visibility:options.visibility,status:options.status});
  if(!closed){id=scope.open(owner)??'';if(!id){stop();}else{
-   scope.receive(owner,id,{type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:'gpt-live-transcribe'},turn_detection:null}}}});
+   providerEvent({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:'gpt-live-transcribe'},turn_detection:null}}}});
    emit({version:1,type:'ready',sessionId:id,simulation:true,liveEnabled:false});publish(null);
  }}
  async function play(){
@@ -43,10 +50,10 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
      for(let n=0;n<5;n++)if(!frame?.(new ArrayBuffer(960))){stop();return;}
      if(!session.commit()){stop();return;}
      later(()=>{
-       scope.receive(owner,id,{type:'input_audio_buffer.committed',event_id:`commit_${current}`,item_id:`item_${current}`});
-       const text=current===1?'I prefer emerald green':'Actually, I prefer blue';
-       scope.receive(owner,id,{type:'conversation.item.input_audio_transcription.delta',event_id:`partial_${current}`,item_id:`item_${current}`,content_index:0,delta:text});
-       later(()=>scope.receive(owner,id,{type:'conversation.item.input_audio_transcription.completed',event_id:`final_${current}`,item_id:`item_${current}`,content_index:0,transcript:text}),650);
+       providerEvent({type:'input_audio_buffer.committed',event_id:`commit_${current}`,item_id:`item_${current}`});
+       const text=current===1?'I prefer Emerald green':'Actually, I prefer Blue';
+       providerEvent({type:'conversation.item.input_audio_transcription.delta',event_id:`partial_${current}`,item_id:`item_${current}`,content_index:0,delta:text});
+       later(()=>providerEvent({type:'conversation.item.input_audio_transcription.completed',event_id:`final_${current}`,item_id:`item_${current}`,content_index:0,transcript:text}),650);
      },100);
    };later(capture,200);return true;
  }

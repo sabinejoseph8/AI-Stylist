@@ -514,3 +514,7 @@ D21/D22 remain partial. The simulated transcription socket lifecycle is implemen
 ## Incremental evidence: combined provider session
 
 D21/D22 remain partial. The shared simulation-only session factory composes the prepared transports and note owner. Six new cancellation/failure checks bring the suite to 704 passing tests across 49 files, with type checking and build passing. No real-provider or physical-device acceptance is claimed. Next integrate the factory through the disabled loopback browser bridge.
+
+## Incremental evidence: combined browser/provider bridge
+
+D21/D22/D24 remain partial. The prepared combined session is integrated through the disabled private browser bridge and the local visible rehearsal. Two turns, confirmation, late correction protection, disconnect cancellation, cleanup holds, provider-failure notification and delayed readiness have seven new focused checks. All 711 tests across 50 files, type checking and build pass; implementer browser verification passed the two-color correction/confirmation/end flow. This is synthetic integration evidence, not live recognition, latency or customer acceptance.
