@@ -220,3 +220,9 @@ I approved one repeat of the automatic speech check using the last $2 reserve, k
 ## Confirming spoken interruption on iPhone
 
 I repeated the automatic speech check with all instructions available before I began. I spoke while the avatar was still replying and confirmed that my words stopped her mid-reply. The app ended the test, and the saved test ledger confirmed the connection closed. This validated spoken interrupt-and-end on my iPhone. It does not yet validate resuming the conversation or precise interruption timing. I kept those limitations separate from the successful result.
+
+## Preparing conversation recovery without guessing what was heard
+
+After confirming spoken interruption on my iPhone, I continued development without spending on another live test. The implementation now has incremental audio generation, a bounded avatar-output queue and recovery checks that reject late responses and unverified connections. I kept “audio sent” separate from “audio heard,” including stopping audio that could still be playing after generation finishes. The 215 automated checks, type checking and build passed with synthetic inputs.
+
+I identified an unresolved vendor contract: the inspected Tavus speaking events do not establish when every old audio chunk is cleared or precisely what reached the listener. I prepared targeted support questions before enabling live recovery. The new components remain separate from the hosted phone flow, and resuming an interrupted conversation is not yet a completed feature.

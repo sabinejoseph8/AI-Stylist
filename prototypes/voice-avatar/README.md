@@ -94,3 +94,7 @@ With the existing explicit `--spoken` startup mode, open `/handsfree.html`. It u
 ### Separately approved repeat
 
 On 9 October 2026 Sabine approved exactly one ninth, spoken-only repeat of the automatic capture/spoken-stop check, capped at $2/five minutes from the final reserve. The overall experiment allocation stays $25 (OpenAI $18, hosting $7, reserve $0); recurring Supabase is separate. Apply prototype-repeat-trial.sql only once after eight verified closed records. No tenth attempt is allowed, no history may be reset, and hosted code cannot grant its own amendment. Give the complete test instructions before the user starts. Natural interruption acceptance remains pending.
+
+### Incremental output and recovery preparation
+
+streamSpokenReply, IncrementalEcho, startStreamedBridge and ContextRecovery are tested building blocks for Task 1b. They are not enabled through the hosted HTTP test or phone page. 215 synthetic/mocked tests, type checking and build pass. The owner must reserve allowance first, enforce the private room lifetime, cancel stale output, verify actual old model/renderer cleanup and restore only confirmed context. No automatic retries or new budget are granted. See docs/task-1b-tavus-recovery-question.md for the unresolved vendor contract.
