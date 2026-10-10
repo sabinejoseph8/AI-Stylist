@@ -6,7 +6,7 @@ const preview = {origin: 'https://notes-test.onrender.com', password: 'x'.repeat
 const authorization = 'Basic ' + Buffer.from('stylist:' + preview.password).toString('base64');
 class Socket extends EventTarget {readyState = 1; bufferedAmount = 0; send = vi.fn(); close = vi.fn();}
 function setup() {
- const socket = new Socket(), capture = {start: vi.fn(async () => true), stop: vi.fn(), end: vi.fn()};
+ const socket = new Socket(), capture = {start: vi.fn(async (_accept?: (pcm: ArrayBuffer) => boolean) => true), stop: vi.fn(), end: vi.fn()};
  const allowance = {purpose: 'notes-only-simulation' as const, reserve: vi.fn(async () => 'synthetic-reservation'), closeVerified: vi.fn(async (_id: string) => {})};
  const fetch = vi.fn(async (_url: string, _init: RequestInit) => Response.json({}));
  const createTransports = vi.fn(() => ({socket, capture, fetch}));
@@ -61,4 +61,90 @@ describe('disabled private notebook server owner', () => {
   await vi.advanceTimersByTimeAsync(0); expect(active.snapshot().notes.color.status).toBe('missing'); expect(s.changed).toHaveBeenLastCalledWith(null); expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1); expect(vi.getTimerCount()).toBe(0);
  });
  it('bounds the pending allowance lifetime and cleans a late success', async () => {vi.useFakeTimers(); const s = setup(); let resolve!: (id: string) => void; s.allowance.reserve.mockImplementation(() => new Promise(r => {resolve = r;})); const pending = s.owner.start(request()); await vi.advanceTimersByTimeAsync(85_000); expect(s.owner.status().state).toBe('starting'); resolve('late'); expect(await pending).toEqual({status: 499}); expect(s.createTransports).not.toHaveBeenCalled(); expect(s.allowance.closeVerified).toHaveBeenCalledExactlyOnceWith('late'); expect(vi.getTimerCount()).toBe(0);});
+});
+
+describe('server-owned synthetic look authorization', () => {
+ const draft = {id: 'synthetic-look', description: 'Synthetic structured green look'};
+ const passed = {outcome: 'passed' as const, reason: 'Trusted synthetic checker accepted this exact draft'};
+ async function activeSession() {
+  const s = setup(), active = await s.owner.start(request());
+  if (active.status !== 200) throw Error('start');
+  active.probe.receive({type: 'session.updated', session: {type: 'transcription', audio: {input: {format: {type: 'audio/pcm', rate: 24000}, transcription: {model: TRANSCRIPTION_MODEL}, turn_detection: null}}}});
+  const ticket = active.looks.begin(draft); if (!ticket) throw Error('ticket');
+  const permit = active.looks.complete(ticket, passed); if (!permit) throw Error('permit');
+  return {...s, active, ticket, permit};
+ }
+ it('requires provider readiness and preserves exact ticket and permit identities', async () => {
+  const s = setup(), active = await s.owner.start(request()); if (active.status !== 200) throw Error('start');
+  expect(active.looks.begin(draft)).toBeNull(); await active.end();
+  const a = await activeSession();
+  expect(a.active.looks.visual({...a.permit})).toBeNull();
+  expect(a.active.looks.visual(a.permit)).toEqual(draft);
+  const ticket = a.active.looks.begin(draft)!;
+  expect(a.active.looks.complete({...ticket}, passed)).toBeNull();
+  expect(a.active.looks.complete(ticket, passed)).not.toBeNull(); await a.active.end();
+ });
+ it('revokes both display and queued speech immediately on a touch correction', async () => {
+  const a = await activeSession(); let signal!: AbortSignal, frame!: () => boolean;
+  expect(a.active.looks.startSpeech(a.permit, (_draft, abort, authorize) => {signal = abort; frame = authorize;})).toBe(true);
+  expect(frame()).toBe(true); expect(a.active.probe.edit('color', 'Blue', 0)).toBe(true);
+  expect(signal.aborted).toBe(true); expect(frame()).toBe(false); expect(a.active.looks.visual(a.permit)).toBeNull(); await a.active.end();
+ });
+ it('revokes before microphone permission resolves and blocks approval during capture', async () => {
+  const a = await activeSession(); let grant!: (value: boolean) => void, signal!: AbortSignal;
+  a.capture.start.mockImplementation(() => new Promise(resolve => {grant = resolve;}));
+  a.active.looks.startSpeech(a.permit, (_draft, abort) => {signal = abort;});
+  const acquiring = a.active.probe.beginTurn('pending');
+  expect(signal.aborted).toBe(true); expect(a.active.looks.begin(draft)).toBeNull();
+  grant(true); expect(await acquiring).toBe(true); expect(a.active.looks.begin(draft)).toBeNull(); await a.active.end();
+ });
+ it('blocks validation while committed audio awaits final extraction', async () => {
+  const a = await activeSession(); let send!: (pcm: ArrayBuffer) => boolean;
+  a.capture.start.mockImplementation(async (accept?: (pcm: ArrayBuffer) => boolean) => {send = accept!; return true;});
+  expect(await a.active.probe.beginTurn('pending')).toBe(true); for(let i=0;i<5;i++)expect(send(new ArrayBuffer(960))).toBe(true);
+  expect(a.active.probe.commit()).toBe(true);
+  expect(a.active.looks.begin(draft)).toBeNull();
+  expect(a.active.looks.complete(a.ticket, passed)).toBeNull(); await a.active.end();
+ });
+ it('waits for final extraction settlement before permitting a fresh check', async () => {
+  vi.useFakeTimers(); const a = await activeSession(); let send!: (pcm: ArrayBuffer) => boolean, respond!: (value: Response) => void;
+  a.capture.start.mockImplementation(async accept => {send=accept!;return true;});
+  a.fetch.mockImplementation(async () => new Promise(resolve => {respond=resolve;}));
+  await a.active.probe.beginTurn('t1'); for(let i=0;i<5;i++)send(new ArrayBuffer(960)); a.active.probe.commit();
+  a.active.probe.receive({type:'input_audio_buffer.committed',event_id:'commit1',item_id:'i1'});
+  a.active.probe.receive({type:'conversation.item.input_audio_transcription.completed',event_id:'final1',item_id:'i1',content_index:0,transcript:'green'});
+  await vi.advanceTimersByTimeAsync(100);
+  expect(a.active.probe.snapshot().notes.extracting).toBe(true); expect(a.active.looks.begin(draft)).toBeNull();
+  respond(Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:'t1',patches:[]})}]}]}));
+  await vi.advanceTimersByTimeAsync(0);
+  expect(a.active.probe.readyForLook()).toBe(true); expect(a.active.looks.visual(a.permit)).toBeNull();
+  const ticket=a.active.looks.begin(draft)!; expect(a.active.looks.complete(ticket,passed)).not.toBeNull(); await a.active.end();
+ });
+ it('revokes synchronously while durable closure remains pending', async () => {
+  const a = await activeSession(); let close!: () => void, signal!: AbortSignal;
+  a.allowance.closeVerified.mockImplementation(() => new Promise(resolve => {close = resolve;}));
+  a.active.looks.startSpeech(a.permit, (_draft, abort) => {signal = abort;});
+  const ending = a.active.end(); expect(signal.aborted).toBe(true);
+  expect(a.active.looks.visual(a.permit)).toBeNull(); expect(a.active.looks.begin(draft)).toBeNull();
+  await Promise.resolve(); close(); await ending;
+ });
+ it('cannot reuse an old owner capability after a replacement starts', async () => {
+  const a = await activeSession(); await a.active.end();
+  const next = await a.owner.start(request()); if (next.status !== 200) throw Error('start');
+  expect(a.active.looks.begin(draft)).toBeNull(); expect(a.active.looks.visual(a.permit)).toBeNull();
+  expect(a.active.looks.startSpeech(a.permit, vi.fn())).toBe(false); await next.end();
+ });
+ it('revokes on provider failure even when cleanup is uncertain', async () => {
+  const a = await activeSession(); let signal!: AbortSignal;
+  a.active.looks.startSpeech(a.permit, (_draft, abort) => {signal = abort;});
+  a.socket.close.mockImplementation(() => {throw Error('synthetic cleanup failure');});
+  a.socket.dispatchEvent(new Event('error')); expect(signal.aborted).toBe(true);
+  expect(a.active.looks.visual(a.permit)).toBeNull(); await a.active.end(); expect(a.owner.status().state).toBe('held');
+ });
+ it('revokes the active permit at the bounded deadline', async () => {
+  vi.useFakeTimers(); const a = await activeSession(); let signal!: AbortSignal;
+  a.active.looks.startSpeech(a.permit, (_draft, abort) => {signal = abort;});
+  await vi.advanceTimersByTimeAsync(85_000); expect(signal.aborted).toBe(true);
+  expect(a.active.looks.visual(a.permit)).toBeNull(); await a.active.end(); expect(vi.getTimerCount()).toBe(0);
+ });
 });

@@ -4,6 +4,9 @@ import type {ExperimentBudget} from './experiment-budget.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
 import type {ProbeCapture} from './note-session-probe.ts';
 import {NotebookState} from './notebook-state.ts';
+import {LookRelease} from './look-release.ts';
+import type {LookDraft, LookPermit} from './look-release.ts';
+import type {CheckTicket, CheckResult} from './notebook-state.ts';
 
 type Session = ReturnType<typeof createPreparedNoteProviderSession>;
 type SessionOptions = Parameters<typeof createPreparedNoteProviderSession>[0];
@@ -30,14 +33,14 @@ export function createPreparedNoteServerOwner(options: {
    if (state !== 'idle') return {status: 409 as const};
    if (request.signal.aborted) return {status: 499 as const};
    state = 'starting';
-   const controller = new AbortController(), notebook = new NotebookState();
+   const controller = new AbortController(), notebook = new NotebookState(), release = new LookRelease(notebook);
    let reservation: string | undefined, session: Session | undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
    const detach = () => {clearTimeout(timer); request.signal.removeEventListener('abort', stop);};
    const finish = (): Promise<void> => {
     if (finishPromise) return finishPromise;
     finishPromise = (async () => {
-     state = 'closing'; detach(); controller.abort(); session?.end();
+     state = 'closing'; detach(); release.dispose(); controller.abort(); session?.end();
      // Probe shutdown and its owner callback must settle before verification.
      await Promise.resolve();
      if (creationFailed || session?.status().cleanupFailed) {state = 'held'; return;}
@@ -48,7 +51,7 @@ export function createPreparedNoteServerOwner(options: {
     return finishPromise;
    };
    const stop = () => {
-    ending = true; controller.abort();
+    ending = true; release.dispose(); controller.abort();
     // A late reservation is closed by the awaiting start, never forgotten.
     if (reservation) void finish();
    };
@@ -58,17 +61,27 @@ export function createPreparedNoteServerOwner(options: {
    catch {
     // The durable write may have succeeded before its response failed. Fail
     // closed without retries or claims that no reservation was consumed.
-    detach(); controller.abort(); state = 'held'; return {status: 503 as const};
+    detach(); release.dispose(); controller.abort(); state = 'held'; return {status: 503 as const};
    }
    if (ending || request.signal.aborted) {await finish(); return {status: 499 as const};}
    try {
-    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, invalidated: () => hooks.publish?.(notebook.snapshot(), null), ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
+    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, inputStarted: () => release.end(), invalidated: () => {release.end(); hooks.publish?.(notebook.snapshot(), null);}, ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
    } catch {
     creationFailed = true; await finish(); return {status: 503 as const};
    }
    if (ending || session.status().ended) {await finish(); return {status: 499 as const};}
    state = 'active';
-   return {status: 200 as const, probe: session.probe, snapshot: () => notebook.snapshot(), end: async () => {ending = true; await finish();}};
+   // Server-only capability: never serialize permits or add look commands to the
+   // notebook wire. A trusted checker must validate the exact captured draft.
+   const available = () => !ending && !controller.signal.aborted && state === 'active' && session?.probe.readyForLook() === true;
+   const allowed = () => {if (available()) return true; release.end(); return false;};
+   const looks = Object.freeze({
+    begin: (draft: LookDraft): CheckTicket | null => allowed() ? release.begin(draft) : null,
+    complete: (ticket: CheckTicket, result: CheckResult): LookPermit | null => allowed() ? release.complete(ticket, result) : null,
+    visual: (permit: LookPermit): LookDraft | null => allowed() ? release.visual(permit) : null,
+    startSpeech: (permit: LookPermit, start: Parameters<LookRelease['startSpeech']>[1]): boolean => allowed() && release.startSpeech(permit, (draft, signal, authorizeFrame) => start(draft, signal, () => allowed() && authorizeFrame())),
+   });
+   return {status: 200 as const, looks, probe: session.probe, snapshot: () => notebook.snapshot(), end: async () => {ending = true; await finish();}};
   },
  };
 }

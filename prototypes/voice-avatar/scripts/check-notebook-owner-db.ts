@@ -5,6 +5,7 @@ import {PreparedNoteAllowance} from '../src/prepared-note-allowance.ts';
 import type {PreparedNoteLedger} from '../src/prepared-note-allowance.ts';
 import {createPreparedNotePersistenceTransport} from '../src/prepared-note-persistence-transport.ts';
 import {createPreparedNoteServerOwner} from '../src/prepared-note-server-owner.ts';
+import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 
 const [flag, container, ...extra] = process.argv.slice(2);
 const worker = extra.length === 1 && extra[0] === '--open-history-hold';
@@ -151,8 +152,25 @@ if (worker) {
  const winner = competitors.find(r=>r.status===200)!; await winner.end();
  assert.equal(a.counts().calls+b.counts().calls,6); // Both reservations actually reached SQL compare-and-swap.
  const final = await read(); assert.equal(final.runs.length,1); assert.equal(final.runs[0]!.closed,true);
+ await reset();
+ const gated = setup(), authoritative = await gated.start();
+ assert.equal(authoritative.status,200); if(authoritative.status!==200) throw Error('Expected local owner.');
+ authoritative.probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}});
+ const draft = {id:'synthetic_sql_look',description:'Synthetic look checked by a fixture only'};
+ const ticket = authoritative.looks.begin(draft); assert.ok(ticket);
+ const permit = authoritative.looks.complete(ticket,{outcome:'passed',reason:'Trusted synthetic fixture result'}); assert.ok(permit);
+ let speechSignal!: AbortSignal, frame!: () => boolean;
+ assert.equal(authoritative.looks.startSpeech(permit,(_draft,signal,authorize)=>{speechSignal=signal;frame=authorize;}),true);
+ assert.equal(frame(),true); assert.equal(authoritative.probe.edit('color','Blue',0),true);
+ assert.equal(speechSignal.aborted,true); assert.equal(frame(),false); assert.equal(authoritative.looks.visual(permit),null);
+ const revisedTicket = authoritative.looks.begin(draft); assert.ok(revisedTicket);
+ const revisedPermit = authoritative.looks.complete(revisedTicket,{outcome:'passed',reason:'Trusted revised synthetic fixture result'}); assert.ok(revisedPermit);
+ assert.equal(await authoritative.probe.beginTurn('synthetic_new_turn'),true);
+ assert.equal(authoritative.looks.visual(revisedPermit),null); assert.equal(authoritative.looks.begin(draft),null);
+ await authoritative.end(); assert.equal((await read()).runs[0]!.closed,true);
+ assert.equal(authoritative.looks.begin(draft),null);
  assert.deepEqual(JSON.parse(await sql('select ledger from public.stylist_prototype_budget;')),{synthetic_legacy:true,closed_attempts:9});
- console.log('7 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
+ console.log('8 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
  const {checkNotebookBrowserDb}=await import('./check-notebook-browser-db.ts');
  await checkNotebookBrowserDb({reset,read,sql,literal});
 } finally {
