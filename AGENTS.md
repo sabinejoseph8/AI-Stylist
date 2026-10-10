@@ -64,6 +64,7 @@ Keep interview-notes.md in the project root. The repository is public, so the no
 **How to work with Sabine**
 
 - Keep the project progressing continuously. Only pause when a step requires Sabine to take an action. Continue with available project work without waiting for another "continue" message.
+- Alert Sabine whenever a step requires her action. Clearly state what she needs to do and give one step at a time.
 - Sabine is not a developer. Explain what you're doing in plain words and keep updates short.
 - Never use em dashes in anything you write for her.
 - Work one task group at a time from docs/progress.md (1a, then 1b, then 1c, and so on). Start each group with a plan and wait for her approval before changing files.
