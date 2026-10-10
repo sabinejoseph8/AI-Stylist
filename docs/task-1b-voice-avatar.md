@@ -316,3 +316,7 @@ Sabine explicitly approved one additional private iPhone voice test after the co
 ## iPhone interrupt-and-end result
 
 The approved phone-trial deployment succeeded. Sabine reported that pressing Interrupt and end stopped the avatar sound and the page confirmed connection closure. A private durable-ledger read verified the latest trial is closed, no reservations remain unresolved, and the next unapproved attempt is rejected before provider work. No additional attempt was created during verification. This confirms the explicit interrupt-and-end control on her physical iPhone, not automatic conversational barge-in or resume. Separate confirmation of audible reply and visible mouth movement before interruption is pending. Task 1b remains unchecked.
+
+## iPhone avatar audio and mouth movement confirmed
+
+Sabine explicitly confirmed hearing the generated reply and seeing the avatar mouth move on her iPhone before pressing Interrupt and end. Together with her preceding interruption and closure confirmation, this establishes basic phone microphone-to-reply/avatar playback and explicit end control. Local phone camera/meter and cleanup checks also passed. It does not establish precise lip synchronization, response latency, repeated natural interruptions, automatic barge-in or resuming a conversation. All approved attempts are consumed and closed; further provider work requires a separate reviewed allowance. Task 1b remains unchecked pending continuous-conversation/context-cancellation evidence, timing/quality review and the agreed feasibility decision.

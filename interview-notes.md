@@ -185,3 +185,5 @@ After completing the local device checks, I approved one additional private phon
 ## Interrupting the avatar on my phone
 
 I tried the private voice test on my iPhone and pressed Interrupt and end during the avatar response. Her sound stopped and the page confirmed the connection closed. The durable record also showed the test was closed. This verified the explicit stop control; it did not establish natural spoken interruptions or resuming a conversation afterward.
+
+I confirmed that I could hear the generated reply and see the avatar mouth move on my iPhone before interrupting it. This gave me evidence that the bounded phone media path works. I kept precise timing, natural interruptions and continuous conversation as open checks instead of treating basic playback as proof of the complete stylist experience.
