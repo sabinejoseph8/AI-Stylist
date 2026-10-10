@@ -1,16 +1,17 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {createPreparedNoteServerOwner} from '../src/prepared-note-server-owner.ts';
 import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
+import {SimulatedPreferenceSource} from '../src/simulated-preference-source.ts';
 import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 const preview = {origin: 'https://notes-test.onrender.com', password: 'x'.repeat(32)};
 const authorization = 'Basic ' + Buffer.from('stylist:' + preview.password).toString('base64');
 class Socket extends EventTarget {readyState = 1; bufferedAmount = 0; send = vi.fn(); close = vi.fn();}
-function setup() {
+function setup(preferences?: SimulatedPreferenceSource) {
  const socket = new Socket(), capture = {start: vi.fn(async (_accept?: (pcm: ArrayBuffer) => boolean) => true), stop: vi.fn(), end: vi.fn()};
  const allowance = {purpose: 'notes-only-simulation' as const, reserve: vi.fn(async () => 'synthetic-reservation'), closeVerified: vi.fn(async (_id: string) => {})};
  const fetch = vi.fn(async (_url: string, _init: RequestInit) => Response.json({}));
  const createTransports = vi.fn(() => ({socket, capture, fetch}));
- const options = {simulation: true, preview, allowance, createTransports, changed: vi.fn()};
+ const options = {simulation: true, preview, allowance, preferences, createTransports, changed: vi.fn()};
  return {...options, socket, capture, fetch, owner: createPreparedNoteServerOwner(options)};
 }
 function request(changes = {}) {return {method: 'GET', path: '/api/notebook-simulation', host: 'notes-test.onrender.com', origin: preview.origin, authorization, signal: new AbortController().signal, ...changes};}
@@ -64,9 +65,9 @@ describe('disabled private notebook server owner', () => {
 });
 
 describe('server-owned synthetic look authorization', () => {
- const draft = {id:'synthetic-look',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const,excludedColors:[] as string[]};
- async function activeSession() {
-  const s = setup(), active = await s.owner.start(request());
+ const draft = {id:'synthetic-look',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const};
+ async function activeSession(preferences?: SimulatedPreferenceSource) {
+  const s = setup(preferences), active = await s.owner.start(request());
   if (active.status !== 200) throw Error('start');
   active.probe.receive({type: 'session.updated', session: {type: 'transcription', audio: {input: {format: {type: 'audio/pcm', rate: 24000}, transcription: {model: TRANSCRIPTION_MODEL}, turn_detection: null}}}});
   for(const [field,value] of Object.entries({occasion:'wedding',season:'November; season not specified',color:'green',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'}))active.probe.edit(field as 'color',value,0);
@@ -84,7 +85,7 @@ describe('server-owned synthetic look authorization', () => {
   expect(a.active.looks.complete({...ticket})).toBeNull();
   expect(a.active.looks.complete(ticket)).not.toBeNull(); await a.active.end();
  });
- it.each([{color:'red'},{newItemCents:50001},{excludedColors:['green']}])('holds a conflicting synthetic candidate %j', async changes => {
+ it.each([{color:'red'},{newItemCents:50001}])('holds a conflicting synthetic candidate %j', async changes => {
   const a=await activeSession(),ticket=a.active.looks.begin({...draft,...changes})!;
   expect(a.active.looks.complete(ticket)).toBeNull(); expect(a.active.looks.visual(a.permit)).toBeNull();
   expect(a.active.snapshot().gate?.state).toBe('held'); await a.active.end();
@@ -96,8 +97,8 @@ describe('server-owned synthetic look authorization', () => {
   expect(forged(ticket,{outcome:'passed',reason:'forged'})).toBeNull(); await a.active.end();
  });
  it('captures immutable candidate data and rejects description injection', async () => {
-  const a=await activeSession(), candidate={...draft,excludedColors:[] as string[]};
-  const ticket=a.active.looks.begin(candidate)!; candidate.color='red';candidate.excludedColors.push('green');
+  const a=await activeSession(), candidate={...draft};
+  const ticket=a.active.looks.begin(candidate)!; candidate.color='red';
   const permit=a.active.looks.complete(ticket)!;expect(permit).not.toBeNull();
   expect(a.active.looks.visual(permit)?.description).toContain('Synthetic sample: green');
   expect(a.active.looks.begin({...draft,description:'Unchecked text'} as never)).toBeNull();
@@ -107,6 +108,28 @@ describe('server-owned synthetic look authorization', () => {
   const a=await activeSession(),ticket=a.active.looks.begin(draft)!;
   a.active.probe.edit('budget','USD 100 maximum (items only)',1);
   expect(a.active.looks.complete(ticket)).toBeNull(); await a.active.end();
+ });
+ it('applies server preferences even when the candidate omits exclusions', async () => {
+  const source=new SimulatedPreferenceSource({simulation:true,excludedColors:['pink']}),a=await activeSession(source);
+  expect(source.replace(1,['green'])).toBe(true);
+  const ticket=a.active.looks.begin(draft)!; expect(a.active.looks.complete(ticket)).toBeNull();
+  expect(a.active.looks.begin({...draft,excludedColors:[]} as never)).toBeNull(); await a.active.end();
+ });
+ it('revokes a pending check and queued speech when the profile changes', async () => {
+  const source=new SimulatedPreferenceSource({simulation:true}),a=await activeSession(source);let signal!:AbortSignal,frame!:()=>boolean;
+  a.active.looks.startSpeech(a.permit,(_draft,abort,authorize)=>{signal=abort;frame=authorize;});
+  source.replace(1,['pink']);expect(signal.aborted).toBe(true);expect(frame()).toBe(false);expect(a.active.looks.visual(a.permit)).toBeNull();
+  const ticket=a.active.looks.begin(draft)!;source.replace(2,['green']);expect(a.active.looks.complete(ticket)).toBeNull();await a.active.end();
+ });
+ it('holds invalid preference updates and does not restore old approvals', async () => {
+  const source=new SimulatedPreferenceSource({simulation:true}),a=await activeSession(source);let signal!:AbortSignal;
+  a.active.looks.startSpeech(a.permit,(_draft,abort)=>{signal=abort;});
+  expect(source.replace(1,[''])).toBe(false);expect(signal.aborted).toBe(true);expect(a.active.looks.begin(draft)).toBeNull();await a.active.end();
+  expect(await a.owner.start(request())).toEqual({status:503});
+ });
+ it('detaches profile listeners when the session ends', async () => {
+  const source=new SimulatedPreferenceSource({simulation:true}),a=await activeSession(source);await a.active.end();const before=a.active.snapshot();
+  expect(source.replace(1,['blue'])).toBe(true);expect(a.active.snapshot()).toEqual(before);
  });
  it('revokes both display and queued speech immediately on a touch correction', async () => {
   const a = await activeSession(); let signal!: AbortSignal, frame!: () => boolean;

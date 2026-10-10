@@ -6,6 +6,8 @@ import type {PreparedNoteLedger} from '../src/prepared-note-allowance.ts';
 import {createPreparedNotePersistenceTransport} from '../src/prepared-note-persistence-transport.ts';
 import {createPreparedNoteServerOwner} from '../src/prepared-note-server-owner.ts';
 import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
+import {SimulatedPreferenceSource} from '../src/simulated-preference-source.ts';
+import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
 
 const [flag, container, ...extra] = process.argv.slice(2);
 const worker = extra.length === 1 && extra[0] === '--open-history-hold';
@@ -48,7 +50,8 @@ const preview = {origin:'https://fixture.onrender.com',password:'synthetic_local
 const request = (signal = new AbortController().signal) => ({method:'GET',path:'/api/notebook-simulation',host:'fixture.onrender.com',origin:preview.origin,authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64'),signal});
 type Fault = 'none' | 'reserve-ack-lost' | 'close-ack-lost' | 'reserve-pending';
 const endings: Array<() => Promise<void>> = [];
-function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>) {
+function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract?: (url:string,init:RequestInit)=>Promise<Response>, preferences?:SimulatedPreferenceSource) {
+ let sendAudio: ((pcm:ArrayBuffer)=>boolean) | undefined;
  let calls = 0, providers = 0, closes = 0;
  let release!: () => void, signalCommitted!: () => void;
  const committed = new Promise<void>(resolve => {signalCommitted = resolve;});
@@ -75,16 +78,16 @@ function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>) {
  };
  const persistence = createPreparedNotePersistenceTransport({simulation:true,url:'https://fixture.supabase.co',fetch});
  const allowance = new PreparedNoteAllowance({simulation:true,persistence});
- const owner = createPreparedNoteServerOwner({simulation:true,preview,allowance,changed:()=>{},createTransports:()=>{
+ const owner = createPreparedNoteServerOwner({simulation:true,preview,allowance,preferences,changed:()=>{},createTransports:()=>{
   providers++;
-  return {socket:Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:()=>{},close:()=>{closes++;}}),capture:{start:async()=>true,stop:()=>{}},fetch:async()=>{throw Error('No provider request permitted.');}};
+  return {socket:Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:()=>{},close:()=>{closes++;}}),capture:{start:async(accept:(pcm:ArrayBuffer)=>boolean)=>{sendAudio=accept;return true;},stop:()=>{}},fetch:extract??(async()=>{throw Error('No provider request permitted.');})};
  }});
  const start = async (signal?: AbortSignal) => {
   const result = await owner.start(request(signal));
   if (result.status === 200) endings.push(result.end);
   return result;
  };
- return {owner,allowance,start,committed,release:()=>release(),counts:()=>({calls,providers,closes})};
+ return {owner,allowance,start,committed,audio:()=>sendAudio?.(new ArrayBuffer(960))??false,release:()=>release(),counts:()=>({calls,providers,closes})};
 }
 if (worker) {
  const before = await read(); assert.ok(before.runs.some(run=>!run.closed));
@@ -157,7 +160,7 @@ if (worker) {
  assert.equal(authoritative.status,200); if(authoritative.status!==200) throw Error('Expected local owner.');
  authoritative.probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}});
  for(const [field,value] of Object.entries({occasion:'wedding',season:'November; season not specified',color:'green',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'}))authoritative.probe.edit(field as 'color',value,0);
- const draft = {id:'synthetic_sql_look',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const,excludedColors:[]};
+ const draft = {id:'synthetic_sql_look',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const};
  const ticket = authoritative.looks.begin(draft); assert.ok(ticket);
  const permit = authoritative.looks.complete(ticket); assert.ok(permit);
  let speechSignal!: AbortSignal, frame!: () => boolean;
@@ -170,8 +173,59 @@ if (worker) {
  assert.equal(authoritative.looks.visual(revisedPermit),null); assert.equal(authoritative.looks.begin(draft),null);
  await authoritative.end(); assert.equal((await read()).runs[0]!.closed,true);
  assert.equal(authoritative.looks.begin(draft),null);
+ await reset();
+ let answer: ((value:Response)=>void) | undefined;
+ const correcting = setup('none',undefined,async()=>new Promise<Response>(resolve=>{answer=resolve;}));
+ const spoken = await correcting.start(); assert.equal(spoken.status,200); if(spoken.status!==200)throw Error('Expected simulated speech owner.');
+ spoken.probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}});
+ for(const [field,value] of Object.entries({occasion:'wedding',season:'November; season not specified',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'}))assert.equal(spoken.probe.edit(field as 'color',value,0),true);
+ const until = async(check:()=>boolean)=>{const expires=Date.now()+4000;while(!check()){assert.ok(Date.now()<expires,'Synthetic settlement timed out.');await new Promise(resolve=>setTimeout(resolve,10));}};
+ const turn = async(id:string,color:string)=>{
+  answer=undefined;assert.equal(await spoken.probe.beginTurn(id),true);
+  for(let i=0;i<5;i++)assert.equal(correcting.audio(),true);
+  assert.equal(spoken.probe.commit(),true);
+  assert.equal(spoken.probe.receive({type:'input_audio_buffer.committed',event_id:id+'_commit',item_id:id+'_item'}),true);
+  assert.equal(spoken.probe.receive({type:'conversation.item.input_audio_transcription.completed',event_id:id+'_final',item_id:id+'_item',content_index:0,transcript:color}),true);
+  await until(()=>Boolean(answer));assert.equal(spoken.looks.begin(draft),null);
+  return ()=>answer!(Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:id,patches:[{field:'color',value:color,evidence:color}]})}]}]}));
+ };
+ const settleGreen=await turn('first_voice','green');settleGreen();await until(()=>spoken.probe.readyForLook());
+ assert.equal(spoken.snapshot().notes.color.status,'tentative');
+ const tentative=spoken.looks.begin(draft);assert.ok(tentative);assert.equal(spoken.looks.complete(tentative),null);
+ assert.equal(spoken.probe.confirm('color',spoken.snapshot().notes.color.revision),true);
+ const greenTicket=spoken.looks.begin(draft);assert.ok(greenTicket);
+ const greenPermit=spoken.looks.complete(greenTicket);assert.ok(greenPermit);
+ let oldSignal!:AbortSignal,oldFrame!:()=>boolean;
+ assert.equal(spoken.looks.startSpeech(greenPermit,(_draft,signal,frame)=>{oldSignal=signal;oldFrame=frame;}),true);assert.equal(oldFrame(),true);
+ const settleBlue=await turn('second_voice','blue');
+ assert.equal(oldSignal.aborted,true);assert.equal(oldFrame(),false);assert.equal(spoken.looks.visual(greenPermit),null);assert.equal(spoken.looks.complete(greenTicket),null);
+ settleBlue();await until(()=>spoken.probe.readyForLook());assert.equal(spoken.snapshot().notes.color.value,'blue');assert.equal(spoken.snapshot().notes.color.status,'tentative');
+ assert.equal(spoken.probe.confirm('color',spoken.snapshot().notes.color.revision),true);
+ const obsolete=spoken.looks.begin(draft);assert.ok(obsolete);assert.equal(spoken.looks.complete(obsolete),null);
+ const blueTicket=spoken.looks.begin({...draft,color:'blue'});assert.ok(blueTicket);
+ const bluePermit=spoken.looks.complete(blueTicket);assert.ok(bluePermit);assert.match(spoken.looks.visual(bluePermit)!.description,/Synthetic sample: blue/);
+ let revisedSignal!:AbortSignal,revisedFrame!:()=>boolean;
+ assert.equal(spoken.looks.startSpeech(bluePermit,(_draft,signal,frame)=>{revisedSignal=signal;revisedFrame=frame;}),true);
+ await spoken.end();assert.equal(revisedSignal.aborted,true);assert.equal(revisedFrame(),false);assert.equal(spoken.snapshot().notes.color.status,'missing');assert.equal((await read()).runs[0]!.closed,true);assert.deepEqual(correcting.counts(),{calls:4,providers:1,closes:1});
+ await reset();
+ const profile=new SimulatedPreferenceSource({simulation:true,excludedColors:['pink']}),profiled=setup('none',undefined,undefined,profile),profileSession=await profiled.start();
+ assert.equal(profileSession.status,200);if(profileSession.status!==200)throw Error('Expected profile fixture owner.');
+ profileSession.probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}});
+ for(const [field,value] of Object.entries({occasion:'wedding',season:'November; season not specified',color:'green',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'}))assert.equal(profileSession.probe.edit(field as 'color',value,0),true);
+ const initialProfileTicket=profileSession.looks.begin(draft);assert.ok(initialProfileTicket);
+ const initialProfilePermit=profileSession.looks.complete(initialProfileTicket);assert.ok(initialProfilePermit);
+ let profileSpeech!:AbortSignal,profileFrame!:()=>boolean;
+ assert.equal(profileSession.looks.startSpeech(initialProfilePermit,(_draft,signal,frame)=>{profileSpeech=signal;profileFrame=frame;}),true);
+ assert.equal(profile.replace(1,['green']),true);assert.equal(profileSpeech.aborted,true);assert.equal(profileFrame(),false);assert.equal(profileSession.looks.visual(initialProfilePermit),null);
+ const excluded=profileSession.looks.begin(draft);assert.ok(excluded);assert.equal(profileSession.looks.complete(excluded),null);
+ assert.equal(profileSession.looks.begin({...draft,excludedColors:[]} as never),null);
+ const pendingProfile=profileSession.looks.begin(draft);assert.ok(pendingProfile);assert.equal(profile.replace(2,[]),true);assert.equal(profileSession.looks.complete(pendingProfile),null);
+ const freshProfileTicket=profileSession.looks.begin(draft);assert.ok(freshProfileTicket);assert.ok(profileSession.looks.complete(freshProfileTicket));
+ assert.equal(profile.replace(3,['']),false);assert.equal(profileSession.looks.begin(draft),null);
+ await profileSession.end();assert.equal((await read()).runs[0]!.closed,true);assert.deepEqual(profiled.counts(),{calls:4,providers:1,closes:1});
+ assert.equal((await profiled.start()).status,503);assert.equal(profiled.counts().calls,4);
  assert.deepEqual(JSON.parse(await sql('select ledger from public.stylist_prototype_budget;')),{synthetic_legacy:true,closed_attempts:9});
- console.log('8 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
+ console.log('10 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
  const {checkNotebookBrowserDb}=await import('./check-notebook-browser-db.ts');
  await checkNotebookBrowserDb({reset,read,sql,literal});
 } finally {

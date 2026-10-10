@@ -4,6 +4,7 @@ import type {ExperimentBudget} from './experiment-budget.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
 import type {ProbeCapture} from './note-session-probe.ts';
 import {NotebookState, checkFixture} from './notebook-state.ts';
+import {SimulatedPreferenceSource} from './simulated-preference-source.ts';
 import {LookRelease} from './look-release.ts';
 import type {LookDraft, LookPermit} from './look-release.ts';
 import type {CheckTicket} from './notebook-state.ts';
@@ -19,12 +20,13 @@ type Allowance = Pick<ExperimentBudget, 'reserve' | 'closeVerified'> & {purpose:
 type Hooks = {capture?: ProbeCapture; publish?: (snapshot: ReturnType<NotebookState['snapshot']>, receipt: number | null) => void; ready?: () => void; turnReady?: (turnId: string) => void; stopped?: () => void};
 type Request = {method: string; path: string; host: string; origin: string; authorization?: string; signal: AbortSignal};
 export function createPreparedNoteServerOwner(options: {
- simulation?: boolean; preview: PreviewConfig; allowance: Allowance;
+ simulation?: boolean; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceSource;
  createTransports: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'capture'>;
  changed: SessionOptions['changed'];
 }) {
  if (options.simulation !== true || options.allowance.purpose !== 'notes-only-simulation') throw Error('Live notebook server owner is disabled.');
  const target = validatePreview(options.preview), gate = new PreviewGate(options.preview);
+ const preferences = options.preferences ?? new SimulatedPreferenceSource({simulation:true});
  let state: 'idle' | 'starting' | 'active' | 'closing' | 'held' = 'idle';
  return {
   status: () => ({state, liveEnabled: false as const}),
@@ -34,11 +36,13 @@ export function createPreparedNoteServerOwner(options: {
    if (auth !== 200) return {status: auth};
    if (state !== 'idle') return {status: 409 as const};
    if (request.signal.aborted) return {status: 499 as const};
+   if (!preferences.snapshot()) return {status: 503 as const};
    state = 'starting';
    const controller = new AbortController(), notebook = new NotebookState(), release = new LookRelease(notebook);
+   const unsubscribePreferences = preferences.subscribe(() => notebook.preferencesChanged());
    let reservation: string | undefined, session: Session | undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
-   const detach = () => {clearTimeout(timer); request.signal.removeEventListener('abort', stop);};
+   const detach = () => {clearTimeout(timer); unsubscribePreferences(); request.signal.removeEventListener('abort', stop);};
    const finish = (): Promise<void> => {
     if (finishPromise) return finishPromise;
     finishPromise = (async () => {
@@ -76,9 +80,9 @@ export function createPreparedNoteServerOwner(options: {
    // Server-only capability: never serialize permits or add look commands to the
    // notebook wire. The narrow fixture checker receives the same immutable data
    // that generates the sample description; no caller-supplied pass is accepted.
-   const available = () => !ending && !controller.signal.aborted && state === 'active' && session?.probe.readyForLook() === true;
+   const available = () => !ending && !controller.signal.aborted && state === 'active' && Boolean(preferences.snapshot()) && session?.probe.readyForLook() === true;
    const allowed = () => {if (available()) return true; release.end(); return false;};
-   let pendingLook: {ticket: CheckTicket; prepared: ReturnType<typeof prepareSyntheticLook>} | null = null;
+   let pendingLook: {ticket: CheckTicket; prepared: ReturnType<typeof prepareSyntheticLook>; profileRevision: number} | null = null;
    const looks = Object.freeze({
     begin: (candidate: SyntheticLookCandidate): CheckTicket | null => {
      if (!allowed()) return null;
@@ -86,12 +90,14 @@ export function createPreparedNoteServerOwner(options: {
      release.end(); pendingLook = null;
      let prepared: ReturnType<typeof prepareSyntheticLook>;
      try {prepared = prepareSyntheticLook(candidate);} catch {return null;}
-     const ticket = release.begin(prepared.draft); pendingLook = {ticket, prepared}; return ticket;
+     const ticket = release.begin(prepared.draft); pendingLook = {ticket, prepared, profileRevision: preferences.snapshot()!.revision}; return ticket;
     },
     complete: (ticket: CheckTicket): LookPermit | null => {
      if (!allowed() || !pendingLook || pendingLook.ticket !== ticket) return null;
      const pending = pendingLook; pendingLook = null;
-     return release.complete(ticket, checkFixture(notebook.snapshot(), pending.prepared.candidate));
+     const profile = preferences.snapshot();
+     if (!profile || profile.revision !== pending.profileRevision) {release.end(); return null;}
+     return release.complete(ticket, checkFixture(notebook.snapshot(), {...pending.prepared.candidate, excludedColors: [...profile.excludedColors]}));
     },
     visual: (permit: LookPermit): LookDraft | null => allowed() ? release.visual(permit) : null,
     startSpeech: (permit: LookPermit, start: Parameters<LookRelease['startSpeech']>[1]): boolean => allowed() && release.startSpeech(permit, (draft, signal, authorizeFrame) => start(draft, signal, () => allowed() && authorizeFrame())),

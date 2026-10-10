@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 894 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 907 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -91,9 +91,9 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 894 prototype checks across 64 files, type checking and build pass. Fifty separate local PostgreSQL checks, eight SQL-backed TypeScript owner scenarios and fourteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 907 prototype checks across 65 files, type checking and build pass. Fifty separate local PostgreSQL checks, ten SQL-backed TypeScript owner scenarios and fourteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Next exercise the internally checked candidate gate through the SQL-backed lifecycle with final extraction settlement and a second confirmed voice correction. Verify stale candidate denial, fresh candidate acceptance and queued speech cancellation in the combined owner harness. Then prepare a separate simulated saved-profile constraint source so candidate data cannot supply its own exclusions. Keep all real providers, products, hosting changes and paid trials disabled; do not alter approved customer/business decisions.
+Next pass the server-injected simulated preference source through the protected loopback bridge. Publish a revision/status invalidation after a profile change without sending raw saved constraints to the browser or exposing profile-save commands. Test active and pending extraction, malformed profile data, ended sessions and replacement isolation through browser/SQL fixtures. Keep live providers, real account/profile access and paid trials disabled.
 
 The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
@@ -154,3 +154,11 @@ Reviewed all five project memory files: product, design, technical specification
 Sabine explicitly requested copying and publication. All five updated memory files and DEVELOPMENT_PROGRESS.md were copied to /Users/sabinejoseph/Documents/Codex/AI stylist and verified byte-for-byte against the working checkout. GitHub confirmed publication of memory commit a3d033f and the historical blocker record 413000b to origin/main. The previous automatic approval-review failure is resolved for this operation. The final completion record is saved and published separately.
 
 No memory synchronization action remains pending. Preserve the preexisting four-line AGENTS.md local handoff unstaged. The exact next implementation action and product/financial/provider gates above remain unchanged. This documentation update did not rerun implementation tests or deploy the application.
+
+## Confirmed voice correction and separate preference authority, 10 October 2026
+
+Two additional SQL-backed owner scenarios exercise the actual prepared extraction and look checker. The first submits two synthetic PCM/transcript turns, waits for final extraction, holds tentative notes, confirms green and then blue, cancels queued speech, denies the old green candidate and releases only a freshly checked blue sample. End clears notes and closes the synthetic ledger once. The second changes a separately injected simulated profile, revokes speech/display and pending checks, rejects candidate-supplied exclusions, and holds invalid profile data without a new reservation.
+
+Added SimulatedPreferenceSource as server-only, revisioned in-memory fixture authority for color exclusions. Constraints are normalized, copied and frozen; stale updates are refused and malformed updates permanently hold that source. Candidate input now rejects excludedColors entirely. The owner checks the profile revision and applies the source's exclusions internally; source changes synchronously invalidate the notebook and current permit. Cleanup unsubscribes the session. No conversation or browser command can update this source. When no source is injected, the existing isolated harness uses an empty synthetic profile, not a claim that a real customer has no preferences.
+
+All 907 prototype checks across 65 files, type checking and build pass. The isolated PostgreSQL harness passes 50 SQL checks, ten owner scenarios and fourteen browser scenarios. Fixed a missing TypeScript Omit parameter during validation and reran all checks. These are synthetic providers/devices and local database evidence. No customer profile storage, authenticated ownership, session exceptions, semantic preference agent, real products, paid call, remote database change or deployment is implemented by this work. D21/D22, D26/D39 discovery and D41 remain partial; R1 dependencies and Phase 1 gates remain open.

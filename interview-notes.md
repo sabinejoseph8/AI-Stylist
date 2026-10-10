@@ -434,3 +434,9 @@ I wanted the stylist to avoid showing or describing a look after the customer ch
 ## Checking the same look that the customer would hear
 
 I tightened the prototype so a caller cannot simply tell the server that a look passed. The server now copies the candidate, checks its attributes against the confirmed notebook and builds the sample description from those same attributes. My checks cover changes made during validation, prices above the budget, conflicting colors and attempts to inject a separate unchecked description. The tradeoff is deliberate: the fixture checker supports a small synthetic example, so it cannot establish suitability of real products or replace the independent preference agent planned for launch.
+
+## Keeping saved requirements outside the proposed look
+
+I checked the full local flow with two simulated voice turns. The first produced a green preference, which stayed tentative until confirmation. Starting a correction canceled the green look and its queued speech. After confirming blue, the old green candidate was blocked and only a freshly checked blue sample could appear. The database reservation closed once when the session ended.
+
+I then separated saved color exclusions from candidate data. A proposed look cannot choose which exclusions apply to it. The server receives them from a separate simulated profile with a revision, and changing that profile immediately cancels old approvals. Invalid profile data holds new recommendations instead of assuming that no exclusions exist. I tested stale changes and cleanup, fixed a TypeScript declaration and reran all checks. The suite now has 907 passing checks, plus 50 local SQL checks, ten owner scenarios and fourteen browser scenarios. This remains synthetic preparation; real account ownership, saved-profile access and the complete independent preference agent are separate work.
