@@ -17,7 +17,7 @@ name = 'ai-stylist-notebook-db-' + uuid.uuid4().hex[:12]
 checks = 0
 
 def command(args, **kwargs):
-    return subprocess.run(args, capture_output=True, text=True, timeout=30, **kwargs)
+    return subprocess.run(args, capture_output=True, text=True, timeout=kwargs.pop('timeout', 30), **kwargs)
 
 def sql(query, succeeds=True):
     global checks
@@ -117,7 +117,7 @@ try:
         raise RuntimeError('Rollback changed the synthetic legacy sentinel.')
     sql(migration.read_text())
     sql('set role service_role; select public.stylist_notebook_allowance_read();', False)
-    composition = command(['node', str(Path(__file__).with_name('check-notebook-owner-db.ts')), '--local-docker', name])
+    composition = command(['node', str(Path(__file__).with_name('check-notebook-owner-db.ts')), '--local-docker', name], timeout=60)
     if composition.returncode:
         raise RuntimeError('Local TypeScript composition checks failed: ' + composition.stderr[-1500:])
     print(composition.stdout.strip())

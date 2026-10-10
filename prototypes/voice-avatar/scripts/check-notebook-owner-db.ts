@@ -153,6 +153,8 @@ if (worker) {
  const final = await read(); assert.equal(final.runs.length,1); assert.equal(final.runs[0]!.closed,true);
  assert.deepEqual(JSON.parse(await sql('select ledger from public.stylist_prototype_budget;')),{synthetic_legacy:true,closed_attempts:9});
  console.log('7 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
+ const {checkNotebookBrowserDb}=await import('./check-notebook-browser-db.ts');
+ await checkNotebookBrowserDb({reset,read,sql,literal});
 } finally {
  for (const end of endings) await end();
 }
