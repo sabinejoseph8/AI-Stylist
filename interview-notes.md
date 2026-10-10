@@ -336,3 +336,7 @@ I tested the prepared notebook connection across a real local socket rather than
 ## Making the prepared connection visible
 
 I added a separate connection rehearsal to the notebook page so I could review the prepared session controls as a visible flow. I reused the client and owner contracts, generated silent audio and scripted a green-to-blue correction. I kept the rehearsal separate from the main notebook and photos. Browser checks passed both turns, confirmation and ending with cleared notes; all 614 automated checks, type checking and build passed. The rehearsal uses no network or real speech, so live integration and customer testing remain open.
+
+## Reviewing the connection rehearsal
+
+I completed all seven local connection rehearsal steps, including the ready status, green-to-blue correction, confirmation and clearing the notes at the end. This gave me a visible check of the simulated session flow. I kept this acceptance separate from real speech quality, hosted security and phone testing, which still need validation.

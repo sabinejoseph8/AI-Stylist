@@ -208,4 +208,4 @@ Read all steps before starting. This separate fixture is silent and needs no mic
 6. Choose Confirm color and check Blue becomes Confirmed.
 7. Choose End rehearsal. Rehearsal notes disappear and the status says the check ended.
 
-Agent verification passed these steps on 10 October 2026. Sabine's new manual acceptance is pending. The earlier 18-step notebook acceptance remains recorded separately.
+Agent verification passed these steps on 10 October 2026. Sabine subsequently reported all seven steps completed, accepting this local simulated rehearsal: ready status, Emerald green, Blue correction, confirmation and end/clear. The earlier 18-step notebook acceptance remains recorded separately. This does not establish live speech, network authentication, physical phone behavior or full Task 1c completion.
