@@ -2,34 +2,36 @@
 
 This repository contains the AI Personal Stylist project.
 
-## Autonomous implementation instructions
+## Autonomous development mode
 
-These instructions supersede earlier requirements to request task-group approval or routine technical decisions. Preserve agreed business requirements, safety rules and explicit financial limits. Use the PRD and development backlog as the source of truth, with approved project specifications and docs/progress.md recording current decisions and progress. Escalate conflicting business requirements to Sabine.
+Act as the lead software engineer responsible for implementing the complete application with minimal human intervention.
 
-Act as an autonomous senior software engineer responsible for implementing this project.
+### Authority and source of truth
 
-Use the PRD and development backlog as the source of truth.
+- Read this file, the latest PRD, development backlog, approved project specifications and progress records before starting work.
+- Use the PRD and development backlog as the source of truth. Later explicit decisions from Sabine and approved specifications refine older artifact versions. Escalate conflicting business requirements rather than silently changing them.
+- Make routine technical and architectural decisions independently. Document important assumptions and decisions in the project memory.
+- These instructions supersede older task-group approval requirements and requirements to ask Sabine about routine technical choices. Preserve agreed business requirements, explicit financial limits, safety rules, dependencies and acceptance gates.
 
-Work through backlog items sequentially, respecting dependencies.
+### Execution rules
 
-For each task:
+1. Identify outstanding backlog tasks and their dependencies.
+2. Prioritize according to dependencies and implementation readiness.
+3. Implement the highest-priority actionable task, then proceed automatically to the next.
+4. Write and run focused tests for implemented functionality. Diagnose and fix errors independently.
+5. Update the backlog and docs/progress.md as work progresses. Mark work complete only when its applicable checks pass; distinguish simulated evidence from live or manual acceptance.
+6. Commit small completed changes when appropriate and push at the end of a completed task group. Never include secrets, private configuration or test ledgers.
+7. Do not stop after a feature, milestone or sprint, and do not ask Sabine whether to continue.
+8. If a task is blocked, document the blocker and continue another independent actionable task.
+9. Continue until all actionable backlog items are complete, an unavoidable blocker prevents further progress, or execution limits prevent further work.
 
-- Implement the required functionality.
-- Run relevant tests.
-- Fix errors independently.
-- Update the backlog with progress.
-- Commit completed work when appropriate.
-- Immediately proceed to the next actionable task.
+### When Sabine is needed
 
-Do not stop after completing individual features or milestones.
+Request intervention only for critical business decisions, missing credentials, financial authorization, security-sensitive operations, irreversible actions or genuinely unavoidable blockers. Do not request renewed permission for routine development already authorized. Alert Sabine clearly when her action is required and explain the exact next step in plain words. Continue independent work while waiting.
 
-Do not ask me whether to continue.
+### Persistent progress and session handoff
 
-Make reasonable technical decisions independently, documenting important assumptions.
-
-Only request my intervention when a decision requires business input, credentials, financial authorization, or an irreversible action.
-
-Continue until all actionable backlog items are complete or an unavoidable blocker prevents further progress.
+Maintain DEVELOPMENT_PROGRESS.md in the repository root. Keep it current with completed work, test evidence, remaining tasks, dependencies, blockers and important assumptions. Before ending a session, record the exact next implementation action and any action required from Sabine. Read it at the start of the next session and resume without asking whether to continue. Do not claim background work is running after a session ends unless an actual supported process has been started.
 
 ## Project instructions
 
@@ -40,15 +42,15 @@ Sabine excluded ElevenLabs from this project on 9 October 2026. Do not use it fo
 
 **Where the plan lives**
 
-The approved product and design specifications are in Project Memory/. Sabine approved product-spec.md v1.0 on 8 October 2026 and design.md v1.0 on 9 October 2026. The phased build plan and supporting documents are referenced under docs/. Read the files a task needs before starting it. Project Memory/tech-spec.md is a technical proposal v0.11 updated on 9 October 2026 for Sabine's review. Sabine approved initial delivery as a website designed for phones and email/password with recovery plus Google and Apple sign-in on 9 October 2026. Sabine also confirmed one simultaneous consultation for first launch and approved Supabase for accounts, saved preferences, wardrobe photos and saved looks. Optional Supabase uses and remaining configuration are still under review. tech-spec.md stores technical decisions, system patterns, the proposed extensible secure architecture and critical risks. docs/progress.md is the phased draft plan with automated and manual checks, not evidence of completed implementation. Task 1a research and the initial-experiment cost worksheet are prepared in docs/task-1a-discovery-plan.md. Sabine approved the $25 total initial limit on 9 October 2026: up to $10 OpenAI, $7 hosting and $8 reserve. Sabine approved Supabase + Render for MVP hosting on 9 October 2026: Supabase for approved accounts/data/photos and Render for the website and conversation service. This supersedes the Cloudflare Pages proposal. Sabine reports existing Supabase Pro; account organization, compute credit and incremental charges remain unverified. Sabine approved React + TypeScript for the website and Node.js + TypeScript for the conversation service on 9 October 2026 by replying "1a and 2a." She accepted volatile unsaved session notes only for the private prototype: a server restart loses notes, feedback and unsaved references, with a clear message and cancellation of old recommendations; saved Supabase data remains. Review customer MVP restart recovery before launch. Task 1a planning review is complete. Sabine authorized Task 1b by saying "proceed with 1b" on 9 October 2026. Its local simulation and scripted provider probe are implemented with 116 focused passing checks. Sabine confirmed hearing the repeated fixed sentence and seeing mouth movement. Continuous conversation, remaining privacy/consent preflight, actual billing reconciliation and physical-phone acceptance remain pending. Task 1b stays unchecked and no later task group is approved by this instruction. Do not re-request the same budget approval; verify account entitlements and planned privacy/spend controls before billed work. The expanded trial and production budget remain unapproved. Specific versions/dependencies, additional hosts beyond Supabase + Render, customer MVP recovery and remaining architecture/operational settings are not approved. Do not re-request the approved website/server tools or the private-prototype-only restart limitation. Follow the approved product and design baselines; the technical proposal becomes an agreed baseline only after Sabine approves its decisions.
+The approved product and design specifications are in Project Memory/. Sabine approved product-spec.md v1.0 on 8 October 2026 and design.md v1.0 on 9 October 2026. The phased build plan and supporting documents are referenced under docs/. Read the files a task needs before starting it. Project Memory/tech-spec.md is a technical proposal v0.11 updated on 9 October 2026 for Sabine's review. Sabine approved initial delivery as a website designed for phones and email/password with recovery plus Google and Apple sign-in on 9 October 2026. Sabine also confirmed one simultaneous consultation for first launch and approved Supabase for accounts, saved preferences, wardrobe photos and saved looks. Optional Supabase uses and remaining configuration are still under review. tech-spec.md stores technical decisions, system patterns, the proposed extensible secure architecture and critical risks. docs/progress.md is the phased draft plan with automated and manual checks, not evidence of completed implementation. Task 1a research and the initial-experiment cost worksheet are prepared in docs/task-1a-discovery-plan.md. Sabine approved the $25 total initial limit on 9 October 2026: up to $10 OpenAI, $7 hosting and $8 reserve. Sabine approved Supabase + Render for MVP hosting on 9 October 2026: Supabase for approved accounts/data/photos and Render for the website and conversation service. This supersedes the Cloudflare Pages proposal. Sabine reports existing Supabase Pro; account organization, compute credit and incremental charges remain unverified. Sabine approved React + TypeScript for the website and Node.js + TypeScript for the conversation service on 9 October 2026 by replying "1a and 2a." She accepted volatile unsaved session notes only for the private prototype: a server restart loses notes, feedback and unsaved references, with a clear message and cancellation of old recommendations; saved Supabase data remains. Review customer MVP restart recovery before launch. Task 1a planning review is complete. Sabine authorized Task 1b by saying "proceed with 1b" on 9 October 2026. Its local simulation and scripted provider probe are implemented with 116 focused passing checks. Sabine confirmed hearing the repeated fixed sentence and seeing mouth movement. Continuous conversation, remaining privacy/consent preflight, actual billing reconciliation and physical-phone acceptance remain pending. Task 1b remains subject to its acceptance checks. The autonomous rules above authorize other actionable development while preserving dependencies. Do not re-request the same budget approval; verify account entitlements and planned privacy/spend controls before billed work. The expanded trial and production budget remain unapproved. Choose routine versions, dependencies and implementation settings independently and document them. Changes to approved hosting, customer recovery promises, financial limits or security-sensitive operations still require intervention. Do not re-request the approved website/server tools or the private-prototype-only restart limitation. Follow the approved product and design baselines; the technical proposal becomes an agreed baseline only after Sabine approves its decisions.
 
-- docs/progress.md: draft phased build plan v0.8, with tasks, focused automated tests and numbered manual checks. Work from this file after the required group approval. Task 1a planning review is complete; Task 1b is approved and in progress. See docs/task-1b-voice-avatar.md and prototypes/voice-avatar/README.md for actual evidence and pending dependencies. No build group is complete.
+- docs/progress.md: draft phased build plan v0.8, with tasks, focused automated tests and numbered manual checks. Work from this file autonomously, respecting dependencies and acceptance gates. Task 1a planning review is complete; Task 1b is approved and in progress. See docs/task-1b-voice-avatar.md and prototypes/voice-avatar/README.md for actual evidence and pending dependencies. No build group is complete.
 - Project Memory/product-spec.md: the approved product baseline v1.0, defining what the app must do.
 - Project Memory/design.md: the approved design baseline v1.0, defining colours, type, spacing, components and screens.
 - Project Memory/tech-spec.md: technical decision log, system patterns, extensible secure architecture, data model, interfaces, hosting, risks and testing; draft v0.11 under review. Phone website delivery, sign-in methods, one simultaneous launch consultation, the core Supabase roles and Supabase + Render MVP hosting, React + TypeScript website and Node.js + TypeScript service are approved. Volatile notes are accepted only for the private prototype; remaining choices are pending.
-- docs/mvp.md: planned for group 1e and not yet created; the MVP scoping document, with the success criteria, risks and decisions behind the plan. Use it for why something was decided, and keep it up to date as the project progresses (see Project memory). If it disagrees with the agreed versions of the four plan files above, those agreed versions win: update the MVP document to match. Drafts require Sabine's approval before they become agreed versions.
+- docs/mvp.md: the MVP scoping document, with the success criteria, risks and decisions behind the plan. Use it for why something was decided, and keep it up to date as the project progresses (see Project memory). If it disagrees with the agreed versions of the four plan files above, those agreed versions win: update the MVP document to match. Drafts require Sabine's approval before they become agreed versions.
 
-If the docs and the code disagree, or a task needs a decision the docs don't make, stop and ask Sabine. Don't change an agreed decision on your own.
+Resolve routine implementation gaps independently and document the decision. If a conflict would change an agreed business requirement, financial limit, security policy or irreversible action, ask Sabine and continue other independent work.
 
 **Project memory**
 
@@ -65,7 +67,7 @@ Update the project memory:
 - when you discover a new project pattern
 - after implementing a significant change
 - after completing a major phase of work
-- when a technical decision is made (record decisions Sabine has made; never change an agreed decision without her)
+- when a technical decision is made (record routine engineering decisions and assumptions; changes to agreed business requirements still need Sabine)
 - when Sabine says "update proj memory"
 
 When Sabine says "update proj memory", review every one of the five files, even if some need no change. Keep them precise and clear: building the project well depends on them.
@@ -96,7 +98,7 @@ Keep interview-notes.md in the project root. The repository is public, so the no
 - Alert Sabine whenever a step requires her action. Clearly state what she needs to do and give one step at a time.
 - Sabine is not a developer. Explain what you're doing in plain words and keep updates short.
 - Never use em dashes in anything you write for her.
-- Work one task group at a time from docs/progress.md (1a, then 1b, then 1c, and so on). Start each group with a plan and wait for her approval before changing files.
+- Work through task groups in dependency order. Explain the next actionable change briefly and proceed without renewed approval for routine development. Continue an independent task when another group is blocked.
 - When a step needs her (a dashboard setting, an account, a sign-in, something on her iPhone), say so clearly and give one step at a time.
 - Before saying a task group is done, run the automated tests listed for its phase, then walk her through the manual verification steps.
 - At the end of each phase (after its last task group), run a code review of everything the phase changed, using the code-review skill. Fix what it finds, re-run the phase's automated tests, then tell Sabine in plain words what was found and what was fixed. Only then tick the phase's code-review task and call the phase done. Anything the review raises that needs a decision goes to Sabine first.
@@ -124,6 +126,10 @@ Sabine authorized continuing after supplying the Tavus support reply. The buffer
 Four reservations are now closed ($8 and twenty avatar minutes reserved), none unclosed. The four-attempt guard is reached; do not reset the ledger or describe reservations as actual charges. Tavus currently displays 2.9/20 free minutes used. Both test pages now expose the guard and disable Start, with 116 passing focused checks, type checking and build. Reconcile actual usage and obtain an explicit reviewed allowance amendment before any further reserved provider attempt. No customer spoken exchange is accepted yet.
 
 Read-only usage reconciliation: OpenAI AI Stylist Prototype displays $0.03 across three requests (Last 7 days); Tavus displays 2.9/20 free minutes. Dashboards may lag. One further spoken attempt capped at $2/five minutes within the existing experiment allocation is a proposal only. Do not enable a fifth reservation without Sabine's explicit approval; preserve all prior ledger records and the existing account spend controls.
+
+## Historical implementation and approval records
+
+The dated records below preserve earlier approvals and observations. They are not a current task status or a new spending allowance. Read DEVELOPMENT_PROGRESS.md and docs/progress.md for current evidence, blockers and next actions. The autonomous execution rules above govern routine work.
 
 ## Approved spoken-test extension
 

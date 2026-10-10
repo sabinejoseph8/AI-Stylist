@@ -45,3 +45,7 @@ D02, D03 and X01 desk comparison are implemented. docs/mvp.md now records curren
 ## Session handoff
 
 The source increments and progress evidence are saved locally and committed. Live providers remain disabled for these additions. No new allowance, provider trial, retailer application or Render deployment was made. The next implementation task above needs no renewed routine-development approval. Human intervention is required later for a new paid trial allowance, the Tavus recovery reply and source/privacy launch decisions. Phase 1 remains incomplete.
+
+## Autonomous instructions maintenance
+
+Updated root AGENTS.md with the complete autonomous development rules, routine decision authority, escalation boundaries and mandatory DEVELOPMENT_PROGRESS.md session handoff. Removed conflicting routine approval instructions while retaining financial/security rules and historical records. Documentation-only change; implementation next action above is unchanged.
