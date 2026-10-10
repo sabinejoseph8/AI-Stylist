@@ -328,3 +328,7 @@ I prepared clear session messages so the notebook can distinguish waiting for a 
 ## Owning the browser connection lifecycle
 
 I prepared one place to bind the notebook connection to page visibility, page exit and connection failures. I made the binding remove listeners and its status timer when it ends, and reject late or malformed messages. I tested asynchronous capture and failures with simulated devices so this work needed no paid provider trial. All 603 automated checks, type checking and build passed. The visible notebook is still a local simulation; actual browser attachment and live provider behavior remain to be validated.
+
+## Verifying the connection as a whole
+
+I tested the prepared notebook connection across a real local socket rather than relying only on separate component checks. Two simulated spoken turns changed a tentative color from green to blue. I verified that losing the connection stopped capture, closing the page cleared both owners, and a late permission result could not restart the session. All 606 automated checks, type checking and build passed. I kept provider responses and devices simulated, so these results do not establish real speech quality or phone acceptance.

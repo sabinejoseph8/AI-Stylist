@@ -1,3 +1,4 @@
+import {bindSimulatedNoteLifecycle} from '../src/note-browser-lifecycle.ts';
 import {PreparedBrowserNoteSession} from '../src/note-browser-session.ts';
 import {encodeNoteAudio} from '../src/note-audio-frame.ts';
 import type {PreparedRemoteNoteCapture} from '../src/note-remote-capture.ts';
@@ -122,4 +123,46 @@ describe('provider-confirmed repeated turns over loopback',()=>{
 
 describe('retired readiness callback isolation',()=>{
  it('keeps old turn-ready callbacks bound to their original connection',async()=>{const callbacks:((turnId:string)=>void)[]=[];const s=await setup((_publish,_capture,turnReady)=>{callbacks.push(turnReady);let ended=false;return{beginTurn:async()=>true,commit:()=>true,audio:()=>false,edit:()=>true,confirm:()=>true,receive:()=>true,acknowledgeRendered:()=>true,end:()=>{ended=true;},disconnected:()=>{ended=true;},snapshot:()=>({ended,reason:'ended',transcription:null})};});const first=await connect(s.url),done=closed(first.ws);first.ws.close();await done;await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));const fresh=await connect(s.url),received:any[]=[];fresh.ws.on('message',d=>received.push(JSON.parse(d.toString())));callbacks[0]!('private_old_sentinel');const next=message(fresh.ws);callbacks[1]!('new_turn');expect(await next).toMatchObject({type:'turn-ready',sessionId:fresh.ready.sessionId,turnId:'new_turn'});expect(JSON.stringify(received)).not.toContain('sentinel');});
+});
+
+describe('complete simulated lifecycle over loopback transport',()=>{
+ async function lifecycle(){
+   const notebook=new NotebookState();let probe!:NoteSessionProbe;
+   const s=await setup((publish,capture,turnReady)=>{probe=new NoteSessionProbe({simulation:true,notebook,capture,turnReady,wire:{bufferedAmount:0,send:()=>true,close:vi.fn()},extract:async input=>[{field:'color',value:input.text,evidence:input.text,confirmed:false}],changed:r=>publish(notebook.snapshot(),r)});publish(notebook.snapshot(),null);return probe;});
+   let frame!:(pcm:ArrayBuffer)=>boolean;
+   const capture={start:vi.fn(async(a:(pcm:ArrayBuffer)=>boolean)=>{frame=a;return true;}),stop:vi.fn()};
+   const ws=new WebSocket(s.url,{headers}),events=new EventTarget(),page=new EventTarget(),visibility=Object.assign(new EventTarget(),{hidden:false}),status=vi.fn();
+   const session=new PreparedBrowserNoteSession({simulation:true,capture,socket:{send:v=>ws.send(v),close:()=>ws.close(),get bufferedAmount(){return ws.bufferedAmount;}},changed:vi.fn()});
+   const binding=bindSimulatedNoteLifecycle({simulation:true,session,socket:events,page,visibility,status});
+   ws.on('message',d=>events.dispatchEvent(new MessageEvent('message',{data:d.toString()})));ws.on('close',()=>events.dispatchEvent(new Event('close')));ws.on('error',()=>events.dispatchEvent(new Event('error')));
+   cleanups.push(async()=>{binding.dispose();if(ws.readyState===WebSocket.OPEN)ws.terminate();});
+   await vi.waitFor(()=>expect(session.snapshot().connection.notes).not.toBeNull());
+   probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:'gpt-live-transcribe'},turn_detection:null}}}});
+   return{...s,probe,notebook,ws,events,page,visibility,status,capture,session,binding,frame:()=>frame(new ArrayBuffer(960))};
+ }
+ it('updates two spoken turns and closes both owners through pagehide',async()=>{
+   const s=await lifecycle();
+   for(const [index,color] of ['green','blue'].entries()){
+     expect(await s.session.startTurn(`turn${index}`)).toBe(true);await vi.waitFor(()=>expect(s.session.snapshot().connection.pending).toBe(false));
+     for(let n=0;n<5;n++)expect(s.frame()).toBe(true);
+     expect(s.session.commit()).toBe(true);s.binding.refresh();expect(s.status.mock.lastCall![0].state).toBe('processing');
+     await vi.waitFor(()=>expect(s.session.snapshot().connection.pending).toBe(false));expect(await s.session.startTurn('premature')).toBe(false);
+     s.probe.receive({type:'input_audio_buffer.committed',event_id:`c${index}`,item_id:`i${index}`});
+     s.probe.receive({type:'conversation.item.input_audio_transcription.completed',event_id:`f${index}`,item_id:`i${index}`,content_index:0,transcript:color});
+     await vi.waitFor(()=>{expect(s.session.snapshot().connection.awaitingProvider).toBe(false);expect(s.session.snapshot().connection.notes?.notes.color.value).toBe(color);expect(s.status.mock.lastCall![0].state).toBe('ready');});
+   }
+   expect(s.capture.start).toHaveBeenCalledTimes(2);expect(s.probe.snapshot().transcription?.audioBytes).toBe(9600);
+   s.page.dispatchEvent(new Event('pagehide'));await vi.waitFor(()=>expect(s.probe.snapshot().ended).toBe(true));
+   expect(s.session.snapshot().connection.notes).toBeNull();expect(s.notebook.snapshot().notes.color.status).toBe('missing');expect(s.frame()).toBe(false);expect(s.status.mock.lastCall![0].message).toContain('page was hidden');
+ });
+ it('stops active capture when the actual transport closes',async()=>{
+   const s=await lifecycle();expect(await s.session.startTurn('t1')).toBe(true);await vi.waitFor(()=>expect(s.session.snapshot().connection.pending).toBe(false));expect(s.frame()).toBe(true);
+   s.ws.terminate();await vi.waitFor(()=>{expect(s.probe.snapshot().ended).toBe(true);expect(s.session.snapshot().ended).toBe(true);});
+   expect(s.capture.stop).toHaveBeenCalled();expect(s.frame()).toBe(false);expect(s.session.snapshot().connection.notes).toBeNull();expect(s.status.mock.lastCall![0].message).toContain('connection ended');
+ });
+ it('releases permission granted after page exit without sending any audio',async()=>{
+   const s=await lifecycle();let resolve!:(value:boolean)=>void;s.capture.start.mockImplementation(()=>new Promise(r=>{resolve=r;}));
+   const pending=s.session.startTurn('late');s.binding.refresh();expect(s.status.mock.lastCall![0].state).toBe('requesting-device');s.page.dispatchEvent(new Event('pagehide'));resolve(true);expect(await pending).toBe(false);
+   await vi.waitFor(()=>expect(s.probe.snapshot().ended).toBe(true));expect(s.capture.stop).toHaveBeenCalledTimes(2);expect(s.probe.snapshot().transcription?.audioBytes).toBe(0);expect(await s.session.startTurn('new')).toBe(false);
+ });
 });
