@@ -316,3 +316,7 @@ I prepared the capture controls so a delayed permission result cannot restart a 
 ## Preserving preferences between spoken turns
 
 I found that allowing another turn immediately after the server command acknowledgment could cancel the previous turn's final extraction. I required both the transcription commit and final note extraction to finish before recording another turn. I tested two simulated spoken turns over real local sockets, including a green-to-blue correction, delayed extraction, readiness replay and disconnect isolation. All 572 automated checks, type checking and build passed. This removes the preparation helper's one-turn limit; the running notebook still uses simulated speech, and live recognition and avatar recovery remain unproven.
+
+## Protecting an edit while the stylist is taking notes
+
+I found that a customer could open an edit dialog, receive a newer note during speech and accidentally overwrite it with an older draft. I made the visible notebook and prepared server use the same version checks. The notebook now preserves the draft, explains the conflict and offers an explicit way to load the latest value. I reproduced the race in the browser, verified recovery and checked normal save, confirm and cancel. All 584 automated checks, type checking and build passed. Speech is still simulated, and no paid call or deployment was needed for this fix.

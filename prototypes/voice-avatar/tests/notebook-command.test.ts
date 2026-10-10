@@ -1,0 +1,13 @@
+import {describe,expect,it} from 'vitest';
+import {applyNotebookCommand} from '../src/notebook-command.ts';
+import {NotebookState} from '../src/notebook-state.ts';
+const edit={type:'edit',session:1,field:'color',expectedRevision:0,value:'Blue'};
+describe('shared notebook command revision checks',()=>{
+ it('applies an edit once and refuses replay',()=>{const n=new NotebookState();expect(applyNotebookCommand(n,edit)).toBe(true);expect(n.snapshot().notes.color).toMatchObject({value:'Blue',status:'confirmed',source:'touch'});expect(applyNotebookCommand(n,edit)).toBe(false);});
+ it('preserves a speech correction arriving while the edit dialog is open',()=>{const n=new NotebookState();n.capture({session:1,field:'color',baseRevision:0,sequence:1,value:'Green',confirmed:false});expect(applyNotebookCommand(n,edit)).toBe(false);expect(n.snapshot().notes.color.value).toBe('Green');expect(applyNotebookCommand(n,{...edit,expectedRevision:1})).toBe(true);expect(n.snapshot().notes.color.value).toBe('Blue');});
+ it('rejects an old dialog after clear even when the field revision matches',()=>{const n=new NotebookState();n.clear();expect(applyNotebookCommand(n,edit)).toBe(false);expect(n.snapshot().notes.color.status).toBe('missing');});
+ it('confirms only the exact nonempty current value',()=>{const n=new NotebookState(),c={type:'confirm',session:1,field:'color',expectedRevision:0};expect(applyNotebookCommand(n,c)).toBe(false);n.capture({session:1,field:'color',baseRevision:0,sequence:1,value:'Green',confirmed:false});expect(applyNotebookCommand(n,c)).toBe(false);expect(applyNotebookCommand(n,{...c,expectedRevision:1})).toBe(true);expect(n.snapshot().notes.color.status).toBe('confirmed');});
+ it('allows an unrelated note change without rejecting this field edit',()=>{const n=new NotebookState();n.edit('style','Elegant');expect(applyNotebookCommand(n,edit)).toBe(true);});
+ it('clears an exact current note and invalidates the look gate',()=>{const n=new NotebookState();n.edit('color','Green');const t=n.beginCheck();n.completeCheck(t,{outcome:'passed',reason:'fixture'});expect(applyNotebookCommand(n,{...edit,expectedRevision:1,value:''})).toBe(true);expect(n.snapshot().notes.color.status).toBe('missing');expect(n.canPresent()).toBe(false);});
+ it.each(['extra','field','type','revision','value','session'])('rejects invalid command %s without mutation',kind=>{const n=new NotebookState(),c:any={...edit};if(kind==='extra')c.confirmed=true;if(kind==='field')c.field='profile';if(kind==='type')c.type='save';if(kind==='revision')c.expectedRevision=-1;if(kind==='value')c.value='x'.repeat(161);if(kind==='session')c.session=NaN;expect(applyNotebookCommand(n,c)).toBe(false);expect(n.snapshot().revision).toBe(0);});
+});

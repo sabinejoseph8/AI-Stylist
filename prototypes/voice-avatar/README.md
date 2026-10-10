@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-572 tests across 41 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+584 tests across 42 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -237,3 +237,7 @@ PreparedBrowserNoteSession owns an injected simulated capture source and control
 ### Repeated-turn readiness preparation, 10 October 2026
 
 The disabled capture orchestrator now supports bounded repeated turns. A later acquisition requires both the command acknowledgment and connection-bound readiness after provider commit plus final note extraction. Server-side enforcement prevents unfinished extraction from being canceled by another turn. Readiness has a five-second deadline and cannot be replayed or retargeted to another connection. All 572 checks across 41 files, type checking and build pass, including actual loopback integration with two generated-audio turns and a tentative color correction. This supersedes the prior one-turn preparation limitation. The running notebook and Render remain unchanged; actual microphone/provider integration, hosted authentication and live timing remain unverified.
+
+### Visible notebook edit protection, 10 October 2026
+
+The notebook and prepared server owner now share epoch/field revision checks for customer edits and confirmations. An edit dialog opened before a newer speech note arrives holds the old draft and offers Load latest note. Agent browser checks verified conflict recovery, normal save, confirmation, cancellation and returned focus. All 584 checks across 42 files, type checking and build pass. The running local page contains this fix; speech remains simulated and Render was not redeployed.

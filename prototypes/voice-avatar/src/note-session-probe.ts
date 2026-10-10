@@ -1,4 +1,5 @@
-import {FIELDS,NotebookState} from './notebook-state.ts';
+import {applyNotebookCommand} from './notebook-command.ts';
+import {NotebookState} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
 import {PreparedLiveTranscription} from './live-transcription.ts';
 import type {TranscriptionWire} from './live-transcription.ts';
@@ -83,17 +84,14 @@ export class NoteSessionProbe {
  }
  /** A touch command may change only the exact field version the client saw. */
  edit(field:Field,value:string,expectedRevision:number):boolean{
-   if(!this.currentField(field,expectedRevision)||typeof value!=='string'||value.length>160)return false;
-   try{this.notebook.edit(field,value);this.invalidated();return !this.ended;}
+   if(this.ended)return false;
+   try{if(!applyNotebookCommand(this.notebook,{type:'edit',session:this.session,field,value,expectedRevision}))return false;this.invalidated();return !this.ended;}
    catch{this.shutdown('display-held');return false;}
  }
  confirm(field:Field,expectedRevision:number):boolean{
-   if(!this.currentField(field,expectedRevision)||!this.notebook.snapshot().notes[field].value)return false;
-   try{this.notebook.confirm(field);this.invalidated();return !this.ended;}
+   if(this.ended)return false;
+   try{if(!applyNotebookCommand(this.notebook,{type:'confirm',session:this.session,field,expectedRevision}))return false;this.invalidated();return !this.ended;}
    catch{this.shutdown('display-held');return false;}
- }
- private currentField(field:Field,revision:number):boolean{
-   return !this.ended&&FIELDS.some(([id])=>id===field)&&Number.isSafeInteger(revision)&&revision>=0&&this.notebook.snapshot().session===this.session&&this.notebook.snapshot().notes[field].revision===revision;
  }
  acknowledgeRendered(receipt:number){return !this.ended&&this.notes.acknowledgeRendered(receipt);}
  private shutdown(reason:string){
