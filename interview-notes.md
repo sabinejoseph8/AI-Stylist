@@ -292,3 +292,7 @@ I prepared a connection ownership guard so a second browser tab cannot take over
 ## Checking the notebook connection over actual local sockets
 
 I prepared the private-preview network control bridge and tested it using real local WebSocket connections with simulated providers. I required the existing preview password, the expected site address and origin before a connection could own a session. I checked a second connection, replayed commands, malformed messages, a delayed start and the time limit. I also verified that disconnecting clears notes from the simulated session. All 453 automated checks, type checking and build passed. The bridge remains unattached to the running app; phone authentication, real provider transport and live timing still need validation.
+
+## Moving notebook updates without moving unrelated data
+
+I prepared the notebook update path across the private connection. I chose to send only the seven structured notes and the revisions needed to reject stale updates, rather than entire session snapshots containing references or other private context. I tested corrections, an old connection's delayed publisher and disconnect cleanup. I also required a render receipt to match the current update before acknowledging it. All 476 automated checks, type checking and build passed with simulated providers and local sockets. The visible notebook is not connected to this path yet, so I have not claimed real speech or display timing acceptance.
