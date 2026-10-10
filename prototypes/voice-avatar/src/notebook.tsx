@@ -1,3 +1,4 @@
+import {NotebookConnectionReview} from './notebook-connection-review.tsx';
 import {applyNotebookCommand} from './notebook-command.ts';
 import React,{useEffect,useRef,useState} from 'react';
 import {createRoot} from 'react-dom/client';
@@ -129,6 +130,7 @@ function App(){
     <section className="stylist-stage" aria-label="Simulated stylist conversation"><div className="stage-monogram" aria-hidden="true">S</div><p className="eyebrow">Your personal stylist</p><h2>Let’s find your direction.</h2><p>No live avatar connected in this notebook preview.</p><div className="caption"><span>Simulated captions</span><p>{caption}</p></div>
       <button className="primary" onClick={startStory} disabled={playing}>Play sample description</button>{playing&&<button onClick={stopSimulation}>Pause sample</button>}
       <button onClick={correctBudget}>Simulate “Actually, make it $350”</button>
+      <NotebookConnectionReview/>
     </section>
     <section className="notebook" aria-labelledby="notebook-title"><div className="notebook-heading"><div><p className="eyebrow">Your session journal</p><h2 id="notebook-title">My Styling Notes</h2></div><button aria-expanded={open} aria-controls="notebook-content" onClick={()=>setOpen(!open)}>{open?'Close notebook':'Open notebook'}</button></div>
       <div className="summary"><p>{summary}</p><span>{pendingCount?`${pendingCount} to confirm`:'No pending confirmations'}</span>{photo&&<button className="thumbnail" onClick={()=>setEnlarged(true)}><img src={photo.url} alt={photo.label}/><span>{photo.label} · {photo.kind==='owned'?'Owned':'Inspiration'}</span></button>}</div>

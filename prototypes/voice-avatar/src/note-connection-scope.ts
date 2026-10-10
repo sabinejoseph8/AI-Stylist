@@ -1,6 +1,5 @@
 import {FIELDS} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
-import {randomUUID} from 'node:crypto';
 import type {NoteSessionProbe} from './note-session-probe.ts';
 export type NoteConnectionProbe=Pick<NoteSessionProbe,'audio'|'edit'|'confirm'|'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
 type Probe=NoteConnectionProbe;
@@ -21,7 +20,7 @@ export class NoteConnectionScope {
  private id:()=>string;
  constructor(options:{simulation?:boolean;create:()=>Probe;id?:()=>string}){
    if(options.simulation!==true)throw Error('Live note connections are disabled.');
-   this.create=options.create;this.id=options.id??randomUUID;
+   this.create=options.create;this.id=options.id??(()=>globalThis.crypto.randomUUID());
  }
  private reap(){
    const lease=this.lease;if(!lease||!lease.probe.snapshot().ended)return;

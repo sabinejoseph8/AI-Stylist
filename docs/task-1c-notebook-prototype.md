@@ -195,3 +195,17 @@ The visible page remains in-process with simulated speech. No actual microphone,
 ### Complete optional check for an edit changed during speech
 
 Read the full sequence before starting. Reload the local notebook, select Play sample description, open the notebook and immediately open Edit Budget before the sample reaches its budget sentence. Enter 400 and check the USD maximum/item-prices statement, but wait until the sample finishes before selecting Save note. Expect a conflict alert and the latest 500 note to remain unchanged. Select Load latest note; expect 500 in the dialog and the scope checkbox unchecked. Enter 400 again, explicitly check the scope statement and save. Expect a confirmed USD 400 maximum for items only. Cancel should always leave the note unchanged. This optional check uses no microphone or paid call. Agent verification passed. Task 1c remains incomplete pending its required live and manual acceptance; this check does not mark the overall task complete.
+
+## Optional local connection rehearsal review
+
+Read all steps before starting. This separate fixture is silent and needs no microphone, camera or paid service. It is not the live stylist.
+
+1. Reload the local notebook page.
+2. Open Review the prepared notebook connection.
+3. Choose Start connection rehearsal and check that the status says ready.
+4. Choose Play first simulated turn. Wait for Emerald green marked To confirm and for ready status.
+5. Choose Play correction. Wait for Blue marked To confirm and for ready status.
+6. Choose Confirm color and check Blue becomes Confirmed.
+7. Choose End rehearsal. Rehearsal notes disappear and the status says the check ended.
+
+Agent verification passed these steps on 10 October 2026. Sabine's new manual acceptance is pending. The earlier 18-step notebook acceptance remains recorded separately.

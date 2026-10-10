@@ -1,4 +1,3 @@
-import {Buffer} from 'node:buffer';
 
 export const LIVE_TRANSCRIPTION_ENABLED=false;
 export const TRANSCRIPTION_MODEL='gpt-live-transcribe';
@@ -7,7 +6,7 @@ export type TranscriptionWire={bufferedAmount:number;send:(event:object)=>boolea
 type Turn={id:string;item:string|null;text:string;sequence:number;final:boolean};
 const id=(v:unknown):v is string=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(v);
 const object=(v:unknown):v is Record<string,any>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
-/** Server-only protocol preparation. No socket, key loading, route or live enable
+/** Protocol preparation for the server boundary and explicit local rehearsal. No socket, key loading, route or live enable
  * switch is provided. A caller must inject a simulated wire explicitly. A later
  * live owner must enforce authentication, allowance and verified socket cleanup.
  */
@@ -61,7 +60,7 @@ export class PreparedLiveTranscription {
    if(!this.ready||!this.current||this.pending||this.ended)return false;
    if(!(pcm instanceof ArrayBuffer)||pcm.byteLength!==960||sequence!==this.audioSequence||!Number.isSafeInteger(sequence)||this.bytes+pcm.byteLength>4_080_000){this.stop('audio-bound');return false;}
    this.audioSequence++;this.bytes+=pcm.byteLength;this.turnBytes+=pcm.byteLength;
-   return this.send({type:'input_audio_buffer.append',audio:Buffer.from(pcm).toString('base64')});
+   return this.send({type:'input_audio_buffer.append',audio:btoa(String.fromCharCode(...new Uint8Array(pcm)))});
  }
  commit():boolean {
    if(!this.ready||!this.current||this.pending||this.ended)return false;

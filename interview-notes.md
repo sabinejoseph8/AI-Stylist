@@ -332,3 +332,7 @@ I prepared one place to bind the notebook connection to page visibility, page ex
 ## Verifying the connection as a whole
 
 I tested the prepared notebook connection across a real local socket rather than relying only on separate component checks. Two simulated spoken turns changed a tentative color from green to blue. I verified that losing the connection stopped capture, closing the page cleared both owners, and a late permission result could not restart the session. All 606 automated checks, type checking and build passed. I kept provider responses and devices simulated, so these results do not establish real speech quality or phone acceptance.
+
+## Making the prepared connection visible
+
+I added a separate connection rehearsal to the notebook page so I could review the prepared session controls as a visible flow. I reused the client and owner contracts, generated silent audio and scripted a green-to-blue correction. I kept the rehearsal separate from the main notebook and photos. Browser checks passed both turns, confirmation and ending with cleared notes; all 614 automated checks, type checking and build passed. The rehearsal uses no network or real speech, so live integration and customer testing remain open.
