@@ -1,12 +1,13 @@
 import { afterEach, describe, expect, it, vi } from 'vitest';
+import { ConfirmedConversation } from '../src/confirmed-conversation.ts';
 import { ContextRecovery } from '../src/context-recovery.ts';
 import { VoiceSession } from '../src/voice-session.ts';
 import { SILENT_FRAME } from '../src/contracts.ts';
-function fixture() {
+function fixture(confirmed = new ConfirmedConversation()) {
   const session = new VoiceSession('room'); const old = session.start('old-response', 'old-item');
   session.enqueue({ ...old, eventId:'audio', pcm:SILENT_FRAME }); session.takeAudio(); session.interrupt();
-  const transport = { stopLocalOutput:vi.fn(), closeOldContext:vi.fn().mockResolvedValue(true), verifyRendererStopped:vi.fn().mockResolvedValue(true), openFreshContext:vi.fn().mockResolvedValue({id:'fresh',configurationVerified:true}), discardFreshContext:vi.fn().mockResolvedValue(undefined) };
-  return {session,old,transport,recovery:new ContextRecovery(session,transport)};
+  const transport = { stopLocalOutput:vi.fn(), closeOldContext:vi.fn().mockResolvedValue(true), verifyRendererStopped:vi.fn().mockResolvedValue(true), openFreshContext:vi.fn().mockResolvedValue({id:'fresh',configurationVerified:true}), restoreConfirmedContext:vi.fn().mockResolvedValue(true), discardFreshContext:vi.fn().mockResolvedValue(undefined) };
+  return {session,old,transport,recovery:new ContextRecovery(session,transport,confirmed)};
 }
 afterEach(() => vi.useRealTimers());
 describe('verified context recovery with synthetic transports only', () => {
@@ -62,6 +63,45 @@ describe('verified context recovery with synthetic transports only', () => {
     const pending=recovery.recover('old',100);await Promise.resolve();await Promise.resolve();await vi.advanceTimersByTimeAsync(100);
     expect(await pending).toBe(false);const late={id:'late',configurationVerified:true};resolve(late);await Promise.resolve();await Promise.resolve();
     expect(transport.discardFreshContext).toHaveBeenCalledWith(late);expect(session.snapshot().state).toBe('held');
+  });
+  it('restores confirmed history only and discards the interrupted pending reply',async()=>{
+    const context=new ConfirmedConversation(),audio=Buffer.alloc(9600).toString('base64');
+    context.stage(context.revision(),'first',audio,'Heard reply');context.confirm('first');
+    context.stage(context.revision(),'second',audio,'Unheard reply');const {transport,recovery}=fixture(context);
+    expect(await recovery.recover('old')).toBe(true);
+    expect(transport.restoreConfirmedContext).toHaveBeenCalledWith({id:'fresh',configurationVerified:true},[{audio,reply:'Heard reply'}],expect.any(AbortSignal));
+    expect(()=>context.confirm('second')).toThrow();
+  });
+  it('holds and discards the replacement if context restoration is not acknowledged',async()=>{
+    const {session,transport,recovery}=fixture();transport.restoreConfirmedContext.mockResolvedValue(false);
+    expect(await recovery.recover('old')).toBe(false);expect(session.snapshot().state).toBe('held');expect(transport.discardFreshContext).toHaveBeenCalledOnce();
+  });
+  it('discards a fresh context when confirmed memory changes during restoration',async()=>{
+    const context=new ConfirmedConversation(),{session,transport,recovery}=fixture(context);
+    transport.restoreConfirmedContext.mockImplementation(async()=>{context.clear();return true;});
+    expect(await recovery.recover('old')).toBe(false);expect(session.snapshot().state).toBe('held');expect(transport.discardFreshContext).toHaveBeenCalledOnce();
+  });
+  it('starts fresh-context cleanup at the deadline even if restoration never resolves',async()=>{
+    vi.useFakeTimers();const {session,transport,recovery}=fixture();transport.restoreConfirmedContext.mockImplementation(()=>new Promise(()=>{}));
+    const pending=recovery.recover('old',100);await vi.advanceTimersByTimeAsync(100);
+    expect(await pending).toBe(false);expect(transport.discardFreshContext).toHaveBeenCalledOnce();expect(session.snapshot().state).toBe('held');
+  });
+  it('holds on restoration errors without leaking private content',async()=>{
+    const {session,transport,recovery}=fixture();transport.restoreConfirmedContext.mockRejectedValue(Error('private content'));
+    expect(await recovery.recover('old')).toBe(false);expect(session.snapshot().state).toBe('held');expect(transport.discardFreshContext).toHaveBeenCalledOnce();
+  });
+  it('never revives an ended session when a restoration acknowledgment arrives late',async()=>{
+    const {session,transport,recovery}=fixture();let resolve!:(value:boolean)=>void;
+    transport.restoreConfirmedContext.mockImplementation(()=>new Promise(r=>{resolve=r;}));
+    const pending=recovery.recover('old');for(let i=0;i<5;i++)await Promise.resolve();
+    session.end();resolve(true);expect(await pending).toBe(false);expect(session.snapshot().state).toBe('ended');
+    expect(transport.discardFreshContext).toHaveBeenCalledOnce();
+  });
+  it('keeps cleanup visible and blocks recovery while fresh-context disposal is unresolved',async()=>{
+    vi.useFakeTimers();const {transport,recovery}=fixture();transport.restoreConfirmedContext.mockImplementation(()=>new Promise(()=>{}));
+    transport.discardFreshContext.mockImplementation(()=>new Promise(()=>{}));
+    const pending=recovery.recover('old',100);await vi.advanceTimersByTimeAsync(100);expect(await pending).toBe(false);
+    expect(recovery.snapshot()).toMatchObject({recovering:false,cleanupPending:true});expect(await recovery.recover('old')).toBe(false);
   });
   it('marks failed late cleanup and refuses further recovery',async()=>{
     const {transport,recovery}=fixture();transport.openFreshContext.mockResolvedValue({id:'old',configurationVerified:true});
