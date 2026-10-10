@@ -1,3 +1,4 @@
+import {NotebookDemoCatalog} from './notebook-demo-catalog.tsx';
 import {NotebookConnectionReview} from './notebook-connection-review.tsx';
 import {applyNotebookCommand} from './notebook-command.ts';
 import React,{useEffect,useRef,useState} from 'react';
@@ -131,6 +132,7 @@ function App(){
       <button className="primary" onClick={startStory} disabled={playing}>Play sample description</button>{playing&&<button onClick={stopSimulation}>Pause sample</button>}
       <button onClick={correctBudget}>Simulate “Actually, make it $350”</button>
       <NotebookConnectionReview/>
+      <NotebookDemoCatalog/>
     </section>
     <section className="notebook" aria-labelledby="notebook-title"><div className="notebook-heading"><div><p className="eyebrow">Your session journal</p><h2 id="notebook-title">My Styling Notes</h2></div><button aria-expanded={open} aria-controls="notebook-content" onClick={()=>setOpen(!open)}>{open?'Close notebook':'Open notebook'}</button></div>
       <div className="summary"><p>{summary}</p><span>{pendingCount?`${pendingCount} to confirm`:'No pending confirmations'}</span>{photo&&<button className="thumbnail" onClick={()=>setEnlarged(true)}><img src={photo.url} alt={photo.label}/><span>{photo.label} · {photo.kind==='owned'?'Owned':'Inspiration'}</span></button>}</div>

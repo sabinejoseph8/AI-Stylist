@@ -340,3 +340,7 @@ I added a separate connection rehearsal to the notebook page so I could review t
 ## Reviewing the connection rehearsal
 
 I completed all seven local connection rehearsal steps, including the ready status, green-to-blue correction, confirmation and clearing the notes at the end. This gave me a visible check of the simulated session flow. I kept this acceptance separate from real speech quality, hosted security and phone testing, which still need validation.
+
+## Keeping retailer integration independent
+
+I prioritized the catalog contract because it had no unfinished implementation dependencies. I preserved product and variant identities, prices, evidence dates and permissions, and tested two different synthetic source formats against the same contract. I then added four original illustrations and searchable sample products, with no purchase links or inventory claims. Browser checks passed all-items search, Blue search, loaded artwork and empty results; all 650 tests, type checking and build passed. I also compared public retailer routes and found that one historical ASOS network listing was closed. I recorded missing permissions instead of treating a public feed advertisement as approval.
