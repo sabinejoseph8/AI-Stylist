@@ -324,3 +324,7 @@ I found that a customer could open an edit dialog, receive a newer note during s
 ## Making connection status understandable
 
 I prepared clear session messages so the notebook can distinguish waiting for a connection, acquiring capture, recording simulated audio and finishing transcript processing. I made cleanup uncertainty explicit and prevented private error text from entering these messages. Six added checks brought the suite to 590 passing tests, with type checking and build also passing. These messages are prepared in the session helper; the visible notebook still needs its connection binding, so I have not claimed a live speech integration.
+
+## Owning the browser connection lifecycle
+
+I prepared one place to bind the notebook connection to page visibility, page exit and connection failures. I made the binding remove listeners and its status timer when it ends, and reject late or malformed messages. I tested asynchronous capture and failures with simulated devices so this work needed no paid provider trial. All 603 automated checks, type checking and build passed. The visible notebook is still a local simulation; actual browser attachment and live provider behavior remain to be validated.
