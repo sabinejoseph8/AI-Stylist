@@ -304,3 +304,7 @@ I connected the visible notebook's simulated conversation to the structured upda
 ## Protecting customer edits across the connection
 
 I prepared server checks so an edit or confirmation applies only to the exact note version the customer saw. This prevents a delayed action from silently replacing a newer preference. I also prepared the browser controller without activating microphone or provider access. I tested edits, confirmations, acknowledgment order, disconnect cleanup and deadlines, including real local sockets with simulated providers. All 517 automated checks, type checking and build passed. A stale network command currently ends and clears the private simulation; production recovery still needs a decision. The running notebook remains an in-process simulation, so I have not claimed a live speech integration or another phone test.
+
+## Preparing speech transport without spending another trial
+
+I connected the simulated browser controller to the notebook's owned audio source over real local sockets. I used generated silent audio frames and simulated transcript events, so I could check ordering, turn commits, returned notes and disconnect cleanup without another paid trial. I bounded frame size, sequence and total audio, and required an active owned turn before accepting input. Replayed or skipped frames end the simulation and clear notes. All 540 automated checks, type checking and build passed. The visible notebook still uses its local simulation; real microphone recognition and phone performance remain unproven.

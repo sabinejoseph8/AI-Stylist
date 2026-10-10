@@ -4,7 +4,7 @@ import {PreparedLiveTranscription} from './live-transcription.ts';
 import type {TranscriptionWire} from './live-transcription.ts';
 import {PartialNoteCoordinator} from './partial-note-coordinator.ts';
 import type {ExtractionInput} from './partial-note-coordinator.ts';
-export type ProbeCapture={start:(accept:(pcm:ArrayBuffer)=>boolean,stopped:(reason:string)=>void)=>Promise<boolean>;stop:()=>void};
+export type ProbeCapture={start:(accept:(pcm:ArrayBuffer)=>boolean,stopped:(reason:string)=>void)=>Promise<boolean>;stop:()=>void;receive?:(frame:ArrayBuffer)=>boolean;end?:()=>void};
 /** In-process simulated ownership integration, not an authenticated endpoint.
  * A future browser/server bridge must carry identities and authenticate ownership.
  * No real capture source, provider socket or extraction model is constructed here.
@@ -37,6 +37,10 @@ export class NoteSessionProbe {
    this.transcription=new PreparedLiveTranscription({simulation:true,wire:options.wire,signal:this.controller.signal,
      emit:event=>{if(!this.ended&&!this.notes.accept(event))throw Error('Note input held.');},
      stopped:reason=>this.shutdown(reason)});
+ }
+ audio(frame:ArrayBuffer):boolean{
+   if(this.ended||!this.capturing||!this.capture.receive)return false;
+   try{return this.capture.receive(frame);}catch{this.shutdown('audio-held');return false;}
  }
  receive(event:unknown){return !this.ended&&this.transcription?.receive(event)===true;}
  async beginTurn(turnId:string):Promise<boolean>{
@@ -80,7 +84,7 @@ export class NoteSessionProbe {
    if(this.ended)return;this.ended=true;this.reason=reason;this.capturing=false;this.acquiring=false;++this.generation;
    this.unsubscribe();this.notes.cancel();this.controller.abort();
    if(this.transcription?.snapshot().cleanupFailed)this.reason='cleanup-unverified';
-   try{this.capture.stop();}catch{this.reason='capture-cleanup-held';}
+   try{this.capture.stop();this.capture.end?.();}catch{this.reason='capture-cleanup-held';}
    this.notebook.clear();
    try{this.changed(null);}catch{/* Ended state and media cancellation remain committed. */}
  }

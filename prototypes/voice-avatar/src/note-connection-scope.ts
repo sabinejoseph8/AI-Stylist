@@ -2,7 +2,7 @@ import {FIELDS} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
 import {randomUUID} from 'node:crypto';
 import type {NoteSessionProbe} from './note-session-probe.ts';
-export type NoteConnectionProbe=Pick<NoteSessionProbe,'edit'|'confirm'|'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
+export type NoteConnectionProbe=Pick<NoteSessionProbe,'audio'|'edit'|'confirm'|'beginTurn'|'commit'|'acknowledgeRendered'|'receive'|'end'|'disconnected'|'snapshot'>;
 type Probe=NoteConnectionProbe;
 type Lease={owner:object;id:string;probe:Probe;sequence:number;commands:number};
 const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
@@ -64,6 +64,12 @@ export class NoteConnectionScope {
      else{lease.probe.end();this.reap();return true;}
      this.reap();return this.lease===lease&&!this.closed&&!this.held&&accepted;
    }catch{this.stop(lease);return false;}
+ }
+ /** Binary audio is authorized by the same opaque connection as commands. */
+ audio(owner:object,id:string,frame:ArrayBuffer):boolean{
+   const lease=this.owned(owner,id);if(!lease)return false;
+   try{const accepted=lease.probe.audio(frame);this.reap();return this.lease===lease&&!this.held&&accepted;}
+   catch{this.stop(lease);return false;}
  }
  /** Called only by the server's provider callback bound to this connection. */
  receive(owner:object,id:string,event:unknown):boolean{

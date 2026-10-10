@@ -6,7 +6,7 @@ Status: disabled simulated preparation, 10 October 2026.
 
 - The future server authenticates a connection before calling open. It supplies an opaque connection object, not a user ID from the message body. The current module does not authenticate anyone.
 - open returns a random session ID and admits one simulation at a time. No browser route calls it today.
-- Commands require version=1, sessionId, sequence and type. begin additionally requires turnId; rendered requires receipt. commit and end permit no additional fields.
+- Commands require version=1, sessionId, sequence and type. begin additionally requires turnId; rendered requires receipt; edit requires field, value and expectedRevision; confirm requires field and expectedRevision. commit and end permit no additional fields. Binary audio has its own bounded frame sequence and is bound to the owning socket.
 - The connection reference, session ID and increasing sequence must match before invoking the session owner. A foreign command cannot end the legitimate owner's session.
 - Provider events use a server-bound callback, separate from browser commands. Browser messages cannot supply provider events through the command schema.
 - Disconnect/end retire the session. No reconnect or silent retry occurs. Failed cleanup holds the slot. New sessions receive new identities; old callbacks have no authority.
@@ -14,7 +14,7 @@ Status: disabled simulated preparation, 10 October 2026.
 
 ## Remaining network work
 
-The HTTP/WebSocket upgrade still needs existing private preview access checks, exact origin/host checks, bounded frames and transport queues, connection deadlines, socket cleanup and private settings. The UI still needs a bridge and safe display updates. Customer Supabase authentication and production isolation remain Phase 2 work. Live activation also needs a separate allowance because all nine prior trials are closed and the reserve is exhausted. No phase or task group is marked complete by these checks.
+The disabled harness now checks private-preview access, exact origin/host, bounded control/audio frames and queues, deadlines and cleanup. It remains unattached to the running application. The UI still needs actual browser transport attachment, capture orchestration and user-facing connection states. Customer Supabase authentication and production isolation remain Phase 2 work. Live activation also needs a separate allowance because all nine prior trials are closed and the reserve is exhausted. No phase or task group is marked complete by these checks.
 
 ## Simulated connection ownership preparation, 10 October 2026
 
@@ -63,3 +63,15 @@ Prepared NoteBrowserController with mandatory simulation and an injected socket.
 All 517 automated checks across 39 files, type checking and build pass. New focused checks cover revision races, stale confirmations, clearing, look invalidation, delayed extraction, ownership and malformed commands, command acknowledgment order, render receipts, deadlines, backlog, callback failures and disconnect. Real loopback sockets connect the prepared controller to NoteSessionProbe through the private bridge using fixture credentials and simulated providers, exercising confirm, edit and cleanup. This does not establish browser/Safari or hosted HTTPS authentication behavior.
 
 No paid provider call, account change, new attempt, deployment or manual acceptance was performed. The visible notebook continues using its in-process simulated path; no page instructions or controls changed. Task 1c and Phase 1 remain incomplete. Next integration is browser transport attachment and bounded audio/provider adapters, followed by approved live quality/timing checks. All nine existing provider trials remain closed with no reserve.
+
+## Bounded simulated audio transport, 10 October 2026
+
+Prepared a browser-compatible binary frame codec and PreparedRemoteNoteCapture. Frames contain the NPC1 format marker, an increasing uint32 sequence and exactly 960 bytes of 24 kHz mono PCM16 (20 ms), for 968 bytes total. Encoding and decoding copy the frame; no audio history is retained. The source accepts frames only while the session owner has acquired it, preserves order across turn commits and ends permanently on malformed, replayed, skipped or rejected frames. The 4,250-frame bound matches the existing 4,080,000-byte/85-second preparation limit. No speech recognition is inferred from frame contents.
+
+The explicitly simulated network harness now provides a remote capture source to its session factory. Binary input uses the same opaque socket owner as control commands and is forwarded only to that session's capture source. Existing 1,024-byte WebSocket payload, backlog, deadlines and command limits remain; audio has its own bounded sequence. A foreign or retired connection cannot supply audio. Bad or unavailable capture ends the socket and owned session. NoteSessionProbe exposes only bounded capture forwarding and ends the remote source during shutdown.
+
+The injected browser controller sends copied binary audio only after the begin command is acknowledged, stops accepting audio before commit and on disconnect, and preserves frame sequence across turns. Invalid frames, send failures or excess backlog close the connection. This is transport preparation, not microphone acquisition or running-page integration.
+
+All 540 automated checks across 40 files, type checking and build pass. Actual loopback sockets carry generated silent PCM from the controller through the remote source and transcription preparation; simulated transcript events then produce a tentative notebook note returned to the client. Tests verify commit ordering, ownership, version/size/order bounds, stale audio, cleanup and rejection of malformed/replayed/skipped frames without forwarding them to the prepared provider wire. Providers and extraction remain simulated. An existing binary-input mock was updated to explicitly reject audio because it has no capture source; its disconnect cleanup expectation still passes.
+
+The running notebook and Render are unchanged. No human microphone/audio, provider connection, API key, paid trial, deployment or new manual acceptance was used. Task 1c and Phase 1 remain incomplete. Next work is explicit browser capture/connection orchestration and provider transport preparation; live activation still needs a separately reviewed allowance. All nine prior trials remain closed with no reserve.

@@ -169,3 +169,7 @@ Remaining integration: a browser socket/controller and session-bound edit comman
 ## Connection preparation evidence, 10 October 2026
 
 All 517 automated checks across 39 files, type checking and build pass. Server edit/confirm commands now require current field revisions. An injected browser controller and actual loopback socket checks exercise customer edits, confirmations and disconnect clearing with simulated providers. This path remains separate from the running notebook page; no new manual acceptance is claimed and the existing review instructions still apply. No paid call or Render deployment occurred.
+
+## Simulated audio transport evidence, 10 October 2026
+
+All 540 automated checks across 40 files, type checking and build pass. Generated silent PCM crosses an actual loopback connection through the owned remote capture source into transcription preparation; simulated provider events return tentative notes. Invalid/replayed/skipped frames stop the session and clear notes. The visible notebook and its review instructions are unchanged. This does not establish real speech recognition, phone transport or a new human acceptance.

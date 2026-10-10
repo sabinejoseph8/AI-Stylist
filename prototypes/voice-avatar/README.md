@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-517 tests across 38 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+540 tests across 40 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -225,3 +225,7 @@ Remaining integration: a browser socket/controller and session-bound edit comman
 The disabled NoteBrowserController accepts an injected simulated socket, validates ready/update/command acknowledgments, and sends edits or confirmations using the latest server field revision. It never constructs a WebSocket, acquires media or sends provider requests. Only one command may be pending. Configuration/command deadlines and the total 85-second limit clear content and close the injected connection without reconnecting. Render receipts wait until the command slot is available and must match the current committed update.
 
 NoteSessionProbe now checks each customer edit/confirmation against the current field revision. Stale commands cannot overwrite newer speech or touch values. Accepted edits immediately invalidate the look gate and publish updated notes; a publishing failure ends and clears the session. There is no saved-profile or wardrobe-write authority. All 517 checks across 39 files, type checking and build pass. Actual local sockets verify the controller, server ownership, updates, edits, confirmations and disconnect clearing together with simulated providers. The running notebook and Render still do not attach this network path; phone HTTPS/authentication, microphone/provider transport and live timing remain unverified.
+
+### Bounded audio connection preparation, 10 October 2026
+
+The disabled network harness now accepts strict 968-byte simulated audio frames, with a format marker, increasing sequence and 960-byte PCM payload. A remote capture source feeds only the owning NoteSessionProbe while acquired. The browser controller waits for the begin acknowledgment, stops audio before commit and clears on disconnect. Actual local socket checks carry generated silent PCM into transcription preparation and return a tentative note from simulated transcript events. All 540 checks across 40 files, type checking and build pass. No actual microphone, provider socket, paid call or deployment was used. The running notebook remains an in-process simulation; capture orchestration and provider transport are still pending.

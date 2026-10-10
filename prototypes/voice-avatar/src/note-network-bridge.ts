@@ -4,16 +4,17 @@ import {PreviewGate,validatePreview} from './preview-gate.ts';
 import type {PreviewConfig} from './preview-gate.ts';
 import {NoteConnectionScope} from './note-connection-scope.ts';
 import {encodeNoteUpdate} from './note-update-wire.ts';
+import {PreparedRemoteNoteCapture} from './note-remote-capture.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
 import type {NotebookState} from './notebook-state.ts';
 import type {NoteConnectionProbe} from './note-connection-scope.ts';
 /** Explicit test harness attachment only. Not called by the application server or
  * CLI. Factory must construct simulated providers. No provider socket or key. */
-export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void)=>NoteConnectionProbe}){
+export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture)=>NoteConnectionProbe}){
  if(options.simulation!==true)throw Error('Live notebook bridge is disabled.');
  const address=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let publisher:((snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void)|null=null;
- const scope=new NoteConnectionScope({simulation:true,create:()=>{const bound=publisher;return options.create((snapshot,receipt)=>bound?.(snapshot,receipt));}});
+ const scope=new NoteConnectionScope({simulation:true,create:()=>{const bound=publisher;return options.create((snapshot,receipt)=>bound?.(snapshot,receipt),new PreparedRemoteNoteCapture({simulation:true}));}});
  const sockets=new WebSocketServer({noServer:true,maxPayload:1024,perMessageDeflate:false});
  let closed=false;
  const reject=(socket:import('node:stream').Duplex,status:number)=>{socket.end(`HTTP/1.1 ${status} Rejected\r\nConnection: close\r\nContent-Length: 0\r\n\r\n`);};
@@ -49,7 +50,12 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
 
    ws.on('message',(data,binary)=>{
      if(ended)return;
-     if(binary||++count>257){finish();return;}
+     if(binary){
+       const bytes=Array.isArray(data)?Buffer.concat(data):Buffer.isBuffer(data)?data:Buffer.from(data);
+       const frame=new ArrayBuffer(bytes.byteLength);new Uint8Array(frame).set(bytes);
+       if(!scope.audio(owner,id!,frame))finish();return;
+     }
+     if(++count>257){finish();return;}
      let value:unknown;
      try{value=JSON.parse(data.toString());}catch{finish();return;}
      const ending=Boolean(value&&typeof value==='object'&&!Array.isArray(value)&&(value as {type?:unknown}).type==='end');
