@@ -1,14 +1,17 @@
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {createPreparedNoteServerOwner} from '../src/prepared-note-server-owner.ts';
+import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
+import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 const preview = {origin: 'https://notes-test.onrender.com', password: 'x'.repeat(32)};
 const authorization = 'Basic ' + Buffer.from('stylist:' + preview.password).toString('base64');
 class Socket extends EventTarget {readyState = 1; bufferedAmount = 0; send = vi.fn(); close = vi.fn();}
 function setup() {
  const socket = new Socket(), capture = {start: vi.fn(async () => true), stop: vi.fn(), end: vi.fn()};
  const allowance = {purpose: 'notes-only-simulation' as const, reserve: vi.fn(async () => 'synthetic-reservation'), closeVerified: vi.fn(async (_id: string) => {})};
- const createTransports = vi.fn(() => ({socket, capture, fetch: vi.fn(async () => Response.json({}))}));
+ const fetch = vi.fn(async (_url: string, _init: RequestInit) => Response.json({}));
+ const createTransports = vi.fn(() => ({socket, capture, fetch}));
  const options = {simulation: true, preview, allowance, createTransports, changed: vi.fn()};
- return {...options, socket, capture, owner: createPreparedNoteServerOwner(options)};
+ return {...options, socket, capture, fetch, owner: createPreparedNoteServerOwner(options)};
 }
 function request(changes = {}) {return {method: 'GET', path: '/api/notebook-simulation', host: 'notes-test.onrender.com', origin: preview.origin, authorization, signal: new AbortController().signal, ...changes};}
 afterEach(() => vi.useRealTimers());
@@ -32,5 +35,30 @@ describe('disabled private notebook server owner', () => {
  it('closes at the active deadline with no retry or lingering timer', async () => {vi.useFakeTimers(); const s = setup(); const active = await s.owner.start(request()); if (active.status !== 200) throw Error('start'); await vi.advanceTimersByTimeAsync(85_000); await active.end(); expect(s.owner.status().state).toBe('idle'); expect(s.socket.close).toHaveBeenCalledTimes(1); expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1); expect(vi.getTimerCount()).toBe(0);});
  it('blocks replacement until durable closure finishes', async () => {const s = setup(); let resolve!: () => void; s.allowance.closeVerified.mockImplementation(() => new Promise(r => {resolve = r;})); const active = await s.owner.start(request()); if (active.status !== 200) throw Error('start'); const ending = active.end(); await Promise.resolve(); expect(await s.owner.start(request())).toEqual({status: 409}); resolve(); await ending; expect(s.owner.status().state).toBe('idle');});
  it('retains final capture failure before closing allowance', async () => {const s = setup(); s.capture.stop.mockImplementation(() => {throw Error('private');}); const active = await s.owner.start(request()); if (active.status !== 200) throw Error('start'); active.probe.end(); await active.end(); expect(s.capture.end).toHaveBeenCalledTimes(1); expect(s.owner.status().state).toBe('held'); expect(s.allowance.closeVerified).not.toHaveBeenCalled();});
+ it('displays tentative partial notes and protects a touch edit during the same turn', async () => {
+  vi.useFakeTimers(); const s = setup();
+  s.fetch.mockImplementation(async () => Response.json({model: NOTE_EXTRACTION_MODEL, status: 'completed', output: [{type: 'message', role: 'assistant', status: 'completed', content: [{type: 'output_text', text: JSON.stringify({version: 1, turnId: 't1', patches: [{field: 'color', value: 'green', evidence: 'green'}]})}]}]}));
+  const active = await s.owner.start(request()); if (active.status !== 200) throw Error('start');
+  active.probe.receive({type: 'session.updated', session: {type: 'transcription', audio: {input: {format: {type: 'audio/pcm', rate: 24000}, transcription: {model: TRANSCRIPTION_MODEL}, turn_detection: null}}}});
+  expect(await active.probe.beginTurn('t1')).toBe(true);
+  active.probe.receive({type: 'conversation.item.input_audio_transcription.delta', event_id: 'e1', item_id: 'i1', content_index: 0, delta: 'green'});
+  await vi.advanceTimersByTimeAsync(100);
+  expect(active.snapshot().notes.color).toMatchObject({value: 'green', status: 'tentative'});
+  s.fetch.mockImplementation(async () => Response.json({model: NOTE_EXTRACTION_MODEL, status: 'completed', output: [{type: 'message', role: 'assistant', status: 'completed', content: [{type: 'output_text', text: JSON.stringify({version: 1, turnId: 't1', patches: []})}]}]}));
+  const note = active.snapshot().notes.color; expect(active.probe.edit('color', 'Blue', note.revision)).toBe(true);
+  active.probe.receive({type: 'conversation.item.input_audio_transcription.delta', event_id: 'e2', item_id: 'i1', content_index: 0, delta: ' please'});
+  await vi.advanceTimersByTimeAsync(100); expect(active.snapshot().notes.color.value).toBe('Blue');
+  await active.end(); expect(active.snapshot().notes.color.status).toBe('missing'); expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1); expect(vi.getTimerCount()).toBe(0);
+ });
+ it('aborts pending extraction on exit and ignores its late successful result', async () => {
+  vi.useFakeTimers(); const s = setup(), abort = new AbortController(); let signal: AbortSignal | undefined, resolve!: (response: Response) => void;
+  s.fetch.mockImplementation(async (_url, init) => {signal = init.signal as AbortSignal; return new Promise(r => {resolve = r;});});
+  const active = await s.owner.start(request({signal: abort.signal})); if (active.status !== 200) throw Error('start');
+  active.probe.receive({type: 'session.updated', session: {type: 'transcription', audio: {input: {format: {type: 'audio/pcm', rate: 24000}, transcription: {model: TRANSCRIPTION_MODEL}, turn_detection: null}}}});
+  await active.probe.beginTurn('t1'); active.probe.receive({type: 'conversation.item.input_audio_transcription.delta', event_id: 'e1', item_id: 'i1', content_index: 0, delta: 'green'});
+  await vi.advanceTimersByTimeAsync(100); expect(signal?.aborted).toBe(false); abort.abort(); await active.end(); expect(signal?.aborted).toBe(true);
+  resolve(Response.json({model: NOTE_EXTRACTION_MODEL, status: 'completed', output: [{type: 'message', role: 'assistant', status: 'completed', content: [{type: 'output_text', text: JSON.stringify({version: 1, turnId: 't1', patches: [{field: 'color', value: 'green', evidence: 'green'}]})}]}]}));
+  await vi.advanceTimersByTimeAsync(0); expect(active.snapshot().notes.color.status).toBe('missing'); expect(s.changed).toHaveBeenLastCalledWith(null); expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1); expect(vi.getTimerCount()).toBe(0);
+ });
  it('bounds the pending allowance lifetime and cleans a late success', async () => {vi.useFakeTimers(); const s = setup(); let resolve!: (id: string) => void; s.allowance.reserve.mockImplementation(() => new Promise(r => {resolve = r;})); const pending = s.owner.start(request()); await vi.advanceTimersByTimeAsync(85_000); expect(s.owner.status().state).toBe('starting'); resolve('late'); expect(await pending).toEqual({status: 499}); expect(s.createTransports).not.toHaveBeenCalled(); expect(s.allowance.closeVerified).toHaveBeenCalledExactlyOnceWith('late'); expect(vi.getTimerCount()).toBe(0);});
 });

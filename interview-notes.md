@@ -368,3 +368,5 @@ I checked that an ended session could not send old model results into a fresh no
 ## Protecting the next notebook experiment
 
 I prepared a server owner that checks private access before any allowance or provider work. I tested cancellation while a reservation was pending, concurrent starts, the deadline and failed cleanup. I retained a hold whenever a reservation write or cleanup result was uncertain, rather than retrying and risking duplicate work. I also required an explicit notes-only simulation purpose so the old trial allowance could not accidentally be reused. All 747 checks, type checking and build passed. This was disabled preparation with synthetic services, not another paid experiment or a deployment.
+
+I then checked actual prepared extraction behind the private gate. Partial text produced tentative notes, a touch edit remained intact, and leaving the session canceled a pending model request. Its late result could not restore cleared notes. I exposed a snapshot tied to that session for presentation, while keeping the provider preparation disabled. The cumulative suite reached 749 passing checks.

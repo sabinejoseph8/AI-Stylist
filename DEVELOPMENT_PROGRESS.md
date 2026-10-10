@@ -26,10 +26,10 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - docs/phase-1-readiness.md reconciles P1 evidence and the remaining live/rights/privacy gates.
 - Session replacement checks isolate old extraction/provider events, reject stale render receipts and refuse a new connection after failed cleanup. Combined budget correction revokes visual and speech-frame permissions.
 - Reviewed current official provider guides and recorded compatibility plus unresolved full-reference/connection checks in docs/notebook-provider-contract-review.md.
-- Added a disabled private notebook server owner with 21 synthetic access, cancellation, concurrency, deadline and cleanup checks. No legacy allowance or actual durable records are used.
+- Added a disabled private notebook server owner with 23 synthetic access, cancellation, concurrency, deadline, cleanup and partial-extraction integration checks. No legacy allowance or actual durable records are used.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 747 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 749 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 ## Current work and dependency order
 
@@ -49,7 +49,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Exact next action
 
-The disabled notes-only server owner is prepared and its 21 synthetic checks pass. Official guide comparison is recorded in docs/notebook-provider-contract-review.md. Models/configuration match the fetched guides, but full event/Responses reference retrieval failed; strict wire metadata and dedicated connection startup still need verification. Next exercise authenticated partial-note extraction and cancellation through the disabled server owner with simulated transports, including pending extraction at exit and late completion. Keep all providers disabled. A future notes-only durable allowance needs a dedicated reviewed adapter and a new authorized amount; never reuse or reset the nine closed legacy reservations. No keys, paid calls, activation or deployment are included. Task 1c, the Tavus recovery reply, source/privacy decisions and Phase 1 exit remain open.
+The disabled notes-only server owner and partial-extraction integration are prepared; all 23 owner checks and 749 cumulative checks pass. Official guide comparison is recorded in docs/notebook-provider-contract-review.md. Models/configuration match the fetched guides, but full event/Responses reference retrieval failed; strict wire metadata and dedicated connection startup still need verification. Authenticated partial-note extraction and cancellation now pass, including pending extraction at exit and late completion. Next connect the owner to an explicitly simulated loopback harness, with strict owner binding, provider readiness and browser cleanup tests. Do not add an application-server route or deploy it. Keep all providers disabled. A future notes-only durable allowance needs a dedicated reviewed adapter and a new authorized amount; never reuse or reset the nine closed legacy reservations. No keys, paid calls, activation or deployment are included. Task 1c, the Tavus recovery reply, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 

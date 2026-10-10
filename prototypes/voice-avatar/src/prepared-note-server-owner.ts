@@ -28,7 +28,7 @@ export function createPreparedNoteServerOwner(options: {
    if (state !== 'idle') return {status: 409 as const};
    if (request.signal.aborted) return {status: 499 as const};
    state = 'starting';
-   const controller = new AbortController();
+   const controller = new AbortController(), notebook = new NotebookState();
    let reservation: string | undefined, session: Session | undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
    const detach = () => {clearTimeout(timer); request.signal.removeEventListener('abort', stop);};
@@ -59,13 +59,13 @@ export function createPreparedNoteServerOwner(options: {
    }
    if (ending || request.signal.aborted) {await finish(); return {status: 499 as const};}
    try {
-    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(), notebook: new NotebookState(), signal: controller.signal, changed: options.changed, stopped: stop});
+    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(), notebook, signal: controller.signal, changed: options.changed, stopped: stop});
    } catch {
     creationFailed = true; await finish(); return {status: 503 as const};
    }
    if (ending || session.status().ended) {await finish(); return {status: 499 as const};}
    state = 'active';
-   return {status: 200 as const, probe: session.probe, end: async () => {ending = true; await finish();}};
+   return {status: 200 as const, probe: session.probe, snapshot: () => notebook.snapshot(), end: async () => {ending = true; await finish();}};
   },
  };
 }
