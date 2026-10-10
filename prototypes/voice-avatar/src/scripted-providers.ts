@@ -8,6 +8,8 @@ export const PAL = 'pipecat0';
 export const SCRIPT = 'Hello. This is a private voice and avatar connection test. You can press Interrupt to stop this test.';
 export const MAX_AUDIO_BYTES = 24_000 * 2 * 25;
 export type Fixture = { pcm: Buffer; transcript: string; inputTokens: number; outputTokens: number };
+export type GeneratedFrame = { responseId: string; itemId: string; eventId: string; sequence: number; pcm: Buffer };
+export type StreamedReply = Omit<Fixture, 'pcm'> & { responseId: string; itemId: string; audioBytes: number };
 
 export async function tavus(key: string, path: string, body?: unknown): Promise<Record<string, any>> {
   if (!/^\/v2\/(pals\/pipecat0|faces\/rc9cff32ceba|conversations(?:\/[a-zA-Z0-9_-]+(?:\/end)?)?)$/.test(path)) throw new Error('Provider path refused.');
@@ -55,24 +57,36 @@ export async function generateScript(key: string, signal: AbortSignal): Promise<
 export async function generateSpokenReply(key: string, signal: AbortSignal, audio: string, history: SpokenHistory[]): Promise<Fixture> {
   return generateAudio(key, signal, spokenRequest(audio, history));
 }
-async function generateAudio(key: string, signal: AbortSignal, request: Record<string, unknown>): Promise<Fixture> {
+/** Future bridge entry point. Accept frames synchronously only while the downstream
+ * queue has capacity. False, exceptions or cancellation terminate generation, with
+ * no retry. Resolution confirms generation, never customer playback. If this rejects
+ * after delivering frames, the owner must cancel downstream output as well.
+ * This is not wired into the hosted buffered test page.
+ */
+export async function streamSpokenReply(key: string, signal: AbortSignal, audio: string, history: SpokenHistory[], accept: (frame: GeneratedFrame) => boolean): Promise<StreamedReply> {
+  const { pcm: _discarded, ...result } = await generateAudio(key, signal, spokenRequest(audio, history), accept);
+  return result;
+}
+async function generateAudio(key: string, signal: AbortSignal, request: Record<string, unknown>, accept?: (frame: GeneratedFrame) => boolean): Promise<Fixture & { responseId: string; itemId: string; audioBytes: number }> {
   if (signal.aborted) throw new Error('Test canceled.');
   return new Promise((resolve, reject) => {
     const ws = new WebSocket(`wss://api.openai.com/v1/realtime?model=${MODEL}`, {
       headers: { Authorization: `Bearer ${key}` }, followRedirects: false, maxPayload: 2_000_000,
       handshakeTimeout: 10_000,
     });
-    let settled = false, sent = false, responseId = '', itemId = '', bytes = 0, transcript = '';
+    let settled = false, sent = false, responseId = '', itemId = '', bytes = 0, transcript = '', sequence = 0;
     const chunks: Buffer[] = [];
     const seen = new Set<string>();
-    const finish = (error?: Error, result?: Fixture) => {
+    const finish = (error?: Error, result?: Fixture & { responseId: string; itemId: string; audioBytes: number }) => {
       if (settled) return; settled = true; clearTimeout(deadline); signal.removeEventListener('abort', abort);
       ws.terminate(); error ? reject(error) : resolve(result!);
     };
     const abort = () => finish(new Error('Test canceled.'));
     const deadline = setTimeout(() => finish(new Error('OpenAI script generation timed out.')), 30_000);
     signal.addEventListener('abort', abort, { once: true });
+    if (signal.aborted) abort();
     ws.on('open', () => {
+      if (settled) return;
       const configuration = realtimeConfiguration(MODEL, VOICE) as { session: Record<string, unknown> };
       configuration.session.instructions = request.instructions;
       configuration.session.max_output_tokens = 1024;
@@ -98,6 +112,7 @@ async function generateAudio(key: string, signal: AbortSignal, request: Record<s
           ws.send(JSON.stringify({ type: 'response.create', response: request }));
         }
         if (event.type === 'response.created') {
+          if (!sent) return finish(new Error('Response preceded verified configuration.'));
           if (responseId) return finish(new Error('Unexpected extra response.'));
           if (typeof event.response?.id !== 'string' || !event.response.id) return finish(new Error('Missing response identity.'));
           responseId = event.response.id;
@@ -113,10 +128,18 @@ async function generateAudio(key: string, signal: AbortSignal, request: Record<s
           if (itemId && itemId !== event.item_id) return finish(new Error('Audio item changed.'));
           itemId = event.item_id;
           const chunk = Buffer.from(event.delta, 'base64');
-          if (chunk.toString('base64') !== event.delta || chunk.length % 2 !== 0) return finish(new Error('Audio encoding mismatch.'));
+          if (!chunk.length || chunk.toString('base64') !== event.delta || chunk.length % 2 !== 0) return finish(new Error('Audio encoding mismatch.'));
           bytes += chunk.length;
           if (bytes > MAX_AUDIO_BYTES) return finish(new Error('Script exceeded the audio bound.'));
-          chunks.push(chunk);
+          if (accept) {
+            // Each downstream frame is at most 20 ms of PCM16. No unbounded queue
+            // or asynchronous acceptance promise is allowed at this boundary.
+            for (let offset = 0; offset < chunk.length; offset += 960) {
+              if (settled || signal.aborted) return;
+              const accepted = accept({ responseId, itemId, eventId: `${event.event_id}/${offset}`, sequence: sequence++, pcm: Buffer.from(chunk.subarray(offset, offset + 960)) });
+              if (accepted !== true) return finish(new Error('Downstream audio capacity unavailable.'));
+            }
+          } else chunks.push(chunk);
         }
         if (event.type === 'response.output_audio_transcript.delta' && event.response_id === responseId) {
           transcript += String(event.delta ?? '');
@@ -127,7 +150,7 @@ async function generateAudio(key: string, signal: AbortSignal, request: Record<s
           const usage = event.response.usage;
           if (!Number.isSafeInteger(usage?.input_tokens) || !Number.isSafeInteger(usage?.output_tokens)
             || usage.input_tokens < 0 || usage.input_tokens > 4000 || usage.output_tokens < 0 || usage.output_tokens > 1024) return finish(new Error('Usage needs review.'));
-          finish(undefined, { pcm: Buffer.concat(chunks), transcript, inputTokens: usage.input_tokens, outputTokens: usage.output_tokens });
+          finish(undefined, { pcm: Buffer.concat(chunks), transcript, inputTokens: usage.input_tokens, outputTokens: usage.output_tokens, responseId, itemId, audioBytes: bytes });
         }
       } catch { finish(new Error('Invalid OpenAI event.')); }
     });
