@@ -5,7 +5,7 @@ import {NoteTiming} from './note-timing.ts';
 type Transcript = {version:1;eventId:string;turnId:string;sequence:number;role:'user'|'assistant';text:string;final:boolean};
 export type NotePatch = {field:Field;value:string;evidence:string;confirmed:boolean};
 export type ExtractionInput = Readonly<{turnId:string;text:string;context?:string}>;
-type Turn = {id:string;sequence:number;text:string;appliedText:string;final:boolean;expected:Record<Field,number>;inputAt:number;owned:Partial<Record<Field,number>>};
+type Turn = {id:string;sequence:number;text:string;appliedText:string;final:boolean;expected:Record<Field,number>;inputAt:number;owned:Partial<Record<Field,number>>;settled:boolean};
 type Job = {id:number;turn:Turn;text:string;fullText:string;controller:AbortController;sample:number;timer:ReturnType<typeof setTimeout>};
 const fields=new Set<string>(FIELDS.map(([id])=>id));
 const exact=(value:Record<string,unknown>,keys:string[])=>Object.keys(value).length===keys.length&&keys.every(k=>Object.hasOwn(value,k));
@@ -36,6 +36,7 @@ function patches(value:unknown,text:string):NotePatch[]|null {
 export class PartialNoteCoordinator {
   private notebook:NotebookState;
   private extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;
+  private settled:(turnId:string)=>void;
   private changed:(receipt:number|null)=>void;
   private invalidated:()=>void;
   private clock:()=>number;
@@ -54,8 +55,8 @@ export class PartialNoteCoordinator {
   private pendingRenders=new Map<number,{session:number;revision:number}>();
   private counters={accepted:0,rejected:0,applied:0,failures:0};
   readonly timing:NoteTiming;
-  constructor(options:{notebook:NotebookState;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void;clock?:()=>number;nextSequence?:()=>number;syntheticFixture?:boolean}){
-    this.invalidated=options.invalidated??(()=>{});this.notebook=options.notebook;this.extract=options.extract;this.changed=options.changed;this.clock=options.clock??(()=>performance.now());
+  constructor(options:{notebook:NotebookState;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void;settled?:(turnId:string)=>void;clock?:()=>number;nextSequence?:()=>number;syntheticFixture?:boolean}){
+    this.settled=options.settled??(()=>{});this.invalidated=options.invalidated??(()=>{});this.notebook=options.notebook;this.extract=options.extract;this.changed=options.changed;this.clock=options.clock??(()=>performance.now());
     this.nextSequence=options.nextSequence??(()=>++this.captureSequence);this.syntheticFixture=options.syntheticFixture===true;
     this.session=this.notebook.snapshot().session;this.timing=new NoteTiming(this.clock);
   }
@@ -70,7 +71,7 @@ export class PartialNoteCoordinator {
     if(this.turn?.id!==event.turnId){
       this.cancelJob();clearTimeout(this.debounce);this.debounce=undefined;this.waitingAt=null;
       if(this.turn)this.retired.add(this.turn.id);
-      this.turn={id:event.turnId,sequence:-1,text:'',appliedText:'',owned:{},final:false,inputAt:this.clock(),expected:Object.fromEntries(FIELDS.map(([id])=>[id,snapshot.notes[id].revision])) as Record<Field,number>};
+      this.turn={id:event.turnId,sequence:-1,text:'',appliedText:'',owned:{},settled:false,final:false,inputAt:this.clock(),expected:Object.fromEntries(FIELDS.map(([id])=>[id,snapshot.notes[id].revision])) as Record<Field,number>};
     }
     if(this.job&&!event.text.startsWith(this.job.fullText))this.cancelJob();clearTimeout(this.debounce);
     // A recognizer rewrite can remove evidence already displayed from this turn.
@@ -101,7 +102,7 @@ export class PartialNoteCoordinator {
     if(this.job)return;
     const turn=this.turn;if(!turn||this.notebook.snapshot().session!==this.session)return;
     const fullText=turn.text,text=fullText.startsWith(turn.appliedText)?fullText.slice(turn.appliedText.length).trim():fullText;
-    if(!text){this.waitingAt=null;return;}
+    if(!text){this.waitingAt=null;this.settle(turn);return;}
     if(this.extractionCount>=64){this.waitingAt=null;this.counters.failures++;return;}
     const sample=this.timing.begin(this.waitingAt??this.clock());this.waitingAt=null;if(sample===null){this.counters.failures++;return;}
     const controller=new AbortController(),id=++this.nextJob;
@@ -129,8 +130,12 @@ export class PartialNoteCoordinator {
     }catch{
       if(current()){this.counters.failures++;this.timing.finish(sample,'failed');this.changed(null);}
     }finally{
-      clearTimeout(job.timer);if(this.job?.id===id){this.job=null;if(this.waitingAt!==null)this.schedule();}
+      clearTimeout(job.timer);if(this.job?.id===id){this.job=null;if(this.waitingAt!==null)this.schedule();else this.settle(turn);}
     }
+  }
+  private settle(turn:Turn){
+    if(this.turn!==turn||!turn.final||turn.settled||turn.appliedText!==turn.text||this.job||this.waitingAt!==null||this.notebook.snapshot().session!==this.session)return;
+    turn.settled=true;try{this.settled(turn.id);}catch{this.changed(null);}
   }
   acknowledgeRendered(receipt:number):boolean{
     const expected=this.pendingRenders.get(receipt);this.pendingRenders.delete(receipt);

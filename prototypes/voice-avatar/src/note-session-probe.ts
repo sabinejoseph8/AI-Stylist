@@ -25,10 +25,15 @@ export class NoteSessionProbe {
  private unsubscribe:()=>void;
  private changed:(receipt:number|null)=>void;
  private invalidated:()=>void;
- constructor(options:{simulation?:boolean;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void}){
+ private turnId:string|null=null;
+ private committedTurn:string|null=null;
+ private providerCommitted=false;
+ private settledTurn:string|null=null;
+ private turnReady:(turnId:string)=>void;
+ constructor(options:{simulation?:boolean;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void;turnReady?:(turnId:string)=>void}){
    if(options.simulation!==true)throw Error('Live note session is disabled.');
-   this.notebook=options.notebook;this.capture=options.capture;this.changed=options.changed;this.invalidated=options.invalidated??(()=>{});this.session=this.notebook.snapshot().session;
-   this.notes=new PartialNoteCoordinator({notebook:options.notebook,extract:options.extract,invalidated:()=>{if(!this.ended){try{options.invalidated?.();}catch{this.shutdown('display-held');}}},changed:receipt=>{
+   this.notebook=options.notebook;this.capture=options.capture;this.changed=options.changed;this.invalidated=options.invalidated??(()=>{});this.session=this.notebook.snapshot().session;this.turnReady=options.turnReady??(()=>{});
+   this.notes=new PartialNoteCoordinator({notebook:options.notebook,extract:options.extract,settled:turnId=>{this.settledTurn=turnId;this.releaseTurn();},invalidated:()=>{if(!this.ended){try{options.invalidated?.();}catch{this.shutdown('display-held');}}},changed:receipt=>{
      if(this.ended)return;
      if(receipt===null){this.shutdown('extraction-held');return;}
      try{this.changed(receipt);}catch{this.shutdown('display-held');}
@@ -42,10 +47,21 @@ export class NoteSessionProbe {
    if(this.ended||!this.capturing||!this.capture.receive)return false;
    try{return this.capture.receive(frame);}catch{this.shutdown('audio-held');return false;}
  }
- receive(event:unknown){return !this.ended&&this.transcription?.receive(event)===true;}
+ receive(event:unknown){
+   if(this.ended||this.transcription?.receive(event)!==true)return false;
+   if((event as {type?:unknown})?.type==='input_audio_buffer.committed'&&this.committedTurn!==null){
+     this.providerCommitted=true;this.releaseTurn();
+   }
+   return !this.ended;
+ }
+ private releaseTurn(){
+   if(this.ended||!this.providerCommitted||!this.committedTurn||this.settledTurn!==this.committedTurn)return;
+   const turn=this.committedTurn;this.committedTurn=null;this.providerCommitted=false;
+   try{this.turnReady(turn);}catch{this.shutdown('display-held');}
+ }
  async beginTurn(turnId:string):Promise<boolean>{
-   if(this.ended||this.acquiring||this.capturing||!this.transcription?.beginTurn(turnId))return false;
-   const generation=++this.generation;this.acquiring=true;
+   if(this.ended||this.acquiring||this.capturing||this.committedTurn!==null||!this.transcription?.beginTurn(turnId))return false;
+   this.turnId=turnId;const generation=++this.generation;this.acquiring=true;
    try{
      const started=await this.capture.start(pcm=>{
        if(this.ended||generation!==this.generation||!this.transcription)return false;
@@ -63,7 +79,7 @@ export class NoteSessionProbe {
    // Stop source before commit; its synchronous stop callback is now obsolete.
    ++this.generation;this.capturing=false;
    try{this.capture.stop();}catch{this.shutdown('capture-cleanup-held');return false;}
-   return this.transcription.commit();
+   this.committedTurn=this.turnId;this.providerCommitted=false;this.turnId=null;return this.transcription.commit();
  }
  /** A touch command may change only the exact field version the client saw. */
  edit(field:Field,value:string,expectedRevision:number):boolean{
@@ -81,7 +97,7 @@ export class NoteSessionProbe {
  }
  acknowledgeRendered(receipt:number){return !this.ended&&this.notes.acknowledgeRendered(receipt);}
  private shutdown(reason:string){
-   if(this.ended)return;this.ended=true;this.reason=reason;this.capturing=false;this.acquiring=false;++this.generation;
+   if(this.ended)return;this.ended=true;this.reason=reason;this.turnId=null;this.committedTurn=null;this.settledTurn=null;this.providerCommitted=false;this.capturing=false;this.acquiring=false;++this.generation;
    this.unsubscribe();this.notes.cancel();this.controller.abort();
    if(this.transcription?.snapshot().cleanupFailed)this.reason='cleanup-unverified';
    try{this.capture.stop();this.capture.end?.();}catch{this.reason='capture-cleanup-held';}

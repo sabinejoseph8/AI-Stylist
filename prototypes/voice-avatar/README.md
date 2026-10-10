@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-554 tests across 41 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+572 tests across 41 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -233,3 +233,7 @@ The disabled network harness now accepts strict 968-byte simulated audio frames,
 ### Browser capture orchestration preparation, 10 October 2026
 
 PreparedBrowserNoteSession owns an injected simulated capture source and controller. Capture starts in the explicit user action; pre-begin-ack frames are discarded locally. It stops capture before commit, cancels late permission results and clears on device loss, disconnect, deadline or caller-signaled page exit. All 554 tests across 41 files, type checking and build pass, including actual loopback integration with a simulated device and provider. This is one-turn preparation; provider-ready signaling is still needed for another turn. No browser listeners or actual microphone/socket are constructed, and the open notebook and Render are unchanged.
+
+### Repeated-turn readiness preparation, 10 October 2026
+
+The disabled capture orchestrator now supports bounded repeated turns. A later acquisition requires both the command acknowledgment and connection-bound readiness after provider commit plus final note extraction. Server-side enforcement prevents unfinished extraction from being canceled by another turn. Readiness has a five-second deadline and cannot be replayed or retargeted to another connection. All 572 checks across 41 files, type checking and build pass, including actual loopback integration with two generated-audio turns and a tentative color correction. This supersedes the prior one-turn preparation limitation. The running notebook and Render remain unchanged; actual microphone/provider integration, hosted authentication and live timing remain unverified.

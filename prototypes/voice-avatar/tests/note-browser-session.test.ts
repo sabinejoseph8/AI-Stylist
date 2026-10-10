@@ -21,3 +21,7 @@ describe('disabled browser capture orchestration',()=>{
 describe('capture during note commands',()=>{
  it('continues forwarding frames while an edit acknowledgment is pending',async()=>{const s=setup();s.session.receive(ready);const notebook=new NotebookState();notebook.edit('color','green');s.session.receive(encodeNoteUpdate('s1',1,notebook.snapshot(),null));await s.session.startTurn('t1');s.ack();expect(s.session.edit('color','Blue')).toBe(true);expect(s.frame()).toBe(true);expect(s.socket.send.mock.calls.at(-1)![0]).toBeInstanceOf(ArrayBuffer);s.session.stop();});
 });
+
+describe('subsequent simulated capture turns',()=>{
+ it('starts another device acquisition only after matching provider readiness',async()=>{const s=setup();s.session.receive(ready);await s.session.startTurn('t1');s.ack();s.session.commit();s.ack(2);expect(await s.session.startTurn('t2')).toBe(false);expect(s.capture.start).toHaveBeenCalledTimes(1);s.session.receive({version:1,type:'turn-ready',sessionId:'s1',turnId:'t1'});expect(await s.session.startTurn('t2')).toBe(true);s.ack(3);expect(s.frame()).toBe(true);expect(s.capture.start).toHaveBeenCalledTimes(2);s.session.stop();});
+});

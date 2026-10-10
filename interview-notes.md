@@ -312,3 +312,7 @@ I connected the simulated browser controller to the notebook's owned audio sourc
 ## Handling microphone permission races
 
 I prepared the capture controls so a delayed permission result cannot restart a session after the customer leaves. I kept capture acquisition in the explicit start action, discarded frames locally until the server acknowledged the turn, and stopped capture before commit. I tested permission denial, device loss, cleanup errors and page exit with a simulated device, including the full local socket path. All 554 automated checks, type checking and build passed. The helper covers one turn because a command acknowledgment alone does not prove the provider is ready for the next; multiple-turn readiness and actual Safari behavior still need integration and validation. No paid trial or real microphone was used.
+
+## Preserving preferences between spoken turns
+
+I found that allowing another turn immediately after the server command acknowledgment could cancel the previous turn's final extraction. I required both the transcription commit and final note extraction to finish before recording another turn. I tested two simulated spoken turns over real local sockets, including a green-to-blue correction, delayed extraction, readiness replay and disconnect isolation. All 572 automated checks, type checking and build passed. This removes the preparation helper's one-turn limit; the running notebook still uses simulated speech, and live recognition and avatar recovery remain unproven.

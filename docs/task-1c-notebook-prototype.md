@@ -177,3 +177,7 @@ All 540 automated checks across 40 files, type checking and build pass. Generate
 ## Capture orchestration evidence, 10 October 2026
 
 All 554 automated checks across 41 files, type checking and build pass. The injected one-turn capture orchestrator handles permission races, pre-ack frame discard, stop-before-commit and page-exit cleanup, including actual local sockets with simulated devices/providers. The visible notebook and its review instructions remain unchanged. Physical permission behavior, multiple-turn readiness and live speech recognition remain pending.
+
+## Repeated-turn preparation evidence, 10 October 2026
+
+All 572 automated checks across 41 files, type checking and build pass. Two generated-audio turns cross actual loopback sockets with simulated providers. The next capture waits for the previous turn's provider commit and final note extraction, then applies a color correction as tentative. The earlier one-turn preparation limit is removed; this does not establish live recognition or avatar resume. The visible notebook review instructions are unchanged, and no new human acceptance or paid call is claimed.

@@ -18,9 +18,13 @@ export class NoteBrowserController {
  private pending:number|null=null;
  private pendingType:string|null=null;
  private capturing=false;
+ private activeTurn:string|null=null;
+ private awaitingTurn:string|null=null;
+ private usedTurns=new Set<string>();
  private audioSequence=0;
  private deadline:ReturnType<typeof setTimeout>|null=null;
  private overall:ReturnType<typeof setTimeout>;
+ private providerDeadline:ReturnType<typeof setTimeout>|null=null;
  constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;changed:(update:NoteUpdate|null)=>void}){
    if(options.simulation!==true)throw Error('Live notebook browser connection is disabled.');
    this.socket=options.socket;this.changed=options.changed;
@@ -33,6 +37,10 @@ export class NoteBrowserController {
    if(!this.sessionId){
      if(!this.client.ready(value))return this.reject();
      this.sessionId=value.sessionId as string;if(this.deadline!==null)clearTimeout(this.deadline);this.deadline=null;return true;
+   }
+   if(value.type==='turn-ready'){
+     if(Object.keys(value).length!==4||!['version','type','sessionId','turnId'].every(k=>Object.hasOwn(value,k))||value.version!==1||value.sessionId!==this.sessionId||!this.awaitingTurn||value.turnId!==this.awaitingTurn)return this.reject();
+     this.awaitingTurn=null;if(this.providerDeadline!==null)clearTimeout(this.providerDeadline);this.providerDeadline=null;this.notify();return !this.ended;
    }
    if(value.type==='notes'){
      if(!this.client.accept(value))return this.reject();this.notify();return !this.ended;
@@ -51,8 +59,11 @@ export class NoteBrowserController {
    try{this.socket.send(JSON.stringify({version:1,sessionId:this.sessionId,sequence:this.sequence,type,...extra}));return !this.ended;}
    catch{return this.reject();}
  }
- begin(turnId:string){return !this.capturing&&typeof turnId==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(turnId)&&this.send('begin',{turnId});}
- commit(){if(!this.capturing||this.pending!==null)return false;this.capturing=false;const sent=this.send('commit');if(!sent)this.stop();return sent;}
+ begin(turnId:string){
+   if(this.ended||!this.sessionId||this.sequence>=256||this.capturing||this.awaitingTurn!==null||this.pending!==null||typeof turnId!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(turnId)||this.usedTurns.has(turnId)||this.usedTurns.size>=16)return false;
+   this.activeTurn=turnId;this.usedTurns.add(turnId);return this.send('begin',{turnId});
+ }
+ commit(){if(!this.capturing||this.pending!==null)return false;this.capturing=false;this.awaitingTurn=this.activeTurn;this.activeTurn=null;this.providerDeadline=setTimeout(()=>this.stop(),5000);const sent=this.send('commit');if(!sent)this.stop();return sent;}
  audio(pcm:ArrayBuffer):boolean{
    if(this.ended||!this.capturing)return false;
    if(this.socket.bufferedAmount>65536)return this.reject();
@@ -74,10 +85,10 @@ export class NoteBrowserController {
  private reject(){this.stop();return false;}
  disconnected(){this.stop();}
  stop(){
-   if(this.ended)return;this.ended=true;clearTimeout(this.overall);if(this.deadline!==null)clearTimeout(this.deadline);
-   this.capturing=false;this.pendingType=null;this.pending=null;this.sessionId=null;this.client.disconnect();
+   if(this.ended)return;this.ended=true;clearTimeout(this.overall);if(this.deadline!==null)clearTimeout(this.deadline);if(this.providerDeadline!==null)clearTimeout(this.providerDeadline);
+   this.activeTurn=null;this.awaitingTurn=null;this.usedTurns.clear();this.capturing=false;this.pendingType=null;this.pending=null;this.sessionId=null;this.client.disconnect();
    try{this.socket.close();}catch{/* Local data remains cleared; no remote cleanup claim. */}
    try{this.changed(null);}catch{/* No stale content retained in controller. */}
  }
- snapshot(){return{ended:this.ended,audioActive:this.capturing,pending:this.pending!==null,notes:this.client.snapshot(),liveEnabled:false as const};}
+ snapshot(){return{ended:this.ended,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),liveEnabled:false as const};}
 }
