@@ -75,6 +75,29 @@ describe('scripted test budget reservations', () => {
     const data=await budget.read(); data.reserveTransfer!.cents=400 as 200; await writeFile(path,JSON.stringify(data));
     await expect(budget.reserve('spoken')).rejects.toThrow('review');
   });
+  it('preserves six closed records and permits exactly one approved phone attempt', async()=>{
+    const {budget}=await ledger();for(let i=0;i<4;i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest();await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer();await budget.closeVerified(await budget.reserve('spoken'));
+    const previous=(await budget.read()).runs;await budget.approvePhoneTrial();
+    expect((await budget.read()).runs).toEqual(previous);await expect(budget.reserve()).rejects.toThrow('limit');
+    const seventh=await budget.reserve('spoken');expect((await budget.read()).runs[6]).toMatchObject({kind:'spoken',cents:200,seconds:300});
+    await budget.closeVerified(seventh);await expect(budget.reserve('spoken')).rejects.toThrow('limit');
+    await expect(budget.approvePhoneTrial()).rejects.toThrow();
+  });
+  it('refuses phone approval with missing or unresolved history', async()=>{
+    const {budget}=await ledger();await expect(budget.approvePhoneTrial()).rejects.toThrow();
+    for(let i=0;i<4;i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest();await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer();await budget.reserve('spoken');await expect(budget.approvePhoneTrial()).rejects.toThrow();
+  });
+  it('rejects modified phone allowance metadata', async()=>{
+    const {path,budget}=await ledger();for(let i=0;i<4;i++) await budget.closeVerified(await budget.reserve());
+    await budget.approveAdditionalSpokenTest();await budget.closeVerified(await budget.reserve('spoken'));
+    await budget.approveReserveTransfer();await budget.closeVerified(await budget.reserve('spoken'));await budget.approvePhoneTrial();
+    const data=await budget.read();data.phoneTrial!.extraAttempts=2 as 1;await writeFile(path,JSON.stringify(data));
+    await expect(budget.reserve('spoken')).rejects.toThrow('review');
+  });
   it('serializes competing processes with an exclusive lock', async () => {
     const { path, budget } = await ledger();
     const outcomes = await Promise.allSettled([budget.reserve(),new ExperimentBudget(path).reserve()]);

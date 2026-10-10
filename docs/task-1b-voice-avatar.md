@@ -306,3 +306,9 @@ Sabine confirmed that pressing Stop removes the camera preview and changes the s
 ## Physical iPhone tab-switch cleanup confirmed
 
 Sabine confirmed that switching to another Safari tab stops the device check and shows “Stopped because you left this page” with the camera off. All planned local-only iPhone device checks now have human confirmation. Phone avatar playback and interrupt-and-end acceptance remain pending; automatic conversational barge-in is not implemented. No additional provider test was started or approved. Private provider account telemetry is omitted from this public update. Task 1b remains unchecked.
+
+## Approved single iPhone voice trial
+
+Sabine explicitly approved one additional private iPhone voice test after the completed device checks and a private usage review. The separate phoneTrial amendment permits only one additional spoken reservation, preserves prior approvals and all six closed records, retains the bounded two-exchange room and blocks an eighth attempt. The hosted application cannot grant its own allowance amendment.
+
+138 focused tests, type checking and build pass. Applied the restricted transactional Supabase amendment, verified full historical deep equality, and confirmed the database rejects an eighth-attempt write with state unchanged. RLS remains enabled and function access remains service-role only. An initial SQL syntax error was corrected before successful execution; the transaction prevented a partial amendment. No new reservation or provider request was created by setup. Phone playback and interrupt-and-end acceptance remain pending, and Task 1b is unchecked. Private usage/spend telemetry is excluded from this public record.

@@ -177,3 +177,7 @@ My iPhone showed the camera successfully, but the microphone meter stayed flat i
 After confirming the microphone meter worked, I checked that pressing Stop removed the camera preview and changed the status to Off. I also let the check run for two minutes and confirmed both devices automatically turned off with the expected message. I kept this local device verification separate from the avatar conversation checks, which still need further testing.
 
 I also confirmed that switching away from the Safari page stops the camera and microphone check. This completed the local device checks; phone avatar playback and interruption still need separate verification.
+
+## Preparing the remaining phone voice test
+
+After completing the local device checks, I approved one additional private phone voice test. I kept earlier test records intact and added a separate allowance amendment instead of resetting the history. Automated checks and a live database check confirm that the next unapproved attempt stays blocked. I will verify avatar playback and the explicit interrupt-and-end control on my iPhone before calling those checks complete.

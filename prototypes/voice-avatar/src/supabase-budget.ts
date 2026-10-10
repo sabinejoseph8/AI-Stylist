@@ -30,5 +30,6 @@ export class SupabaseBudget extends ExperimentBudget {
     if (result !== true) throw new Error('Durable experiment ledger requires review.');
   }
   override async approveAdditionalSpokenTest() { throw new Error('Hosted allowance amendments require a separate review.'); }
+  override async approvePhoneTrial() { throw new Error('Hosted allowance amendments require a separate review.'); }
   override async approveReserveTransfer() { throw new Error('Hosted allowance amendments require a separate review.'); }
 }

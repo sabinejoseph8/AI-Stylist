@@ -88,7 +88,7 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
       if (!options.budget) { json(423, { error: 'Experiment budget is unavailable.' }); return; }
       try {
         const ledger = await options.budget.read();
-        json(200, { remainingAttempts: Math.max(0, (ledger.spokenExtension ? (ledger.reserveTransfer ? 6 : 5) : 4) - ledger.runs.length), remainingScriptedAttempts: Math.max(0, 4 - ledger.runs.length), cleanupPending: ledger.runs.some(run => !run.closed), reservedCents: ledger.runs.length * 200 });
+        json(200, { remainingAttempts: Math.max(0, (ledger.spokenExtension ? (ledger.reserveTransfer ? (ledger.phoneTrial ? 7 : 6) : 5) : 4) - ledger.runs.length), remainingScriptedAttempts: Math.max(0, 4 - ledger.runs.length), cleanupPending: ledger.runs.some(run => !run.closed), reservedCents: ledger.runs.length * 200 });
       } catch { json(423, { error: 'Experiment budget requires review.' }); }
       return;
     }
