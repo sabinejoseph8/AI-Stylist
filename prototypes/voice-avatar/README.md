@@ -98,3 +98,7 @@ On 9 October 2026 Sabine approved exactly one ninth, spoken-only repeat of the a
 ### Incremental output and recovery preparation
 
 streamSpokenReply, IncrementalEcho, startStreamedBridge and ContextRecovery are tested building blocks for Task 1b. They are not enabled through the hosted HTTP test or phone page. 215 synthetic/mocked tests, type checking and build pass. The owner must reserve allowance first, enforce the private room lifetime, cancel stale output, verify actual old model/renderer cleanup and restore only confirmed context. No automatic retries or new budget are granted. See docs/task-1b-tavus-recovery-question.md for the unresolved vendor contract.
+
+### Confirmed conversation context
+
+ConfirmedConversation is wired to the local SpokenService and keeps generated replies pending until explicit whole-reply confirmation. It retains one confirmed exchange within the existing two-turn limit and clears on end/replacement. ContextRecovery restores an immutable confirmed-only snapshot and waits for acknowledgment before releasing its hold. Timeout, stale context and unresolved cleanup remain blocking. 231 mocked/synthetic tests, type checking and build pass. These changes are not deployed to Render; live resume still requires Tavus clarification and transport integration.

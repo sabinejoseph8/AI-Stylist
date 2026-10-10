@@ -226,3 +226,9 @@ I repeated the automatic speech check with all instructions available before I b
 After confirming spoken interruption on my iPhone, I continued development without spending on another live test. The implementation now has incremental audio generation, a bounded avatar-output queue and recovery checks that reject late responses and unverified connections. I kept “audio sent” separate from “audio heard,” including stopping audio that could still be playing after generation finishes. The 215 automated checks, type checking and build passed with synthetic inputs.
 
 I identified an unresolved vendor contract: the inspected Tavus speaking events do not establish when every old audio chunk is cleared or precisely what reached the listener. I prepared targeted support questions before enabling live recovery. The new components remain separate from the hosted phone flow, and resuming an interrupted conversation is not yet a completed feature.
+
+## Keeping unheard replies out of conversation memory
+
+While waiting for Tavus's technical reply, I continued the work that did not require another paid test. I separated confirmed conversation history from generated replies and connected that memory to the local spoken service. An interrupted reply cannot become confirmed context, and late confirmations cannot restore discarded content. I kept the existing two-exchange prototype limit and cleared volatile content when the session ends.
+
+I also tightened recovery so it waits for acknowledgment that the confirmed context was restored. A stale context revision, failed restoration or timeout keeps recovery held and cleans up the replacement connection. All 231 synthetic automated checks, type checking and build passed. These controls are prepared in code; live recovery and phone acceptance still depend on the vendor contract and later testing.
