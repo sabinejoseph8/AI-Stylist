@@ -15,13 +15,18 @@ export function attachProtectedSimulatedNoteBridge(server: Server, options: {
  preferences?: OwnerOptions['preferences'];
  /** Server-only simulation observer. Never exposed as a browser command. */
  sessionReady?: (session:Started)=>void;
- createTransports: () => {socket: SimulatedTranscriptionSocket; fetch: SimulatedExtractionFetch};
+ createTransports?: () => {socket: SimulatedTranscriptionSocket; fetch: SimulatedExtractionFetch};
+ createStartupTransports?: () => {open:ReturnType<NonNullable<OwnerOptions['createStartupTransports']>>['open'];fetch:SimulatedExtractionFetch};
 }) {
  if (options.simulation !== true) throw Error('Live protected notebook bridge is disabled.');
- const owner = createPreparedNoteServerOwner({simulation: true, cleanupRequirement: options.cleanupRequirement, preview: options.preview, allowance: options.allowance, preferences: options.preferences, changed: () => {}, createTransports: capture => {
+ const createTransports=options.createTransports,createStartupTransports=options.createStartupTransports;
+ const owner = createPreparedNoteServerOwner({simulation: true, cleanupRequirement: options.cleanupRequirement, preview: options.preview, allowance: options.allowance, preferences: options.preferences, changed: () => {}, createTransports: createTransports?capture => {
   if (!capture) throw Error('Simulated capture required.');
-  return {...options.createTransports(), capture};
- }});
+  return {...createTransports(), capture};
+ }:undefined,createStartupTransports:createStartupTransports?capture=>{
+  if(!capture)throw Error('Simulated capture required.');
+  return{...createStartupTransports(),capture};
+ }:undefined});
  const bridge = attachSimulatedNoteBridge(server, {simulation: true, preview: options.preview, deferReady: true, create: (publish, capture, turnReady, ended, ready, req, clarify) => {
   const abort = new AbortController();
   let active: Started | undefined, stopping = false, finished = false;

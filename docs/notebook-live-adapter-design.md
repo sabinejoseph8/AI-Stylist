@@ -2,6 +2,10 @@
 
 Prepared: 11 October 2026. Disabled engineering design, not activation or spending approval.
 
+## Current implementation status, 11 October 2026
+
+The disabled startup controller is now composed into the protected server owner and loopback browser bridge. Exact private access and allowance checks run before transport construction; startup readiness is awaited before Ready is published. Pending opening cancellation keeps the owner closing until late sockets are handled, then remote-required cleanup retains a hold. Existing already-open simulation remains a separate explicit factory choice. These are injected simulations, not a live opener or route. The current full suite passes 1,189 tests across 78 files, type checking and build. The next check is two synthetic turns with extraction/corrections through the startup-backed path.
+
 ## Scope
 
 Prepare one private notes-only connection with two turns and an 85-second owner deadline. No avatar, camera, saved customer profile, recording, shopping or customer launch. The existing simulation owners remain explicitly simulated. Do not change their discriminator to make a live connection work.
@@ -50,3 +54,5 @@ After implementation, run the phase suite, type checking/build, isolated databas
 prepared-note-startup.ts now owns the simulated opening deadline and creation/configuration sequence, including early creation envelopes, late returned sockets and cancellation. It delegates configuration validation to the existing prepared provider session and exposes that session only after readiness. Initial observation remains attached until readiness to reject duplicate creation during configuration, then detaches. The injected opener must deliver initial events from its first packet and honor cancellation for resources not returned. There is no real opener, live route or key loader. Integration with the protected owner/allowance is next, and the remote-cleanup hold is not relaxed. Twenty-seven new tests pass within 1,173 total checks, with type checking and build.
 
 Startup exposes openingSettled separately from end(): cancellation stops local work immediately, while openingSettled resolves only after the injected opener returns or fails and any late returned socket has been closed. Protected-owner composition must await that settlement or retain a hold, never retire a reservation while opening is still unresolved. This promise establishes local opening settlement only, not verified remote cleanup. The late-open cancellation/deadline/end checks explicitly verify this distinction.
+
+The startup-backed protected compositions also pass isolated PostgreSQL checks: final totals are 50 SQL checks, 17 owner scenarios and 24 browser scenarios, including fresh-process unresolved holds. No remote database was used.

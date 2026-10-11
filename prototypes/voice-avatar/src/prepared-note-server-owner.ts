@@ -5,6 +5,7 @@ import {reconcilePreparedPreferences} from './preference-contract.ts';
 import {PreviewGate, validatePreview} from './preview-gate.ts';
 import type {PreviewConfig} from './preview-gate.ts';
 import type {ExperimentBudget} from './experiment-budget.ts';
+import {prepareNoteStartup} from './prepared-note-startup.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
 import type {ProbeCapture} from './note-session-probe.ts';
 import {NotebookState, checkFixture} from './notebook-state.ts';
@@ -25,10 +26,13 @@ type Hooks = {clarificationChanged?: (record:PreferenceClarification|null)=>void
 type Request = {method: string; path: string; host: string; origin: string; authorization?: string; signal: AbortSignal};
 export function createPreparedNoteServerOwner(options: {
  simulation?: boolean; cleanupRequirement?: 'simulation-local'|'remote-verified'; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceAuthority;
- createTransports: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'capture'>;
+ createTransports?: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'capture'>;
+ createStartupTransports?: (capture?: ProbeCapture) => {open:Parameters<typeof prepareNoteStartup>[0]['open'];fetch:SessionOptions['fetch'];capture:ProbeCapture};
  changed: SessionOptions['changed'];
 }) {
  if (options.simulation !== true || options.allowance.purpose !== 'notes-only-simulation') throw Error('Live notebook server owner is disabled.');
+ const createTransports=options.createTransports,createStartupTransports=options.createStartupTransports;
+ if(Boolean(createTransports)===Boolean(createStartupTransports))throw Error('Exactly one simulated transport factory is required.');
  const cleanupRequirement=options.cleanupRequirement??'simulation-local';
  if(!['simulation-local','remote-verified'].includes(cleanupRequirement))throw Error('Invalid cleanup requirement.');
  const target = validatePreview(options.preview), gate = new PreviewGate(options.preview);
@@ -56,7 +60,7 @@ export function createPreparedNoteServerOwner(options: {
      try {hooks.publish?.(notebook.snapshot(), null);} catch {stop();}
     }
    });
-   let reservation: string | undefined, session: Session | undefined;
+   let reservation: string | undefined, session: Session | undefined, startup:ReturnType<typeof prepareNoteStartup>|undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
    const detach = () => {clearTimeout(timer); unsubscribePreferences(); unsubscribeClarification(); setClarification(null); request.signal.removeEventListener('abort', stop);};
    const finish = (): Promise<void> => {
@@ -66,10 +70,13 @@ export function createPreparedNoteServerOwner(options: {
     let settle!: () => void;
     finishPromise = new Promise<void>(resolve => {settle = resolve;});
     void (async () => {
-     state = 'closing'; detach(); release.dispose(); controller.abort(); session?.end();
+     state = 'closing'; detach(); release.dispose(); controller.abort(); startup?.end(); session?.end();
+     // Cancellation is not opening settlement. A late socket must be closed
+     // before even simulation-local closure can retire this reservation.
+     if(startup)await startup.openingSettled;
      // Probe shutdown and its owner callback must settle before verification.
      await Promise.resolve();
-     if (creationFailed || session?.status().cleanupFailed || (session && cleanupRequirement==='remote-verified' && !session.status().remoteCleanupVerified)) {state = 'held'; return;}
+     if (creationFailed || startup?.status().cleanupFailed || session?.status().cleanupFailed || ((session||startup) && cleanupRequirement==='remote-verified')) {state = 'held'; return;}
      try {if (reservation) await options.allowance.closeVerified(reservation); state = 'idle';}
      catch {state = 'held';}
     })().then(settle, () => {state = 'held'; settle();});
@@ -95,12 +102,24 @@ export function createPreparedNoteServerOwner(options: {
    }
    if (ending || request.signal.aborted) {await finish(); return {status: 499 as const};}
    try {
-    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, inputStarted: () => {setClarification(null);release.end();}, invalidated: () => {release.end(); hooks.publish?.(notebook.snapshot(), null);}, ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
+    const sessionOptions={notebook,changed:(receipt:number|null)=>{options.changed(receipt);hooks.publish?.(notebook.snapshot(),receipt);},inputStarted:()=>{setClarification(null);release.end();},invalidated:()=>{release.end();hooks.publish?.(notebook.snapshot(),null);},turnReady:hooks.turnReady};
+    if(createStartupTransports){
+     const transports=createStartupTransports(hooks.capture);
+     let settled!:(ready:boolean)=>void;const readiness=new Promise<boolean>(resolve=>{settled=resolve;});
+     startup=prepareNoteStartup({simulation:true,signal:controller.signal,open:transports.open,session:{...sessionOptions,fetch:transports.fetch,capture:transports.capture},ready:()=>settled(true),stopped:()=>queueMicrotask(()=>{stop();settled(false);})});
+     if(!await readiness){await finish();return{status:499 as const};}
+     session=startup.active()??undefined;
+     if(!session){await finish();return{status:499 as const};}
+    }else session=createPreparedNoteProviderSession({simulation:true,...createTransports!(hooks.capture),...sessionOptions,signal:controller.signal,ready:hooks.ready,stopped:stop});
    } catch {
     creationFailed = true; await finish(); return {status: 503 as const};
    }
    if (ending || session.status().ended) {await finish(); return {status: 499 as const};}
    state = 'active';
+   if(startup){
+    try{hooks.ready?.();}catch{ending=true;}
+    if(ending||controller.signal.aborted||session.status().ended){await finish();return{status:499 as const};}
+   }
    // Server-only capability: never serialize permits or add look commands to the
    // notebook wire. The narrow fixture checker receives the same immutable data
    // that generates the sample description; no caller-supplied pass is accepted.

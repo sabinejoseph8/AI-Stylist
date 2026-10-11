@@ -562,3 +562,10 @@ I extended the cleanup checks from an injected store to isolated PostgreSQL. I t
 ### Separating connection opening from readiness, 11 October 2026
 
 I added a disabled startup controller because an open connection does not mean the stylist is ready to receive speech. It waits for session creation, sends configuration, then requires the matching acknowledgment before exposing the notebook session. I tested cancellation, duplicate events, timeouts and connections returned after the test ended. A type-checking error around cancellation was fixed, and all 1,173 tests, type checking and build now pass. The next step is integrating this controller with the protected test owner; I have not enabled live transcription or started another paid test.
+
+
+### Connecting readiness to private test ownership, 11 October 2026
+
+I connected the startup controller to the protected owner and browser bridge. The connection now needs private access, a reservation and a valid provider configuration before it reports Ready. Leaving during startup keeps the reservation locked while a delayed socket is still unresolved. I also caught and fixed a case where cancellation inside the Ready callback could return an ended session as active. The full 1,189-test suite, type checking and build pass. The work remains simulated and does not enable another paid test.
+
+I also verified configured startup and cancellation during opening against isolated PostgreSQL. Fresh application processes still saw the unresolved hold. The database checks passed with 17 owner scenarios and 24 browser scenarios, and I kept the real Supabase records unchanged.

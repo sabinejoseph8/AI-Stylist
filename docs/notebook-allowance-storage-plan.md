@@ -1,6 +1,6 @@
 # Notebook allowance storage preparation
 
-Status: unapplied migration prepared and checked locally, 10 October 2026. This document authorizes no database change or spending. The current allowance and connection tests use an injected in-memory compare-and-swap store.
+Status: unapplied migration prepared and checked locally, 10 October 2026. This document authorizes no database change or spending. Current allowance and connection tests use both injected stores and isolated local PostgreSQL. Nothing has been applied to the remote notes-only ledger.
 
 ## Scope and isolation
 
@@ -69,3 +69,8 @@ Three further browser/database scenarios use the actual prepared extraction adap
 Four more browser/database scenarios verify provider disconnect during active capture, malformed extraction, permission granted after page exit and uncertain provider cleanup. Verified local cleanup closes the reservation exactly once and clears notes; late frames/events cannot restore the session. When synthetic socket cleanup throws, the reservation stays open, no closure write is attempted and replacement remains blocked. Fixed an inferred callback return type in the new harness and added an explicit wait for browser termination before asserting its cleanup state. The cumulative evidence is 50 isolated SQL checks, seven owner scenarios and fourteen browser scenarios, plus all 869 prototype tests, type checking and build. No live devices/providers, remote records, allowance changes or deployment were used.
 
 Rechecked official OpenAI connection documentation. The discovered intent-based cookbook is archived; the transcription-token reference is deprecated. Neither resolves current server-owned dedicated startup for the selected model. Recorded this distinction and prepared four unsent clarification questions in docs/notebook-transcription-startup-questions.md. No model/protocol change was made. D21/D22, Task 1c and Phase 1 remain partial.
+
+
+### Startup-backed storage composition, 11 October 2026
+
+The optional simulated startup controller now participates in protected-owner and browser allowance checks. Ready configuration followed by end, and cancellation/page exit during pending opening, leave the remote-required reservation open through a fresh application process. A late socket is closed before local opening settlement; no closure write or replacement is permitted under unresolved remote cleanup. Final isolated evidence: 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. No remote storage, credentials or legacy history changed.
