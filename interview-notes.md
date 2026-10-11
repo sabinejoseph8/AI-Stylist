@@ -656,3 +656,8 @@ I prepared an image lifecycle that treats a lost response as uncertainty rather 
 I added database locks to prevent a race between saving an image reference and deleting the image. The concurrent SQL check produces exactly one winner and keeps a consistent result. Pending deletion retains its token and metadata until the server confirms object removal. Hosted object storage remains to be verified.
 
 I prepared recovery for interrupted image saves and deletes. Recovery checks database ownership and verified object evidence; uncertainty keeps the operation pending. A lost response cannot silently authorize data removal. These recovery paths are locally tested, while hosted object storage remains separate.
+
+
+## Recovering from an uncertain image deletion
+
+I tested image saving and deletion against a real isolated database while simulating object storage failures. I found that a successful deletion could lose its response, leaving the app unable to distinguish completion from an unknown missing record. I added a private, owner-scoped receipt in the same transaction as metadata deletion. It excludes image bytes and checksums. Six recovery scenarios now pass. I kept hosted rollout gated because simulated storage does not establish real provider deletion, and receipt retention still needs a defined policy.

@@ -5,7 +5,7 @@ from concurrent.futures import ThreadPoolExecutor
 name='stylist-data-'+uuid.uuid4().hex[:10]
 image='postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
 def run(args, **kw):
- return subprocess.run(args,capture_output=True,text=True,timeout=30,**kw)
+ return subprocess.run(args,capture_output=True,text=True,timeout=kw.pop('timeout',30),**kw)
 def sql(text, expected=True):
  r=run(['docker','exec','-i',name,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],input=text)
  assert (r.returncode==0)==expected, r.stderr
@@ -211,6 +211,10 @@ try:
  assert sql(f"set role service_role; select public.stylist_read_media_operation('{race_id}','{b}');") in ['', 'null']
  sql(actor(a,f"select public.stylist_read_media_operation('{race_id}','{a}');"),False)
  sql('set role anon; select public.stylist_read_media_operation(null,null);',False)
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110011_media_deletion_receipts.sql').read_text())
+ checked=run(['node',str(Path(__file__).resolve().parent/'check-media-lifecycle-db.ts'),name],timeout=60)
+ assert checked.returncode==0, checked.stderr
+ print(checked.stdout.strip())
  print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

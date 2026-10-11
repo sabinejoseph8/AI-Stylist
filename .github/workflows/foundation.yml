@@ -45,5 +45,9 @@ jobs:
     timeout-minutes: 5
     steps:
       - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24.20.0'
+      - run: npm ci --prefix apps/foundation --ignore-scripts --no-audit --no-fund
       - run: docker pull postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3
       - run: python3 apps/foundation/scripts/check-data-protections.py

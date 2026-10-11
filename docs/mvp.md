@@ -569,3 +569,12 @@ Added an unapplied service-only exact-owner operation reader and a prepared reco
 Evidence: all isolated SQL checks pass, including server-only pending reads and wrong-owner absence. Foundation tests increase to 136 passing tests; type checking and build pass. Reconciliation uses simulated storage evidence, not a hosted object store or SQL-connected TypeScript adapter. Task 2b remains open. No remote change, personal image or paid call occurred.
 
 Exact next action: run the TypeScript lifecycle/reconciler against an isolated SQL-backed adapter with simulated storage, including lost acknowledgment recovery. Then harden image process limits/fixtures, complete retail persistence and migration compatibility. Preserve hosted and Phase 1 gates. No Sabine action required for local preparation.
+
+
+## SQL-backed image recovery rehearsal, 11 October 2026
+
+Connected the prepared TypeScript image lifecycle and reconciler to isolated PostgreSQL RPCs with simulated object storage. Six paths cover normal operation and lost acknowledgments after staging, upload, commit, object removal and metadata finalization. The rehearsal exposed a finalization gap: a missing record could not prove deletion. An unapplied migration now writes an owner-scoped deletion receipt atomically with metadata deletion and prevents retired image IDs from being reused. Receipts contain IDs, owner, opaque key, deletion token and timestamp, with no image checksum or image bytes. Direct table access is revoked. Receipt retention/purge must be settled before hosted activation.
+
+Evidence: 137 foundation tests, type checking and production build pass. The complete isolated SQL suite and all six recovery paths pass, including wrong-owner absence. Storage remains simulated; this does not prove hosted deletion, signed URLs, a production adapter or remote finalization. No hosted migration, provider call or spending change occurred. Task 2b remains open.
+
+Exact next action: harden image decoding fixtures and process resource isolation, then continue migration compatibility and source-backed retail persistence. Hosted acceptance and Phase 1 gates remain unchanged. No Sabine action is required for this local preparation.
