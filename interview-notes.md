@@ -636,3 +636,5 @@ I added a controlled wardrobe save so a conversation cannot silently become save
 I extended those protections to deletion and added an automated database check in GitHub. Deleting a wardrobe entry leaves its image intact until reference-aware cleanup can prove it is unused. This avoids removing an image another saved item still needs. Fifty local database checks now pass.
 
 I also separated explicitly selected profile preferences from the live notebook. The prepared save request rejects transcripts and event details, validates USD amounts in cents and refuses contradictory color choices. The foundation now has 51 passing checks. This contract still needs database integration before it can save a real profile.
+
+I prepared profile saves so the preference update and its revision signal succeed together. A stale or invalid save produces neither change. This creates the foundation for checking another tab’s preference changes before releasing a look; the live invalidation connection is still to be built. The isolated database suite now passes 74 checks.

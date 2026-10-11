@@ -463,3 +463,12 @@ Prepared wardrobe deletion requires owner identity, explicit confirmation and th
 Added a strict, immutable profile-save decoder with explicit consent and expected revision. It whitelists preferred/excluded colors, styles, excluded categories and integer USD budget cents; it rejects conflicting colors, duplicates, oversized values, extra customer IDs, transcripts and session occasion fields. This is a bounded initial profile contract, not the complete profile schema or a connected save endpoint. Sizes and further approved requirements must be added with typed validation before customer acceptance. All 51 foundation tests, type checking and build pass. The preceding GitHub run 38181663127 passed all three jobs, including 50 database checks and prototype regressions.
 
 Exact next action: add matching strict SQL profile persistence and atomic revision-controlled mutations, with tests for second-tab invalidation before connecting saves. Then continue saved-look schemas and safe image upload/reference-aware cleanup. Task 2b remains open; no human action is required for this local preparation.
+
+
+### Atomic profile persistence preparation
+
+Prepared an unapplied profile migration matching the initial typed preference subset. Database validation rejects unknown keys, invalid/contradictory colors, duplicate/oversized terms and invalid USD amounts. Explicit consent and expected revision are required. A successful save commits a minimal private revision event in the same transaction; failed or stale saves create no event. Direct customer writes and reads of the private event table are denied. This does not yet consume events, invalidate live look releases or implement the full profile schema.
+
+Latest evidence: 74 actual local PostgreSQL checks pass, using synthetic Auth/Storage schemas in a network-disabled temporary container that was removed. Foundation evidence remains 51 passing checks plus type checking and build. No remote migration, provider call or deployment occurred. Task 2b remains incomplete.
+
+Exact next action: add second-tab/competing-profile-save tests and the revision-event consumption contract, then prepare saved-look schemas and safe image upload/reference-aware cleanup. The broader Phase 1 and hosted acceptance gates remain open. No action is needed from Sabine for this authorized local preparation.

@@ -1,6 +1,6 @@
 """Isolated PostgreSQL rehearsal, with synthetic Supabase identity roles only."""
 from pathlib import Path
-import subprocess, time, uuid
+import subprocess, time, uuid, json
 from concurrent.futures import ThreadPoolExecutor
 name='stylist-data-'+uuid.uuid4().hex[:10]
 image='postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
@@ -84,6 +84,28 @@ try:
  sql(actor(a,f"select public.stylist_delete_wardrobe('{item}',3,true);"),False)
  assert sql(actor(a,'select count(*) from public.stylist_wardrobe_items;'))=='0'
  assert sql('select count(*) from public.stylist_media_assets;')=='1'
- print('50 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110005_controlled_profiles.sql').read_text())
+ profile='\'{"preferredColors":["Blue"],"excludedColors":["Red"],"styles":["Structured"],"excludedCategories":[],"budgetCents":35000,"currency":"USD"}\'::jsonb'
+ def profile_save(uid,revision,consent='true',payload=None,expected=True):
+  return sql(actor(uid,f"select (public.stylist_save_profile({payload or profile},{revision},{consent})).revision;"),expected)
+ profile_save(a,0,'false',expected=False)
+ profile_save('',0,expected=False)
+ profile_save(a,0,payload="'{\"notes\":{}}'::jsonb",expected=False)
+ assert profile_save(a,0)=='1'
+ assert sql(actor(b,'select count(*) from public.stylist_profiles;'))=='0'
+ profile_save(a,0,expected=False)
+ assert profile_save(a,1)=='2'
+ profile_save(a,1,expected=False)
+ sql(actor(a,"update public.stylist_profiles set revision=99;"),False)
+ sql(actor(a,'select * from stylist_private.profile_changes;'),False)
+ assert sql('select count(*) from stylist_private.profile_changes;')=='2'
+ assert sql('select max(revision) from stylist_private.profile_changes;')=='2'
+ valid={"preferredColors":["Blue"],"excludedColors":["Red"],"styles":["Structured"],"excludedCategories":[],"budgetCents":35000,"currency":"USD"}
+ bad_profiles=[{**valid,"currency":None},{**valid,"currency":"EUR"},{**valid,"budgetCents":-1},{**valid,"budgetCents":1.5},{**valid,"budgetCents":9007199254740992},{**valid,"transcript":"private"},{**valid,"excludedColors":["blue"]},{**valid,"styles":["A","a"]},{**valid,"styles":[""]},{**valid,"styles":[None]},{**valid,"styles":["x"*81]}]
+ for bad in bad_profiles:
+  payload="'"+json.dumps(bad).replace("'","''")+"'::jsonb"
+  profile_save(a,2,payload=payload,expected=False)
+ assert sql('select count(*) from stylist_private.profile_changes;')=='2'
+ print('74 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])
