@@ -666,3 +666,8 @@ I tested image saving and deletion against a real isolated database while simula
 ## Checking real image boundaries
 
 I expanded image validation checks to malformed files, oversized decoded images and animated WebP. I caught a misleading test fixture: identical frames had been optimized into a still image. I replaced it with distinct frames and checked the fixture itself before checking rejection. All 140 foundation tests pass; isolated processing resource safeguards are still pending.
+
+
+## Isolating image decoding
+
+I moved image decoding into a separate process so a malformed image cannot hold the app server in native image work. The parent has a deadline, kills a hung child, and accepts only bounded results. I tested a real crash and hang, then confirmed a later image still works. Native memory needs an OS limit before customer upload is available.

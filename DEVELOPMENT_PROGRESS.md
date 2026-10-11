@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2b local preparation is active. Latest evidence: 140 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
+Task 2b local preparation is active. Latest evidence: 142 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
 
 ## Completed evidence
 
@@ -578,3 +578,12 @@ Added synthetic truncated JPEG/PNG/WebP, 16-million-pixel overflow with valid si
 Evidence: 140 foundation tests, type checking and build pass. No customer media or provider call was used. These tests strengthen existing validation; they do not establish OS-enforced memory/CPU isolation. Task 2b remains open and new database migrations remain local.
 
 Exact next action: implement an isolated decoder process with a parent-enforced wall-clock deadline and deployment resource-limit contract; verify timeout/crash cleanup and bounded admission. Then continue migration compatibility and retail persistence. No Sabine action required for local preparation.
+
+
+## Isolated image decoding preparation, 11 October 2026
+
+Moved Sharp decoding and WebP conversion into a separate child process. The server admits one image decode at a time, caps input and child output, enforces a seven-second parent deadline and kills a stalled child. The child disables Sharp cache, uses one decoder thread, checks format, frame count, dimensions, pixels and output size; the server rechecks its result and computes the checksum. Process errors are redacted. A 128 MiB V8 heap argument limits JavaScript heap only; native libvips memory still needs an OS/container limit before customer uploads. No upload route is activated.
+
+Evidence: 142 foundation tests pass, including real child crash and hang scenarios; type checking and build pass. The hung child is killed and a later valid image decodes. No personal media, provider call or hosted deployment occurred. Task 2b remains open.
+
+Exact next action: define and verify OS/container resource limits for the decoder on the intended host, then continue migration compatibility and source-backed retail persistence. This local preparation requires no Sabine action.

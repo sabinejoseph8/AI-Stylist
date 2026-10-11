@@ -1,6 +1,7 @@
 import {it,expect} from 'vitest';
 import sharp from 'sharp';
-import {sanitizeImage} from '../src/server/sanitize-image.ts';
+import {decodeInChild,sanitizeImage} from '../src/server/sanitize-image.ts';
+import {fileURLToPath} from 'node:url';
 async function image(format:'png'|'jpeg'|'webp',width=10,height=20){return sharp({create:{width,height,channels:3,background:'#008080'}}).toFormat(format).toBuffer();}
 for(const format of ['png','jpeg','webp'] as const)it(`decodes ${format} and emits bounded webp`,async()=>{const x=await sanitizeImage(await image(format),`image/${format}`);expect(x.contentType).toBe('image/webp');expect(x.width).toBe(10);expect(x.height).toBe(20);expect(x.checksum).toMatch(/^[a-f0-9]{64}$/);expect((await sharp(x.bytes).metadata()).format).toBe('webp');});
 it('strips EXIF and honors orientation',async()=>{const input=await sharp(await image('jpeg')).withMetadata({orientation:6}).toBuffer();expect((await sharp(input).metadata()).exif).toBeDefined();const x=await sanitizeImage(input,'image/jpeg');const meta=await sharp(x.bytes).metadata();expect(meta.exif).toBeUndefined();expect(meta.xmp).toBeUndefined();expect(meta.icc).toBeUndefined();expect(x.width).toBe(20);expect(x.height).toBe(10);});
@@ -24,4 +25,13 @@ it('rejects animated WebP rather than silently saving its first frame',async()=>
  const bytes=await sharp(Buffer.concat([Buffer.alloc(300,0),Buffer.alloc(300,255)]),{raw:{width:10,height:20,channels:3,pageHeight:10}}).webp({loop:0,delay:[100,100]}).toBuffer();
  expect((await sharp(bytes,{animated:true}).metadata()).pages).toBe(2);
  await expect(sanitizeImage(bytes,'image/webp')).rejects.toThrow('Image unavailable');
+});
+it('kills a hung decoder at the parent deadline',async()=>{
+ const fixture=fileURLToPath(new URL('./fixtures/image-worker-hang.mjs',import.meta.url));
+ await expect(decodeInChild(Buffer.from('test'),'png',fixture,100)).rejects.toThrow('Image unavailable');
+ expect((await sanitizeImage(await image('png'),'image/png')).width).toBe(10);
+});
+it('rejects a child crash without exposing decoder output',async()=>{
+ const fixture=fileURLToPath(new URL('./fixtures/image-worker-crash.mjs',import.meta.url));
+ await expect(decodeInChild(Buffer.from('test'),'png',fixture,1000)).rejects.toThrow('Image unavailable');
 });
