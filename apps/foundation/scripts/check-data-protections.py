@@ -106,6 +106,23 @@ try:
   payload="'"+json.dumps(bad).replace("'","''")+"'::jsonb"
   profile_save(a,2,payload=payload,expected=False)
  assert sql('select count(*) from stylist_private.profile_changes;')=='2'
- print('74 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ def profile_race():
+  query=actor(a,f"select (public.stylist_save_profile({profile},2,true)).revision;")
+  return run(['docker','exec','-i',name,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],input=query)
+ with ThreadPoolExecutor(max_workers=2) as pool:
+  results=list(pool.map(lambda _:profile_race(),range(2)))
+ assert sum(r.returncode==0 for r in results)==1
+ assert sql(actor(a,'select revision from public.stylist_profiles;'))=='3'
+ assert sql('select count(*) from stylist_private.profile_changes;')=='3'
+ profile_save(a,2,expected=False)
+ assert sql('select count(*) from stylist_private.profile_changes;')=='3'
+ assert sql(actor(b,'select count(*) from public.stylist_profiles;'))=='0'
+ sql(actor(a,'delete from public.stylist_profiles;'),False)
+ sql('set role anon; select public.stylist_save_profile(null,0,true);',False)
+ # Explicit transaction rollback must remove both the saved data and its signal.
+ sql(actor(a,f"begin; select public.stylist_save_profile({profile},3,true); rollback;"))
+ assert sql(actor(a,'select revision from public.stylist_profiles;'))=='3'
+ assert sql('select count(*) from stylist_private.profile_changes;')=='3'
+ print('85 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

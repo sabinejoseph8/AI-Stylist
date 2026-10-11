@@ -485,3 +485,6 @@ Prepared an unapplied profile migration matching the initial typed preference su
 Latest evidence: 74 actual local PostgreSQL checks pass, using synthetic Auth/Storage schemas in a network-disabled temporary container that was removed. Foundation evidence remains 51 passing checks plus type checking and build. No remote migration, provider call or deployment occurred. Task 2b remains incomplete.
 
 Exact next action: add second-tab/competing-profile-save tests and the revision-event consumption contract, then prepare saved-look schemas and safe image upload/reference-aware cleanup. The broader Phase 1 and hosted acceptance gates remain open. No action is needed from Sabine for this authorized local preparation.
+
+
+Latest checkpoint: 85 local database scenarios now cover concurrent profile saves, second-tab stale revisions and rollback of both profile and revision event. Only one competing save succeeds. Local foundation evidence remains 51 checks with type checking/build passing. Next: the revision-event consumption contract, saved-look schemas and safe image upload/reference-aware cleanup. Task 2b remains open. No action is required from Sabine for continued local preparation.
