@@ -283,6 +283,20 @@ export async function checkNotebookBrowserDb(db:Database){
   assert.equal(pendingProfileClient.session.snapshot().connection.ready,false);assert.equal(pendingProfileFixture.counts().providers,0);
   pendingProfileFixture.release();await until(()=>pendingProfileClient.session.snapshot().ended);await until(()=>!pendingProfileFixture.bridge.snapshot().active);
   assert.deepEqual(pendingProfileFixture.counts(),{calls:4,providers:0,closed:0});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
-  console.log('17 local SQL-backed loopback browser scenarios passed, including separate profile invalidation and isolation. Devices and providers were synthetic.');
+  await db.reset();
+  const rapidProfile=new SimulatedPreferenceSource({simulation:true});
+  const rapidFixture=await open('none',async(_url,init)=>{const input=fragment(init);return response(input.turnId,input.currentFragment);},rapidProfile);
+  const rapidClient=rapidFixture.connect();await until(()=>rapidClient.session.status().state==='ready');await begin(rapidClient,'turn_1');rapidFixture.emit(delta(1,'green'));
+  await until(()=>rapidClient.session.snapshot().connection.notes?.notes.color.value==='green');const staleRender=rapidClient.session.snapshot().connection.notes!.sequence;
+  rapidProfile.replace(1,['private_one']);rapidProfile.replace(2,['private_two']);assert.equal(rapidClient.session.edit('color','blue'),true);
+  await until(()=>!rapidClient.session.snapshot().connection.pending&&rapidClient.session.snapshot().connection.notes?.notes.color.value==='blue');
+  rapidProfile.replace(3,['private_three']);await commit(rapidFixture,rapidClient,1,'green');
+  assert.equal(rapidClient.session.snapshot().connection.notes!.notes.color.value,'blue');assert.equal(rapidClient.session.snapshot().connection.notes!.notes.color.status,'confirmed');assert.equal(rapidClient.session.rendered(staleRender),false);
+  await begin(rapidClient,'turn_2');rapidFixture.emit(delta(2,'red'));await until(()=>rapidClient.session.snapshot().connection.notes?.notes.color.value==='red');
+  const freshRender=rapidClient.session.snapshot().connection.notes!;assert.notEqual(freshRender.receipt,null);assert.equal(rapidClient.session.rendered(freshRender.sequence),true);await until(()=>!rapidClient.session.snapshot().connection.pending);
+  rapidProfile.replace(4,['private_four']);await commit(rapidFixture,rapidClient,2,'red');assert.equal(rapidClient.session.snapshot().ended,false);
+  assert.equal(rapidClient.session.snapshot().connection.notes!.notes.color.status,'tentative');assert.ok(!rapidClient.messages.join('').includes('private_'));
+  rapidClient.session.stop();await until(()=>!rapidFixture.bridge.snapshot().active);assert.deepEqual(rapidFixture.counts(),{calls:4,providers:1,closed:1});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
+  console.log('18 local SQL-backed loopback browser scenarios passed, including separate profile invalidation and isolation. Devices and providers were synthetic.');
  }finally{await clear();}
 }

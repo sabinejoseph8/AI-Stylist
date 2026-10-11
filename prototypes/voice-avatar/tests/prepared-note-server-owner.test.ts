@@ -62,6 +62,15 @@ describe('disabled private notebook server owner', () => {
   await vi.advanceTimersByTimeAsync(0); expect(active.snapshot().notes.color.status).toBe('missing'); expect(s.changed).toHaveBeenLastCalledWith(null); expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1); expect(vi.getTimerCount()).toBe(0);
  });
  it('bounds the pending allowance lifetime and cleans a late success', async () => {vi.useFakeTimers(); const s = setup(); let resolve!: (id: string) => void; s.allowance.reserve.mockImplementation(() => new Promise(r => {resolve = r;})); const pending = s.owner.start(request()); await vi.advanceTimersByTimeAsync(85_000); expect(s.owner.status().state).toBe('starting'); resolve('late'); expect(await pending).toEqual({status: 499}); expect(s.createTransports).not.toHaveBeenCalled(); expect(s.allowance.closeVerified).toHaveBeenCalledExactlyOnceWith('late'); expect(vi.getTimerCount()).toBe(0);});
+ it.each(['throw','end'])('cleans up once when preference publication triggers %s',async mode=>{
+  const preferences=new SimulatedPreferenceSource({simulation:true}),s=setup(preferences);let end:()=>Promise<void>=async()=>{};
+  const publish=vi.fn(()=>{if(mode==='throw')throw Error('private publication failure');void end();});
+  const active=await s.owner.start(request(),{publish});if(active.status!==200)throw Error('start');end=active.end;
+  expect(()=>preferences.replace(1,['private_color'])).not.toThrow();await active.end();
+  expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);expect(s.owner.status().state).toBe('idle');
+  const calls=publish.mock.calls.length;preferences.replace(2,[]);expect(publish).toHaveBeenCalledTimes(calls);expect(active.snapshot().notes.color.status).toBe('missing');
+ });
+
 });
 
 describe('server-owned synthetic look authorization', () => {

@@ -82,8 +82,8 @@ function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract
   providers++;
   return {socket:Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:()=>{},close:()=>{closes++;}}),capture:{start:async(accept:(pcm:ArrayBuffer)=>boolean)=>{sendAudio=accept;return true;},stop:()=>{}},fetch:extract??(async()=>{throw Error('No provider request permitted.');})};
  }});
- const start = async (signal?: AbortSignal) => {
-  const result = await owner.start(request(signal));
+ const start = async (signal?: AbortSignal, hooks?: Parameters<typeof owner.start>[1]) => {
+  const result = await owner.start(request(signal), hooks);
   if (result.status === 200) endings.push(result.end);
   return result;
  };
@@ -224,8 +224,17 @@ if (worker) {
  assert.equal(profile.replace(3,['']),false);assert.equal(profileSession.looks.begin(draft),null);
  await profileSession.end();assert.equal((await read()).runs[0]!.closed,true);assert.deepEqual(profiled.counts(),{calls:4,providers:1,closes:1});
  assert.equal((await profiled.start()).status,503);assert.equal(profiled.counts().calls,4);
+ for(const mode of ['end','throw']){
+  await reset();const reentrantProfile=new SimulatedPreferenceSource({simulation:true}),reentrant=setup('none',undefined,undefined,reentrantProfile);
+  let end:()=>Promise<void>=async()=>{};let publications=0;
+  const reentrantSession=await reentrant.start(undefined,{publish:()=>{publications++;if(mode==='throw')throw Error('Synthetic publication failure.');void end();}});
+  assert.equal(reentrantSession.status,200);if(reentrantSession.status!==200)throw Error('Expected reentrant fixture owner.');end=reentrantSession.end;
+  assert.equal(reentrantProfile.replace(1,['private_color']),true);await reentrantSession.end();
+  assert.equal(reentrant.owner.status().state,'idle');assert.deepEqual(reentrant.counts(),{calls:4,providers:1,closes:1});assert.equal((await read()).runs[0]!.closed,true);
+  const previousPublications=publications;reentrantProfile.replace(2,[]);assert.equal(publications,previousPublications);assert.equal(reentrantSession.snapshot().notes.color.status,'missing');
+ }
  assert.deepEqual(JSON.parse(await sql('select ledger from public.stylist_prototype_budget;')),{synthetic_legacy:true,closed_attempts:9});
- console.log('10 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
+ console.log('12 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
  const {checkNotebookBrowserDb}=await import('./check-notebook-browser-db.ts');
  await checkNotebookBrowserDb({reset,read,sql,literal});
 } finally {

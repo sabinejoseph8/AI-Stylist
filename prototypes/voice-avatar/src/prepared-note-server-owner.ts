@@ -52,14 +52,18 @@ export function createPreparedNoteServerOwner(options: {
    const detach = () => {clearTimeout(timer); unsubscribePreferences(); request.signal.removeEventListener('abort', stop);};
    const finish = (): Promise<void> => {
     if (finishPromise) return finishPromise;
-    finishPromise = (async () => {
+    // Install the shared completion before synchronous cleanup can publish
+    // an ended snapshot and re-enter end(). Never close a reservation twice.
+    let settle!: () => void;
+    finishPromise = new Promise<void>(resolve => {settle = resolve;});
+    void (async () => {
      state = 'closing'; detach(); release.dispose(); controller.abort(); session?.end();
      // Probe shutdown and its owner callback must settle before verification.
      await Promise.resolve();
      if (creationFailed || session?.status().cleanupFailed) {state = 'held'; return;}
      try {if (reservation) await options.allowance.closeVerified(reservation); state = 'idle';}
      catch {state = 'held';}
-    })();
+    })().then(settle, () => {state = 'held'; settle();});
     void finishPromise.then(() => {try {hooks.stopped?.();} catch {/* Cleanup has already settled. */}});
     return finishPromise;
    };

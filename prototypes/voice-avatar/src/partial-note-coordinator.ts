@@ -53,12 +53,24 @@ export class PartialNoteCoordinator {
   private extractionCount=0;
   private captureSequence=0;
   private pendingRenders=new Map<number,{session:number;revision:number}>();
+  private unsubscribe:()=>void;
   private counters={accepted:0,rejected:0,applied:0,failures:0};
   readonly timing:NoteTiming;
   constructor(options:{notebook:NotebookState;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void;settled?:(turnId:string)=>void;clock?:()=>number;nextSequence?:()=>number;syntheticFixture?:boolean}){
     this.settled=options.settled??(()=>{});this.invalidated=options.invalidated??(()=>{});this.notebook=options.notebook;this.extract=options.extract;this.changed=options.changed;this.clock=options.clock??(()=>performance.now());
     this.nextSequence=options.nextSequence??(()=>++this.captureSequence);this.syntheticFixture=options.syntheticFixture===true;
     this.session=this.notebook.snapshot().session;this.timing=new NoteTiming(this.clock);
+    this.unsubscribe=this.watchRevisions();
+  }
+  private watchRevisions(){
+    return this.notebook.subscribe(()=>{
+      const current=this.notebook.snapshot();
+      for(const [id,expected] of this.pendingRenders){
+        if(expected.session!==current.session||expected.revision!==current.revision){
+          this.pendingRenders.delete(id);this.timing.finish(id,'canceled');
+        }
+      }
+    });
   }
   private cancelJob(){
     if(this.job){clearTimeout(this.job.timer);this.timing.finish(this.job.sample,'canceled');this.job.controller.abort();this.job=null;}
@@ -144,10 +156,11 @@ export class PartialNoteCoordinator {
     return this.timing.rendered(receipt);
   }
   cancel(){
+    this.unsubscribe();
     clearTimeout(this.debounce);this.debounce=undefined;this.waitingAt=null;this.cancelJob();
     if(this.turn)this.retired.add(this.turn.id);this.turn=null;
     this.pendingRenders.forEach((_v,id)=>this.timing.finish(id,'canceled'));this.pendingRenders.clear();
   }
-  reset(){this.cancel();this.session=this.notebook.snapshot().session;this.seen.clear();this.retired.clear();this.extractionCount=0;this.counters={accepted:0,rejected:0,applied:0,failures:0};this.timing.clear();}
+  reset(){this.cancel();this.session=this.notebook.snapshot().session;this.seen.clear();this.retired.clear();this.extractionCount=0;this.counters={accepted:0,rejected:0,applied:0,failures:0};this.timing.clear();this.unsubscribe=this.watchRevisions();}
   snapshot(){return {...this.counters,extracting:Boolean(this.job),queued:Boolean(this.debounce),timing:this.timing.report()};}
 }

@@ -102,4 +102,16 @@ describe('protected simulated browser/provider bridge',()=>{
   expect(preferences.snapshot()).toEqual({revision:1,excludedColors:['private_profile_color']});expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);
  });
 
+ it('preserves touch corrections through rapid profile changes and final settlement, then acknowledges a fresh render',async()=>{
+  const preferences=new SimulatedPreferenceSource({simulation:true});const s=await setup(false,false,{preferences});await s.begin('t1');s.partial(1,'green');
+  await vi.waitFor(()=>expect(s.controller.snapshot().notes?.notes.color.value).toBe('green'));const stale=s.controller.snapshot().notes!.sequence;
+  preferences.replace(1,['private_one']);preferences.replace(2,['private_two']);expect(s.controller.edit('color','blue')).toBe(true);
+  await vi.waitFor(()=>{expect(s.controller.snapshot().pending).toBe(false);expect(s.controller.snapshot().notes?.notes.color).toMatchObject({value:'blue',status:'confirmed'});});
+  preferences.replace(3,['private_three']);await s.commit(1,'green');expect(s.controller.snapshot().notes?.notes.color).toMatchObject({value:'blue',status:'confirmed'});expect(s.controller.rendered(stale)).toBe(false);
+  await s.begin('t2');s.partial(2,'red');await vi.waitFor(()=>expect(s.controller.snapshot().notes?.notes.color.value).toBe('red'));
+  const fresh=s.controller.snapshot().notes!;expect(fresh.receipt).not.toBeNull();expect(s.controller.rendered(fresh.sequence)).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));
+  preferences.replace(4,['private_four']);await s.commit(2,'red');expect(s.controller.snapshot().ended).toBe(false);expect(s.controller.snapshot().notes?.notes.color.status).toBe('tentative');
+  expect(s.messages.join('')).not.toContain('private_');s.controller.stop();await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);
+ });
+
 });

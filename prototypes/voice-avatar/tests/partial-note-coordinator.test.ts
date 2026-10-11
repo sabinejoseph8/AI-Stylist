@@ -18,6 +18,22 @@ describe('partial notes with synthetic extraction',()=>{
  it.each(['field','evidence','duplicate','authority'])('rejects invalid %s patches atomically',async kind=>{const result=kind==='field'?[{...patch()[0],field:'unknown'}]:kind==='evidence'?[{...patch()[0],evidence:'absent'}]:kind==='duplicate'?[...patch(),...patch()]:[{...patch()[0],authority:true}];const s=setup(async()=>result);s.coordinator.accept(event());await vi.advanceTimersByTimeAsync(100);expect(s.notebook.snapshot().notes.color.status).toBe('missing');expect(s.coordinator.snapshot().failures).toBe(1);});
  it('times out without retry or transcript exposure',async()=>{const extract=vi.fn(async()=>new Promise(()=>{})),s=setup(extract);s.coordinator.accept(event('private green'));await vi.advanceTimersByTimeAsync(1700);expect(extract).toHaveBeenCalledTimes(1);expect(s.coordinator.snapshot().timing.failed).toBe(1);expect(JSON.stringify(s.coordinator.snapshot())).not.toContain('private');});
  it('rejects old render receipts after clearing or editing',async()=>{const s=setup();s.coordinator.accept(event());await vi.advanceTimersByTimeAsync(100);const id=s.changed.mock.calls[0]![0];s.notebook.edit('style','Structured');expect(s.coordinator.acknowledgeRendered(id)).toBe(false);s.notebook.clear();s.coordinator.reset();expect(s.coordinator.acknowledgeRendered(id)).toBe(false);});
+ it('retires undisplayed receipts immediately after profile revision changes',async()=>{
+  const s=setup();s.coordinator.accept(event());await vi.advanceTimersByTimeAsync(100);const receipt=s.changed.mock.calls[0]![0];
+  expect(s.coordinator.snapshot().timing).toMatchObject({pending:1,canceled:0});s.notebook.preferencesChanged();
+  expect(s.coordinator.snapshot().timing).toMatchObject({pending:0,canceled:1,rendered:0});expect(s.coordinator.acknowledgeRendered(receipt)).toBe(false);
+ });
+ it('keeps rendered evidence and cancels only a later superseded sample',async()=>{
+  const s=setup();s.coordinator.accept(event());await vi.advanceTimersByTimeAsync(100);expect(s.coordinator.acknowledgeRendered(s.changed.mock.calls[0]![0])).toBe(true);
+  s.coordinator.accept(event('green',1,'next'));await vi.advanceTimersByTimeAsync(100);s.notebook.edit('color','Blue');
+  expect(s.coordinator.snapshot().timing).toMatchObject({rendered:1,canceled:1,pending:0});s.coordinator.cancel();
+ });
+ it('restores revision watching once after reset and rejects old receipts',async()=>{
+  const s=setup();s.coordinator.accept(event());await vi.advanceTimersByTimeAsync(100);const old=s.changed.mock.calls[0]![0];s.coordinator.cancel();s.coordinator.reset();s.coordinator.reset();
+  s.coordinator.accept(event('green',1,'fresh'));await vi.advanceTimersByTimeAsync(100);s.notebook.preferencesChanged();
+  expect(s.coordinator.snapshot().timing).toMatchObject({total:1,pending:0,canceled:1});expect(s.coordinator.acknowledgeRendered(old)).toBe(false);s.coordinator.cancel();
+ });
+
 });
 describe('timing metadata',()=>{
  it('includes slow samples and reports incomplete work separately',()=>{let now=0;const t=new NoteTiming(()=>now);for(let i=0;i<20;i++){now=0;const id=t.begin(0)!;t.extracted(id);now=i<18?100:4000;t.rendered(id);}t.finish(t.begin(0)!,'failed');t.begin(0);expect(t.report()).toMatchObject({p95Ms:4000,rendered:20,failed:1,pending:1,liveTargetVerified:false});});

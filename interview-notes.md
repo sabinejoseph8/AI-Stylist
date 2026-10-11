@@ -447,3 +447,12 @@ I then separated saved color exclusions from candidate data. A proposed look can
 I connected the simulated saved-preference source to the notebook browser flow. When those preferences change, the server cancels old look approvals immediately and sends the browser an updated notebook revision. The saved exclusions themselves stay on the server. I checked that the browser cannot save or replace them by inventing a command.
 
 I also tested malformed profile data while speech extraction or a database reservation was pending. Capture stops, notes clear and late results cannot restore the session. A replacement session receives its own updates, while the ended session stays cleared. I fixed a duplicate variable in the database test script and reran the checks. All 914 prototype tests, 50 local SQL checks, ten owner scenarios and seventeen browser scenarios pass, along with type checking and build. This remains simulated preparation; real account ownership and saved-profile access still need implementation.
+
+
+## Fixing two bugs found during rapid notebook updates
+
+I checked what happens when saved preferences change several times while a customer edits a note and an older speech result finishes. The customer's confirmed correction remains intact. A later voice turn can still propose a new value, and the browser can acknowledge only its current rendered update.
+
+That review revealed two bugs. Superseded note timing samples could remain marked as waiting to appear, so I made revision changes cancel those samples immediately while keeping successful timing measurements. A new regression also showed that ending a session during its final publication could attempt to close the test reservation twice. I fixed the order of cleanup so every end request shares the same completion operation. Publication errors still stop the session safely.
+
+I reran verification after the initially failing closure test. All 920 prototype tests, 50 local SQL checks, twelve owner scenarios and eighteen browser scenarios pass, together with type checking and build. These checks use simulated media and providers. I kept real customer-profile access, live-service acceptance and financial approvals separate from the findings.
