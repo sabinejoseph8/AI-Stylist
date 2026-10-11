@@ -898,3 +898,10 @@ Exact next action: prepare strict saved-profile and saved-look persistence bound
 ### Controlled deletion and continuous database checks
 
 Prepared wardrobe deletion requires owner identity, explicit confirmation and the current revision. It removes only the selected wardrobe metadata; shared image objects are preserved pending reference-aware cleanup. Fifty local database checks pass. Added a dedicated GitHub job for the pinned isolated database rehearsal and included migration changes in its triggers. Hosted Storage and signed URLs remain unverified. Next: saved profile/look schemas and safe upload/reference-aware cleanup interfaces. Task 2b is still incomplete; no action is needed from Sabine for local preparation.
+
+
+### Explicit profile request preparation
+
+Added a strict, immutable profile-save decoder with explicit consent and expected revision. It whitelists preferred/excluded colors, styles, excluded categories and integer USD budget cents; it rejects conflicting colors, duplicates, oversized values, extra customer IDs, transcripts and session occasion fields. This is a bounded initial profile contract, not the complete profile schema or a connected save endpoint. Sizes and further approved requirements must be added with typed validation before customer acceptance. All 51 foundation tests, type checking and build pass. The preceding GitHub run 38181663127 passed all three jobs, including 50 database checks and prototype regressions.
+
+Exact next action: add matching strict SQL profile persistence and atomic revision-controlled mutations, with tests for second-tab invalidation before connecting saves. Then continue saved-look schemas and safe image upload/reference-aware cleanup. Task 2b remains open; no human action is required for this local preparation.
