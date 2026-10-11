@@ -9,6 +9,8 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
+Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
+
 Autonomous execution is authorized by Sabine on 10 October 2026. Routine technical decisions and task transitions do not require renewed approval. Preserve business requirements, explicit financial limits, security-sensitive approvals and dependency/acceptance gates. DEVELOPMENT_PROGRESS.md is the persistent handoff; docs/development-backlog.md tracks every imported v1.8 task.
 
 - **Current focus:** Task 1a planning is complete. Task 1b remains in progress awaiting Tavus recovery clarification. Sabine explicitly approved independent Task 1c notebook preparation while waiting; Sabine completed the original local notebook review and the seven-step local connection rehearsal on 10 October 2026, reporting that all steps worked. Desktop and physical iPhone generated-reply/avatar audio and mouth movement are confirmed; iPhone explicit Interrupt and end, connection closure and local-device cleanup are confirmed. Bounded spoken interrupt-and-end is accepted on iPhone; continuous resume/context recovery and precise timing remain open.
@@ -1074,3 +1076,8 @@ The disabled owner and protected browser bridge now accept exactly one server-in
 Thirteen new owner checks and three protected loopback browser checks cover request rejection, factory selection, readiness, abort, startup/full-owner deadlines, late sockets, cleanup failure, invalid configuration, page exit, a fresh allowance reader and reentrant cancellation from Ready. The latter now returns cancellation rather than an ended active session. An initial test-only address narrowing error was corrected before the final passing type check. All 1,189 tests across 78 files, type checking and build pass.
 
 Isolated PostgreSQL compositions add configured startup/end and pending startup/abort to the owner, plus configured startup/end and page exit during opening to the browser. Open history stays unchanged through fresh Node processes; replacement is refused before another provider is constructed. Final verification passed 50 isolated PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. The temporary database container was removed. No real provider, credential path, Supabase record, legacy ledger, new allowance or deployment is changed. The running notebook uses its existing local rehearsal; Task 1c and Phase 1 remain partial.
+
+
+## Project memory website, 11 October 2026
+
+Published the owner-private [project memory website](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) with four document tabs, design tokens and diagrams, and evidence-based shared Plan updates. Fifteen website tests and local browser checks pass. ChatGPT sign-in is required for production verification. See docs/project-memory-website.md. No customer-app phase is completed by this tooling work.

@@ -1,0 +1,5 @@
+import http from 'node:http';
+import worker from '../worker/index.js';
+// Loopback-only synthetic identity and memory storage. Never deploy this preview server.
+let value=null,etag=0;const BUCKET={async get(){return value?{etag:String(etag),json:async()=>JSON.parse(value)}:null},async put(k,v,o){if(o.onlyIf.etagMatches!==undefined&&o.onlyIf.etagMatches!==String(etag)||o.onlyIf.etagDoesNotMatch==='*'&&value)return null;value=v;etag++;return {etag:String(etag)}}};
+http.createServer(async(req,res)=>{try{let chunks=[];for await(let c of req)chunks.push(c);let headers={...req.headers,'oai-authenticated-user-id':'local-synthetic-owner'};let input=new Request('http://127.0.0.1:4330'+req.url,{method:req.method,headers,...(['GET','HEAD'].includes(req.method)?{}:{body:Buffer.concat(chunks)})});let out=await worker.fetch(input,{BUCKET});res.writeHead(out.status,Object.fromEntries(out.headers));res.end(Buffer.from(await out.arrayBuffer()))}catch{res.writeHead(500);res.end('Preview error')}}).listen(4330,'127.0.0.1',()=>console.log('Local: http://127.0.0.1:4330/'));

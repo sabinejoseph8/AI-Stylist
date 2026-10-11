@@ -569,3 +569,8 @@ I added a disabled startup controller because an open connection does not mean t
 I connected the startup controller to the protected owner and browser bridge. The connection now needs private access, a reservation and a valid provider configuration before it reports Ready. Leaving during startup keeps the reservation locked while a delayed socket is still unresolved. I also caught and fixed a case where cancellation inside the Ready callback could return an ended session as active. The full 1,189-test suite, type checking and build pass. The work remains simulated and does not enable another paid test.
 
 I also verified configured startup and cancellation during opening against isolated PostgreSQL. Fresh application processes still saw the unresolved hold. The database checks passed with 17 owner scenarios and 24 browser scenarios, and I kept the real Supabase records unchanged.
+
+
+### Making project memory usable, 11 October 2026
+
+I turned my product, design, technical and delivery documents into a private website so I could review the project without reading raw Markdown. I kept the full source documents available and added clear summaries, color swatches, design tables and diagrams. I made task updates require evidence and detect conflicting changes, so a checkmark does not silently replace another update. I fixed a cramped phone toolbar and verified the layout at phone and desktop widths. Fifteen automated website checks pass. The published site requires ChatGPT sign-in, and my production task-update check is still pending. This work does not mean the customer app is finished.
