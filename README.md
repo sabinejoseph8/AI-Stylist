@@ -68,3 +68,8 @@ Sabine selected Rakuten first for eligibility questions about ASOS and other US 
 ## Local application foundation
 
 Task 2a lives in apps/foundation. Run `npm ci` and `npm run dev` there, then open http://127.0.0.1:4322/. See [Foundation instructions](apps/foundation/README.md). This local fixture shell has no working sign-in, provider, persistence or shopping. Sabine approved 2a alongside open Phase 1 checks; visual acceptance remains pending. Shared note fields live in packages/style-contracts.
+
+
+## Task 2a visual acceptance, 11 October 2026
+
+Sabine reported “All steps worked” after refreshing the local foundation, visiting all four destinations, expanding the notebook, reading all seven fields and collapsing it. Task 2a is complete with the previously passing 17 foundation checks and successful GitHub CI. Tasks 2b/2c and the full phases remain open. The Task 2a-only sequencing exception does not authorize bypassing their dependencies.

@@ -615,3 +615,8 @@ I fixed a notebook cancellation bug: an error in an earlier screen observer coul
 ## Building the app foundation while discovery stays open
 
 I approved building Task 2a in parallel with the remaining discovery checks. I now have a local React/TypeScript shell with four navigation sections, the notebook’s approved visual language and a Node/TypeScript service that refuses production startup. I extracted the seven preference fields into a shared contract so the prototype and new app cannot drift. Seventeen foundation checks and 1,273 prototype regressions pass, with type checking and builds passing. Browser checks cover navigation and a phone-width notebook; my own visual acceptance is still pending. This does not establish working customer accounts or a launch-ready stylist.
+
+
+## Task 2a visual acceptance, 11 October 2026
+
+I reviewed the local foundation and confirmed all four navigation destinations and the seven-field notebook expand/collapse worked. I completed the foundation milestone while keeping account security and the remaining Phase 1 checks open.
