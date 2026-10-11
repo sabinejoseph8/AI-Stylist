@@ -20,7 +20,7 @@ Only verified outcomes may be checked off. The initial published snapshot preser
 
 Website source is in tools/project-memory-site and the AI stylist folder's Project Memory Website directory. Its original Sites checkout is in the Capstone 2 workspace under sites/ai-stylist-memory. Reuse the project_id in .openai/hosting.json; never create a second Site. No credentials are stored there.
 
-Run scripts/sync-docs.py with the development checkout path, review curated summaries, build, test and republish through the Sites skill. Snapshots do not automatically pull from GitHub. The published snapshot references application commit 1ef03e7.
+Run scripts/sync-docs.py with the development checkout path, review curated summaries, build, test and republish through the Sites skill. Snapshots do not automatically pull from GitHub. The published snapshot references application commit cd394ca.
 
 Shared task evidence is stored as a JSON file in the provisioned R2 binding. Saves require private identity, evidence and a matching revision; conflicts cannot silently overwrite another update. A changed task source hash invalidates its old override. Missing storage disables updates. The local preview has synthetic identity and memory-only test data, and is never deployed.
 
