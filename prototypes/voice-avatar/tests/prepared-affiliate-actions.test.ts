@@ -42,3 +42,16 @@ describe('affiliate final authorization reentrancy',()=>{
   expect(stage==='issue'?s.actions.issue(1000,s.request):s.actions.resolve(permit!,1000)).toBeNull();s.release.dispose();
  });
 });
+
+describe('affiliate selection changes during authorization',()=>{
+ it.each(['issue','resolve'])('rejects a selection replacement during final %s authorization',stage=>{
+  const s=actionFixture();const permit=stage==='resolve'?s.actions.issue(1000,s.request):null;let calls=0;
+  s.allowed.mockImplementation(()=>{if(++calls===2)s.replace({...s.product,priceCents:20000});return true;});
+  expect(stage==='issue'?s.actions.issue(1000,s.request):s.actions.resolve(permit!,1000)).toBeNull();s.release.dispose();
+ });
+ it.each(['issue','resolve'])('rejects an unversioned mutation during final %s authorization',stage=>{
+  const s=actionFixture();const permit=stage==='resolve'?s.actions.issue(1000,s.request):null;let calls=0;
+  s.allowed.mockImplementation(()=>{if(++calls===2)s.mutate({...s.product,availability:'unavailable'});return true;});
+  expect(stage==='issue'?s.actions.issue(1000,s.request):s.actions.resolve(permit!,1000)).toBeNull();s.release.dispose();
+ });
+});

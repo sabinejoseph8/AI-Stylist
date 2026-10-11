@@ -603,3 +603,9 @@ I added a disabled shopping-action boundary so a refreshed product, changed pref
 I attempted the selected Rakuten eligibility inquiry, but its support form requires an existing publisher ID. I kept the inquiry marked unsent and asked whether I already have an account, rather than inventing an identifier or treating a rejected form as outreach. My reply address stays out of the public repository.
 
 I confirmed that I do not yet have a Rakuten publisher account. I tried the official support widget as well, but it also requires an SID. Both attempts remain accurately marked unsent; registration is a separate decision requiring my credentials and agreement to terms.
+
+## Sequencing affiliate approval
+
+I postponed Rakuten registration until the customer website is live, following its stated live-site requirement. I kept sample-product development moving while preserving retailer independence. My private project documentation and GitHub repository are not presented as the finished customer app. Real shopping links and commission revenue still depend on publisher and retailer approvals.
+
+I fixed a timing edge where a product could change during the final shopping-link authorization check. I now recheck the selected product before releasing an action, including changes where a source forgets to increment its revision. Four new regression cases and all 1,268 prototype tests passed, along with type checking and build. The prototype remains disabled for real shopping.

@@ -455,7 +455,7 @@ Baseline acceptance: Written evidence and decision record; no partner presumed.
 
 ### X02: Send Rakuten ASOS feed inquiry
 
-Priority: External | Release: Future | Dependencies: None | Status: Rakuten selected by Sabine; inquiry prepared; submission rejected because SID is required. No publisher account; both contact forms require SID. Registration decision pending; not sent.
+Priority: External | Release: Future | Dependencies: None | Status: Rakuten selected by Sabine; inquiry prepared; submission rejected because SID is required. Deferred by Sabine until customer website is live. No publisher account; both forms require SID; inquiry unsent.
 
 User story: As a team we can establish ASOS eligibility.
 
@@ -850,3 +850,7 @@ Prepared a disabled server-side affiliate action boundary composed with the exis
 Twenty-two new checks pass within 1,264 prototype tests across 81 files, with type checking and build passing. The previous isolated SQL totals remain 50 checks, 19 owner and 27 browser scenarios; persistence was unchanged and those checks were not rerun. No paid request, app deployment or remote ledger change occurred. All relevant incomplete phase/retailer acceptance gates remain incomplete.
 
 Sabine selected Rakuten first for eligibility questions about ASOS and other US fashion programs. Prepared both inquiry drafts; neither was sent. The official Rakuten request form was opened and its subject and full description filled. Sabine supplied a reply email privately. Submission was attempted, but the form rejected it with “SID: cannot be blank.” A user action card asks whether she has a publisher account. The inquiry remains unsent. No contact email or private account value is stored in these public records. Public source references and the selected route are in docs/retailer-eligibility-inquiries.md.
+
+## Affiliate selection recheck, 11 October 2026
+
+Fixed a stale-selection edge in the disabled affiliate action prototype: after final authorization, issuance and resolution re-read the trusted product and compare both revision and complete product content. A product replacement or unversioned stock change during authorization now blocks the old action. Four added regression cases pass. All 1,268 prototype tests across 81 files, type checking and build pass with loopback access; the restricted initial run could not open synthetic test sockets. No paid call, retailer request, actual shopping route or Render deployment was started. Phase 1 remains incomplete.

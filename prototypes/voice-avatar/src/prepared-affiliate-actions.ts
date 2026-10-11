@@ -17,6 +17,7 @@ export function prepareAffiliateActions(options:{simulation?:boolean;links:Retur
     if(ended||!options.allowed())return null;
     const current=read(),captured=structuredClone(request);
     if(!current||!options.links.describe(current.product,now,captured)||!options.allowed()||ended||generation!==epoch)return null;
+    const verified=read();if(!verified||verified.revision!==current.revision||JSON.stringify(verified.product)!==JSON.stringify(current.product)||ended||generation!==epoch)return null;
     const permit=Object.freeze({});permits.set(permit,{epoch:generation,revision:current.revision,product:JSON.stringify(current.product),request:captured});return permit;
    }catch{return null;}
   },
@@ -27,7 +28,8 @@ export function prepareAffiliateActions(options:{simulation?:boolean;links:Retur
     const current=read();if(!current||current.revision!==bound.revision||JSON.stringify(current.product)!==bound.product)return null;
     const metadata=options.links.describe(current.product,now,bound.request);
     if(!metadata||!options.allowed())return null;
-    return !ended&&bound.epoch===epoch?metadata:null;
+    const verified=read();
+    return verified&&verified.revision===bound.revision&&JSON.stringify(verified.product)===bound.product&&!ended&&bound.epoch===epoch?metadata:null;
    }catch{return null;}
   },
   invalidate(){epoch++;},
