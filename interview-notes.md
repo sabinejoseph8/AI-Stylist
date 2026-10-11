@@ -661,3 +661,8 @@ I prepared recovery for interrupted image saves and deletes. Recovery checks dat
 ## Recovering from an uncertain image deletion
 
 I tested image saving and deletion against a real isolated database while simulating object storage failures. I found that a successful deletion could lose its response, leaving the app unable to distinguish completion from an unknown missing record. I added a private, owner-scoped receipt in the same transaction as metadata deletion. It excludes image bytes and checksums. Six recovery scenarios now pass. I kept hosted rollout gated because simulated storage does not establish real provider deletion, and receipt retention still needs a defined policy.
+
+
+## Checking real image boundaries
+
+I expanded image validation checks to malformed files, oversized decoded images and animated WebP. I caught a misleading test fixture: identical frames had been optimized into a still image. I replaced it with distinct frames and checked the fixture itself before checking rejection. All 140 foundation tests pass; isolated processing resource safeguards are still pending.

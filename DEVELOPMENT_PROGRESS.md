@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2b local preparation is active. Latest evidence: 137 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
+Task 2b local preparation is active. Latest evidence: 140 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
 
 ## Completed evidence
 
@@ -569,3 +569,12 @@ Connected the prepared TypeScript image lifecycle and reconciler to isolated Pos
 Evidence: 137 foundation tests, type checking and production build pass. The complete isolated SQL suite and all six recovery paths pass, including wrong-owner absence. Storage remains simulated; this does not prove hosted deletion, signed URLs, a production adapter or remote finalization. No hosted migration, provider call or spending change occurred. Task 2b remains open.
 
 Exact next action: harden image decoding fixtures and process resource isolation, then continue migration compatibility and source-backed retail persistence. Hosted acceptance and Phase 1 gates remain unchanged. No Sabine action is required for this local preparation.
+
+
+## Image boundary fixtures, 11 October 2026
+
+Added synthetic truncated JPEG/PNG/WebP, 16-million-pixel overflow with valid side lengths, and actual two-frame animated WebP rejection checks. Verified failed decoding releases admission for the next image. The first animation fixture encoded identical frames and was optimized into a still image; corrected it to two different raw frames and asserted the fixture really has two pages before testing rejection.
+
+Evidence: 140 foundation tests, type checking and build pass. No customer media or provider call was used. These tests strengthen existing validation; they do not establish OS-enforced memory/CPU isolation. Task 2b remains open and new database migrations remain local.
+
+Exact next action: implement an isolated decoder process with a parent-enforced wall-clock deadline and deployment resource-limit contract; verify timeout/crash cleanup and bounded admission. Then continue migration compatibility and retail persistence. No Sabine action required for local preparation.
