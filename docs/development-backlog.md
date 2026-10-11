@@ -962,3 +962,12 @@ Moved the existing catalog validator into packages/catalog-contracts with a prot
 Evidence: 103 foundation tests pass; all 1,273 prototype checks across 81 files, both type checks and builds pass. Fixed a test import path during type checking. The 122 database scenarios remain the preceding unchanged database evidence. No paid call, hosted migration or customer deployment occurred. Task 2b remains open.
 
 Exact next action: implement safe local image-byte decoding/metadata stripping with bounded dimensions/size, then owner-bound upload staging and reference-aware cleanup. Complete retail persistence only with source-backed snapshot validation and recheck-before-reuse semantics. Continue migration compatibility checks. No Sabine action needed for local preparation.
+
+
+## Local image sanitizer preparation, 11 October 2026
+
+Pinned Sharp 0.35.5 after checking its supported npm release and official security/output documentation (https://sharp.pixelplumbing.com/security/ and https://sharp.pixelplumbing.com/api-output/). Prepared buffer-only JPEG/PNG/WebP signature and MIME matching, 10 MiB input/output limits, 16 million pixel and 8,192-side bounds, single-frame admission, strict warning failure, orientation correction and metadata-stripping WebP re-encoding. One in-flight decode is allowed with no pending queue; native image processing has a five-second timeout. Output includes server-computed dimensions and SHA-256 checksum. It never fetches a URL or writes an image to disk.
+
+Evidence: nine synthetic-image tests bring the foundation suite to 112 passing tests; type checking and build pass. Tests cover supported formats, EXIF stripping/orientation, fake formats, MIME mismatch, byte/dimension overflow and concurrent admission. This is local preparation, not an upload endpoint or process sandbox. Sharp explicitly recommends OS resource limits; process/container memory and CPU isolation, queued-time deadline and hosted load tests remain required before customer upload activation. The earlier 122 database scenarios are unchanged. No personal image, live provider, remote migration or customer deployment was used.
+
+Exact next action: prepare owner-bound, explicit-consent upload staging and reference-aware image cleanup; add missing animated/truncated/pixel-limit fixtures and process-level resource safeguards. Continue full retail persistence and migration compatibility before Task 2b acceptance. No Sabine action required for local preparation.
