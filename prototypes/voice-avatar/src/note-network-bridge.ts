@@ -1,3 +1,5 @@
+import {decodeClarificationMessage} from './preference-clarification-wire.ts';
+import type {PreferenceClarification} from './preference-clarification.ts';
 import type {Server,IncomingMessage} from 'node:http';
 import {WebSocketServer,WebSocket} from 'ws';
 import {PreviewGate,validatePreview} from './preview-gate.ts';
@@ -10,15 +12,16 @@ import type {NotebookState} from './notebook-state.ts';
 import type {NoteConnectionProbe} from './note-connection-scope.ts';
 /** Explicit test harness attachment only. Not called by the application server or
  * CLI. Factory must construct simulated providers. No provider socket or key. */
-export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;deferReady?:boolean;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture,turnReady:(turnId:string)=>void,ended:()=>void,ready:()=>void,request:IncomingMessage)=>NoteConnectionProbe}){
+export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;deferReady?:boolean;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture,turnReady:(turnId:string)=>void,ended:()=>void,ready:()=>void,request:IncomingMessage,clarify:(record:PreferenceClarification|null)=>void)=>NoteConnectionProbe}){
  if(options.simulation!==true)throw Error('Live notebook bridge is disabled.');
  const address=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let incoming:IncomingMessage|null=null;
  let publisher:((snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void)|null=null;
  let readiness:((turnId:string)=>void)|null=null;
  let termination:(()=>void)|null=null;
+ let clarifier:((record:PreferenceClarification|null)=>void)|null=null;
  let configurationReady:(()=>void)|null=null;
- const scope=new NoteConnectionScope({simulation:true,create:()=>{const bound=publisher,boundReady=readiness,boundEnd=termination,boundConfigured=configurationReady,boundRequest=incoming!;return options.create((snapshot,receipt)=>bound?.(snapshot,receipt),new PreparedRemoteNoteCapture({simulation:true}),turnId=>boundReady?.(turnId),()=>boundEnd?.(),()=>boundConfigured?.(),boundRequest);}});
+ const scope=new NoteConnectionScope({simulation:true,create:()=>{const bound=publisher,boundReady=readiness,boundEnd=termination,boundConfigured=configurationReady,boundRequest=incoming!,boundClarify=clarifier;return options.create((snapshot,receipt)=>bound?.(snapshot,receipt),new PreparedRemoteNoteCapture({simulation:true}),turnId=>boundReady?.(turnId),()=>boundEnd?.(),()=>boundConfigured?.(),boundRequest,record=>boundClarify?.(record));}});
  const sockets=new WebSocketServer({noServer:true,maxPayload:1024,perMessageDeflate:false});
  let closed=false;
  const reject=(socket:import('node:stream').Duplex,status:number)=>{socket.end(`HTTP/1.1 ${status} Rejected\r\nConnection: close\r\nContent-Length: 0\r\n\r\n`);};
@@ -31,19 +34,30 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
    sockets.handleUpgrade(req,socket,head,ws=>sockets.emit('connection',ws,req));
  };
  sockets.on('connection',(ws,req)=>{
-   const owner={};let id:string|null=null,ended=false,inflight=0,count=0,updateSequence=0,ready=false;
-   let pending:NoteUpdate|null=null;
-   const finish=()=>{if(ended)return;ended=true;clearTimeout(deadline);pending=null;scope.disconnect(owner,id??'');ws.terminate();};
+   const owner={};let id:string|null=null,ended=false,inflight=0,count=0,updateSequence=0,clarificationSequence=0,ready=false;
+   let pending:NoteUpdate|null=null,latestNotes:NoteUpdate|null=null;
+   let pendingClarification:PreferenceClarification|null|undefined;
+   const finish=()=>{if(ended)return;ended=true;clearTimeout(deadline);pending=null;pendingClarification=undefined;latestNotes=null;scope.disconnect(owner,id??'');ws.terminate();};
    const deadline=setTimeout(finish,85000);
    ws.on('close',finish);ws.on('error',finish);
    const send=(message:unknown)=>{
      if(ended||ws.readyState!==WebSocket.OPEN||ws.bufferedAmount>65536){finish();return false;}
      try{ws.send(JSON.stringify(message),error=>{if(error)finish();});return true;}catch{finish();return false;}
    };
+   const clarify=(record:PreferenceClarification|null)=>{
+     if(ended)return;
+     if(clarificationSequence>=512){finish();return;}
+     try{
+       const encoded=decodeClarificationMessage({version:1,type:'clarification',sessionId:id??'pending',sequence:clarificationSequence+1,record});
+       if(!ready||!latestNotes){pendingClarification=encoded.record;return;}
+       if(encoded.record&&(encoded.record.notebookSession!==latestNotes.notebookSession||encoded.record.notebookRevision!==latestNotes.revision)){finish();return;}
+       clarificationSequence++;send(encoded);
+     }catch{finish();}
+   };
    const publish=(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>{
      if(ended)return;
      if(updateSequence>=512){finish();return;}
-     try{const encoded=encodeNoteUpdate(id??'pending',updateSequence+1,snapshot,receipt);if(!ready){pending=encoded;return;}updateSequence++;send(encoded);}catch{finish();}
+     try{const encoded=encodeNoteUpdate(id??'pending',updateSequence+1,snapshot,receipt);if(!ready){pending=encoded;return;}updateSequence++;latestNotes=encoded;send(encoded);if(pendingClarification!==undefined){const record=pendingClarification;pendingClarification=undefined;clarify(record);}}catch{finish();}
    };
    let readyCount=0;
    readiness=turnId=>{if(ended)return;if(!id||typeof turnId!=='string'||!/^[a-zA-Z0-9_-]{1,80}$/.test(turnId)||++readyCount>16){finish();return;}send({version:1,type:'turn-ready',sessionId:id,turnId});};
@@ -52,10 +66,10 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
      if(ended||ready||!id||!providerReady)return;
      if(!send({version:1,type:'ready',sessionId:id,simulation:true,liveEnabled:false}))return;
      ready=true;
-     if(pending){const initial=pending as NoteUpdate;pending=null;updateSequence++;send({...initial,sessionId:id,sequence:updateSequence});}
+     if(pending){const initial=pending as NoteUpdate;pending=null;updateSequence++;latestNotes={...initial,sessionId:id,sequence:updateSequence};send(latestNotes);if(pendingClarification!==undefined){const record=pendingClarification;pendingClarification=undefined;clarify(record);}}
    };
    configurationReady=()=>{providerReady=true;completeReady();};
-   publisher=publish;termination=finish;incoming=req;id=scope.open(owner);incoming=null;publisher=null;readiness=null;termination=null;configurationReady=null;
+   publisher=publish;clarifier=clarify;termination=finish;incoming=req;id=scope.open(owner);incoming=null;publisher=null;clarifier=null;readiness=null;termination=null;configurationReady=null;
    if(ended){scope.disconnect(owner,id??'');return;}
    if(!id){finish();return;}
    completeReady();

@@ -492,3 +492,12 @@ I added a local review that shows which styling field needs clarification while 
 I prepared the simulated browser connection to clear explanations before a correction or new voice turn. Stale or malformed messages end the connection safely instead of restoring an explanation from an older state. I checked the three-step local flow myself: show the conflict, change the color, and end the review. The actual protected server publication is still the next integration step.
 
 All 1,040 prototype tests, type checking and build pass. These remain simulated services and profiles. Live notebook quality, real profile ownership and customer acceptance are still pending.
+
+
+## Connecting preference explanations safely
+
+I connected the simulated server's preference explanations to the protected notebook connection. I kept publication on the server and excluded private saved values and profile-changing commands. Corrections, changed preferences and ending a session clear the old explanation. I also handled publication failures so a broken display connection cannot leave the test running.
+
+I expanded the local seven-step review to show a held preference check, correct the color and finish with cleared notes. I completed this review myself. Separately, I checked the server-to-browser flow against the local SQL test ledger, including a fresh session receiving none of the old notes or explanations.
+
+All 1,059 prototype checks, type checking and build pass, plus 50 local SQL checks, thirteen owner scenarios and nineteen browser scenarios. These results use simulated providers and profiles. Customer acceptance, live quality and real saved-profile ownership remain open.

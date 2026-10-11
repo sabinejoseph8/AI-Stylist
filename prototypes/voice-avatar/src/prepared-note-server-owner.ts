@@ -21,7 +21,7 @@ type SessionOptions = Parameters<typeof createPreparedNoteProviderSession>[0];
  * A future notes-only ledger requires its own approved allowance and adapter.
  * This module has no route, credential loading or application-server call site. */
 type Allowance = Pick<ExperimentBudget, 'reserve' | 'closeVerified'> & {purpose: 'notes-only-simulation'};
-type Hooks = {capture?: ProbeCapture; publish?: (snapshot: ReturnType<NotebookState['snapshot']>, receipt: number | null) => void; ready?: () => void; turnReady?: (turnId: string) => void; stopped?: () => void};
+type Hooks = {clarificationChanged?: (record:PreferenceClarification|null)=>void; capture?: ProbeCapture; publish?: (snapshot: ReturnType<NotebookState['snapshot']>, receipt: number | null) => void; ready?: () => void; turnReady?: (turnId: string) => void; stopped?: () => void};
 type Request = {method: string; path: string; host: string; origin: string; authorization?: string; signal: AbortSignal};
 export function createPreparedNoteServerOwner(options: {
  simulation?: boolean; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceAuthority;
@@ -44,7 +44,7 @@ export function createPreparedNoteServerOwner(options: {
    state = 'starting';
    const controller = new AbortController(), notebook = new NotebookState(), release = new LookRelease(notebook);
    let clarification:PreferenceClarification|null=null;
-   const unsubscribeClarification=notebook.subscribe(()=>{clarification=null;});
+   const unsubscribeClarification=notebook.subscribe(()=>{setClarification(null);});
    const unsubscribePreferences = preferences.subscribe(() => {
     notebook.preferencesChanged(); // Revoke look and speech permissions synchronously.
     if (!preferences.snapshot()) {stop(); return;}
@@ -55,7 +55,7 @@ export function createPreparedNoteServerOwner(options: {
    });
    let reservation: string | undefined, session: Session | undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
-   const detach = () => {clearTimeout(timer); unsubscribePreferences(); unsubscribeClarification(); clarification=null; request.signal.removeEventListener('abort', stop);};
+   const detach = () => {clearTimeout(timer); unsubscribePreferences(); unsubscribeClarification(); setClarification(null); request.signal.removeEventListener('abort', stop);};
    const finish = (): Promise<void> => {
     if (finishPromise) return finishPromise;
     // Install the shared completion before synchronous cleanup can publish
@@ -78,6 +78,10 @@ export function createPreparedNoteServerOwner(options: {
     // A late reservation is closed by the awaiting start, never forgotten.
     if (reservation) void finish();
    };
+   const setClarification=(record:PreferenceClarification|null)=>{
+    if(clarification===record)return;clarification=record;
+    try{hooks.clarificationChanged?.(record);}catch{stop();}
+   };
    const timer = setTimeout(stop, 85_000);
    request.signal.addEventListener('abort', stop, {once: true});
    try {reservation = await options.allowance.reserve();}
@@ -88,7 +92,7 @@ export function createPreparedNoteServerOwner(options: {
    }
    if (ending || request.signal.aborted) {await finish(); return {status: 499 as const};}
    try {
-    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, inputStarted: () => {clarification=null;release.end();}, invalidated: () => {release.end(); hooks.publish?.(notebook.snapshot(), null);}, ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
+    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, inputStarted: () => {setClarification(null);release.end();}, invalidated: () => {release.end(); hooks.publish?.(notebook.snapshot(), null);}, ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
    } catch {
     creationFailed = true; await finish(); return {status: 503 as const};
    }
@@ -98,13 +102,14 @@ export function createPreparedNoteServerOwner(options: {
    // notebook wire. The narrow fixture checker receives the same immutable data
    // that generates the sample description; no caller-supplied pass is accepted.
    const available = () => !ending && !controller.signal.aborted && state === 'active' && Boolean(preferences.snapshot()) && session?.probe.readyForLook() === true;
-   const allowed = () => {if (available()) return true; clarification=null;release.end(); return false;};
+   const allowed = () => {if (available()) return true; setClarification(null);release.end(); return false;};
    let pendingLook: {ticket: CheckTicket; prepared: ReturnType<typeof prepareSyntheticLook>; profileRevision: number} | null = null;
    const looks = Object.freeze({
     begin: (candidate: SyntheticLookCandidate): CheckTicket | null => {
      if (!allowed()) return null;
      // Even malformed replacement data revokes the previously approved sample.
-     clarification=null; release.end(); pendingLook = null;
+     setClarification(null); release.end(); pendingLook = null;
+     if(!available())return null;
      let prepared: ReturnType<typeof prepareSyntheticLook>;
      try {prepared = prepareSyntheticLook(candidate);} catch {return null;}
      const ticket = release.begin(prepared.draft); pendingLook = {ticket, prepared, profileRevision: preferences.snapshot()!.revision}; return ticket;
@@ -117,7 +122,7 @@ export function createPreparedNoteServerOwner(options: {
      const snapshot=notebook.snapshot();
      const hold=(outcome:'unknown'|'blocked',reason:string,issues:readonly ClarificationIssue[])=>{
       release.complete(ticket,{outcome,reason});
-      clarification=preparePreferenceClarification({simulation:true,profileRevision:profile.revision,notebook:notebook.snapshot(),ticket,issues});
+      setClarification(preparePreferenceClarification({simulation:true,profileRevision:profile.revision,notebook:notebook.snapshot(),ticket,issues}));
       return null;
      };
      const merged=reconcilePreparedPreferences(profile,snapshot,{simulation:true});
@@ -137,9 +142,9 @@ export function createPreparedNoteServerOwner(options: {
      return release.complete(ticket, checkFixture(snapshot, {...pending.prepared.candidate, excludedColors}));
     },
     clarification: ():PreferenceClarification|null => {
-     if(!available()){clarification=null;return null;}
+     if(!available()){setClarification(null);return null;}
      const current=notebook.snapshot();
-     if(clarification&&(preferences.snapshot()?.revision!==clarification.profileRevision||current.session!==clarification.notebookSession||current.revision!==clarification.notebookRevision||current.gate?.state!=='held'||current.gate.ticket.id!==clarification.checkId))clarification=null;
+     if(clarification&&(preferences.snapshot()?.revision!==clarification.profileRevision||current.session!==clarification.notebookSession||current.revision!==clarification.notebookRevision||current.gate?.state!=='held'||current.gate.ticket.id!==clarification.checkId))setClarification(null);
      return clarification;
     },
     visual: (permit: LookPermit): LookDraft | null => allowed() ? release.visual(permit) : null,

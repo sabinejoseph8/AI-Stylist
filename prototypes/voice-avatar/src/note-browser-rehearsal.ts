@@ -1,3 +1,5 @@
+import {preparePreferenceClarification} from './preference-clarification.ts';
+import type {PreferenceClarification} from './preference-clarification.ts';
 import {NotebookState} from './notebook-state.ts';
 import type {NoteSessionProbe} from './note-session-probe.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
@@ -10,11 +12,11 @@ import {encodeNoteUpdate} from './note-update-wire.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
 /** Entirely local fixture for reviewing prepared client/session contracts.
  * No WebSocket, microphone, fetch, provider, persistence or authentication claim. */
-export function createNotebookRehearsal(options:{simulation?:boolean;page:EventTarget;visibility:EventTarget&{readonly hidden:boolean};changed:(notes:NoteUpdate|null)=>void;status:(status:ReturnType<PreparedBrowserNoteSession['status']>)=>void}){
+export function createNotebookRehearsal(options:{simulation?:boolean;page:EventTarget;visibility:EventTarget&{readonly hidden:boolean};changed:(notes:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void;status:(status:ReturnType<PreparedBrowserNoteSession['status']>)=>void}){
  if(options.simulation!==true)throw Error('Live notebook rehearsal is disabled.');
  const notebook=new NotebookState(),remote=new PreparedRemoteNoteCapture({simulation:true}),events=new EventTarget(),owner={};
  let probe!:NoteSessionProbe,id='',wireSequence=0,frame:((pcm:ArrayBuffer)=>boolean)|null=null,closed=false,turn=0;
- let pending=false;
+ let pending=false,clarificationSequence=0;
  const timers=new Set<ReturnType<typeof setTimeout>>();
  const later=(fn:()=>void,ms=0)=>{const timer=setTimeout(()=>{timers.delete(timer);if(!closed)fn();},ms);timers.add(timer);};
  const emit=(value:unknown)=>{if(!closed)events.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));};
@@ -30,7 +32,7 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
    probe=prepared.probe;return probe;
  }});
  const stop=()=>{if(closed)return;closed=true;timers.forEach(clearTimeout);timers.clear();frame=null;scope.close();events.dispatchEvent(new Event('close'));};
- const session=new PreparedBrowserNoteSession({simulation:true,capture:{start:async accept=>{frame=accept;return true;},stop:()=>{frame=null;}},changed:options.changed,
+ const session=new PreparedBrowserNoteSession({simulation:true,capture:{start:async accept=>{frame=accept;return true;},stop:()=>{frame=null;}},changed:options.changed,clarificationChanged:options.clarificationChanged,
    socket:{bufferedAmount:0,close:stop,send:value=>{
      if(closed)throw Error('Rehearsal ended.');
      if(value instanceof ArrayBuffer){if(!scope.audio(owner,id,value))stop();return;}
@@ -57,5 +59,13 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
      },100);
    };later(capture,200);return true;
  }
- return{session,play,turns:()=>turn,dispose:()=>{binding.dispose();stop();},snapshot:()=>({closed,turns:turn,server:probe?.snapshot()??null,notes:notebook.snapshot()})};
+ function explain(){
+   if(closed||session.status().state!=='ready'||notebook.snapshot().notes.color.status!=='confirmed')return false;
+   // Scripted held-check presentation only, not a real saved customer profile.
+   emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record:null});
+   const ticket=notebook.beginCheck();notebook.completeCheck(ticket,{outcome:'unknown',reason:'Scripted preference conflict.'});
+   const record=preparePreferenceClarification({simulation:true,profileRevision:1,notebook:notebook.snapshot(),ticket,issues:[{field:'color',reason:'request-conflict'}]});
+   emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record});return !closed;
+ }
+ return{session,play,explain,turns:()=>turn,dispose:()=>{binding.dispose();stop();},snapshot:()=>({closed,turns:turn,server:probe?.snapshot()??null,notes:notebook.snapshot()})};
 }

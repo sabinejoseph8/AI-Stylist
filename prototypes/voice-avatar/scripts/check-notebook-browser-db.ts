@@ -1,3 +1,5 @@
+import {SimulatedContractPreferenceSource} from '../src/simulated-contract-preference-source.ts';
+import type {SimulatedPreferenceAuthority} from '../src/simulated-contract-preference-source.ts';
 /** Invoked only after the owner harness verifies its isolated synthetic database. */
 import assert from 'node:assert/strict';
 import {createServer} from 'node:http';
@@ -20,7 +22,7 @@ async function until(check:()=>boolean,timeout=4000) {
  const deadline=Date.now()+timeout;
  while(!check()) {if(Date.now()>deadline)throw Error('Local browser check did not settle.');await new Promise(resolve=>setTimeout(resolve,10));}
 }
-async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceSource) {
+async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceAuthority) {
  let calls=0,providers=0,closed=0,closureGated=false,release:()=>void=()=>{};
  let signalPending!:()=>void;
  const pending=new Promise<void>(resolve=>{signalPending=resolve;});
@@ -46,7 +48,8 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
  const persistence=createPreparedNotePersistenceTransport({simulation:true,url:'https://fixture.supabase.co',fetch});
  const allowance=new PreparedNoteAllowance({simulation:true,persistence});
  const server=createServer((_req,res)=>{res.writeHead(404);res.end();});
- const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,preferences,createTransports:()=>{
+ let active:Parameters<NonNullable<Parameters<typeof attachProtectedSimulatedNoteBridge>[1]['sessionReady']>>[0]|undefined;
+ const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,preferences,sessionReady:session=>{active=session;},createTransports:()=>{
   providers++;
   const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:()=>{closed++;if(fault==='provider-close-failed')throw Error('Synthetic cleanup uncertainty.');},send:(value:string)=>{
    if(JSON.parse(value).type==='session.update')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));
@@ -93,11 +96,11 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
    bridge.dispose();server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()));
   }
  }
- return {bridge,pending,release:()=>release(),connect,denied,dispose,emit:(value:unknown)=>emit(value),failProvider:()=>failProvider(),counts:()=>({calls,providers,closed})};
+ return {active:()=>{if(!active)throw Error("No simulated server session");return active;},bridge,pending,release:()=>release(),connect,denied,dispose,emit:(value:unknown)=>emit(value),failProvider:()=>failProvider(),counts:()=>({calls,providers,closed})};
 }
 export async function checkNotebookBrowserDb(db:Database){
  const fixtures:Awaited<ReturnType<typeof harness>>[]=[];
- const open=async(fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceSource)=>{const fixture=await harness(db,fault,extract,preferences);fixtures.push(fixture);return fixture;};
+ const open=async(fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceAuthority)=>{const fixture=await harness(db,fault,extract,preferences);fixtures.push(fixture);return fixture;};
  const response=(turnId:string,text:string)=>Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId,patches:[{field:'color',value:text,evidence:text}]})}]}]});
  const fragment=(init:RequestInit)=>JSON.parse(JSON.parse(init.body as string).input[0].content[0].text) as {turnId:string;currentFragment:string};
  const delta=(index:number,text:string)=>({type:'conversation.item.input_audio_transcription.delta',event_id:`delta_${index}`,item_id:`item_${index}`,content_index:0,delta:text});
@@ -297,6 +300,22 @@ export async function checkNotebookBrowserDb(db:Database){
   rapidProfile.replace(4,['private_four']);await commit(rapidFixture,rapidClient,2,'red');assert.equal(rapidClient.session.snapshot().ended,false);
   assert.equal(rapidClient.session.snapshot().connection.notes!.notes.color.status,'tentative');assert.ok(!rapidClient.messages.join('').includes('private_'));
   rapidClient.session.stop();await until(()=>!rapidFixture.bridge.snapshot().active);assert.deepEqual(rapidFixture.counts(),{calls:4,providers:1,closed:1});assert.equal((await db.read()).runs[0]!.closed,true);await clear();
-  console.log('18 local SQL-backed loopback browser scenarios passed, including separate profile invalidation and isolation. Devices and providers were synthetic.');
+  await db.reset();
+  const explanationSource=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[{id:'private_rule_id',field:'color',kind:'required',status:'confirmed',value:'private_saved_color'}]}});
+  const explanationFixture=await open('none',undefined,explanationSource),explanationClient=explanationFixture.connect();await until(()=>explanationClient.session.status().state==='ready');
+  assert.equal(explanationClient.session.edit('color','green'),true);await until(()=>!explanationClient.session.snapshot().connection.pending);
+  const candidate={id:'fixture',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:100,currency:'USD' as const};
+  let explanationTicket=explanationFixture.active().looks.begin(candidate)!;assert.ok(explanationTicket);assert.equal(explanationFixture.active().looks.complete(explanationTicket),null);
+  await until(()=>explanationClient.session.snapshot().connection.clarification!==null);
+  assert.equal(explanationClient.session.snapshot().connection.clarification!.issues[0]!.reason,'request-conflict');
+  assert.ok(!explanationClient.messages.join('').includes('private_saved_color'));assert.ok(!explanationClient.messages.join('').includes('private_rule_id'));
+  assert.equal(explanationClient.session.edit('color','blue'),true);assert.equal(explanationClient.session.snapshot().connection.clarification,null);await until(()=>!explanationClient.session.snapshot().connection.pending);
+  explanationSource.replace(1,[{id:'private_rule_id',field:'color',kind:'required',status:'uncertain',value:null}]);await until(()=>explanationClient.session.snapshot().connection.notes!.revision===explanationFixture.active().snapshot().revision);
+  explanationTicket=explanationFixture.active().looks.begin({...candidate,color:'blue'})!;assert.equal(explanationFixture.active().looks.complete(explanationTicket),null);
+  await until(()=>explanationClient.session.snapshot().connection.clarification?.profileRevision===2);assert.equal(explanationClient.session.snapshot().connection.clarification!.issues[0]!.reason,'saved-uncertain');
+  explanationClient.session.stop();await until(()=>!explanationFixture.bridge.snapshot().active);assert.equal(explanationClient.session.snapshot().connection.clarification,null);assert.equal((await db.read()).runs[0]!.closed,true);
+  const explanationReplacement=explanationFixture.connect();await until(()=>explanationReplacement.session.status().state==='ready');assert.equal(explanationReplacement.session.snapshot().connection.clarification,null);assert.equal(explanationReplacement.session.snapshot().connection.notes!.notes.color.value,'');
+  explanationReplacement.session.stop();await until(()=>!explanationFixture.bridge.snapshot().active);assert.deepEqual(explanationFixture.counts(),{calls:8,providers:2,closed:2});assert.ok((await db.read()).runs.every(run=>run.closed));await clear();
+  console.log('19 local SQL-backed loopback browser scenarios passed, including safe clarification delivery, revision clearing and replacement isolation. Devices and providers were synthetic.');
  }finally{await clear();}
 }

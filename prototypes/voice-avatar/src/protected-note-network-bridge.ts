@@ -13,6 +13,8 @@ type Started = Extract<Awaited<ReturnType<ReturnType<typeof createPreparedNoteSe
 export function attachProtectedSimulatedNoteBridge(server: Server, options: {
  simulation?: boolean; preview: OwnerOptions['preview']; allowance: OwnerOptions['allowance'];
  preferences?: OwnerOptions['preferences'];
+ /** Server-only simulation observer. Never exposed as a browser command. */
+ sessionReady?: (session:Started)=>void;
  createTransports: () => {socket: SimulatedTranscriptionSocket; fetch: SimulatedExtractionFetch};
 }) {
  if (options.simulation !== true) throw Error('Live protected notebook bridge is disabled.');
@@ -20,19 +22,20 @@ export function attachProtectedSimulatedNoteBridge(server: Server, options: {
   if (!capture) throw Error('Simulated capture required.');
   return {...options.createTransports(), capture};
  }});
- const bridge = attachSimulatedNoteBridge(server, {simulation: true, preview: options.preview, deferReady: true, create: (publish, capture, turnReady, ended, ready, req) => {
+ const bridge = attachSimulatedNoteBridge(server, {simulation: true, preview: options.preview, deferReady: true, create: (publish, capture, turnReady, ended, ready, req, clarify) => {
   const abort = new AbortController();
   let active: Started | undefined, stopping = false, finished = false;
   const stop = () => {stopping = true; abort.abort(); if (active) void active.end();};
   const settled = () => {finished = true; ended();};
   const pendingSnapshot = {ended: false, reason: null, capturing: false, acquiring: true, transcription: null, notes: {accepted: 0, rejected: 0, applied: 0, failures: 0, extracting: false, queued: false, timing: new NoteTiming().report()}, liveEnabled: false as const};
   void owner.start({method: req.method ?? '', path: req.url ?? '', host: req.headers.host ?? '', origin: req.headers.origin ?? '', authorization: req.headers.authorization, signal: abort.signal}, {
-   capture, publish, turnReady, ready: () => {if (!stopping) ready();}, stopped: settled,
+   capture, publish, clarificationChanged:clarify, turnReady, ready: () => {if (!stopping) ready();}, stopped: settled,
   }).then(async result => {
    if (result.status !== 200) {settled(); return;}
    active = result;
    if (stopping) {await active.end(); return;}
    publish(active.snapshot(), null);
+   try{options.sessionReady?.(active);}catch{stop();}
   }, () => {stop(); settled();});
   const facade: NoteConnectionProbe = {
    audio: frame => !stopping && Boolean(active?.probe.audio(frame)),

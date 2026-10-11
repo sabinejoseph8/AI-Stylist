@@ -266,3 +266,14 @@ describe('server-owned synthetic look authorization', () => {
  });
 
 });
+
+
+describe('server clarification notification cleanup',()=>{
+ const draft={id:'fixture',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:100,currency:'USD' as const};
+ async function fixture(changed:(record:unknown)=>void){
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[{id:'color',field:'color',kind:'required',status:'confirmed',value:'blue'}]}}),s=setup(source),active=await s.owner.start(request(),{clarificationChanged:changed});if(active.status!==200)throw Error('start');
+  active.probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}});active.probe.edit('color','green',0);return{...s,active};
+ }
+ it('closes once and clears when clarification publication throws',async()=>{const changed=vi.fn(()=>{throw Error('private publisher');}),s=await fixture(changed);const ticket=s.active.looks.begin(draft)!;expect(s.active.looks.complete(ticket)).toBeNull();await s.active.end();expect(s.active.looks.clarification()).toBeNull();expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);expect(changed).toHaveBeenLastCalledWith(null);expect(s.owner.status().state).toBe('idle');});
+ it('does not begin a new check after a clear callback reentrantly ends the session',async()=>{let end:(()=>void)|undefined;const s=await fixture(record=>{if(record===null)end?.();});const ticket=s.active.looks.begin(draft)!;s.active.looks.complete(ticket);end=()=>{void s.active.end();};expect(s.active.looks.begin(draft)).toBeNull();await s.active.end();expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);expect(s.active.looks.clarification()).toBeNull();});
+});
