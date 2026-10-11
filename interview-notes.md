@@ -650,3 +650,5 @@ I added confirmed deletion for saved looks and tested competing edits. Only one 
 I reused the existing catalog rules for saved retail history instead of creating a second validator. A dated saved snapshot cannot act as a fresh recommendation approval. The checks reject stale facts, unapproved imagery and sample products. All 103 foundation tests and 1,273 prototype regression tests passed.
 
 I prepared an image sanitizer that checks actual bytes, removes photo metadata and corrects orientation before producing a bounded WebP image. I tested with generated images rather than customer photos. The foundation suite passes 112 checks. I kept deployment resource limits and actual uploads as unfinished work.
+
+I prepared an image lifecycle that treats a lost response as uncertainty rather than permission to erase data. Uploads are staged first, and deletion cannot finalize until object removal is acknowledged. I verified these paths with simulated adapters and generated images. Actual database locking and hosted storage remain unfinished.
