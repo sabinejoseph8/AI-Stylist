@@ -632,3 +632,5 @@ Follow-up: 19 local checks now pass, including owner-only Storage policy reads, 
 ## Explicit saves and competing edits
 
 I added a controlled wardrobe save so a conversation cannot silently become saved data. A save requires consent and the current revision. Two simultaneous edits cannot overwrite each other: one succeeds and the other must refresh. I also blocked linking another customer's photo. Forty isolated database checks and 33 foundation checks passed; hosted integration remains separate.
+
+I extended those protections to deletion and added an automated database check in GitHub. Deleting a wardrobe entry leaves its image intact until reference-aware cleanup can prove it is unused. This avoids removing an image another saved item still needs. Fifty local database checks now pass.

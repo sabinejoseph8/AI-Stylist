@@ -451,3 +451,8 @@ Added an unapplied ordered wardrobe migration with same-owner asset references, 
 Evidence: 40 isolated PostgreSQL checks pass, including two concurrent edits with exactly one winner, cross-owner references, direct-write denials and function privilege configuration. Storage checks use a minimal synthetic schema, not a real Storage API. All 33 foundation tests, type checking and build pass. The first sandbox test run could not bind its loopback test socket; rerunning with authorized local execution passed. Temporary database containers were removed. No Supabase or Render change occurred. Task 2b remains open.
 
 Exact next action: prepare strict saved-profile and saved-look persistence boundaries, controlled deletion and safe media upload interfaces; extend migration upgrade/rollback checks. Preserve explicit-save-only persistence and profile-revision invalidation. Hosted signed-URL and account-isolation acceptance remain blocked by the separate integration/Phase 1 gates. Sabine has no action for the remaining local preparation.
+
+
+### Controlled deletion and continuous database checks
+
+Prepared wardrobe deletion requires owner identity, explicit confirmation and the current revision. It removes only the selected wardrobe metadata; shared image objects are preserved pending reference-aware cleanup. Fifty local database checks pass. Added a dedicated GitHub job for the pinned isolated database rehearsal and included migration changes in its triggers. Hosted Storage and signed URLs remain unverified. Next: saved profile/look schemas and safe upload/reference-aware cleanup interfaces. Task 2b is still incomplete; no action is needed from Sabine for local preparation.

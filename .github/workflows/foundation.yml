@@ -1,9 +1,9 @@
 name: Foundation checks
 on:
   push:
-    paths: ['apps/foundation/**', 'packages/style-contracts/**', '.github/workflows/foundation.yml']
+    paths: ['apps/foundation/**', 'packages/style-contracts/**', 'supabase/**', '.github/workflows/foundation.yml']
   pull_request:
-    paths: ['apps/foundation/**', 'packages/style-contracts/**', '.github/workflows/foundation.yml']
+    paths: ['apps/foundation/**', 'packages/style-contracts/**', 'supabase/**', '.github/workflows/foundation.yml']
 permissions:
   contents: read
 jobs:
@@ -39,3 +39,11 @@ jobs:
       - run: npm run test:phase-1
       - run: npm run typecheck
       - run: npm run build
+
+  data-protections:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - run: docker pull postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3
+      - run: python3 apps/foundation/scripts/check-data-protections.py

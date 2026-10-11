@@ -76,6 +76,14 @@ try:
  sql(f"insert into public.stylist_wardrobe_items(user_id,asset_id,label) values ('{b}','{asset}','Foreign');",False)
  sql(actor(a,f"insert into public.stylist_wardrobe_items(user_id,asset_id,label) values ('{a}','{asset}','Bypass');"),False)
  assert sql("select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname='stylist_save_wardrobe' and p.prosecdef and p.proconfig=array['search_path=\"\"'];")=='1'
- print('40 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110004_controlled_wardrobe_delete.sql').read_text())
+ for uid,revision,confirm in [(a,2,'true'),(b,3,'true'),('',3,'true'),(a,3,'false'),(a,3,'null')]:
+  sql(actor(uid,f"select public.stylist_delete_wardrobe('{item}',{revision},{confirm});"),False)
+ assert sql(actor(a,'select count(*) from public.stylist_wardrobe_items;'))=='1'
+ assert sql(actor(a,f"select public.stylist_delete_wardrobe('{item}',3,true);"))=='t'
+ sql(actor(a,f"select public.stylist_delete_wardrobe('{item}',3,true);"),False)
+ assert sql(actor(a,'select count(*) from public.stylist_wardrobe_items;'))=='0'
+ assert sql('select count(*) from public.stylist_media_assets;')=='1'
+ print('50 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])
