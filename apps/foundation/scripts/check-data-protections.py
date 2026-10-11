@@ -1,6 +1,7 @@
 """Isolated PostgreSQL rehearsal, with synthetic Supabase identity roles only."""
 from pathlib import Path
 import subprocess, time, uuid
+from concurrent.futures import ThreadPoolExecutor
 name='stylist-data-'+uuid.uuid4().hex[:10]
 image='postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
 def run(args, **kw):
@@ -45,6 +46,36 @@ try:
  assert sql(actor(a,"with changed as (delete from storage.objects returning *) select count(*) from changed;"))=='0'
  assert sql(actor(a,"with changed as (update storage.objects set name='changed' returning *) select count(*) from changed;"))=='0'
  assert sql("select public::text || ':' || file_size_limit::text from storage.buckets where id='stylist-wardrobe';")=='false:10485760'
- print('19 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110003_controlled_wardrobe.sql').read_text())
+ asset=sql('select id from public.stylist_media_assets limit 1;')
+ def save(uid,label='Jacket',consent='true',item='null',revision='0',expected=True):
+  return sql(actor(uid,f"select (public.stylist_save_wardrobe('{asset}','{label}',{consent},{item},{revision})).id;"),expected)
+ save(a,consent='false',expected=False)
+ save(a,consent='null',expected=False)
+ save(a,label='',expected=False)
+ save(a,revision='1',expected=False)
+ save(b,expected=False)
+ save('',expected=False)
+ item=save(a)
+ assert sql(actor(a,'select revision from public.stylist_wardrobe_items;'))=='1'
+ assert sql(actor(b,'select count(*) from public.stylist_wardrobe_items;'))=='0'
+ save(b,item=f"'{item}'",revision='1',expected=False)
+ save(a,item=f"'{item}'",revision='1')
+ save(a,item=f"'{item}'",revision='1',expected=False)
+ assert sql(actor(a,'select revision from public.stylist_wardrobe_items;'))=='2'
+ sql(actor(a,"update public.stylist_wardrobe_items set label='Bypass';"),False)
+ sql(actor(a,'delete from public.stylist_wardrobe_items;'),False)
+ sql('set role anon; select public.stylist_save_wardrobe(null, null, true);',False)
+ def race():
+  query=actor(a,f"select (public.stylist_save_wardrobe('{asset}','Concurrent',true,'{item}',2)).revision;")
+  return run(['docker','exec','-i',name,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],input=query)
+ with ThreadPoolExecutor(max_workers=2) as pool:
+  results=list(pool.map(lambda _:race(),range(2)))
+ assert sum(r.returncode==0 for r in results)==1
+ assert sql(actor(a,'select revision from public.stylist_wardrobe_items;'))=='3'
+ sql(f"insert into public.stylist_wardrobe_items(user_id,asset_id,label) values ('{b}','{asset}','Foreign');",False)
+ sql(actor(a,f"insert into public.stylist_wardrobe_items(user_id,asset_id,label) values ('{a}','{asset}','Bypass');"),False)
+ assert sql("select count(*) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname='public' and p.proname='stylist_save_wardrobe' and p.prosecdef and p.proconfig=array['search_path=\"\"'];")=='1'
+ print('40 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

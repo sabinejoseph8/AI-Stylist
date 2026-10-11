@@ -627,3 +627,8 @@ I reviewed the local foundation and confirmed all four navigation destinations a
 I approved local data-protection work before the remaining provider checks finished. I started with saved-image records: customers can read their own records, while direct changes are blocked until controlled save interfaces exist. Twelve isolated database checks passed. I kept this evidence separate from hosted Storage and signed-link verification, which still need checking.
 
 Follow-up: 19 local checks now pass, including owner-only Storage policy reads, anonymous/other-owner isolation, blocked upload/update/delete and private bucket limits against a minimal synthetic Storage schema. This does not test real Storage APIs or signed URLs. Next: strict consent/revision-controlled saved-data interfaces and same-owner references.
+
+
+## Explicit saves and competing edits
+
+I added a controlled wardrobe save so a conversation cannot silently become saved data. A save requires consent and the current revision. Two simultaneous edits cannot overwrite each other: one succeeds and the other must refresh. I also blocked linking another customer's photo. Forty isolated database checks and 33 foundation checks passed; hosted integration remains separate.

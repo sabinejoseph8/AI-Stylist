@@ -455,3 +455,12 @@ Sabine approved local Task 2b database and protection-test preparation while Pha
 Exact next action: extend local migration/test coverage for Storage owner reads and denied writes, then add strict consent/revision-controlled saved-data interfaces and same-owner references. Keep credentials, live migrations and deployment disabled.
 
 Follow-up: 19 local checks now pass, including owner-only Storage policy reads, anonymous/other-owner isolation, blocked upload/update/delete and private bucket limits against a minimal synthetic Storage schema. This does not test real Storage APIs or signed URLs. Next: strict consent/revision-controlled saved-data interfaces and same-owner references.
+
+
+## Task 2b controlled wardrobe save preparation, 11 October 2026
+
+Added an unapplied ordered wardrobe migration with same-owner asset references, owner-only reads, blocked direct writes, explicit-save consent, server-owned timestamps and atomic expected-revision updates. The privilege-elevating save function has an empty search path and derives identity from auth.uid(), never a request-body customer ID. No live route or provider is attached. Strict request decoding rejects extra fields, transcripts, notebook payloads, ownership claims, absent consent and invalid revisions.
+
+Evidence: 40 isolated PostgreSQL checks pass, including two concurrent edits with exactly one winner, cross-owner references, direct-write denials and function privilege configuration. Storage checks use a minimal synthetic schema, not a real Storage API. All 33 foundation tests, type checking and build pass. The first sandbox test run could not bind its loopback test socket; rerunning with authorized local execution passed. Temporary database containers were removed. No Supabase or Render change occurred. Task 2b remains open.
+
+Exact next action: prepare strict saved-profile and saved-look persistence boundaries, controlled deletion and safe media upload interfaces; extend migration upgrade/rollback checks. Preserve explicit-save-only persistence and profile-revision invalidation. Hosted signed-URL and account-isolation acceptance remain blocked by the separate integration/Phase 1 gates. Sabine has no action for the remaining local preparation.
