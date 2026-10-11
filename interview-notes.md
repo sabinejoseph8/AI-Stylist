@@ -696,3 +696,8 @@ I added database checks to reject future or fractional source timestamps and inv
 ## Preparing a private database connection
 
 I added a disabled server-side Supabase adapter for saved looks. It only targets the configured Supabase project, keeps the key in server request headers, refuses redirects and bounds request and response time and size. I verified failures with simulated responses; I did not call the live database. The timestamp checks in the newest database migration still need an isolated PostgreSQL run after the system approval limit clears.
+
+
+## Preparing private wardrobe image storage
+
+I added a disabled Supabase Storage adapter for the private wardrobe-image bucket. It accepts only bounded sanitized image bytes and exact owner-scoped paths, refuses overwrites and redirects, hashes downloaded bytes before reconciliation, and removes one confirmed object key at a time. I tested it with simulated requests, including stalled and oversized streams. The adapter is not connected to a live route, and I did not send a photo or call my Supabase project. The database timestamp checks and actual hosted storage still need verification.

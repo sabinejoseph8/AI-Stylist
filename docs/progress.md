@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Latest local Task 2b checkpoint: 129 unprivileged foundation tests, type checking and build pass. The preceding 146-test and isolated SQL mixed-look/image recovery suite passed before the latest database timestamp hardening; that SQL change is awaiting rerun because the system usage limit blocks Docker approval. Hosted Storage and signed URLs remain unverified; migrations remain unapplied remotely. Task 2b stays open.
+Latest local Task 2b checkpoint: 148 foundation tests pass across 13 files when excluding the existing loopback-binding test, with type checking and build passing. The isolated SQL mixed-look/image recovery suite passed before the latest database timestamp hardening; rerun it when the system execution limit permits. A simulated-only Supabase Storage adapter now covers bounded no-overwrite uploads, checksum reads and exact-key deletion. Hosted Storage and signed URLs remain unverified; migrations remain unapplied remotely. Task 2b stays open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -27,6 +27,14 @@ Autonomous execution is authorized by Sabine on 10 October 2026. Routine technic
 - **Spoken test:** Generated reply/avatar audio and mouth movement are accepted on desktop and physical iPhone. The phone explicit interruption and connection closure passed. The prototype supports two buffered exchanges per bounded room. Spoken interrupt-and-end is accepted on iPhone; precise lip-sync timing and conversational resume remain pending. Live notes and looks are not built.
 - **Recent changes:** Prepared server-owned look authorization and immutable internally checked synthetic candidates. Candidate checks use the authoritative notebook; new input, note edits and shutdown revoke both display and queued speech. Missing confirmations, conflicts, excessive prices and stale results are held. Exclusions now come from a separate server-injected simulated source. Real saved-profile validation, product discovery and media gating are not accepted.
 - **Publishing:** Source, tests and project documents are published to the public AI-Stylist repository. The protected Render Free preview deployed successfully from the verified publication commit. Credentials and private ledgers were excluded from GitHub.
+
+## Task 2b local Storage transport preparation, 11 October 2026
+
+Prepared `apps/foundation/src/server/supabase-storage.ts` as an explicitly constructed, server-only boundary. It validates an HTTPS Supabase project origin and bounded injected service key, permits only exact owner-folder keys, uploads sanitized WebP with overwrite disabled, hashes bytes retrieved from the authenticated object route, and removes one exact path. Redirects are refused, objects and streamed reads are bounded, calls have an eight-second deadline, and failures are redacted. No route constructs this adapter and all Storage calls are mocked.
+
+Evidence: 148 tests across 13 files pass, excluding the existing test that attempts a loopback bind denied by the current execution environment. Type checking and production build pass. Ten focused cases cover config, key restrictions, upload, error handling, checksum reads, missing versus unknown, delete, timeout and stream cancellation. No hosted bucket, image, key, signed URL or live API call was used. The latest SQL timestamp guards still need isolated PostgreSQL verification; remote migrations remain unapplied.
+
+Next: rerun SQL checks when the execution limit allows, then connect reconciliation to this adapter through injected simulations. Preserve Task 2b's local-only and Phase 1 gates.
 
 ## Project memory review, 9 October 2026
 

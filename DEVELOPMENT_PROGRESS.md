@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2b local preparation is active. Latest evidence: 146 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
+Task 2b local preparation is active. Latest evidence: 148 foundation tests (excluding the loopback-binding test), type checking/build and earlier SQL-backed recovery paths pass. SQL timestamp hardening still needs a rerun. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
 
 ## Completed evidence
 
@@ -634,3 +634,12 @@ Added an explicitly constructed server-only RPC transport and mixed-look Supabas
 Evidence: 138 tests pass when excluding the existing HTTP test that cannot bind loopback under the current execution limit; type checking, build and whitespace checks pass. Simulated checks cover destination validation, headers, redirect refusal, request/response sizes, malformed/status errors, timeout, cancellation and mixed-look RPC response validation. No live Supabase request was made. The migration's latest timestamp guards remain unverified because the approval system blocked the isolated Docker run.
 
 Exact next action: rerun the isolated PostgreSQL suite after approval is available. Then copy the pending commits to the AI stylist folder, push to GitHub and publish the refreshed private Memory site. Continue local work without exceeding Phase 1 or spending boundaries.
+
+
+## Disabled Supabase Storage adapter preparation, 11 October 2026
+
+Added an explicitly constructed server-side Storage transport for the existing wardrobe bucket. It restricts requests to an HTTPS Supabase project origin and exact owner-scoped single-file keys, accepts bounded sanitized WebP bytes, sets no-overwrite upload behavior, hashes downloaded object bytes for reconciliation, and removes only the single supplied object path. Requests refuse redirects, use injected credentials, enforce an eight-second deadline, bound stored objects to 10 MiB, cancel stalled/oversized streams and return fixed redacted errors. All requests are injected simulations; no route loads the transport, no API key is read automatically and no live object is accessed.
+
+Evidence: 148 foundation tests across 13 files pass when excluding the existing HTTP test that cannot bind loopback under the current execution limit. Type checking and production build pass. Ten checks cover host/key configuration, owner/path restrictions, no-overwrite uploads, response failures, checksum inspection, absent versus unknown reads, exact-key deletion and timeout/cancellation. SQL timestamp guards remain unverified because the approval system still blocks the isolated Docker run. No hosted Storage, signed URL, customer image or deployment was used.
+
+Exact next action: when the execution limit clears, rerun the isolated PostgreSQL suite including the newest timestamp checks, then complete local reconciliation wiring and its SQL-backed simulated-storage rehearsal. Copy completed docs to the AI Stylist folder, push pending commits and publish the refreshed private Memory site only when those actions are permitted. Task 2b remains local-only.
