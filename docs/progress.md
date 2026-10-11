@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Latest local Task 2b checkpoint: 143 foundation tests and six SQL-backed image recovery paths pass; type checking and build pass. Image deletion receipts fix lost-finalization recovery. Storage is simulated, all new migrations remain unapplied remotely, and Task 2b stays open.
+Latest local Task 2b checkpoint: 145 foundation tests and six SQL-backed image recovery paths pass; type checking and build pass. Image deletion receipts fix lost-finalization recovery. Storage is simulated, all new migrations remain unapplied remotely, and Task 2b stays open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1310,3 +1310,12 @@ The isolated migration rehearsal now carries an existing JPEG record from the fi
 Evidence: isolated SQL and six newer recovery paths plus legacy JPEG deletion pass with simulated storage. 143 foundation tests, type checking and build pass. No hosted migration or actual Storage API was used. Task 2b remains open.
 
 Exact next action: complete the OS/container resource-limit decision and local verification, then persist source-backed retail snapshots and check schema upgrade behavior with hosted Supabase when Phase 1 and approval gates permit. No Sabine action is required for continued local preparation.
+
+
+## Protected retail history preparation, 11 October 2026
+
+Added an unapplied owner-scoped retail history table and service-only save function for dated product facts. It stores source/product/variant IDs, name, category, size, USD price or unknown, US country, product and image URLs, image rights reference, source timestamps and a saved-history marker. Direct writes by customers and anonymous users are blocked. The server boundary requires a verified owner, explicit consent and the existing trusted catalog policy before submitting an immutable whitelisted snapshot. Saved history is not a fresh availability or recommendation approval.
+
+Evidence: the isolated PostgreSQL suite passes direct-write denial, owner isolation and malformed payload rollback. A TypeScript-to-SQL rehearsal persists validated source facts while unsafe URLs and stale facts never reach the database. 145 foundation tests, type checking and build pass. Local synthetic source facts and synthetic Auth/Storage schemas were used. The retail record is not yet linked atomically to a saved look; no live retailer, hosted migration or customer deployment occurred. Task 2b remains open.
+
+Exact next action: link retail history to saved looks through an atomic mixed-item save while retaining owned-item behavior and owner isolation. Resolve OS/container limits for image decoding before customer upload activation. No Sabine action is required for this local preparation.

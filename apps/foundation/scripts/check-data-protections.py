@@ -215,6 +215,22 @@ try:
  checked=run(['node',str(Path(__file__).resolve().parent/'check-media-lifecycle-db.ts'),name],timeout=60)
  assert checked.returncode==0, checked.stderr
  print(checked.stdout.strip())
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110012_retail_history.sql').read_text())
+ snapshot={"sourceId":"fixture","productId":"dress","variantId":"m","name":"Dress","category":"dress","size":"M","priceCents":35000,"currency":"USD","country":"US","productUrl":"https://shop.example/dress","image":{"url":"https://images.example/dress.jpg","rightsReference":"synthetic-test-license"},"checkedAt":1000,"sourceUpdatedAt":900,"status":"saved-history"}
+ def retail(payload,owner=a,expected=True):
+  quoted=json.dumps(payload).replace("'","''")
+  return sql(f"set role service_role; select public.stylist_store_retail_history('{owner}','{quoted}'::jsonb);",expected)
+ retail(snapshot)
+ assert sql(actor(a,'select count(*) from public.stylist_retail_history;'))=='1'
+ assert sql(actor(b,'select count(*) from public.stylist_retail_history;'))=='0'
+ assert sql('set role anon; select * from public.stylist_retail_history;',False)==''
+ sql(actor(a,"update public.stylist_retail_history set name='Bypass';"),False)
+ sql(actor(a,f"select public.stylist_store_retail_history('{a}','{{}}'::jsonb);"),False)
+ for bad in [{**snapshot,'transcript':'private'},{**snapshot,'status':None},{**snapshot,'country':'CA'},{**snapshot,'priceCents':-1},{**snapshot,'image':{'url':'https://images.example/dress.jpg'}},{**snapshot,'productUrl':'http://shop.example/dress'}]:retail(bad,expected=False)
+ assert sql('select count(*) from public.stylist_retail_history;')=='1'
+ checked=run(['node',str(Path(__file__).resolve().parent/'check-retail-history-db.ts'),name],timeout=30)
+ assert checked.returncode==0, checked.stderr
+ print(checked.stdout.strip())
  print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

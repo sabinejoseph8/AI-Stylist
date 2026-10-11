@@ -676,3 +676,8 @@ I moved image decoding into a separate process so a malformed image cannot hold 
 ## Keeping older wardrobe images usable
 
 I found that an early image record can use a JPEG filename that does not match its record ID. I updated deletion and recovery so those records remain manageable after the database upgrade. I confined deletion to a safe filename in the verified customer's folder and tested a nested path rejection. The SQL rehearsal proves the compatibility path locally with simulated object storage.
+
+
+## Saving checked retail facts
+
+I prepared a protected record for the product facts a customer chooses to save. I kept a dated history of the source, price, link and image rights instead of treating saved details as fresh shopping proof. The server checks approved source rules and consent first. The local database rehearsal shows another customer cannot read the record and direct edits are blocked. Retail records still need to be linked to a saved look in one transaction.
