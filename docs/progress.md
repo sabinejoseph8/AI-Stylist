@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Latest local Task 2b checkpoint: 146 foundation tests, type checking, build, and isolated SQL-backed mixed-look and image recovery checks pass. Hosted Storage and signed URLs remain unverified; all new migrations are unapplied remotely. Task 2b stays open. GitHub and private Memory site publication of this newest checkpoint are pending a system usage-limit gate.
+Latest local Task 2b checkpoint: 129 unprivileged foundation tests, type checking and build pass. The preceding 146-test and isolated SQL mixed-look/image recovery suite passed before the latest database timestamp hardening; that SQL change is awaiting rerun because the system usage limit blocks Docker approval. Hosted Storage and signed URLs remain unverified; migrations remain unapplied remotely. Task 2b stays open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1330,3 +1330,12 @@ The server-side mixed-look boundary accepts item identifiers and labels from the
 Evidence: 146 foundation tests, type checking and build pass. The isolated PostgreSQL suite verifies mixed owned/retail save, cross-owner invisibility, stale revision refusal, invalid-component rollback, replacement and deletion cleanup. A TypeScript-to-SQL rehearsal verifies trusted catalog lookup through the atomic write. These use synthetic source facts and synthetic Auth/Storage schemas; they do not prove hosted Storage, signed URLs, retailer permission or live customer access. Task 2b remains open.
 
 Exact next action: define and verify decoder OS/container limits and a hosted-safe retail/source adapter boundary. Continue local schema and access checks; apply no hosted migration until the agreed Phase 1 and security gates are met. No Sabine action is needed for local preparation.
+
+
+## Database-level source timestamp checks, 11 October 2026
+
+Tightened the local retail history function to reject future source checks, fractional timestamps, source update times after the check time, and fractional or out-of-range prices even if callers bypass the TypeScript validator. Added SQL rejection cases for those values.
+
+Evidence: the 129 foundation tests outside the loopback-boundary file, type checking, build and whitespace checks pass. The full suite earlier passed 146 tests, and the isolated SQL suite passed before this latest SQL-only validation change. I could not rerun PostgreSQL after the change because the system usage limit blocks approval for the Docker execution. The new SQL cases remain unverified.
+
+Exact next action: rerun `python3 apps/foundation/scripts/check-data-protections.py` when the execution approval limit clears; fix any SQL failure. Then copy the mixed-look checkpoint to the AI stylist folder, publish GitHub and refresh the private Memory site. Do not bypass the approval limit. Task 2b remains open and local-only.

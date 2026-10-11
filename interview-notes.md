@@ -686,3 +686,8 @@ I prepared a protected record for the product facts a customer chooses to save. 
 ## Saving owned and retail pieces together
 
 I designed saved looks to contain my customer's own clothing and real retail products. Retail product facts come from a checked source, then the look and its dated facts save in one database transaction. If a component fails, the whole save rolls back; deleting or replacing a look removes its unused retail history. I kept the customer request to item IDs and labels so a customer cannot invent a price or shopping link. The local rehearsal passed, while real retailer permission and hosted access remain open.
+
+
+## Guarding saved product history in the database
+
+I added database checks to reject future or fractional source timestamps and invalid prices, even if an application caller bypasses normal catalog validation. The unit checks, type check and build pass. I have not yet rerun PostgreSQL for this final SQL change because the system approval limit blocked Docker; I recorded that as the next verification step.

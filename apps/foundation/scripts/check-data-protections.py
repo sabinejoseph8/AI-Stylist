@@ -226,7 +226,7 @@ try:
  assert sql('set role anon; select * from public.stylist_retail_history;',False)==''
  sql(actor(a,"update public.stylist_retail_history set name='Bypass';"),False)
  sql(actor(a,f"select public.stylist_store_retail_history('{a}','{{}}'::jsonb);"),False)
- for bad in [{**snapshot,'transcript':'private'},{**snapshot,'status':None},{**snapshot,'country':'CA'},{**snapshot,'priceCents':-1},{**snapshot,'image':{'url':'https://images.example/dress.jpg'}},{**snapshot,'productUrl':'http://shop.example/dress'}]:retail(bad,expected=False)
+ for bad in [{**snapshot,'transcript':'private'},{**snapshot,'status':None},{**snapshot,'country':'CA'},{**snapshot,'priceCents':-1},{**snapshot,'priceCents':35000.5},{**snapshot,'checkedAt':9999999999999999},{**snapshot,'sourceUpdatedAt':1100},{**snapshot,'checkedAt':1000.5},{**snapshot,'image':{'url':'https://images.example/dress.jpg'}},{**snapshot,'productUrl':'http://shop.example/dress'}]:retail(bad,expected=False)
  assert sql('select count(*) from public.stylist_retail_history;')=='1'
  checked=run(['node',str(Path(__file__).resolve().parent/'check-retail-history-db.ts'),name],timeout=30)
  assert checked.returncode==0, checked.stderr

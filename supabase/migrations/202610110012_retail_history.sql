@@ -52,6 +52,16 @@ begin
   not (jsonb_typeof(p_snapshot->'sourceUpdatedAt') in ('number','null')) then
   raise exception 'retail history unavailable' using errcode='22023';
  end if;
+ if p_snapshot->>'currency'<>'USD' or p_snapshot->>'country'<>'US' or
+  (p_snapshot->>'checkedAt') !~ '^(0|[1-9][0-9]*)$' or
+  (p_snapshot->>'checkedAt')::numeric>floor(extract(epoch from clock_timestamp())*1000) or
+  p_snapshot->'sourceUpdatedAt'<>'null'::jsonb and
+   ((p_snapshot->>'sourceUpdatedAt') !~ '^(0|[1-9][0-9]*)$' or
+    (p_snapshot->>'sourceUpdatedAt')::numeric>(p_snapshot->>'checkedAt')::numeric) or
+  p_snapshot->'priceCents'<>'null'::jsonb and
+   ((p_snapshot->>'priceCents') !~ '^(0|[1-9][0-9]*)$' or (p_snapshot->>'priceCents')::numeric>10000000) then
+  raise exception 'retail history unavailable' using errcode='22023';
+ end if;
  insert into public.stylist_retail_history(user_id,source_id,product_id,variant_id,name,category,size,price_cents,currency,country,product_url,image_url,image_rights_reference,checked_at_ms,source_updated_at_ms)
  values(p_owner,p_snapshot->>'sourceId',p_snapshot->>'productId',p_snapshot->>'variantId',p_snapshot->>'name',p_snapshot->>'category',p_snapshot->>'size',
   (p_snapshot->>'priceCents')::integer,p_snapshot->>'currency',p_snapshot->>'country',p_snapshot->>'productUrl',p_snapshot->'image'->>'url',
