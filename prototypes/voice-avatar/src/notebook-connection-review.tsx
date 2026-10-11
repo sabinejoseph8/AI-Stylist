@@ -2,7 +2,7 @@ import {PreferenceClarificationPanel} from './notebook-preference-review.tsx';
 import type {PreferenceClarification} from './preference-clarification.ts';
 import React,{useEffect,useRef,useState} from 'react';
 import {createNotebookRehearsal} from './note-browser-rehearsal.ts';
-import {FIELDS} from './notebook-state.ts';
+import {NotebookConnectionEditor} from './notebook-connection-editor.tsx';
 import type {NoteUpdate} from './note-update-wire.ts';
 import type {PreparedBrowserNoteSession} from './note-browser-session.ts';
 export function NotebookConnectionReview(){
@@ -30,10 +30,10 @@ export function NotebookConnectionReview(){
  <button onClick={()=>void play()} disabled={!active||status?.state!=='ready'||turns>=2}>{turns===0?'Play first simulated turn':'Play correction'}</button>
  <button onClick={()=>owner.current?.explain()} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='confirmed'}>Show connection preference explanation</button>
  <button onClick={()=>owner.current?.session.confirm('color')} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='tentative'}>Confirm color</button>
- <h4>Additional preference checks</h4><p>After confirming a color, choose Show multiple preference issues. Color should need clarification, Style should say To confirm, and Budget should remain Not specified. Then choose Simulate changed saved requirements twice: only the latest Style explanation should remain. Focus stays on the button; the explanations use a polite screen-reader announcement. End rehearsal clears everything. These are scripted requirements, not a saved customer profile.</p>
+ <h4>Touch editing checks</h4><p>After the first turn, choose Edit beside any rehearsal note. Change its value and choose Save rehearsal note, or Cancel to keep the original. Confirm tentative notes with Confirm. Budget requires a USD maximum and explicit item-price scope. A change clears the old explanation immediately; a new check is still required. Escape cancels editing and restores focus. End rehearsal or leave the tab to clear notes and any open draft.</p><h4>Additional preference checks</h4><p>After confirming a color, choose Show multiple preference issues. Color should need clarification, Style should say To confirm, and Budget should remain Not specified. Then choose Simulate changed saved requirements twice: only the latest Style explanation should remain. Focus stays on the button; the explanations use a polite screen-reader announcement. End rehearsal clears everything. These are scripted requirements, not a saved customer profile.</p>
  <button onClick={()=>owner.current?.explain('multiple')} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='confirmed'}>Show multiple preference issues</button>
  <button onClick={()=>owner.current?.revise()} disabled={!active||status?.state!=='ready'||!clarification}>Simulate changed saved requirements</button>
  <button onClick={()=>owner.current?.dispose()} disabled={!active}>End rehearsal</button>
- {notes&&<section className="notebook" aria-label="Connection rehearsal notes"><h3>Rehearsal Styling Notes</h3><div className="notes-list">{FIELDS.map(([field,label])=><div className="note-row" key={field}><div><h4>{label}</h4><p>{notes.notes[field].value||'Not specified'}</p><span>{notes.notes[field].status==='tentative'?'To confirm':notes.notes[field].status==='confirmed'?'Confirmed':'Not specified'}</span></div></div>)}</div><PreferenceClarificationPanel record={clarification}/></section>}
+ {notes&&<section className="notebook" aria-label="Connection rehearsal notes"><h3>Rehearsal Styling Notes</h3>{owner.current&&<NotebookConnectionEditor notes={notes} ready={active&&status?.state==='ready'} session={owner.current.session}/>}<PreferenceClarificationPanel record={clarification}/></section>}
  </details>;
 }

@@ -5,6 +5,7 @@ import {NoteUpdateClient} from './note-update-wire.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
 import {FIELDS} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
+export type NoteEditVersion={sessionId:string;notebookSession:number;revision:number};
 export type SimulatedBrowserSocket={send:(message:string|ArrayBuffer)=>void;close:()=>void;bufferedAmount:number};
 const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
 /** Disabled browser transport preparation. The caller injects a simulated socket
@@ -79,12 +80,14 @@ export class NoteBrowserController {
    if(this.socket.bufferedAmount>65536)return this.reject();
    try{const frame=encodeNoteAudio(pcm,this.audioSequence);this.socket.send(frame);this.audioSequence++;return !this.ended;}catch{return this.reject();}
  }
- edit(field:Field,value:string){
+ edit(field:Field,value:string,expected?:NoteEditVersion){
    const update=this.client.snapshot();if(!update||!FIELDS.some(([id])=>id===field)||typeof value!=='string'||value.length>160)return false;
+   if(expected&&(expected.sessionId!==update.sessionId||expected.notebookSession!==update.notebookSession||expected.revision!==update.notes[field].revision))return false;
    return this.send('edit',{field,value,expectedRevision:update.notes[field].revision});
  }
- confirm(field:Field){
+ confirm(field:Field,expected?:NoteEditVersion){
    const update=this.client.snapshot();if(!update||!FIELDS.some(([id])=>id===field)||!update.notes[field].value)return false;
+   if(expected&&(expected.sessionId!==update.sessionId||expected.notebookSession!==update.notebookSession||expected.revision!==update.notes[field].revision))return false;
    return this.send('confirm',{field,expectedRevision:update.notes[field].revision});
  }
  rendered(updateSequence:number){

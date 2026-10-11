@@ -510,3 +510,12 @@ I expanded the notebook review to show several unresolved preferences at once. I
 I tested the visible flow using Enter and Tab. Focus stayed on the active button while explanations changed, and ending the review cleared the notes. I checked screen-reader announcement markup, but I have not yet tested spoken screen-reader output or this new flow on a phone.
 
 All 1,072 prototype tests, type checking and build pass. The review still uses scripted profiles and simulated services; live customer acceptance remains open.
+
+
+## Making notebook corrections safe and accessible
+
+I added touch editing to every field in the connected notebook rehearsal so customers can correct what the stylist understood. I made budget meaning explicit: the customer must confirm a USD maximum for item prices, with shipping and tax separate. I kept these edits temporary and required another preference check before a look could be approved.
+
+I bound each draft to the note version the customer opened, preventing an older draft from overwriting a newer correction. During keyboard review, I found that confirming a note removed the focused button. I fixed this by moving focus to Edit before confirmation. Escape and Cancel keep the original note and restore focus.
+
+All 1,089 prototype tests, type checking, build and isolated database checks pass. I verified the visible simulated editor and recorded the remaining phone, screen-reader and live-provider checks separately. These results do not establish customer launch readiness.

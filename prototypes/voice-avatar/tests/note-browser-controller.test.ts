@@ -38,3 +38,7 @@ describe('provider-ready turn progression',()=>{
 describe('bounded repeated turn identities',()=>{
  it('does not reuse turn IDs or exceed the existing sixteen-turn bound',()=>{const s=setup();s.controller.receive(ready);for(let i=1;i<=16;i++){expect(s.controller.begin(`t${i}`)).toBe(true);s.ack(i*2-1);expect(s.controller.commit()).toBe(true);s.ack(i*2);expect(s.controller.receive({version:1,type:'turn-ready',sessionId:'s1',turnId:`t${i}`})).toBe(true);}expect(s.controller.begin('t1')).toBe(false);expect(s.controller.begin('t17')).toBe(false);s.controller.stop();});
 });
+
+describe('display-bound touch command versions',()=>{
+ it.each(['session','epoch','revision'])('refuses a stale %s for edit and confirmation without sending',kind=>{const s=setup();s.controller.receive(ready);s.notebook.edit('color','Blue');s.controller.receive(s.update());const expected={sessionId:kind==='session'?'old':'s1',notebookSession:kind==='epoch'?2:1,revision:kind==='revision'?0:1};expect(s.controller.edit('color','Red',expected)).toBe(false);expect(s.controller.confirm('color',expected)).toBe(false);expect(s.socket.send).not.toHaveBeenCalled();expect(s.controller.snapshot().notes!.notes.color.value).toBe('Blue');s.controller.stop();});
+});

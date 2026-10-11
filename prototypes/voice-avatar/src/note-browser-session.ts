@@ -1,6 +1,6 @@
 import type {PreferenceClarification} from './preference-clarification.ts';
 import {NoteBrowserController} from './note-browser-controller.ts';
-import type {SimulatedBrowserSocket} from './note-browser-controller.ts';
+import type {NoteEditVersion,SimulatedBrowserSocket} from './note-browser-controller.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
 import type {Field} from './notebook-state.ts';
 export type BrowserNoteCapture={start:(accept:(pcm:ArrayBuffer)=>boolean,stopped:(reason:string)=>void)=>Promise<boolean>;stop:()=>void};
@@ -49,8 +49,8 @@ export class PreparedBrowserNoteSession {
    if(this.cleanupFailed){this.stop();return false;}
    const committed=this.controller.commit();if(!committed)this.stop();return committed;
  }
- edit(field:Field,value:string){return !this.ended&&this.controller.edit(field,value);}
- confirm(field:Field){return !this.ended&&this.controller.confirm(field);}
+ edit(field:Field,value:string,expected?:NoteEditVersion){return !this.ended&&this.controller.edit(field,value,expected);}
+ confirm(field:Field,expected?:NoteEditVersion){return !this.ended&&this.controller.confirm(field,expected);}
  rendered(sequence:number){return !this.ended&&this.controller.rendered(sequence);}
  private stopCapture(){try{this.capture.stop();}catch{this.cleanupFailed=true;}}
  disconnected(){this.stop('connection');}
