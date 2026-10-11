@@ -123,6 +123,16 @@ try:
  sql(actor(a,f"begin; select public.stylist_save_profile({profile},3,true); rollback;"))
  assert sql(actor(a,'select revision from public.stylist_profiles;'))=='3'
  assert sql('select count(*) from stylist_private.profile_changes;')=='3'
- print('85 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110006_profile_revision_read.sql').read_text())
+ snapshot=json.loads(sql(actor(a,'select public.stylist_read_profile_revision();')))
+ assert snapshot['revision']==3 and snapshot['sequence']>0
+ assert json.loads(sql(actor(b,'select public.stylist_read_profile_revision();')))=={'revision':0,'sequence':0}
+ sql('set role anon; select public.stylist_read_profile_revision();',False)
+ sql(actor('','select public.stylist_read_profile_revision();'),False)
+ assert profile_save(a,3)=='4'
+ latest=json.loads(sql(actor(a,'select public.stylist_read_profile_revision();')))
+ assert latest['revision']==4 and latest['sequence']>snapshot['sequence']
+ assert json.loads(sql(actor(b,'select public.stylist_read_profile_revision();')))=={'revision':0,'sequence':0}
+ print('92 data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

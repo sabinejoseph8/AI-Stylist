@@ -1460,3 +1460,12 @@ The active persistent Goal is now created; subsequent idle turns can resume auth
 This fence has no live subscription or database release transaction attached. It cannot prove a current database revision by itself; release must perform an authoritative, serialized revision check. Task 2b and Phase 1 remain open. No remote migration, paid call or deployment occurred.
 
 Exact next action: implement the local revision-event read/consumption boundary and its owner/isolation checks, then saved-look persistence and safe media upload/reference-aware cleanup. Preserve local-only Task 2b authorization and all spending limits. No Sabine action is required for this preparation.
+
+
+## Owner revision snapshot preparation, 11 October 2026
+
+Added an unapplied authenticated revision-reader RPC with no customer-ID argument. Its single SQL snapshot returns only the calling owner's current revision and latest event sequence, including zero/zero for an absent saved profile. Anonymous and missing identities are refused; another customer cannot observe the first customer's sequence. Added a strict local snapshot consumer: unknown fields, inconsistent/backward observations and read failures revoke the attached revision fence. Duplicate snapshots are idempotent and skipped committed revisions are supported.
+
+Evidence: 92 isolated database scenarios and all 78 foundation tests pass, with type checking and build. These are local Auth/Storage simulations, not hosted integration. No API client, live event subscription or transaction-serialized look release is attached. Task 2b remains open. Previous goal turn made concrete progress by committing the revision fence; this turn implements the next consumption boundary.
+
+Exact next action: prepare saved-look tables, same-owner components and controlled explicit-save/revision mutations; then safe media upload/reference-aware cleanup and migration compatibility checks. Keep hosted integration and paid calls disabled under the existing authorization. No action required from Sabine for local preparation.

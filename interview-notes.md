@@ -640,3 +640,5 @@ I also separated explicitly selected profile preferences from the live notebook.
 I prepared profile saves so the preference update and its revision signal succeed together. A stale or invalid save produces neither change. This creates the foundation for checking another tab’s preference changes before releasing a look; the live invalidation connection is still to be built. The isolated database suite now passes 74 checks.
 
 I added a revision fence so newer saved preferences cancel permits based on an older profile. A permit cannot be reused for another customer. I kept the limitation explicit: the fence still needs an authoritative database check before releasing a real look. The foundation suite now passes 65 tests.
+
+I prepared an owner-scoped revision reader so one customer cannot observe another customer’s profile changes. The consumer rejects stale or inconsistent observations and cancels old permits if the read becomes unavailable. This is locally verified; the real database and recommendation release connection remain separate.

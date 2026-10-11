@@ -1,0 +1,8 @@
+import {it,expect,vi} from 'vitest';
+import {ProfileRevisionFence} from '../src/server/profile-revision.ts';
+import {ProfileRevisionReader} from '../src/server/profile-revision-reader.ts';
+function setup(){const cancel=vi.fn();const fence=new ProfileRevisionFence(cancel);return {cancel,fence,reader:new ProfileRevisionReader(fence)};}
+it('accepts missing profile and subsequent saved revision',()=>{const {reader,fence,cancel}=setup();reader.accept({revision:0,sequence:0});const old=fence.capture();reader.accept({revision:1,sequence:5});expect(fence.allows(old)).toBe(false);expect(cancel).toHaveBeenCalledOnce();});
+it('accepts duplicate and skipped revisions',()=>{const {reader,fence}=setup();reader.accept({revision:2,sequence:9});const old=fence.capture();reader.accept({revision:2,sequence:9});expect(fence.allows(old)).toBe(true);reader.accept({revision:4,sequence:20});expect(fence.allows(old)).toBe(false);});
+for(const [name,value] of Object.entries({null:null,extra:{revision:1,sequence:1,user_id:'other'},fraction:{revision:1.5,sequence:1},missing:{revision:1},string:{revision:'1',sequence:1},negative:{revision:-1,sequence:1},emptyMismatch:{revision:0,sequence:1},stale:{revision:1,sequence:5},sameSequence:{revision:3,sequence:9},sameRevision:{revision:2,sequence:10}}))it(`closes on ${name}`,()=>{const {reader,fence}=setup();reader.accept({revision:2,sequence:9});const old=fence.capture();expect(()=>reader.accept(value)).toThrow();expect(fence.allows(old)).toBe(false);});
+it('read failure revokes all permits',()=>{const {reader,fence}=setup();reader.accept({revision:1,sequence:2});const old=fence.capture();reader.unavailable();expect(fence.allows(old)).toBe(false);expect(()=>reader.accept({revision:1,sequence:2})).toThrow();});
