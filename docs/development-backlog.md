@@ -808,6 +808,6 @@ Isolated PostgreSQL compositions add configured startup/end and pending startup/
 ## Project memory tooling, 11 October 2026
 
 - [x] Build and privately publish the requested four-section document website with full source access, design swatches/tables, accessible architecture/data diagrams and durable evidence-based task update tools. Fifteen tests and synthetic preview checks pass.
-- [ ] Verify production authenticated task persistence after Sabine signs into the website. This is a tooling verification, not acceptance of any customer-app build phase.
+- [x] Verify production authenticated task persistence. Save/reload and restoration of Task 1a passed on 11 October 2026. Shared record revision 2 preserves the original 4/41 completed tasks. This is tooling verification, not acceptance of any customer-app build phase.
 
 See docs/project-memory-website.md and https://ai-stylist-project-memory.idealgnat256.chatgpt.site.

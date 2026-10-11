@@ -1080,4 +1080,4 @@ Isolated PostgreSQL compositions add configured startup/end and pending startup/
 
 ## Project memory website, 11 October 2026
 
-Published the owner-private [project memory website](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) with four document tabs, design tokens and diagrams, and evidence-based shared Plan updates. Fifteen website tests and local browser checks pass. ChatGPT sign-in is required for production verification. See docs/project-memory-website.md. No customer-app phase is completed by this tooling work.
+Published the owner-private [project memory website](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) with four document tabs, design tokens and diagrams, and evidence-based shared Plan updates. Fifteen website tests and local browser checks pass. Authenticated production save/reload verification passed; record revision 2 preserves the original 4/41 completed tasks and source alignment. See docs/project-memory-website.md. No customer-app phase is completed by this tooling work.

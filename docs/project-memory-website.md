@@ -8,7 +8,7 @@ Four tabs: Product Spec, Design Spec, Tech Spec and Plan. The complete source Ma
 
 ## Access and AI updates
 
-Sign in with ChatGPT to view the owner-private site. Sites provisioned the private AI Stylist Project Memory plugin. It is reported installed; its tools may require a new Codex chat to appear. The current session has not completed an authenticated production task update.
+Sign in with ChatGPT to view the owner-private site. Sites provisioned the private AI Stylist Project Memory plugin. It is reported installed; its tools may require a new Codex chat to appear. Authenticated browser reads, saves and reload persistence were verified on 11 October 2026.
 
 MCP endpoint: https://ai-stylist-project-memory.idealgnat256.chatgpt.site/mcp
 
@@ -26,6 +26,6 @@ Shared task evidence is stored as a JSON file in the provisioned R2 binding. Sav
 
 ## Verification
 
-All 15 focused website tests pass. Desktop and phone browser checks cover four tabs, 13 swatches, task search/filter, completion dialog, save/reload in the synthetic preview and labeled diagrams. A cramped phone toolbar and diagram label were fixed and checked again. Native Sites confirms successful private deployment with MCP. The production page requires ChatGPT sign-in, so authenticated production persistence remains to be checked after sign-in.
+All 15 focused website tests pass. Desktop and phone browser checks cover four tabs, 13 swatches, task search/filter, completion dialog, save/reload in the synthetic preview and labeled diagrams. A cramped phone toolbar and diagram label were fixed and checked again. Native Sites confirms successful private deployment with MCP. Authenticated production persistence is verified: Task 1a was temporarily reopened with an explicit verification note, reloaded, restored to its previously approved completed status, and reloaded again. Shared record revision 2 shows 4/41 tasks complete and Aligned. No incomplete application task was accepted.
 
 This website is project tooling. The customer app's approved Supabase + Render hosting, provider limits and acceptance gates are unchanged.
