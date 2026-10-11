@@ -1,3 +1,4 @@
+import {reconcilePreparedPreferences} from './preference-contract.ts';
 import {PreviewGate, validatePreview} from './preview-gate.ts';
 import type {PreviewConfig} from './preview-gate.ts';
 import type {ExperimentBudget} from './experiment-budget.ts';
@@ -106,9 +107,15 @@ export function createPreparedNoteServerOwner(options: {
     complete: (ticket: CheckTicket): LookPermit | null => {
      if (!allowed() || !pendingLook || pendingLook.ticket !== ticket) return null;
      const pending = pendingLook; pendingLook = null;
-     const profile = preferences.snapshot();
+     const profile = preferences.contractSnapshot();
      if (!profile || profile.revision !== pending.profileRevision) {release.end(); return null;}
-     return release.complete(ticket, checkFixture(notebook.snapshot(), {...pending.prepared.candidate, excludedColors: [...profile.excludedColors]}));
+     const snapshot=notebook.snapshot();
+     const merged=reconcilePreparedPreferences(profile,snapshot,{simulation:true});
+     if(merged.status!=='ready-for-validator'){release.end();return null;}
+     // This fixture source currently supplies confirmed color exclusions only.
+     // Reconciliation is a preflight, never a passed candidate verdict.
+     const excludedColors=merged.requirements.filter(rule=>rule.field==='color'&&rule.kind==='excluded'&&rule.status==='confirmed'&&rule.value!==null).map(rule=>rule.value!);
+     return release.complete(ticket, checkFixture(snapshot, {...pending.prepared.candidate, excludedColors}));
     },
     visual: (permit: LookPermit): LookDraft | null => allowed() ? release.visual(permit) : null,
     startSpeech: (permit: LookPermit, start: Parameters<LookRelease['startSpeech']>[1]): boolean => allowed() && release.startSpeech(permit, (draft, signal, authorizeFrame) => start(draft, signal, () => allowed() && authorizeFrame())),

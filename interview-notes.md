@@ -456,3 +456,12 @@ I checked what happens when saved preferences change several times while a custo
 That review revealed two bugs. Superseded note timing samples could remain marked as waiting to appear, so I made revision changes cancel those samples immediately while keeping successful timing measurements. A new regression also showed that ending a session during its final publication could attempt to close the test reservation twice. I fixed the order of cleanup so every end request shares the same completion operation. Publication errors still stop the session safely.
 
 I reran verification after the initially failing closure test. All 920 prototype tests, 50 local SQL checks, twelve owner scenarios and eighteen browser scenarios pass, together with type checking and build. These checks use simulated media and providers. I kept real customer-profile access, live-service acceptance and financial approvals separate from the findings.
+
+
+## Separating requirements from preferences
+
+I prepared a versioned saved-preference contract so the stylist can distinguish firm requirements and exclusions from optional preferences. An uncertain requirement stays visible as something to clarify. A conflicting request cannot overwrite a saved rule or create an exception silently. Optional preferences remain separate from the customer's confirmed session requirements.
+
+I made the first reconciliation step deliberately conservative. It compares text, preserves both sources and sends unresolved differences for clarification. It does not claim that a color synonym, budget or subjective style has been validated. I connected the existing simulated color exclusions through the contract before the narrow look checker, while keeping real profile storage and account ownership separate.
+
+All 949 prototype tests, 50 local SQL checks, twelve owner scenarios and eighteen browser scenarios pass, along with type checking and build. I corrected a parameterized-test structure during verification. The contract is preparation for the full validation agent; it does not establish a customer-ready profile or approve a real look.

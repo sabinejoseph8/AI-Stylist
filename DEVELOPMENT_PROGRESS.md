@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 920 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 949 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -91,9 +91,9 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 920 prototype checks across 65 files, type checking and build pass. Fifty separate local PostgreSQL checks, twelve SQL-backed TypeScript owner scenarios and eighteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 949 prototype checks across 66 files, type checking and build pass. Fifty separate local PostgreSQL checks, twelve SQL-backed TypeScript owner scenarios and eighteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Next prepare a versioned server-only saved-preference constraint contract for independent discovery. Separate confirmed requirements, exclusions, optional ranking preferences and unknown values using the approved product scope. Document merge/conflict rules with session notes without implementing profile saves or exceptions. Add focused fixtures; preserve the existing R1 dependency gates and keep live services disabled.
+Next extend the simulated preference source with separate server-only construction from the versioned contract. Preserve the color fixture adapter and verify required, optional and unknown rules at the owner boundary, including revision invalidation. Keep real profile storage, account ownership, session exceptions and live services disabled; preserve R1 dependency gates.
 
 The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
@@ -178,3 +178,12 @@ The connected browser checks now interleave successive simulated profile updates
 Fixed two issues. First, superseded render samples remained pending until an acknowledgment or session end. The coordinator now watches notebook revisions and immediately cancels obsolete unrendered receipts. Previously rendered timing evidence remains intact; cancel removes the subscription and reset restores it once. Second, synchronous publication during cleanup could re-enter end before its shared completion promise existed and attempt durable closure twice. The server now installs that promise before cleanup. Repeated ends share one operation; publication failure still stops and clears safely, with uncertain cleanup held.
 
 Six new prototype checks bring the suite to 920 across 65 files. Type checking and build pass. Separate isolated verification passes 50 PostgreSQL checks, twelve SQL-backed owner scenarios and eighteen SQL-backed browser scenarios. The new owner regression initially failed on duplicate closure, then passed after the fix. These are synthetic provider/device and local database results. No real profile access, hosted configuration, paid trial, spending allowance, legacy ledger or deployment changed. Task 1c and Phase 1 remain incomplete; D21/D22 and D41 retain prototype-only status, with D26/D39 discovery separate from R1 implementation.
+
+
+## Versioned saved-preference contract discovery, 10 October 2026
+
+Prepared a strict version 1 server-only contract for required, excluded and optional preferred rules over the seven notebook fields. Rules carry confirmed/uncertain status, bounded values and a profile revision. Exact keys, unique IDs, bounds, immutable copied snapshots and malformed-data holds prevent unknown authority or automatic save/exception fields from entering the contract.
+
+The pure reconciliation step preserves saved hard rules and confirmed session constraints separately, keeps optional ranking and uncertain preferences distinct, and requests clarification for unresolved requirements, excluded requests, tentative values or conflicting saved rules. It never saves a preference, creates an exception or approves a look. Comparison is lexical only; budget parsing, subjective meaning, full-look validation, feedback/kept-item and anchor semantics remain separate. The existing simulated color source now produces this contract, and the owner runs reconciliation before its existing narrow candidate checker. Only color exclusions are currently supplied by that integrated source.
+
+Twenty-eight contract fixtures and one source-adapter check bring the prototype suite to 949 across 66 files. Type checking and build pass. The existing isolated suite was rerun with the integration and passes 50 PostgreSQL checks, twelve SQL-backed owner scenarios and eighteen SQL-backed browser scenarios. Corrected a parameterized-test array that was being expanded into separate arguments, then reran verification. docs/preference-contract-discovery.md records the shape, merge rules and limitations. No real customer profile access, saved-profile endpoint, paid request, remote configuration, legacy records, allowance or deployment changed. D39 remains independent discovery with its R1 implementation dependencies open; Task 1c and Phase 1 remain incomplete.

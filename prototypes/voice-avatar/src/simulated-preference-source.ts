@@ -1,3 +1,4 @@
+import {preparePreferenceContract} from './preference-contract.ts';
 /** Server-injected fixture source only. No account identity, database, profile
  * save endpoint or session exception is implemented by this preparation. */
 export class SimulatedPreferenceSource {
@@ -16,6 +17,11 @@ export class SimulatedPreferenceSource {
   return Object.freeze([...new Set(value.map(color=>(color as string).trim().toLowerCase()))]);
  }
  snapshot(){return this.held?null:{revision:this.revision,excludedColors:Object.freeze([...this.colors])};}
+ /** Adapt this limited color fixture without implying a real saved profile. */
+ contractSnapshot(){
+  const current=this.snapshot();if(!current)return null;
+  return preparePreferenceContract({version:1,revision:current.revision,rules:current.excludedColors.map((value,index)=>({id:`excluded_color_${index+1}`,field:'color',kind:'excluded',status:'confirmed',value}))},{simulation:true});
+ }
  subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
  /** Simulates a separately authorized server profile update, not conversation
   * extraction or client save authority. Invalid data holds this source. */

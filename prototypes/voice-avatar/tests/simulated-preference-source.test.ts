@@ -21,4 +21,11 @@ describe('server-only simulated preference source',()=>{
   expect(source.replace(1,[])).toBe(false);expect(listener).toHaveBeenCalledTimes(1);
  });
  it('rejects malformed initial data',()=>expect(()=>new SimulatedPreferenceSource({simulation:true,excludedColors:['']})).toThrow('Invalid'));
+ it('adapts only current confirmed color exclusions and holds a malformed source',()=>{
+  const source=new SimulatedPreferenceSource({simulation:true,excludedColors:[' Blue ']});
+  const old=source.contractSnapshot()!;expect(old).toMatchObject({version:1,revision:1,rules:[{field:'color',kind:'excluded',status:'confirmed',value:'blue'}]});
+  source.replace(1,['green']);expect(source.contractSnapshot()?.revision).toBe(2);expect(old.rules[0]?.value).toBe('blue');
+  source.replace(2,{});expect(source.contractSnapshot()).toBeNull();
+ });
+
 });
