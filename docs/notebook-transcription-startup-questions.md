@@ -1,6 +1,6 @@
 # Dedicated notebook transcription startup clarification
 
-Authorized by Sabine on 10 October 2026. Entered into official support chat; email/sign-in gate prevents completed submission. No ticket or human escalation confirmed. No credentials, customer media, private records or account identifiers included.
+Authorized submission; Sabine supplied an AI-assisted support reply on 10 October 2026. Contact/sign-in handoff resolved. Human engineering confirmation and dedicated remote-cleanup semantics remain unverified. See docs/notebook-provider-contract-review.md for disposition.
 
 ## Intended integration
 
@@ -23,3 +23,13 @@ A server-owned, notes-only WebSocket transcription session using gpt-live-transc
 ## Boundaries
 
 Sabine explicitly authorized sending this draft. Complete the existing support conversation after sign-in; verify retained content to avoid duplicate submission. Do not include keys, recordings, full test ledgers or account details. The selected provider preparation stays disabled. A real experiment also needs the reviewed dedicated storage/configuration and a newly authorized allowance; the nine closed legacy trials remain unchanged.
+
+## AI-assisted OpenAI support reply reviewed, 10 October 2026
+
+Sabine supplied the support reply after using the email route. This is explicitly AI-assisted support summarizing public documentation, not a human engineering confirmation or live trace. The previous sign-in/contact handoff is resolved by receipt of this reply; do not ask Sabine to sign in again for this submission.
+
+Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with server Bearer authentication, session.created followed by session.update/session.updated, low delay, and item_id correlation through committed/delta/completed events. Current official transcription guidance supports the selected configuration, low delay and item correlation. The retrieved general WebSocket example still selects a conversational model; applying its model query to the dedicated transcription model remains the support bot’s interpretation, not independently established live acceptance. Preserve this proposed URL as a candidate, not an activated endpoint.
+
+The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
+
+Next: Prepare a disabled connection-plan contract for the support-proposed transcription URL and local close evidence, with no socket construction, credentials or live enablement. Distinguish model-specific startup proposed by AI-assisted support from verified provider behavior. Keep remote cleanup, Tavus recovery and new paid-trial authorization as open activation gates.
