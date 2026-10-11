@@ -594,3 +594,8 @@ I checked the new connection opener through the protected browser and isolated d
 ## Keeping affiliate revenue subordinate to product evidence, 11 October 2026
 
 I prepared a disabled affiliate-link validator that uses an exact approved product and variant mapping rather than inventing tracking URLs. It holds stale or unavailable products and keeps the qualifying-purchase disclosure with the link metadata. A click is not earned revenue, and affiliate metadata cannot approve a look or override customer preferences. I also checked startup timeouts and cancellation during connection setup. The full suite passed 1,242 tests, type checking and build. Actual affiliate program approval and live-provider acceptance remain open.
+
+
+## Revoking shopping actions when requirements change, 11 October 2026
+
+I added a disabled shopping-action boundary so a refreshed product, changed preference or ended session cannot reuse an old affiliate action. I found and fixed a cancellation edge during final authorization. All 1,264 tests, type checking and build passed. I chose to investigate Rakuten first for ASOS and other US fashion programs. The eligibility inquiry is drafted, but it is not sent and no retailer permission is assumed.
