@@ -61,3 +61,5 @@ Record the actual response and any restrictions. A referral, feed capability or 
 ## Form preparation status
 
 On 11 October 2026, Sabine provided her reply email privately for this inquiry. The subject, full description and email were entered in the official form, with SID blank and no attachments. Clicking Submit returned the validation error “SID: cannot be blank.” This is a rejected submission, not evidence of delivery. No SID was invented. Await confirmation of whether Sabine has a publisher account and a valid SID. The reply email and private browser screenshot are deliberately omitted from this public repository. FARFETCH remains unsent.
+
+Sabine confirmed she has no publisher account. The official Support > Contact us > Leave a message widget was also tried with the same eligibility scope and an explicit statement that no account or SID exists. Send returned “Enter a value” on SID. Neither route delivered the inquiry. Next: Sabine chooses whether to register; do not accept membership terms or create credentials for her.

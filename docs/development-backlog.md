@@ -455,7 +455,7 @@ Baseline acceptance: Written evidence and decision record; no partner presumed.
 
 ### X02: Send Rakuten ASOS feed inquiry
 
-Priority: External | Release: Future | Dependencies: None | Status: Rakuten selected by Sabine; inquiry prepared; submission rejected because SID is required. Awaiting publisher-account confirmation; not sent.
+Priority: External | Release: Future | Dependencies: None | Status: Rakuten selected by Sabine; inquiry prepared; submission rejected because SID is required. No publisher account; both contact forms require SID. Registration decision pending; not sent.
 
 User story: As a team we can establish ASOS eligibility.
 
