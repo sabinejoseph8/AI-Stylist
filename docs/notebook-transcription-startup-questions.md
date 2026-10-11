@@ -1,6 +1,6 @@
 # Dedicated notebook transcription startup clarification
 
-Draft only, not sent. No credentials, customer media, private records or account identifiers.
+Authorized by Sabine on 10 October 2026. Entered into official support chat; email/sign-in gate prevents completed submission. No ticket or human escalation confirmed. No credentials, customer media, private records or account identifiers included.
 
 ## Intended integration
 
@@ -22,4 +22,4 @@ A server-owned, notes-only WebSocket transcription session using gpt-live-transc
 
 ## Boundaries
 
-Do not send this draft without Sabine's explicit authorization. Do not include keys, recordings, full test ledgers or account details. The selected provider preparation stays disabled. A real experiment also needs the reviewed dedicated storage/configuration and a newly authorized allowance; the nine closed legacy trials remain unchanged.
+Sabine explicitly authorized sending this draft. Complete the existing support conversation after sign-in; verify retained content to avoid duplicate submission. Do not include keys, recordings, full test ledgers or account details. The selected provider preparation stays disabled. A real experiment also needs the reviewed dedicated storage/configuration and a newly authorized allowance; the nine closed legacy trials remain unchanged.
