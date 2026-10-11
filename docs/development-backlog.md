@@ -811,3 +811,10 @@ Isolated PostgreSQL compositions add configured startup/end and pending startup/
 - [x] Verify production authenticated task persistence. Save/reload and restoration of Task 1a passed on 11 October 2026. Shared record revision 2 preserves the original 4/41 completed tasks. This is tooling verification, not acceptance of any customer-app build phase.
 
 See docs/project-memory-website.md and https://ai-stylist-project-memory.idealgnat256.chatgpt.site.
+
+
+## Startup-backed two-turn correction evidence, 11 October 2026
+
+Two new startup-backed loopback checks exercise two speech turns, partial/final extraction, a delayed color result after a touch correction, budget correction revoking a released look and its speech callback, and a cheaper rechecked candidate. Ending clears notes/capture and revokes remaining presentation. Page exit while extraction is pending aborts the request and rejects its late response. Both paths retain the unresolved reservation and prevent a fresh owner from opening another provider or extracting notes.
+
+All 1,191 tests across 78 files, type checking and build pass. The first command found no local dependency link; the matching lockfile's already installed dependencies were reused, then verification passed. No production code or provider invocation changed. Earlier isolated SQL totals (50 checks, 17 owner and 24 browser scenarios) were not rerun because this increment changes test composition only. Task 1c, D21/D22 and Phase 1 remain partial. The live opener boundary was reviewed and the next disabled preparation is recorded; no new paid call, allowance, app deployment or remote database change occurred.

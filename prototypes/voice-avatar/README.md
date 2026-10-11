@@ -25,9 +25,9 @@ npm run typecheck
 npm run build
 ```
 
-1,189 tests across 78 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+1,191 tests across 78 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
-The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller now checks creation/configuration ordering and cancellation. Protected-owner/browser composition is tested; two-turn extraction and correction through this startup-backed path are next. No live notebook connection or new hosted deployment is enabled.
+The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller now checks creation/configuration ordering and cancellation. Protected-owner/browser composition now also covers two turns, delayed extraction, color/budget corrections, stale visual/speech revocation, shutdown and fresh-owner holds. No live notebook connection or new hosted deployment is enabled.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
@@ -461,3 +461,10 @@ The connection rehearsal includes Hold timing acknowledgments, an explicit local
 ### Disabled transcription connection contract
 
 src/transcription-connection-plan.ts is inspection-only and not connected to application routes. It labels the selected-model endpoint as an AI-assisted support proposal, with startup and live activation unverified. Its simulated close-evidence helper distinguishes transport closure from normal closure; neither grants remote cleanup, final-usage, deletion or allowance-release permission. Twenty-one new checks bring the passing suite to 1,136 tests across 75 files, with type checking and build passing. Existing cleanup and funding gates remain intact.
+
+
+## Startup-backed two-turn correction evidence, 11 October 2026
+
+Two new startup-backed loopback checks exercise two speech turns, partial/final extraction, a delayed color result after a touch correction, budget correction revoking a released look and its speech callback, and a cheaper rechecked candidate. Ending clears notes/capture and revokes remaining presentation. Page exit while extraction is pending aborts the request and rejects its late response. Both paths retain the unresolved reservation and prevent a fresh owner from opening another provider or extracting notes.
+
+All 1,191 tests across 78 files, type checking and build pass. The first command found no local dependency link; the matching lockfile's already installed dependencies were reused, then verification passed. No production code or provider invocation changed. Earlier isolated SQL totals (50 checks, 17 owner and 24 browser scenarios) were not rerun because this increment changes test composition only. Task 1c, D21/D22 and Phase 1 remain partial. The live opener boundary was reviewed and the next disabled preparation is recorded; no new paid call, allowance, app deployment or remote database change occurred.

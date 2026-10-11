@@ -574,3 +574,8 @@ I also verified configured startup and cancellation during opening against isola
 ### Making project memory usable, 11 October 2026
 
 I turned my product, design, technical and delivery documents into a private website so I could review the project without reading raw Markdown. I kept the full source documents available and added clear summaries, color swatches, design tables and diagrams. I made task updates require evidence and detect conflicting changes, so a checkmark does not silently replace another update. I fixed a cramped phone toolbar and verified the layout at phone and desktop widths. Fifteen automated website checks pass. I then verified signed-in task updates on the published site: the change survived a reload, and I restored the original planning completion with its evidence. The record still matches my Markdown plan. This work does not mean the customer app is finished.
+
+
+### Keeping corrections authoritative across the full connection, 11 October 2026
+
+I tested two simulated speech turns through the protected startup connection instead of checking the notebook pieces separately. A delayed result could not undo the customer’s newer color correction. Lowering the budget revoked the old look and its permission to speak, and a cheaper look had to pass a fresh check. Leaving during unfinished extraction stopped local capture and discarded its late result. A new connection stayed blocked while provider cleanup remained uncertain. All 1,191 checks, type checking and build pass. This evidence improves the private prototype without claiming live-provider or launch acceptance.

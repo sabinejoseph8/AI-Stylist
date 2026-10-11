@@ -5,11 +5,11 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 10 October 2026
 
-1,189 prototype checks across 78 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, seventeen SQL-backed owner scenarios and twenty-four SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+1,191 prototype checks across 78 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, seventeen SQL-backed owner scenarios and twenty-four SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Extend the startup-backed protected connection through two synthetic spoken turns, extraction, touch correction and stale-look/speech revocation; verify shutdown and fresh-owner isolation in the same path. Then review the future live opener against docs/notebook-live-adapter-design.md. Keep the running application, live routes, keys, paid services, remote ledgers and deployment unchanged.
+**Next action:** Prepare a separately disabled, server-owned socket opener with injected transport construction. Verify first-packet observation, abort/error/late-open cleanup and no automatic reconnect before considering real provider wiring. Keep the running application, live routes, keys, paid services and remote ledgers unchanged. Any live activation still requires its own financial and security authorization.
 
 **Remaining gates:** Tavus recovery clarification, live validation of the dedicated transcription startup and remote cleanup contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. Sabine authorized the OpenAI questions and received AI-assisted replies. Low delay and item correlation are documented; the selected-model startup URL remains an inference, and no stronger remote-finalization guarantee was established.
 
@@ -330,7 +330,7 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Extend the startup-backed protected connection through two synthetic spoken turns, extraction, touch correction and stale-look/speech revocation; verify shutdown and fresh-owner isolation in the same path. Then review the future live opener against docs/notebook-live-adapter-design.md. Keep the running application, live routes, keys, paid services, remote ledgers and deployment unchanged.
+Next: Prepare a separately disabled, server-owned socket opener with injected transport construction. Verify first-packet observation, abort/error/late-open cleanup and no automatic reconnect before considering real provider wiring. Keep the running application, live routes, keys, paid services and remote ledgers unchanged. Any live activation still requires its own financial and security authorization.
 
 
 ## Disabled transcription connection and close-evidence contract, 10 October 2026

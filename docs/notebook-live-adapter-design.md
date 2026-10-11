@@ -4,7 +4,7 @@ Prepared: 11 October 2026. Disabled engineering design, not activation or spendi
 
 ## Current implementation status, 11 October 2026
 
-The disabled startup controller is now composed into the protected server owner and loopback browser bridge. Exact private access and allowance checks run before transport construction; startup readiness is awaited before Ready is published. Pending opening cancellation keeps the owner closing until late sockets are handled, then remote-required cleanup retains a hold. Existing already-open simulation remains a separate explicit factory choice. These are injected simulations, not a live opener or route. The current full suite passes 1,189 tests across 78 files, type checking and build. The next check is two synthetic turns with extraction/corrections through the startup-backed path.
+The disabled startup controller is now composed into the protected server owner and loopback browser bridge. Exact private access and allowance checks run before transport construction; startup readiness is awaited before Ready is published. Pending opening cancellation keeps the owner closing until late sockets are handled, then remote-required cleanup retains a hold. Existing already-open simulation remains a separate explicit factory choice. These are injected simulations, not a live opener or route. The current full suite passes 1,191 tests across 78 files, type checking and build. Two startup-backed synthetic turns, extraction, touch corrections, stale-look/speech revocation and fresh-owner isolation now pass. Cancellation during pending extraction also rejects late work. The future opener boundary has been reviewed; no real opener, credential loader or live route exists. The next preparation is the separately disabled socket opener described below.
 
 ## Scope
 
@@ -56,3 +56,8 @@ prepared-note-startup.ts now owns the simulated opening deadline and creation/co
 Startup exposes openingSettled separately from end(): cancellation stops local work immediately, while openingSettled resolves only after the injected opener returns or fails and any late returned socket has been closed. Protected-owner composition must await that settlement or retain a hold, never retire a reservation while opening is still unresolved. This promise establishes local opening settlement only, not verified remote cleanup. The late-open cancellation/deadline/end checks explicitly verify this distinction.
 
 The startup-backed protected compositions also pass isolated PostgreSQL checks: final totals are 50 SQL checks, 17 owner scenarios and 24 browser scenarios, including fresh-process unresolved holds. No remote database was used.
+
+
+## Next disabled opener preparation
+
+The startup controller currently trusts the injected opener to observe the first packet and clean up resources not yet returned. Prepare and test that ownership boundary next with an injected transport constructor and synthetic events only. A real destination, key loader, invocation and route remain absent. An open transport does not imply configured readiness or verified remote cleanup. Do not attach it to the running application or weaken the unresolved reservation hold.
