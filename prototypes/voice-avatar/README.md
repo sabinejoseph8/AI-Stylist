@@ -1,6 +1,6 @@
 # Task 1b: Private voice and avatar experiment
 
-## Current status, 9 October 2026
+## Current status, 10 October 2026
 
 Task 1b is approved and in progress. The source is published to GitHub, and a password-protected Render Free preview uses Supabase for its durable test-limit ledger. The deployed phone page supports two bounded, buffered exchanges and spoken interrupt-and-end. Sabine confirmed a generated avatar reply with mouth movement and intentional spoken interruption on iPhone. Continuous conversation recovery and precise latency/lip-sync measurements are not accepted.
 
@@ -13,7 +13,7 @@ The latest local and published preparation includes incremental output, cancella
 
 Sabine approved independent notebook preparation while Task 1b waits. notebook.html provides simulated progressive notes, touch edits, a simulated budget correction, confirmed local image references and camera-only preview. It uses no microphone, provider calls, shopping or permanent saves. A synthetic look stays hidden until its current fixture check passes. Real speech extraction, recommendation validation and device acceptance remain pending.
 
-The currently running computer-only review is http://127.0.0.1:4320/notebook.html. For a later fresh local run, the existing default server command serves notebook.html on port 4318; do not enable --spoken or --scripted for notebook review. Read the [complete Task 1c guide](../../docs/task-1c-notebook-prototype.md) before starting. This page has not been deployed to Render.
+The computer-only review used http://127.0.0.1:4320/notebook.html; it requires a running local server. For a later fresh local run, the existing default server command serves notebook.html on port 4318; do not enable --spoken or --scripted for notebook review. Read the [complete Task 1c guide](../../docs/task-1c-notebook-prototype.md) before starting. This page has not been deployed to Render.
 
 ### Automated checks
 
@@ -25,7 +25,9 @@ npm run typecheck
 npm run build
 ```
 
-869 tests across 63 files, type checking and build pass. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+1,146 tests across 75 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+
+The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. These new remote-required browser checks use injected persistence. PostgreSQL/fresh-process composition is the next check; no live notebook connection or new hosted deployment is enabled.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 

@@ -8,4 +8,4 @@ Phone website delivery, email/password plus Google and Apple sign-in, and one si
 
 ElevenLabs is excluded from the project by Sabine's decision on 9 October 2026; see D09 in tech-spec.md.
 
-Task 1b is approved and in progress. See D14 and docs/task-1b-voice-avatar.md for the simulation, scripted provider evidence and pending continuous-conversation/phone verification.
+Task 1b is approved and in progress. The protected Render Free preview is deployed; Sabine confirmed avatar audio, mouth movement, spoken interrupt-and-end and device cleanup on iPhone. Conversational resume and precise timing remain unverified. See the current checkpoint in tech-spec.md and docs/progress.md; earlier D14 entries retain historical evidence.

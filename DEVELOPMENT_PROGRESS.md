@@ -91,11 +91,11 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 1136 prototype checks across 75 files, type checking and build pass. Fifty separate local PostgreSQL checks, thirteen SQL-backed TypeScript owner scenarios and nineteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 1,146 prototype checks across 75 files, type checking and build pass. Fifty separate local PostgreSQL checks, thirteen SQL-backed TypeScript owner scenarios and nineteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
 Extend the isolated PostgreSQL owner/browser scenarios to cover the remote-required cleanup hold across a fresh process. Then finish the disabled server-only live adapter design and review its access and readiness boundaries. Keep live adapters disabled; no keys, paid calls, deployment, remote ledger initialization or new financial authorization are included.
 
-The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
+The reviewed OpenAI support replies confirm documented low-delay configuration and item correlation. The selected-model startup URL remains an inference without live acceptance, and normal socket closure does not establish remote finalization; see docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
 ## Session handoff
 
@@ -326,3 +326,8 @@ The disabled server owner now captures an explicit cleanup requirement at constr
 Seven additional focused checks pass, bringing the prototype suite to 1,143 tests across 75 files, with type checking and build passing. The isolated PostgreSQL harness readiness check was corrected to wait for the final TCP listener rather than the temporary initialization socket. This is local synthetic preparation; Task 1c, D42/R1 and Phase 1 remain incomplete.
 
 The protected browser bridge also accepts this server-only cleanup policy. Three synthetic loopback scenarios cover page exit, provider close and explicit stop: browser capture and notes clear, the provider closes once, the ledger retains its open reservation, replacement is denied and a fresh allowance reader refuses further work. The browser cannot change this policy. Final checks: 1,146 tests across 75 files, type checking and build pass; 50 isolated PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios pass after the readiness fix. The new remote-required scenarios currently use injected persistence, so PostgreSQL/fresh-process composition for this policy is the exact next check.
+
+
+### Current-summary reconciliation, 10 October 2026
+
+Updated the repository and prototype READMEs, technical memory checkpoint, MVP checkpoint, exact-next-action verification count and older technical-spec redirect. Current summaries now match 1,146 passing tests, accepted iPhone checks and the deployed private voice preview. Removed stale current claims that the OpenAI questions were unsent or low-delay guidance was still conflicting. Historical dated records and approved product/design scope are preserved. Documentation-only maintenance; no implementation tests rerun, no provider request, allowance change or deployment. The next implementation action remains the remote-required PostgreSQL/fresh-process composition check above.

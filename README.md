@@ -2,9 +2,17 @@
 
 ## Private voice and avatar prototype
 
-The Task 1b prototype is in [prototypes/voice-avatar](prototypes/voice-avatar/README.md). It is a private experiment, not the complete customer app. Phone deployment and remaining manual acceptance are pending.
+The Task 1b prototype is in [prototypes/voice-avatar](prototypes/voice-avatar/README.md). It is a private experiment, not the complete customer app. The password-protected Render Free preview is deployed. Sabine confirmed avatar audio, mouth movement, spoken interrupt-and-end and device cleanup on iPhone. Conversational resume and precise latency/lip-sync measurements remain unverified.
 
 See [the phased plan](docs/progress.md) for actual evidence and open checks. The prepared Render configuration keeps secrets in server environment settings and uses the existing Supabase test-limit ledger. Never commit private configuration or experiment records.
+
+## Current development status, 10 October 2026
+
+All 1,146 prototype tests across 75 files, type checking and build pass. Separate isolated checks passed 50 PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios. The latest notebook preparation is published source, not a new Render deployment. Live notebook transcription and customer accounts, real shopping and production preference validation remain incomplete.
+
+The disabled server/browser preparation keeps a test reservation held when remote cleanup is unverified. New remote-required browser scenarios use injected persistence; their PostgreSQL/fresh-process composition is the next check. All nine earlier provider attempts are consumed and closed; no new paid trial is authorized.
+
+The sections below preserve earlier implementation checkpoints. Their test counts describe those earlier changes, not the current suite.
 
 ### Partial speech groundwork
 
