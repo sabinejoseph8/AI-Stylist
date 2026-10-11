@@ -599,3 +599,5 @@ I prepared a disabled affiliate-link validator that uses an exact approved produ
 ## Revoking shopping actions when requirements change, 11 October 2026
 
 I added a disabled shopping-action boundary so a refreshed product, changed preference or ended session cannot reuse an old affiliate action. I found and fixed a cancellation edge during final authorization. All 1,264 tests, type checking and build passed. I chose to investigate Rakuten first for ASOS and other US fashion programs. The eligibility inquiry is drafted, but it is not sent and no retailer permission is assumed.
+
+I attempted the selected Rakuten eligibility inquiry, but its support form requires an existing publisher ID. I kept the inquiry marked unsent and asked whether I already have an account, rather than inventing an identifier or treating a rejected form as outreach. My reply address stays out of the public repository.

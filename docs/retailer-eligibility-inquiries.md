@@ -60,4 +60,4 @@ Record the actual response and any restrictions. A referral, feed capability or 
 
 ## Form preparation status
 
-The Rakuten form subject and full description are filled in the in-app browser. The reply-email field is blank and requires Sabine. No SID was entered, no file was attached, and Submit has not been clicked. The public-page text extractor did not render the form, but direct browser inspection showed the editable fields. No sign-in was needed to reach this form. This is preparation evidence only; submission and delivery are unverified.
+On 11 October 2026, Sabine provided her reply email privately for this inquiry. The subject, full description and email were entered in the official form, with SID blank and no attachments. Clicking Submit returned the validation error “SID: cannot be blank.” This is a rejected submission, not evidence of delivery. No SID was invented. Await confirmation of whether Sabine has a publisher account and a valid SID. The reply email and private browser screenshot are deliberately omitted from this public repository. FARFETCH remains unsent.

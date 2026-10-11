@@ -455,7 +455,7 @@ Baseline acceptance: Written evidence and decision record; no partner presumed.
 
 ### X02: Send Rakuten ASOS feed inquiry
 
-Priority: External | Release: Future | Dependencies: None | Status: Rakuten selected by Sabine; inquiry drafted and form prepared, awaiting reply-email entry. Not submitted.
+Priority: External | Release: Future | Dependencies: None | Status: Rakuten selected by Sabine; inquiry prepared; submission rejected because SID is required. Awaiting publisher-account confirmation; not sent.
 
 User story: As a team we can establish ASOS eligibility.
 
@@ -849,4 +849,4 @@ Prepared a disabled server-side affiliate action boundary composed with the exis
 
 Twenty-two new checks pass within 1,264 prototype tests across 81 files, with type checking and build passing. The previous isolated SQL totals remain 50 checks, 19 owner and 27 browser scenarios; persistence was unchanged and those checks were not rerun. No paid request, app deployment or remote ledger change occurred. All relevant incomplete phase/retailer acceptance gates remain incomplete.
 
-Sabine selected Rakuten first for eligibility questions about ASOS and other US fashion programs. Prepared both inquiry drafts; neither was sent. The official Rakuten request form was opened and its subject and full description filled. A reply email is missing; SID is not invented. A user action card requests email entry. No contact email or private account value is stored in these public records. Public source references and the selected route are in docs/retailer-eligibility-inquiries.md.
+Sabine selected Rakuten first for eligibility questions about ASOS and other US fashion programs. Prepared both inquiry drafts; neither was sent. The official Rakuten request form was opened and its subject and full description filled. Sabine supplied a reply email privately. Submission was attempted, but the form rejected it with “SID: cannot be blank.” A user action card asks whether she has a publisher account. The inquiry remains unsent. No contact email or private account value is stored in these public records. Public source references and the selected route are in docs/retailer-eligibility-inquiries.md.
