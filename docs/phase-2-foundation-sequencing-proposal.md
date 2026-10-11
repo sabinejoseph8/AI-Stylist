@@ -1,6 +1,6 @@
 # Proposed foundation work while Phase 1 remains open
 
-Prepared: 11 October 2026. Proposed schedule change, not approved or implemented.
+Prepared: 11 October 2026. Sabine approved the Task 2a sequencing exception on 11 October 2026. Foundation implemented locally; her visual review remains pending.
 
 ## Decision for Sabine
 
@@ -30,4 +30,4 @@ Foundation setup can use local fixtures while live voice, retention and retailer
 
 ## Exact next action
 
-Await Sabine's decision on this explicit sequencing exception. If approved, read Task 2a and the approved product/design/technical baseline, scaffold locally, run focused checks and continue independent work. If declined, preserve Phase 2's gate and work within remaining Phase 1 preparation only.
+Complete Sabine’s local visual review of Task 2a. Keep Tasks 2b/2c and Phase 1 acceptance gates open. No broader phase-order exception, production migration or provider activation is implied.

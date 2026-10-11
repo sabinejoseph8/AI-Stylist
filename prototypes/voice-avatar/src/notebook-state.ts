@@ -1,9 +1,7 @@
-export const FIELDS = [
-  ['occasion','Occasion'],['season','Season / date'],['color','Color'],['style','Style'],
-  ['budget','Budget'],['lookType','Look type'],['wardrobe','Owned wardrobe'],
-] as const;
-export type Field = typeof FIELDS[number][0];
-export type Note = {value:string;status:'missing'|'tentative'|'confirmed';revision:number;sequence:number;source:'speech'|'touch'|null};
+import {FIELDS} from '../../../packages/style-contracts/src/index.ts';
+import type {Field,Note} from '../../../packages/style-contracts/src/index.ts';
+export {FIELDS};
+export type {Field,Note};
 export type Capture = {session:number;field:Field;baseRevision:number;sequence:number;value:string;confirmed:boolean};
 export type Reference = {label:string;kind:'owned'|'inspiration'};
 export type CheckTicket = Readonly<{id:number;revision:number;session:number}>;

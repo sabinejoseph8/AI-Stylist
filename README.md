@@ -64,3 +64,7 @@ Prepared a disabled server-side affiliate action boundary composed with the exis
 Twenty-two new checks pass within 1,264 prototype tests across 81 files, with type checking and build passing. The previous isolated SQL totals remain 50 checks, 19 owner and 27 browser scenarios; persistence was unchanged and those checks were not rerun. No paid request, app deployment or remote ledger change occurred. All relevant incomplete phase/retailer acceptance gates remain incomplete.
 
 Sabine selected Rakuten first for eligibility questions about ASOS and other US fashion programs. Prepared both inquiry drafts; neither was sent. The official Rakuten request form was opened and its subject and full description filled. Sabine supplied a reply email privately. Submission was attempted, but the form rejected it with “SID: cannot be blank.” A user action card asks whether she has a publisher account. The inquiry remains unsent. No contact email or private account value is stored in these public records. Public source references and the selected route are in docs/retailer-eligibility-inquiries.md.
+
+## Local application foundation
+
+Task 2a lives in apps/foundation. Run `npm ci` and `npm run dev` there, then open http://127.0.0.1:4322/. See [Foundation instructions](apps/foundation/README.md). This local fixture shell has no working sign-in, provider, persistence or shopping. Sabine approved 2a alongside open Phase 1 checks; visual acceptance remains pending. Shared note fields live in packages/style-contracts.
