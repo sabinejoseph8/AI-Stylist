@@ -9,7 +9,7 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Sabine authorized the four OpenAI technical questions. They were entered into the official help-center chat, which requires an email or sign-in to continue. Sabine must complete OpenAI sign-in; then resume that existing chat and finish submission, verifying receipt without creating a duplicate. No human support ticket or email delivery is confirmed. Tavus recovery and live-trial funding remain separate gates; keep providers disabled.
+**Next action:** Sabine authorized the four OpenAI technical questions. They were entered into the official help-center chat, which requires an email or sign-in to continue. Sign-in failed for Sabine. The existing support chat retains all four questions and offers an Email field plus Continue without selecting Log in. Sabine should enter her preferred reply email directly there; then resume the existing chat and finish submission, verifying receipt without creating a duplicate. No human support ticket or email delivery is confirmed. Tavus recovery and live-trial funding remain separate gates; keep providers disabled.
 
 **Remaining gates:** Tavus recovery clarification, current dedicated transcription startup/delay contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. The unsent OpenAI clarification draft has no send authorization.
 
@@ -315,3 +315,8 @@ Implementer browser verification passed Pending 1 with p95 Not measured, a Blue 
 ## OpenAI support handoff, 10 October 2026
 
 Sabine explicitly authorized sending the four prepared transcription questions. The official help.openai.com chat displayed the complete message, then required email or sign-in before continuing. Opened the existing OpenAI login flow; authentication needs Sabine. Submission remains incomplete: no ticket, human escalation or email receipt is confirmed. After sign-in, return to the existing support conversation and verify whether the questions are retained before sending anything again. No keys, media, account identifiers or private test records were included. No code changed, no paid call started and the latest passing test evidence remains 1,115 tests.
+
+
+### Support contact alternative
+
+Sabine reported she could not sign in. Returned to the existing help-center chat and verified that all four questions remain present. The chat offers an Email field and Continue separately from Log in for personalized support. Handed direct email entry to Sabine; no address was inferred or copied from private files. No completed ticket or technical answer is confirmed.

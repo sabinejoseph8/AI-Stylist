@@ -93,7 +93,7 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 All 1115 prototype checks across 74 files, type checking and build pass. Fifty separate local PostgreSQL checks, thirteen SQL-backed TypeScript owner scenarios and nineteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Sabine authorized the four OpenAI technical questions. They were entered into the official help-center chat, which requires an email or sign-in to continue. Sabine must complete OpenAI sign-in; then resume that existing chat and finish submission, verifying receipt without creating a duplicate. No human support ticket or email delivery is confirmed. Tavus recovery and live-trial funding remain separate gates; keep providers disabled.
+Sabine authorized the four OpenAI technical questions. They were entered into the official help-center chat, which requires an email or sign-in to continue. Sign-in failed for Sabine. The existing support chat retains all four questions and offers an Email field plus Continue without selecting Log in. Sabine should enter her preferred reply email directly there; then resume the existing chat and finish submission, verifying receipt without creating a duplicate. No human support ticket or email delivery is confirmed. Tavus recovery and live-trial funding remain separate gates; keep providers disabled.
 
 The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
@@ -285,3 +285,8 @@ Implementer browser verification passed Pending 1 with p95 Not measured, a Blue 
 ## OpenAI support handoff, 10 October 2026
 
 Sabine explicitly authorized sending the four prepared transcription questions. The official help.openai.com chat displayed the complete message, then required email or sign-in before continuing. Opened the existing OpenAI login flow; authentication needs Sabine. Submission remains incomplete: no ticket, human escalation or email receipt is confirmed. After sign-in, return to the existing support conversation and verify whether the questions are retained before sending anything again. No keys, media, account identifiers or private test records were included. No code changed, no paid call started and the latest passing test evidence remains 1,115 tests.
+
+
+### Support contact alternative
+
+Sabine reported she could not sign in. Returned to the existing help-center chat and verified that all four questions remain present. The chat offers an Email field and Continue separately from Log in for personalized support. Handed direct email entry to Sabine; no address was inferred or copied from private files. No completed ticket or technical answer is confirmed.
