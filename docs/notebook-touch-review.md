@@ -29,3 +29,15 @@ Read all steps first. This local sequence starts no paid voice test.
 6. Start a new rehearsal. All notes must be Not specified and no earlier draft or explanation should reappear. End the rehearsal when finished.
 
 Implementer browser checks passed the refusal, explicit reload, input focus, cancellation and disconnect cleanup. These controls exist only in the injected local rehearsal. They do not establish live provider recovery or customer restart persistence.
+
+
+## Local timing diagnostics
+
+Read first: this optional check measures scripted events, not real speech or the live performance target.
+
+1. Start a clean connection rehearsal and play the first simulated turn.
+2. Expand Local timing diagnostics below its notes. After display acknowledgment, Rendered should increase and a local p95 may appear. Total, failed, canceled, pending and overflow are shown separately.
+3. Verify the panel explicitly says live timing acceptance is not verified. Do not use this number to accept the two-second live target.
+4. End rehearsal. Both the notes and diagnostics must disappear.
+
+Implementer browser verification passed one acknowledged sample and end clearing. Representative live timing and physical-device performance remain unverified.

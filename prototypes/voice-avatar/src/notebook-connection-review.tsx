@@ -2,12 +2,15 @@ import {PreferenceClarificationPanel} from './notebook-preference-review.tsx';
 import type {PreferenceClarification} from './preference-clarification.ts';
 import React,{useEffect,useRef,useState} from 'react';
 import {createNotebookRehearsal} from './note-browser-rehearsal.ts';
+import {NotebookTimingReview} from './notebook-timing-review.tsx';
+import type {NoteTiming} from './note-timing.ts';
 import {NotebookConnectionEditor} from './notebook-connection-editor.tsx';
 import type {NoteUpdate} from './note-update-wire.ts';
 import type {PreparedBrowserNoteSession} from './note-browser-session.ts';
 export function NotebookConnectionReview(){
  const startButton=useRef<HTMLButtonElement>(null),hadNotes=useRef(false);
  const owner=useRef<ReturnType<typeof createNotebookRehearsal>|null>(null);
+ const [timing,setTiming]=useState<ReturnType<NoteTiming['report']>|null>(null);
  const [clarification,setClarification]=useState<PreferenceClarification|null>(null);
  const [notes,setNotes]=useState<NoteUpdate|null>(null),[status,setStatus]=useState<ReturnType<PreparedBrowserNoteSession['status']>|null>(null),[turns,setTurns]=useState(0);
  useEffect(()=>()=>owner.current?.dispose(),[]);
@@ -16,6 +19,7 @@ export function NotebookConnectionReview(){
  function start(){owner.current?.dispose();setTurns(0);owner.current=createNotebookRehearsal({simulation:true,page:window,visibility:document,changed:setNotes,clarificationChanged:setClarification,status:setStatus});}
  async function play(){const current=owner.current;if(current&&await current.play())setTurns(current.turns());}
  const active=Boolean(status&&status.state!=='ended'&&status.state!=='cleanup-held');
+ useEffect(()=>{if(!active){setTiming(null);return;}const update=()=>setTiming(owner.current?.snapshot().server?.notes.timing??null);update();const timer=setInterval(update,200);return()=>clearInterval(timer);},[active]);
  return <details className="camera-panel"><summary>Review the prepared notebook connection</summary>
  <p>This separate rehearsal uses generated silence and scripted transcript events in this page. No microphone, camera, network connection or paid service is started. Its notes are separate from the main notebook.</p>
  <h3>Read before starting</h3><ol>
@@ -36,6 +40,6 @@ export function NotebookConnectionReview(){
  <button onClick={()=>owner.current?.explain('multiple')} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='confirmed'}>Show multiple preference issues</button>
  <button onClick={()=>owner.current?.revise()} disabled={!active||status?.state!=='ready'||!clarification}>Simulate changed saved requirements</button>
  <button onClick={()=>owner.current?.dispose()} disabled={!active}>End rehearsal</button>
- {notes&&<section className="notebook" aria-label="Connection rehearsal notes"><h3>Rehearsal Styling Notes</h3>{owner.current&&<NotebookConnectionEditor notes={notes} ready={active&&status?.state==='ready'} session={owner.current.session} rehearsal={{replace:owner.current.replaceWhileEditing,disconnect:owner.current.disconnect}}/>}<PreferenceClarificationPanel record={clarification}/></section>}
+ {notes&&<section className="notebook" aria-label="Connection rehearsal notes"><h3>Rehearsal Styling Notes</h3>{owner.current&&<NotebookConnectionEditor notes={notes} ready={active&&status?.state==='ready'} session={owner.current.session} rehearsal={{replace:owner.current.replaceWhileEditing,disconnect:owner.current.disconnect}}/>}<PreferenceClarificationPanel record={clarification}/>{active&&<NotebookTimingReview report={timing}/>}</section>}
  </details>;
 }

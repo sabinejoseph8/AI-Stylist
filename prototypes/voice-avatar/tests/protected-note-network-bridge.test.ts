@@ -186,3 +186,44 @@ describe('revision-bound editing through the protected connection',()=>{
   expect(old.controller.edit('color','stale',version)).toBe(false);expect(old.controller.snapshot().notes).toBeNull();expect(fresh.controller.snapshot().ended).toBe(false);
  });
 });
+
+describe('draft, profile and delayed extraction interleaving',()=>{
+ const candidate={id:'fixture',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const};
+ const rule=(value:string)=>({id:'private-color-rule',field:'color' as const,kind:'required' as const,status:'confirmed' as const,value});
+ async function prepared(){
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[rule('green')]}}),s=await setup(true,false,{preferences:source});
+  const values={occasion:'wedding',season:'November; season not specified',color:'green',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'};
+  for(const [field,value] of Object.entries(values)){expect(s.controller.edit(field as keyof typeof values,value)).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));}
+  const ticket=s.active().looks.begin(candidate)!;const permit=s.active().looks.complete(ticket)!;expect(permit).not.toBeNull();
+  let signal!:AbortSignal,authorize!:()=>boolean;expect(s.active().looks.startSpeech(permit,(_draft,abort,frame)=>{signal=abort;authorize=frame;})).toBe(true);expect(authorize()).toBe(true);
+  return{...s,source,permit,signal,authorize};
+ }
+ it.each(['profile-first','touch-first'])('keeps the current correction under %s ordering and revokes the old look',async order=>{
+  const s=await prepared();await s.begin('t1');expect(s.signal.aborted).toBe(true);expect(s.authorize()).toBe(false);expect(s.active().looks.visual(s.permit)).toBeNull();
+  s.partial(1,'green');await vi.waitFor(()=>expect(s.fetch).toHaveBeenCalledTimes(1));const displayed=s.controller.snapshot().notes!,version={sessionId:displayed.sessionId,notebookSession:displayed.notebookSession,revision:displayed.notes.color.revision};
+  if(order==='profile-first'){expect(s.source.replace(1,[rule('blue')])).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().notes!.revision).toBe(s.active().snapshot().revision));}
+  expect(s.controller.edit('color','blue',version)).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));
+  if(order==='touch-first')expect(s.source.replace(1,[rule('blue')])).toBe(true);
+  // Settle the earlier extraction after the touch correction. Future extraction
+  // responses are also synthetic, so completing the turn costs no provider call.
+  s.fetch.mockImplementation(async(_url,init)=>{const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text);return response(input.turnId,input.currentFragment);});
+  s.release(response('t1','green'));await s.commit(1,'green');
+  await vi.waitFor(()=>expect(s.controller.snapshot().notes?.notes.color).toMatchObject({value:'blue',status:'confirmed',source:'touch'}));
+  expect(s.active().snapshot().notes.color.value).toBe('blue');expect(s.source.contractSnapshot()?.rules).toEqual([rule('blue')]);
+  expect(s.controller.edit('color','green',version)).toBe(false);expect(s.authorize()).toBe(false);expect(s.active().looks.visual(s.permit)).toBeNull();expect(s.active().looks.startSpeech(s.permit,vi.fn())).toBe(false);
+  const rejected=s.active().looks.begin(candidate)!;expect(s.active().looks.complete(rejected)).toBeNull();await vi.waitFor(()=>expect(s.controller.snapshot().clarification?.issues).toEqual([{field:'color',reason:'request-conflict'}]));
+  const fresh=s.active().looks.begin({...candidate,id:'corrected',color:'blue'})!;const allowed=s.active().looks.complete(fresh)!;expect(allowed).not.toBeNull();expect(s.active().looks.visual(allowed)?.id).toBe('corrected');
+  expect(s.authorize()).toBe(false);expect(s.messages.join(' ')).not.toMatch(/private-color-rule|authorizeFrame|permit/);
+  s.controller.stop();await vi.waitFor(()=>expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1));
+ });
+ it('leaves no old draft, extraction or look authority in a replacement connection',async()=>{
+  const s=await prepared();await s.begin('t1');s.partial(1,'green');await vi.waitFor(()=>expect(s.fetch).toHaveBeenCalledTimes(1));const old=s.controller.snapshot().notes!,draft={sessionId:old.sessionId,notebookSession:old.notebookSession,revision:old.notes.color.revision};
+  expect(s.source.replace(1,[rule('blue')])).toBe(true);expect(s.controller.edit('color','blue',draft)).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));s.controller.stop();await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));
+  const ws=new WebSocket(s.url,{headers}),fresh=new NoteBrowserController({simulation:true,socket:{send:text=>ws.send(text),close:()=>ws.close(),get bufferedAmount(){return ws.bufferedAmount;}},changed:vi.fn()});
+  ws.on('message',data=>fresh.receive(JSON.parse(data.toString())));ws.on('error',()=>fresh.disconnected());ws.on('close',()=>fresh.disconnected());cleanups.push(async()=>{fresh.stop();ws.terminate();});
+  await vi.waitFor(()=>expect(fresh.snapshot().notes).not.toBeNull());s.release(response('t1','green'));
+  expect(fresh.edit('color','old unsent draft',draft)).toBe(false);expect(fresh.snapshot().clarification).toBeNull();expect(fresh.snapshot().notes!.notes.color.status).toBe('missing');
+  expect(s.active().looks.visual(s.permit)).toBeNull();expect(s.active().looks.startSpeech(s.permit,vi.fn())).toBe(false);expect(s.authorize()).toBe(false);expect(s.source.contractSnapshot()?.revision).toBe(2);
+  fresh.stop();await vi.waitFor(()=>expect(s.allowance.closeVerified).toHaveBeenCalledTimes(2));expect(s.controller.snapshot().notes).toBeNull();expect(fresh.snapshot().notes).toBeNull();
+ });
+});

@@ -528,3 +528,10 @@ I also checked the edit flow over an actual local connection for all seven field
 I made stale edits and connection loss repeatable in the notebook rehearsal. When a newer Blue note arrived while Red was being edited, the old draft could not overwrite it. The customer could explicitly reload Blue for review or cancel without sending anything. Connection loss removed the draft and temporary notes.
 
 I found another keyboard issue: loading the latest note removed the focused reload button. I moved focus into the updated input, and returned focus to Start when the connection ended. I also clarified the status messages so a canceled draft could not be mistaken for a saved change. All 1,103 tests, type checking and build pass. The browser checks used local scripted events, with real phone and screen-reader acceptance still pending.
+
+
+## Separating local performance evidence from live readiness
+
+I checked the race between a customer correction, a saved preference change and a delayed extraction response in both event orders. The latest touch correction stayed in place. Earlier visual and speech permissions remained revoked, and a matching sample needed a fresh check before release. Replacement sessions could not reuse the old draft or permission.
+
+I added a local timing panel that shows failed, canceled and pending updates alongside successful ones. I labeled the measurements as simulated so a fast local result could not be mistaken for live acceptance. The panel uses temporary timing metadata only and clears when the rehearsal ends. All 1,109 tests, type checking and build pass; real speech, phone performance and provider startup still need separate evidence.
