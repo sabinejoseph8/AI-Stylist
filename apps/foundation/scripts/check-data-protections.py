@@ -34,6 +34,17 @@ try:
    sql(actor(uid,query),False)
  sql(f"insert into public.stylist_media_assets(user_id,storage_key,content_type,width,height) values ('{a}','{b}/bad.jpg','image/jpeg',1,1);",False)
  assert sql('select count(*) from public.stylist_media_assets;')=='1'
- print('12 data-protection checks passed. Synthetic local database only; no Storage or hosted acceptance.')
+ # A minimal Storage schema rehearses policy SQL, not the Storage API/signing service.
+ sql("create schema storage; create table storage.buckets(id text primary key,name text,public boolean,file_size_limit bigint,allowed_mime_types text[]); create table storage.objects(id uuid default gen_random_uuid(),bucket_id text,name text); alter table storage.objects enable row level security; grant usage on schema storage to authenticated,anon; grant select,insert,update,delete on storage.objects to authenticated,anon;")
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110002_private_image_bucket.sql').read_text())
+ sql(f"insert into storage.objects(bucket_id,name) values ('stylist-wardrobe','{a}/fixture.jpg'),('other','{a}/other.jpg');")
+ assert sql(actor(a,'select count(*) from storage.objects;'))=='1'
+ assert sql(actor(b,'select count(*) from storage.objects;'))=='0'
+ assert sql('set role anon; select count(*) from storage.objects;')=='0'
+ sql(actor(a,f"insert into storage.objects(bucket_id,name) values ('stylist-wardrobe','{a}/new.jpg');"),False)
+ assert sql(actor(a,"with changed as (delete from storage.objects returning *) select count(*) from changed;"))=='0'
+ assert sql(actor(a,"with changed as (update storage.objects set name='changed' returning *) select count(*) from changed;"))=='0'
+ assert sql("select public::text || ':' || file_size_limit::text from storage.buckets where id='stylist-wardrobe';")=='false:10485760'
+ print('19 data-protection checks passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])
