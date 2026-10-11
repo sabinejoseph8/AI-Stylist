@@ -501,3 +501,12 @@ I connected the simulated server's preference explanations to the protected note
 I expanded the local seven-step review to show a held preference check, correct the color and finish with cleared notes. I completed this review myself. Separately, I checked the server-to-browser flow against the local SQL test ledger, including a fresh session receiving none of the old notes or explanations.
 
 All 1,059 prototype checks, type checking and build pass, plus 50 local SQL checks, thirteen owner scenarios and nineteen browser scenarios. These results use simulated providers and profiles. Customer acceptance, live quality and real saved-profile ownership remain open.
+
+
+## Handling several preference questions without losing context
+
+I expanded the notebook review to show several unresolved preferences at once. I kept a tentative style note and a missing budget visibly distinct, so asking for clarification does not turn an assumption into a confirmed requirement. Confirming one field removes only that field's question. Rapid preference revisions show only the latest explanation.
+
+I tested the visible flow using Enter and Tab. Focus stayed on the active button while explanations changed, and ending the review cleared the notes. I checked screen-reader announcement markup, but I have not yet tested spoken screen-reader output or this new flow on a phone.
+
+All 1,072 prototype tests, type checking and build pass. The review still uses scripted profiles and simulated services; live customer acceptance remains open.

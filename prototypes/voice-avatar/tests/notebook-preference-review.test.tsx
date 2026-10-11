@@ -1,3 +1,4 @@
+import {FIELDS} from '../src/notebook-state.ts';
 import React from 'react';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {describe,it,expect} from 'vitest';
@@ -8,4 +9,10 @@ describe('notebook preference explanation presentation',()=>{
  it('renders no stale panel for a cleared record',()=>expect(renderToStaticMarkup(<PreferenceClarificationPanel record={null}/>)).toBe(''));
  it.each(['confirm-note','saved-uncertain','request-conflict','saved-conflict','unsupported-rule'] as const)('renders accessible safe wording for %s',reason=>{const html=renderToStaticMarkup(<PreferenceClarificationPanel record={record(reason)}/>);expect(html).toContain('role="status"');expect(html).toContain('aria-live="polite"');expect(html).toContain('Color:');expect(html).toContain('suggestion stays on hold');expect(html).not.toContain('profileRevision');expect(html).not.toContain('checkId');});
  it('provides the complete local review instructions and disabled inactive controls',()=>{const html=renderToStaticMarkup(<NotebookPreferenceReview/>);expect(html).toContain('Review preference explanations');expect(html).toContain('Show simulated preference conflict');expect(html).toContain('Simulate a note edit');expect(html).toContain('End preference review');expect(html).toContain('does not connect to a server');expect(html.match(/disabled=""/g)).toHaveLength(2);expect(html).not.toContain('aria-label="Preference clarification"');});
+});
+
+
+describe('multiple-field accessible explanations',()=>{
+ it.each(FIELDS)('renders the readable label for %s', (field,label)=>{const value={...record('confirm-note'),issues:[{field,reason:'confirm-note' as const}]};const html=renderToStaticMarkup(<PreferenceClarificationPanel record={value}/>);expect(html).toContain(label+':');expect(html).toContain('Confirm this note');expect(html).not.toContain('tabindex');expect(html).not.toContain('autofocus');});
+ it('announces a complete list and then renders only the replacement issues',()=>{const first={...record('request-conflict'),issues:[{field:'color' as const,reason:'request-conflict' as const},{field:'style' as const,reason:'confirm-note' as const},{field:'budget' as const,reason:'saved-uncertain' as const}]};const html=renderToStaticMarkup(<PreferenceClarificationPanel record={first}/>);expect(html.match(/<li>/g)).toHaveLength(3);expect(html).toContain('aria-atomic="true"');const next=renderToStaticMarkup(<PreferenceClarificationPanel record={{...first,profileRevision:2,issues:[{field:'style',reason:'saved-uncertain'}]}}/>);expect(next.match(/<li>/g)).toHaveLength(1);expect(next).not.toContain('Color:');expect(next).not.toContain('Budget:');});
 });

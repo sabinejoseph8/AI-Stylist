@@ -16,7 +16,7 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
  if(options.simulation!==true)throw Error('Live notebook rehearsal is disabled.');
  const notebook=new NotebookState(),remote=new PreparedRemoteNoteCapture({simulation:true}),events=new EventTarget(),owner={};
  let probe!:NoteSessionProbe,id='',wireSequence=0,frame:((pcm:ArrayBuffer)=>boolean)|null=null,closed=false,turn=0;
- let pending=false,clarificationSequence=0;
+ let pending=false,clarificationSequence=0,profileRevision=1;
  const timers=new Set<ReturnType<typeof setTimeout>>();
  const later=(fn:()=>void,ms=0)=>{const timer=setTimeout(()=>{timers.delete(timer);if(!closed)fn();},ms);timers.add(timer);};
  const emit=(value:unknown)=>{if(!closed)events.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}));};
@@ -59,13 +59,26 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
      },100);
    };later(capture,200);return true;
  }
- function explain(){
+ function explain(mode:'single'|'multiple'='single'){
    if(closed||session.status().state!=='ready'||notebook.snapshot().notes.color.status!=='confirmed')return false;
    // Scripted held-check presentation only, not a real saved customer profile.
+   if(mode==='multiple'){
+     const current=notebook.snapshot();
+     notebook.capture({session:current.session,field:'style',baseRevision:current.notes.style.revision,sequence:current.notes.style.sequence+1,value:'Structured',confirmed:false});
+     publish(null);
+   }
    emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record:null});
    const ticket=notebook.beginCheck();notebook.completeCheck(ticket,{outcome:'unknown',reason:'Scripted preference conflict.'});
-   const record=preparePreferenceClarification({simulation:true,profileRevision:1,notebook:notebook.snapshot(),ticket,issues:[{field:'color',reason:'request-conflict'}]});
+   const record=preparePreferenceClarification({simulation:true,profileRevision,notebook:notebook.snapshot(),ticket,issues:mode==='multiple'?[{field:'color',reason:'request-conflict'},{field:'style',reason:'confirm-note'},{field:'budget',reason:'saved-uncertain'}]:[{field:'color',reason:'request-conflict'}]});
    emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record});return !closed;
  }
- return{session,play,explain,turns:()=>turn,dispose:()=>{binding.dispose();stop();},snapshot:()=>({closed,turns:turn,server:probe?.snapshot()??null,notes:notebook.snapshot()})};
+ function revise(){
+   if(closed||session.status().state!=='ready'||!session.snapshot().connection.clarification)return false;
+   emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record:null});
+   profileRevision++;notebook.preferencesChanged();publish(null);
+   const ticket=notebook.beginCheck();notebook.completeCheck(ticket,{outcome:'unknown',reason:'Scripted updated requirement.'});
+   const record=preparePreferenceClarification({simulation:true,profileRevision,notebook:notebook.snapshot(),ticket,issues:[{field:'style',reason:'saved-uncertain'}]});
+   emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record});return !closed;
+ }
+ return{session,play,explain,revise,turns:()=>turn,dispose:()=>{binding.dispose();stop();},snapshot:()=>({closed,turns:turn,server:probe?.snapshot()??null,notes:notebook.snapshot()})};
 }
