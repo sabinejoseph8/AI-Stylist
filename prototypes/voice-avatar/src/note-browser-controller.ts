@@ -1,3 +1,5 @@
+import {SimulatedClarificationClient} from './preference-clarification-wire.ts';
+import type {PreferenceClarification} from './preference-clarification.ts';
 import {encodeNoteAudio} from './note-audio-frame.ts';
 import {NoteUpdateClient} from './note-update-wire.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
@@ -10,6 +12,8 @@ const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='ob
  * UI receipts must follow the exact committed display, never just receipt arrival. */
 export class NoteBrowserController {
  private client=new NoteUpdateClient();
+ private clarification=new SimulatedClarificationClient({simulation:true});
+ private clarificationChanged:(record:PreferenceClarification|null)=>void;
  private socket:SimulatedBrowserSocket;
  private changed:(update:NoteUpdate|null)=>void;
  private ended=false;
@@ -25,25 +29,30 @@ export class NoteBrowserController {
  private deadline:ReturnType<typeof setTimeout>|null=null;
  private overall:ReturnType<typeof setTimeout>;
  private providerDeadline:ReturnType<typeof setTimeout>|null=null;
- constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;changed:(update:NoteUpdate|null)=>void}){
+ constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;changed:(update:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void}){
    if(options.simulation!==true)throw Error('Live notebook browser connection is disabled.');
-   this.socket=options.socket;this.changed=options.changed;
+   this.socket=options.socket;this.changed=options.changed;this.clarificationChanged=options.clarificationChanged??(()=>{});
    this.overall=setTimeout(()=>this.stop(),85000);this.wait();
  }
  private wait(){if(this.deadline!==null)clearTimeout(this.deadline);this.deadline=setTimeout(()=>this.stop(),5000);}
  private notify(){try{this.changed(this.client.snapshot());}catch{this.stop();}}
+ private notifyClarification(){try{this.clarificationChanged(this.clarification.snapshot());}catch{this.stop();}}
+ private clearClarification(){this.clarification.clear();this.notifyClarification();}
  receive(value:unknown):boolean{
    if(this.ended||!object(value))return this.reject();
    if(!this.sessionId){
      if(!this.client.ready(value))return this.reject();
      this.sessionId=value.sessionId as string;if(this.deadline!==null)clearTimeout(this.deadline);this.deadline=null;return true;
    }
+   if(value.type==='clarification'){
+     if(!this.clarification.accept(value))return this.reject();this.notifyClarification();return !this.ended;
+   }
    if(value.type==='turn-ready'){
      if(Object.keys(value).length!==4||!['version','type','sessionId','turnId'].every(k=>Object.hasOwn(value,k))||value.version!==1||value.sessionId!==this.sessionId||!this.awaitingTurn||value.turnId!==this.awaitingTurn)return this.reject();
      this.awaitingTurn=null;if(this.providerDeadline!==null)clearTimeout(this.providerDeadline);this.providerDeadline=null;this.notify();return !this.ended;
    }
    if(value.type==='notes'){
-     if(!this.client.accept(value))return this.reject();this.notify();return !this.ended;
+     if(!this.client.accept(value)||!this.clarification.notes(value))return this.reject();this.notifyClarification();if(this.ended)return false;this.notify();return !this.ended;
    }
    if(Object.keys(value).length!==4||!['version','type','sessionId','sequence'].every(k=>Object.hasOwn(value,k))||value.version!==1||value.type!=='accepted'||value.sessionId!==this.sessionId||this.pending===null||value.sequence!==this.pending)return this.reject();
    if(this.pendingType==='begin')this.capturing=true;
@@ -56,6 +65,7 @@ export class NoteBrowserController {
    if(this.ended||!this.sessionId||this.pending!==null||this.sequence>=256)return false;
    if(this.socket.bufferedAmount>65536)return this.reject();
    this.pendingType=type;this.pending=++this.sequence;this.wait();
+   if(['begin','edit','confirm'].includes(type)){this.clearClarification();if(this.ended)return false;}
    try{this.socket.send(JSON.stringify({version:1,sessionId:this.sessionId,sequence:this.sequence,type,...extra}));return !this.ended;}
    catch{return this.reject();}
  }
@@ -86,9 +96,10 @@ export class NoteBrowserController {
  disconnected(){this.stop();}
  stop(){
    if(this.ended)return;this.ended=true;clearTimeout(this.overall);if(this.deadline!==null)clearTimeout(this.deadline);if(this.providerDeadline!==null)clearTimeout(this.providerDeadline);
-   this.activeTurn=null;this.awaitingTurn=null;this.usedTurns.clear();this.capturing=false;this.pendingType=null;this.pending=null;this.sessionId=null;this.client.disconnect();
+   this.activeTurn=null;this.awaitingTurn=null;this.usedTurns.clear();this.capturing=false;this.pendingType=null;this.pending=null;this.sessionId=null;this.client.disconnect();this.clarification.stop();
+   try{this.clarificationChanged(null);}catch{/* Temporary explanations remain cleared. */}
    try{this.socket.close();}catch{/* Local data remains cleared; no remote cleanup claim. */}
    try{this.changed(null);}catch{/* No stale content retained in controller. */}
  }
- snapshot(){return{ended:this.ended,ready:this.sessionId!==null,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),liveEnabled:false as const};}
+ snapshot(){return{ended:this.ended,ready:this.sessionId!==null,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),clarification:this.clarification.snapshot(),liveEnabled:false as const};}
 }

@@ -1,3 +1,4 @@
+import type {PreferenceClarification} from './preference-clarification.ts';
 import {NoteBrowserController} from './note-browser-controller.ts';
 import type {SimulatedBrowserSocket} from './note-browser-controller.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
@@ -18,10 +19,10 @@ export class PreparedBrowserNoteSession {
  private ended=false;
  private cleanupFailed=false;
  private endReason: 'stopped'|'connection'|'hidden'|'capture'|'display'|null=null;
- constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;capture:BrowserNoteCapture;changed:(notes:NoteUpdate|null)=>void}){
+ constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;capture:BrowserNoteCapture;changed:(notes:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void}){
    if(options.simulation!==true)throw Error('Live browser note session is disabled.');
    this.capture=options.capture;this.changed=options.changed;
-   this.controller=new NoteBrowserController({simulation:true,socket:options.socket,changed:notes=>{
+   this.controller=new NoteBrowserController({simulation:true,socket:options.socket,clarificationChanged:options.clarificationChanged,changed:notes=>{
      if(this.controller.snapshot().ended){this.stop('connection');return;}
      try{this.changed(notes);}catch{this.stop('display');}
    }});

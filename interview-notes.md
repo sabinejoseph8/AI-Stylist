@@ -483,3 +483,12 @@ I prepared structured clarification records so a held preference check can ident
 I checked that an explanation cannot act as a look approval or change a profile. It also cannot carry into a replacement session. I kept these records on the server for now; showing them in the notebook remains the next integration step.
 
 All 989 prototype tests, 50 local SQL checks, thirteen owner scenarios and eighteen browser scenarios pass, alongside type checking and build. These are simulated records and providers, so customer-facing clarification, real profile storage and live acceptance remain open.
+
+
+## Making preference explanations visible in the notebook
+
+I added a local review that shows which styling field needs clarification while keeping the suggestion on hold. I kept the wording separate from private saved values and made clear that editing the current note does not save or override a profile.
+
+I prepared the simulated browser connection to clear explanations before a correction or new voice turn. Stale or malformed messages end the connection safely instead of restoring an explanation from an older state. I checked the three-step local flow myself: show the conflict, change the color, and end the review. The actual protected server publication is still the next integration step.
+
+All 1,040 prototype tests, type checking and build pass. These remain simulated services and profiles. Live notebook quality, real profile ownership and customer acceptance are still pending.
