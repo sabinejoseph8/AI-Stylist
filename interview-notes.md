@@ -638,3 +638,5 @@ I extended those protections to deletion and added an automated database check i
 I also separated explicitly selected profile preferences from the live notebook. The prepared save request rejects transcripts and event details, validates USD amounts in cents and refuses contradictory color choices. The foundation now has 51 passing checks. This contract still needs database integration before it can save a real profile.
 
 I prepared profile saves so the preference update and its revision signal succeed together. A stale or invalid save produces neither change. This creates the foundation for checking another tab’s preference changes before releasing a look; the live invalidation connection is still to be built. The isolated database suite now passes 74 checks.
+
+I added a revision fence so newer saved preferences cancel permits based on an older profile. A permit cannot be reused for another customer. I kept the limitation explicit: the fence still needs an authoritative database check before releasing a real look. The foundation suite now passes 65 tests.

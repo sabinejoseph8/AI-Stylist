@@ -1191,3 +1191,12 @@ Exact next action: add second-tab/competing-profile-save tests and the revision-
 
 
 Latest checkpoint: 85 local database scenarios now cover concurrent profile saves, second-tab stale revisions and rollback of both profile and revision event. Only one competing save succeeds. Local foundation evidence remains 51 checks with type checking/build passing. Next: the revision-event consumption contract, saved-look schemas and safe image upload/reference-aware cleanup. Task 2b remains open. No action is required from Sabine for continued local preparation.
+
+
+## Profile revision fence, 11 October 2026
+
+The active persistent Goal is now created; subsequent idle turns can resume authorized work automatically. Previous goal turn created that authoritative state. Added a local profile revision fence: initial readiness requires an observation; advancing revision synchronously cancels old permits; stale/invalid observations or cancellation failure close the fence. Issued permit identity prevents reuse across fence instances or copied stamps. Fourteen focused checks bring the foundation suite to 65 passing tests; type checking passes. Build passed before the permit-identity follow-up, which changes server-only code.
+
+This fence has no live subscription or database release transaction attached. It cannot prove a current database revision by itself; release must perform an authoritative, serialized revision check. Task 2b and Phase 1 remain open. No remote migration, paid call or deployment occurred.
+
+Exact next action: implement the local revision-event read/consumption boundary and its owner/isolation checks, then saved-look persistence and safe media upload/reference-aware cleanup. Preserve local-only Task 2b authorization and all spending limits. No Sabine action is required for this preparation.
