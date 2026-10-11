@@ -538,3 +538,12 @@ Prepared a trusted server adapter contract for durable staging, put-if-absent ob
 Evidence: eleven new simulated-adapter/synthetic-image scenarios bring foundation tests to 123 passing tests; type checking passes. Build passed before the server-only exact-key follow-up. This is orchestration preparation, not a durable adapter, database lock, live upload route or hosted verification. The adapter must implement atomic reference claims and forbid new references to deleting assets. No Supabase/Render change or personal image was used. Task 2b remains open.
 
 Exact next action: implement unapplied database staging/deletion states and reference locks, with real isolated SQL races and reconciliation checks. Then add image malformed/animated/pixel-bound fixtures, hard process limits and migration compatibility. Complete retail persistence separately. No human action needed for authorized local preparation.
+
+
+## Database image lifecycle and reference locking, 11 October 2026
+
+Added an unapplied migration with staged/ready/deleting image states, checksum and deletion token. Service-only stage/commit/finalize RPCs prepare opaque owner keys; customer mutation cannot initialize or finalize storage records. Owner-confirmed deletion locks the image row, checks current revision and refuses existing wardrobe/look references. Reference triggers acquire a compatible lock and refuse assets that are not ready. Legacy local fixture rows remain ready with optional checksum for additive compatibility; legacy-key deletion compatibility is still to be reviewed.
+
+All isolated database scenarios pass, including staged-reference refusal, service-only permissions, foreign/checksum mismatch, referenced-image deletion refusal, lost-finalization hold and a concurrent save-versus-delete race with exactly one winner and a consistent final state. The test runner now reports suite success rather than a manually maintained scenario total. The temporary network-disabled PostgreSQL container was removed. This is real local SQL with synthetic Auth/Storage schemas, not actual object deletion or hosted acceptance. Foundation evidence remains 123 passing tests. No remote change or paid call occurred. Task 2b remains open.
+
+Exact next action: add server-only pending-operation reads and reconciliation, wire the prepared lifecycle to a simulated SQL-backed adapter, then hard image-process limits and migration compatibility checks. Preserve retail snapshot persistence work and all hosted/Phase 1 gates. No human action required for local preparation.

@@ -652,3 +652,5 @@ I reused the existing catalog rules for saved retail history instead of creating
 I prepared an image sanitizer that checks actual bytes, removes photo metadata and corrects orientation before producing a bounded WebP image. I tested with generated images rather than customer photos. The foundation suite passes 112 checks. I kept deployment resource limits and actual uploads as unfinished work.
 
 I prepared an image lifecycle that treats a lost response as uncertainty rather than permission to erase data. Uploads are staged first, and deletion cannot finalize until object removal is acknowledged. I verified these paths with simulated adapters and generated images. Actual database locking and hosted storage remain unfinished.
+
+I added database locks to prevent a race between saving an image reference and deleting the image. The concurrent SQL check produces exactly one winner and keeps a consistent result. Pending deletion retains its token and metadata until the server confirms object removal. Hosted object storage remains to be verified.

@@ -21,7 +21,7 @@ try:
   if run(['docker','exec',name,'pg_isready','-h','127.0.0.1','-U','postgres']).returncode==0: break
   time.sleep(.2)
  else: raise RuntimeError('Database startup timed out')
- sql("create role anon; create role authenticated; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;")
+ sql("create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;")
  sql(f"insert into auth.users values ('{a}'),('{b}');")
  sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110001_customer_media_foundation.sql').read_text())
  sql(f"insert into public.stylist_media_assets(user_id,storage_key,content_type,width,height) values ('{a}','{a}/fixture.jpg','image/jpeg',100,100);")
@@ -171,6 +171,40 @@ try:
  assert sql(actor(a,'select count(*) from public.stylist_saved_looks;'))=='0'
  assert sql('select count(*) from public.stylist_media_assets;')=='1'
  sql(actor(a,f"select public.stylist_delete_saved_look('{look}',3,true);"),False)
- print('122 data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110009_media_lifecycle.sql').read_text())
+ staged='00000000-0000-0000-0000-000000000003'
+ checksum='a'*64
+ sql(f"set role service_role; select public.stylist_stage_media('{staged}','{a}','{checksum}',10,10);")
+ sql(actor(a,f"select public.stylist_commit_media('{staged}','{a}','{checksum}');"),False)
+ sql(actor(a,f"select public.stylist_save_wardrobe('{staged}','Staged',true);"),False)
+ sql(f"set role service_role; select public.stylist_commit_media('{staged}','{b}','{checksum}');",False)
+ sql(f"set role service_role; select public.stylist_commit_media('{staged}','{a}','{'b'*64}');",False)
+ sql(f"set role service_role; select public.stylist_commit_media('{staged}','{a}','{checksum}');")
+ saved=sql(actor(a,f"select (public.stylist_save_wardrobe('{staged}','Ready',true)).id;"))
+ sql(actor(a,f"select public.stylist_begin_media_delete('{staged}',2,true);"),False)
+ sql(actor(a,f"select public.stylist_delete_wardrobe('{saved}',1,true);"))
+ sql(actor(b,f"select public.stylist_begin_media_delete('{staged}',2,true);"),False)
+ claim=json.loads(sql(actor(a,f"select public.stylist_begin_media_delete('{staged}',2,true);")))
+ assert claim['key']==f'{a}/{staged}.webp'
+ sql(actor(a,f"select public.stylist_save_wardrobe('{staged}','Deleting',true);"),False)
+ sql(f"set role service_role; select public.stylist_finish_media_delete('{staged}','{a}','{staged}');",False)
+ assert sql(f"select state from public.stylist_media_assets where id='{staged}';")=='deleting'
+ sql(f"set role service_role; select public.stylist_finish_media_delete('{staged}','{a}','{claim['deletionToken']}');")
+ assert sql(f"select count(*) from public.stylist_media_assets where id='{staged}';")=='0'
+ race_id='00000000-0000-0000-0000-000000000004'
+ sql(f"set role service_role; select public.stylist_stage_media('{race_id}','{a}','{checksum}',10,10); select public.stylist_commit_media('{race_id}','{a}','{checksum}');")
+ def reference_race(action):
+  query=actor(a,f"select public.stylist_save_wardrobe('{race_id}','Race',true);" if action=='save' else f"select public.stylist_begin_media_delete('{race_id}',2,true);")
+  return run(['docker','exec','-i',name,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],input=query)
+ with ThreadPoolExecutor(max_workers=2) as pool:
+  results=list(pool.map(reference_race,['save','delete']))
+ assert sum(r.returncode==0 for r in results)==1
+ state=sql(f"select state from public.stylist_media_assets where id='{race_id}';")
+ references=int(sql(f"select count(*) from public.stylist_wardrobe_items where asset_id='{race_id}';"))
+ assert (state=='ready' and references==1) or (state=='deleting' and references==0)
+ sql(actor(a,f"select public.stylist_stage_media('{staged}','{a}','{checksum}',10,10);"),False)
+ sql('set role anon; select public.stylist_stage_media(null,null,null,null,null);',False)
+ sql(f"set role service_role; select public.stylist_stage_media('{staged}','{a}','{checksum}',8192,8192);",False)
+ print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])
