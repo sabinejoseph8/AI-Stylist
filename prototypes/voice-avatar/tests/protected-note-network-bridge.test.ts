@@ -151,3 +151,38 @@ describe('multiple saved requirements through the protected bridge',()=>{
  it('holds tentative speech and uncertain saved values in separate fields',async()=>{const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[{id:'color',field:'color',kind:'required',status:'confirmed',value:'green'},{id:'budget',field:'budget',kind:'required',status:'uncertain',value:null}]}}),s=await setup(false,false,{preferences:source});await s.begin('t1');s.partial(1,'green');await vi.waitFor(()=>expect(s.controller.snapshot().notes?.notes.color.status).toBe('tentative'));await s.commit(1,'green');const ticket=s.active().looks.begin(candidate)!;expect(s.active().looks.complete(ticket)).toBeNull();await vi.waitFor(()=>expect(s.controller.snapshot().clarification?.issues).toEqual([{field:'color',reason:'confirm-note'},{field:'budget',reason:'saved-uncertain'}]));expect(s.controller.snapshot().notes!.notes.budget.status).toBe('missing');expect(s.controller.confirm('color')).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));expect(s.controller.snapshot().clarification).toBeNull();const next=s.active().looks.begin(candidate)!;s.active().looks.complete(next);await vi.waitFor(()=>expect(s.controller.snapshot().clarification?.issues).toEqual([{field:'budget',reason:'saved-uncertain'}]));expect(s.active().snapshot().gate?.state).toBe('held');});
  it('keeps only the latest explanation through rapid profile revisions and checks',async()=>{const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),s=await setup(false,false,{preferences:source});for(let revision=1;revision<=3;revision++){source.replace(revision,[{id:'rule',field:revision===3?'style':'budget',kind:'required',status:'uncertain',value:null}]);const ticket=s.active().looks.begin(candidate)!;expect(s.active().looks.complete(ticket)).toBeNull();}await vi.waitFor(()=>expect(s.controller.snapshot().clarification?.profileRevision).toBe(4));expect(s.controller.snapshot().clarification?.issues).toEqual([{field:'style',reason:'saved-uncertain'}]);expect(s.controller.snapshot().ended).toBe(false);expect(s.controller.snapshot().clarification!.notebookRevision).toBe(s.controller.snapshot().notes!.revision);});
 });
+
+describe('revision-bound editing through the protected connection',()=>{
+ const values={occasion:'Outdoor wedding',season:'November',color:'Emerald green',style:'Tailored',budget:'USD 350 maximum (items only)',lookType:'Dress',wardrobe:'My navy jacket'} as const;
+ it.each(Object.entries(values))('edits, confirms and clears only the current %s field',async(raw,value)=>{
+  const field=raw as keyof typeof values,s=await setup();const initial=s.controller.snapshot().notes!;
+  const version={sessionId:initial.sessionId,notebookSession:initial.notebookSession,revision:initial.notes[field].revision};
+  expect(s.controller.edit(field,value,version)).toBe(true);expect(s.controller.snapshot().notes!.notes[field].status).toBe('missing');
+  await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));const updated=s.controller.snapshot().notes!;
+  expect(updated.notes[field]).toMatchObject({value,status:'confirmed',source:'touch'});
+  for(const other of Object.keys(values) as (keyof typeof values)[])if(other!==field)expect(updated.notes[other]).toEqual(initial.notes[other]);
+  const before=s.messages.length;expect(s.controller.edit(field,'obsolete',version)).toBe(false);expect(s.controller.confirm(field,version)).toBe(false);expect(s.messages).toHaveLength(before);
+  expect(s.controller.confirm(field,{...version,revision:updated.notes[field].revision})).toBe(true);
+  await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));expect(s.controller.snapshot().notes!.notes[field].value).toBe(value);
+  const current=s.controller.snapshot().notes!;expect(s.controller.edit(field,'',{...version,revision:current.notes[field].revision})).toBe(true);
+  await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));expect(s.controller.snapshot().notes!.notes[field]).toMatchObject({value:'',status:'missing'});
+  expect(s.controller.confirm(field)).toBe(false);expect(s.controller.snapshot().ended).toBe(false);
+  s.controller.stop();await vi.waitFor(()=>expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1));expect(s.controller.snapshot().notes).toBeNull();
+ });
+ it('keeps the corrected budget and invalidates an old check before any fresh release',async()=>{
+  const s=await setup();expect(s.controller.edit('budget','USD 500 maximum (items only)')).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));const old=s.controller.snapshot().notes!;
+  const candidate={id:'fixture',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:45000,currency:'USD' as const};
+  const ticket=s.active().looks.begin(candidate)!;expect(s.active().looks.complete(ticket)).toBeNull();
+  expect(s.controller.edit('budget','USD 350 maximum (items only)',{sessionId:old.sessionId,notebookSession:old.notebookSession,revision:old.notes.budget.revision})).toBe(true);
+  await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));expect(s.active().looks.complete(ticket)).toBeNull();
+  expect(s.controller.edit('budget','USD 500 maximum (items only)',{sessionId:old.sessionId,notebookSession:old.notebookSession,revision:old.notes.budget.revision})).toBe(false);
+  expect(s.controller.snapshot().notes!.notes.budget.value).toBe('USD 350 maximum (items only)');expect(s.active().snapshot().gate?.state).not.toBe('passed');
+ });
+ it('rejects a prior connection draft even when field and notebook revisions match',async()=>{
+  const old=await setup(),notes=old.controller.snapshot().notes!,version={sessionId:notes.sessionId,notebookSession:notes.notebookSession,revision:notes.notes.color.revision};
+  old.controller.stop();await vi.waitFor(()=>expect(old.bridge.snapshot().active).toBe(false));const fresh=await setup();
+  expect(fresh.controller.snapshot().notes!.notes.color.revision).toBe(version.revision);expect(fresh.controller.snapshot().notes!.notebookSession).toBe(version.notebookSession);
+  expect(fresh.controller.edit('color','stale',version)).toBe(false);expect(fresh.controller.snapshot().notes!.notes.color.status).toBe('missing');
+  expect(old.controller.edit('color','stale',version)).toBe(false);expect(old.controller.snapshot().notes).toBeNull();expect(fresh.controller.snapshot().ended).toBe(false);
+ });
+});

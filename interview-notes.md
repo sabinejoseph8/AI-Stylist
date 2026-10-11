@@ -519,3 +519,5 @@ I added touch editing to every field in the connected notebook rehearsal so cust
 I bound each draft to the note version the customer opened, preventing an older draft from overwriting a newer correction. During keyboard review, I found that confirming a note removed the focused button. I fixed this by moving focus to Edit before confirmation. Escape and Cancel keep the original note and restore focus.
 
 All 1,089 prototype tests, type checking, build and isolated database checks pass. I verified the visible simulated editor and recorded the remaining phone, screen-reader and live-provider checks separately. These results do not establish customer launch readiness.
+
+I also checked the edit flow over an actual local connection for all seven fields. The tests confirmed that a later budget reduction stays in place and an ended session's draft cannot affect a replacement session, even if their field revisions match. The suite now has 1,098 passing tests; type checking and build pass. The services and allowance remain simulated.
