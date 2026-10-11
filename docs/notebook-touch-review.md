@@ -41,3 +41,17 @@ Read first: this optional check measures scripted events, not real speech or the
 4. End rehearsal. Both the notes and diagnostics must disappear.
 
 Implementer browser verification passed one acknowledged sample and end clearing. Representative live timing and physical-device performance remain unverified.
+
+
+### Pending, canceled and restarted timing review
+
+Read all steps before beginning. This is optional local review, with generated silence and scripted transcripts only.
+
+1. Start a clean connection rehearsal. Select Hold timing acknowledgments before playing the first simulated turn.
+2. Wait for Emerald green, then expand Local timing diagnostics. Pending should be 1, Rendered 0 and p95 Not measured. The note is visible, but this fixture deliberately withholds its display receipt.
+3. Edit Color to Blue and save. Canceled should become 1 and Pending 0. The sample cannot become a successful measurement later.
+4. End rehearsal. The notes and diagnostics disappear.
+5. Start a fresh rehearsal and open diagnostics. All counts are zero, p95 is Not measured, the hold checkbox is cleared and previous notes are missing.
+6. End rehearsal when finished. No live target is accepted by this check.
+
+Implementer browser verification passed these steps. Sabine’s acceptance and physical-device verification of this new control remain pending.

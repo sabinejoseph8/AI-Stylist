@@ -535,3 +535,8 @@ I found another keyboard issue: loading the latest note removed the focused relo
 I checked the race between a customer correction, a saved preference change and a delayed extraction response in both event orders. The latest touch correction stayed in place. Earlier visual and speech permissions remained revoked, and a matching sample needed a fresh check before release. Replacement sessions could not reuse the old draft or permission.
 
 I added a local timing panel that shows failed, canceled and pending updates alongside successful ones. I labeled the measurements as simulated so a fast local result could not be mistaken for live acceptance. The panel uses temporary timing metadata only and clears when the rehearsal ends. All 1,109 tests, type checking and build pass; real speech, phone performance and provider startup still need separate evidence.
+
+
+## Making incomplete timing evidence visible
+
+I made the local timing rehearsal show unfinished and canceled updates, so a fast successful sample could not hide work that never reached acknowledgment. I added a deliberate receipt-hold control with instructions before the test. I verified that a correction canceled the earlier sample and that restarting began with no previous measurements. I kept these results separate from live performance: scripted events cannot prove how quickly the customer’s phone and providers will respond. The latest suite passes 1,115 automated tests; the live integration still needs provider clarification and separate spending authorization.

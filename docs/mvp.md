@@ -5,11 +5,11 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 10 October 2026
 
-1109 prototype checks across 74 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, thirteen SQL-backed owner scenarios and nineteen SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+1115 prototype checks across 74 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, thirteen SQL-backed owner scenarios and nineteen SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Add a deterministic local timing review for canceled and unacknowledged note updates, then verify that ending and replacing a rehearsal removes all prior measurements. Keep the local timing target explicitly unverified and providers disabled.
+**Next action:** Await Sabine’s authorization to send the four prepared OpenAI transcription questions, then submit only that technical draft and record the outcome. Tavus recovery clarification and a newly authorized bounded live-trial allowance remain separate gates. Keep providers disabled; do not reuse the nine closed reservations.
 
 **Remaining gates:** Tavus recovery clarification, current dedicated transcription startup/delay contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. The unsent OpenAI clarification draft has no send authorization.
 
@@ -301,3 +301,12 @@ Three protected real-loopback checks interleave a displayed draft, a changed sav
 Added Local timing diagnostics to the separate connection rehearsal using existing bounded metadata only. It reports total, rendered, failed, canceled, pending, overflow and local p95, with no transcript, note values, persistence or export. Polling exists only while the rehearsal is active. Three presentation checks retain all outcomes, report unmeasured p95 honestly and show overflow. Implementer browser verification observed one acknowledged rendered sample and an explicit live-target-unverified label; ending removed the diagnostics and notes. The observed local duration is not representative live evidence.
 
 All 1,109 tests across 74 files, type checking and build pass. Prior database evidence remains 50 isolated PostgreSQL checks, thirteen owner and nineteen browser scenarios; no SQL or persistence transport changed here. Task 1c, D42/R1 and Phase 1 remain incomplete. No paid calls, credentials, allowance amendments, Supabase changes or Render deployment occurred.
+
+
+## Unacknowledged timing and replacement review, 10 October 2026
+
+Added a clearly labeled local-only Hold timing acknowledgments checkbox with complete instructions before use. It deliberately withholds the display receipt while the notes remain visible. Disabling the control resumes normal acknowledgment; starting a fresh rehearsal resets it. It does not simulate provider latency or establish live performance.
+
+Six focused lifecycle checks verify pending work has no measured duration, replacement cancels an unacknowledged sample, only a current acknowledgment records rendering, and disposal/disconnect/page exit isolate old receipts from a fresh rehearsal. Ending removes notes and the visible timing report; the retired in-memory owner retains cancellation metadata until released, while the new owner has zero samples. No transcript or note values are stored in timing records. The initial test incorrectly expected an active replacement owner to have no heartbeat timers; it was corrected to dispose that owner before asserting cleanup.
+
+Implementer browser verification passed Pending 1 with p95 Not measured, a Blue touch correction changing Canceled to 1/Pending to 0, end removing the report, and restart resetting all counts and the checkbox. This is local simulated acceptance only. All 1,115 tests across 74 files, type checking and build pass. Prior SQL evidence is unchanged and was not rerun because no SQL or persistence transport changed. Task 1c, D42/R1 and Phase 1 remain incomplete. No paid request, allowance amendment, customer record, remote configuration or Render deployment changed.

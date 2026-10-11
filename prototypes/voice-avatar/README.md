@@ -449,3 +449,8 @@ Three protected real-loopback checks interleave a displayed draft, a changed sav
 Added Local timing diagnostics to the separate connection rehearsal using existing bounded metadata only. It reports total, rendered, failed, canceled, pending, overflow and local p95, with no transcript, note values, persistence or export. Polling exists only while the rehearsal is active. Three presentation checks retain all outcomes, report unmeasured p95 honestly and show overflow. Implementer browser verification observed one acknowledged rendered sample and an explicit live-target-unverified label; ending removed the diagnostics and notes. The observed local duration is not representative live evidence.
 
 All 1,109 tests across 74 files, type checking and build pass. Prior database evidence remains 50 isolated PostgreSQL checks, thirteen owner and nineteen browser scenarios; no SQL or persistence transport changed here. Task 1c, D42/R1 and Phase 1 remain incomplete. No paid calls, credentials, allowance amendments, Supabase changes or Render deployment occurred.
+
+
+### Local timing outcome review
+
+The connection rehearsal includes Hold timing acknowledgments, an explicit local fixture control. Follow the full instructions on the page or in docs/notebook-touch-review.md before use. Pending samples have no measured p95; a correction cancels the old unacknowledged sample; ending removes the report and restarting uses a fresh owner with zero samples. The checkbox resets at start. Six lifecycle regressions bring the passing prototype suite to 1,115 tests across 74 files, with type checking and build passing. This does not establish live provider timing.

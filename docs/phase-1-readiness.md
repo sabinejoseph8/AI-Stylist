@@ -32,7 +32,7 @@ Task 1e still needs actual feasibility findings, performance measurements and ag
 
 Continue deterministic failure checks and implementation that does not depend on these live decisions. Keep fixtures explicitly synthetic, preserve all approved financial limits, and update the backlog and persistent progress after each increment. No new business requirement or acceptance target is introduced by this page.
 
-Latest deterministic evidence: 1,109 tests across 74 files, type checking and build pass. These checks and the local timing display do not establish live provider timing, remote deletion or production multi-customer isolation.
+Latest deterministic evidence: 1,115 tests across 74 files, type checking and build pass. These checks and the local timing display do not establish live provider timing, remote deletion or production multi-customer isolation.
 
 ## Disabled notebook server owner
 
@@ -180,3 +180,12 @@ Three protected real-loopback checks interleave a displayed draft, a changed sav
 Added Local timing diagnostics to the separate connection rehearsal using existing bounded metadata only. It reports total, rendered, failed, canceled, pending, overflow and local p95, with no transcript, note values, persistence or export. Polling exists only while the rehearsal is active. Three presentation checks retain all outcomes, report unmeasured p95 honestly and show overflow. Implementer browser verification observed one acknowledged rendered sample and an explicit live-target-unverified label; ending removed the diagnostics and notes. The observed local duration is not representative live evidence.
 
 All 1,109 tests across 74 files, type checking and build pass. Prior database evidence remains 50 isolated PostgreSQL checks, thirteen owner and nineteen browser scenarios; no SQL or persistence transport changed here. Task 1c, D42/R1 and Phase 1 remain incomplete. No paid calls, credentials, allowance amendments, Supabase changes or Render deployment occurred.
+
+
+## Unacknowledged timing and replacement review, 10 October 2026
+
+Added a clearly labeled local-only Hold timing acknowledgments checkbox with complete instructions before use. It deliberately withholds the display receipt while the notes remain visible. Disabling the control resumes normal acknowledgment; starting a fresh rehearsal resets it. It does not simulate provider latency or establish live performance.
+
+Six focused lifecycle checks verify pending work has no measured duration, replacement cancels an unacknowledged sample, only a current acknowledgment records rendering, and disposal/disconnect/page exit isolate old receipts from a fresh rehearsal. Ending removes notes and the visible timing report; the retired in-memory owner retains cancellation metadata until released, while the new owner has zero samples. No transcript or note values are stored in timing records. The initial test incorrectly expected an active replacement owner to have no heartbeat timers; it was corrected to dispose that owner before asserting cleanup.
+
+Implementer browser verification passed Pending 1 with p95 Not measured, a Blue touch correction changing Canceled to 1/Pending to 0, end removing the report, and restart resetting all counts and the checkbox. This is local simulated acceptance only. All 1,115 tests across 74 files, type checking and build pass. Prior SQL evidence is unchanged and was not rerun because no SQL or persistence transport changed. Task 1c, D42/R1 and Phase 1 remain incomplete. No paid request, allowance amendment, customer record, remote configuration or Render deployment changed.
