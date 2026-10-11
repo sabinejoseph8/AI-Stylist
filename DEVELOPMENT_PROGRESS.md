@@ -502,3 +502,12 @@ Added an unapplied saved-look/header and ordered component migration with same-o
 Evidence: 108 isolated local database scenarios pass, including read isolation, consent, stale edits, malformed components and rollback after duplicate references. No hosted migration, paid call or customer deployment occurred. Task 2b remains open. Previous goal turn committed the owner revision reader; this turn adds saved-look persistence.
 
 Exact next action: add controlled saved-look deletion, concurrency/reference checks and a strict server request decoder. Then prepare source-backed retail snapshot contracts, safe media upload/reference-aware cleanup and migration compatibility. Keep all live routes disabled and preserve remaining Phase 1 dependencies. No Sabine action required for local preparation.
+
+
+## Saved-look deletion and request validation, 11 October 2026
+
+Added an unapplied controlled saved-look delete function requiring owner identity, explicit confirmation and current revision. Deletion cascades only its component records and preserves image metadata. Concurrent saves allow one winner, and stale deletion/repeated deletion are refused. Added an immutable, whitelisted owned-look request decoder rejecting ownership claims, transcripts, unverified retail fields, duplicate image IDs including case differences, empty/oversized lists and invalid revisions. No live save/delete route is attached.
+
+Evidence: 122 local database scenarios and all 90 foundation tests pass; type checking and build pass. Storage/Auth remain synthetic schemas, not hosted acceptance. Task 2b remains open. Previous goal turn committed saved-look storage; this turn verifies concurrent edits and controlled deletion.
+
+Exact next action: prepare source-backed retail saved-look snapshot contracts and safe media upload/reference-aware cleanup, then migration compatibility checks. Preserve current Phase 1 gates and local-only authorization. No human action required for this preparation.

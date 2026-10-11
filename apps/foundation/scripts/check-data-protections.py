@@ -154,6 +154,23 @@ try:
  sql(actor(a,"update public.stylist_saved_looks set label='Bypass';"),False)
  sql(actor(a,'delete from public.stylist_saved_look_items;'),False)
  sql('set role anon; select * from public.stylist_saved_looks;',False)
- print('108 data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ def look_race():
+  query=actor(a,f"select (public.stylist_save_owned_look('Concurrent',{components},true,'{look}',2)).revision;")
+  return run(['docker','exec','-i',name,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],input=query)
+ with ThreadPoolExecutor(max_workers=2) as pool:
+  results=list(pool.map(lambda _:look_race(),range(2)))
+ assert sum(r.returncode==0 for r in results)==1
+ assert sql(actor(a,'select revision from public.stylist_saved_looks;'))=='3'
+ assert sql(actor(a,'select count(*) from public.stylist_saved_look_items;'))=='1'
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110008_saved_look_delete.sql').read_text())
+ for uid,rev,confirm in [(a,2,'true'),(b,3,'true'),('',3,'true'),(a,3,'false'),(a,3,'null')]:
+  sql(actor(uid,f"select public.stylist_delete_saved_look('{look}',{rev},{confirm});"),False)
+ assert sql(actor(a,'select count(*) from public.stylist_saved_looks;'))=='1'
+ assert sql(actor(a,f"select public.stylist_delete_saved_look('{look}',3,true);"))=='t'
+ assert sql(actor(a,'select count(*) from public.stylist_saved_look_items;'))=='0'
+ assert sql(actor(a,'select count(*) from public.stylist_saved_looks;'))=='0'
+ assert sql('select count(*) from public.stylist_media_assets;')=='1'
+ sql(actor(a,f"select public.stylist_delete_saved_look('{look}',3,true);"),False)
+ print('122 data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

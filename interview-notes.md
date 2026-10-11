@@ -644,3 +644,5 @@ I added a revision fence so newer saved preferences cancel permits based on an o
 I prepared an owner-scoped revision reader so one customer cannot observe another customer’s profile changes. The consumer rejects stale or inconsistent observations and cancels old permits if the read becomes unavailable. This is locally verified; the real database and recommendation release connection remain separate.
 
 I prepared saved looks made from a customer’s owned items. Saving requires consent, and replacing a look is atomic: invalid components leave the earlier saved look intact. I limited this initial preparation to owned images and labels; retail snapshots and current recommendation checks remain separate. The local database suite passes 108 scenarios.
+
+I added confirmed deletion for saved looks and tested competing edits. Only one edit wins; an older delete request cannot remove a newer version. The request boundary rejects conversation content and unverified retail items. The local checks now cover 122 database scenarios and 90 foundation tests.
