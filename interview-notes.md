@@ -545,3 +545,10 @@ I made the local timing rehearsal show unfinished and canceled updates, so a fas
 ## Separating a closed connection from completed provider cleanup
 
 I used the AI-assisted support reply to prepare a disabled transcription connection plan, while recording that the proposed address still needed validation. I separated a normal network close from proof of remote processing termination, final usage and deletion. This prevents the prototype from releasing a test allowance just because a socket closed. I added 21 focused checks and requested clarification in the existing support conversation. The full suite now passes 1,136 tests with type checking and build; no new live trial or spending was started.
+
+
+### Keeping unresolved provider cleanup visible
+
+I made the prototype distinguish local shutdown from verified provider cleanup. A future connection cannot release its test reservation just because its local socket stopped. I added checks for disconnects, timeouts and repeated ending so uncertainty continues to block replacement. I also fixed a race in the isolated database test startup, where a temporary initialization server could appear ready before the final server started. This work prepares the connection boundary without enabling paid services or claiming live acceptance.
+
+I checked the same rule through the protected browser connection: stopping, leaving the page or losing the provider clears local media and notes, while a new allowance reader still refuses an unresolved reservation. The full suite now passes 1,146 checks. These are simulated services, and I have not presented them as live-provider proof.

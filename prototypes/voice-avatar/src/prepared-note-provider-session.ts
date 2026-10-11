@@ -27,5 +27,5 @@ export function createPreparedNoteProviderSession(options:{simulation?:boolean;s
   probe=new NoteSessionProbe({simulation:true,notebook:options.notebook,capture:options.capture,wire:binding.wire,extract,changed:options.changed,invalidated:options.invalidated,inputStarted:options.inputStarted,turnReady:options.turnReady});
   if(ended)probe.end();
  }catch{stop();throw Error('Prepared provider note session unavailable.');}
- return{probe,end:stop,status:()=>({ended:ended||probe!.snapshot().ended,cleanupFailed:binding!.status().cleanupFailed||['capture-cleanup-held','cleanup-unverified'].includes(probe!.snapshot().reason??''),liveEnabled:false as const})};
+ return{probe,end:stop,status:()=>({ended:ended||probe!.snapshot().ended,cleanupFailed:binding!.status().cleanupFailed||['capture-cleanup-held','cleanup-unverified'].includes(probe!.snapshot().reason??''),remoteCleanupVerified:false as const,liveEnabled:false as const})};
 }

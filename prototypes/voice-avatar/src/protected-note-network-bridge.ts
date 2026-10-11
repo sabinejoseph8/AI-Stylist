@@ -11,14 +11,14 @@ type Started = Extract<Awaited<ReturnType<ReturnType<typeof createPreparedNoteSe
  * Private upgrade checks precede allowance work. A pending allowance never emits
  * Ready, creates a provider, or releases its slot before cancellation settles. */
 export function attachProtectedSimulatedNoteBridge(server: Server, options: {
- simulation?: boolean; preview: OwnerOptions['preview']; allowance: OwnerOptions['allowance'];
+ simulation?: boolean; cleanupRequirement?: OwnerOptions['cleanupRequirement']; preview: OwnerOptions['preview']; allowance: OwnerOptions['allowance'];
  preferences?: OwnerOptions['preferences'];
  /** Server-only simulation observer. Never exposed as a browser command. */
  sessionReady?: (session:Started)=>void;
  createTransports: () => {socket: SimulatedTranscriptionSocket; fetch: SimulatedExtractionFetch};
 }) {
  if (options.simulation !== true) throw Error('Live protected notebook bridge is disabled.');
- const owner = createPreparedNoteServerOwner({simulation: true, preview: options.preview, allowance: options.allowance, preferences: options.preferences, changed: () => {}, createTransports: capture => {
+ const owner = createPreparedNoteServerOwner({simulation: true, cleanupRequirement: options.cleanupRequirement, preview: options.preview, allowance: options.allowance, preferences: options.preferences, changed: () => {}, createTransports: capture => {
   if (!capture) throw Error('Simulated capture required.');
   return {...options.createTransports(), capture};
  }});

@@ -41,7 +41,9 @@ try:
         raise RuntimeError('The pinned local PostgreSQL image must be available before running checks.')
     created = True
     deadline = time.monotonic() + 20
-    while command(['docker', 'exec', name, 'pg_isready', '-U', 'postgres']).returncode:
+    # The entrypoint temporarily starts a socket-only server during initialization.
+    # Wait for the final TCP listener so that initial readiness cannot race its restart.
+    while command(['docker', 'exec', name, 'pg_isready', '-h', '127.0.0.1', '-U', 'postgres']).returncode:
         if time.monotonic() >= deadline:
             raise RuntimeError('Isolated PostgreSQL did not become ready.')
         time.sleep(.2)

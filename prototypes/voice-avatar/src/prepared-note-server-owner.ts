@@ -24,16 +24,19 @@ type Allowance = Pick<ExperimentBudget, 'reserve' | 'closeVerified'> & {purpose:
 type Hooks = {clarificationChanged?: (record:PreferenceClarification|null)=>void; capture?: ProbeCapture; publish?: (snapshot: ReturnType<NotebookState['snapshot']>, receipt: number | null) => void; ready?: () => void; turnReady?: (turnId: string) => void; stopped?: () => void};
 type Request = {method: string; path: string; host: string; origin: string; authorization?: string; signal: AbortSignal};
 export function createPreparedNoteServerOwner(options: {
- simulation?: boolean; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceAuthority;
+ simulation?: boolean; cleanupRequirement?: 'simulation-local'|'remote-verified'; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceAuthority;
  createTransports: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'capture'>;
  changed: SessionOptions['changed'];
 }) {
  if (options.simulation !== true || options.allowance.purpose !== 'notes-only-simulation') throw Error('Live notebook server owner is disabled.');
+ const cleanupRequirement=options.cleanupRequirement??'simulation-local';
+ if(!['simulation-local','remote-verified'].includes(cleanupRequirement))throw Error('Invalid cleanup requirement.');
  const target = validatePreview(options.preview), gate = new PreviewGate(options.preview);
  const preferences = options.preferences ?? new SimulatedPreferenceSource({simulation:true});
  let state: 'idle' | 'starting' | 'active' | 'closing' | 'held' = 'idle';
  return {
   status: () => ({state, liveEnabled: false as const}),
+  cleanupBoundary:()=>Object.freeze({requirement:cleanupRequirement,remoteCleanupVerified:false as const,liveEnabled:false as const}),
   async start(request: Request, hooks: Hooks = {}) {
    if (request.method !== 'GET' || request.path !== '/api/notebook-simulation' || request.host !== target.host || request.origin !== target.origin) return {status: 403 as const};
    const auth = gate.check(request.authorization);
@@ -66,7 +69,7 @@ export function createPreparedNoteServerOwner(options: {
      state = 'closing'; detach(); release.dispose(); controller.abort(); session?.end();
      // Probe shutdown and its owner callback must settle before verification.
      await Promise.resolve();
-     if (creationFailed || session?.status().cleanupFailed) {state = 'held'; return;}
+     if (creationFailed || session?.status().cleanupFailed || (session && cleanupRequirement==='remote-verified' && !session.status().remoteCleanupVerified)) {state = 'held'; return;}
      try {if (reservation) await options.allowance.closeVerified(reservation); state = 'idle';}
      catch {state = 'held';}
     })().then(settle, () => {state = 'held'; settle();});

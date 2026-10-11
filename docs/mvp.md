@@ -9,7 +9,7 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Review docs/notes-only-trial-decision-proposal.md and design the still-disabled server-only live adapter boundary, including how unavailable provider cleanup evidence keeps the allowance held. Keep transport closure distinct from remote termination. Do not load keys, construct live sockets, deploy, initialize remote ledgers or request financial activation until the adapter/security prerequisites are concrete and reviewed.
+**Next action:** Extend the isolated PostgreSQL owner/browser scenarios to cover the remote-required cleanup hold across a fresh process. Then finish the disabled server-only live adapter design and review its access and readiness boundaries. Keep live adapters disabled; no keys, paid calls, deployment, remote ledger initialization or new financial authorization are included.
 
 **Remaining gates:** Tavus recovery clarification, current dedicated transcription startup/delay contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. The unsent OpenAI clarification draft has no send authorization.
 
@@ -330,7 +330,7 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Review docs/notes-only-trial-decision-proposal.md and design the still-disabled server-only live adapter boundary, including how unavailable provider cleanup evidence keeps the allowance held. Keep transport closure distinct from remote termination. Do not load keys, construct live sockets, deploy, initialize remote ledgers or request financial activation until the adapter/security prerequisites are concrete and reviewed.
+Next: Extend the isolated PostgreSQL owner/browser scenarios to cover the remote-required cleanup hold across a fresh process. Then finish the disabled server-only live adapter design and review its access and readiness boundaries. Keep live adapters disabled; no keys, paid calls, deployment, remote ledger initialization or new financial authorization are included.
 
 
 ## Disabled transcription connection and close-evidence contract, 10 October 2026
@@ -347,3 +347,12 @@ Sent a narrow follow-up in the same authorized OpenAI support conversation askin
 ### Notes-only trial proposal prepared
 
 Prepared docs/notes-only-trial-decision-proposal.md with one 85-second/two-turn candidate trial, no avatar/camera and a proposed new USD 2 reservation. Public model rates and existing request limits give a conservative approximate USD 1.073 estimate; this is not actual usage or a hard provider billing cap. No approval was requested, and no account spending was checked. The proposal explicitly retains unresolved cleanup holds and requires a concrete reviewed live adapter, private access and dedicated allowance before activation decisions. Financial approval cannot waive the existing security/cleanup policy.
+
+
+### Remote cleanup requirement boundary, 10 October 2026
+
+The disabled server owner now captures an explicit cleanup requirement at construction. Simulation-local remains the existing fixture default; remote-verified retains the allowance hold after provider creation because provider status explicitly reports remoteCleanupVerified=false. End, provider disconnect, request abort and deadline expiry cannot close the reservation or permit replacement. Repeated end and later caller-option changes cannot waive the requirement. A canceled reservation that never created providers can still be retired once. No live adapter, route, key loading or provider socket was added.
+
+Seven additional focused checks pass, bringing the prototype suite to 1,143 tests across 75 files, with type checking and build passing. The isolated PostgreSQL harness readiness check was corrected to wait for the final TCP listener rather than the temporary initialization socket. This is local synthetic preparation; Task 1c, D42/R1 and Phase 1 remain incomplete.
+
+The protected browser bridge also accepts this server-only cleanup policy. Three synthetic loopback scenarios cover page exit, provider close and explicit stop: browser capture and notes clear, the provider closes once, the ledger retains its open reservation, replacement is denied and a fresh allowance reader refuses further work. The browser cannot change this policy. Final checks: 1,146 tests across 75 files, type checking and build pass; 50 isolated PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios pass after the readiness fix. The new remote-required scenarios currently use injected persistence, so PostgreSQL/fresh-process composition for this policy is the exact next check.

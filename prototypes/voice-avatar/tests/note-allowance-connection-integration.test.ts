@@ -19,7 +19,7 @@ function persistence(){
  const compareAndSwap=vi.fn(async(expected:PreparedNoteLedger,next:PreparedNoteLedger)=>{if(!isDeepStrictEqual(saved,expected))return false;saved=structuredClone(next);return true;});
  return{read,compareAndSwap,snapshot:()=>structuredClone(saved)};
 }
-async function setup(store=persistence()){
+async function setup(store=persistence(),cleanupRequirement:'simulation-local'|'remote-verified'='simulation-local'){
  const providers:(EventTarget&{readyState:number;bufferedAmount:number;close:ReturnType<typeof vi.fn>;send:(value:string)=>void})[]=[];
  const rpcFetch=vi.fn(async(url:string,init:RequestInit)=>{
   if(url==='https://fixture.supabase.co/rest/v1/rpc/stylist_notebook_allowance_read')return Response.json(await store.read());
@@ -33,7 +33,7 @@ async function setup(store=persistence()){
   const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:vi.fn(),send:(value:string)=>{if(JSON.parse(value).type==='session.update')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));}});
   providers.push(socket);return{socket,fetch:vi.fn(async()=>{throw Error('No extraction expected.');})};
  });
- const server=createServer((_req,res)=>res.end()),bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,createTransports});
+ const server=createServer((_req,res)=>res.end()),bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,cleanupRequirement,preview,allowance,createTransports});
  await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));const address=server.address();if(!address||typeof address==='string')throw Error('No loopback');const url=`ws://127.0.0.1:${address.port}/api/notebook-simulation`;
  const clients:WebSocket[]=[],bindings:ReturnType<typeof bindSimulatedNoteLifecycle>[]=[];
  function connect(){
@@ -75,4 +75,25 @@ describe('bounded persistence and separate allowance through protected browser l
   const store=persistence(),a=await setup(store),b=await setup(store),first=a.connect(),second=b.connect();await vi.waitFor(()=>expect([first.session.status().state,second.session.status().state].filter(v=>v==='ready')).toHaveLength(1));await vi.waitFor(()=>expect(a.bridge.snapshot().held||b.bridge.snapshot().held).toBe(true));expect(a.createTransports.mock.calls.length+b.createTransports.mock.calls.length).toBe(1);expect(store.snapshot().runs).toHaveLength(1);
   const winner=first.session.status().state==='ready'?first:second;winner.session.stop();await vi.waitFor(()=>expect(store.snapshot().runs[0]!.closed).toBe(true));expect(a.providers.length+b.providers.length).toBe(1);
  });
+ it.each(['pagehide','provider-close','explicit-stop'] as const)('retains unresolved remote cleanup through %s and a fresh allowance reader',async(reason)=>{
+  const store=persistence(),s=await setup(store,'remote-verified'),client=s.connect();
+  await vi.waitFor(()=>expect(client.session.status().state).toBe('ready'));
+  expect(await client.session.startTurn('t1')).toBe(true);
+  if(reason==='pagehide')client.page.dispatchEvent(new Event('pagehide'));
+  else if(reason==='provider-close')s.providers[0]!.dispatchEvent(new Event('close'));
+  else client.session.stop();
+  await vi.waitFor(()=>expect(s.bridge.snapshot().allowanceState).toBe('held'));
+  await vi.waitFor(()=>expect(client.ws.readyState).toBe(WebSocket.CLOSED));
+  expect(client.session.snapshot().capturing).toBe(false);
+  expect(client.session.snapshot().connection.notes).toBeNull();
+  expect(s.providers[0]!.close).toHaveBeenCalledTimes(1);
+  expect(store.snapshot().runs).toHaveLength(1);
+  expect(store.snapshot().runs[0]!.closed).toBe(false);
+  expect(store.compareAndSwap).toHaveBeenCalledTimes(1);
+  expect(await s.denied()).toBe(409);
+  await expect(new PreparedNoteAllowance({simulation:true,persistence:store}).reserve()).rejects.toThrow('requires review');
+  expect(s.createTransports).toHaveBeenCalledTimes(1);
+  expect(store.compareAndSwap).toHaveBeenCalledTimes(1);
+ });
+
 });
