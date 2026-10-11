@@ -1,3 +1,5 @@
+import {SimulatedContractPreferenceSource} from '../src/simulated-contract-preference-source.ts';
+import type {SimulatedPreferenceAuthority} from '../src/simulated-contract-preference-source.ts';
 import {afterEach, describe, expect, it, vi} from 'vitest';
 import {createPreparedNoteServerOwner} from '../src/prepared-note-server-owner.ts';
 import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
@@ -6,7 +8,7 @@ import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 const preview = {origin: 'https://notes-test.onrender.com', password: 'x'.repeat(32)};
 const authorization = 'Basic ' + Buffer.from('stylist:' + preview.password).toString('base64');
 class Socket extends EventTarget {readyState = 1; bufferedAmount = 0; send = vi.fn(); close = vi.fn();}
-function setup(preferences?: SimulatedPreferenceSource) {
+function setup(preferences?: SimulatedPreferenceAuthority) {
  const socket = new Socket(), capture = {start: vi.fn(async (_accept?: (pcm: ArrayBuffer) => boolean) => true), stop: vi.fn(), end: vi.fn()};
  const allowance = {purpose: 'notes-only-simulation' as const, reserve: vi.fn(async () => 'synthetic-reservation'), closeVerified: vi.fn(async (_id: string) => {})};
  const fetch = vi.fn(async (_url: string, _init: RequestInit) => Response.json({}));
@@ -75,7 +77,7 @@ describe('disabled private notebook server owner', () => {
 
 describe('server-owned synthetic look authorization', () => {
  const draft = {id:'synthetic-look',color:'green',style:'structured',occasion:'wedding',lookType:'dress',newItemCents:30000,currency:'USD' as const};
- async function activeSession(preferences?: SimulatedPreferenceSource) {
+ async function activeSession(preferences?: SimulatedPreferenceAuthority) {
   const s = setup(preferences), active = await s.owner.start(request());
   if (active.status !== 200) throw Error('start');
   active.probe.receive({type: 'session.updated', session: {type: 'transcription', audio: {input: {format: {type: 'audio/pcm', rate: 24000}, transcription: {model: TRANSCRIPTION_MODEL}, turn_detection: null}}}});
@@ -203,4 +205,36 @@ describe('server-owned synthetic look authorization', () => {
   await vi.advanceTimersByTimeAsync(85_000); expect(signal.aborted).toBe(true);
   expect(a.active.looks.visual(a.permit)).toBeNull(); await a.active.end(); expect(vi.getTimerCount()).toBe(0);
  });
+ it('rechecks firm saved rules and revokes speech on a contract revision',async()=>{
+  const rules=[{id:'color',field:'color',kind:'required',status:'confirmed',value:'green'}];
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules}}),a=await activeSession(source);let signal!:AbortSignal;
+  a.active.looks.startSpeech(a.permit,(_draft,abort)=>{signal=abort;});source.replace(1,[{...rules[0],value:'blue'}]);
+  expect(signal.aborted).toBe(true);expect(a.active.looks.visual(a.permit)).toBeNull();const ticket=a.active.looks.begin(draft)!;expect(a.active.looks.complete(ticket)).toBeNull();
+  expect(source.contractSnapshot()?.rules[0]?.value).toBe('blue');await a.active.end();
+ });
+ it('does not enforce optional ranking as a hard requirement',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[{id:'color',field:'color',kind:'preferred',status:'confirmed',value:'blue'}]}});
+  const a=await activeSession(source);expect(a.active.looks.visual(a.permit)).not.toBeNull();await a.active.end();
+ });
+ it.each(['required','excluded'])('holds an uncertain saved %s rule at the owner boundary',async kind=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'uncertain',field:'style',kind,status:'uncertain',value:null}]);const ticket=a.active.looks.begin(draft)!;expect(a.active.looks.complete(ticket)).toBeNull();expect(a.active.snapshot().gate).toMatchObject({state:'held',reason:expect.stringContaining('clarify')});await a.active.end();
+ });
+ it('holds an excluded non-color request without silently saving a change',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'style',field:'style',kind:'excluded',status:'confirmed',value:'structured'}]);const ticket=a.active.looks.begin(draft)!;
+  expect(a.active.looks.complete(ticket)).toBeNull();expect(source.contractSnapshot()?.rules[0]?.value).toBe('structured');await a.active.end();
+ });
+ it('stops the session and refuses another reservation after malformed contract data',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'bad',field:'color',kind:'required',status:'confirmed',value:null}]);await a.active.end();
+  expect(a.active.snapshot().notes.color.status).toBe('missing');expect(await a.owner.start(request())).toEqual({status:503});expect(a.allowance.reserve).toHaveBeenCalledTimes(1);
+ });
+
+ it.each(['season','budget','wardrobe'])('holds an unsupported hard %s rule even without a session conflict',async field=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  const value=field==='wardrobe'?'my jacket':a.active.snapshot().notes[field as 'season'|'budget'].value;
+  source.replace(1,[{id:'hard',field,kind:'required',status:'confirmed',value}]);const ticket=a.active.looks.begin(draft)!;expect(a.active.looks.complete(ticket)).toBeNull();expect(a.active.snapshot().gate).toMatchObject({state:'held',reason:expect.stringContaining('cannot be checked')});await a.active.end();
+ });
+
 });

@@ -1,3 +1,5 @@
+import {SimulatedContractPreferenceSource} from '../src/simulated-contract-preference-source.ts';
+import type {SimulatedPreferenceAuthority} from '../src/simulated-contract-preference-source.ts';
 import {afterEach,describe,it,expect,vi} from 'vitest';
 import {createServer} from 'node:http';
 import {WebSocket} from 'ws';
@@ -19,7 +21,7 @@ class Provider extends EventTarget{
 }
 function response(turnId:string,text:string){return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId,patches:[{field:'color',value:text,evidence:text}]})}]}]});}
 function fakeAllowance(){return {purpose:'notes-only-simulation' as const,reserve:vi.fn(async():Promise<string>=>crypto.randomUUID()),closeVerified:vi.fn(async(_id:string)=>{})};}
-async function setup(deferred=false,delayConfiguration=false,extra:{allowance?:ReturnType<typeof fakeAllowance>;wait?:boolean;preferences?:SimulatedPreferenceSource;headers?:Record<string,string>}={}){
+async function setup(deferred=false,delayConfiguration=false,extra:{allowance?:ReturnType<typeof fakeAllowance>;wait?:boolean;preferences?:SimulatedPreferenceAuthority;headers?:Record<string,string>}={}){
  const allowance=extra.allowance??fakeAllowance();
  const provider=new Provider();if(delayConfiguration)provider.send.mockImplementation((text:string)=>{const event=JSON.parse(text);if(event.type==='input_audio_buffer.append')provider.frames++;});let release:((response:Response)=>void)|undefined,requestSignal:AbortSignal|undefined;
  const fetch=vi.fn(async(_url:string,init:RequestInit)=>{requestSignal=init.signal as AbortSignal;const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text);return deferred?new Promise<Response>(r=>{release=r;}):response(input.turnId,input.currentFragment);});
@@ -112,6 +114,14 @@ describe('protected simulated browser/provider bridge',()=>{
   const fresh=s.controller.snapshot().notes!;expect(fresh.receipt).not.toBeNull();expect(s.controller.rendered(fresh.sequence)).toBe(true);await vi.waitFor(()=>expect(s.controller.snapshot().pending).toBe(false));
   preferences.replace(4,['private_four']);await s.commit(2,'red');expect(s.controller.snapshot().ended).toBe(false);expect(s.controller.snapshot().notes?.notes.color.status).toBe('tentative');
   expect(s.messages.join('')).not.toContain('private_');s.controller.stop();await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);
+ });
+
+ it('publishes generalized profile invalidation without exposing rule values or profile authority',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[{id:'private_rule',field:'style',kind:'preferred',status:'confirmed',value:'private_saved_value'}]}});
+  const s=await setup(false,false,{preferences:source});await s.begin('t1');const revision=s.controller.snapshot().notes!.revision;
+  source.replace(1,[{id:'private_rule',field:'color',kind:'required',status:'uncertain',value:null}]);await vi.waitFor(()=>expect(s.controller.snapshot().notes!.revision).toBeGreaterThan(revision));
+  expect(s.messages.join('')).not.toContain('private_rule');expect(s.messages.join('')).not.toContain('private_saved_value');expect(s.messages.join('')).not.toContain('rules');
+  source.replace(2,{});await vi.waitFor(()=>expect(s.controller.snapshot().ended).toBe(true));await vi.waitFor(()=>expect(s.bridge.snapshot().active).toBe(false));expect(s.controller.snapshot().notes).toBeNull();expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);
  });
 
 });

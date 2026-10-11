@@ -1,3 +1,4 @@
+import type {SimulatedPreferenceAuthority} from './simulated-contract-preference-source.ts';
 import {reconcilePreparedPreferences} from './preference-contract.ts';
 import {PreviewGate, validatePreview} from './preview-gate.ts';
 import type {PreviewConfig} from './preview-gate.ts';
@@ -21,7 +22,7 @@ type Allowance = Pick<ExperimentBudget, 'reserve' | 'closeVerified'> & {purpose:
 type Hooks = {capture?: ProbeCapture; publish?: (snapshot: ReturnType<NotebookState['snapshot']>, receipt: number | null) => void; ready?: () => void; turnReady?: (turnId: string) => void; stopped?: () => void};
 type Request = {method: string; path: string; host: string; origin: string; authorization?: string; signal: AbortSignal};
 export function createPreparedNoteServerOwner(options: {
- simulation?: boolean; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceSource;
+ simulation?: boolean; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceAuthority;
  createTransports: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'capture'>;
  changed: SessionOptions['changed'];
 }) {
@@ -111,8 +112,17 @@ export function createPreparedNoteServerOwner(options: {
      if (!profile || profile.revision !== pending.profileRevision) {release.end(); return null;}
      const snapshot=notebook.snapshot();
      const merged=reconcilePreparedPreferences(profile,snapshot,{simulation:true});
-     if(merged.status!=='ready-for-validator'){release.end();return null;}
-     // This fixture source currently supplies confirmed color exclusions only.
+     if(merged.status!=='ready-for-validator')return release.complete(ticket,{outcome:'unknown',reason:'Please clarify your saved requirements before checking this look.'});
+     // The fixture candidate has only four directly comparable attributes.
+     // Unsupported hard rules cannot disappear merely because notes are missing.
+     const fields=['color','style','occasion','lookType'] as const;
+     const normalize=(value:string)=>value.trim().replace(/\s+/g,' ').toLowerCase();
+     for(const rule of merged.requirements){
+      if(!fields.some(field=>field===rule.field)||rule.status!=='confirmed'||rule.value===null)return release.complete(ticket,{outcome:'unknown',reason:'A saved requirement cannot be checked by this synthetic prototype.'});
+      const value=pending.prepared.candidate[rule.field as typeof fields[number]];
+      const same=normalize(value)===normalize(rule.value);
+      if(rule.kind==='required'&&!same||rule.kind==='excluded'&&same)return release.complete(ticket,{outcome:'blocked',reason:'This synthetic candidate conflicts with a saved requirement.'});
+     }
      // Reconciliation is a preflight, never a passed candidate verdict.
      const excludedColors=merged.requirements.filter(rule=>rule.field==='color'&&rule.kind==='excluded'&&rule.status==='confirmed'&&rule.value!==null).map(rule=>rule.value!);
      return release.complete(ticket, checkFixture(snapshot, {...pending.prepared.candidate, excludedColors}));

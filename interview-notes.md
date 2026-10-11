@@ -465,3 +465,12 @@ I prepared a versioned saved-preference contract so the stylist can distinguish 
 I made the first reconciliation step deliberately conservative. It compares text, preserves both sources and sends unresolved differences for clarification. It does not claim that a color synonym, budget or subjective style has been validated. I connected the existing simulated color exclusions through the contract before the narrow look checker, while keeping real profile storage and account ownership separate.
 
 All 949 prototype tests, 50 local SQL checks, twelve owner scenarios and eighteen browser scenarios pass, along with type checking and build. I corrected a parameterized-test structure during verification. The contract is preparation for the full validation agent; it does not establish a customer-ready profile or approve a real look.
+
+
+## Enforcing firm rules without hiding uncertainty
+
+I extended the simulated saved-profile source beyond color exclusions. Firm requirements and exclusions are checked separately from optional preferences. A change cancels old look approvals and queued speech immediately. Invalid profile data stops the session, while a stale update cannot replace newer preferences.
+
+I made unsupported hard rules hold the suggestion, even when the notebook has no conflicting value. The small synthetic checker can compare color, style, occasion and look type directly; it cannot establish saved budget, seasonal or owned-item requirements. Those remain explicit limitations. Held results now explain that clarification or a supported check is needed instead of remaining in a checking state. Private profile rules stay off the browser connection.
+
+All 970 prototype tests, 50 local SQL checks, thirteen owner scenarios and eighteen browser scenarios pass, alongside type checking and build. These are simulated profile and media checks. Real profile ownership, persistent saves, session exceptions and the complete customer validation agent still need implementation.

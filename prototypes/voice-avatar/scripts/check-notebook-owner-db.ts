@@ -1,3 +1,5 @@
+import {SimulatedContractPreferenceSource} from '../src/simulated-contract-preference-source.ts';
+import type {SimulatedPreferenceAuthority} from '../src/simulated-contract-preference-source.ts';
 /** Local SQL composition checks only. No HTTP connection, credentials or provider. */
 import assert from 'node:assert/strict';
 import {execFile, spawn} from 'node:child_process';
@@ -50,7 +52,7 @@ const preview = {origin:'https://fixture.onrender.com',password:'synthetic_local
 const request = (signal = new AbortController().signal) => ({method:'GET',path:'/api/notebook-simulation',host:'fixture.onrender.com',origin:preview.origin,authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64'),signal});
 type Fault = 'none' | 'reserve-ack-lost' | 'close-ack-lost' | 'reserve-pending';
 const endings: Array<() => Promise<void>> = [];
-function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract?: (url:string,init:RequestInit)=>Promise<Response>, preferences?:SimulatedPreferenceSource) {
+function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract?: (url:string,init:RequestInit)=>Promise<Response>, preferences?:SimulatedPreferenceAuthority) {
  let sendAudio: ((pcm:ArrayBuffer)=>boolean) | undefined;
  let calls = 0, providers = 0, closes = 0;
  let release!: () => void, signalCommitted!: () => void;
@@ -224,6 +226,20 @@ if (worker) {
  assert.equal(profile.replace(3,['']),false);assert.equal(profileSession.looks.begin(draft),null);
  await profileSession.end();assert.equal((await read()).runs[0]!.closed,true);assert.deepEqual(profiled.counts(),{calls:4,providers:1,closes:1});
  assert.equal((await profiled.start()).status,503);assert.equal(profiled.counts().calls,4);
+ await reset();
+ const contractSource=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[{id:'color',field:'color',kind:'required',status:'confirmed',value:'green'}]}});
+ const contractOwner=setup('none',undefined,undefined,contractSource),contractSession=await contractOwner.start();assert.equal(contractSession.status,200);if(contractSession.status!==200)throw Error('Expected contract fixture owner.');
+ contractSession.probe.receive({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}});
+ for(const [field,value] of Object.entries({occasion:'wedding',season:'November; season not specified',color:'green',style:'structured',budget:'USD 500 maximum (items only)',lookType:'dress'}))assert.equal(contractSession.probe.edit(field as 'color',value,0),true);
+ const contractTicket=contractSession.looks.begin(draft);assert.ok(contractTicket);const contractPermit=contractSession.looks.complete(contractTicket);assert.ok(contractPermit);
+ let contractSpeech!:AbortSignal;contractSession.looks.startSpeech(contractPermit,(_draft,signal)=>{contractSpeech=signal;});
+ contractSource.replace(1,[{id:'color',field:'color',kind:'required',status:'confirmed',value:'blue'}]);assert.equal(contractSpeech.aborted,true);assert.equal(contractSession.looks.visual(contractPermit),null);
+ const conflictTicket=contractSession.looks.begin(draft);assert.ok(conflictTicket);assert.equal(contractSession.looks.complete(conflictTicket),null);
+ contractSource.replace(2,[{id:'color',field:'color',kind:'preferred',status:'confirmed',value:'blue'}]);const optionalTicket=contractSession.looks.begin(draft);assert.ok(optionalTicket);assert.ok(contractSession.looks.complete(optionalTicket));
+ contractSource.replace(3,[{id:'unknown',field:'style',kind:'required',status:'uncertain',value:null}]);const unknownTicket=contractSession.looks.begin(draft);assert.ok(unknownTicket);assert.equal(contractSession.looks.complete(unknownTicket),null);
+ contractSource.replace(4,[{id:'wardrobe',field:'wardrobe',kind:'required',status:'confirmed',value:'my jacket'}]);const unsupportedTicket=contractSession.looks.begin(draft);assert.ok(unsupportedTicket);assert.equal(contractSession.looks.complete(unsupportedTicket),null);
+ assert.equal(contractSource.replace(5,[{id:'invalid',field:'color',kind:'required',status:'confirmed',value:null}]),false);await contractSession.end();
+ assert.deepEqual(contractOwner.counts(),{calls:4,providers:1,closes:1});assert.equal((await read()).runs[0]!.closed,true);assert.equal((await contractOwner.start()).status,503);assert.equal(contractOwner.counts().calls,4);
  for(const mode of ['end','throw']){
   await reset();const reentrantProfile=new SimulatedPreferenceSource({simulation:true}),reentrant=setup('none',undefined,undefined,reentrantProfile);
   let end:()=>Promise<void>=async()=>{};let publications=0;
@@ -234,7 +250,7 @@ if (worker) {
   const previousPublications=publications;reentrantProfile.replace(2,[]);assert.equal(publications,previousPublications);assert.equal(reentrantSession.snapshot().notes.color.status,'missing');
  }
  assert.deepEqual(JSON.parse(await sql('select ledger from public.stylist_prototype_budget;')),{synthetic_legacy:true,closed_attempts:9});
- console.log('12 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
+ console.log('13 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
  const {checkNotebookBrowserDb}=await import('./check-notebook-browser-db.ts');
  await checkNotebookBrowserDb({reset,read,sql,literal});
 } finally {

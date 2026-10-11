@@ -5,7 +5,7 @@ Status: Synthetic server-side preparation for D39. R1 implementation and its dep
 
 ## Authority and boundaries
 
-The contract represents a separately supplied saved-profile snapshot. It does not establish account ownership or permission to save anything. The conversation, proposed look and browser cannot choose or overwrite its rules. Current integration adapts only the existing simulated color-exclusion source. All other fields are contract fixtures, not connected customer data.
+The contract represents a separately supplied saved-profile snapshot. It does not establish account ownership or permission to save anything. The conversation, proposed look and browser cannot choose or overwrite its rules. Current integration accepts either the existing simulated color-exclusion adapter or a separately constructed SimulatedContractPreferenceSource. Both are injected server-only fixtures, not connected customer data.
 
 No profile persistence, authentication, session exception, save endpoint, live model or new spending is enabled. A successful reconciliation means ready for the independent validator, never permission to display or describe a look. Existing candidate, notebook, profile revision and speech-frame gates remain required.
 
@@ -50,3 +50,12 @@ Twenty-eight focused contract cases cover strict shape and bounds, immutable cop
 Automated checks: run npm run test:phase-1, npm run typecheck and npm run build in prototypes/voice-avatar. The isolated database composition remains scripts/check-notebook-allowance-db.py --local-docker.
 
 Before customer acceptance, verify actual authenticated profile ownership, confirmed save consent, complete supported-rule semantics, visible clarification, session exception expiry and revalidation of every affected look. These cannot be marked complete from this discovery contract.
+
+
+## Generalized source and owner boundary
+
+The separate contract source copies and freezes its initial contract. A server fixture update supplies an expected revision and new rules; the source assigns the next revision itself. Stale updates do nothing. Malformed current updates and revision overflow permanently hold that source, stop active sessions and refuse new reservations. All observers are notified even if a different observer throws. Cleanup removes subscriptions.
+
+The synthetic owner now supports direct lexical required/excluded checks for color, style, occasion and lookType, followed by its existing notebook/candidate checker. Optional preferred rules do not become hard filters or implement a ranking algorithm. Uncertain hard rules and unsupported hard season, budget or wardrobe rules produce a held result. They cannot be discarded because a session note is missing. This is deliberately narrower than the future full validator. No rule creates a session exception or changes a saved profile automatically.
+
+Held current checks receive a generic explanation instead of staying in Checking state. Raw profile rules, values and authority are excluded from the browser protocol. A profile change immediately revokes old visual and speech permissions. Twenty-one added checks cover source lifecycle, stale/invalid updates, observer isolation, requirements, ranking separation, unknowns, unsupported fields and browser privacy. A new SQL-backed owner scenario covers requirement changes, optional rules, uncertainty, an unsupported owned-item rule and malformed data closing once. The suite is 970 prototype checks across 67 files, plus 50 local SQL checks, thirteen owner scenarios and eighteen browser scenarios; type checking and build pass. Real account ownership, persisted customer profiles and launch acceptance remain open.
