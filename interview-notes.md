@@ -579,3 +579,8 @@ I turned my product, design, technical and delivery documents into a private web
 ### Keeping corrections authoritative across the full connection, 11 October 2026
 
 I tested two simulated speech turns through the protected startup connection instead of checking the notebook pieces separately. A delayed result could not undo the customer’s newer color correction. Lowering the budget revoked the old look and its permission to speak, and a cheaper look had to pass a fresh check. Leaving during unfinished extraction stopped local capture and discarded its late result. A new connection stayed blocked while provider cleanup remained uncertain. All 1,191 checks, type checking and build pass. This evidence improves the private prototype without claiming live-provider or launch acceptance.
+
+
+## Making connection startup failures visible, 11 October 2026
+
+I added a simulated connection opener that listens before the connection starts, so an early event cannot disappear. I kept cleanup errors visible even when opening is canceled. That protects the rule that uncertain cleanup must hold the test allowance. Sixteen new checks passed within 1,207 total tests, with type checking and build passing. This is disabled preparation, not a new customer trial or a claim that the provider has finished processing.

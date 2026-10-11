@@ -4,7 +4,7 @@ Prepared: 11 October 2026. Disabled engineering design, not activation or spendi
 
 ## Current implementation status, 11 October 2026
 
-The disabled startup controller is now composed into the protected server owner and loopback browser bridge. Exact private access and allowance checks run before transport construction; startup readiness is awaited before Ready is published. Pending opening cancellation keeps the owner closing until late sockets are handled, then remote-required cleanup retains a hold. Existing already-open simulation remains a separate explicit factory choice. These are injected simulations, not a live opener or route. The current full suite passes 1,191 tests across 78 files, type checking and build. Two startup-backed synthetic turns, extraction, touch corrections, stale-look/speech revocation and fresh-owner isolation now pass. Cancellation during pending extraction also rejects late work. The future opener boundary has been reviewed; no real opener, credential loader or live route exists. The next preparation is the separately disabled socket opener described below.
+The disabled startup controller is now composed into the protected server owner and loopback browser bridge. Exact private access and allowance checks run before transport construction; startup readiness is awaited before Ready is published. Pending opening cancellation keeps the owner closing until late sockets are handled, then remote-required cleanup retains a hold. Existing already-open simulation remains a separate explicit factory choice. These are injected simulations, not a live opener or route. The current full suite passes 1,207 tests across 79 files, type checking and build. Two startup-backed synthetic turns, extraction, touch corrections, stale-look/speech revocation and fresh-owner isolation now pass. Cancellation during pending extraction also rejects late work. The future opener boundary has been reviewed; no real opener, credential loader or live route exists. The next preparation is the separately disabled socket opener described below.
 
 ## Scope
 
@@ -61,3 +61,10 @@ The startup-backed protected compositions also pass isolated PostgreSQL checks: 
 ## Next disabled opener preparation
 
 The startup controller currently trusts the injected opener to observe the first packet and clean up resources not yet returned. Prepare and test that ownership boundary next with an injected transport constructor and synthetic events only. A real destination, key loader, invocation and route remain absent. An open transport does not imply configured readiness or verified remote cleanup. Do not attach it to the running application or weaken the unresolved reservation hold.
+
+
+## Disabled dormant opener evidence, 11 October 2026
+
+Added prepareNoteOpener with an explicitly simulated dormant transport constructor. Listeners attach before start, including synchronous first packets. Abort, error, disconnect, malformed/oversized/binary packets and throwing consumers close once without reconnect. Constructed failed resources return a guarded facade so startup cannot lose sticky listener/close failure evidence through a rejected opening promise. Cancellation before construction creates no resource. Handover detaches initial observation without closing the configured transport.
+
+Sixteen new checks include startup configuration readiness and cancellation during opening with failed cleanup. All 1,207 tests across 79 files, type checking and build pass. The first command used the wrong working-directory prefix; the corrected command also needed authorized access to the existing dependency cache. Final verification passed. The running application is unchanged: this component has no URL, keys, actual socket constructor, live route or retry. Earlier isolated SQL totals were not rerun because persistence is unchanged. Task 1c, D21/D22 and Phase 1 remain partial.
