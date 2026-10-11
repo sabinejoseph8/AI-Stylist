@@ -1209,3 +1209,12 @@ Added an unapplied authenticated revision-reader RPC with no customer-ID argumen
 Evidence: 92 isolated database scenarios and all 78 foundation tests pass, with type checking and build. These are local Auth/Storage simulations, not hosted integration. No API client, live event subscription or transaction-serialized look release is attached. Task 2b remains open. Previous goal turn made concrete progress by committing the revision fence; this turn implements the next consumption boundary.
 
 Exact next action: prepare saved-look tables, same-owner components and controlled explicit-save/revision mutations; then safe media upload/reference-aware cleanup and migration compatibility checks. Keep hosted integration and paid calls disabled under the existing authorization. No action required from Sabine for local preparation.
+
+
+## Owned saved-look persistence preparation, 11 October 2026
+
+Added an unapplied saved-look/header and ordered component migration with same-owner image references, owner-only reads and blocked direct writes. Controlled explicit saves require consent and expected revision. Component fields are whitelisted to asset ID and label; duplicates, empty/oversized lists and foreign assets are rejected. Header updates and component replacement share a transaction, so an invalid replacement preserves the prior saved look. This is the owned-item subset, not the full retail snapshot contract or current-look approval.
+
+Evidence: 108 isolated local database scenarios pass, including read isolation, consent, stale edits, malformed components and rollback after duplicate references. No hosted migration, paid call or customer deployment occurred. Task 2b remains open. Previous goal turn committed the owner revision reader; this turn adds saved-look persistence.
+
+Exact next action: add controlled saved-look deletion, concurrency/reference checks and a strict server request decoder. Then prepare source-backed retail snapshot contracts, safe media upload/reference-aware cleanup and migration compatibility. Keep all live routes disabled and preserve remaining Phase 1 dependencies. No Sabine action required for local preparation.

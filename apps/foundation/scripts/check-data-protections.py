@@ -133,6 +133,27 @@ try:
  latest=json.loads(sql(actor(a,'select public.stylist_read_profile_revision();')))
  assert latest['revision']==4 and latest['sequence']>snapshot['sequence']
  assert json.loads(sql(actor(b,'select public.stylist_read_profile_revision();')))=={'revision':0,'sequence':0}
- print('92 data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110007_saved_looks.sql').read_text())
+ components="'"+json.dumps([{'assetId':asset,'label':'Jacket'}])+"'::jsonb"
+ def look_save(uid,items=None,consent='true',look='null',revision=0,expected=True):
+  return sql(actor(uid,f"select (public.stylist_save_owned_look('Saved look',{items or components},{consent},{look},{revision})).id;"),expected)
+ look_save(a,consent='false',expected=False)
+ look_save(b,expected=False)
+ look_save(a,items="'[]'::jsonb",expected=False)
+ look_save(a,items="'[{\"transcript\":\"private\"}]'::jsonb",expected=False)
+ look=look_save(a)
+ assert sql(actor(a,'select count(*) from public.stylist_saved_look_items;'))=='1'
+ assert sql(actor(b,'select count(*) from public.stylist_saved_looks;'))=='0'
+ assert sql(actor(b,'select count(*) from public.stylist_saved_look_items;'))=='0'
+ look_save(a,look=f"'{look}'",revision=1)
+ look_save(a,look=f"'{look}'",revision=1,expected=False)
+ duplicate="'"+json.dumps([{'assetId':asset,'label':'One'},{'assetId':asset,'label':'Two'}])+"'::jsonb"
+ look_save(a,items=duplicate,look=f"'{look}'",revision=2,expected=False)
+ assert sql(actor(a,'select revision from public.stylist_saved_looks;'))=='2'
+ assert sql(actor(a,'select count(*) from public.stylist_saved_look_items;'))=='1'
+ sql(actor(a,"update public.stylist_saved_looks set label='Bypass';"),False)
+ sql(actor(a,'delete from public.stylist_saved_look_items;'),False)
+ sql('set role anon; select * from public.stylist_saved_looks;',False)
+ print('108 data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])
