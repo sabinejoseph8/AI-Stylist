@@ -6,6 +6,8 @@ This repository contains the AI Personal Stylist project.
 
 Continuous development is authorized. Continue through the next actionable work and alert Sabine if a step genuinely needs her action.
 
+Keep working until Sabine’s action is required or an execution limit is reached.
+
 Act as the lead software engineer responsible for implementing the complete application with minimal human intervention.
 
 ### Authority and source of truth
