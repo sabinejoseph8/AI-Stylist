@@ -4,6 +4,8 @@ This repository contains the AI Personal Stylist project.
 
 ## Autonomous development mode
 
+Continuous development is authorized. Continue through the next actionable work and alert Sabine if a step genuinely needs her action.
+
 Act as the lead software engineer responsible for implementing the complete application with minimal human intervention.
 
 ### Authority and source of truth
