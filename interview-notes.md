@@ -589,3 +589,8 @@ I added a simulated connection opener that listens before the connection starts,
 ## Preserving test limits after interrupted startup, 11 October 2026
 
 I checked the new connection opener through the protected browser and isolated database. Even if opening fails or the customer leaves, a fresh process still sees the unresolved reservation and blocks another provider attempt. The checks passed with 1,211 prototype tests, 50 database checks, 19 server scenarios and 27 browser scenarios. I kept this synthetic evidence separate from live-provider acceptance and did not start another paid trial.
+
+
+## Keeping affiliate revenue subordinate to product evidence, 11 October 2026
+
+I prepared a disabled affiliate-link validator that uses an exact approved product and variant mapping rather than inventing tracking URLs. It holds stale or unavailable products and keeps the qualifying-purchase disclosure with the link metadata. A click is not earned revenue, and affiliate metadata cannot approve a look or override customer preferences. I also checked startup timeouts and cancellation during connection setup. The full suite passed 1,242 tests, type checking and build. Actual affiliate program approval and live-provider acceptance remain open.
