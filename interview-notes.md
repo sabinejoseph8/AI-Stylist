@@ -474,3 +474,12 @@ I extended the simulated saved-profile source beyond color exclusions. Firm requ
 I made unsupported hard rules hold the suggestion, even when the notebook has no conflicting value. The small synthetic checker can compare color, style, occasion and look type directly; it cannot establish saved budget, seasonal or owned-item requirements. Those remain explicit limitations. Held results now explain that clarification or a supported check is needed instead of remaining in a checking state. Private profile rules stay off the browser connection.
 
 All 970 prototype tests, 50 local SQL checks, thirteen owner scenarios and eighteen browser scenarios pass, alongside type checking and build. These are simulated profile and media checks. Real profile ownership, persistent saves, session exceptions and the complete customer validation agent still need implementation.
+
+
+## Explaining held preference checks safely
+
+I prepared structured clarification records so a held preference check can identify the affected field and reason without revealing private saved values. Each record belongs to one profile revision, notebook revision and held check. Editing notes, changing the profile, starting another check or voice turn, and ending the session clear the old explanation.
+
+I checked that an explanation cannot act as a look approval or change a profile. It also cannot carry into a replacement session. I kept these records on the server for now; showing them in the notebook remains the next integration step.
+
+All 989 prototype tests, 50 local SQL checks, thirteen owner scenarios and eighteen browser scenarios pass, alongside type checking and build. These are simulated records and providers, so customer-facing clarification, real profile storage and live acceptance remain open.

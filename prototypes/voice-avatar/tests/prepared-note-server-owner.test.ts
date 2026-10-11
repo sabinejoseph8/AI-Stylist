@@ -237,4 +237,32 @@ describe('server-owned synthetic look authorization', () => {
   source.replace(1,[{id:'hard',field,kind:'required',status:'confirmed',value}]);const ticket=a.active.looks.begin(draft)!;expect(a.active.looks.complete(ticket)).toBeNull();expect(a.active.snapshot().gate).toMatchObject({state:'held',reason:expect.stringContaining('cannot be checked')});await a.active.end();
  });
 
+ it('returns only safe clarification fields and binds them to the held check',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'private_rule_identity',field:'color',kind:'required',status:'confirmed',value:'private_saved_value'}]);const ticket=a.active.looks.begin(draft)!;expect(a.active.looks.complete(ticket)).toBeNull();
+  const record=a.active.looks.clarification()!;expect(record).toMatchObject({version:1,profileRevision:2,notebookSession:a.active.snapshot().session,notebookRevision:a.active.snapshot().revision,checkId:ticket.id,issues:[{field:'color',reason:'request-conflict'}]});
+  expect(JSON.stringify(record)).not.toContain('private_');expect(Object.isFrozen(record)).toBe(true);expect(a.active.looks.complete(record as never)).toBeNull();expect(a.active.looks.visual(record as never)).toBeNull();expect(a.active.looks.startSpeech(record as never,vi.fn())).toBe(false);
+  expect(source.contractSnapshot()?.rules[0]?.value).toBe('private_saved_value');await a.active.end();expect(a.active.looks.clarification()).toBeNull();
+ });
+ it('clears clarification on note and profile changes and requires a fresh check',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'color',field:'color',kind:'required',status:'confirmed',value:'blue'}]);let ticket=a.active.looks.begin(draft)!;a.active.looks.complete(ticket);const old=a.active.looks.clarification()!;
+  a.active.probe.edit('color','blue',a.active.snapshot().notes.color.revision);expect(a.active.looks.clarification()).toBeNull();expect(a.active.looks.visual(old as never)).toBeNull();
+  ticket=a.active.looks.begin({...draft,color:'blue'})!;expect(a.active.looks.complete(ticket)).not.toBeNull();expect(a.active.looks.clarification()).toBeNull();
+  source.replace(2,[{id:'color',field:'color',kind:'required',status:'uncertain',value:null}]);ticket=a.active.looks.begin({...draft,color:'blue'})!;a.active.looks.complete(ticket);expect(a.active.looks.clarification()?.issues[0]?.reason).toBe('saved-uncertain');
+  source.replace(3,[]);expect(a.active.looks.clarification()).toBeNull();await a.active.end();
+ });
+ it('clears a held explanation when another check begins, including a malformed candidate',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'wardrobe',field:'wardrobe',kind:'required',status:'confirmed',value:'my jacket'}]);let ticket=a.active.looks.begin(draft)!;a.active.looks.complete(ticket);expect(a.active.looks.clarification()?.issues).toEqual([{field:'wardrobe',reason:'unsupported-rule'}]);
+  ticket=a.active.looks.begin(draft)!;expect(a.active.looks.clarification()).toBeNull();a.active.looks.complete(ticket);expect(a.active.looks.clarification()).not.toBeNull();
+  expect(a.active.looks.begin({...draft,description:'unchecked'} as never)).toBeNull();expect(a.active.looks.clarification()).toBeNull();await a.active.end();
+ });
+ it('clears clarification before new input and keeps an ended record out of a replacement',async()=>{
+  const source=new SimulatedContractPreferenceSource({simulation:true,contract:{version:1,revision:1,rules:[]}}),a=await activeSession(source);
+  source.replace(1,[{id:'color',field:'color',kind:'required',status:'confirmed',value:'blue'}]);const ticket=a.active.looks.begin(draft)!;a.active.looks.complete(ticket);const old=a.active.looks.clarification()!;
+  await a.active.probe.beginTurn('fresh_input');expect(a.active.looks.clarification()).toBeNull();await a.active.end();
+  const replacement=await a.owner.start(request());if(replacement.status!==200)throw Error('start');expect(replacement.looks.clarification()).toBeNull();expect(replacement.looks.visual(old as never)).toBeNull();expect(a.active.looks.clarification()).toBeNull();await replacement.end();
+ });
+
 });

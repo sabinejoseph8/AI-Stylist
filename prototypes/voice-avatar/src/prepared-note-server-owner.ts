@@ -1,3 +1,5 @@
+import {preparePreferenceClarification} from './preference-clarification.ts';
+import type {PreferenceClarification,ClarificationIssue} from './preference-clarification.ts';
 import type {SimulatedPreferenceAuthority} from './simulated-contract-preference-source.ts';
 import {reconcilePreparedPreferences} from './preference-contract.ts';
 import {PreviewGate, validatePreview} from './preview-gate.ts';
@@ -41,6 +43,8 @@ export function createPreparedNoteServerOwner(options: {
    if (!preferences.snapshot()) return {status: 503 as const};
    state = 'starting';
    const controller = new AbortController(), notebook = new NotebookState(), release = new LookRelease(notebook);
+   let clarification:PreferenceClarification|null=null;
+   const unsubscribeClarification=notebook.subscribe(()=>{clarification=null;});
    const unsubscribePreferences = preferences.subscribe(() => {
     notebook.preferencesChanged(); // Revoke look and speech permissions synchronously.
     if (!preferences.snapshot()) {stop(); return;}
@@ -51,7 +55,7 @@ export function createPreparedNoteServerOwner(options: {
    });
    let reservation: string | undefined, session: Session | undefined;
    let ending = false, creationFailed = false, finishPromise: Promise<void> | undefined;
-   const detach = () => {clearTimeout(timer); unsubscribePreferences(); request.signal.removeEventListener('abort', stop);};
+   const detach = () => {clearTimeout(timer); unsubscribePreferences(); unsubscribeClarification(); clarification=null; request.signal.removeEventListener('abort', stop);};
    const finish = (): Promise<void> => {
     if (finishPromise) return finishPromise;
     // Install the shared completion before synchronous cleanup can publish
@@ -84,7 +88,7 @@ export function createPreparedNoteServerOwner(options: {
    }
    if (ending || request.signal.aborted) {await finish(); return {status: 499 as const};}
    try {
-    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, inputStarted: () => release.end(), invalidated: () => {release.end(); hooks.publish?.(notebook.snapshot(), null);}, ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
+    session = createPreparedNoteProviderSession({simulation: true, ...options.createTransports(hooks.capture), notebook, signal: controller.signal, changed: receipt => {options.changed(receipt); hooks.publish?.(notebook.snapshot(), receipt);}, inputStarted: () => {clarification=null;release.end();}, invalidated: () => {release.end(); hooks.publish?.(notebook.snapshot(), null);}, ready: hooks.ready, turnReady: hooks.turnReady, stopped: stop});
    } catch {
     creationFailed = true; await finish(); return {status: 503 as const};
    }
@@ -94,13 +98,13 @@ export function createPreparedNoteServerOwner(options: {
    // notebook wire. The narrow fixture checker receives the same immutable data
    // that generates the sample description; no caller-supplied pass is accepted.
    const available = () => !ending && !controller.signal.aborted && state === 'active' && Boolean(preferences.snapshot()) && session?.probe.readyForLook() === true;
-   const allowed = () => {if (available()) return true; release.end(); return false;};
+   const allowed = () => {if (available()) return true; clarification=null;release.end(); return false;};
    let pendingLook: {ticket: CheckTicket; prepared: ReturnType<typeof prepareSyntheticLook>; profileRevision: number} | null = null;
    const looks = Object.freeze({
     begin: (candidate: SyntheticLookCandidate): CheckTicket | null => {
      if (!allowed()) return null;
      // Even malformed replacement data revokes the previously approved sample.
-     release.end(); pendingLook = null;
+     clarification=null; release.end(); pendingLook = null;
      let prepared: ReturnType<typeof prepareSyntheticLook>;
      try {prepared = prepareSyntheticLook(candidate);} catch {return null;}
      const ticket = release.begin(prepared.draft); pendingLook = {ticket, prepared, profileRevision: preferences.snapshot()!.revision}; return ticket;
@@ -111,21 +115,32 @@ export function createPreparedNoteServerOwner(options: {
      const profile = preferences.contractSnapshot();
      if (!profile || profile.revision !== pending.profileRevision) {release.end(); return null;}
      const snapshot=notebook.snapshot();
+     const hold=(outcome:'unknown'|'blocked',reason:string,issues:readonly ClarificationIssue[])=>{
+      release.complete(ticket,{outcome,reason});
+      clarification=preparePreferenceClarification({simulation:true,profileRevision:profile.revision,notebook:notebook.snapshot(),ticket,issues});
+      return null;
+     };
      const merged=reconcilePreparedPreferences(profile,snapshot,{simulation:true});
-     if(merged.status!=='ready-for-validator')return release.complete(ticket,{outcome:'unknown',reason:'Please clarify your saved requirements before checking this look.'});
+     if(merged.status!=='ready-for-validator')return hold('unknown','Please clarify your saved requirements before checking this look.',merged.issues.map(issue=>({field:issue.field,reason:issue.reason==='note-to-confirm'?'confirm-note':issue.reason==='saved-value-uncertain'?'saved-uncertain':issue.reason==='saved-rules-unresolved'?'saved-conflict':'request-conflict'})));
      // The fixture candidate has only four directly comparable attributes.
      // Unsupported hard rules cannot disappear merely because notes are missing.
      const fields=['color','style','occasion','lookType'] as const;
      const normalize=(value:string)=>value.trim().replace(/\s+/g,' ').toLowerCase();
      for(const rule of merged.requirements){
-      if(!fields.some(field=>field===rule.field)||rule.status!=='confirmed'||rule.value===null)return release.complete(ticket,{outcome:'unknown',reason:'A saved requirement cannot be checked by this synthetic prototype.'});
+      if(!fields.some(field=>field===rule.field)||rule.status!=='confirmed'||rule.value===null)return hold('unknown','A saved requirement cannot be checked by this synthetic prototype.',[{field:rule.field,reason:'unsupported-rule'}]);
       const value=pending.prepared.candidate[rule.field as typeof fields[number]];
       const same=normalize(value)===normalize(rule.value);
-      if(rule.kind==='required'&&!same||rule.kind==='excluded'&&same)return release.complete(ticket,{outcome:'blocked',reason:'This synthetic candidate conflicts with a saved requirement.'});
+      if(rule.kind==='required'&&!same||rule.kind==='excluded'&&same)return hold('blocked','This synthetic candidate conflicts with a saved requirement.',[{field:rule.field,reason:'request-conflict'}]);
      }
      // Reconciliation is a preflight, never a passed candidate verdict.
      const excludedColors=merged.requirements.filter(rule=>rule.field==='color'&&rule.kind==='excluded'&&rule.status==='confirmed'&&rule.value!==null).map(rule=>rule.value!);
      return release.complete(ticket, checkFixture(snapshot, {...pending.prepared.candidate, excludedColors}));
+    },
+    clarification: ():PreferenceClarification|null => {
+     if(!available()){clarification=null;return null;}
+     const current=notebook.snapshot();
+     if(clarification&&(preferences.snapshot()?.revision!==clarification.profileRevision||current.session!==clarification.notebookSession||current.revision!==clarification.notebookRevision||current.gate?.state!=='held'||current.gate.ticket.id!==clarification.checkId))clarification=null;
+     return clarification;
     },
     visual: (permit: LookPermit): LookDraft | null => allowed() ? release.visual(permit) : null,
     startSpeech: (permit: LookPermit, start: Parameters<LookRelease['startSpeech']>[1]): boolean => allowed() && release.startSpeech(permit, (draft, signal, authorizeFrame) => start(draft, signal, () => allowed() && authorizeFrame())),
