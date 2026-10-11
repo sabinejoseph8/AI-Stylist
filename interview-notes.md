@@ -654,3 +654,5 @@ I prepared an image sanitizer that checks actual bytes, removes photo metadata a
 I prepared an image lifecycle that treats a lost response as uncertainty rather than permission to erase data. Uploads are staged first, and deletion cannot finalize until object removal is acknowledged. I verified these paths with simulated adapters and generated images. Actual database locking and hosted storage remain unfinished.
 
 I added database locks to prevent a race between saving an image reference and deleting the image. The concurrent SQL check produces exactly one winner and keeps a consistent result. Pending deletion retains its token and metadata until the server confirms object removal. Hosted object storage remains to be verified.
+
+I prepared recovery for interrupted image saves and deletes. Recovery checks database ownership and verified object evidence; uncertainty keeps the operation pending. A lost response cannot silently authorize data removal. These recovery paths are locally tested, while hosted object storage remains separate.

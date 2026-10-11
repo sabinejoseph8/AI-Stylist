@@ -205,6 +205,12 @@ try:
  sql(actor(a,f"select public.stylist_stage_media('{staged}','{a}','{checksum}',10,10);"),False)
  sql('set role anon; select public.stylist_stage_media(null,null,null,null,null);',False)
  sql(f"set role service_role; select public.stylist_stage_media('{staged}','{a}','{checksum}',8192,8192);",False)
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110010_media_operation_read.sql').read_text())
+ pending=json.loads(sql(f"set role service_role; select public.stylist_read_media_operation('{race_id}','{a}');"))
+ assert pending['id']==race_id and pending['ownerId']==a and pending['state']==state
+ assert sql(f"set role service_role; select public.stylist_read_media_operation('{race_id}','{b}');") in ['', 'null']
+ sql(actor(a,f"select public.stylist_read_media_operation('{race_id}','{a}');"),False)
+ sql('set role anon; select public.stylist_read_media_operation(null,null);',False)
  print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

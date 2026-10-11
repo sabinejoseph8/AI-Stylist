@@ -1263,3 +1263,12 @@ Added an unapplied migration with staged/ready/deleting image states, checksum a
 All isolated database scenarios pass, including staged-reference refusal, service-only permissions, foreign/checksum mismatch, referenced-image deletion refusal, lost-finalization hold and a concurrent save-versus-delete race with exactly one winner and a consistent final state. The test runner now reports suite success rather than a manually maintained scenario total. The temporary network-disabled PostgreSQL container was removed. This is real local SQL with synthetic Auth/Storage schemas, not actual object deletion or hosted acceptance. Foundation evidence remains 123 passing tests. No remote change or paid call occurred. Task 2b remains open.
 
 Exact next action: add server-only pending-operation reads and reconciliation, wire the prepared lifecycle to a simulated SQL-backed adapter, then hard image-process limits and migration compatibility checks. Preserve retail snapshot persistence work and all hosted/Phase 1 gates. No human action required for local preparation.
+
+
+## Pending image reconciliation preparation, 11 October 2026
+
+Added an unapplied service-only exact-owner operation reader and a prepared reconciliation state machine. Staged uploads commit only with matching verified byte checksum. Missing or unknown staged objects remain pending without deletion. Confirmed deletion operations finalize only after known absence or acknowledged removal; read/remove/commit failures remain pending. Foreign owners, wrong keys, malformed records and extra fields cannot reach storage operations. Ready/deleted results are lifecycle status, never recommendation permits. Actual object inspection must verify bytes rather than trust arbitrary metadata.
+
+Evidence: all isolated SQL checks pass, including server-only pending reads and wrong-owner absence. Foundation tests increase to 136 passing tests; type checking and build pass. Reconciliation uses simulated storage evidence, not a hosted object store or SQL-connected TypeScript adapter. Task 2b remains open. No remote change, personal image or paid call occurred.
+
+Exact next action: run the TypeScript lifecycle/reconciler against an isolated SQL-backed adapter with simulated storage, including lost acknowledgment recovery. Then harden image process limits/fixtures, complete retail persistence and migration compatibility. Preserve hosted and Phase 1 gates. No Sabine action required for local preparation.
