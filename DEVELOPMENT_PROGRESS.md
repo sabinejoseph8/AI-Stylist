@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 1115 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 1136 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -91,9 +91,9 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 1115 prototype checks across 74 files, type checking and build pass. Fifty separate local PostgreSQL checks, thirteen SQL-backed TypeScript owner scenarios and nineteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 1136 prototype checks across 75 files, type checking and build pass. Fifty separate local PostgreSQL checks, thirteen SQL-backed TypeScript owner scenarios and nineteen SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Prepare a disabled connection-plan contract for the support-proposed transcription URL and local close evidence, with no socket construction, credentials or live enablement. Distinguish model-specific startup proposed by AI-assisted support from verified provider behavior. Keep remote cleanup, Tavus recovery and new paid-trial authorization as open activation gates.
+Prepare a concrete bounded notes-only live-trial proposal from docs/combined-notes-live-trial-plan.md, explicitly separating unverified startup, transport closure, remote cleanup and usage evidence. It must list required decisions and the proposed financial reservation before asking for activation. Do not construct a live socket, access credentials, deploy, alter remote records or reuse the nine closed reservations.
 
 The dedicated transcription startup and conflicting delay descriptions remain unresolved live dependencies in docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
@@ -300,4 +300,15 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Prepare a disabled connection-plan contract for the support-proposed transcription URL and local close evidence, with no socket construction, credentials or live enablement. Distinguish model-specific startup proposed by AI-assisted support from verified provider behavior. Keep remote cleanup, Tavus recovery and new paid-trial authorization as open activation gates.
+Next: Prepare a concrete bounded notes-only live-trial proposal from docs/combined-notes-live-trial-plan.md, explicitly separating unverified startup, transport closure, remote cleanup and usage evidence. It must list required decisions and the proposed financial reservation before asking for activation. Do not construct a live socket, access credentials, deploy, alter remote records or reuse the nine closed reservations.
+
+
+## Disabled transcription connection and close-evidence contract, 10 October 2026
+
+Prepared an immutable inspection-only plan for the AI-assisted support-proposed endpoint. It labels startup as unverified, preserves the selected model/session.update protocol and constructs no socket, loads no credential and exposes no live enable switch. The new module is not imported into the application or existing transport owners.
+
+A separate explicitly simulated close-evidence helper records only a matching connection’s close event after an explicit close request. It distinguishes observed transport closure from a normal code-1000 clean close, rejects malformed/other-protocol/wrong-owner records, and refuses duplicate evidence. Even a normal close cannot verify remote cleanup, final usage or deletion and cannot authorize allowance release. This helper does not replace the existing conservative cleanup holds or durable ledger logic.
+
+Twenty-one new checks bring the suite to 1,136 tests across 75 files; type checking and build pass. An initial TypeScript parameter-property error was fixed to comply with the project’s erasable-syntax setting before the final passing run. SQL and persistence transport were unchanged; earlier isolated database evidence was not rerun. No live API call, keys, allowance amendment, Supabase change or deployment occurred. Task 1c, D42/R1 and Phase 1 remain incomplete.
+
+Sent a narrow follow-up in the same authorized OpenAI support conversation asking for selected-model startup confirmation and the unresolved cleanup procedure, including human API support escalation if available. It contains no keys, audio, customer data or account identifiers. The reply was received: the AI support bot cannot route to human API technical support. It explicitly identifies the selected-model URL as an inference combining two guides, not a published selected-model URL example. It describes clean socket close as transport closure and per-item completed events as received application results, without a stronger remote-finalization guarantee. No new support thread was created.

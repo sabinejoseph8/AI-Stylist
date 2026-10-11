@@ -33,3 +33,8 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
 Next: Prepare a disabled connection-plan contract for the support-proposed transcription URL and local close evidence, with no socket construction, credentials or live enablement. Distinguish model-specific startup proposed by AI-assisted support from verified provider behavior. Keep remote cleanup, Tavus recovery and new paid-trial authorization as open activation gates.
+
+
+## Follow-up disposition
+
+The same support thread received a narrow follow-up on the original startup and cleanup questions. The AI support bot states it cannot route to human API technical support. It explicitly describes the proposed selected-model URL as an inference from the generic pattern plus the transcription guide, without a published selected-model URL example. Its cleanup guidance distinguishes clean transport close from per-item completed transcripts and provides no stronger remote-finalization guarantee. No additional follow-up was sent. Startup and remote-cleanup activation gates remain unverified.

@@ -454,3 +454,8 @@ All 1,109 tests across 74 files, type checking and build pass. Prior database ev
 ### Local timing outcome review
 
 The connection rehearsal includes Hold timing acknowledgments, an explicit local fixture control. Follow the full instructions on the page or in docs/notebook-touch-review.md before use. Pending samples have no measured p95; a correction cancels the old unacknowledged sample; ending removes the report and restarting uses a fresh owner with zero samples. The checkbox resets at start. Six lifecycle regressions bring the passing prototype suite to 1,115 tests across 74 files, with type checking and build passing. This does not establish live provider timing.
+
+
+### Disabled transcription connection contract
+
+src/transcription-connection-plan.ts is inspection-only and not connected to application routes. It labels the selected-model endpoint as an AI-assisted support proposal, with startup and live activation unverified. Its simulated close-evidence helper distinguishes transport closure from normal closure; neither grants remote cleanup, final-usage, deletion or allowance-release permission. Twenty-one new checks bring the passing suite to 1,136 tests across 75 files, with type checking and build passing. Existing cleanup and funding gates remain intact.

@@ -540,3 +540,8 @@ I added a local timing panel that shows failed, canceled and pending updates alo
 ## Making incomplete timing evidence visible
 
 I made the local timing rehearsal show unfinished and canceled updates, so a fast successful sample could not hide work that never reached acknowledgment. I added a deliberate receipt-hold control with instructions before the test. I verified that a correction canceled the earlier sample and that restarting began with no previous measurements. I kept these results separate from live performance: scripted events cannot prove how quickly the customer’s phone and providers will respond. The latest suite passes 1,115 automated tests; the live integration still needs provider clarification and separate spending authorization.
+
+
+## Separating a closed connection from completed provider cleanup
+
+I used the AI-assisted support reply to prepare a disabled transcription connection plan, while recording that the proposed address still needed validation. I separated a normal network close from proof of remote processing termination, final usage and deletion. This prevents the prototype from releasing a test allowance just because a socket closed. I added 21 focused checks and requested clarification in the existing support conversation. The full suite now passes 1,136 tests with type checking and build; no new live trial or spending was started.

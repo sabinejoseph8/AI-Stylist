@@ -41,3 +41,8 @@ Record observed versus expected outcomes separately from automated fixtures. One
 ## Actions required later
 
 Before implementation is activated, a concrete cost reservation needs Sabine's financial authorization. Before customer media launch, provider privacy, retention and recovery terms still need resolution. Before avatar conversational-resume testing, Sabine needs to share Tavus's technical reply. None of those requirements is waived by this plan.
+
+
+## Connection and cleanup review after support reply
+
+The inspection-only candidate uses the support-proposed model query; startup is not live-verified. The separate simulated close-evidence helper can observe local transport closure only and cannot authorize allowance release. Do not equate a clean socket close with final usage, remote session deletion or zero retention. The existing support thread has been asked for the unresolved dedicated-session procedure and authoritative startup confirmation. This plan remains blocked for live activation until those evidence requirements, reviewed security/storage setup and a new financial allowance are satisfied. No GPT-Live terminal events are substituted into Realtime transcription.
