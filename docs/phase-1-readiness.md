@@ -32,7 +32,7 @@ Task 1e still needs actual feasibility findings, performance measurements and ag
 
 Continue deterministic failure checks and implementation that does not depend on these live decisions. Keep fixtures explicitly synthetic, preserve all approved financial limits, and update the backlog and persistent progress after each increment. No new business requirement or acceptance target is introduced by this page.
 
-Latest deterministic evidence: 1,136 tests across 75 files, type checking and build pass. These checks and the local timing display do not establish live provider timing, remote deletion or production multi-customer isolation.
+Latest deterministic evidence: 1,211 tests across 79 files, type checking and build pass. These checks and the local timing display do not establish live provider timing, remote deletion or production multi-customer isolation.
 
 ## Disabled notebook server owner
 
@@ -237,4 +237,11 @@ The disabled owner and protected browser bridge now accept exactly one server-in
 
 Thirteen new owner checks and three protected loopback browser checks cover request rejection, factory selection, readiness, abort, startup/full-owner deadlines, late sockets, cleanup failure, invalid configuration, page exit, a fresh allowance reader and reentrant cancellation from Ready. The latter now returns cancellation rather than an ended active session. An initial test-only address narrowing error was corrected before the final passing type check. All 1,189 tests across 78 files, type checking and build pass.
 
-Isolated PostgreSQL compositions add configured startup/end and pending startup/abort to the owner, plus configured startup/end and page exit during opening to the browser. Open history stays unchanged through fresh Node processes; replacement is refused before another provider is constructed. Final verification passed 50 isolated PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. The temporary database container was removed. No real provider, credential path, Supabase record, legacy ledger, new allowance or deployment is changed. The running notebook uses its existing local rehearsal; Task 1c and Phase 1 remain partial.
+Isolated PostgreSQL compositions add configured startup/end and pending startup/abort to the owner, plus configured startup/end and page exit during opening to the browser. Open history stays unchanged through fresh Node processes; replacement is refused before another provider is constructed. Final verification passed 50 isolated PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. The temporary database container was removed. No real provider, credential path, Supabase record, legacy ledger, new allowance or deployment is changed. The running notebook uses its existing local rehearsal; Task 1c and Phase 1 remain partial.
+
+
+## Dormant opener protected and SQL composition, 11 October 2026
+
+The disabled dormant opener now has four protected-loopback checks covering creation before opening, configuration acknowledgment before capture, page exit, provider error and failed close. Late opening cannot revive the notebook. Each unresolved reservation blocks a replacement bridge before transport construction or extraction. These are synthetic integrations; no live route was changed.
+
+The isolated SQL harness adds two dormant-opener server-owner scenarios and three browser scenarios, including failed close during opening. Fresh Node readers preserve the open reservation; a replacement browser owner is refused before provider construction. Final verification passes 1,211 prototype tests across 79 files, type checking, build, 50 isolated PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. The temporary container was removed. No actual Supabase data, credentials, paid allowance or Render deployment changed. Task 1c, D21/D22 and Phase 1 remain partial.

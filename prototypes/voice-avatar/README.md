@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-1,207 prototype tests across 79 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+1,211 prototype tests across 79 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller now checks creation/configuration ordering and cancellation. Protected-owner/browser composition now also covers two turns, delayed extraction, color/budget corrections, stale visual/speech revocation, shutdown and fresh-owner holds. No live notebook connection or new hosted deployment is enabled.
 
@@ -475,3 +475,10 @@ All 1,191 tests across 78 files, type checking and build pass. The first command
 Added prepareNoteOpener with an explicitly simulated dormant transport constructor. Listeners attach before start, including synchronous first packets. Abort, error, disconnect, malformed/oversized/binary packets and throwing consumers close once without reconnect. Constructed failed resources return a guarded facade so startup cannot lose sticky listener/close failure evidence through a rejected opening promise. Cancellation before construction creates no resource. Handover detaches initial observation without closing the configured transport.
 
 Sixteen new checks include startup configuration readiness and cancellation during opening with failed cleanup. All 1,207 tests across 79 files, type checking and build pass. The first command used the wrong working-directory prefix; the corrected command also needed authorized access to the existing dependency cache. Final verification passed. The running application is unchanged: this component has no URL, keys, actual socket constructor, live route or retry. Earlier isolated SQL totals were not rerun because persistence is unchanged. Task 1c, D21/D22 and Phase 1 remain partial.
+
+
+## Dormant opener protected and SQL composition, 11 October 2026
+
+The disabled dormant opener now has four protected-loopback checks covering creation before opening, configuration acknowledgment before capture, page exit, provider error and failed close. Late opening cannot revive the notebook. Each unresolved reservation blocks a replacement bridge before transport construction or extraction. These are synthetic integrations; no live route was changed.
+
+The isolated SQL harness adds two dormant-opener server-owner scenarios and three browser scenarios, including failed close during opening. Fresh Node readers preserve the open reservation; a replacement browser owner is refused before provider construction. Final verification passes 1,211 prototype tests across 79 files, type checking, build, 50 isolated PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. The temporary container was removed. No actual Supabase data, credentials, paid allowance or Render deployment changed. Task 1c, D21/D22 and Phase 1 remain partial.

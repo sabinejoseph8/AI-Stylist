@@ -584,3 +584,8 @@ I tested two simulated speech turns through the protected startup connection ins
 ## Making connection startup failures visible, 11 October 2026
 
 I added a simulated connection opener that listens before the connection starts, so an early event cannot disappear. I kept cleanup errors visible even when opening is canceled. That protects the rule that uncertain cleanup must hold the test allowance. Sixteen new checks passed within 1,207 total tests, with type checking and build passing. This is disabled preparation, not a new customer trial or a claim that the provider has finished processing.
+
+
+## Preserving test limits after interrupted startup, 11 October 2026
+
+I checked the new connection opener through the protected browser and isolated database. Even if opening fails or the customer leaves, a fresh process still sees the unresolved reservation and blocks another provider attempt. The checks passed with 1,211 prototype tests, 50 database checks, 19 server scenarios and 27 browser scenarios. I kept this synthetic evidence separate from live-provider acceptance and did not start another paid trial.

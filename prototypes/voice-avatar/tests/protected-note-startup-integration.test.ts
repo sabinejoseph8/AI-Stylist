@@ -7,6 +7,7 @@ import {PreparedNoteAllowance} from '../src/prepared-note-allowance.ts';
 import type {PreparedNoteLedger} from '../src/prepared-note-allowance.ts';
 import {PreparedBrowserNoteSession} from '../src/note-browser-session.ts';
 import {bindSimulatedNoteLifecycle} from '../src/note-browser-lifecycle.ts';
+import {prepareNoteOpener} from '../src/prepared-note-opener.ts';
 import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
 const preview={origin:'https://fixture.onrender.com',password:'fixture_password_only_for_tests_123456'};
@@ -22,11 +23,13 @@ function extractionResponse(init:RequestInit){
  const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text);
  return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:[{field:'color',value:input.currentFragment,evidence:input.currentFragment}]})}]}]});
 }
-async function setup(persistence=store(),extraction=false){
+async function setup(persistence=store(),extraction=false,dormant=false){
  const allowance=new PreparedNoteAllowance({simulation:true,persistence});
- const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:vi.fn(),close:vi.fn()}),detachInitialEvents=vi.fn();
+ const socket=Object.assign(new EventTarget(),{readyState:dormant?0:1,bufferedAmount:0,send:vi.fn(),close:vi.fn()}),detachInitialEvents=vi.fn();
  let release!:(value:{socket:typeof socket;detachInitialEvents:()=>void})=>void,initial!:(value:unknown)=>void;
- const open=vi.fn((_signal:AbortSignal,event:(value:unknown)=>void)=>{initial=event;return new Promise<{socket:typeof socket;detachInitialEvents:()=>void}>(resolve=>{release=resolve;});});
+ const manualOpen=vi.fn((_signal:AbortSignal,event:(value:unknown)=>void)=>{initial=event;return new Promise<{socket:typeof socket;detachInitialEvents:()=>void}>(resolve=>{release=resolve;});});
+ const construct=vi.fn(()=>({socket,start:vi.fn(()=>{socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.created',session:{id:'dormant'}})}));})}));
+ const open=dormant?vi.fn(prepareNoteOpener({simulation:true,construct})):manualOpen;
  const fetch=vi.fn(async(_url:string,init:RequestInit)=>{if(!extraction)throw Error('No extraction expected.');return extractionResponse(init);});
  const createStartupTransports=vi.fn(()=>({open,fetch}));
  let active:Parameters<NonNullable<Parameters<typeof attachProtectedSimulatedNoteBridge>[1]['sessionReady']>>[0]|undefined;
@@ -41,8 +44,8 @@ async function setup(persistence=store(),extraction=false){
   ws.on('message',data=>events.dispatchEvent(new MessageEvent('message',{data:data.toString()})));ws.on('close',()=>events.dispatchEvent(new Event('close')));ws.on('error',()=>events.dispatchEvent(new Event('error')));
   return{ws,page,session,capture,frame:()=>pcm!(new ArrayBuffer(960))};
  }
- cleanups.push(async()=>{for(const binding of bindings)binding.dispose();for(const ws of clients)ws.terminate();if(open.mock.calls.length)release({socket,detachInitialEvents});bridge.dispose();server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));});
- return{bridge,connect,persistence,createStartupTransports,open,socket,fetch,active:()=>{if(!active)throw Error("Session not ready");return active;},message:(event:unknown)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(event)})),opened:()=>release({socket,detachInitialEvents}),created:()=>initial({type:'session.created',session:{id:'synthetic'}}),ack:(value:unknown=config)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
+ cleanups.push(async()=>{for(const binding of bindings)binding.dispose();for(const ws of clients)ws.terminate();if(manualOpen.mock.calls.length)release({socket,detachInitialEvents});bridge.dispose();server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));});
+ return{bridge,connect,persistence,createStartupTransports,construct,open,socket,fetch,active:()=>{if(!active)throw Error("Session not ready");return active;},message:(event:unknown)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(event)})),opened:()=>{if(dormant){socket.readyState=1;socket.dispatchEvent(new Event('open'));}else release({socket,detachInitialEvents});},created:()=>initial({type:'session.created',session:{id:'synthetic'}}),ack:(value:unknown=config)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
 }
 describe('startup through protected loopback browser and separate allowance',()=>{
  it('keeps browser capture unavailable until creation and configuration, then retains the hold on end',async()=>{
@@ -157,5 +160,31 @@ describe('startup-backed cancellation during extraction',()=>{
   const fresh=await setup(s.persistence,true);fresh.connect();await vi.waitFor(()=>expect(fresh.bridge.snapshot().held).toBe(true));
   expect(fresh.createStartupTransports).not.toHaveBeenCalled();expect(fresh.fetch).not.toHaveBeenCalled();
   expect(s.persistence.snapshot().runs).toHaveLength(1);expect(s.persistence.snapshot().runs[0]!.closed).toBe(false);
+ });
+});
+
+
+describe('dormant opener through protected browser ownership',()=>{
+ it('observes early creation, waits for acknowledgment, and retains the ended reservation',async()=>{
+  const s=await setup(store(),false,true),client=s.connect();await vi.waitFor(()=>expect(s.construct).toHaveBeenCalledTimes(1));
+  expect(client.capture.start).not.toHaveBeenCalled();expect(s.socket.send).not.toHaveBeenCalled();
+  s.opened();await vi.waitFor(()=>expect(s.socket.send).toHaveBeenCalledTimes(1));expect(client.session.status().state).not.toBe('ready');
+  s.ack();await vi.waitFor(()=>expect(client.session.status().state).toBe('ready'));
+  expect(await client.session.startTurn('dormant')).toBe(true);client.session.stop();
+  await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));expect(s.socket.close).toHaveBeenCalledTimes(1);
+  expect(client.session.snapshot().capturing).toBe(false);expect(client.session.snapshot().connection.notes).toBeNull();
+  const fresh=await setup(s.persistence,false,true);fresh.connect();await vi.waitFor(()=>expect(fresh.bridge.snapshot().held).toBe(true));expect(fresh.construct).not.toHaveBeenCalled();
+  expect(s.persistence.compareAndSwap).toHaveBeenCalledTimes(1);expect(s.persistence.snapshot().runs[0]!.closed).toBe(false);
+ });
+ it.each(['pagehide','error','failed-close'])('holds %s during opening and rejects late open and replacement',async kind=>{
+  const s=await setup(store(),false,true),client=s.connect();await vi.waitFor(()=>expect(s.construct).toHaveBeenCalledTimes(1));
+  if(kind==='failed-close')s.socket.close.mockImplementation(()=>{throw Error('private cleanup detail');});
+  if(kind==='error')s.socket.dispatchEvent(new Event('error'));else client.page.dispatchEvent(new Event('pagehide'));
+  await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));s.opened();s.ack();
+  expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.socket.send).not.toHaveBeenCalled();expect(client.capture.start).not.toHaveBeenCalled();
+  expect(client.session.snapshot().connection.notes).toBeNull();expect(s.fetch).not.toHaveBeenCalled();
+  const fresh=await setup(s.persistence,false,true);fresh.connect();await vi.waitFor(()=>expect(fresh.bridge.snapshot().held).toBe(true));
+  expect(fresh.createStartupTransports).not.toHaveBeenCalled();expect(fresh.construct).not.toHaveBeenCalled();
+  expect(s.persistence.compareAndSwap).toHaveBeenCalledTimes(1);expect(s.persistence.snapshot().runs).toHaveLength(1);expect(s.persistence.snapshot().runs[0]!.closed).toBe(false);
  });
 });

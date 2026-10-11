@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 1207 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 1211 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -91,9 +91,9 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 1,207 prototype checks across 79 files, type checking and build pass. Fifty separate local PostgreSQL checks, seventeen SQL-backed TypeScript owner scenarios and twenty-four SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 1,211 prototype checks across 79 files, type checking and build pass. Fifty separate local PostgreSQL checks, nineteen SQL-backed TypeScript owner scenarios and twenty-seven SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Compose the disabled dormant opener through the protected owner and loopback browser, including opening cancellation and sticky cleanup failure. Verify unresolved reservations block a fresh owner before provider construction. Keep actual provider wiring, keys, live routes, paid services and remote ledgers unchanged. Live activation still requires separate financial and security authorization.
+Exercise dormant-opening deadline expiry, duplicate open events and reentrant cancellation through the protected owner. Verify bounded termination, single closure and unchanged unresolved reservations before considering actual provider wiring. Keep keys, live routes, paid services and remote ledgers unchanged; live activation still requires separate financial and security authorization.
 
 The reviewed OpenAI support replies confirm documented low-delay configuration and item correlation. The selected-model startup URL remains an inference without live acceptance, and normal socket closure does not establish remote finalization; see docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
@@ -300,7 +300,7 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Compose the disabled dormant opener through the protected owner and loopback browser, including opening cancellation and sticky cleanup failure. Verify unresolved reservations block a fresh owner before provider construction. Keep actual provider wiring, keys, live routes, paid services and remote ledgers unchanged. Live activation still requires separate financial and security authorization.
+Next: Exercise dormant-opening deadline expiry, duplicate open events and reentrant cancellation through the protected owner. Verify bounded termination, single closure and unchanged unresolved reservations before considering actual provider wiring. Keep keys, live routes, paid services and remote ledgers unchanged; live activation still requires separate financial and security authorization.
 
 
 ## Disabled transcription connection and close-evidence contract, 10 October 2026
@@ -379,3 +379,10 @@ All 1,191 tests across 78 files, type checking and build pass. The first command
 Added prepareNoteOpener with an explicitly simulated dormant transport constructor. Listeners attach before start, including synchronous first packets. Abort, error, disconnect, malformed/oversized/binary packets and throwing consumers close once without reconnect. Constructed failed resources return a guarded facade so startup cannot lose sticky listener/close failure evidence through a rejected opening promise. Cancellation before construction creates no resource. Handover detaches initial observation without closing the configured transport.
 
 Sixteen new checks include startup configuration readiness and cancellation during opening with failed cleanup. All 1,207 tests across 79 files, type checking and build pass. The first command used the wrong working-directory prefix; the corrected command also needed authorized access to the existing dependency cache. Final verification passed. The running application is unchanged: this component has no URL, keys, actual socket constructor, live route or retry. Earlier isolated SQL totals were not rerun because persistence is unchanged. Task 1c, D21/D22 and Phase 1 remain partial.
+
+
+## Dormant opener protected and SQL composition, 11 October 2026
+
+The disabled dormant opener now has four protected-loopback checks covering creation before opening, configuration acknowledgment before capture, page exit, provider error and failed close. Late opening cannot revive the notebook. Each unresolved reservation blocks a replacement bridge before transport construction or extraction. These are synthetic integrations; no live route was changed.
+
+The isolated SQL harness adds two dormant-opener server-owner scenarios and three browser scenarios, including failed close during opening. Fresh Node readers preserve the open reservation; a replacement browser owner is refused before provider construction. Final verification passes 1,211 prototype tests across 79 files, type checking, build, 50 isolated PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. The temporary container was removed. No actual Supabase data, credentials, paid allowance or Render deployment changed. Task 1c, D21/D22 and Phase 1 remain partial.

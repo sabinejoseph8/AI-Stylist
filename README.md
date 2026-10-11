@@ -39,3 +39,10 @@ Added strict literal-evidence decoding with a separate untrusted input/context e
 ## Pinned extraction preparation
 
 Sabine approved GPT-4.1 mini preparation. The disabled adapter validates simulated Responses envelopes and returns tentative notes only. All 396 tests, type checking and build pass. No provider call or deployment occurred. See [the scoped decision and evidence](docs/task-1c-extraction-model-proposal.md).
+
+
+## Dormant opener protected and SQL composition, 11 October 2026
+
+The disabled dormant opener now has four protected-loopback checks covering creation before opening, configuration acknowledgment before capture, page exit, provider error and failed close. Late opening cannot revive the notebook. Each unresolved reservation blocks a replacement bridge before transport construction or extraction. These are synthetic integrations; no live route was changed.
+
+The isolated SQL harness adds two dormant-opener server-owner scenarios and three browser scenarios, including failed close during opening. Fresh Node readers preserve the open reservation; a replacement browser owner is refused before provider construction. Final verification passes 1,211 prototype tests across 79 files, type checking, build, 50 isolated PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. The temporary container was removed. No actual Supabase data, credentials, paid allowance or Render deployment changed. Task 1c, D21/D22 and Phase 1 remain partial.

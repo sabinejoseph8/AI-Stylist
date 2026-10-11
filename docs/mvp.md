@@ -5,11 +5,11 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 10 October 2026
 
-1,207 prototype checks across 79 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, seventeen SQL-backed owner scenarios and twenty-four SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+1,211 prototype checks across 79 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, nineteen SQL-backed owner scenarios and twenty-seven SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Compose the disabled dormant opener through the protected owner and loopback browser, including opening cancellation and sticky cleanup failure. Verify unresolved reservations block a fresh owner before provider construction. Keep actual provider wiring, keys, live routes, paid services and remote ledgers unchanged. Live activation still requires separate financial and security authorization.
+**Next action:** Exercise dormant-opening deadline expiry, duplicate open events and reentrant cancellation through the protected owner. Verify bounded termination, single closure and unchanged unresolved reservations before considering actual provider wiring. Keep keys, live routes, paid services and remote ledgers unchanged; live activation still requires separate financial and security authorization.
 
 **Remaining gates:** Tavus recovery clarification, live validation of the dedicated transcription startup and remote cleanup contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. Sabine authorized the OpenAI questions and received AI-assisted replies. Low delay and item correlation are documented; the selected-model startup URL remains an inference, and no stronger remote-finalization guarantee was established.
 
@@ -330,7 +330,7 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Compose the disabled dormant opener through the protected owner and loopback browser, including opening cancellation and sticky cleanup failure. Verify unresolved reservations block a fresh owner before provider construction. Keep actual provider wiring, keys, live routes, paid services and remote ledgers unchanged. Live activation still requires separate financial and security authorization.
+Next: Exercise dormant-opening deadline expiry, duplicate open events and reentrant cancellation through the protected owner. Verify bounded termination, single closure and unchanged unresolved reservations before considering actual provider wiring. Keep keys, live routes, paid services and remote ledgers unchanged; live activation still requires separate financial and security authorization.
 
 
 ## Disabled transcription connection and close-evidence contract, 10 October 2026
@@ -392,3 +392,10 @@ Isolated PostgreSQL compositions add configured startup/end and pending startup/
 Added prepareNoteOpener with an explicitly simulated dormant transport constructor. Listeners attach before start, including synchronous first packets. Abort, error, disconnect, malformed/oversized/binary packets and throwing consumers close once without reconnect. Constructed failed resources return a guarded facade so startup cannot lose sticky listener/close failure evidence through a rejected opening promise. Cancellation before construction creates no resource. Handover detaches initial observation without closing the configured transport.
 
 Sixteen new checks include startup configuration readiness and cancellation during opening with failed cleanup. All 1,207 tests across 79 files, type checking and build pass. The first command used the wrong working-directory prefix; the corrected command also needed authorized access to the existing dependency cache. Final verification passed. The running application is unchanged: this component has no URL, keys, actual socket constructor, live route or retry. Earlier isolated SQL totals were not rerun because persistence is unchanged. Task 1c, D21/D22 and Phase 1 remain partial.
+
+
+## Dormant opener protected and SQL composition, 11 October 2026
+
+The disabled dormant opener now has four protected-loopback checks covering creation before opening, configuration acknowledgment before capture, page exit, provider error and failed close. Late opening cannot revive the notebook. Each unresolved reservation blocks a replacement bridge before transport construction or extraction. These are synthetic integrations; no live route was changed.
+
+The isolated SQL harness adds two dormant-opener server-owner scenarios and three browser scenarios, including failed close during opening. Fresh Node readers preserve the open reservation; a replacement browser owner is refused before provider construction. Final verification passes 1,211 prototype tests across 79 files, type checking, build, 50 isolated PostgreSQL checks, 19 SQL-backed owner scenarios and 27 SQL-backed browser scenarios. The temporary container was removed. No actual Supabase data, credentials, paid allowance or Render deployment changed. Task 1c, D21/D22 and Phase 1 remain partial.

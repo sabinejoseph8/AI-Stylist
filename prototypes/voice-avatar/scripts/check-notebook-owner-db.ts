@@ -1,3 +1,4 @@
+import {prepareNoteOpener} from '../src/prepared-note-opener.ts';
 import {SimulatedContractPreferenceSource} from '../src/simulated-contract-preference-source.ts';
 import type {SimulatedPreferenceAuthority} from '../src/simulated-contract-preference-source.ts';
 /** Local SQL composition checks only. No HTTP connection, credentials or provider. */
@@ -52,7 +53,7 @@ const preview = {origin:'https://fixture.onrender.com',password:'synthetic_local
 const request = (signal = new AbortController().signal) => ({method:'GET',path:'/api/notebook-simulation',host:'fixture.onrender.com',origin:preview.origin,authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64'),signal});
 type Fault = 'none' | 'reserve-ack-lost' | 'close-ack-lost' | 'reserve-pending';
 const endings: Array<() => Promise<void>> = [];
-function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract?: (url:string,init:RequestInit)=>Promise<Response>, preferences?:SimulatedPreferenceAuthority, cleanupRequirement:'simulation-local'|'remote-verified'='simulation-local',startupMode:'off'|'ready'|'pending'='off') {
+function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract?: (url:string,init:RequestInit)=>Promise<Response>, preferences?:SimulatedPreferenceAuthority, cleanupRequirement:'simulation-local'|'remote-verified'='simulation-local',startupMode:'off'|'ready'|'pending'|'dormant-ready'|'dormant-pending'='off') {
  let sendAudio: ((pcm:ArrayBuffer)=>boolean) | undefined;
  let calls = 0, providers = 0, closes = 0;
  let release!: () => void, signalCommitted!: () => void;
@@ -84,11 +85,21 @@ function setup(fault: Fault = 'none', readBarrier?: () => Promise<void>, extract
  const openingPending=new Promise<void>(resolve=>{openingStarted=resolve;});
  const createTransports=()=>{
   providers++;
-  const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:()=>{if(startupMode==='ready')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));},close:()=>{closes++;}});
+  const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:()=>{if(startupMode==='ready'||startupMode==='dormant-ready')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));},close:()=>{closes++;}});
   return {socket,capture:{start:async(accept:(pcm:ArrayBuffer)=>boolean)=>{sendAudio=accept;return true;},stop:()=>{}},fetch:extract??(async()=>{throw Error('No provider request permitted.');})};
  };
  const owner = createPreparedNoteServerOwner({simulation:true,cleanupRequirement,preview,allowance,preferences,changed:()=>{},createTransports:startupMode==='off'?createTransports:undefined,createStartupTransports:startupMode==='off'?undefined:()=>{
-  const t=createTransports();return{capture:t.capture,fetch:t.fetch,open:async(_signal,initial)=>{
+  const t=createTransports();
+  if(startupMode.startsWith('dormant')){
+   t.socket.readyState=0;
+   const open=prepareNoteOpener({simulation:true,construct:()=>({socket:t.socket,start:()=>{
+    t.socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.created',session:{id:'synthetic_dormant_sql'}})}));
+    const opened=()=>{t.socket.readyState=1;t.socket.dispatchEvent(new Event('open'));};
+    if(startupMode==='dormant-pending'){releaseOpening=opened;openingStarted();}else opened();
+   }})});
+   return {capture:t.capture,fetch:t.fetch,open};
+  }
+  return{capture:t.capture,fetch:t.fetch,open:async(_signal,initial)=>{
    if(startupMode==='pending')await new Promise<void>(resolve=>{releaseOpening=resolve;openingStarted();});
    initial({type:'session.created',session:{id:'synthetic_sql_startup'}});return{socket:t.socket,detachInitialEvents:()=>{}};
   }};
@@ -285,8 +296,14 @@ if (worker) {
   else{const active=await pending;assert.equal(active.status,200);if(active.status!==200)throw Error('Expected SQL startup session.');await active.end();}
   assert.equal(startupOwner.owner.status().state,'held');assert.deepEqual(startupOwner.counts(),{calls:2,providers:1,closes:1});assert.equal((await read()).runs[0]!.closed,false);await verifyFreshHold();
  }
+ for(const mode of ['dormant-ready','dormant-pending'] as const){
+  await reset();const abort=new AbortController(),fixture=setup('none',undefined,undefined,undefined,'remote-verified',mode),pending=fixture.start(abort.signal);
+  if(mode==='dormant-pending'){await fixture.openingPending;abort.abort();assert.equal((await pending).status,499);fixture.releaseOpening();}
+  else{const active=await pending;assert.equal(active.status,200);if(active.status!==200)throw Error('Expected dormant session');await active.end();}
+  assert.equal(fixture.owner.status().state,'held');assert.deepEqual(fixture.counts(),{calls:2,providers:1,closes:1});assert.equal((await read()).runs[0]!.closed,false);await verifyFreshHold();assert.equal((await fixture.start()).status,409);
+ }
  assert.deepEqual(JSON.parse(await sql('select ledger from public.stylist_prototype_budget;')),{synthetic_legacy:true,closed_attempts:9});
- console.log('17 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
+ console.log('19 local SQL-backed TypeScript owner scenarios passed, including a fresh Node process. No HTTP or paid provider calls.');
  const {checkNotebookBrowserDb}=await import('./check-notebook-browser-db.ts');
  await checkNotebookBrowserDb({reset,read,sql,literal,verifyFreshHold});
 } finally {
