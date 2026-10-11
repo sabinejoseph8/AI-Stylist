@@ -1,0 +1,11 @@
+import {it,expect} from 'vitest';
+import {prepareRetailSnapshot} from '../src/server/retail-snapshot.ts';
+import type {CatalogPolicy} from '../../../packages/catalog-contracts/src/index.ts';
+const policy:CatalogPolicy={sourceId:'fixture',synthetic:false,permittedHosts:['shop.example'],imageHosts:['images.example'],rightsReferences:['synthetic-test-license'],maxAgeMs:1000,capabilities:{externalCheckout:true,embeddedCheckout:false,cartTransfer:false,orderTracking:false}};
+const product={sourceId:'fixture',productId:'dress',variantId:'m',name:'Dress',category:'dress',colors:['Blue'],size:'M',priceCents:35000,currency:'USD',country:'US',availability:'available',delivery:{status:'eligible',destination:'US'},image:{url:'https://images.example/dress.jpg',rightsReference:'synthetic-test-license'},productUrl:'https://shop.example/dress',checkedAt:1000,sourceUpdatedAt:900,synthetic:false};
+it('copies only source facts into a dated immutable history snapshot',()=>{const s=prepareRetailSnapshot(product,policy,1100);expect(s.status).toBe('saved-history');expect(Object.isFrozen(s.image)).toBe(true);expect(s).not.toHaveProperty('colors');expect(s).not.toHaveProperty('delivery');});
+for(const [name,change] of Object.entries({transcript:{transcript:'private'},owner:{user_id:'other'},source:{sourceId:'other'},url:{productUrl:'http://shop.example/dress'},host:{productUrl:'https://evil.example/dress'},license:{image:{...product.image,rightsReference:'unapproved'}},price:{priceCents:-1},currency:{currency:'EUR'},future:{checkedAt:2000}}))it(`rejects ${name}`,()=>expect(()=>prepareRetailSnapshot({...product,...change},policy,1100)).toThrow());
+it('rejects stale source facts for a new save',()=>expect(()=>prepareRetailSnapshot(product,policy,2001)).toThrow());
+it('preserves an unknown price without inventing an estimate',()=>expect(prepareRetailSnapshot({...product,priceCents:null},policy,1100).priceCents).toBeNull());
+
+it('refuses sample products as retail history',()=>{const p={...policy,synthetic:true,capabilities:{...policy.capabilities,externalCheckout:false}};expect(()=>prepareRetailSnapshot({...product,synthetic:true,image:{url:'/demo-catalog/dress.svg',rightsReference:'synthetic-test-license'},productUrl:null},p,1100)).toThrow();});

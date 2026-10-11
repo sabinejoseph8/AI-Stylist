@@ -524,3 +524,12 @@ Added an unapplied controlled saved-look delete function requiring owner identit
 Evidence: 122 local database scenarios and all 90 foundation tests pass; type checking and build pass. Storage/Auth remain synthetic schemas, not hosted acceptance. Task 2b remains open. Previous goal turn committed saved-look storage; this turn verifies concurrent edits and controlled deletion.
 
 Exact next action: prepare source-backed retail saved-look snapshot contracts and safe media upload/reference-aware cleanup, then migration compatibility checks. Preserve current Phase 1 gates and local-only authorization. No human action required for this preparation.
+
+
+## Shared retail snapshot preparation, 11 October 2026
+
+Moved the existing catalog validator into packages/catalog-contracts with a prototype reexport, preserving one source of URL/rights/source validation. Prepared a source-fact-only retail history snapshot: copies IDs, name/category/size, dated USD price (including explicit unknown), source URL and image-rights reference; omits transient/customer fields and marks saved-history. Rejects stale/new-save source facts, sample products, invalid URLs, unapproved rights and unknown input fields. Trusted adapter policy remains server configuration; no live retailer or database retail mutation is attached. This is not current-look approval or completed retail persistence.
+
+Evidence: 103 foundation tests pass; all 1,273 prototype checks across 81 files, both type checks and builds pass. Fixed a test import path during type checking. The 122 database scenarios remain the preceding unchanged database evidence. No paid call, hosted migration or customer deployment occurred. Task 2b remains open.
+
+Exact next action: implement safe local image-byte decoding/metadata stripping with bounded dimensions/size, then owner-bound upload staging and reference-aware cleanup. Complete retail persistence only with source-backed snapshot validation and recheck-before-reuse semantics. Continue migration compatibility checks. No Sabine action needed for local preparation.

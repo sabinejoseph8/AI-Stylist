@@ -646,3 +646,5 @@ I prepared an owner-scoped revision reader so one customer cannot observe anothe
 I prepared saved looks made from a customer’s owned items. Saving requires consent, and replacing a look is atomic: invalid components leave the earlier saved look intact. I limited this initial preparation to owned images and labels; retail snapshots and current recommendation checks remain separate. The local database suite passes 108 scenarios.
 
 I added confirmed deletion for saved looks and tested competing edits. Only one edit wins; an older delete request cannot remove a newer version. The request boundary rejects conversation content and unverified retail items. The local checks now cover 122 database scenarios and 90 foundation tests.
+
+I reused the existing catalog rules for saved retail history instead of creating a second validator. A dated saved snapshot cannot act as a fresh recommendation approval. The checks reject stale facts, unapproved imagery and sample products. All 103 foundation tests and 1,273 prototype regression tests passed.
