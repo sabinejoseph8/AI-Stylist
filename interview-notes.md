@@ -691,3 +691,8 @@ I designed saved looks to contain my customer's own clothing and real retail pro
 ## Guarding saved product history in the database
 
 I added database checks to reject future or fractional source timestamps and invalid prices, even if an application caller bypasses normal catalog validation. The unit checks, type check and build pass. I have not yet rerun PostgreSQL for this final SQL change because the system approval limit blocked Docker; I recorded that as the next verification step.
+
+
+## Preparing a private database connection
+
+I added a disabled server-side Supabase adapter for saved looks. It only targets the configured Supabase project, keeps the key in server request headers, refuses redirects and bounds request and response time and size. I verified failures with simulated responses; I did not call the live database. The timestamp checks in the newest database migration still need an isolated PostgreSQL run after the system approval limit clears.

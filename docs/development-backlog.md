@@ -1063,3 +1063,12 @@ Tightened the local retail history function to reject future source checks, frac
 Evidence: the 129 foundation tests outside the loopback-boundary file, type checking, build and whitespace checks pass. The full suite earlier passed 146 tests, and the isolated SQL suite passed before this latest SQL-only validation change. I could not rerun PostgreSQL after the change because the system usage limit blocks approval for the Docker execution. The new SQL cases remain unverified.
 
 Exact next action: rerun `python3 apps/foundation/scripts/check-data-protections.py` when the execution approval limit clears; fix any SQL failure. Then copy the mixed-look checkpoint to the AI stylist folder, publish GitHub and refresh the private Memory site. Do not bypass the approval limit. Task 2b remains open and local-only.
+
+
+## Disabled Supabase RPC adapter preparation, 11 October 2026
+
+Added an explicitly constructed server-only RPC transport and mixed-look Supabase port. It accepts only an HTTPS Supabase project root, uses the injected service key only in protected request headers, refuses redirects, bounds UTF-8 request and streamed response sizes, applies one eight-second deadline to request and response reads, cancels stalled/oversized responses, validates JSON output and returns fixed redacted failures. No key is read from the environment automatically, no route constructs the adapter and all checks use simulated fetch responses.
+
+Evidence: 138 tests pass when excluding the existing HTTP test that cannot bind loopback under the current execution limit; type checking, build and whitespace checks pass. Simulated checks cover destination validation, headers, redirect refusal, request/response sizes, malformed/status errors, timeout, cancellation and mixed-look RPC response validation. No live Supabase request was made. The migration's latest timestamp guards remain unverified because the approval system blocked the isolated Docker run.
+
+Exact next action: rerun the isolated PostgreSQL suite after approval is available. Then copy the pending commits to the AI stylist folder, push to GitHub and publish the refreshed private Memory site. Continue local work without exceeding Phase 1 or spending boundaries.
