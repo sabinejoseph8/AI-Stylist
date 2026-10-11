@@ -25,7 +25,7 @@ npm run typecheck
 npm run build
 ```
 
-1,191 tests across 78 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+1,207 prototype tests across 79 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
 The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller now checks creation/configuration ordering and cancellation. Protected-owner/browser composition now also covers two turns, delayed extraction, color/budget corrections, stale visual/speech revocation, shutdown and fresh-owner holds. No live notebook connection or new hosted deployment is enabled.
 

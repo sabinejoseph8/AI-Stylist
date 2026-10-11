@@ -8,7 +8,7 @@ See [the phased plan](docs/progress.md) for actual evidence and open checks. The
 
 ## Current development status, 11 October 2026
 
-All 1,189 prototype tests across 78 files, type checking and build pass. Separate isolated checks passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. The latest notebook preparation is published source, not a new Render deployment. Live notebook transcription and customer accounts, real shopping and production preference validation remain incomplete.
+All 1,207 prototype tests across 79 files, type checking and build pass. Separate isolated checks passed 50 PostgreSQL checks, 17 SQL-backed owner scenarios and 24 SQL-backed browser scenarios. The latest notebook preparation is published source, not a new Render deployment. Live notebook transcription and customer accounts, real shopping and production preference validation remain incomplete.
 
 The disabled server/browser preparation keeps a test reservation held when remote cleanup is unverified. Remote-required owner and browser checks now preserve unresolved reservations in isolated PostgreSQL across fresh application processes. The disabled startup controller is composed into the protected owner and browser bridge, with readiness and late-opening cancellation checks. Two-turn extraction and correction through this startup-backed path are next. All nine earlier provider attempts are consumed and closed; no new paid trial is authorized.
 
