@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2b local preparation is active. Latest evidence: 142 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
+Task 2b local preparation is active. Latest evidence: 143 foundation tests, type checking/build and six SQL-backed recovery paths pass. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
 
 ## Completed evidence
 
@@ -587,3 +587,12 @@ Moved Sharp decoding and WebP conversion into a separate child process. The serv
 Evidence: 142 foundation tests pass, including real child crash and hang scenarios; type checking and build pass. The hung child is killed and a later valid image decodes. No personal media, provider call or hosted deployment occurred. Task 2b remains open.
 
 Exact next action: define and verify OS/container resource limits for the decoder on the intended host, then continue migration compatibility and source-backed retail persistence. This local preparation requires no Sabine action.
+
+
+## Legacy media migration compatibility, 11 October 2026
+
+The isolated migration rehearsal now carries an existing JPEG record from the first schema through all eleven local migrations. Its key uses an older safe filename unrelated to the record ID, and its checksum is null. Owner-scoped reads recognize it as ready; a reference-safe deletion removes its simulated object, writes the durable receipt and confirms deletion. New checksums still require the exact new ID-based WebP key. Both deletion paths refuse foreign folders or nested paths; the legacy allowance is restricted to a single safe image filename inside the verified owner's folder.
+
+Evidence: isolated SQL and six newer recovery paths plus legacy JPEG deletion pass with simulated storage. 143 foundation tests, type checking and build pass. No hosted migration or actual Storage API was used. Task 2b remains open.
+
+Exact next action: complete the OS/container resource-limit decision and local verification, then persist source-backed retail snapshots and check schema upgrade behavior with hosted Supabase when Phase 1 and approval gates permit. No Sabine action is required for continued local preparation.

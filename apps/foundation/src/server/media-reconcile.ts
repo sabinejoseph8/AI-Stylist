@@ -16,8 +16,18 @@ export async function reconcileMedia(port:MediaReconcilePort,ownerId:string,id:s
   if(!value||typeof value!=='object'||Array.isArray(value))return 'pending';
   const x=value as Record<string,unknown>;
   const keys=['id','ownerId','key','checksum','state','deletionToken'];
-  if(Object.keys(x).length!==keys.length||keys.some(k=>!Object.hasOwn(x,k))||x.id!==asset||x.ownerId!==owner||x.key!==`${owner}/${asset}.webp`)return 'pending';
+  if(Object.keys(x).length!==keys.length||keys.some(k=>!Object.hasOwn(x,k))||x.id!==asset||x.ownerId!==owner||
+   typeof x.key!=='string'||!new RegExp(`^${owner}/[A-Za-z0-9_-]{1,128}\\.(webp|png|jpg|jpeg)$`).test(x.key)||
+   (x.checksum!==null&&x.key!==`${owner}/${asset}.webp`))return 'pending';
   if(x.state==='deleted'&&x.checksum===null&&typeof x.deletionToken==='string'&&uuid.test(x.deletionToken))return 'deleted';
+  if(x.state==='ready'&&x.checksum===null&&x.deletionToken===null)return 'ready';
+  if(x.state==='deleting'&&x.checksum===null&&typeof x.deletionToken==='string'&&uuid.test(x.deletionToken)){
+   const evidence=await port.inspect(x.key);
+   if(evidence.state==='unknown')return 'pending';
+   if(evidence.state==='present')await port.remove(x.key);
+   else if(evidence.state!=='absent')return 'pending';
+   await port.finishDelete(asset,owner,x.deletionToken);return 'deleted';
+  }
   if(typeof x.checksum!=='string'||!/^[a-f0-9]{64}$/.test(x.checksum))return 'pending';
   if(x.state==='ready'&&x.deletionToken===null)return 'ready';
   if(x.state!=='staged'&&x.state!=='deleting')return 'pending';

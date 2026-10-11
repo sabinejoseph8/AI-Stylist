@@ -36,7 +36,8 @@ export async function deleteImage(port:MediaLifecyclePort,ownerId:string,id:stri
   // Adapter must lock metadata, refuse existing references, and mark deleting
   // atomically. New references must refuse deleting assets before releasing lock.
   const pending=await port.beginDelete(id,actor,revision);
-  if(pending.key!==`${actor}/${id.toLowerCase()}.webp`||typeof pending.deletionToken!=='string'||!uuid.test(pending.deletionToken))throw Error('Invalid deletion claim');
+  if(typeof pending.key!=='string'||!new RegExp(`^${actor}/[A-Za-z0-9_-]{1,128}\\.(webp|png|jpg|jpeg)$`).test(pending.key)||
+   typeof pending.deletionToken!=='string'||!uuid.test(pending.deletionToken))throw Error('Invalid deletion claim');
   await port.remove(pending.key);
   await port.finishDelete(id,actor,pending.deletionToken);
  }catch{throw Error('Image deletion not confirmed');}

@@ -671,3 +671,8 @@ I expanded image validation checks to malformed files, oversized decoded images 
 ## Isolating image decoding
 
 I moved image decoding into a separate process so a malformed image cannot hold the app server in native image work. The parent has a deadline, kills a hung child, and accepts only bounded results. I tested a real crash and hang, then confirmed a later image still works. Native memory needs an OS limit before customer upload is available.
+
+
+## Keeping older wardrobe images usable
+
+I found that an early image record can use a JPEG filename that does not match its record ID. I updated deletion and recovery so those records remain manageable after the database upgrade. I confined deletion to a safe filename in the verified customer's folder and tested a nested path rejection. The SQL rehearsal proves the compatibility path locally with simulated object storage.

@@ -42,4 +42,23 @@ for(const failure of ['none','stage','put','commit','remove','finish'] as const)
  assert.throws(()=>service(`select public.stylist_stage_media(${literal(asset)},${literal(owner)},${literal('a'.repeat(64))},10,10);`));
  assert.equal(service(`select public.stylist_read_media_operation(${literal(asset)},${literal(other)});`),'');
 }
-console.log('SQL-backed media lifecycle recovery: six lost-acknowledgment paths pass. Storage is simulated.');
+const legacyId=actor(`select id from public.stylist_media_assets where user_id=${literal(owner)} and storage_key=${literal(owner+'/fixture.jpg')};`);
+assert(legacyId);
+const legacyKey=owner+'/fixture.jpg';
+const legacyObjects=new Set([legacyKey]);
+const legacyPort={
+ async read(id:string,o:string){const raw=service(`select public.stylist_read_media_operation(${literal(id)},${literal(o)});`);return raw?JSON.parse(raw):null;},
+ async inspect(k:string){return legacyObjects.has(k)?{state:'present' as const,checksum:'legacy'}:{state:'absent' as const};},
+ async commit(){throw Error('legacy record cannot be staged');},
+ async beginDelete(id:string,_o:string,revision:number){return JSON.parse(actor(`select public.stylist_begin_media_delete(${literal(id)},${revision},true);`));},
+ async remove(k:string){assert.equal(k,legacyKey);legacyObjects.delete(k);},
+ async finishDelete(id:string,o:string,t:string){service(`select public.stylist_finish_media_delete(${literal(id)},${literal(o)},${literal(t)});`);},
+ async stage(){throw Error('legacy record cannot be staged');},
+ async putIfAbsent(){throw Error('legacy record cannot be staged');},
+};
+assert.equal(await reconcileMedia(legacyPort,owner,legacyId),'ready');
+assert.equal(await reconcileMedia(legacyPort,other,legacyId),'pending');
+await deleteImage(legacyPort,owner,legacyId,1,true);
+assert.equal(await reconcileMedia(legacyPort,owner,legacyId),'deleted');
+assert(!legacyObjects.has(legacyKey));
+console.log('SQL-backed media lifecycle recovery: six lost-acknowledgment paths and legacy JPEG deletion pass. Storage is simulated.');
