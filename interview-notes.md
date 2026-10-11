@@ -681,3 +681,8 @@ I found that an early image record can use a JPEG filename that does not match i
 ## Saving checked retail facts
 
 I prepared a protected record for the product facts a customer chooses to save. I kept a dated history of the source, price, link and image rights instead of treating saved details as fresh shopping proof. The server checks approved source rules and consent first. The local database rehearsal shows another customer cannot read the record and direct edits are blocked. Retail records still need to be linked to a saved look in one transaction.
+
+
+## Saving owned and retail pieces together
+
+I designed saved looks to contain my customer's own clothing and real retail products. Retail product facts come from a checked source, then the look and its dated facts save in one database transaction. If a component fails, the whole save rolls back; deleting or replacing a look removes its unused retail history. I kept the customer request to item IDs and labels so a customer cannot invent a price or shopping link. The local rehearsal passed, while real retailer permission and hosted access remain open.

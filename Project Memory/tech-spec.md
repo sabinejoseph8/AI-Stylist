@@ -1577,3 +1577,14 @@ Added an unapplied owner-scoped retail history table and service-only save funct
 Evidence: the isolated PostgreSQL suite passes direct-write denial, owner isolation and malformed payload rollback. A TypeScript-to-SQL rehearsal persists validated source facts while unsafe URLs and stale facts never reach the database. 145 foundation tests, type checking and build pass. Local synthetic source facts and synthetic Auth/Storage schemas were used. The retail record is not yet linked atomically to a saved look; no live retailer, hosted migration or customer deployment occurred. Task 2b remains open.
 
 Exact next action: link retail history to saved looks through an atomic mixed-item save while retaining owned-item behavior and owner isolation. Resolve OS/container limits for image decoding before customer upload activation. No Sabine action is required for this local preparation.
+
+
+## Atomic mixed saved-look preparation, 11 October 2026
+
+Added an unapplied migration that lets saved-look components reference either an owned wardrobe image or an owner-scoped retail history record. A service-only transaction creates or revises the look, stores validated retail snapshots, links all components and rolls everything back if any component fails. A trigger removes retail history when its look item is replaced or deleted; the existing owned-look path remains functional. The final migration revokes the temporary standalone retail-history write privilege, so retail records are created inside a saved-look transaction.
+
+The server-side mixed-look boundary accepts item identifiers and labels from the customer. It fetches retail facts through a trusted injected catalog adapter, checks the approved source policy and freshness, then passes only validated snapshots to the database adapter. It requires verified owner identity and explicit consent, rejects duplicate components and extra customer-supplied product facts, and has no live route or source credential.
+
+Evidence: 146 foundation tests, type checking and build pass. The isolated PostgreSQL suite verifies mixed owned/retail save, cross-owner invisibility, stale revision refusal, invalid-component rollback, replacement and deletion cleanup. A TypeScript-to-SQL rehearsal verifies trusted catalog lookup through the atomic write. These use synthetic source facts and synthetic Auth/Storage schemas; they do not prove hosted Storage, signed URLs, retailer permission or live customer access. Task 2b remains open.
+
+Exact next action: define and verify decoder OS/container limits and a hosted-safe retail/source adapter boundary. Continue local schema and access checks; apply no hosted migration until the agreed Phase 1 and security gates are met. No Sabine action is needed for local preparation.

@@ -1,5 +1,5 @@
-import {it,expect,vi} from 'vitest';
-import {prepareRetailSnapshot,saveRetailHistory} from '../src/server/retail-snapshot.ts';
+import {it,expect} from 'vitest';
+import {prepareRetailSnapshot} from '../src/server/retail-snapshot.ts';
 import type {CatalogPolicy} from '../../../packages/catalog-contracts/src/index.ts';
 const policy:CatalogPolicy={sourceId:'fixture',synthetic:false,permittedHosts:['shop.example'],imageHosts:['images.example'],rightsReferences:['synthetic-test-license'],maxAgeMs:1000,capabilities:{externalCheckout:true,embeddedCheckout:false,cartTransfer:false,orderTracking:false}};
 const product={sourceId:'fixture',productId:'dress',variantId:'m',name:'Dress',category:'dress',colors:['Blue'],size:'M',priceCents:35000,currency:'USD',country:'US',availability:'available',delivery:{status:'eligible',destination:'US'},image:{url:'https://images.example/dress.jpg',rightsReference:'synthetic-test-license'},productUrl:'https://shop.example/dress',checkedAt:1000,sourceUpdatedAt:900,synthetic:false};
@@ -9,18 +9,3 @@ it('rejects stale source facts for a new save',()=>expect(()=>prepareRetailSnaps
 it('preserves an unknown price without inventing an estimate',()=>expect(prepareRetailSnapshot({...product,priceCents:null},policy,1100).priceCents).toBeNull());
 
 it('refuses sample products as retail history',()=>{const p={...policy,synthetic:true,capabilities:{...policy.capabilities,externalCheckout:false}};expect(()=>prepareRetailSnapshot({...product,synthetic:true,image:{url:'/demo-catalog/dress.svg',rightsReference:'synthetic-test-license'},productUrl:null},p,1100)).toThrow();});
-it('stores only validated source history for a verified owner with consent',async()=>{
- const store=vi.fn(async(_owner:string,_snapshot:ReturnType<typeof prepareRetailSnapshot>)=> 'aaaaaaaa-0000-0000-0000-000000000001');
- const saved=await saveRetailHistory({store},'BBBBBBBB-0000-0000-0000-000000000002',true,product,policy,1100);
- expect(saved.status).toBe('saved-history');
- expect(store).toHaveBeenCalledOnce();
- expect(store.mock.calls[0][0]).toBe('bbbbbbbb-0000-0000-0000-000000000002');
- expect(store.mock.calls[0][1]).not.toHaveProperty('delivery');
-});
-it('refuses missing consent, invalid owner and unapproved source before persistence',async()=>{
- const store=vi.fn(async()=> 'aaaaaaaa-0000-0000-0000-000000000001');const port={store};
- await expect(saveRetailHistory(port,'bad',true,product,policy,1100)).rejects.toThrow();
- await expect(saveRetailHistory(port,'bbbbbbbb-0000-0000-0000-000000000002',false,product,policy,1100)).rejects.toThrow();
- await expect(saveRetailHistory(port,'bbbbbbbb-0000-0000-0000-000000000002',true,{...product,sourceId:'other'},policy,1100)).rejects.toThrow();
- expect(store).not.toHaveBeenCalled();
-});

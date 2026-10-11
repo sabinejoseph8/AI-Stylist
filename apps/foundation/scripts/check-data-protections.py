@@ -231,6 +231,32 @@ try:
  checked=run(['node',str(Path(__file__).resolve().parent/'check-retail-history-db.ts'),name],timeout=30)
  assert checked.returncode==0, checked.stderr
  print(checked.stdout.strip())
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110013_mixed_saved_looks.sql').read_text())
+ mixed_asset='00000000-0000-0000-0000-000000000005'
+ sql(f"set role service_role; select public.stylist_stage_media('{mixed_asset}','{a}','{'c'*64}',10,10); select public.stylist_commit_media('{mixed_asset}','{a}','{'c'*64}');")
+ def mixed(items,owner=a,look='null',rev=0,expected=True):
+  quoted=json.dumps(items).replace("'","''")
+  return sql(f"set role service_role; select (public.stylist_save_mixed_look('{owner}','Wedding','{quoted}'::jsonb,true,{look},{rev})).id;",expected)
+ mixed_items=[{'kind':'owned','assetId':mixed_asset,'label':'Jacket'},{'kind':'retail','snapshot':snapshot,'label':'Dress'}]
+ mixed_id=mixed(mixed_items)
+ assert sql(actor(a,f"select count(*) from public.stylist_saved_look_items where look_id='{mixed_id}';"))=='2'
+ assert sql(actor(b,f"select count(*) from public.stylist_saved_look_items where look_id='{mixed_id}';"))=='0'
+ assert sql(actor(a,f"select count(*) from public.stylist_retail_history where id in (select retail_history_id from public.stylist_saved_look_items where look_id='{mixed_id}');"))=='1'
+ assert sql(actor(b,f"select count(*) from public.stylist_retail_history where id in (select retail_history_id from public.stylist_saved_look_items where look_id='{mixed_id}');"))=='0'
+ sql(actor(a,f"select public.stylist_save_mixed_look('{a}','Nope','[]'::jsonb,true);"),False)
+ sql('set role service_role; select public.stylist_store_retail_history(null,null);',False)
+ before=sql('select count(*) from public.stylist_retail_history;')
+ mixed([mixed_items[1],{'kind':'retail','snapshot':{**snapshot,'transcript':'private'},'label':'Bad'}],expected=False)
+ assert sql('select count(*) from public.stylist_retail_history;')==before
+ mixed(mixed_items,look=f"'{mixed_id}'",rev=1)
+ assert sql(actor(a,f"select revision from public.stylist_saved_looks where id='{mixed_id}';"))=='2'
+ assert sql('select count(*) from public.stylist_retail_history;')==before
+ mixed(mixed_items,look=f"'{mixed_id}'",rev=1,expected=False)
+ assert sql(actor(a,f"select public.stylist_delete_saved_look('{mixed_id}',2,true);"))=='t'
+ assert sql('select count(*) from public.stylist_retail_history;')==str(int(before)-1)
+ checked=run(['node',str(Path(__file__).resolve().parent/'check-mixed-look-db.ts'),name,mixed_asset],timeout=30)
+ assert checked.returncode==0, checked.stderr
+ print(checked.stdout.strip())
  print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

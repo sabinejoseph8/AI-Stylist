@@ -14,17 +14,3 @@ export function prepareRetailSnapshot(input:unknown,policy:CatalogPolicy,now:num
   status:'saved-history' as const,
  });
 }
-
-export interface RetailHistoryPort {
- store(ownerId:string,snapshot:ReturnType<typeof prepareRetailSnapshot>):Promise<string>;
-}
-const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
-/** Server-only entry. ownerId must come from verified auth; input must come from a trusted catalog adapter. */
-export async function saveRetailHistory(port:RetailHistoryPort,ownerId:string,consent:boolean,
- input:unknown,policy:CatalogPolicy,now:number){
- if(typeof ownerId!=='string'||!uuid.test(ownerId)||consent!==true)throw Error('Retail history unavailable');
- const snapshot=prepareRetailSnapshot(input,policy,now);
- const id=await port.store(ownerId.toLowerCase(),snapshot);
- if(typeof id!=='string'||!uuid.test(id))throw Error('Retail history unavailable');
- return Object.freeze({id:id.toLowerCase(),status:snapshot.status});
-}
