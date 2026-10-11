@@ -16,7 +16,11 @@ export class NotebookState {
   private notes=empty();
   private listeners=new Set<()=>void>();
   subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
-  private notify(){for(const listener of [...this.listeners])listener();}
+  private notify(){
+    // State is already committed. One observer must not prevent the remaining
+    // observers from revoking obsolete display or queued speech permissions.
+    for(const listener of [...this.listeners]){try{listener();}catch{/* Observer failure cannot roll back state or block cancellation. */}}
+  }
   private session=1;
   private revision=0;
   private reference:Reference|null=null;

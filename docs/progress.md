@@ -57,7 +57,7 @@ Keep each test narrow: a small fixture, one behavior, a clear expected result. E
 
 Proposed tools are Vitest for domain/adapter tests, Playwright for a few focused browser journeys, and Supabase database tests for schema and access policies. Exact supported versions are pinned when scaffolding is approved. [Vitest guide](https://vitest.dev/guide/), [Playwright practices](https://playwright.dev/docs/best-practices), [Supabase database testing](https://supabase.com/docs/guides/database/testing)
 
-**The Phase 1 command exists in prototypes/voice-avatar/.** The current 869 checks cover voice/avatar preparation and synthetic notebook/provider/browser integration. Real partial speech, real recommendation/speech gating, connected garment interpretation and P1-06 timing measurements remain pending. See [Phase 1 readiness](phase-1-readiness.md) for the current evidence matrix. The later phase commands below remain planned script names. Phase 2 creates the app harness. Each later group adds its tests to the relevant script. The scripts must fail on failed assertions and must not make hidden paid provider calls.
+**The Phase 1 command exists in prototypes/voice-avatar/.** The current 1,273 checks cover voice/avatar preparation and synthetic notebook/provider/browser integration. Real partial speech, real recommendation/speech gating, connected garment interpretation and P1-06 timing measurements remain pending. See [Phase 1 readiness](phase-1-readiness.md) for the current evidence matrix. The later phase commands below remain planned script names. Phase 2 creates the app harness. Each later group adds its tests to the relevant script. The scripts must fail on failed assertions and must not make hidden paid provider calls.
 
 | Phase | Planned cumulative command | Scope |
 | --- | --- | --- |
@@ -1128,3 +1128,9 @@ Sabine agreed on 11 October 2026 to postpone Rakuten registration until the cust
 ## Affiliate selection recheck, 11 October 2026
 
 Fixed a stale-selection edge in the disabled affiliate action prototype: after final authorization, issuance and resolution re-read the trusted product and compare both revision and complete product content. A product replacement or unversioned stock change during authorization now blocks the old action. Four added regression cases pass. All 1,268 prototype tests across 81 files, type checking and build pass with loopback access; the restricted initial run could not open synthetic test sockets. No paid call, retailer request, actual shopping route or Render deployment was started. Phase 1 remains incomplete.
+
+## Notebook observer cancellation resilience, 11 October 2026
+
+Fixed observer failure isolation in NotebookState: once a note/reference/profile/session change is committed, a throwing screen observer cannot prevent later observers from canceling old look display or queued speech. Five added tests cover note edits, reference changes, clear, profile changes and replacing a check. All 1,273 tests across 81 files, type checking and build pass. No live provider, paid request, database change or app deployment occurred. Task 1c and Phase 1 remain incomplete.
+
+Next action: Sabine decides whether Task 2a foundation scaffolding may proceed while Phase 1 acceptance gates remain open. The concrete bounded proposal is docs/phase-2-foundation-sequencing-proposal.md. This is a sequencing exception, not Phase 1 approval, spending or provider activation. If approved, scaffold the approved React/TypeScript and Node/TypeScript foundations with local fixtures; otherwise preserve the phase order.

@@ -91,7 +91,7 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 1,268 prototype checks across 81 files, type checking and build pass. Fifty separate local PostgreSQL checks, nineteen SQL-backed TypeScript owner scenarios and twenty-seven SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 1,273 prototype checks across 81 files, type checking and build pass. Fifty separate local PostgreSQL checks, nineteen SQL-backed TypeScript owner scenarios and twenty-seven SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
 Sabine agreed on 11 October 2026 to postpone Rakuten registration until the customer website is live. Both contact forms require a publisher SID, and neither inquiry was delivered. Do not present the GitHub repository or private project memory site as the finished customer app. Continue clearly labeled, non-purchasable sample-product work. Real shopping links and affiliate commissions require publisher and retailer approvals. FARFETCH remains unsent. Next: complete independent Phase 1 preparation and preserve the outstanding live-provider, source-rights and privacy acceptance gates.
 
@@ -412,3 +412,9 @@ Sabine agreed on 11 October 2026 to postpone Rakuten registration until the cust
 ## Affiliate selection recheck, 11 October 2026
 
 Fixed a stale-selection edge in the disabled affiliate action prototype: after final authorization, issuance and resolution re-read the trusted product and compare both revision and complete product content. A product replacement or unversioned stock change during authorization now blocks the old action. Four added regression cases pass. All 1,268 prototype tests across 81 files, type checking and build pass with loopback access; the restricted initial run could not open synthetic test sockets. No paid call, retailer request, actual shopping route or Render deployment was started. Phase 1 remains incomplete.
+
+## Notebook observer cancellation resilience, 11 October 2026
+
+Fixed observer failure isolation in NotebookState: once a note/reference/profile/session change is committed, a throwing screen observer cannot prevent later observers from canceling old look display or queued speech. Five added tests cover note edits, reference changes, clear, profile changes and replacing a check. All 1,273 tests across 81 files, type checking and build pass. No live provider, paid request, database change or app deployment occurred. Task 1c and Phase 1 remain incomplete.
+
+Next action: Sabine decides whether Task 2a foundation scaffolding may proceed while Phase 1 acceptance gates remain open. The concrete bounded proposal is docs/phase-2-foundation-sequencing-proposal.md. This is a sequencing exception, not Phase 1 approval, spending or provider activation. If approved, scaffold the approved React/TypeScript and Node/TypeScript foundations with local fixtures; otherwise preserve the phase order.

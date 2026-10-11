@@ -35,3 +35,22 @@ describe('notebook and simulated playback integration',()=>{
    s.notebook.preferencesChanged();expect(s.release.complete(ticket,pass)).toBeNull();
  });
 });
+
+describe('notebook observer failure isolation',()=>{
+ it.each(['edit','reference','clear','profile'])('still cancels released speech when an earlier observer throws during %s',action=>{
+  const notebook=new NotebookState(),broken=vi.fn(()=>{throw Error('Fixture screen observer failed');});
+  notebook.subscribe(broken);
+  const release=new LookRelease(notebook),ticket=release.begin(draft),permit=release.complete(ticket,pass)!;
+  let signal!:AbortSignal,authorize!:()=>boolean;
+  release.startSpeech(permit,(_draft,sig,check)=>{signal=sig;authorize=check;});
+  const later=vi.fn();notebook.subscribe(later);
+  expect(()=>{switch(action){case'edit':notebook.edit('color','Blue');break;case'reference':notebook.setReference({label:'My jacket',kind:'owned'});break;case'clear':notebook.clear();break;default:notebook.preferencesChanged();}}).not.toThrow();
+  expect(broken).toHaveBeenCalled();expect(later).toHaveBeenCalledTimes(1);expect(signal.aborted).toBe(true);expect(authorize()).toBe(false);expect(release.visual(permit)).toBeNull();release.dispose();
+ });
+ it('a broken observer cannot prevent a replacement check from revoking old playback',()=>{
+  const notebook=new NotebookState();notebook.subscribe(()=>{throw Error('Fixture observer');});
+  const release=new LookRelease(notebook),old=release.complete(release.begin(draft),pass)!;let signal!:AbortSignal;
+  release.startSpeech(old,(_look,sig)=>{signal=sig;});
+  const next=release.begin({...draft,id:'next'});expect(signal.aborted).toBe(true);expect(release.visual(old)).toBeNull();expect(release.complete(next,pass)).not.toBeNull();release.dispose();
+ });
+});
