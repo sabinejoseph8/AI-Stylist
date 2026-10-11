@@ -37,7 +37,7 @@ The token estimate deliberately uses a coarse upper allowance rather than expect
 1. Complete and review a server-only live adapter and private entry point, with exact request authentication/Host/Origin, one owner, bounded startup and cancellation. Current simulation classes and inspection plan are not that adapter.
 2. Confirm how unresolved provider cleanup is represented without granting an unverified close permission. If the agreed policy requires evidence unavailable from the provider, stop at that gate rather than treating funding approval as a policy waiver.
 3. Prepare the dedicated durable notes-only allowance initialization and verify access controls. Do not apply it remotely without the required authorization; never modify the nine closed legacy reservations.
-4. Run the full phase checks and a review of affected code. Latest verification includes 1,146 passing tests plus isolated PostgreSQL composition checks, establishing disabled preparation only. See notebook-live-adapter-design.md for the remaining startup and access requirements.
+4. Run the full phase checks and a review of affected code. Latest verification includes 1,173 passing tests plus isolated PostgreSQL composition checks, establishing disabled preparation only. See notebook-live-adapter-design.md for the remaining startup and access requirements.
 5. Present the complete privacy notice and manual script before any microphone gesture. Use synthetic preferences; no saved profile, media recording or customer launch.
 6. Only after these prerequisites are reviewable, request a specific financial/activation decision. A USD 2 approval alone must not authorize a security-policy change or unresolved cleanup assumption.
 

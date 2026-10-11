@@ -1,0 +1,45 @@
+import {afterEach,describe,expect,it,vi} from 'vitest';
+import {prepareNoteStartup} from '../src/prepared-note-startup.ts';
+import {NotebookState} from '../src/notebook-state.ts';
+import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
+const created={type:'session.created',session:{id:'synthetic'}};
+const ack={type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}};
+function fixture(){
+ const abort=new AbortController(),socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:vi.fn(),close:vi.fn()});
+ const detachInitialEvents=vi.fn(),capture={start:vi.fn(async()=>true),stop:vi.fn()},ready=vi.fn(),stopped=vi.fn();
+ let resolve!:(value:{socket:typeof socket;detachInitialEvents:()=>void})=>void,receive!:(value:unknown)=>void,signal!:AbortSignal;
+ const open=vi.fn((s:AbortSignal,r:(v:unknown)=>void)=>{signal=s;receive=r;return new Promise<{socket:typeof socket;detachInitialEvents:()=>void}>(r=>{resolve=r;});});
+ const options={simulation:true,signal:abort.signal,open,session:{notebook:new NotebookState(),capture,fetch:vi.fn(async()=>{throw Error('No extraction expected');}),changed:vi.fn()},ready,stopped};
+ const startup=prepareNoteStartup(options);
+ return{startup,options,abort,socket,capture,ready,stopped,detachInitialEvents,open,openingSignal:()=>signal,receive:(v:unknown)=>receive(v),opened:async()=>{resolve({socket,detachInitialEvents});await Promise.resolve();},ack:(value:unknown=ack)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
+}
+afterEach(()=>{vi.useRealTimers();});
+describe('disabled provider startup sequencing',()=>{
+ it('rejects live construction before an opener is called',()=>{const open=vi.fn();expect(()=>prepareNoteStartup({simulation:false,open} as any)).toThrow('disabled');expect(open).not.toHaveBeenCalled();});
+ it('waits for creation and matching configuration before exposing a session',async()=>{
+  const s=fixture();expect(s.startup.status().state).toBe('opening');expect(s.startup.active()).toBeNull();await s.opened();
+  expect(s.startup.status().state).toBe('awaiting-created');expect(s.socket.send).not.toHaveBeenCalled();s.receive(created);
+  expect(s.startup.status().state).toBe('configuring');expect(s.detachInitialEvents).not.toHaveBeenCalled();expect(s.socket.send).toHaveBeenCalledTimes(1);expect(JSON.parse(s.socket.send.mock.calls[0]![0]).type).toBe('session.update');expect(s.startup.active()).toBeNull();expect(s.capture.start).not.toHaveBeenCalled();
+  s.ack();expect(s.detachInitialEvents).toHaveBeenCalledTimes(1);expect(s.startup.status().state).toBe('ready');expect(s.ready).toHaveBeenCalledTimes(1);expect(s.startup.active()).not.toBeNull();s.startup.end();expect(s.startup.active()).toBeNull();expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.startup.status().remoteCleanupVerified).toBe(false);
+ });
+ it('retains a creation event received before the opening promise settles',async()=>{const s=fixture();s.receive(created);expect(s.socket.send).not.toHaveBeenCalled();await s.opened();expect(s.startup.status().state).toBe('configuring');s.ack();expect(s.ready).toHaveBeenCalledTimes(1);s.startup.end();});
+ it.each(['abort','deadline','end'] as const)('closes a late open once after %s without configuring or capturing',async reason=>{
+  vi.useFakeTimers();const s=fixture();if(reason==='abort')s.abort.abort();else if(reason==='deadline')await vi.advanceTimersByTimeAsync(5000);else s.startup.end();
+  expect(s.openingSignal().aborted).toBe(true);let settled=false;void s.startup.openingSettled.then(()=>{settled=true;});await Promise.resolve();expect(settled).toBe(false);s.receive(created);await s.opened();await s.startup.openingSettled;expect(settled).toBe(true);s.startup.end();expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.detachInitialEvents).toHaveBeenCalledTimes(1);expect(s.socket.send).not.toHaveBeenCalled();expect(s.capture.start).not.toHaveBeenCalled();expect(s.stopped).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);
+ });
+ it.each([null,[],{},ack,{type:'session.created',session:null},{type:'session.created',session:{}},{type:'session.created',session:{value:'x'.repeat(17000)}}])('holds malformed or premature startup event %#',async value=>{const s=fixture();s.receive(value);await s.opened();expect(s.startup.status().state).toBe('ended');expect(s.socket.send).not.toHaveBeenCalled();expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.capture.start).not.toHaveBeenCalled();});
+ it('rejects duplicate creation before handover',async()=>{const s=fixture();s.receive(created);s.receive(created);await s.opened();expect(s.startup.status().reason).toBe('startup-event-held');expect(s.socket.send).not.toHaveBeenCalled();});
+ it('rejects duplicate creation while waiting for configuration',async()=>{const s=fixture();await s.opened();s.receive(created);s.receive(created);expect(s.startup.status().state).toBe('ended');s.ack();expect(s.ready).not.toHaveBeenCalled();expect(s.socket.close).toHaveBeenCalledTimes(1);});
+ it('times out missing creation and stops an already-open socket',async()=>{vi.useFakeTimers();const s=fixture();await s.opened();await vi.advanceTimersByTimeAsync(5000);expect(s.startup.status().reason).toBe('startup-timeout');expect(s.socket.close).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);});
+ it('times out missing configuration and cancels both startup and provider timers',async()=>{vi.useFakeTimers();const s=fixture();await s.opened();s.receive(created);await vi.advanceTimersByTimeAsync(5000);expect(s.startup.active()).toBeNull();expect(s.socket.close).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);});
+ it('holds mismatched configuration without exposing capture',async()=>{const s=fixture();await s.opened();s.receive(created);s.ack({...ack,session:{type:'transcription'}});await Promise.resolve();expect(s.startup.status().state).toBe('ended');expect(s.ready).not.toHaveBeenCalled();expect(s.capture.start).not.toHaveBeenCalled();expect(s.socket.close).toHaveBeenCalledTimes(1);});
+ it('keeps cleanup uncertainty redacted and unverified',async()=>{const s=fixture();s.socket.close.mockImplementation(()=>{throw Error('private sentinel');});s.startup.end();await s.opened();expect(s.startup.status()).toMatchObject({cleanupFailed:true,remoteCleanupVerified:false,liveEnabled:false});expect(JSON.stringify(s.startup.status())).not.toContain('sentinel');});
+ it('does not invoke an opener when already canceled',()=>{const signal=AbortSignal.abort(),open=vi.fn();const startup=prepareNoteStartup({simulation:true,signal,open,session:{} as any});expect(open).not.toHaveBeenCalled();expect(startup.status().reason).toBe('canceled');});
+ it.each(['throw','reject'] as const)('holds opener %s with no retry or private error text',async kind=>{const open=vi.fn(()=>{if(kind==='throw')throw Error('private sentinel');return Promise.reject(Error('private sentinel'));});const startup=prepareNoteStartup({simulation:true,signal:new AbortController().signal,open,session:{} as any});await Promise.resolve();await Promise.resolve();expect(startup.status().reason).toBe('opening-held');expect(open).toHaveBeenCalledTimes(1);expect(JSON.stringify(startup.status())).not.toContain('sentinel');});
+ it('rejects a returned socket that is not open',async()=>{const s=fixture();s.socket.readyState=0;await s.opened();expect(s.startup.status().reason).toBe('opening-held');expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.socket.send).not.toHaveBeenCalled();});
+ it('holds failed initial-listener cleanup before reporting Ready',async()=>{const s=fixture();s.detachInitialEvents.mockImplementation(()=>{throw Error('private listener');});await s.opened();s.receive(created);s.ack();expect(s.startup.status()).toMatchObject({state:'ended',cleanupFailed:true,remoteCleanupVerified:false});expect(s.ready).not.toHaveBeenCalled();expect(s.socket.close).toHaveBeenCalledTimes(1);});
+ it('stops a configured session on abort without exposing late provider events',async()=>{const s=fixture();await s.opened();s.receive(created);s.ack();s.abort.abort();s.ack();s.receive(created);expect(s.startup.active()).toBeNull();expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.ready).toHaveBeenCalledTimes(1);expect(s.stopped).toHaveBeenCalledTimes(1);});
+ it('closes safely when a Ready consumer throws',async()=>{const s=fixture();s.ready.mockImplementation(()=>{throw Error('private consumer');});await s.opened();s.receive(created);s.ack();expect(s.startup.status().reason).toBe('consumer-held');expect(s.startup.active()).toBeNull();expect(s.socket.close).toHaveBeenCalledTimes(1);});
+ it('does not expose an ended provider during deferred stopped notification',async()=>{const s=fixture();await s.opened();s.receive(created);s.ack();s.socket.dispatchEvent(new Event('error'));expect(s.startup.active()).toBeNull();await Promise.resolve();expect(s.startup.status().state).toBe('ended');expect(s.socket.close).toHaveBeenCalledTimes(1);});
+
+});

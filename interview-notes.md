@@ -557,3 +557,8 @@ I checked the same rule through the protected browser connection: stopping, leav
 ### Checking uncertainty across application restarts, 11 October 2026
 
 I extended the cleanup checks from an injected store to isolated PostgreSQL. I tested ending, leaving the page and provider failure, then started fresh application readers. The unresolved reservation stayed open and a replacement connection could not create another provider. This mattered because a server restart must not make uncertain cleanup look complete. I also documented the future live connection sequence so the microphone cannot send audio before the provider confirms its configuration. These checks used synthetic providers, and no additional paid trial or deployment was started.
+
+
+### Separating connection opening from readiness, 11 October 2026
+
+I added a disabled startup controller because an open connection does not mean the stylist is ready to receive speech. It waits for session creation, sends configuration, then requires the matching acknowledgment before exposing the notebook session. I tested cancellation, duplicate events, timeouts and connections returned after the test ended. A type-checking error around cancellation was fixed, and all 1,173 tests, type checking and build now pass. The next step is integrating this controller with the protected test owner; I have not enabled live transcription or started another paid test.

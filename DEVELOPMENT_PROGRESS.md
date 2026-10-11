@@ -31,7 +31,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 - Added seven protected browser lifecycle checks with synthetic devices: pagehide/visibility, late permission, pending extraction, device loss and actual loopback disconnect. Injected reservation closure is checked.
 - Prepared docs/combined-notes-live-trial-plan.md with a complete future manual script and activation prerequisites; it starts no trial and grants no spending permission.
 - docs/mvp.md created from approved scope and actual findings, with unresolved decisions explicit.
-- 1146 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
+- 1173 automated prototype checks, type checking and build last passed. The connected rehearsal is local simulation, not a live provider or network deployment.
 
 
 
@@ -91,9 +91,9 @@ Prepared an unapplied rollback that refuses any initialized allowance and uses n
 
 ## Exact next action
 
-All 1,146 prototype checks across 75 files, type checking and build pass. Fifty separate local PostgreSQL checks, fifteen SQL-backed TypeScript owner scenarios and twenty-two SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
+All 1,173 prototype checks across 76 files, type checking and build pass. Fifty separate local PostgreSQL checks, fifteen SQL-backed TypeScript owner scenarios and twenty-two SQL-backed browser scenarios pass, including a fresh Node process preserving unresolved history; the temporary isolated container was removed. The bounded persistence transport is implemented and checked through the protected owner and browser lifecycle with injected simulated requests. No actual Supabase records or legacy reservations changed.
 
-Implement the disabled startup controller described in docs/notebook-live-adapter-design.md with injected simulated sockets: require session.created before configuration and validated session.updated before audio, covering timeout, abort and late-open closure. Preserve remote cleanup holds. No live route, keys, paid calls, deployment or remote ledger changes are authorized by this step.
+Compose prepared-note-startup.ts with the disabled protected server owner and separate allowance using an injected simulated opener. Verify opening cancellation, late returned sockets, readiness publication and remote-required reservation holds through the protected browser bridge, then isolated PostgreSQL. Keep the running application, live routes, keys, paid services, remote ledgers and deployment unchanged.
 
 The reviewed OpenAI support replies confirm documented low-delay configuration and item correlation. The selected-model startup URL remains an inference without live acceptance, and normal socket closure does not establish remote finalization; see docs/notebook-provider-contract-review.md. A real notebook trial still needs reviewed remote storage/configuration and a newly authorized amount. Do not seed/change Supabase or reuse/reset the nine closed legacy reservations. Keep providers disabled. Task 1c, Tavus recovery clarification, source/privacy decisions and Phase 1 exit remain open.
 
@@ -300,7 +300,7 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Implement the disabled startup controller described in docs/notebook-live-adapter-design.md with injected simulated sockets: require session.created before configuration and validated session.updated before audio, covering timeout, abort and late-open closure. Preserve remote cleanup holds. No live route, keys, paid calls, deployment or remote ledger changes are authorized by this step.
+Next: Compose prepared-note-startup.ts with the disabled protected server owner and separate allowance using an injected simulated opener. Verify opening cancellation, late returned sockets, readiness publication and remote-required reservation holds through the protected browser bridge, then isolated PostgreSQL. Keep the running application, live routes, keys, paid services, remote ledgers and deployment unchanged.
 
 
 ## Disabled transcription connection and close-evidence contract, 10 October 2026
@@ -340,3 +340,14 @@ Added two SQL-backed owner scenarios (explicit end and request abort) and three 
 All 1,146 prototype tests across 75 files, type checking and build pass. Separate checks now pass 50 PostgreSQL checks, 15 SQL-backed owner scenarios and 22 SQL-backed browser scenarios. The isolated database container was removed. No Supabase records, nine-trial legacy history, credentials, paid services or deployment changed. Task 1c and Phase 1 remain partial.
 
 Prepared docs/notebook-live-adapter-design.md with server-only ownership, access-before-reservation, session.created/configuration/readiness ordering, bounded cancellation, local shutdown versus remote cleanup, and focused implementation checks. The design exposes the next implementation gap: the existing simulated factory takes an already-open socket and cannot serve as the future live startup controller. Activation and the USD 2 trial proposal remain unapproved.
+
+
+### Disabled startup controller, 11 October 2026
+
+Implemented prepareNoteStartup with an explicitly simulated injected opener. Initial events are observed from the first packet, including a bounded creation envelope received before the opening promise resolves. Configuration is sent only after one valid session.created envelope and an open socket. The existing strict configuration decoder must accept session.updated before the controller exposes the session; capture is not started by startup itself. Duplicate creation during startup, premature/malformed events, failed opening and configuration mismatch end safely without retry.
+
+A five-second startup deadline covers opening, creation and configuration. Abort/end/timeouts cancel the injected opening signal, detach initial listeners and close a late returned socket once. Provider-close ownership is shared through a guarded facade. Failed close/listener cleanup remains explicitly uncertain; remoteCleanupVerified and liveEnabled remain false. An ended provider cannot be exposed during its deferred stopped notification. The opener must observe events before resolving and honor cancellation for resources it has not returned; a real opener is not implemented.
+
+Twenty-seven additional checks bring the suite to 1,173 tests across 76 files; type checking and build pass. The first run passed tests but type checking caught control-flow narrowing around reentrant cancellation; the code now checks the internal abort signal, and the final full run passes. Database code was unchanged in this increment, so the earlier 50 PostgreSQL, 15 SQL-backed owner and 22 SQL-backed browser results were not rerun. The new controller is not yet composed into the protected owner or running application. Task 1c and Phase 1 remain partial; no keys, paid calls, allowance initialization or deployment occurred.
+
+Startup exposes openingSettled separately from end(): cancellation stops local work immediately, while openingSettled resolves only after the injected opener returns or fails and any late returned socket has been closed. Protected-owner composition must await that settlement or retain a hold, never retire a reservation while opening is still unresolved. This promise establishes local opening settlement only, not verified remote cleanup. The late-open cancellation/deadline/end checks explicitly verify this distinction.

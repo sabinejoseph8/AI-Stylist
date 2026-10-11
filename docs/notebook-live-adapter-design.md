@@ -43,3 +43,10 @@ Therefore an attempt that created provider resources retains its open reservatio
 | UI/privacy | Complete notice and manual script are visible before the microphone gesture; stopped media and unresolved remote cleanup have separate messages. |
 
 After implementation, run the phase suite, type checking/build, isolated database checks and review the affected code. Only then make any security-sensitive deployment or specific financial/activation request. The USD 2 trial proposal remains unapproved. This design does not add a credential path, create sockets, initialize remote storage or deploy anything.
+
+
+## Disabled implementation checkpoint, 11 October 2026
+
+prepared-note-startup.ts now owns the simulated opening deadline and creation/configuration sequence, including early creation envelopes, late returned sockets and cancellation. It delegates configuration validation to the existing prepared provider session and exposes that session only after readiness. Initial observation remains attached until readiness to reject duplicate creation during configuration, then detaches. The injected opener must deliver initial events from its first packet and honor cancellation for resources not returned. There is no real opener, live route or key loader. Integration with the protected owner/allowance is next, and the remote-cleanup hold is not relaxed. Twenty-seven new tests pass within 1,173 total checks, with type checking and build.
+
+Startup exposes openingSettled separately from end(): cancellation stops local work immediately, while openingSettled resolves only after the injected opener returns or fails and any late returned socket has been closed. Protected-owner composition must await that settlement or retain a hold, never retire a reservation while opening is still unresolved. This promise establishes local opening settlement only, not verified remote cleanup. The late-open cancellation/deadline/end checks explicitly verify this distinction.

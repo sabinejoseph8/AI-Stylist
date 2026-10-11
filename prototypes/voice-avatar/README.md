@@ -25,9 +25,9 @@ npm run typecheck
 npm run build
 ```
 
-1,146 tests across 75 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 15 SQL-backed owner scenarios and 22 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+1,173 tests across 76 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 15 SQL-backed owner scenarios and 22 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
-The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller is the next implementation step; no live notebook connection or new hosted deployment is enabled.
+The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller now checks creation/configuration ordering and cancellation. Protected-owner composition is next; no live notebook connection or new hosted deployment is enabled.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 
