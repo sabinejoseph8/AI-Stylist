@@ -552,3 +552,8 @@ I used the AI-assisted support reply to prepare a disabled transcription connect
 I made the prototype distinguish local shutdown from verified provider cleanup. A future connection cannot release its test reservation just because its local socket stopped. I added checks for disconnects, timeouts and repeated ending so uncertainty continues to block replacement. I also fixed a race in the isolated database test startup, where a temporary initialization server could appear ready before the final server started. This work prepares the connection boundary without enabling paid services or claiming live acceptance.
 
 I checked the same rule through the protected browser connection: stopping, leaving the page or losing the provider clears local media and notes, while a new allowance reader still refuses an unresolved reservation. The full suite now passes 1,146 checks. These are simulated services, and I have not presented them as live-provider proof.
+
+
+### Checking uncertainty across application restarts, 11 October 2026
+
+I extended the cleanup checks from an injected store to isolated PostgreSQL. I tested ending, leaving the page and provider failure, then started fresh application readers. The unresolved reservation stayed open and a replacement connection could not create another provider. This mattered because a server restart must not make uncertain cleanup look complete. I also documented the future live connection sequence so the microphone cannot send audio before the provider confirms its configuration. These checks used synthetic providers, and no additional paid trial or deployment was started.

@@ -6,11 +6,11 @@ The Task 1b prototype is in [prototypes/voice-avatar](prototypes/voice-avatar/RE
 
 See [the phased plan](docs/progress.md) for actual evidence and open checks. The prepared Render configuration keeps secrets in server environment settings and uses the existing Supabase test-limit ledger. Never commit private configuration or experiment records.
 
-## Current development status, 10 October 2026
+## Current development status, 11 October 2026
 
-All 1,146 prototype tests across 75 files, type checking and build pass. Separate isolated checks passed 50 PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios. The latest notebook preparation is published source, not a new Render deployment. Live notebook transcription and customer accounts, real shopping and production preference validation remain incomplete.
+All 1,146 prototype tests across 75 files, type checking and build pass. Separate isolated checks passed 50 PostgreSQL checks, 15 SQL-backed owner scenarios and 22 SQL-backed browser scenarios. The latest notebook preparation is published source, not a new Render deployment. Live notebook transcription and customer accounts, real shopping and production preference validation remain incomplete.
 
-The disabled server/browser preparation keeps a test reservation held when remote cleanup is unverified. New remote-required browser scenarios use injected persistence; their PostgreSQL/fresh-process composition is the next check. All nine earlier provider attempts are consumed and closed; no new paid trial is authorized.
+The disabled server/browser preparation keeps a test reservation held when remote cleanup is unverified. Remote-required owner and browser checks now preserve unresolved reservations in isolated PostgreSQL across fresh application processes. The disabled startup controller is the next implementation step. All nine earlier provider attempts are consumed and closed; no new paid trial is authorized.
 
 The sections below preserve earlier implementation checkpoints. Their test counts describe those earlier changes, not the current suite.
 

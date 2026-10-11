@@ -14,7 +14,7 @@ import {TRANSCRIPTION_MODEL} from '../src/live-transcription.ts';
 import {SimulatedPreferenceSource} from '../src/simulated-preference-source.ts';
 import {NOTE_EXTRACTION_MODEL} from '../src/openai-note-extractor.ts';
 
-type Database = {reset:()=>Promise<string>;read:()=>Promise<PreparedNoteLedger>;sql:(query:string)=>Promise<string>;literal:(value:unknown)=>string};
+type Database = {verifyFreshHold:()=>Promise<void>;reset:()=>Promise<string>;read:()=>Promise<PreparedNoteLedger>;sql:(query:string)=>Promise<string>;literal:(value:unknown)=>string};
 type Fault = 'none'|'reserve-pending'|'closure-pending'|'closure-failed'|'reserve-ack-lost'|'provider-close-failed';
 const preview={origin:'https://fixture.onrender.com',password:'synthetic_local_password_123456789'};
 const headers={Host:'fixture.onrender.com',Origin:preview.origin,Authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64')};
@@ -22,7 +22,7 @@ async function until(check:()=>boolean,timeout=4000) {
  const deadline=Date.now()+timeout;
  while(!check()) {if(Date.now()>deadline)throw Error('Local browser check did not settle.');await new Promise(resolve=>setTimeout(resolve,10));}
 }
-async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceAuthority) {
+async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceAuthority,cleanupRequirement:'simulation-local'|'remote-verified'='simulation-local') {
  let calls=0,providers=0,closed=0,closureGated=false,release:()=>void=()=>{};
  let signalPending!:()=>void;
  const pending=new Promise<void>(resolve=>{signalPending=resolve;});
@@ -49,7 +49,7 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
  const allowance=new PreparedNoteAllowance({simulation:true,persistence});
  const server=createServer((_req,res)=>{res.writeHead(404);res.end();});
  let active:Parameters<NonNullable<Parameters<typeof attachProtectedSimulatedNoteBridge>[1]['sessionReady']>>[0]|undefined;
- const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,preview,allowance,preferences,sessionReady:session=>{active=session;},createTransports:()=>{
+ const bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,cleanupRequirement,preview,allowance,preferences,sessionReady:session=>{active=session;},createTransports:()=>{
   providers++;
   const socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,close:()=>{closed++;if(fault==='provider-close-failed')throw Error('Synthetic cleanup uncertainty.');},send:(value:string)=>{
    if(JSON.parse(value).type==='session.update')queueMicrotask(()=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}})})));
@@ -100,7 +100,7 @@ async function harness(db:Database,fault:Fault='none',extract?:(url:string,init:
 }
 export async function checkNotebookBrowserDb(db:Database){
  const fixtures:Awaited<ReturnType<typeof harness>>[]=[];
- const open=async(fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceAuthority)=>{const fixture=await harness(db,fault,extract,preferences);fixtures.push(fixture);return fixture;};
+ const open=async(fault:Fault='none',extract?:(url:string,init:RequestInit)=>Promise<Response>,preferences?:SimulatedPreferenceAuthority,cleanupRequirement:'simulation-local'|'remote-verified'='simulation-local')=>{const fixture=await harness(db,fault,extract,preferences,cleanupRequirement);fixtures.push(fixture);return fixture;};
  const response=(turnId:string,text:string)=>Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId,patches:[{field:'color',value:text,evidence:text}]})}]}]});
  const fragment=(init:RequestInit)=>JSON.parse(JSON.parse(init.body as string).input[0].content[0].text) as {turnId:string;currentFragment:string};
  const delta=(index:number,text:string)=>({type:'conversation.item.input_audio_transcription.delta',event_id:`delta_${index}`,item_id:`item_${index}`,content_index:0,delta:text});
@@ -316,6 +316,25 @@ export async function checkNotebookBrowserDb(db:Database){
   explanationClient.session.stop();await until(()=>!explanationFixture.bridge.snapshot().active);assert.equal(explanationClient.session.snapshot().connection.clarification,null);assert.equal((await db.read()).runs[0]!.closed,true);
   const explanationReplacement=explanationFixture.connect();await until(()=>explanationReplacement.session.status().state==='ready');assert.equal(explanationReplacement.session.snapshot().connection.clarification,null);assert.equal(explanationReplacement.session.snapshot().connection.notes!.notes.color.value,'');
   explanationReplacement.session.stop();await until(()=>!explanationFixture.bridge.snapshot().active);assert.deepEqual(explanationFixture.counts(),{calls:8,providers:2,closed:2});assert.ok((await db.read()).runs.every(run=>run.closed));await clear();
-  console.log('19 local SQL-backed loopback browser scenarios passed, including safe clarification delivery, revision clearing and replacement isolation. Devices and providers were synthetic.');
+  for(const reason of ['pagehide','provider-failure','explicit-stop'] as const){
+   await db.reset();const held=await open('none',undefined,undefined,'remote-verified'),client=held.connect();
+   await until(()=>client.session.status().state==='ready');await begin(client,'remote_hold');
+   const before=await db.read();assert.equal(before.runs[0]!.closed,false);
+   if(reason==='pagehide')client.page.dispatchEvent(new Event('pagehide'));
+   else if(reason==='provider-failure')held.failProvider();else client.session.stop();
+   await until(()=>held.bridge.snapshot().allowanceState==='held');
+   await until(()=>client.socket.readyState===WebSocket.CLOSED);
+   assert.equal(client.session.snapshot().capturing,false);assert.equal(client.session.snapshot().connection.notes,null);
+   assert.ok(client.captureCounts().stops>0);assert.deepEqual(held.counts(),{calls:2,providers:1,closed:1});
+   assert.equal(await held.denied(),409);assert.deepEqual(await db.read(),before);
+   await db.verifyFreshHold();
+   const restarted=await open('none',undefined,undefined,'remote-verified'),replacement=restarted.connect();
+   await until(()=>restarted.bridge.snapshot().allowanceState==='held');
+   await until(()=>replacement.socket.readyState===WebSocket.CLOSED);
+   assert.deepEqual(restarted.counts(),{calls:1,providers:0,closed:0});
+   assert.equal(await restarted.denied(),409);assert.deepEqual(await db.read(),before);
+   await clear();
+  }
+  console.log('22 local SQL-backed loopback browser scenarios passed, including safe clarification delivery, revision clearing and replacement isolation. Devices and providers were synthetic.');
  }finally{await clear();}
 }

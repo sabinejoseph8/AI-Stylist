@@ -1,6 +1,6 @@
 # Task 1b: Private voice and avatar experiment
 
-## Current status, 10 October 2026
+## Current status, 11 October 2026
 
 Task 1b is approved and in progress. The source is published to GitHub, and a password-protected Render Free preview uses Supabase for its durable test-limit ledger. The deployed phone page supports two bounded, buffered exchanges and spoken interrupt-and-end. Sabine confirmed a generated avatar reply with mouth movement and intentional spoken interruption on iPhone. Continuous conversation recovery and precise latency/lip-sync measurements are not accepted.
 
@@ -25,9 +25,9 @@ npm run typecheck
 npm run build
 ```
 
-1,146 tests across 75 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
+1,146 tests across 75 files, type checking and build pass. Separate isolated verification passed 50 PostgreSQL checks, 15 SQL-backed owner scenarios and 22 SQL-backed browser scenarios. Tests use synthetic inputs and mocked providers. They do not prove real provider behavior or authorize additional spending.
 
-The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. These new remote-required browser checks use injected persistence. PostgreSQL/fresh-process composition is the next check; no live notebook connection or new hosted deployment is enabled.
+The protected simulation bridge now carries a server-owned remote-cleanup requirement. Missing provider cleanup evidence retains the reservation hold after local shutdown; replacement and a fresh allowance reader remain blocked. Remote-required owner/browser checks now also use isolated PostgreSQL and fresh application processes. The disabled startup controller is the next implementation step; no live notebook connection or new hosted deployment is enabled.
 
 See [current plan summary](../../docs/progress.md) and [Task 1b evidence](../../docs/task-1b-voice-avatar.md). The following notes retain earlier snapshots for context. Their status statements and allowance counts are historical, not current operating instructions.
 

@@ -1,15 +1,15 @@
 # AI Stylist MVP scope and discovery findings
 
-Updated: 10 October 2026
+Updated: 11 October 2026
 Status: Working memory from approved requirements and actual findings. Phase 1 feasibility and launch are not approved by this file.
 
 ## Current memory checkpoint, 10 October 2026
 
-1,146 prototype checks across 75 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, thirteen SQL-backed owner scenarios and nineteen SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+1,146 prototype checks across 75 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, fifteen SQL-backed owner scenarios and twenty-two SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Extend the isolated PostgreSQL owner/browser scenarios to cover the remote-required cleanup hold across a fresh process. Then finish the disabled server-only live adapter design and review its access and readiness boundaries. Keep live adapters disabled; no keys, paid calls, deployment, remote ledger initialization or new financial authorization are included.
+**Next action:** Implement the disabled startup controller described in docs/notebook-live-adapter-design.md with injected simulated sockets: require session.created before configuration and validated session.updated before audio, covering timeout, abort and late-open closure. Preserve remote cleanup holds. No live route, keys, paid calls, deployment or remote ledger changes are authorized by this step.
 
 **Remaining gates:** Tavus recovery clarification, live validation of the dedicated transcription startup and remote cleanup contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. Sabine authorized the OpenAI questions and received AI-assisted replies. Low delay and item correlation are documented; the selected-model startup URL remains an inference, and no stronger remote-finalization guarantee was established.
 
@@ -330,7 +330,7 @@ Support proposes wss://api.openai.com/v1/realtime?model=gpt-live-transcribe with
 
 The reply explicitly cannot establish a dedicated transcription terminal acknowledgment. GPT-Live session.close/session.closed must not be imported into the Realtime transcription implementation. Normal socket closure can show transport closure, not remote deletion, final billing, retention or a provider-specific terminal state. Keep remote cleanup unverified and the conservative hold rules intact. No API request, credentials, allowance or deployment changed. Documentation-only review; no tests rerun, latest code evidence remains 1,115 passing checks with type checking/build.
 
-Next: Extend the isolated PostgreSQL owner/browser scenarios to cover the remote-required cleanup hold across a fresh process. Then finish the disabled server-only live adapter design and review its access and readiness boundaries. Keep live adapters disabled; no keys, paid calls, deployment, remote ledger initialization or new financial authorization are included.
+Next: Implement the disabled startup controller described in docs/notebook-live-adapter-design.md with injected simulated sockets: require session.created before configuration and validated session.updated before audio, covering timeout, abort and late-open closure. Preserve remote cleanup holds. No live route, keys, paid calls, deployment or remote ledger changes are authorized by this step.
 
 
 ## Disabled transcription connection and close-evidence contract, 10 October 2026
@@ -356,3 +356,12 @@ The disabled server owner now captures an explicit cleanup requirement at constr
 Seven additional focused checks pass, bringing the prototype suite to 1,143 tests across 75 files, with type checking and build passing. The isolated PostgreSQL harness readiness check was corrected to wait for the final TCP listener rather than the temporary initialization socket. This is local synthetic preparation; Task 1c, D42/R1 and Phase 1 remain incomplete.
 
 The protected browser bridge also accepts this server-only cleanup policy. Three synthetic loopback scenarios cover page exit, provider close and explicit stop: browser capture and notes clear, the provider closes once, the ledger retains its open reservation, replacement is denied and a fresh allowance reader refuses further work. The browser cannot change this policy. Final checks: 1,146 tests across 75 files, type checking and build pass; 50 isolated PostgreSQL checks, 13 SQL-backed owner scenarios and 19 SQL-backed browser scenarios pass after the readiness fix. The new remote-required scenarios currently use injected persistence, so PostgreSQL/fresh-process composition for this policy is the exact next check.
+
+
+## Remote-cleanup hold across PostgreSQL and process replacement, 11 October 2026
+
+Added two SQL-backed owner scenarios (explicit end and request abort) and three SQL-backed protected-browser scenarios (page exit, provider failure and explicit stop). Provider resources close once locally while the original reservation stays open. Each scenario verifies unchanged PostgreSQL history through a fresh Node process; browser scenarios also construct a replacement bridge which is denied before provider creation. No closure write, retry or replacement reservation occurs. These checks restart application readers, not PostgreSQL itself, and use synthetic media/providers with an isolated temporary local database.
+
+All 1,146 prototype tests across 75 files, type checking and build pass. Separate checks now pass 50 PostgreSQL checks, 15 SQL-backed owner scenarios and 22 SQL-backed browser scenarios. The isolated database container was removed. No Supabase records, nine-trial legacy history, credentials, paid services or deployment changed. Task 1c and Phase 1 remain partial.
+
+Prepared docs/notebook-live-adapter-design.md with server-only ownership, access-before-reservation, session.created/configuration/readiness ordering, bounded cancellation, local shutdown versus remote cleanup, and focused implementation checks. The design exposes the next implementation gap: the existing simulated factory takes an already-open socket and cannot serve as the future live startup controller. Activation and the USD 2 trial proposal remain unapproved.
