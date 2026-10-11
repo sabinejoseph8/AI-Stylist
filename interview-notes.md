@@ -620,3 +620,8 @@ I approved building Task 2a in parallel with the remaining discovery checks. I n
 ## Task 2a visual acceptance, 11 October 2026
 
 I reviewed the local foundation and confirmed all four navigation destinations and the seven-field notebook expand/collapse worked. I completed the foundation milestone while keeping account security and the remaining Phase 1 checks open.
+
+
+## Preparing private saved images
+
+I approved local data-protection work before the remaining provider checks finished. I started with saved-image records: customers can read their own records, while direct changes are blocked until controlled save interfaces exist. Twelve isolated database checks passed. I kept this evidence separate from hosted Storage and signed-link verification, which still need checking.

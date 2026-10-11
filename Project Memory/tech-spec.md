@@ -1409,3 +1409,10 @@ Exact next action: resolve the remaining Phase 1 dependencies or obtain a specif
 ## Task 2a visual acceptance, 11 October 2026
 
 Sabine reported “All steps worked” after refreshing the local foundation, visiting all four destinations, expanding the notebook, reading all seven fields and collapsing it. Task 2a is complete with the previously passing 17 foundation checks and successful GitHub CI. Tasks 2b/2c and the full phases remain open. The Task 2a-only sequencing exception does not authorize bypassing their dependencies.
+
+
+## Task 2b local preparation authorized, 11 October 2026
+
+Sabine approved local Task 2b database and protection-test preparation while Phase 1 stays open. This exception includes no remote Supabase change or deployment. Added ordered saved-image metadata and private wardrobe-bucket migrations. Twelve actual PostgreSQL checks passed in a temporary pinned, network-disabled container: owner read, other/missing identity isolation, anonymous denial, blocked insert/update/delete and owner-prefix validation. The container was removed. Storage policy/signed-URL behavior is not proven by these checks. Task 2b remains incomplete.
+
+Exact next action: extend local migration/test coverage for Storage owner reads and denied writes, then add strict consent/revision-controlled saved-data interfaces and same-owner references. Keep credentials, live migrations and deployment disabled.
