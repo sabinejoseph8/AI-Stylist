@@ -1,6 +1,7 @@
 import {preparePreferenceClarification} from './preference-clarification.ts';
 import type {PreferenceClarification} from './preference-clarification.ts';
 import {NotebookState} from './notebook-state.ts';
+import type {Field} from './notebook-state.ts';
 import type {NoteSessionProbe} from './note-session-probe.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
 import {NOTE_EXTRACTION_MODEL} from './openai-note-extractor.ts';
@@ -80,5 +81,15 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
    const record=preparePreferenceClarification({simulation:true,profileRevision,notebook:notebook.snapshot(),ticket,issues:[{field:'style',reason:'saved-uncertain'}]});
    emit({version:1,type:'clarification',sessionId:id,sequence:++clarificationSequence,record});return !closed;
  }
- return{session,play,explain,revise,turns:()=>turn,dispose:()=>{binding.dispose();stop();},snapshot:()=>({closed,turns:turn,server:probe?.snapshot()??null,notes:notebook.snapshot()})};
+ // Deliberate local review controls. These never become wire commands.
+ function replaceWhileEditing(field:Field){
+   if(closed||session.status().state!=='ready')return false;
+   const values:Record<Field,string>={occasion:'Indoor wedding',season:'December',color:'Blue',style:'Relaxed',budget:'USD 250 maximum (items only)',lookType:'Pantsuit',wardrobe:'My black blazer'};
+   if(!Object.hasOwn(values,field))return false;
+   const current=notebook.snapshot(),note=current.notes[field];
+   const accepted=notebook.capture({session:current.session,field,baseRevision:note.revision,sequence:note.sequence+1,value:values[field],confirmed:false});
+   if(accepted)publish(null);return accepted&&!closed;
+ }
+ function disconnect(){if(closed)return;session.disconnected();stop();}
+ return{session,play,explain,revise,replaceWhileEditing,disconnect,turns:()=>turn,dispose:()=>{binding.dispose();stop();},snapshot:()=>({closed,turns:turn,server:probe?.snapshot()??null,notes:notebook.snapshot()})};
 }

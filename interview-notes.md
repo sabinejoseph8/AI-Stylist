@@ -521,3 +521,10 @@ I bound each draft to the note version the customer opened, preventing an older 
 All 1,089 prototype tests, type checking, build and isolated database checks pass. I verified the visible simulated editor and recorded the remaining phone, screen-reader and live-provider checks separately. These results do not establish customer launch readiness.
 
 I also checked the edit flow over an actual local connection for all seven fields. The tests confirmed that a later budget reduction stays in place and an ended session's draft cannot affect a replacement session, even if their field revisions match. The suite now has 1,098 passing tests; type checking and build pass. The services and allowance remain simulated.
+
+
+## Protecting an open draft when the conversation changes
+
+I made stale edits and connection loss repeatable in the notebook rehearsal. When a newer Blue note arrived while Red was being edited, the old draft could not overwrite it. The customer could explicitly reload Blue for review or cancel without sending anything. Connection loss removed the draft and temporary notes.
+
+I found another keyboard issue: loading the latest note removed the focused reload button. I moved focus into the updated input, and returned focus to Start when the connection ended. I also clarified the status messages so a canceled draft could not be mistaken for a saved change. All 1,103 tests, type checking and build pass. The browser checks used local scripted events, with real phone and screen-reader acceptance still pending.

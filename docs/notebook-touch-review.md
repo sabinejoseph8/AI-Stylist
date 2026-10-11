@@ -15,3 +15,17 @@ This is an optional local simulation review, not a paid voice test. Read the who
 The existing 85-second rehearsal limit can end a slow review. Restart the local rehearsal for remaining steps; it uses no paid allowance. This is not the avatar's private voice test.
 
 Implementer checks passed cancellation/focus, budget meaning/save, style correction/clearing, confirmation/focus and end clearing. Sabine has not accepted these new steps. Automated checks cover stale drafts and connection loss; real iPhone touch and spoken screen-reader output remain pending.
+
+
+## Stale draft and connection loss
+
+Read all steps first. This local sequence starts no paid voice test.
+
+1. Start a fresh connection rehearsal and choose Edit beside Color. Enter Red in the draft.
+2. Choose Simulate newer note, then Save rehearsal note. Save must be refused; Red stays in the editor and a message says the draft was not sent.
+3. Choose Load latest note. Blue should replace Red, and keyboard focus should return to the input. Nothing is sent by loading.
+4. Enter another draft, then Escape or Cancel. The notebook must still show Blue, To confirm; the cancellation message should say the draft was discarded.
+5. Open Color again. It must show Blue rather than the canceled draft. Enter an unsaved value and choose Simulate connection loss. The dialog, notes and draft must disappear. The status says the connection ended; keyboard focus returns to Start.
+6. Start a new rehearsal. All notes must be Not specified and no earlier draft or explanation should reappear. End the rehearsal when finished.
+
+Implementer browser checks passed the refusal, explicit reload, input focus, cancellation and disconnect cleanup. These controls exist only in the injected local rehearsal. They do not establish live provider recovery or customer restart persistence.

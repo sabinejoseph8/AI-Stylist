@@ -6,11 +6,13 @@ import {NotebookConnectionEditor} from './notebook-connection-editor.tsx';
 import type {NoteUpdate} from './note-update-wire.ts';
 import type {PreparedBrowserNoteSession} from './note-browser-session.ts';
 export function NotebookConnectionReview(){
+ const startButton=useRef<HTMLButtonElement>(null),hadNotes=useRef(false);
  const owner=useRef<ReturnType<typeof createNotebookRehearsal>|null>(null);
  const [clarification,setClarification]=useState<PreferenceClarification|null>(null);
  const [notes,setNotes]=useState<NoteUpdate|null>(null),[status,setStatus]=useState<ReturnType<PreparedBrowserNoteSession['status']>|null>(null),[turns,setTurns]=useState(0);
  useEffect(()=>()=>owner.current?.dispose(),[]);
  useEffect(()=>{if(!notes)return;const frame=requestAnimationFrame(()=>owner.current?.session.rendered(notes.sequence));return()=>cancelAnimationFrame(frame);},[notes,status]);
+ useEffect(()=>{if(hadNotes.current&&!notes&&document.activeElement===document.body)startButton.current?.focus();hadNotes.current=Boolean(notes);},[notes]);
  function start(){owner.current?.dispose();setTurns(0);owner.current=createNotebookRehearsal({simulation:true,page:window,visibility:document,changed:setNotes,clarificationChanged:setClarification,status:setStatus});}
  async function play(){const current=owner.current;if(current&&await current.play())setTurns(current.turns());}
  const active=Boolean(status&&status.state!=='ended'&&status.state!=='cleanup-held');
@@ -26,7 +28,7 @@ export function NotebookConnectionReview(){
  <li>Choose End rehearsal. The notes should disappear and the status should say the check ended. Leaving this tab also ends it.</li>
  </ol>
  <p role="status" aria-live="polite" aria-atomic="true">{status?.message??'The connection rehearsal has not started.'}</p>
- <button onClick={start} disabled={active}>Start connection rehearsal</button>
+ <button ref={startButton} onClick={start} disabled={active}>Start connection rehearsal</button>
  <button onClick={()=>void play()} disabled={!active||status?.state!=='ready'||turns>=2}>{turns===0?'Play first simulated turn':'Play correction'}</button>
  <button onClick={()=>owner.current?.explain()} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='confirmed'}>Show connection preference explanation</button>
  <button onClick={()=>owner.current?.session.confirm('color')} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='tentative'}>Confirm color</button>
@@ -34,6 +36,6 @@ export function NotebookConnectionReview(){
  <button onClick={()=>owner.current?.explain('multiple')} disabled={!active||status?.state!=='ready'||notes?.notes.color.status!=='confirmed'}>Show multiple preference issues</button>
  <button onClick={()=>owner.current?.revise()} disabled={!active||status?.state!=='ready'||!clarification}>Simulate changed saved requirements</button>
  <button onClick={()=>owner.current?.dispose()} disabled={!active}>End rehearsal</button>
- {notes&&<section className="notebook" aria-label="Connection rehearsal notes"><h3>Rehearsal Styling Notes</h3>{owner.current&&<NotebookConnectionEditor notes={notes} ready={active&&status?.state==='ready'} session={owner.current.session}/>}<PreferenceClarificationPanel record={clarification}/></section>}
+ {notes&&<section className="notebook" aria-label="Connection rehearsal notes"><h3>Rehearsal Styling Notes</h3>{owner.current&&<NotebookConnectionEditor notes={notes} ready={active&&status?.state==='ready'} session={owner.current.session} rehearsal={{replace:owner.current.replaceWhileEditing,disconnect:owner.current.disconnect}}/>}<PreferenceClarificationPanel record={clarification}/></section>}
  </details>;
 }

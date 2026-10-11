@@ -5,11 +5,11 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 10 October 2026
 
-1098 prototype checks across 73 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, thirteen SQL-backed owner scenarios and nineteen SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+1103 prototype checks across 73 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, thirteen SQL-backed owner scenarios and nineteen SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Add a deterministic stale-draft and connection-loss rehearsal for the visible touch editor. Verify explicit reload/review preserves the current note, cancellation discards a draft, and termination closes the dialog without retaining draft content. Keep live providers, profile saving, exceptions and hosted activation disabled.
+**Next action:** Extend the protected connection regression to interleave a displayed draft, a saved-preference revision and a delayed extraction result. Verify that the current touch correction wins, all old look permissions are revoked and replacement sessions retain no draft. Keep providers and hosted activation disabled.
 
 **Remaining gates:** Tavus recovery clarification, current dedicated transcription startup/delay contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. The unsent OpenAI clarification draft has no send authorization.
 
@@ -283,3 +283,12 @@ Complete optional manual instructions are in docs/notebook-touch-review.md. Earl
 ### Protected seven-field editing regression
 
 Nine additional real-loopback tests cover editing, confirmation, stale-version rejection and clearing across all seven fields, invalidation after a USD 500 to USD 350 correction, and rejection of an ended connection draft even when field/epoch revisions coincide. Values remain temporary, other fields remain unchanged, and no look permission is granted. All 1,098 tests across 73 files, type checking and build pass. The earlier local SQL regression remains passing at 50 database checks, thirteen owner and nineteen browser scenarios. Providers/devices and allowance are injected simulations; no remote data, paid call or deployment changed.
+
+
+## Visible stale-draft and disconnect review, 10 October 2026
+
+Added explicit local-only controls inside the rehearsal editor to deliver a newer tentative note or end its simulated connection. These are injected fixture actions, not additional browser protocol commands or customer profile writes. Full instructions appear before the controls are used. Pending commands, ended sessions and unknown fields refuse replacement. A newer budget remains tentative and cannot approve a look.
+
+Implementer browser verification passed: Red draft refused after Blue arrived, Red retained until explicit reload, reload showing Blue with keyboard focus in the input, Escape discarding later draft text while retaining Blue, and connection loss removing the dialog/notes and returning focus to Start. Fixed focus loss when the reload button disappeared. Cancellation and reload now state explicitly that nothing was sent.
+
+Five new tests bring the prototype suite to 1,103 across 73 files; type checking and build pass. The earlier database evidence remains 50 isolated PostgreSQL checks, thirteen owner scenarios and nineteen browser scenarios; this change did not alter the database or its transport. Physical-device and spoken screen-reader acceptance remain pending. Task 1c, D42/R1 and Phase 1 remain incomplete. No live provider, paid allowance, customer data, Supabase configuration or Render deployment changed.
