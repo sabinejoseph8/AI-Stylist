@@ -37,6 +37,9 @@ try{
  const cookies=await context.cookies();assert(cookies.some(x=>x.name==='__Host-stylist_reset'&&x.secure&&x.httpOnly));assert(!cookies.some(x=>x.name==='__Host-stylist_recovery_confirm'));assert(!cookies.some(x=>x.name==='__Host-stylist_account'));
  const replay=await context.request.post(origin+'/api/account/recovery-confirm',{headers:{origin,cookie:cookie.name+'='+cookie.value},data:{confirmation:nonce}});assert.equal(replay.status(),400);assert.equal(verifications,1);
  try{await page.getByRole('heading',{name:'Choose a new password'}).waitFor({timeout:5000});}catch(error){console.error({pageErrors:errors,body:await page.locator('body').innerText()});throw error;}
+ await page.getByLabel('New password',{exact:true}).waitFor();
+ const resetLayout=await page.getByLabel('New password',{exact:true}).evaluate(input=>({height:input.getBoundingClientRect().height,fontSize:getComputedStyle(input).fontSize,layout:getComputedStyle(input.form).display}));
+ assert.ok(resetLayout.height>=48);assert.equal(resetLayout.fontSize,'16px');assert.equal(resetLayout.layout,'grid');
  await page.getByLabel('New password',{exact:true}).fill('Made-up-password-123!');await page.getByLabel('Confirm new password',{exact:true}).fill('Made-up-password-123!');
  await page.getByRole('button',{name:'Update password',exact:true}).click();
  await page.getByText('Password updated. Sign in to use your stylist.',{exact:true}).waitFor();

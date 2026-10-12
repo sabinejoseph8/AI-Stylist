@@ -16,5 +16,5 @@ it('refuses expired metadata and canceled late preparation',async()=>{
 });
 it('renders a permission check without starting a request during server rendering or showing password fields',()=>{
  const load=vi.fn(async()=>configuration());const html=renderToStaticMarkup(React.createElement(RecoveryPage,{origin,href:'/account/reset',load,onClose:()=>{}}));
- expect(html).toContain('Checking recovery permission');expect(html).not.toContain('type="password"');expect(load).not.toHaveBeenCalled();
+ expect(html).toContain('class="card account-panel"');expect(html).toContain('Checking recovery permission');expect(html).not.toContain('type="password"');expect(load).not.toHaveBeenCalled();
 });

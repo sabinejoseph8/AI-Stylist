@@ -1257,3 +1257,7 @@ I prepared strict validation for deployment origins, private server settings and
 ## Preparing graceful account shutdown
 
 I added an explicit shutdown helper so deployment can wait for connection cleanup before reporting success. Repeated stop signals share one cleanup operation, and uncertain cleanup stays unconfirmed. Four focused checks and the full 587-test suite pass. This prepares deployment without activating customer accounts or choosing an unapproved sign-in duration.
+
+## Making the reset form consistent
+
+I found that the standalone reset page was missing the shared account form styles. I corrected the wrapper so password fields use readable text, consistent spacing and large controls. I added a regression check and verified the rendered dimensions in desktop WebKit through the complete synthetic reset journey. Physical-phone and screen-reader checks remain open.
