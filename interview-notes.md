@@ -1009,3 +1009,8 @@ I prepared password and registration HTTP requests with simulated responses, fix
 ## Testing the complete password preparation path
 
 I connected the password HTTP adapter to the verified session and encrypted database rehearsal. I checked that registration confirmation does not sign someone in, and that an uncertain save followed by failed cleanup remains blocked after restart. I also rejected ambiguous registration responses instead of treating them as confirmation.
+
+
+## Confirming sign-out independently
+
+I prepared sign-out so clearing a browser cookie or receiving a successful HTTP reply does not automatically mean the remote session ended. I required an independent session-absence check and blocked saved refresh credentials before cleanup where possible. I kept uncertainty visible and tested owner isolation and cleanup ordering locally.

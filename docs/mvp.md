@@ -1321,3 +1321,12 @@ The isolated PostgreSQL harness now composes actual password HTTP operations, no
 The registration normalizer now also refuses ambiguous error/session fields rather than describing them as confirmation. All 439 foundation tests across 55 files, type checking/build pass. The full isolated database rehearsal passes with synthetic provider replies; real Supabase Auth and browser HTTPS behavior remain unverified. No real sign-in, email, credentials, hosted change or paid call occurred.
 
 Exact next action: prepare the concrete durable sign-out port using verified request identity, scoped encrypted ownership and independent session-presence confirmation. Keep provider response uncertainty explicit. Consolidate private Memory at the next checkpoint; its current publication contains 432 tests. Task 2c remains incomplete.
+
+
+## Durable sign-out port preparation, 12 October 2026
+
+Prepared createStoredSignOut as a disconnected port behind the existing bounded sign-out owner. It snapshots request headers, verifies exact same-origin POST/path and signed owner/session, quarantines ready encrypted ownership where possible, attempts explicit session logout and then requires independent primary Auth absence through scoped reconciliation. An accepted HTTP logout alone is insufficient. A lost logout acknowledgment can still resolve only when independent absence is proved. Empty local storage also requires remote evidence; malformed, canceled or unknown paths return false. Matching generation/lease removal remains fenced.
+
+All 443 foundation tests across 56 files, type checking/build pass after correcting incomplete test doubles and narrowing the identity dependency to authorize only. Four synthetic scenarios cover independent proof, lost acknowledgment, wrong owner/origin refusal and quarantine-before-cleanup ordering. The new port is not yet composed with isolated PostgreSQL or real providers. No route, hosted change, credential or paid call was added.
+
+Exact next action: compose the sign-out port, actual password HTTP logout and primary Auth presence authority in the isolated database harness; prove logout-response-without-row-deletion stays unconfirmed, actual synthetic session deletion confirms, and quarantine survives refused cleanup. Consolidate private Memory at that checkpoint. Task 2c remains incomplete.
