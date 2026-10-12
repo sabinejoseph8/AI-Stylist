@@ -12,6 +12,7 @@ import {createRefreshHttp} from '../src/server/refresh-http.ts';
 import {createRefreshProvider} from '../src/server/refresh-provider.ts';
 import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts';
 import {createRefreshReconciliation} from '../src/server/refresh-reconciliation.ts';
+import {createRefreshScan} from '../src/server/refresh-scan.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 const container=process.argv[2];
@@ -203,3 +204,24 @@ const competing=await store.inspect(owner,session,signal());assert.equal(competi
 // Synthetic teardown only. The authority above is a fixture, not real provider termination.
 assert.equal(await store.remove(competing.scope,competing.leaseId,true,signal()),'confirmed');
 console.log('Cleanup reconciliation PostgreSQL composition passed: held restart persistence, stale-scope refusal, lost removal acknowledgment with explicit proof recheck, and concurrent-generation fencing. Revocation authority is synthetic.');
+
+const scanSecond='44444444-4444-4444-8444-444444444444',scanThird='55555555-5555-4555-8555-555555555555';
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`insert into auth.sessions values('${scanSecond}','${owner}',null),('${scanThird}','${owner}',null);`);
+for(const id of [session,scanSecond,scanThird])assert.equal(await store.adopt('scan-fixture',{...scope,sessionId:id},signal()),'confirmed');
+const scanAuthority={confirm:async(ownerId,sessionId)=>sessionId===scanSecond?{status:'revoked',ownerId,sessionId}:{status:'unconfirmed'}};
+const initialScan=createRefreshScan(store,createRefreshReconciliation(store,scanAuthority));
+const firstPage=await initialScan.page(null,1,signal());assert.equal(firstPage.status,'page');assert.equal(firstPage.unconfirmed,1);assert.equal(firstPage.nextAfter,session);assert.equal(firstPage.endOfSweep,false);
+assert.equal((await store.inspect(owner,session,signal())).status,'found');
+await execute(['restart',container]);
+for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
+const scanStore=createRefreshStore(rpc,createRefreshEnvelopes(keyring,'fixture'));
+const replacementScan=createRefreshScan(scanStore,createRefreshReconciliation(scanStore,scanAuthority));
+const secondPage=await replacementScan.page(firstPage.nextAfter,1,signal());assert.equal(secondPage.confirmed,1);assert.equal(secondPage.nextAfter,scanSecond);assert.equal((await scanStore.inspect(owner,scanSecond,signal())).status,'absent');
+const thirdPage=await replacementScan.page(secondPage.nextAfter,1,signal());assert.equal(thirdPage.unconfirmed,1);assert.equal(thirdPage.nextAfter,scanThird);
+const endPage=await replacementScan.page(thirdPage.nextAfter,1,signal());assert.equal(endPage.endOfSweep,true);assert.equal(endPage.visited,0);
+// A later full sweep requires fresh explicit authority; reaching the prior end did not resolve unknowns.
+const finalScan=createRefreshScan(scanStore,createRefreshReconciliation(scanStore,{confirm:async(ownerId,sessionId)=>({status:'revoked',ownerId,sessionId})}));
+const finalPage=await finalScan.page(null,10,signal());assert.equal(finalPage.confirmed,2);assert.equal(finalPage.endOfSweep,true);
+assert.equal((await scanStore.discover(null,10,signal())).candidates.length,0);
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id in ('${scanSecond}','${scanThird}');`);
+console.log('Reconciliation scan PostgreSQL composition passed: unknown-record preservation, confirmed-only removal, actual restart and replacement-scanner cursor resume, empty terminal page, and fresh full-sweep resolution. Authority remains synthetic.');

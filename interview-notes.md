@@ -966,3 +966,6 @@ I added service-only, bounded discovery of retained session metadata without exp
 
 
 I prepared a bounded reconciliation scan with resumable progress and separate confirmed, stale and unknown counts. Unknown records remain untouched, and cancellation preserves a safe cursor. All 417 foundation tests, type checking and build pass. I documented that reaching the end of a scan is not proof that cleanup finished, and real authority/scheduling remain disconnected.
+
+
+I verified the bounded scanner against actual local PostgreSQL. It resumed after a database restart, preserved unknown records and removed only records with synthetic exact-session revocation proof. An empty final page did not hide unresolved work. All 417 foundation tests, type checking and build pass. Real authority and scheduled operation remain separate activation requirements.
