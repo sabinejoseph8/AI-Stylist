@@ -6,6 +6,7 @@ export const FRAME_BYTES = 960;
  */
 export class EchoStream {
   private generation = 0;
+  private usedInferences = new Set<string>();
   private timer?: ReturnType<typeof setTimeout>;
   private frames = 0;
   private connection: EchoConnection;
@@ -16,6 +17,8 @@ export class EchoStream {
   }
   play(pcmBytes: Uint8Array, inferenceId: string) {
     if (!pcmBytes.length || pcmBytes.length % 2 || pcmBytes.length > 1_200_000) throw new Error('Audio fixture exceeds the bound.');
+    if (typeof inferenceId !== 'string' || !inferenceId || inferenceId.length > 128 || this.usedInferences.has(inferenceId) || this.usedInferences.size >= 64) throw new Error('A fresh inference identity is required.');
+    this.usedInferences.add(inferenceId);
     this.interrupt(this.frames > 0); this.connection.inferenceId = inferenceId;
     const generation = ++this.generation; this.frames = 0;
     let offset = 0, next = performance.now();

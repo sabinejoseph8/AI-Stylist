@@ -6,6 +6,7 @@ export type EchoFrame = { responseId: string; itemId: string; sequence: number; 
  */
 export class IncrementalEcho {
   private epoch = 0;
+  private usedInferences = new Set<string>();
   private responseId = '';
   private itemId = '';
   private sequence = 0;
@@ -36,10 +37,13 @@ export class IncrementalEcho {
     if (!this.active || epoch !== this.epoch || this.done) return false;
     if (!frame || !frame.responseId || !frame.itemId || frame.sequence !== this.sequence
       || !(frame.pcm instanceof Uint8Array) || !frame.pcm.length || frame.pcm.length > 960 || frame.pcm.length % 2
+      || frame.responseId.length > 128
+      || (!this.responseId && (this.usedInferences.has(frame.responseId) || this.usedInferences.size >= 64))
       || (this.responseId && (frame.responseId !== this.responseId || frame.itemId !== this.itemId))
       || this.queue.length >= 50 || this.totalBytes + frame.pcm.length > 1_200_000) {
       this.stop('held'); return false;
     }
+    this.usedInferences.add(frame.responseId);
     this.responseId = frame.responseId; this.itemId = frame.itemId; this.sequence++;
     this.totalBytes += frame.pcm.length; this.queue.push(new Uint8Array(frame.pcm));
     if (!this.timer) this.tick(epoch);

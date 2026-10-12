@@ -1331,3 +1331,8 @@ I chose Supabase automatic linking so customers using Google or Apple with the s
 ## Deferring the custom domain, 12 October 2026
 
 I decided to delay buying a domain until the app is ready for public launch. The prototype can use a Render-provided website address, so I can avoid an early purchase. I kept verified production email delivery and real account security checks as launch requirements rather than treating the temporary website address as proof that accounts are ready.
+
+
+## Preventing canceled audio from restarting, 12 October 2026
+
+I found that a local audio sender could reuse an earlier inference identity after interruption. I fixed both senders to reject reused identities and added three regression tests. All 1,276 prototype tests, type checking and the build passed. I kept the distinction between a server speaking event and proof of what the customer heard, so the app does not treat a stopped event as permission to resume old buffered playback. Live recovery remains an acceptance task.

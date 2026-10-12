@@ -2334,3 +2334,14 @@ Exact next action: review the follow-up when Sabine shares it, or proceed with a
 Three consecutive resumed checks, starting with the follow-up-pending record, found the same external account activation dependencies unresolved. Revalidated current repository, plan gates and sanitized handoff. No live deployment/test handle is awaiting output and no independent authorized task can bypass these dependencies. No new reply or credential input was supplied. Domain purchase remains deferred; do not request it now.
 
 Goal is incomplete and is being marked blocked. Resume when Sabine shares the hosting engineering follow-up or supplies another existing account-setup prerequisite. Review that evidence before hosted changes; preserve all phase, security and spending limits. No additional email, paid call or deployment was started. This record contains only the approved sanitized status.
+
+
+## Echo inference identity protection, 12 October 2026
+
+Reviewed the public Tavus speaking-event and Echo documentation: https://docs.tavus.io/sections/event-schemas/conversation-started-stopped-speaking and https://docs.tavus.io/sections/conversational-video-interface/echo-mode. Current speaking events use properties.role=pal with replica legacy duplicates; stopped events carry interrupted, duration, seq, inference_id and turn_idx. Existing scripted event display recognizes the current generic speaking names. A speaking-state event is not proof of downstream playback flush or what the listener heard; duration is not used to truncate confirmed conversation history.
+
+Fixed a local sender gap: buffered EchoStream and IncrementalEcho now reject an inference identity already used by that sender, including after interruption or a new epoch. Identity history is bounded at 64 unique outputs without eviction; exhaustion refuses output. Existing queue cancellation, stale epoch refusal and verified renderer cleanup gates remain. Fresh identity alone does not authorize resuming a room. No removed replica_interrupted event is used.
+
+Validation: 1,276 prototype tests across 82 files, type checking and build pass. Three focused regressions cover old identity rejection, fresh identity acceptance and bounded identity history. The first sandbox run timed out on loopback checks and was explicitly terminated; the full loopback-enabled replacement passed. No provider room, reservation, paid call, hosted setting or Render deployment was started. Log: /private/tmp/ai-stylist-fresh-inference-verified.log.
+
+Task 1b remains incomplete. Next: prepare the renderer recovery adapter using actual room/client teardown verification before replacement output, preserve confirmed-only context, and never substitute stopped-speaking or sent-audio duration for playback proof. If the required strict cleanup cannot be established, keep interrupt-and-end. A live replacement-room trial requires separate financial authorization because existing attempts are exhausted.
