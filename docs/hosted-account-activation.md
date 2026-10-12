@@ -4,10 +4,10 @@ Status: preparation in progress, 12 October 2026. Hosted Tasks 2b/2c are authori
 
 ## Verified current state
 
-- Existing AI Stylist Supabase project: all twenty reviewed customer migrations installed. Source hashes and metadata checks are in hosted-database-deployment.json. SQL Editor execution does not register CLI history.
+- Existing AI Stylist Supabase project: all twenty-one customer migrations installed. Source hashes and metadata checks are in hosted-database-deployment.json. SQL Editor execution does not register CLI history.
 - Customer account handlers are prepared but absent from the default server. The current Render service is the private voice prototype, not a deployed customer account application.
 - Read-only dashboard inspection: Site URL is http://localhost:3000; no redirect URLs; built-in email sender with a production-use warning; password reset template uses ConfirmationURL.
-- Local synthetic evidence: 538 tests, type checking, build, isolated database rehearsal and desktop WebKit checks. The rendered confirmation-to-password-form journey now passes. This does not prove real email, hosted provider or physical-device acceptance.
+- Local synthetic evidence: 560 tests, type checking, build, isolated database rehearsal and desktop WebKit checks. The rendered confirmation-to-password-form journey now passes. This does not prove real email, hosted provider or physical-device acceptance.
 
 ## Required order
 
@@ -26,7 +26,7 @@ Schedule bounded seven-day receipt expiry and recovery-grant cleanup before cust
 
 ## Exact next implementation
 
-Prepare the dormant explicit host composition and durable abuse control contract, with focused tests. Do not change the live email template until a verified HTTPS destination and sender configuration are ready.
+The dormant explicit Supabase host composition and durable shared admission are prepared. Prepare separate connected account/reset browser delivery and strictly bounded static HTTPS serving, then test the complete browser journey. Do not change the live email template until a verified HTTPS destination and sender configuration are ready.
 
 ## Shared account admission prepared and installed, 12 October 2026
 
@@ -43,3 +43,7 @@ Prepared createAccountHost to connect the dormant account composition to the str
 Shutdown stops the timer, aborts admitted request signals and cleanup work, closes reset grants and refuses late admission. Its bounded result reports unconfirmed if cleanup, admission or handler work remains unresolved; it does not claim remote transport termination. Six focused tests use actual loopback HTTP for startup gating, failed maintenance, sign-out, shutdown and late admission; fake time verifies scheduled cleanup. All 550 foundation tests across 77 files, type checking and build pass. No hosted account route, cleanup invocation, real credential, email or paid request was activated.
 
 Exact next action: compose actual Supabase password/OAuth/recovery/refresh adapters, signed identity/current-session verification and encrypted ownership into the explicit host; then verify the combined host with synthetic HTTP/database providers before hosted configuration. Static reset/account pages and production sender/origin still need deployment and real acceptance. Private Memory needs the full rendered reset, 21-migration and 550-test host checkpoint. Task 2c and phase gates remain open.
+
+## Current complete-host evidence, 12 October 2026
+
+The complete factory now composes concrete Supabase transports, shared signed identity/current-session checks, encrypted refresh ownership, independently verified scoped revocation, shared admission and explicit maintenance/shutdown. All 560 foundation checks pass. Actual loopback HTTP plus disposable PostgreSQL prove generated signed login, encrypted adoption, generation-two rotation, primary-session deletion, ownership cascade and stale-cookie refusal. Auth provider and receipt-maintenance HTTP replies were synthetic. No customer host is mounted and no live Auth configuration has changed. The next delivery work must preserve the strict Origin/Host boundary and scanner-safe recovery landing.

@@ -122,3 +122,9 @@ Exact next action: prepare the disconnected trusted cleanup-reconciliation path 
 Published verified discovery/reconciliation/scan preparation and actual isolated database restart evidence, with incomplete real-authority/scheduling/activation gates retained. All 16 site checks and artifact validation pass. Owner-only access was verified and native deployment succeeded with MCP enabled. Source ddb7906fb90c5af49bd7fd606c51eaca9873c415; deployment appgdep_6acc5ae5608c81919b138f12354cbc1b; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_d7c04d1c51a481919044eaa7d19682a5. URL: https://ai-stylist-project-memory.idealgnat256.chatgpt.site . No incomplete task was marked complete.
 
 Exact next action: prepare an error-distinguishing, service-only authoritative session-presence lookup for reconciliation. Separate an absent session row from an active session, owner mismatch, malformed reply and lookup failure; validate the documented provider semantics and actual isolated SQL composition before any hosted use. Do not equate current-session authorization false with revocation proof. Task 2c, real provider and phase gates remain open.
+
+## Private Memory synchronized to complete account host, 12 October 2026
+
+Owner-private publication succeeded, preserving the existing one-user/no-group audience and MCP capability. All 16 site checks and artifact validation passed. Source 535e97d629d274eb89ec9ca7ea4cc6eb2a327e60; deployment appgdep_6acc9132db8c8191957bac163dcff385; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_2dadc742200c8191a46f73a91ce9d86d. The site now includes 560-test account host integration and the complete isolated PostgreSQL lifecycle rehearsal. No task was marked complete by publication.
+
+Next: prepare separate connected account/reset browser entry and strictly bounded static HTTPS delivery around the explicit host. Preserve the sample preview and all customer activation gates.
