@@ -788,3 +788,11 @@ Reviewed the agreed phase checks against current migrations, adapters, local SQL
 
 
 Exact next action: publish/copy this audit and refresh Memory. Check Sabine's response to the local Task 2c sequencing question before implementing account preparation. If absent, preserve current gates and revalidate remaining Phase 1 actions; no spend or hosted action is authorized by this audit.
+
+
+## Local Task 2c preparation approved, 11 October 2026
+
+Sabine explicitly approved local Task 2c account preparation while Phase 1 remains open. This extends the earlier local Task 2b sequencing exception only to account interfaces and simulated tests. It includes no hosted configuration, real sign-in, new credentials, paid calls or customer launch. Prepare email/password, recovery, Google and Apple flows against injected provider interfaces, then real server identity-verification boundaries. Preserve every existing hosted, privacy, financial and Phase 1 acceptance gate. The pending-question wording in the preceding audit is now superseded by this approval.
+
+
+Exact next action: publish/copy the audit and new sequencing approval; refresh Memory. Start Task 2c with a testable account-flow controller and injected provider interface. Cover email/password submission, confirmation-required registration, generic recovery acknowledgment, OAuth pending/cancel/failure, stale asynchronous replies, sign-out and guest-styling refusal. Keep credentials ephemeral and provider responses private; do not wire hosted Auth or present simulated sign-in as real. Then prepare the server verification contract and callback/session protections.

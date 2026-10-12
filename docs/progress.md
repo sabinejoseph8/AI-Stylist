@@ -1405,3 +1405,8 @@ The prepared adapter now passes actual local SQL checks that deliberately discar
 ## Local Task 2b acceptance audit
 
 Reviewed the agreed phase checks against current migrations, adapters, local SQL/Storage/resource evidence and CI configuration. docs/task-2b-acceptance-audit.md records requirement-level evidence and missing real/hosted acceptance. No additional mandatory local Task 2b implementation gap was identified; Task 2b and Phase 2 remain incomplete. Task 2c is not covered by the existing sequencing exception. Sabine has been asked whether to authorize local-only Task 2c preparation, with no hosted changes, credentials, real sign-in or paid calls. Do not treat the pending question as approval.
+
+
+## Local Task 2c preparation approved, 11 October 2026
+
+Sabine explicitly approved local Task 2c account preparation while Phase 1 remains open. This extends the earlier local Task 2b sequencing exception only to account interfaces and simulated tests. It includes no hosted configuration, real sign-in, new credentials, paid calls or customer launch. Prepare email/password, recovery, Google and Apple flows against injected provider interfaces, then real server identity-verification boundaries. Preserve every existing hosted, privacy, financial and Phase 1 acceptance gate. The pending-question wording in the preceding audit is now superseded by this approval.

@@ -21,3 +21,8 @@ No additional mandatory local Task 2b implementation gap was identified by this 
 ## Next decision
 
 A request for local-only Task 2c preparation has been presented to Sabine. Until she answers, do not implement Task 2c, configure OAuth, migrate hosted Supabase or start paid tests. If approved, prepare the account boundary and simulated acceptance tests first; real account setup and provider credentials remain separate actions. If declined, retain the Phase 1 gate and identify the concrete outstanding Phase 1 business/provider actions.
+
+
+## Local Task 2c preparation approved, 11 October 2026
+
+Sabine explicitly approved local Task 2c account preparation while Phase 1 remains open. This extends the earlier local Task 2b sequencing exception only to account interfaces and simulated tests. It includes no hosted configuration, real sign-in, new credentials, paid calls or customer launch. Prepare email/password, recovery, Google and Apple flows against injected provider interfaces, then real server identity-verification boundaries. Preserve every existing hosted, privacy, financial and Phase 1 acceptance gate. The pending-question wording in the preceding audit is now superseded by this approval.
