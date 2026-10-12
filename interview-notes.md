@@ -729,3 +729,8 @@ I tested private image access against a disposable Storage API and database. The
 ### Keeping wardrobe URLs tied to an account
 
 I prepared image delivery that checks the customer on each request instead of exposing a reusable Storage link. I tested it with actual local Storage and database records: the owner received the image, while another generated customer using the same app URL did not. I also tested cancellation, sign-out during a download and deletion-state changes. I kept real authentication and hosted acceptance open, since the local identity gate was simulated.
+
+
+### Preserving existing data during schema changes
+
+I seeded a real local photo and its saved references before applying newer migrations. The upgrade preserved the image and both references. I then confirmed that removing one reference did not delete a photo still used by a saved look. Only after removing both could cleanup delete the object and record its completion. I kept the technical-receipt retention period as an explicit privacy decision.

@@ -35,3 +35,7 @@ Configuration reference: [Supabase Docker self-hosting](https://supabase.com/doc
 
 
 Follow-up: the rehearsal now also executes the prepared account-bound TypeScript handler against service-role local SQL metadata and actual Storage downloads. The owner receives exact bytes, and another generated identity copying the app URL receives 404 with no bytes. Authentication stays simulated; no app route installs the handler. See account-bound-image-delivery.md.
+
+## Upgrade compatibility and reference-aware cleanup
+
+The rehearsal now seeds an actual JPEG object, image metadata, a wardrobe item and a saved-look reference after migrations 1–8, before lifecycle migration 9. Applying migrations 9–13 preserves exact JPEG bytes, ready legacy metadata, both references and owner isolation. The account-bound handler reads the upgraded legacy JPEG correctly. Deletion claims are refused while either reference exists; removing only the wardrobe item preserves the image because the saved look still uses it. After both references are explicitly removed, actual Storage deletion and SQL finalization succeed, the owner-only deletion receipt proves completion, and retired-ID reuse is refused. All fixtures are generated and temporary.

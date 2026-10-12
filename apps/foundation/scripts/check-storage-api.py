@@ -24,8 +24,11 @@ def require(ok, message):
         raise RuntimeError(message)
 
 
-def sql(query):
+def sql(query, expected_error=None):
     r = run(['docker', 'exec', '-i', db, 'psql', '-U', 'postgres', '-Atq', '-v', 'ON_ERROR_STOP=1'], input=query)
+    if expected_error is not None:
+        require(r.returncode != 0 and expected_error in r.stderr, 'Expected SQL protection did not reject the operation')
+        return ''
     require(r.returncode == 0, 'Local Storage SQL failed: ' + r.stderr[:700])
     return r.stdout.strip()
 
@@ -127,9 +130,36 @@ select coalesce(nullif(current_setting('request.jwt.claim.sub',true),''),
     else:
         raise RuntimeError('Local Storage API startup timeout')
     sql('grant usage on schema auth to authenticated,anon,service_role; grant execute on function auth.uid() to authenticated,anon,service_role;')
-    for migration in sorted((ROOT / 'supabase/migrations').glob('*.sql')):
+    migrations = sorted((ROOT / 'supabase/migrations').glob('*.sql'))
+    require(len(migrations) == 13, 'Review upgrade rehearsal boundaries after changing migration count')
+    for migration in migrations[:8]:
         sql(migration.read_text())
     owner, other, service, anon = token('authenticated', a), token('authenticated', b), token('service_role'), token('anon')
+    legacy_id = str(uuid.uuid4())
+    legacy_key = a + '/legacy-camera.jpg'
+    legacy_path = '/object/stylist-wardrobe/' + legacy_key
+    legacy_generated = run(['node', '--input-type=module', '-e',
+        "import sharp from 'sharp';console.log((await sharp({create:{width:3,height:2,channels:3,background:'#286b85'}}).jpeg().toBuffer()).toString('base64'));"], cwd=ROOT / 'apps/foundation')
+    require(legacy_generated.returncode == 0, 'Legacy fixture generation failed')
+    legacy_image = base64.b64decode(legacy_generated.stdout.strip())
+    require(request(legacy_path, service, 'POST', legacy_image, 'image/jpeg')[0] == 200, 'Legacy image upload failed')
+    sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{legacy_id}','{a}','{legacy_key}','image/jpeg',3,2);")
+    actor = f"set role authenticated; set request.jwt.claim.sub='{a}'; "
+    legacy_wardrobe = sql(actor + f"select (public.stylist_save_wardrobe('{legacy_id}','Existing jacket',true)).id;")
+    legacy_items = json.dumps([{'assetId': legacy_id, 'label': 'Existing jacket'}])
+    legacy_look = sql(actor + f"select (public.stylist_save_owned_look('Existing saved look','{legacy_items}'::jsonb,true)).id;")
+    for migration in migrations[8:]:
+        sql(migration.read_text())
+    legacy_record = json.loads(sql(f"set role service_role; select public.stylist_read_media_operation('{legacy_id}','{a}');"))
+    require(legacy_record['state'] == 'ready' and legacy_record['checksum'] is None and legacy_record['key'] == legacy_key,
+            'Upgrade changed legacy media state/key')
+    require(sql(actor + f"select count(*) from public.stylist_wardrobe_items where id='{legacy_wardrobe}' and asset_id='{legacy_id}';") == '1', 'Upgrade lost wardrobe reference')
+    require(sql(actor + f"select count(*) from public.stylist_saved_look_items where look_id='{legacy_look}' and asset_id='{legacy_id}';") == '1', 'Upgrade lost saved-look reference')
+    foreign = f"set role authenticated; set request.jwt.claim.sub='{b}'; "
+    require(sql(foreign + f"select count(*) from public.stylist_media_assets where id='{legacy_id}';") == '0', 'Upgrade exposed foreign metadata')
+    require(request(legacy_path, owner) == (200, legacy_image) and request(legacy_path, other)[0] != 200,
+            'Upgrade changed legacy image bytes or owner protection')
+    print('Actual Storage upgrade preserves legacy JPEG bytes, wardrobe/saved-look references and owner isolation')
     generated = run(['node', '--input-type=module', '-e',
                      "import sharp from 'sharp';console.log((await sharp({create:{width:2,height:2,channels:3,background:'#157568'}}).webp().toBuffer()).toString('base64'));"],
                     cwd=ROOT / 'apps/foundation')
@@ -209,6 +239,8 @@ try{
  assert.equal(allowed.status,200);assert.deepEqual(Buffer.from(await allowed.arrayBuffer()),bytes);
  assert.equal((await handle(new Request(url,{headers:{authorization:x.otherToken}}))).status,404);
  assert.ok(allowed.headers.get('cache-control').includes('no-store'));assert.equal(allowed.headers.has('location'),false);
+ const legacy=await handle(new Request('https://stylist.example/api/media/'+x.legacyId,{headers:{authorization:x.ownerToken}}));
+ assert.equal(legacy.status,200);assert.equal(legacy.headers.get('content-type'),'image/jpeg');assert.deepEqual(Buffer.from(await legacy.arrayBuffer()),Buffer.from(x.legacyImage,'base64'));
  console.log('Account-bound read handler passes actual local SQL/Storage bytes and copied-URL owner-isolation checks with simulated Auth');
 }finally{await db.end();}
 await port.remove(x.key);
@@ -217,10 +249,30 @@ console.log('Prepared Storage transport passes actual local upload/checksum/no-o
 })().catch(e=>{console.error(e.message);process.exit(1)});"""
     check_input = {'token': service, 'image': base64.b64encode(image).decode(),
                    'key': a + '/' + str(uuid.uuid4()) + '.webp',
-                   'ownerToken': owner, 'otherToken': other, 'otherOwner': b}
+                   'ownerToken': owner, 'otherToken': other, 'otherOwner': b,
+                   'legacyId': legacy_id, 'legacyImage': base64.b64encode(legacy_image).decode()}
     checked = run(['docker', 'exec', '-i', api, 'node', '-e', adapter_check], input=json.dumps(check_input))
     require(checked.returncode == 0, 'Prepared adapter local API check failed: ' + checked.stderr[:500])
     print(checked.stdout.strip())
+    # Existing references must protect real object bytes until all are removed.
+    begin_legacy = actor + f"select public.stylist_begin_media_delete('{legacy_id}',1,true);"
+    sql(begin_legacy, expected_error='asset referenced')
+    require(sql(actor + f"select public.stylist_delete_wardrobe('{legacy_wardrobe}',1,true);") == 't', 'Legacy wardrobe removal failed')
+    sql(begin_legacy, expected_error='asset referenced')
+    require(request(legacy_path, owner) == (200, legacy_image), 'Removing one reference removed shared image bytes')
+    require(sql(actor + f"select public.stylist_delete_saved_look('{legacy_look}',1,true);") == 't', 'Legacy saved-look removal failed')
+    claim = json.loads(sql(begin_legacy))
+    require(claim['key'] == legacy_key, 'Legacy deletion claim key mismatch')
+    require(request(legacy_path, service)[0] == 200, 'Claim unexpectedly removed object bytes')
+    code, body = json_request('/object/stylist-wardrobe', service, 'DELETE', {'prefixes': [legacy_key]})
+    removed = json.loads(body)
+    require(code == 200 and len(removed) == 1 and removed[0].get('name') == legacy_key, 'Legacy object removal failed')
+    require(sql(f"set role service_role; select public.stylist_finish_media_delete('{legacy_id}','{a}','{claim['deletionToken']}');") == 't', 'Legacy metadata finalization failed')
+    receipt = json.loads(sql(f"set role service_role; select public.stylist_read_media_operation('{legacy_id}','{a}');"))
+    require(receipt['state'] == 'deleted' and request(legacy_path, owner)[0] != 200, 'Legacy deletion proof/object absence failed')
+    require(sql(f"set role service_role; select public.stylist_read_media_operation('{legacy_id}','{b}');") == '', 'Foreign owner saw deletion receipt')
+    sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{legacy_id}','{a}','{legacy_key}','image/jpeg',3,2);", expected_error='image id retired')
+    print('Shared legacy image is protected until both references are removed; actual deletion, receipt isolation and retired-ID protection pass')
     print('Actual local Storage API protection and signed-expiry checks pass; hosted acceptance remains open')
 finally:
     failures = []

@@ -668,3 +668,8 @@ The disposable Storage API rehearsal passes owner-only reads, public/foreign/ano
 ## Account-bound image interface preparation, 11 October 2026
 
 Prepared a disconnected image-read handler with a fresh trusted identity gate per request, owner/ready metadata validation, bounded verified bytes, a second metadata/session check, cancellation/deadlines, no-store/same-origin headers and four-request admission. It exposes no signed Storage URL. The actual local SQL/Storage rehearsal verifies owner bytes and copied-URL denial for another generated identity; authentication remains simulated. All 209 foundation tests across 16 files, type checking and build pass. See docs/account-bound-image-delivery.md for evidence and remaining hosted/auth/race gates. No app route constructs it; Task 2b remains incomplete and local-only.
+
+
+## Actual Storage upgrade compatibility, 11 October 2026
+
+The disposable API/database rehearsal now seeds a legacy JPEG, wardrobe item and saved-look reference before lifecycle migrations. The newer chain preserves exact bytes, owner isolation and both references, including account-bound legacy delivery. A deletion claim is refused while either reference remains; after explicit removal of both, actual object deletion, owner-only receipt finalization and retired-ID protection pass. The existing 209-test foundation evidence is unchanged because only this integration harness and documentation changed. Hosted activation and actual Auth remain gated. A concrete seven-day technical-receipt/minimal-retired-ID retention proposal is in docs/deletion-receipt-retention-proposal.md for Sabine's business/privacy decision; it is not approved or implemented.
