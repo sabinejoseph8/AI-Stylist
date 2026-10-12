@@ -2668,3 +2668,12 @@ Fixed a local sender gap: buffered EchoStream and IncrementalEcho now reject an 
 Validation: 1,276 prototype tests across 82 files, type checking and build pass. Three focused regressions cover old identity rejection, fresh identity acceptance and bounded identity history. The first sandbox run timed out on loopback checks and was explicitly terminated; the full loopback-enabled replacement passed. No provider room, reservation, paid call, hosted setting or Render deployment was started. Log: /private/tmp/ai-stylist-fresh-inference-verified.log.
 
 Task 1b remains incomplete. Next: prepare the renderer recovery adapter using actual room/client teardown verification before replacement output, preserve confirmed-only context, and never substitute stopped-speaking or sent-audio duration for playback proof. If the required strict cleanup cannot be established, keep interrupt-and-end. A live replacement-room trial requires separate financial authorization because existing attempts are exhausted.
+
+
+## Local renderer teardown preparation, 12 October 2026
+
+Added RendererTeardown, a disabled integration helper for the recovery adapter. It synchronously invalidates old attachment callbacks, mutes and pauses owned media, detaches their streams, awaits Daily client destruction and requires isDestroyed() before reporting local renderer disposal. Disposal is shared across callers; cancellation prevents recovery authorization while cleanup continues. Failures hold recovery and still attempt remaining cleanup. The element list is copied on construction.
+
+Five focused synthetic tests cover ordering, repeated disposal, missing destruction proof, destruction failure, cancellation and cleanup after local errors. This is local disposal evidence only, not provider room termination, final usage or an exact heard offset. It is not wired into the live page and does not authorize replacement-room output. Task 1b remains open; all paid attempts remain exhausted. Next: integrate this helper into a disabled recovery adapter with separately verified provider closure, confirmed-only restoration and replacement configuration, then seek the required financial approval before any live trial.
+
+Validation: final prototype suite 1,281 tests across 83 files passes; type checking and build pass. Log: /private/tmp/ai-stylist-renderer-teardown-final.log. No provider call or deployment.

@@ -1336,3 +1336,8 @@ I decided to delay buying a domain until the app is ready for public launch. The
 ## Preventing canceled audio from restarting, 12 October 2026
 
 I found that a local audio sender could reuse an earlier inference identity after interruption. I fixed both senders to reject reused identities and added three regression tests. All 1,276 prototype tests, type checking and the build passed. I kept the distinction between a server speaking event and proof of what the customer heard, so the app does not treat a stopped event as permission to resume old buffered playback. Live recovery remains an acceptance task.
+
+
+## Preparing safe playback replacement
+
+I separated local playback cleanup from provider shutdown. I added a disposal helper that invalidates old media callbacks, detaches playback and checks that the video client is destroyed. Failure keeps recovery blocked, even though remaining cleanup is still attempted. This helps prevent an old reply from returning, but I have not claimed that it proves provider termination or completed a real replacement-room test. The live prototype still ends on interruption.
