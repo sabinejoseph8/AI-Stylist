@@ -5,7 +5,7 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 11 October 2026
 
-Task 2a is accepted. Task 2b persistence/access and Task 2c account preparation are authorized locally while Phase 1 remains open. All 322 foundation tests across 34 files, type checking and build pass. Local SQL, sixteen-migration actual Storage upgrade and six Linux decoder-resource scenarios have separate recorded passing evidence. Generated-token account composition and callback exchange use simulated transports, with current-session checks, cancellation cleanup and uncertainty holds. Local account screens pass agent narrow-layout and keyboard checks; Sabine completed all eight local account preview steps and confirmed they worked and were readable. Real Auth, provider/refresh/recovery behavior and hosted activation are unverified. The last recorded prototype run passed 1,273 checks and was not rerun for this account checkpoint.
+Task 2a is accepted. Task 2b persistence/access and Task 2c account preparation are authorized locally while Phase 1 remains open. All 324 foundation tests across 34 files, type checking and build pass. Local SQL, sixteen-migration actual Storage upgrade and six Linux decoder-resource scenarios have separate recorded passing evidence. Generated-token account composition and callback exchange use simulated transports, with current-session checks, cancellation cleanup and uncertainty holds. Local account screens pass agent narrow-layout and keyboard checks; Sabine completed all eight local account preview steps and confirmed they worked and were readable. Real Auth, provider/refresh/recovery behavior and hosted activation are unverified. The last recorded prototype run passed 1,273 checks and was not rerun for this account checkpoint.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
@@ -881,3 +881,12 @@ The handler has a maximum ten-second response deadline and four underlying admit
 All 322 foundation tests across 34 files, type checking and build pass. Five added checks cover header-only cookies, private status JSON, hostile origin/content/body rejection, generic provider errors, stalled-body cancellation and retained admission after delivery timeout. A fixture initially returned an invalid null-cookie shape for unconfirmed delivery; type checking caught it and the fixture was corrected before final verification. No actual provider, account, password, email, hosted setting or spending changed.
 
 Exact next action: refresh private Memory with the 322-test checkpoint, then integrate the reset HTTP factory with the actual disconnected recovery/delivery owners in simulated request tests. Task 2c and Phase 1/2 acceptance remain open.
+
+
+## Full local reset HTTP composition, 11 October 2026
+
+Verified the actual disconnected callback/recovery owner, browser delivery and HTTP handler together with simulated provider leases. A bound callback and separate reset cookie produce status-only HTTP completion plus a clearing cookie header; no normal account cookie is issued. Replaying the same request is rejected, and provider reset/cleanup each run once. A foreign-origin HTTP request is refused before consuming valid permission, allowing the legitimate same-origin attempt afterward.
+
+All 324 foundation tests across 34 files, type checking and build pass. Two new full-composition checks provide this evidence. These in-memory Request/Response tests do not validate a real HTTP server, real browser cookie handling, actual provider purpose, email delivery, signing configuration, rate controls or hosted behavior. No route, account or paid activity was enabled.
+
+Exact next action: refresh private Memory, then audit the remaining authorized local Task 2c requirements and implement the next ready account transport/controller contract while keeping actual provider and hosted activation gated. Task 2c remains incomplete.

@@ -845,3 +845,8 @@ I added explicit expiration and shutdown disposal for temporary reset permission
 ## Bounding password-reset requests
 
 I prepared the reset HTTP boundary with same-origin checks, strict bounded JSON parsing, cancellation and a limit on outstanding work. Cookies stay in headers and provider failures never appear in customer responses. I verified oversized and stalled requests without enabling a live endpoint. All 322 foundation tests pass, with type checking and build. Production rate protection and actual provider behavior remain open.
+
+
+## Testing the full local password-reset response
+
+I verified the HTTP handler with the actual prepared recovery and browser-delivery owners. The response contains only status, clears reset permission in a header and creates no normal account access. A hostile request cannot consume the legitimate reset. All 324 foundation tests pass, with type checking and build. These are local simulated-provider tests; real server/browser and provider acceptance remain open.

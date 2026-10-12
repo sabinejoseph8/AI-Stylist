@@ -2,6 +2,7 @@ import {describe,it,expect,vi,afterEach} from 'vitest';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {createAccountRecovery} from '../src/server/account-recovery.ts';
+import {createRecoveryHttp} from '../src/server/recovery-http.ts';
 import {createRecoveryBrowser} from '../src/server/recovery-browser.ts';
 const origin='https://stylist.example',project='https://example.supabase.co';
 const owner='11111111-1111-4111-8111-111111111111',sessionId='22222222-2222-4222-8222-222222222222';
@@ -46,6 +47,17 @@ describe('disconnected recovery owner and browser delivery composition',()=>{
   const f=await fixture(),value=lease();let resolve!:(v:boolean)=>void,started!:()=>void,scope!:AbortSignal;const began=new Promise<void>(r=>started=r);value.resetPassword=vi.fn((_password:string,s:AbortSignal)=>{scope=s;started();return new Promise<boolean>(r=>resolve=r);});
   const recovery=createAccountRecovery(f.security,{exchange:async()=>value}),browser=createRecoveryBrowser(origin),grant=await recovery.complete(f.begin('recovery').request,signal());if(grant.status!=='resetRequired')throw Error();
   const delivery=browser.install(grant),work=browser.submit(request(delivery.setCookie.split(';')[0]!),input,signal());await began;expect(await browser.close()).toBe(true);expect(scope.aborted).toBe(true);expect((await work).status).toBe('unconfirmed');resolve(true);await Promise.resolve();expect(value.discard).toHaveBeenCalledTimes(1);
+ });
+
+ it('delivers a full reset HTTP response without leaking permission or creating account access',async()=>{
+  const f=await fixture(),value=lease(),recovery=createAccountRecovery(f.security,{exchange:async()=>value}),browser=createRecoveryBrowser(origin),handler=createRecoveryHttp(origin,browser),grant=await recovery.complete(f.begin('recovery').request,signal());if(grant.status!=='resetRequired')throw Error();
+  const delivery=browser.install(grant),cookie=delivery.setCookie.split(';')[0]!,make=()=>new Request(origin+'/api/account/reset',{method:'POST',headers:{origin,cookie,'content-type':'application/json'},body:JSON.stringify(input)});
+  const response=await handler(make(),signal());expect(response.status).toBe(200);expect(await response.json()).toEqual({status:'resetComplete'});expect(response.headers.get('set-cookie')).toContain('__Host-stylist_reset=;');expect(response.headers.get('set-cookie')).not.toContain('stylist_access');expect(response.headers.get('cache-control')).toBe('no-store');expect((await handler(make(),signal())).status).toBe(400);expect(value.resetPassword).toHaveBeenCalledTimes(1);expect(value.discard).toHaveBeenCalledTimes(1);
+ });
+ it('rejects a hostile HTTP request before consuming valid recovery delivery',async()=>{
+  const f=await fixture(),value=lease(),recovery=createAccountRecovery(f.security,{exchange:async()=>value}),browser=createRecoveryBrowser(origin),handler=createRecoveryHttp(origin,browser),grant=await recovery.complete(f.begin('recovery').request,signal());if(grant.status!=='resetRequired')throw Error();
+  const delivery=browser.install(grant),cookie=delivery.setCookie.split(';')[0]!,make=(source:string)=>new Request(origin+'/api/account/reset',{method:'POST',headers:{origin:source,cookie,'content-type':'application/json'},body:JSON.stringify(input)});
+  expect((await handler(make('https://other.example'),signal())).status).toBe(400);expect(value.resetPassword).not.toHaveBeenCalled();expect((await handler(make(origin),signal())).status).toBe(200);
  });
 
 });
