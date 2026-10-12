@@ -102,3 +102,10 @@ Verified private publication: source 7bc7d55b602c23ca17e6791d1352140b3216fd95, d
 Consolidated the accepted account/reset reviews, 387-test foundation checkpoint and isolated refresh database composition into the private Memory site. All 16 site checks and artifact validation pass. Owner-only access was verified before publication; native deployment succeeded with MCP enabled. Source b44a934783ad7653e2af5a008cc8d3d558c9a059, deployment appgdep_6acc53f23efc8191935d8aa0687d8c5c, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_79327d8fb64c8191b3364f2fc3cc0851. URL: https://ai-stylist-project-memory.idealgnat256.chatgpt.site . Task 2c and phase exit gates remain open.
 
 Exact next action: prepare the trusted account-refresh port deriving scope from verified request identity and inspected durable generation, then exercise the existing account-refresh HTTP coordinator with the encrypted store and synthetic provider. No actual provider activation, hosted account change or paid call is authorized by this publication.
+
+
+## Private Memory 406-test publication, 11 October 2026
+
+Published the latest account-provider preparation, quarantine restart/lost-acknowledgment evidence and remaining distributed-cleanup risk. All 16 site checks and artifact validation pass. Owner-only access was verified, and native deployment succeeded with MCP enabled. Source 20bbdf5b65f5e801329b7324c4861a5abe89896f; deployment appgdep_6acc5801fe6c8191b5c059452a432ccc; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_6473e477013c8191836e3bc581ab4b91. URL: https://ai-stylist-project-memory.idealgnat256.chatgpt.site . No incomplete task or phase was checked complete.
+
+Exact next action: prepare the disconnected trusted cleanup-reconciliation path with explicit owner/session/generation and independently confirmed revocation evidence; test stale scope, canceled work and uncertain removal without resetting or retrying rotation. Durable recovery from simultaneous storage/provider failure remains open. No real provider, hosted account setup or paid activity was performed by this publication.
