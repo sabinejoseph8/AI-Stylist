@@ -67,7 +67,7 @@ export function createAccountFlow(provider:AccountProvider,deadlineMs=15000){
   async signOut(){
    invalidate();const version=generation;set('signedOut','You are signed out on this page.');
    try{await operation(signal=>provider.signOut(signal));if(version===generation)set('signedOut','You are signed out.');}
-   catch{if(version===generation)set('signedOut','Local access is closed. Server sign-out is unconfirmed; retry sign-out.');}
+   catch{if(version===generation)set('signedOut','Local access is closed. Server sign-out could not be confirmed.');}
   },
  });
 }

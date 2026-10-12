@@ -1,6 +1,6 @@
 """Isolated PostgreSQL refresh ownership rehearsal. Synthetic identity and ciphertext only."""
 from pathlib import Path
-import subprocess,uuid,time,json
+import subprocess,uuid,time,json,os
 from concurrent.futures import ThreadPoolExecutor
 name='stylist-refresh-'+uuid.uuid4().hex[:10]
 image='postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
@@ -80,6 +80,9 @@ try:
  sql(f"insert into auth.sessions values('{session}','{owner}',null);")
  composed=run(['node',str(Path(__file__).with_name('check-refresh-adapter.mjs')),name],timeout=90);assert composed.returncode==0,composed.stderr
  print(composed.stdout.strip())
+ if os.environ.get('ACCOUNT_BROWSER_REHEARSAL')=='1':
+  browser=run(['node',str(Path(__file__).with_name('check-account-browser.mjs')),name],timeout=90);assert browser.returncode==0,browser.stderr
+  print(browser.stdout.strip())
  print('Refresh ownership PostgreSQL rehearsal passed: service-only access, one concurrent winner, database restart hold, fencing, confirmed removal, rotation and cascade.')
 finally:
  if created:run(['docker','rm','-f',name])

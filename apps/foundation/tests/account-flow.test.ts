@@ -36,7 +36,7 @@ it('drops old replies after a newer attempt, cancellation or sign-out',async()=>
 });
 it('bounds stalled operations, hides raw errors and marks failed remote sign-out unconfirmed',async()=>{
  const flow=createAccountFlow({submit:async()=>{throw Error('secret');},signOut:async()=>{throw Error('secret');}});
- await flow.submit(request);expect(flow.snapshot().message).not.toContain('secret');await flow.signOut();expect(flow.snapshot().message).toContain('unconfirmed');
+ await flow.submit(request);expect(flow.snapshot().message).not.toContain('secret');await flow.signOut();expect(flow.snapshot().message).toBe('Local access is closed. Server sign-out could not be confirmed.');expect(flow.snapshot().userId).toBeNull();
  const stalled=createAccountFlow({submit:()=>new Promise(()=>{}),signOut:async()=>{}},5);await stalled.submit(request);expect(stalled.snapshot().status).toBe('error');
 });
 it('rejects malformed input and provider results',async()=>{

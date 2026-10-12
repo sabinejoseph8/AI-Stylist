@@ -1245,3 +1245,7 @@ I added bounded build loading and connected it to the complete account applicati
 ## Making account startup and shutdown predictable
 
 I added explicit listener startup and bounded shutdown. Account maintenance must pass before a socket opens. Shutdown waits for sockets to close and reports uncertainty when it must force closure or application cleanup is unresolved. Focused tests exposed a timing issue in socket-close reporting, which I fixed. All 578 foundation tests passed, and the connected reset journey also passed over local HTTPS through the network wrapper. Hosted customer acceptance remains open.
+
+## Connecting the browser to the isolated account database
+
+I ran the actual connected pages through HTTPS and WebKit with the complete account application and a disposable PostgreSQL database. Signed login, encrypted refresh storage, refresh and confirmed sign-out passed. Recovery also passed in a separate browser context with no original cookies, with exactly one password update and no reuse after reload. I corrected a test that checked sign-out too early and removed misleading retry advice from an unconfirmed sign-out message. All 578 foundation tests passed. Auth responses remained simulated, so real email and phone acceptance are still open.

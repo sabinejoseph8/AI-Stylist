@@ -48,7 +48,7 @@ describe('simulated browser transport and server composition',()=>{
   await h.flow.submit({method:'recover',email:input.email});expect(h.flow.snapshot().status).toBe('recoveryRequested');expect(h.jar.has('__Host-stylist_access')).toBe(false);expect(h.sendRecovery).toHaveBeenCalledTimes(1);
  });
  it('closes local access while preserving unconfirmed remote revocation',async()=>{
-  const h=await harness(false);await h.flow.submit(input);await h.flow.signOut();expect(h.flow.snapshot().status).toBe('signedOut');expect(h.flow.snapshot().message).toContain('unconfirmed');expect(h.jar.has('__Host-stylist_access')).toBe(false);
+  const h=await harness(false);await h.flow.submit(input);await h.flow.signOut();expect(h.flow.snapshot().status).toBe('signedOut');expect(h.flow.snapshot().message).toBe('Local access is closed. Server sign-out could not be confirmed.');expect(h.jar.has('__Host-stylist_access')).toBe(false);
   expect(await h.f.security.authorize(new Request(origin+'/api/profile',{headers:{cookie:'__Host-stylist_access='+h.f.token}}),signal())).not.toBeNull();
  });
 });
