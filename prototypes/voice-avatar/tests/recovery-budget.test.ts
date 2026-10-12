@@ -28,3 +28,14 @@ describe('approved two-room recovery allowance, local fixtures only',()=>{
   const partial=structuredClone(ledger);partial.runs.pop();expect(()=>validateLedger(partial)).toThrow();
  });
 });
+
+it('permits exactly the approved repeat while preserving the unused original replacement',async()=>{
+ const b=await fixture();await b.approveRecoveryTrial();const old=await b.reserveRecoveryPair();await b.claimRecoveryRoom(old[0]);await b.setRoom(old[0],'ended-initial');await b.closeVerified(old[0]);const before=await b.read();
+ await b.approveRecoveryRepeat();const pair=await b.reserveRecoveryPair();expect((await b.read()).runs.slice(0,11)).toEqual(before.runs);
+ await expect(b.claimRecoveryRoom(old[1])).rejects.toThrow();await expect(b.claimRecoveryRoom(pair[1])).rejects.toThrow();
+ await b.claimRecoveryRoom(pair[0]);await b.setRoom(pair[0],'repeat-initial');await b.closeVerified(pair[0]);await b.claimRecoveryRoom(pair[1]);await b.setRoom(pair[1],'repeat-replacement');await b.closeVerified(pair[1]);
+ await expect(b.reserveRecoveryPair()).rejects.toThrow();await expect(b.approveRecoveryRepeat()).rejects.toThrow();await expect(b.reserve('spoken')).rejects.toThrow();
+});
+it('refuses repeat amendment while initial cleanup is unresolved',async()=>{
+ const b=await fixture();await b.approveRecoveryTrial();await b.reserveRecoveryPair();await expect(b.approveRecoveryRepeat()).rejects.toThrow();
+});

@@ -1,3 +1,4 @@
+import { recoveryAvailable } from './experiment-budget.ts';
 import { createServer } from 'node:http';
 import type { IncomingMessage } from 'node:http';
 import { randomBytes, randomUUID } from 'node:crypto';
@@ -105,7 +106,7 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
         if (!options.budget) { json(423, {error:'Recovery allowance unavailable.'}); return; }
         try {
           const ledger = await options.budget.read();
-          json(200, {available: Boolean(ledger.recoveryTrial) && ledger.runs.length === 9 && ledger.runs.every(run => run.closed), reservedCents:400, roomLimit:2});
+          json(200, {available: recoveryAvailable(ledger), reservedCents:400, roomLimit:2});
         } catch { json(423, {error:'Recovery allowance requires review.'}); }
         return;
       }
