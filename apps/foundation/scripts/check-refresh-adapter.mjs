@@ -30,6 +30,7 @@ function execute(args,input=''){
  });
 }
 const signatures={
+ stylist_list_refresh_candidates:[['p_after','uuid'],['p_limit','integer']],
  stylist_auth_session_active:[['p_owner','uuid'],['p_session','uuid']],
  stylist_adopt_refresh:[['p_owner','uuid'],['p_session','uuid'],['p_expiry','bigint'],['p_envelope','jsonb']],
  stylist_inspect_refresh:[['p_owner','uuid'],['p_session','uuid']],
@@ -176,12 +177,16 @@ const revokedProof={status:'revoked',ownerId:owner,sessionId:session};
 assert.equal(await store.adopt('reconcile-fixture',scope,signal()),'confirmed');
 const reconcileClaim=await store.claim(owner,session,1,signal());assert.equal(reconcileClaim.status,'claimed');reconcileClaim.clearSecret();
 assert.equal(await store.hold(reconcileClaim.scope,reconcileClaim.leaseId,signal()),'confirmed');
-const cleanupScope={ownerId:owner,sessionId:session,generation:1,leaseId:reconcileClaim.leaseId};
+const discovery=await store.discover(null,10,signal());assert.equal(discovery.status,'found');assert.equal(discovery.candidates.length,1);
+const found=discovery.candidates[0];assert.equal(found.state,'held');assert.equal(found.scope.sessionId,session);
+assert.equal(JSON.stringify(discovery).includes('envelope'),false);
+const cleanupScope={...found.scope,leaseId:found.leaseId};
 const uncertain=createRefreshReconciliation(store,{confirm:async()=>({status:'unconfirmed'})});
 assert.equal(await uncertain.reconcile(cleanupScope,signal()),'unconfirmed');assert.equal((await store.inspect(owner,session,signal())).state,'held');
 await execute(['restart',container]);
 for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
 const reconciliationStore=createRefreshStore(rpc,createRefreshEnvelopes(keyring,'fixture'));
+const rediscovered=await reconciliationStore.discover(null,10,signal());assert.equal(rediscovered.status,'found');assert.equal(rediscovered.candidates[0].state,'held');
 const reconciliation=createRefreshReconciliation(reconciliationStore,{confirm:async()=>revokedProof});
 assert.equal(await reconciliation.reconcile({...cleanupScope,generation:2},signal()),'stale');
 loseNext='stylist_remove_refresh';assert.equal(await reconciliation.reconcile(cleanupScope,signal()),'unconfirmed');

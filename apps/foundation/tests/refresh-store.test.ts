@@ -40,3 +40,12 @@ it('requires exact trusted revocation confirmation before requesting fenced remo
  expect(await store.remove(context,lease,true,signal())).toBe('confirmed');
  expect(call).toHaveBeenCalledWith('stylist_remove_refresh',{p_owner:owner,p_session:session,p_generation:1,p_lease:lease,p_revoked:true},expect.any(AbortSignal));
 });
+it('discovers bounded scoped metadata without exporting envelopes or plaintext',async()=>{
+ const context=scope(),call=vi.fn(async()=>[{owner_id:owner,session_id:session,generation:1,expires_at_ms:context.expiresAt,state:'held',lease_id:lease}]),store=createRefreshStore({call},codec());
+ const page=await store.discover(null,10,signal());expect(page.status).toBe('found');if(page.status!=='found')throw Error();expect(page.candidates[0]?.scope.sessionId).toBe(session);expect(JSON.stringify(page)).not.toContain('envelope');expect(page.nextAfter).toBe(session);
+ expect((await store.discover(null,101,signal())).status).toBe('unconfirmed');expect(call).toHaveBeenCalledTimes(1);
+});
+it('refuses out-of-order discovery and credential-bearing metadata',async()=>{
+ const context=scope(),record={owner_id:owner,session_id:session,generation:1,expires_at_ms:context.expiresAt,state:'ready',lease_id:null},call=vi.fn(async():Promise<unknown>=>[record]),store=createRefreshStore({call},codec());
+ expect((await store.discover(session,10,signal())).status).toBe('unconfirmed');call.mockResolvedValue([{...record,envelope:{private:'fixture'}}]);expect((await store.discover(null,10,signal())).status).toBe('unconfirmed');
+});

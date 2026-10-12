@@ -24,6 +24,19 @@ export function createRefreshStore(rpc:RefreshStoreRpc,codec:ReturnType<typeof c
  }
  async function mutation(name:string,input:Record<string,unknown>,signal:AbortSignal){const result=await call(name,input,signal);return result.status==='confirmed'&&typeof result.value==='boolean'?result.value?'confirmed' as const:'refused' as const:'unconfirmed' as const;}
  return Object.freeze({
+  async discover(after:string|null,limit:number,signal:AbortSignal){
+   if((after!==null&&!uuid.test(after))||!Number.isSafeInteger(limit)||limit<1||limit>100)return {status:'unconfirmed' as const};
+   const result=await call('stylist_list_refresh_candidates',{p_after:after,p_limit:limit},signal);
+   if(result.status!=='confirmed'||!Array.isArray(result.value)||result.value.length>limit)return {status:'unconfirmed' as const};
+   const candidates=[];let previous=after;
+   for(const item of result.value){
+    if(!item||typeof item!=='object'||Array.isArray(item)||Object.keys(item).sort().join(',')!=='expires_at_ms,generation,lease_id,owner_id,session_id,state'||!ids(item.owner_id,item.session_id))return {status:'unconfirmed' as const};
+    const value=row({...item,envelope:null},item.owner_id,item.session_id);
+    if(!value||(previous!==null&&value.scope.sessionId<=previous))return {status:'unconfirmed' as const};
+    previous=value.scope.sessionId;candidates.push(Object.freeze({scope:value.scope,state:value.state,leaseId:value.leaseId}));
+   }
+   return Object.freeze({status:'found' as const,candidates:Object.freeze(candidates),nextAfter:previous});
+  },
   async adopt(secret:string,scope:RefreshScope,signal:AbortSignal){
    try{if(scope.generation!==1||!ids(scope.ownerId,scope.sessionId))return 'refused' as const;const envelope=codec.seal(secret,scope);return await mutation('stylist_adopt_refresh',{p_owner:scope.ownerId,p_session:scope.sessionId,p_expiry:scope.expiresAt,p_envelope:envelope},signal);}catch{return 'refused' as const;}
   },

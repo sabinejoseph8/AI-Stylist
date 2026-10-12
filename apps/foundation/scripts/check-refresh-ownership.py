@@ -23,10 +23,16 @@ try:
  sql("create role anon;create role authenticated;create role service_role;create schema auth;create schema stylist_private;create table auth.users(id uuid primary key,deleted_at timestamptz,is_anonymous boolean default false,banned_until timestamptz);create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id),not_after timestamptz);")
  sql(f"insert into auth.users(id) values('{owner}'),('{other}');insert into auth.sessions values('{session}','{owner}',null);")
  root=Path(__file__).resolve().parents[3]
- for migration in ['202610110016_current_auth_session.sql','202610110017_refresh_ownership.sql']:sql((root/'supabase/migrations'/migration).read_text())
+ for migration in ['202610110016_current_auth_session.sql','202610110017_refresh_ownership.sql','202610110018_refresh_discovery.sql']:sql((root/'supabase/migrations'/migration).read_text())
  adopt=f"select public.stylist_adopt_refresh('{owner}','{session}',{expiry},'{envelope}'::jsonb);"
  assert sql('set role service_role;'+adopt)=='t'
  assert sql('set role service_role;'+adopt)=='f'
+ for role in ['anon','authenticated']:sql(f'set role {role};select public.stylist_list_refresh_candidates(null,10);',False)
+ page=json.loads(sql('set role service_role;select public.stylist_list_refresh_candidates(null,1);'))
+ assert len(page)==1 and set(page[0])=={'owner_id','session_id','generation','expires_at_ms','state','lease_id'}
+ assert sql(f"select public.stylist_list_refresh_candidates('{session}',1);")=='[]'
+ sql('select public.stylist_list_refresh_candidates(null,101);',False)
+
  for role in ['anon','authenticated','service_role']:sql(f'set role {role};select * from stylist_private.refresh_ownership;',False)
  for role in ['anon','authenticated']:sql(f'set role {role};'+adopt,False)
  assert sql(f"select public.stylist_claim_refresh('{other}','{session}',1);")==''
@@ -56,6 +62,7 @@ try:
  sql(f"update stylist_private.refresh_ownership set envelope='{{\"plaintext\":\"forbidden\"}}';",False)
  sql(f"delete from auth.sessions where id='{session}';")
  assert sql('select count(*) from stylist_private.refresh_ownership;')=='0'
+ assert sql('set role service_role;select public.stylist_list_refresh_candidates(null,10);')=='[]'
  sql(f"insert into auth.sessions values('{session}','{owner}',null);")
  composed=run(['node',str(Path(__file__).with_name('check-refresh-adapter.mjs')),name],timeout=90);assert composed.returncode==0,composed.stderr
  print(composed.stdout.strip())

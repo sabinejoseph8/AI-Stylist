@@ -960,3 +960,6 @@ I prepared a separate cleanup reconciliation capability that requires independen
 
 
 I tested reconciliation against actual isolated PostgreSQL, including restart persistence, lost removal acknowledgment and a concurrent newer generation. The scoped checks preserve uncertainty and refuse stale deletion. All 411 foundation tests, type checking and build pass. Proof remains synthetic, and durable discovery of unresolved work is the next implementation requirement.
+
+
+I added service-only, bounded discovery of retained session metadata without exposing encrypted credentials. Actual local database checks prove access restrictions, restart rediscovery and deletion cascade. All 413 foundation tests, type checking and build pass. I kept candidates separate from cleanup authority because legitimate active sessions must not be removed simply because a scan finds them.
