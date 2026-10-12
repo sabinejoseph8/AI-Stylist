@@ -235,3 +235,10 @@ Sabine approved Supabase automatic linking for matching verified Google/Apple em
 Read-only SQL Editor checks returned all seven expected managed Auth columns with matching UUID, timestamptz and boolean types. Both stylist_auth_session_active and stylist_auth_session_presence exist as security-definer functions with empty search paths, service-role execution allowed, and anonymous/authenticated execution denied. Sanitized receipt: docs/hosted-auth-metadata-review.json. No customer rows were read, no session lookup was invoked, and no database setting or data changed. This closes the narrow schema/privilege inspection prerequisite only; live signed-token/current-session/provider acceptance remains open.
 
 Sabine confirmed she does not own a sender domain. Asked for the desired app/domain name before checking options and presenting purchase costs. No domain, sender service, credentials or charge was created. Render's response, exact hosted origin, production sender and social-provider credentials remain dependencies. Next: use Sabine's naming choice to research available domain options and costs; review Render's reply when supplied; preserve all phase/security/spending limits.
+
+
+## Live public signing-key retrieval, 12 October 2026
+
+A bounded unauthenticated HTTPS GET to the fixed AI Stylist Supabase JWKS endpoint returned HTTP 200 and one EC P-256/ES256 public key with no private key fields. The existing createAuthKeys resolver successfully imported the live public key; two lookups through the same resolver made one fetch, confirming cache reuse. Sanitized result is in docs/hosted-auth-metadata-review.json. No source behavior changed, real JWT was verified, account/session created, private credential used or paid voice call started.
+
+This proves public-key retrieval/import/cache compatibility only. Real token claims, current-session behavior, provider security, hosted email/OAuth and customer isolation/device acceptance remain incomplete. Next action: await Sabine's app/domain naming choice for sender-domain options and Render's response for ingress/logging; existing social credentials and phase/spending limits remain.

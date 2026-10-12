@@ -32,5 +32,17 @@
     "No Auth session function invoked",
     "No hosted mutation",
     "Does not prove real token/session/provider acceptance"
-  ]
+  ],
+  "public_key_probe": {
+    "date": "2026-10-12",
+    "http_status": 200,
+    "public_key_count": 1,
+    "type": "EC",
+    "curve": "P-256",
+    "algorithm": "ES256",
+    "private_fields_present": false,
+    "existing_resolver_imported": true,
+    "resolver_requests_across_two_lookups": 1,
+    "scope": "Live unauthenticated public JWKS retrieval, app resolver import and cache only; no JWT verified, customer/session created or private credential used"
+  }
 }
