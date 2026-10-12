@@ -20,6 +20,9 @@ import {createSignOutHttp} from '../src/server/signout-http.ts';
 import {createPasswordProviderHttp} from '../src/server/password-provider-http.ts';
 import {createPasswordProvider} from '../src/server/password-provider.ts';
 import {createPasswordAccounts} from '../src/server/password-account.ts';
+import {createOAuthProvider} from '../src/server/oauth-provider.ts';
+import {createAccountExchange} from '../src/server/account-exchange.ts';
+import {createOAuthStart} from '../src/server/oauth-start.ts';
 import {createIdentityVerifier} from '../src/server/verified-identity.ts';
 import {createAuthSessionAuthority} from '../src/server/auth-session.ts';
 import {createRefreshScan} from '../src/server/refresh-scan.ts';
@@ -316,3 +319,37 @@ console.log('Stored sign-out HTTP/PostgreSQL composition passed: accepted-only r
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});
 assert.equal(await createRefreshReconciliation(scanStore,presence).reconcile({...scope,leaseId:null},signal()),'confirmed');
 console.log('Primary Auth session presence composition passed: present/mismatched owners remain unconfirmed; actual session deletion permits scoped reconciliation. Hosted activation remains unverified.');
+
+// OAuth uses actual refresh ownership and identity authority; all provider responses are synthetic.
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`insert into auth.sessions values('${session}','${owner}',null);`);
+let oauthCalls=0,oauthRevoked=true;
+const oauthHttp=createPasswordProviderHttp(project,'synthetic-oauth-http-key',async(url,init)=>{
+ assert.equal(init.redirect,'error');assert.equal(init.credentials,'omit');
+ if(url===project+'/auth/v1/logout?scope=local')return new Response(null,{status:oauthRevoked?204:503});
+ assert.equal(url,project+'/auth/v1/token?grant_type=pkce');
+ const body=JSON.parse(init.body);assert.deepEqual(Object.keys(body).sort(),['auth_code','code_verifier']);
+ assert.equal(body.auth_code,'synthetic-oauth-code');assert.match(body.code_verifier,/^[A-Za-z0-9_-]{43}$/);
+ oauthCalls++;return Response.json({access_token:await token(),refresh_token:'synthetic-oauth-refresh',token_type:'bearer'});
+});
+const oauthStager=createInitialSessionStager(store,initialVerifier,()=>scope.expiresAt,(jwt,abort)=>oauthHttp.revoke(jwt,'local',abort));
+const oauthProvider=createOAuthProvider(oauthHttp,oauthStager),oauthStart=createOAuthStart(project,security.callbacks);
+function oauthRequest(provider){
+ const start=oauthStart.begin(provider,'/saved-looks'),url=new URL(new URL(start.url).searchParams.get('redirect_to'));
+ url.searchParams.set('code','synthetic-oauth-code');return new Request(url,{headers:{cookie:start.setCookies[0].split(';')[0]}});
+}
+for(const provider of ['google','apple']){
+ const exchange=createAccountExchange(security,origin,oauthProvider),request=oauthRequest(provider);
+ const ready=await exchange.complete(request,provider,signal());assert.equal(ready.status,'ready');assert.equal(ready.returnPath,'/saved-looks');
+ assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
+ assert.equal((await exchange.complete(request,provider,signal())).status,'unavailable');
+ assert.equal(await ready.discard(),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+}
+assert.equal(oauthCalls,2);
+loseNext='stylist_adopt_refresh';oauthRevoked=false;
+const uncertainOAuth=createAccountExchange(security,origin,oauthProvider);
+assert.deepEqual(await uncertainOAuth.complete(oauthRequest('google'),'google',signal()),{status:'unavailable'});
+assert.equal(uncertainOAuth.cleanupHeld(),true);assert.notEqual((await store.inspect(owner,session,signal())).state,'ready');
+await execute(['restart',container]);
+for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
+assert.notEqual((await createRefreshStore(rpc,codec).claim(owner,session,1,signal())).status,'claimed');assert.equal(oauthCalls,3);
+console.log('OAuth HTTP/PostgreSQL composition passed: both bound providers, one-use callbacks, encrypted adoption and lost-save/refused-cleanup protection across database restart. No real provider calls.');

@@ -1027,3 +1027,7 @@ I prepared Google and Apple sign-in links so each callback is tied to the browse
 ## Connecting the prepared social sign-in steps
 
 I connected the simulated social sign-in callback to the code exchange and the same session validation used for password sign-in. This reduced duplicate security logic. I checked that malformed responses cannot create access, replayed callbacks fail, and late responses after cancellation retain cleanup ownership. I still need database composition and real provider/device acceptance before calling sign-in complete.
+
+## Checking social sign-in against the database
+
+I tested both prepared social sign-in paths against a disposable database with synthetic provider replies. I verified that a callback could not be reused and that an uncertain session save stayed blocked after a database restart. This gave me stronger evidence than a mocked database alone, while real provider and phone acceptance remain separate.

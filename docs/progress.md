@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 443 foundation tests across 56 files, type checking and build pass. Password HTTP operations, verified initial adoption, encrypted refresh ownership, scoped sign-out and independent primary-session absence checks are prepared and composed against isolated PostgreSQL with generated identities and synthetic provider fetch. A successful logout reply alone stays unconfirmed; actual synthetic session deletion removes encrypted ownership and denies the old signed token. Lost-save cleanup quarantine survives database restart. Both local account and reset-screen reviews are accepted. OAuth transport, provider-verified recovery, real configuration, HTTPS/browser/device acceptance and Phase 1/hosted gates remain open. No real account routes, emails, credentials or paid calls were activated.
+Task 2c local account preparation is active. All 451 foundation tests across 58 files, type checking and build pass. Password and OAuth HTTP exchange now compose with verified identity and actual isolated PostgreSQL encrypted refresh ownership using synthetic provider responses. Both Google and Apple callbacks are browser-bound and one-use. Lost-save/refused-cleanup ownership stays blocked across database restart. Sign-out still requires independent primary-session absence. Both local account/reset reviews are accepted. Real provider configuration, recovery-purpose verification, HTTPS/device acceptance and Phase 1/hosted gates remain open. No real sign-in, account route, credentials or paid calls were activated.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2004,3 +2004,9 @@ Prepared PKCE code exchange through the existing bounded Supabase HTTP transport
 Next action: compose OAuth code exchange with the actual isolated PostgreSQL refresh-ownership store and confirm failed adoption and callback replay cannot issue access. Then update the private Memory publication, currently at 443 tests.
 
 Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (_exchangeCodeForSession). The reviewed upstream source is not a pinned installed SDK or evidence of live compatibility.
+
+## OAuth database composition verified
+
+The disposable PostgreSQL rehearsal passes with the prepared OAuth HTTP transport, generated signed identities and actual encrypted refresh ownership. Google and Apple each adopt generation one, reject callback replay, and clean up the staged ownership. A lost adoption acknowledgment combined with refused synthetic logout blocks access and keeps the ownership unclaimable after an actual database restart. All provider/network responses are synthetic. No hosted database changes or real provider calls occurred; this does not complete Task 2c. The earlier 451-test suite, type checking and build passed.
+
+Exact next implementation action: prepare provider-verified recovery authorization, without treating an ordinary account JWT as recovery proof. Private Memory publication follows this checkpoint.

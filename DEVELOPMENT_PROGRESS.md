@@ -2,9 +2,9 @@
 
 ## Current private Memory publication
 
-Private Memory updated successfully on 11 October 2026 (America/Cayman) with the 443-test checkpoint, password HTTP/database composition, durable sign-out evidence and remaining activation gates. All 16 website checks and artifact validation passed. Owner-only access and MCP preserved. Source 2fe7abc3b4cc4d29612b808dbf200edfb3e1468b; deployment appgdep_6acc6333ed80819188082b135948adb5; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_4e0b0a1438f4819189007362056de737. Task 2c and phase gates remain open.
+Private Memory publication succeeded with the 451-test checkpoint and OAuth/database composition evidence. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 63d0055a2820559712e21bac67cd6dd7f68732ce; deployment appgdep_6acc65e135d88191a4c24b19e5e79f99; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_00f8bd69b7c481919927db12e4b81b2a. Task 2c stays open.
 
-Exact next action: compose the prepared OAuth code exchange with actual isolated PostgreSQL refresh ownership, then publish the newer private Memory checkpoint. No real provider setup, credentials or paid calls are authorized by this update.
+Exact next action: prepare provider-verified recovery authorization with synthetic tests. An ordinary account JWT is not recovery proof; no live settings or account routes are authorized.
 
 ## Previous publication checkpoint (historical)
 
@@ -26,7 +26,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 443 foundation tests across 56 files, type checking and build pass. Password HTTP operations, verified initial adoption, encrypted refresh ownership, scoped sign-out and independent primary-session absence checks are prepared and composed against isolated PostgreSQL with generated identities and synthetic provider fetch. A successful logout reply alone stays unconfirmed; actual synthetic session deletion removes encrypted ownership and denies the old signed token. Lost-save cleanup quarantine survives database restart. Both local account and reset-screen reviews are accepted. OAuth transport, provider-verified recovery, real configuration, HTTPS/browser/device acceptance and Phase 1/hosted gates remain open. No real account routes, emails, credentials or paid calls were activated.
+Task 2c local account preparation is active. All 451 foundation tests across 58 files, type checking and build pass. Password and OAuth HTTP exchange now compose with verified identity and actual isolated PostgreSQL encrypted refresh ownership using synthetic provider responses. Both Google and Apple callbacks are browser-bound and one-use. Lost-save/refused-cleanup ownership stays blocked across database restart. Sign-out still requires independent primary-session absence. Both local account/reset reviews are accepted. Real provider configuration, recovery-purpose verification, HTTPS/device acceptance and Phase 1/hosted gates remain open. No real sign-in, account route, credentials or paid calls were activated.
 
 ## Completed evidence
 
@@ -1559,3 +1559,9 @@ Prepared PKCE code exchange through the existing bounded Supabase HTTP transport
 Next action: compose OAuth code exchange with the actual isolated PostgreSQL refresh-ownership store and confirm failed adoption and callback replay cannot issue access. Then update the private Memory publication, currently at 443 tests.
 
 Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (_exchangeCodeForSession). The reviewed upstream source is not a pinned installed SDK or evidence of live compatibility.
+
+## OAuth database composition verified
+
+The disposable PostgreSQL rehearsal passes with the prepared OAuth HTTP transport, generated signed identities and actual encrypted refresh ownership. Google and Apple each adopt generation one, reject callback replay, and clean up the staged ownership. A lost adoption acknowledgment combined with refused synthetic logout blocks access and keeps the ownership unclaimable after an actual database restart. All provider/network responses are synthetic. No hosted database changes or real provider calls occurred; this does not complete Task 2c. The earlier 451-test suite, type checking and build passed.
+
+Exact next implementation action: prepare provider-verified recovery authorization, without treating an ordinary account JWT as recovery proof. Private Memory publication follows this checkpoint.
