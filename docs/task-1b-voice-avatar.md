@@ -527,3 +527,14 @@ Added RecoverySpokenService outside HTTP routes. It reserves the approved pair o
 Four new simulated lifecycle tests cover confirmed restoration, one replacement only, closure refusal, stale/expired requests and delayed-reservation cancellation. Browser renderer disposal must still gate replacement; no HTTP route or live browser uses this service yet. No hosted allowance, room, provider call or deployment changed. Next: add the private browser recovery controls and route bounds, integrate actual renderer teardown, then review and verify before hosted activation and user-started trial.
 
 Validation: 1,292 prototype tests across 86 files, type checking and build pass. Log: /private/tmp/ai-stylist-recovery-service-final.log. No hosted mutation or paid call.
+
+
+## Private recovery routes and browser preparation, 12 October 2026
+
+Added a separate recovery.html entry using the shared spoken UI, recovery API prefix and explicit --recovery server mode. Routes remain disabled by default, use the existing private owner/origin/body bounds, reject fabricated renderer booleans and expose only a sanitized allowance summary. Recovery mode cannot be combined with ordinary spoken/scripted modes. Shutdown stops its service.
+
+The browser stops capture and old chunk sending, invalidates media callbacks, detaches media and verifies Daily destruction with an eight-second deadline before requesting replacement. Hidden tab, End, loss of server identity and cleanup failure retain end behavior. The correction spoken during interruption is deliberately discarded and must be repeated after replacement. Confirmed first-reply context alone is restored. Full proposed instructions and the two-room $4 bound appear before Start. Existing handsfree and spoken paths retain their original behavior.
+
+Three new simulated route tests cover default denial, owner/origin/body/action bounds and sanitized failures. The first full run caught an accidental return in the confirmed-history restoration loop; it was fixed before publication. Browser rendering, actual media teardown and physical acceptance are not established by these tests. No hosted migration or Render deployment occurred and no paid call started. Next: complete a simulated browser rehearsal and code review, fix findings, then apply/verify the approved hosted allowance and deploy the reviewed private test. Sabine starts only after receiving final complete instructions.
+
+Validation: 1,295 prototype tests across 87 files, type checking and build pass. Log: /private/tmp/ai-stylist-recovery-browser-final.log.

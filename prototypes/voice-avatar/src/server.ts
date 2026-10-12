@@ -7,6 +7,7 @@ import { dirname, extname, resolve, sep } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { loadEnvFile } from 'node:process';
 import { ScriptedService } from './scripted-service.ts';
+import { RecoverySpokenService } from './recovery-spoken-service.ts';
 import { SpokenService } from './spoken-service.ts';
 import { ExperimentBudget } from './experiment-budget.ts';
 import { SupabaseBudget } from './supabase-budget.ts';
@@ -37,7 +38,7 @@ export function boundedJson(req: IncomingMessage): Promise<Record<string, unknow
     req.on('data', data); req.on('end', end); req.on('error', failed); req.on('aborted', failed);
   });
 }
-export function createPrototypeServer(options: { scripted?: ScriptedService; spoken?: SpokenService; budget?: ExperimentBudget; preview?: PreviewConfig } = {}) {
+export function createPrototypeServer(options: { scripted?: ScriptedService; spoken?: SpokenService; recovery?: RecoverySpokenService; budget?: ExperimentBudget; preview?: PreviewConfig } = {}) {
   const publicAddress = options.preview ? validatePreview(options.preview) : null;
   const gate = options.preview ? new PreviewGate(options.preview) : null;
   const instanceId = randomUUID();
@@ -53,7 +54,7 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('X-Content-Type-Options', 'nosniff');
     res.setHeader('Referrer-Policy', 'no-referrer');
-    const spokenPage = req.url === '/spoken.html' || req.url === '/handsfree.html';
+    const spokenPage = req.url === '/spoken.html' || req.url === '/handsfree.html' || req.url === '/recovery.html';
     const scriptedPage = req.url === '/scripted.html' || spokenPage;
     const devicePage = req.url === '/devices.html';
     const notebookPage = new URL(req.url ?? '/', origin).pathname === '/notebook.html';
@@ -94,13 +95,24 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
       } catch { json(423, { error: 'Experiment budget requires review.' }); }
       return;
     }
-    if (path.startsWith('/api/spoken/')) {
+    if (path.startsWith('/api/spoken/') || path.startsWith('/api/recovery/')) {
+      const recovery = path.startsWith('/api/recovery/');
+      const prefix = recovery ? '/api/recovery/' : '/api/spoken/';
+      const service = recovery ? options.recovery : options.spoken;
       if (!owns) { json(403, { error: 'Open the local test page first.' }); return; }
-      if (!options.spoken) { json(423, { error: 'Spoken test mode is not enabled.' }); return; }
-      if (req.method === 'GET' && path === '/api/spoken/status') { options.spoken.heartbeat(); json(200, options.spoken.snapshot()); return; }
+      if (!service) { json(423, { error: 'Spoken test mode is not enabled.' }); return; }
+      if (recovery && req.method === 'GET' && path === prefix + 'allowance') {
+        if (!options.budget) { json(423, {error:'Recovery allowance unavailable.'}); return; }
+        try {
+          const ledger = await options.budget.read();
+          json(200, {available: Boolean(ledger.recoveryTrial) && ledger.runs.length === 9 && ledger.runs.every(run => run.closed), reservedCents:400, roomLimit:2});
+        } catch { json(423, {error:'Recovery allowance requires review.'}); }
+        return;
+      }
+      if (req.method === 'GET' && path === prefix + 'status') { service.heartbeat(); json(200, service.snapshot()); return; }
       if (req.method !== 'POST') { json(405, { error: 'Method not allowed.' }); return; }
       if (req.headers.origin !== origin) { json(403, { error: 'Open the local test page first.' }); return; }
-      if (!['/api/spoken/start','/api/spoken/connect','/api/spoken/turn','/api/spoken/confirm','/api/spoken/end'].includes(path)) { json(404, { error: 'Unknown test action.' }); return; }
+      if (!(recovery ? ['start','connect','turn','confirm','replace','end'] : ['start','connect','turn','confirm','end']).some(action => path === prefix + action)) { json(404, { error: 'Unknown test action.' }); return; }
       if (req.headers['content-type'] !== 'application/json') { json(415, { error: 'Expected JSON.' }); return; }
       let body: Record<string, unknown>;
       try { body = await boundedJson(req); }
@@ -109,12 +121,13 @@ export function createPrototypeServer(options: { scripted?: ScriptedService; spo
       if (Object.keys(body).length !== allowed.length || Object.keys(body).some(key => !allowed.includes(key)) || allowed.some(key => typeof body[key] !== 'string')) { json(400, { error: 'Unexpected spoken-test fields.' }); return; }
       const sessionId = body.sessionId as string;
       try {
-        if (path.endsWith('/start')) await options.spoken.start(sessionId);
-        else if (path.endsWith('/connect')) { json(200, options.spoken.connect(sessionId)); return; }
-        else if (path.endsWith('/turn')) { json(200, await options.spoken.turn(body.audio as string, sessionId)); return; }
-        else if (path.endsWith('/confirm')) { json(200, options.spoken.confirmHeard(body.id as string, sessionId)); return; }
-        else await options.spoken.end(sessionId);
-        json(200, options.spoken.snapshot());
+        if (path.endsWith('/start')) await service.start(sessionId);
+        else if (path.endsWith('/connect')) { json(200, service.connect(sessionId)); return; }
+        else if (path.endsWith('/turn')) { json(200, await service.turn(body.audio as string, sessionId)); return; }
+        else if (path.endsWith('/confirm')) { json(200, service.confirmHeard(body.id as string, sessionId)); return; }
+        else if (recovery && path.endsWith('/replace')) await options.recovery!.replace(sessionId);
+        else await service.end(sessionId);
+        json(200, service.snapshot());
       } catch { json(409, { error: 'Spoken test is unavailable or stopped. Check the connection and usage record.' }); }
       return;
     }
@@ -178,21 +191,26 @@ if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.ur
   if (preview) validatePreview(preview);
   let scripted: ScriptedService | undefined;
   let spoken: SpokenService | undefined;
+  let recovery: RecoverySpokenService | undefined;
   let budget: ExperimentBudget | undefined;
-  if (process.argv.includes('--scripted') || process.argv.includes('--spoken')) {
+  if (process.argv.includes('--scripted') || process.argv.includes('--spoken') || process.argv.includes('--recovery')) {
 
     const openai = process.env.OPENAI_API_KEY, tavus = process.env.TAVUS_API_KEY;
     if (!openai || !tavus) throw new Error('Private provider keys are missing.');
     budget = remotePreview ? new SupabaseBudget(process.env.SUPABASE_URL || '', process.env.SUPABASE_SECRET_KEY || '') : new ExperimentBudget(resolve(prototypeRoot, '.experiment-usage.json'));
     if (remotePreview) await budget.read();
     if (process.argv.includes('--scripted')) scripted = new ScriptedService({ openai, tavus }, budget);
+    if (process.argv.includes('--recovery')) {
+      if (process.argv.includes('--spoken') || process.argv.includes('--scripted')) throw new Error('Recovery requires a dedicated server mode.');
+      recovery = new RecoverySpokenService({ openai, tavus }, budget);
+    }
     if (process.argv.includes('--spoken')) spoken = new SpokenService({ openai, tavus }, budget);
   }
-  const server = createPrototypeServer({ scripted, spoken, budget, preview });
+  const server = createPrototypeServer({ scripted, spoken, recovery, budget, preview });
   const port = remotePreview ? Number(process.env.PORT || '10000') : 4318;
   if (!Number.isInteger(port) || port < 1 || port > 65535) throw new Error('Invalid preview port.');
   server.listen(port, remotePreview ? '0.0.0.0' : '127.0.0.1', () => console.log(preview ? `Private phone preview: ${validatePreview(preview).origin}/spoken.html` : spoken ? 'Private spoken test: http://127.0.0.1:4318/spoken.html' : scripted ? 'Private scripted test: http://127.0.0.1:4318/scripted.html' : 'Private simulation: http://127.0.0.1:4318'));
   for (const signal of ['SIGINT', 'SIGTERM'] as const) process.on(signal, () => {
-    void (async () => { await Promise.allSettled([scripted?.stop(), spoken?.stop()]); server.close(() => process.exit(0)); })();
+    void (async () => { await Promise.allSettled([scripted?.stop(), spoken?.stop(), recovery?.stop()]); server.close(() => process.exit(0)); })();
   });
 }

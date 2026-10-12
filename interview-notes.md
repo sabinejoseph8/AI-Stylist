@@ -1356,3 +1356,6 @@ I tested the recovery experiment's spending rules in an isolated database before
 
 
 I separated the interruption experiment from the original end-only voice test. The new service copies only replies explicitly confirmed as heard, ends the old room, and refuses the replacement unless closure is verified. Simulated tests cover that lifecycle, but real phone playback remains a separate acceptance step.
+
+
+I added a separate private recovery page rather than changing the original stop-only test. Its browser must verify local video-client destruction before asking for a replacement, and its server still requires verified old-room closure. The automated suite caught an early return that prevented replacement after restoring history; I fixed it before publishing. A real device test is still needed.

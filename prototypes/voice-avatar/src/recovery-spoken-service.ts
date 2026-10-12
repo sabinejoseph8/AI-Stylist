@@ -22,7 +22,7 @@ export class RecoverySpokenService {
     this.budget=budget;this.key=keys.openai;
     this.room=new ScriptedService(keys,budget,true,()=>{this.abort.abort();this.context.clear();});
   }
-  snapshot() { return {...this.room.snapshot(),phase:this.phase,turns:this.turns,awaitingConfirmation:this.context.awaitingConfirmation(),generating:this.busy}; }
+  snapshot() { return {...this.room.snapshot(),phase:this.phase,turns:this.turns,awaitingConfirmation:this.context.awaitingConfirmation(),generating:this.busy,turnLimit:3}; }
   heartbeat() { this.room.heartbeat(); }
   private check(id:string) { if (!id || id!==this.sessionId) throw new Error('Stale recovery test.'); }
   async start(id:string) {
@@ -45,7 +45,7 @@ export class RecoverySpokenService {
     } catch {if(generation===this.generation)await this.end(id);throw new Error('Recovery reply canceled.');}
     finally {this.busy=false;}
   }
-  confirmHeard(replyId:string,id:string) {this.check(id);if(this.abort.signal.aborted||this.room.snapshot().state!=='connected'||!['initial','replacement'].includes(this.phase))throw new Error('Stale confirmation.');this.context.confirm(replyId);}
+  confirmHeard(replyId:string,id:string) {this.check(id);if(this.abort.signal.aborted||this.room.snapshot().state!=='connected'||!['initial','replacement'].includes(this.phase))throw new Error('Stale confirmation.');this.context.confirm(replyId);return this.snapshot();}
   async replace(id:string) {
     this.check(id);
     if(this.phase!=='initial'||!this.pair||this.busy||!this.context.awaitingConfirmation()||this.room.snapshot().state!=='connected'||this.room.snapshot().remainingSeconds<=0||this.turns<1)throw new Error('Replacement unavailable.');
@@ -58,5 +58,6 @@ export class RecoverySpokenService {
     if(this.phase!=='replacing'||this.room.snapshot().state!=='ready'){await this.room.stop();this.context.clear();this.phase='held';throw new Error('Replacement stopped.');}
     this.phase='replacement';
   }
-  async end(id:string) {this.check(id);this.phase='ended';this.generation++;this.abort.abort();this.context.clear();await this.room.stop();if(this.room.snapshot().state==='held')this.phase='held';}
+  async end(id:string) {this.check(id);await this.stop();}
+  async stop() {this.phase='ended';this.generation++;this.abort.abort();this.context.clear();await this.room.stop();if(this.room.snapshot().state==='held')this.phase='held';}
 }
