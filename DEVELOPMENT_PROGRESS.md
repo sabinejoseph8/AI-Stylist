@@ -1423,3 +1423,10 @@ The full isolated SQL/composition rehearsal and all 417 foundation tests across 
 Remaining requirements: real independent revocation authority, operational authorization and durable scan cursor scheduling still need evidence before activation. Candidate discovery includes legitimate ready records, so the scanner cannot infer that they should be revoked. Simultaneous database/provider failure remains unconfirmed rather than automatically reset.
 
 Exact next action: consolidate private Memory with the 417-test and complete scan/database evidence, then implement an independent, error-distinguishing server-side revocation authority contract using verified provider/session semantics. Keep hosted configuration, real credentials and phase gates closed until separately authorized. Task 2c remains incomplete.
+
+
+## Private Memory 417-test publication, 11 October 2026
+
+Published verified discovery/reconciliation/scan preparation and actual isolated database restart evidence, with incomplete real-authority/scheduling/activation gates retained. All 16 site checks and artifact validation pass. Owner-only access was verified and native deployment succeeded with MCP enabled. Source ddb7906fb90c5af49bd7fd606c51eaca9873c415; deployment appgdep_6acc5ae5608c81919b138f12354cbc1b; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_d7c04d1c51a481919044eaa7d19682a5. URL: https://ai-stylist-project-memory.idealgnat256.chatgpt.site . No incomplete task was marked complete.
+
+Exact next action: prepare an error-distinguishing, service-only authoritative session-presence lookup for reconciliation. Separate an absent session row from an active session, owner mismatch, malformed reply and lookup failure; validate the documented provider semantics and actual isolated SQL composition before any hosted use. Do not equate current-session authorization false with revocation proof. Task 2c, real provider and phase gates remain open.
