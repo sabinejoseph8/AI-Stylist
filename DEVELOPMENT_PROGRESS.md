@@ -820,3 +820,6 @@ Prepared a disconnected jose 6.2.12 verifier with exact Supabase issuer/audience
 
 
 Exact next action: publish/copy this identity checkpoint and refresh Memory. Next prepare the protected local auth.sessions owner/session lookup and SQL-backed verifier rehearsal; then bounded fixed-project JWKS transport and the request/cookie/callback boundary. Verify actual Supabase schema before hosted activation, and preserve no-real-sign-in/no-hosted-change limits.
+
+
+Identity checkpoint 79b060d is published and copied. Private Memory source 5ee28c00f9cade43bf2a533af0d4e93f5355f94f deployed successfully as appgdep_6acc3509582081919814c6cd47d046f6; all 16 website checks pass and MCP is retained. The next implementation remains the protected local current-session lookup and SQL-backed verifier checks.

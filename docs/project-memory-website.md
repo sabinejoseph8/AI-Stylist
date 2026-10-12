@@ -62,3 +62,6 @@ Audit and local Task 2c approval checkpoint a488a4a is published and copied. Pri
 
 
 Account-controller checkpoint 27aad35 is published and copied. Private Memory source f0094284ab004626c1d7e0e55ff15686172d3cd6 deployed successfully as appgdep_6acc33bbcd3881919f084176bec986ca, with MCP retained. All 16 website checks and artifact validation pass. Next: server verified-identity/session contract and simulated checks; real sign-in remains gated.
+
+
+Identity checkpoint 79b060d is published and copied. Private Memory source 5ee28c00f9cade43bf2a533af0d4e93f5355f94f deployed successfully as appgdep_6acc3509582081919814c6cd47d046f6; all 16 website checks pass and MCP is retained. The next implementation remains the protected local current-session lookup and SQL-backed verifier checks.
