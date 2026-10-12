@@ -4,7 +4,7 @@
 
 623 foundation tests across 94 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
-Private Memory synchronization succeeded from 7dae8f45d0af96e08dc0d98df8d534a5251e356e with MCP preserved. Sabine approved automatic identity linking and sent the Render inquiry. Exact next action: review its reply and verify ingress/logging before configuring account email URLs. Read-only Supabase inspection confirms Google/Apple disabled, email confirmation on and provider session time-box unset; no settings changed. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the 623-test checkpoint, approved automatic linking, and user-confirmed Render inquiry submission. Earlier publication records below are historical.
+Private Memory synchronization succeeded from 28c383971e40af0e322567d67234678ad6534b50 with MCP preserved. Sabine approved automatic identity linking and sent the Render inquiry. Exact next action: review its reply and verify ingress/logging before configuring account email URLs. Read-only Supabase inspection confirms Google/Apple disabled, email confirmation on and provider session time-box unset; no settings changed. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the 623-test checkpoint, approved automatic linking, and user-confirmed Render inquiry submission. Earlier publication records below are historical.
 
 ## Previous publication checkpoint (historical)
 
@@ -2299,3 +2299,10 @@ Goal remains incomplete and is being marked blocked after the repeated-blocker a
 Sabine explicitly decided to delay purchasing a domain until ready to launch publicly. Do not keep requesting a domain name or purchase during prototype development. A Render-provided website address can be used subject to the existing ingress/logging and deployment checks; no custom domain is required for the website prototype. The planned verified production email sender remains a pre-launch dependency. This decision does not approve another sender, paid service, new account credentials or weaker email/security acceptance. Any private email testing must use a separately verified permitted sender path.
 
 Next action: review Render's reply when supplied and continue other authorized readiness work when its existing dependencies are satisfied. Google/Apple credentials, live account/provider isolation and phase acceptance remain open. No domain was bought and no spending limit changed.
+
+
+## Private Memory domain and hosted-readiness publication, 12 October 2026
+
+Verified successful private publication: source 28c383971e40af0e322567d67234678ad6534b50; deployment appgdep_6acd1a6d6ca881918ebaf4d4dc619886; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_387b613aa9bc8191ba626f89733a476f. MCP enabled; owner-only audience preserved, one allowed user and no groups. All 16 site tests, build and artifact validation pass. Includes domain purchase deferred until launch, hosted Auth metadata inspection and live public-key compatibility evidence. Task overrides unchanged.
+
+This goal turn made publication progress. Remaining implementation is still gated by Render's response, working customer ingress, sender/provider credentials and real acceptance; domain purchase is not an immediate request. No background provider job or paid test is running. Next: review supplied external evidence and continue within existing account setup approvals; preserve later-phase dependencies.
