@@ -989,3 +989,8 @@ I added a private count of records that depend on each encryption key. I include
 ## Handling incomplete sign-in responses
 
 I prepared the password-provider connection without enabling real sign-ins. I separated registration confirmation from authenticated sessions and kept cleanup possible when replies arrived late or contained incomplete session data. When saving might have partly succeeded, I kept the result unresolved rather than reporting successful cleanup.
+
+
+## Saving an initial sign-in safely
+
+I connected initial sign-in preparation to encrypted session ownership. I required verified identity before saving and prevented uncertain save acknowledgments from becoming permission to delete another session record. I tested the local lifecycle and kept real activation separate from these simulated checks.
