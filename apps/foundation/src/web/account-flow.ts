@@ -3,7 +3,7 @@ export type AccountRequest=
  |{method:'signIn'|'signUp';email:string;password:string}
  |{method:'recover';email:string}
  |{method:'social';provider:'google'|'apple'};
-export type AccountReply={status:'signedIn';userId?:string}|{status:'confirmationRequired'|'redirecting'|'canceled'};
+export type AccountReply={status:'signedIn';userId?:string}|{status:'confirmationRequired'|'redirecting'|'canceled'|'recoveryRequested'};
 export interface AccountProvider{
  submit(request:AccountRequest,signal:AbortSignal):Promise<AccountReply>;
  signOut(signal:AbortSignal):Promise<void>;

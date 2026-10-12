@@ -865,3 +865,8 @@ I prepared recovery requests to return the same visible acknowledgment for an ab
 ## Aligning browser and server account replies
 
 I found that the local controller required a user ID while the prepared HTTP reply intentionally exposed only sign-in status. I aligned the browser presentation contract without inventing an account identity or granting server access. All 333 foundation tests pass, with type checking and build. The private Memory site now includes the preceding account-request checkpoint and remains owner-only.
+
+
+## Preparing the browser account connection safely
+
+I prepared a disabled browser transport using fixed same-origin paths and cookies, with strict response limits and generic errors. I tested redirected responses, stalled bodies and canceled fetches without connecting a real provider. The preview still uses sample behavior, and browser account state never grants server access. All 341 foundation tests pass, with type checking and build. Real cookie behavior and session adoption remain open.
