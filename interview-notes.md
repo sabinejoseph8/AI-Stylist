@@ -1229,3 +1229,7 @@ I connected Supabase account adapters, signed identity checks, encrypted session
 ## Proving session adoption before delivery
 
 I tested the assembled account host with a generated signed identity. The app checked the current session and stored the refresh secret in an encrypted envelope before sending the browser cookie. I verified that browser JSON and database requests did not expose the refresh secret. The full suite reached 560 passing tests. This remains simulated-service evidence; hosted customer acceptance is still open.
+
+## Testing the complete account lifecycle against a database
+
+I extended the isolated database rehearsal to use the assembled account host through actual local HTTP. Signed login stored encrypted session ownership, refresh advanced its generation, and scoped sign-out removed the session and refused the old cookie. I used synthetic provider responses and removed the disposable database afterward. This gave stronger integration evidence while keeping real customer acceptance separate. All 560 foundation tests also passed.

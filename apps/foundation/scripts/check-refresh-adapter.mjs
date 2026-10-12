@@ -1,3 +1,5 @@
+import {createSupabaseAccountHost} from '../src/server/supabase-account-host.ts';
+import {createServer,request as nodeRequest} from 'node:http';
 // Test-only composition. Receives a disposable container name, never a credential.
 import assert from 'node:assert/strict';
 import {createAccountComposition} from '../src/server/account-composition.ts';
@@ -51,6 +53,7 @@ function execute(args,input=''){
  });
 }
 const signatures={
+ stylist_consume_account_admission:[],
  stylist_refresh_key_usage:[['p_key_id','text']],
  stylist_list_refresh_candidates:[['p_after','uuid'],['p_limit','integer']],
  stylist_auth_session_presence:[['p_owner','uuid'],['p_session','uuid']],
@@ -433,3 +436,46 @@ try{assert.deepEqual(await Promise.race([lateConfirmed,new Promise((_,reject)=>{
 await new Promise(resolve=>setTimeout(resolve,0));assert.equal(lateRecovery.cleanupHeld(),false);assert.equal(lateUpdates,0);
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});
 console.log('Late canceled recovery PostgreSQL composition passed: independent cleanup identity verification, actual primary session deletion, no reset permission/update and no unnecessary cleanup hold.');
+
+// Complete concrete host: actual HTTP, PostgreSQL and crypto, with synthetic Auth transport.
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`insert into auth.sessions values('${session}','${owner}',null);`);
+let fullRefreshes=0,fullLogouts=0;
+const fullFetch=async(url,init)=>{
+ const target=new URL(url),body=init.body?JSON.parse(init.body):{};
+ assert.equal(target.origin,project);assert.equal(init.redirect,'error');
+ if(target.pathname==='/auth/v1/.well-known/jwks.json')return Response.json({keys:[jwk]});
+ if(target.pathname.startsWith('/rest/v1/rpc/')){
+  const name=target.pathname.split('/').at(-1);
+  // This focused fixture has no media receipts. Maintenance acceptance is synthetic here.
+  if(name==='stylist_expire_media_receipts')return Response.json(0);
+  return Response.json(await rpc.call(name,body,init.signal));
+ }
+ if(target.pathname==='/auth/v1/token'){
+  if(target.searchParams.get('grant_type')==='refresh_token'){fullRefreshes++;assert.equal(body.refresh_token,'full-host-initial');return Response.json({access_token:await token(),refresh_token:'full-host-rotated',token_type:'bearer'});}
+  assert.equal(target.searchParams.get('grant_type'),'password');return Response.json({access_token:await token(),refresh_token:'full-host-initial',token_type:'bearer'});
+ }
+ if(target.pathname==='/auth/v1/logout'){
+  assert.equal(target.searchParams.get('scope'),'local');fullLogouts++;
+  await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id='${session}';`);return new Response(null,{status:204});
+ }
+ throw Error('Unexpected complete host transport');
+};
+const fullHost=createSupabaseAccountHost({appOrigin:origin,projectUrl:project,serviceKey:'synthetic-full-host-key',fetch:fullFetch,refreshKeyring:keyring,activeRefreshKeyId:'fixture',initialExpiry:()=>Date.now()+600000,rotatedExpiry:()=>Date.now()+600000});
+const server=createServer(fullHost.handle);await new Promise(resolve=>server.listen(0,'127.0.0.1',resolve));
+const post=(path,body,cookie='')=>new Promise((resolve,reject)=>{
+ const req=nodeRequest({host:'127.0.0.1',port:server.address().port,path,method:'POST',headers:{host:new URL(origin).host,origin,'content-type':'application/json',cookie}},res=>{let text='';res.on('data',chunk=>text+=chunk);res.on('end',()=>resolve({status:res.statusCode,body:JSON.parse(text),cookies:res.headers['set-cookie']??[]}));});req.on('error',reject);req.end(JSON.stringify(body));
+});
+try{
+ assert.equal(await fullHost.start(),true);
+ const signed=await post('/api/account/password',{method:'signIn',email:'sample@example.test',password:'synthetic-password'});assert.equal(signed.status,200);assert.deepEqual(signed.body,{status:'signedIn'});
+ const cookie=signed.cookies.find(c=>c.startsWith('__Host-stylist_access=')).split(';')[0];
+ const initial=await store.inspect(owner,session,signal());assert.equal(initial.status,'found');assert.equal(initial.scope.generation,1);assert.equal(initial.state,'ready');
+ const rotated=await post('/api/account/refresh',{},cookie);assert.equal(rotated.status,200);assert.equal(fullRefreshes,1);
+ const after=await store.inspect(owner,session,signal());assert.equal(after.status,'found');assert.equal(after.scope.generation,2);assert.equal(after.state,'ready');
+ const row=await rpc.call('stylist_inspect_refresh',{p_owner:owner,p_session:session},signal());assert.equal(codec.open(row.envelope,after.scope),'full-host-rotated');assert.doesNotMatch(JSON.stringify(row),/full-host-initial|full-host-rotated/);
+ const nextCookie=rotated.cookies.find(c=>c.startsWith('__Host-stylist_access=')).split(';')[0];
+ const out=await post('/api/account/sign-out',{},nextCookie);assert.equal(out.status,200);assert.deepEqual(out.body,{status:'signedOut'});assert.equal(fullLogouts,1);assert.ok(out.cookies.some(c=>c.includes('Max-Age=0')));
+ assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+ assert.equal((await post('/api/account/refresh',{},nextCookie)).status,400);assert.equal(fullRefreshes,1);assert.equal(await fullHost.close(),true);
+}finally{await fullHost.close();await new Promise(resolve=>server.close(resolve));}
+console.log('Complete Supabase host HTTP/PostgreSQL composition passed: signed login, encrypted adoption, actual durable admission, generation-two rotation, scoped logout, primary absence, cascade and stale-cookie refusal. Auth and media-maintenance responses were synthetic.');
