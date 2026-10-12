@@ -930,3 +930,6 @@ I combined encrypted refresh storage, rotation and signed-session verification i
 
 
 I connected refresh ownership to verified request identity instead of browser-supplied account fields. The local database and HTTP-factory rehearsal confirm valid adoption, identity-input refusal and failed-delivery cleanup. All 392 foundation tests, type checking and build pass. Provider behavior is still simulated, and the customer account routes remain disabled.
+
+
+I tested the prepared refresh flow over a real local HTTP connection. The cookie arrives only after adoption; disconnecting during adoption triggers one revocation and guarded storage cleanup. All 394 foundation tests, type checking and build pass. I updated the activation checklist to show this local evidence clearly, while keeping real provider, hosted database and HTTPS acceptance separate.

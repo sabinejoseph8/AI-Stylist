@@ -11,9 +11,9 @@ The account preview uses sample adapters. Prepared password, recovery, sign-out 
 | Work | Required evidence |
 | --- | --- |
 | Reset screen review | Accepted: Sabine confirmed all seven steps worked/readable. Retain this result separately from the earlier eight-step account review |
-| Session adoption | Define the trusted adapter's ownership transfer, failed response delivery and cleanup contract before attaching a real provider; prove cancellation and partial adoption with simulated storage |
-| Refresh persistence | Choose a server-held representation bound to signed owner/session. Never put refresh material in browser JSON, logs, project memory or public Git. Prove rotation fencing, rollback/uncertainty holds and restart handling locally before hosted use |
-| Account route composition | Install only into an isolated test server with explicit simulated adapters first; verify actual HTTP origin, cookie and response-disconnect behavior. Current Request/Response tests are not that evidence |
+| Session adoption | Local evidence: shared adoption/discard lifecycle and actual loopback disconnect cleanup pass with simulated provider/storage. Real provider revocation evidence remains required |
+| Refresh persistence | Local evidence: AES-256-GCM encrypted ownership bound to owner/session/generation/expiry, service-only SQL fencing, uncertainty and database restart checks pass. Actual hosted schema, private key provisioning and provider rotation still need acceptance |
+| Account route composition | Local evidence: isolated loopback HTTP verifies password and stored-refresh delivery, origin/Host refusal and disconnect cleanup with synthetic adapters. Target HTTPS, proxy configuration and hosted providers remain unverified |
 | Regression review | Run the full foundation suite, type checking and build after composition; keep phase-wide review open until the actual phase scope is ready |
 
 ## Requires a hosted/account activation decision
