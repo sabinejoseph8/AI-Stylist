@@ -810,3 +810,8 @@ I completed the local account preview and confirmed every step worked and was re
 ## Distinguishing local sign-out from remote revocation
 
 I prepared sign-out to clear browser access immediately while keeping remote revocation status explicit. A failed or delayed provider response cannot be presented as confirmed sign-out. I bounded pending work so repeated attempts cannot accumulate unlimited stalled requests. I corrected a test that mixed fake-clock deadlines with asynchronous signature checks, then verified all 287 foundation tests, type checking and build. This remains local preparation; real provider revocation and hosted behavior still need acceptance.
+
+
+## Keeping password recovery separate from account access
+
+I designed recovery to grant temporary password-reset permission only. It never creates normal account access. I made each reset one-use before the provider call starts, so retries after a timeout cannot silently change the password twice. I require confirmation of both the change and cleanup before showing completion. I tested expiry, invalid proof, canceled work, busy admission and late results with simulated capabilities. All 295 foundation checks pass, with type checking and build. Real provider recovery and cross-device usability remain acceptance work.
