@@ -2067,3 +2067,8 @@ Reviewed Supabase's primary identity-linking documentation and prepared docs/acc
 Added a focused OAuth adapter regression with misleading user ID, email and identities metadata. Only accessToken and refreshSecret reach the verified session stager; ownership remains derived from signed identity/current session. All 623 tests across 94 files, type checking and build pass (/private/tmp/ai-stylist-identity-metadata-tests.log). This does not prove live provider linking or close P2-06.
 
 Next required actions: Sabine's linking-policy choice and authorization for the prepared Render support inquiry. Hosted origin/sender/social credentials and real provider/isolation/device checks remain open. Preserve later-phase dependencies and spending. Do not manufacture additional feature work past those boundaries or claim activation from adapter tests.
+
+
+## Current account decisions and external dependency, 12 October 2026
+
+Sabine approved Supabase automatic linking for matching verified Google/Apple emails; manual linking and app-driven merging remain disabled. Seven-day absolute app sessions and cross-device recovery are approved. Sabine confirmed sending the prepared Render support inquiry; its response remains pending. Earlier pending-policy and unsent statements above are historical. No provider has been enabled and no hosted account acceptance gate is complete. Next: review Render's contract, verify ingress/logging with synthetic checks, then establish exact hosted origin, production sender and provider credentials for real account/isolation acceptance. No extra spending is authorized.

@@ -28,7 +28,7 @@ Sabine approved recovery on a different device and a fixed seven days from sign-
 4. Verify exact application origin and callback allowlists. Reject wildcard or caller-selected redirects. Validate cookie behavior over HTTPS on the target browser.
 5. Configure email/password confirmation, recovery sender and approved templates. Verify sender/DNS, recovery delivery, bounce behavior, abuse limits and non-enumerating public replies with synthetic accounts.
 6. Obtain Google and Apple credentials through the account owner. Record credential owner, expiry and renewal procedure without recording secret values. Verify both successful and canceled callbacks.
-7. Inspect actual identity-linking defaults and test duplicate/unverified identities without merging customer records. Any customer-facing linking policy needs Sabine's business decision.
+7. Inspect actual identity-linking defaults and test duplicate/unverified identities without merging customer records. Sabine approved automatic linking for matching verified emails; manual linking and application-driven merging remain disabled. Verify actual provider behavior before activation.
 8. Verify the approved cross-device recovery flow with the actual sender/provider and receiving device. Local scanner-safe confirmation and reset-only authority are implemented; real email acceptance remains open.
 9. Verify real refresh rotation, exact session revocation, old-token denial, failed delivery cleanup, concurrent requests and server restart recovery. A closed browser or cleared cookie does not prove remote revocation.
 10. Complete the Phase 2 manual checks and phase review before checking Task 2c or Phase 2 complete. Keep spending/provider-attempt limits intact.
@@ -40,8 +40,8 @@ For each live check, record the deployed commit, environment, timestamp, synthet
 ## Pending customer decisions or actions
 
 - Sender service/domain and privately entered credentials when required; new charges require authorization.
-- Google and Apple account-owner credentials and any customer-facing identity-linking policy.
-- Authorization for the prepared Render support inquiry; its platform contract remains unverified.
+- Google and Apple account-owner credentials; automatic-linking policy is approved, with live security acceptance pending.
+- Render response to the inquiry Sabine confirmed sending; its platform contract remains unverified.
 - Physical-device and real customer acceptance steps when the hosted endpoint is ready.
 
 Hosted Tasks 2b/2c, cross-device recovery and the seven-day session lifetime are already approved. Do not request them again.
@@ -223,3 +223,8 @@ Reviewed Supabase's primary identity-linking documentation and prepared docs/acc
 Added a focused OAuth adapter regression with misleading user ID, email and identities metadata. Only accessToken and refreshSecret reach the verified session stager; ownership remains derived from signed identity/current session. All 623 tests across 94 files, type checking and build pass (/private/tmp/ai-stylist-identity-metadata-tests.log). This does not prove live provider linking or close P2-06.
 
 Next required actions: Sabine's linking-policy choice and authorization for the prepared Render support inquiry. Hosted origin/sender/social credentials and real provider/isolation/device checks remain open. Preserve later-phase dependencies and spending. Do not manufacture additional feature work past those boundaries or claim activation from adapter tests.
+
+
+## Current account decisions and external dependency, 12 October 2026
+
+Sabine approved Supabase automatic linking for matching verified Google/Apple emails; manual linking and app-driven merging remain disabled. Seven-day absolute app sessions and cross-device recovery are approved. Sabine confirmed sending the prepared Render support inquiry; its response remains pending. Earlier pending-policy and unsent statements above are historical. No provider has been enabled and no hosted account acceptance gate is complete. Next: review Render's contract, verify ingress/logging with synthetic checks, then establish exact hosted origin, production sender and provider credentials for real account/isolation acceptance. No extra spending is authorized.

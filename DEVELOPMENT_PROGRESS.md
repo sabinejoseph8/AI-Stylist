@@ -4,7 +4,7 @@
 
 623 foundation tests across 94 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
-Private Memory synchronization succeeded from 7dae8f45d0af96e08dc0d98df8d534a5251e356e with MCP preserved. Exact next action: obtain authorization for the prepared Render support inquiry and verify ingress/logging before configuring account email URLs. Read-only Supabase inspection confirms Google/Apple disabled, email confirmation on and provider session time-box unset; no settings changed. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the current 622-test runtime and transport checkpoint. Earlier publication records below are historical.
+Private Memory synchronization succeeded from 7dae8f45d0af96e08dc0d98df8d534a5251e356e with MCP preserved. Sabine approved automatic identity linking and sent the Render inquiry. Exact next action: review its reply and verify ingress/logging before configuring account email URLs. Read-only Supabase inspection confirms Google/Apple disabled, email confirmation on and provider session time-box unset; no settings changed. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the 623-test checkpoint, approved automatic linking, and user-confirmed Render inquiry submission. Earlier publication records below are historical.
 
 ## Previous publication checkpoint (historical)
 
@@ -2255,3 +2255,10 @@ Exact next action: Sabine grants Accessibility and Screen Recording to ChatGPT t
 Sabine confirmed she sent the prepared ingress-header and recovery/OAuth logging questions to support@render.com. This is user-reported submission, not an independently verified delivery receipt. Render's response is pending. Local Mail permissions no longer block submission. No platform guarantee, hosted activation, additional spending or task completion follows from sending the inquiry.
 
 Next action: review Render's reply when Sabine shares it, record the verified ingress/logging contract, and perform the required synthetic checks before real customer account activation. Existing origin, sender, social-provider credentials and live security/manual acceptance gates remain open.
+
+
+## Private Memory synchronized with approved account policy, 12 October 2026
+
+Deployment succeeded: source a49307bb8a3d05a7bc15b6767723d84de6554de1; deployment appgdep_6acd17d9ae4481919d58e71b645c95f5; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_dd3d6c93f7308191b13ec4f49e4f5fb8. MCP remains enabled; owner-private audience preserved with one allowed user and no groups. All 16 site tests, build and artifact validation passed. No task completion override changed.
+
+Reconciled current summary and activation checklist: policy approval and inquiry submission are resolved, while provider security acceptance and Render's reply remain pending. Previous goal turn made progress by recording the sent inquiry; this turn made progress by publishing current memory and correcting active handoff wording. No running provider test, extra spending or customer activation occurred. Exact next action remains review Render's reply and obtain the working origin, production sender and social-provider credentials for approved hosted account setup. Later-phase dependencies remain unchanged.
