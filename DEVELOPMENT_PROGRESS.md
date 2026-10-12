@@ -2379,3 +2379,12 @@ Fixed reentrant cleanup: the shared disposal promise is installed before calling
 Next action: prepare the distinct replacement lifecycle locally using the existing reservation limits and confirmed snapshots, with no callable paid endpoint. Keep actual activation and live acceptance blocked pending financial authorization. Private Memory currently reflects the preceding 1,284-test checkpoint, not this follow-up.
 
 Validation: 1,285 tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-reentry-final.log. No paid call or deployment.
+
+
+## Authorized-work boundary recheck after renderer fixes, 12 October 2026
+
+The previous turn made implementation progress (reentrant disposal fixed and verified). Rechecked the actual providers, ledger cap, backlog and phase dependencies. The current model path is stateless and already supplies confirmed history; ending the current spoken service intentionally clears it. The generic recovery helper is preparation only. Connecting it to paid room replacement would require a distinct lifecycle with reserved replacement capacity, continued deadlines and actual media/provider acceptance. No existing attempt or reserve authorizes that trial. Do not create more generic wrappers or count simulated acknowledgments as closing this gap.
+
+This is the first current check of the external activation boundary. No live process/deployment needs polling. Task 1b needs a newly approved live experiment allowance and remaining privacy/live-note acceptance. Hosted 2b/2c still require unresolved ingress/logging guarantees or an approved verified alternative, provider credentials, a permitted email test path and real customer isolation acceptance. Domain purchase remains deferred until launch. Later task groups remain gated. The private Memory website was published successfully at the prior checkpoint; no phase is complete.
+
+Exact next action: review new hosting evidence or existing setup credentials when supplied; otherwise prepare a concrete limited replacement-room trial proposal for Sabine's financial decision before any paid integration activation. No additional provider call, service deployment, purchase or email is authorized by this recheck.
