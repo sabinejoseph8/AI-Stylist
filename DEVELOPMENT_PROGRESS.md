@@ -2313,3 +2313,10 @@ This goal turn made publication progress. Remaining implementation is still gate
 Across the resumed publication turn and two subsequent dependency checks, the same external activation boundary remained unresolved. The publication completed successfully; no deployment, test or provider job remains active. Rechecked the current plan, Render inquiry and repository. Only pre-existing AGENTS.md edits remain dirty. No independent authorized implementation can bypass the pending ingress/logging response, working customer origin, sender/provider credentials or real acceptance. Later phases retain their predecessor dependencies; paid voice attempts remain exhausted. Domain purchase is explicitly deferred until launch and is not an immediate human action.
 
 Mark the incomplete goal blocked after this fresh three-turn audit. Exact resume action: Sabine shares Render's technical reply or supplies input/credentials for another existing account setup gate. Review evidence before activating routes or changing configuration. Preserve approved automatic linking, seven-day absolute sessions, cross-device recovery, public-repository safety and all spending limits. Do not send follow-ups, buy a domain or enable paid testing without applicable authorization. All completed implementation and the private Memory checkpoint are published.
+
+
+## Hosting clarification status, 12 October 2026
+
+The hosting inquiry has received a partial answer. Customer account activation still requires confirmation of trusted proxy-header handling and protection of sensitive callback query values in upstream logs. Published platform log-retention periods do not establish query redaction. Next: obtain engineering clarification or review a design that avoids relying on these unknowns. No account route, provider setting, spending limit or domain-purchase timing changed.
+
+Sabine authorized publishing this short sanitized summary. Support email text and account/credential details are excluded.

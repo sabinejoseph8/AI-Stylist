@@ -1926,3 +1926,10 @@ This resolves the linking-policy decision only. Hosted Google/Apple providers re
 Sabine explicitly decided to delay purchasing a domain until ready to launch publicly. Do not keep requesting a domain name or purchase during prototype development. A Render-provided website address can be used subject to the existing ingress/logging and deployment checks; no custom domain is required for the website prototype. The planned verified production email sender remains a pre-launch dependency. This decision does not approve another sender, paid service, new account credentials or weaker email/security acceptance. Any private email testing must use a separately verified permitted sender path.
 
 Next action: review Render's reply when supplied and continue other authorized readiness work when its existing dependencies are satisfied. Google/Apple credentials, live account/provider isolation and phase acceptance remain open. No domain was bought and no spending limit changed.
+
+
+## Hosting clarification status, 12 October 2026
+
+The hosting inquiry has received a partial answer. Customer account activation still requires confirmation of trusted proxy-header handling and protection of sensitive callback query values in upstream logs. Published platform log-retention periods do not establish query redaction. Next: obtain engineering clarification or review a design that avoids relying on these unknowns. No account route, provider setting, spending limit or domain-purchase timing changed.
+
+Sabine authorized publishing this short sanitized summary. Support email text and account/credential details are excluded.
