@@ -1,4 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
+import {createAccountAdmission} from '../src/server/account-admission.ts';
 import {createAccountComposition} from '../src/server/account-composition.ts';
 import {createAccountCallbacks} from '../src/server/account-callback.ts';
 import type {createAccountSecurity} from '../src/server/account-security.ts';
@@ -63,6 +64,21 @@ describe('explicit dormant account composition',()=>{
   vi.useFakeTimers();
   try{vi.setSystemTime(Date.now()+60001);expect(await app.expireRecovery()).toBe(true);expect(discard).toHaveBeenCalledTimes(1);expect(await app.expireRecovery()).toBe(true);expect(discard).toHaveBeenCalledTimes(1);}
   finally{vi.useRealTimers();await app.close();}
+ });
+
+ it('limits factory requests before provider calls without consuming a rejected OAuth callback',async()=>{
+  const {app,ports,security}=setup();let now=1000;
+  const routes=createAccountAdmission(app.routes(),{limit:1,windowMs:1000},()=>now).routes();
+  await routes.get('/api/account/password')!.handle(passwordRequest(),signal());
+  expect(ports.password.password).toHaveBeenCalledTimes(1);
+  const flow=security.callbacks.begin('google');
+  const callback=new Request(flow.callbackUrl+'&code=synthetic',{headers:{cookie:flow.cookie.split(';')[0]!}});
+  expect((await routes.get('/auth/callback/google')!.handle(callback,signal())).status).toBe(429);
+  const recovery=new Request(origin+'/api/account/recover',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({email:'sample@example.test'})});
+  expect((await routes.get('/api/account/recover')!.handle(recovery,signal())).status).toBe(429);
+  expect(ports.exchange.exchange).not.toHaveBeenCalled();expect(ports.recoveryRequest.request).not.toHaveBeenCalled();
+  now=2000;await routes.get('/auth/callback/google')!.handle(callback,signal());
+  expect(ports.exchange.exchange).toHaveBeenCalledTimes(1);await app.close();
  });
 
 });

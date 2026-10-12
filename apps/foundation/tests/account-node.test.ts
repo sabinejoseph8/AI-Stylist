@@ -1,3 +1,5 @@
+import {createAccountComposition} from '../src/server/account-composition.ts';
+import {createAccountAdmission} from '../src/server/account-admission.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {createPasswordAccounts} from '../src/server/password-account.ts';
@@ -98,4 +100,18 @@ it('cleans late adopted state after a real HTTP disconnect during sign-in',async
   await new Promise(resolve=>setTimeout(resolve,20));expect(discard).not.toHaveBeenCalled();release(true);
   await vi.waitFor(()=>expect(discard).toHaveBeenCalledTimes(1));expect(storage.size).toBe(0);expect(adopt).toHaveBeenCalledTimes(1);
  }finally{release?.(false);await h.close();}
+});
+
+
+it('delivers guarded factory password cookies over loopback without exposing tokens',async()=>{
+ const {security,token}=await identityFixture();const password=vi.fn(async()=>({accessToken:token,discard:vi.fn(async()=>true)}));
+ const unexpected=async()=>{throw Error('Unexpected provider operation');};
+ const app=createAccountComposition(origin,'https://fixture.supabase.co',security,{password:{password},exchange:{exchange:unexpected},refresh:{refresh:unexpected},signOut:{revoke:unexpected},recovery:{exchange:unexpected},recoveryRequest:{request:unexpected}});
+ const guarded=createAccountAdmission(app.routes(),{limit:1,windowMs:60000}).routes();
+ const route=guarded.get(path)!;const h=await harness(route.handle,route.discardResponse);
+ try{
+  const body=JSON.stringify({method:'signIn',email:'sample@example.test',password:'made-up'});
+  const reply=await h.send(body);expect(reply.status).toBe(200);expect(JSON.parse(reply.body)).toEqual({status:'signedIn'});expect(reply.body).not.toContain(token);expect(reply.cookies).toHaveLength(1);
+  const blocked=await h.send(body);expect(blocked.status).toBe(429);expect(blocked.cookies).toHaveLength(0);expect(password).toHaveBeenCalledTimes(1);
+ }finally{await app.close();await h.close();}
 });

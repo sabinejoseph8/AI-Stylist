@@ -1103,3 +1103,7 @@ I exposed expiry cleanup through the prepared account factory so a future host c
 ## Local account request limits, 12 October 2026
 
 I prepared a bounded aggregate request guard so account methods cannot independently bypass a shared local allowance. Excess requests stop before provider work and receive a retry delay. I avoided storing customer identifiers. All 494 tests, type checking and build pass. Durable hosted abuse controls and production settings remain separate acceptance work.
+
+## Guarded account delivery, 12 October 2026
+
+I checked the request guard around the actual account factory, then verified password delivery over a real local HTTP connection with a generated signed identity. Excess requests made no provider calls, and a refused social callback remained usable later. Tokens stayed out of JSON. All 496 tests, type checking and build pass; providers remain synthetic and hosted acceptance is open.
