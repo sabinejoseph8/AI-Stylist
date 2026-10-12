@@ -1051,3 +1051,7 @@ I prepared the recovery request, code exchange and password-update calls with fi
 ## Verifying recovery cleanup against primary data
 
 I tested the prepared reset flow against a disposable database. The confirmed synthetic provider removed the actual test session; a logout acknowledgment without deletion stayed unconfirmed. I checked both ordinary-token refusal and reset replay protection. This proves the local composition, while real email delivery and hosted password changes remain untested.
+
+## Completing the social callback delivery step
+
+I found that the prepared social sign-in exchange still needed an HTTP delivery adapter. I added safe local redirects, cookie-only delivery and cleanup for an undelivered successful response. Tests confirm that an external destination or canceled request cannot receive the account cookie. The handler remains disconnected from the real server.
