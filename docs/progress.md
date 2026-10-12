@@ -2116,3 +2116,9 @@ Replaced direct recovery-owner assembly in the isolated PostgreSQL rehearsal wit
 The full isolated ownership rehearsal passes; disposable containers and volumes were verified absent. All 491 foundation tests across 67 files, type checking and build pass. This verifies the factory recovery path, not every factory route or real hosted Auth.
 
 Exact next action: update and publish the private Memory site to this checkpoint, then extend the factory rehearsal to password/OAuth/refresh/sign-out routes. All hosted, sequencing, customer-policy and spending gates remain unchanged.
+
+## Private Memory published, 12 October 2026
+
+The private Memory website now publishes the 491-test account factory/database checkpoint from source 90fe94e71fc2efbe4481119516784275fce19dec. All 16 site checks and artifact validation pass. Native deployment appgdep_6acc6e4b8d388191a6e58423b9825003 succeeded with MCP enabled. Owner-only access was rechecked: one allowed user, no groups. Site source snapshots are retained in tools/project-memory-site. Task 2c and the phase gates remain open.
+
+Exact next action: extend the isolated factory rehearsal to password/OAuth/refresh/sign-out routes while preserving all hosted and spending limits.
