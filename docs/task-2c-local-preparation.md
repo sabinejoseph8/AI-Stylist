@@ -310,3 +310,12 @@ Reviewed the current Task 2c requirements, acceptance audit, prepared server bou
 The existing local preview serves HTTP 200 at http://127.0.0.1:4322/. The in-app open request was queued; it is not evidence that Sabine saw it. Sent Sabine the complete seven-step newer reset-screen review in one question. This review is pending and separate from her accepted eight-step account review. No test suite was rerun for this documentation-only audit; the latest code evidence remains 358 passing foundation tests, type checking and build.
 
 Exact next action: implement the local adoption/persistence ownership contract with simulated storage and failure tests; incorporate Sabine's reset review when received, and refresh private Memory at the next consolidated checkpoint. Task 2c, hosted account activation and phase exit remain incomplete.
+
+
+## Local Node account response delivery, 11 October 2026
+
+Prepared a disconnected Node HTTP listener that accepts only an explicitly supplied route map and configured HTTPS application identity. It checks Host before dispatch, maps IncomingMessage into a streaming Fetch Request with cancellation, bounds buffered account responses to 16 KiB, preserves separate Set-Cookie headers and streams the final bounded JSON response through Node. Client disconnect aborts work; a handler response returned afterward invokes its idempotent discardResponse cleanup. Failed output also invokes cleanup. The default foundation server is unchanged and registers no account route. TLS/proxy trust, durable adoption and production rate controls are not configured by this listener.
+
+All 361 foundation tests across 40 files, type checking and build pass. Three new tests use actual loopback Node HTTP with the prepared shared JSON boundary and simulated operation handlers. They verify cookie/header separation, wrong Host/Origin rejection before operation work and late-response cleanup after actual client disconnect. These tests do not compose a real provider, verify a real browser cookie jar or demonstrate hosted TLS. Prior generated-token account composition remains separate evidence.
+
+Exact next action: compose the local Node listener with generated-token password/refresh owners and simulated adoption storage; test response loss and cancellation at that composition boundary. Add explicit delivery deadlines/resource checks before production use. Sabine's newer reset review is still pending. Task 2c remains incomplete. Private Memory remains at its preceding 347-test checkpoint pending a consolidated refresh.

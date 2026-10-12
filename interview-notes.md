@@ -894,3 +894,6 @@ I strengthened refresh handling to preserve the exact signed session and reject 
 
 
 I connected the local refresh preparation to the same lifecycle owner as password and social sign-in. A failed cleanup now prevents another account method from bypassing that uncertainty. Refresh stays absent unless a server adapter is explicitly supplied. Three composed tests verify this separation; all 358 foundation tests, type checking and build pass. Real provider and durable-state acceptance remain open.
+
+
+I added actual local HTTP delivery tests to complement in-memory account tests. They verify that cookie headers remain separate, hostile Host/Origin values cannot reach operation work and a disconnected client cannot keep a late returned session response. All 361 foundation tests, type checking and build pass. The operations are simulated, and browser/TLS, durable adoption and real provider acceptance remain open.
