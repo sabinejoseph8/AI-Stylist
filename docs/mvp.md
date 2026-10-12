@@ -1443,3 +1443,11 @@ Exact next action: compose the prepared initiation, password, callback, refresh,
 Added an explicit nine-route registry for password, OAuth initiation, refresh, sign-out, recovery request/reset and the three callbacks. It snapshots handlers and preserves undelivered-response cleanup without opening a listener or invoking a provider. Two focused tests cover exact route membership, cleanup forwarding, snapshot isolation and missing/extra handler refusal. All 487 tests across 66 files, type checking and build pass with authorized local loopback access. The first restricted run was interrupted after loopback refusals; it is not acceptance evidence.
 
 Shared owner construction and recovery shutdown composition still need implementation. The registry alone does not prove those lifecycles. No hosted routes, real sign-ins, emails or spending were enabled. Exact next action: build the explicit account composition around this registry with shared session ownership and recovery close, then test cross-route capacity and shutdown cleanup.
+
+## Shared account composition, 12 October 2026
+
+The explicit dormant factory now builds all nine handlers with one shared account-session lifecycle for password, OAuth and refresh. It preserves response-discard callbacks, cancels pending requests on shutdown, closes browser reset grants and refuses new requests after closure. No listener is opened and no environment configuration activates these routes. The close result describes reset-grant cleanup only, not remote termination.
+
+All 489 foundation tests across 67 files, type checking and build pass. New synthetic composition checks prove construction without provider calls, idempotent closure/refused admission and password capacity shared with OAuth while requests are pending. Existing signed-identity and isolated database tests remain separate evidence. Cross-route refresh, signed recovery shutdown and actual database factory composition still require focused checks.
+
+Exact next action: extend composition tests with signed recovery grant shutdown and shared refresh admission, then use the factory in the isolated database rehearsal. Preserve hosted, business-policy and spending gates. Private Memory is still at the 482-test checkpoint and needs reconciliation after these checks.

@@ -1075,3 +1075,7 @@ I added the same-origin handler that prepares a Google or Apple sign-in handoff.
 ## Account route preparation, 12 October 2026
 
 I added one explicit registry for the prepared account routes so delivery cleanup remains attached to each handler. I kept it disconnected while provider configuration and acceptance checks remain open. All 487 focused tests, type checking and build pass. Sharing the account lifecycle owners and testing shutdown are the next steps.
+
+## Shared account lifecycle, 12 October 2026
+
+I connected the prepared account handlers through one explicit factory. Password sign-in, social sign-in and refresh share session ownership and capacity limits. Shutdown cancels pending requests and closes reset grants, while cleanup uncertainty remains visible. All 489 focused tests, type checking and build pass. This remains local preparation with synthetic providers, not customer account activation.
