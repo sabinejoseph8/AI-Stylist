@@ -19,3 +19,10 @@ Ending releases the row but preserves its monotonic fence. Old generations canno
 Local PostgreSQL tests cover two simultaneous starts with one winner, same-account reconnect, foreign denial, exactly-once provider authorization, heartbeat, refusal of unverified cleanup, expired-provider hold, verified release, stale-generation rejection, expired-reservation replacement and function/table privilege denial.
 
 The 60-second heartbeat window is an internal preparation choice, not a customer recovery promise. Actual coordinator admission, per-command fencing, heartbeat cancellation, provider cleanup evidence, bounded database request deadlines, real Auth and hosted acceptance remain open. Do not treat this row as automatic cleanup of remote media or as live single-consultation acceptance.
+
+
+## Prepared consultation-slot adapter, 11 October 2026
+
+Added a disconnected server port bound to one trusted owner. It validates UUIDs, exact lease fields, safe fences, explicit-offset timestamps and boolean mutation acknowledgments. It rejects overlapping calls, enforces an eight-second maximum response deadline, sanitizes errors and never retries. A timed-out mutation may still complete remotely; the caller must treat it as uncertain and use the same reservation evidence for reconciliation, without starting provider work. No token is exposed through a route and no key is read from the environment.
+
+All 215 foundation checks across 17 files, type checking and build pass. A separate actual local SQL rehearsal connects this TypeScript adapter to migration 015 and verifies reservation, reconnect, foreign isolation, provider authorization fencing and verified cleanup holds. Auth and transport identities in this rehearsal are synthetic. Actual provider/coordinator integration and hosted acceptance remain gated.

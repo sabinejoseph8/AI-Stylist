@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2b local preparation is active. Latest evidence: 209 foundation tests across 16 files, type checking and build pass. Local PostgreSQL protections and actual local Storage API upgrade checks pass. Sabine approved seven-day detailed photo-deletion receipts on 11 October 2026; migration 014 and cutoff, authorization, repeated-cleanup, retired-ID and account-cascade checks pass locally. Hosted activation, cleanup scheduling and Phase 1 acceptance remain open. No paid calls were started.
+Task 2b local preparation is active. Latest evidence: 215 foundation tests across 17 files pass, with type checking and build passing. The prepared owner-bound consultation-slot adapter also passes actual local PostgreSQL reservation, reconnect, provider-fence and cleanup-hold checks. Receipt retention and concurrent cleanup are verified locally; the Storage upgrade chain passes. Hosted activation, real Auth, cleanup scheduling and Phase 1 acceptance remain open. No paid calls were started.
 
 ## Completed evidence
 
@@ -756,3 +756,13 @@ Exact next action: finish migration-chain Storage regression and publish/copy th
 
 
 Single-slot checkpoint df10dc8 is published to GitHub and copied to the AI stylist folder. Storage regression passes with all 15 migrations. Private Memory source 00b2dfc3a33edc027ddc2dfc3424ef04f49e38b3 deployed successfully as appgdep_6acc301929f88191930de39c086f4555; 16 website checks pass and MCP remains available.
+
+
+## Prepared consultation-slot adapter, 11 October 2026
+
+Added a disconnected server port bound to one trusted owner. It validates UUIDs, exact lease fields, safe fences, explicit-offset timestamps and boolean mutation acknowledgments. It rejects overlapping calls, enforces an eight-second maximum response deadline, sanitizes errors and never retries. A timed-out mutation may still complete remotely; the caller must treat it as uncertain and use the same reservation evidence for reconciliation, without starting provider work. No token is exposed through a route and no key is read from the environment.
+
+All 215 foundation checks across 17 files, type checking and build pass. A separate actual local SQL rehearsal connects this TypeScript adapter to migration 015 and verifies reservation, reconnect, foreign isolation, provider authorization fencing and verified cleanup holds. Auth and transport identities in this rehearsal are synthetic. Actual provider/coordinator integration and hosted acceptance remain gated.
+
+
+Exact next action: publish/copy the tested adapter and refresh the private Memory site. Then verify lost-acknowledgment reconciliation and SQL heartbeat/start/end races, including ensuring timeout never authorizes a duplicate provider call. Preserve local-only Task 2b and all Phase 1/spending gates.

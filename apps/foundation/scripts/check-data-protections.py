@@ -325,6 +325,9 @@ try:
  sql('set role anon; select * from stylist_private.consultation_slot;',False)
  sql('set role service_role; select * from stylist_private.consultation_slot;',False)
  assert change(owner,fresh,'end')
+ checked=run(['node',str(Path(__file__).resolve().parent/'check-consultation-slot-db.ts'),name],timeout=30)
+ assert checked.returncode==0, checked.stderr
+ print(checked.stdout.strip())
  print('Single consultation SQL slot passes concurrent claim, reconnect, fencing, expiry and cleanup-hold scenarios')
  sql(f"delete from auth.users where id='{a}';")
  assert sql(f"select count(*) from stylist_private.retired_media_ids where user_id='{a}';")=='0'

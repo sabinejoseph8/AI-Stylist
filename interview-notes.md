@@ -747,3 +747,6 @@ I also checked overlapping cleanup workers. They removed only expired technical 
 ## Protecting the one-customer capacity limit
 
 I prepared a database reservation so two customers cannot claim the stylist at the same time. A reconnect keeps the same reservation, and old requests cannot change a newer one. I also separated reservation expiry from provider cleanup: if a remote call may still exist, the slot stays held until closure is verified. Local race checks pass; real account and provider integration remains open.
+
+
+I connected the prepared consultation reservation adapter to a disposable real database. I checked reconnects, foreign-account denial and the rule that only one provider start is permitted. A failed acknowledgment stays uncertain, so the app cannot mistake a timeout for permission to start another call. This remains local preparation, with live account and provider acceptance still pending.
