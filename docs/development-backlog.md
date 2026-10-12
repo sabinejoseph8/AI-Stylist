@@ -1637,3 +1637,9 @@ Extended the isolated database pipeline through the concrete stored sign-out por
 All 443 foundation tests across 56 files, type checking/build and the complete isolated SQL rehearsal pass. A missing cancellation argument in the test harness was corrected before the passing final run. Provider fetch is synthetic; no hosted or real-account acceptance is claimed. No live routes, credentials, emails or paid calls were used.
 
 Exact next action: consolidate private Memory with the complete 443-test account checkpoint, then prepare OAuth initiation/exchange transport contracts locally with synthetic responses and one-use PKCE transactions. Recovery purpose verification, real provider configuration, HTTPS browser/device checks and Phase 1/hosted approvals remain open. Task 2c remains incomplete.
+
+## Local OAuth initiation checkpoint
+
+Prepared fixed-destination Google and Apple authorization links with browser-bound, one-use PKCE transactions. Three focused synthetic checks pass: both providers round-trip through the existing callback validator, missing browser binding and replay fail, and external destinations/return paths are rejected. No route, credentials, real sign-in or hosted configuration was activated. This does not prove provider compatibility or complete Task 2c.
+
+Exact next action: prepare the bounded PKCE code-exchange HTTP transport, then compose it with verified initial session ownership using synthetic provider responses. Full-suite evidence is recorded in DEVELOPMENT_PROGRESS.md after completion.

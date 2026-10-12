@@ -4,7 +4,7 @@
 
 Private Memory updated successfully on 11 October 2026 (America/Cayman) with the 443-test checkpoint, password HTTP/database composition, durable sign-out evidence and remaining activation gates. All 16 website checks and artifact validation passed. Owner-only access and MCP preserved. Source 2fe7abc3b4cc4d29612b808dbf200edfb3e1468b; deployment appgdep_6acc6333ed80819188082b135948adb5; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_4e0b0a1438f4819189007362056de737. Task 2c and phase gates remain open.
 
-Exact next action: prepare OAuth initiation/exchange transport contracts locally with synthetic responses and existing one-use PKCE transactions. No real provider setup, credentials or paid calls are authorized by this update.
+Exact next action: prepare bounded PKCE code-exchange HTTP transport and compose with verified initial session ownership using synthetic provider responses. No real provider setup, credentials or paid calls are authorized by this update.
 
 ## Previous publication checkpoint (historical)
 
@@ -1543,3 +1543,11 @@ Extended the isolated database pipeline through the concrete stored sign-out por
 All 443 foundation tests across 56 files, type checking/build and the complete isolated SQL rehearsal pass. A missing cancellation argument in the test harness was corrected before the passing final run. Provider fetch is synthetic; no hosted or real-account acceptance is claimed. No live routes, credentials, emails or paid calls were used.
 
 Exact next action: consolidate private Memory with the complete 443-test account checkpoint, then prepare OAuth initiation/exchange transport contracts locally with synthetic responses and one-use PKCE transactions. Recovery purpose verification, real provider configuration, HTTPS browser/device checks and Phase 1/hosted approvals remain open. Task 2c remains incomplete.
+
+## Local OAuth initiation checkpoint
+
+Prepared fixed-destination Google and Apple authorization links with browser-bound, one-use PKCE transactions. Three focused synthetic checks pass: both providers round-trip through the existing callback validator, missing browser binding and replay fail, and external destinations/return paths are rejected. No route, credentials, real sign-in or hosted configuration was activated. This does not prove provider compatibility or complete Task 2c.
+
+Exact next action: prepare the bounded PKCE code-exchange HTTP transport, then compose it with verified initial session ownership using synthetic provider responses. Full-suite evidence is recorded in DEVELOPMENT_PROGRESS.md after completion.
+
+Verification: all 446 foundation tests across 57 files, type checking and build pass. The restricted run could not use loopback listeners; the authorized loopback-capable run passed. Latest private Memory publication remains the 443-test checkpoint and needs this incremental update.

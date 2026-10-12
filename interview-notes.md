@@ -1019,3 +1019,7 @@ I prepared sign-out so clearing a browser cookie or receiving a successful HTTP 
 ## Checking sign-out against stored sessions
 
 I verified the prepared sign-out flow against an isolated database. A successful provider HTTP reply alone remained unconfirmed. Actual synthetic session deletion cleared encrypted ownership and caused the old signed token to be rejected. I kept cookie clearing separate from proof that the remote session ended.
+
+## Preparing secure social sign-in
+
+I prepared Google and Apple sign-in links so each callback is tied to the browser that started it and cannot be replayed. I kept real provider connections disabled while checking the local behavior with synthetic responses. The remaining work includes the code exchange, real provider configuration and device acceptance.
