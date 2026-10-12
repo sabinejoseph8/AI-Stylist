@@ -1961,3 +1961,11 @@ Exact next action: compose actual Supabase password/OAuth/recovery/refresh adapt
 Owner-private publication succeeded with MCP enabled and the existing one-user/no-group audience unchanged. All 16 site checks and artifact validation passed. Source cfcc66f64e732cf7e7d0b3c7bd5da200eba1e615; deployment appgdep_6acc8c7ef11081918ea7d06331a9c1a1; saved version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_1d94b5a023d08191a0fc82855ee3fa9f. URL: https://ai-stylist-project-memory.idealgnat256.chatgpt.site/#plan. The site now includes the complete rendered reset journey/WebKit fix, 21 installed customer migrations, shared admission evidence and 550-test explicit host checkpoint. No task was marked complete by this publication.
 
 Exact next action: compose the actual Supabase adapters, signed identity/current-session verification and encrypted refresh ownership into the explicit host without environment activation. Preserve the explicit expiry policy requirement; do not invent a customer session-lifetime promise. Hosted sender/origin/provider/device acceptance and phase gates remain open.
+
+## Verified provider logout composition, 12 October 2026
+
+Prepared a server-only revocation adapter that captures signed/current identity before scoped logout, then independently confirms absence of that exact owner/session. HTTP acceptance alone, missing or mismatched evidence, cancellation and lookup errors remain unconfirmed. Failed identity verification still permits best-effort local logout but never claims verified cleanup. Four underlying operations are bounded; timeout does not release capacity until the underlying work settles. No account route or provider request was activated.
+
+Evidence: five focused synthetic tests cover ordering, failed verification, strict evidence, timeout capacity and cancellation. All 555 foundation tests across 78 files, type checking and production build pass.
+
+Next: wire this adapter with actual Supabase transports, signed identity verification and encrypted refresh ownership into the explicit dormant account host. Expiry policies must be supplied explicitly. Hosted sender/origin, real account/provider/device acceptance and phase gates remain open. Private Memory still publishes the 550-test checkpoint and needs this addition during the next consolidated publication.

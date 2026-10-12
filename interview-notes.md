@@ -1217,3 +1217,7 @@ I added a shared account request counter in the database so restarting a server 
 ## Preparing the account host lifecycle
 
 I connected the prepared account handlers to a host wrapper with shared database request limits and explicit startup checks. A failed cleanup check keeps account work unavailable while sign-out remains possible. I tested startup, shutdown, late replies and recurring maintenance over local HTTP, and made unresolved shutdown work visible instead of claiming cleanup had finished. All 550 foundation tests pass. Actual customer hosting and real provider acceptance remain separate.
+
+## Checking that logout really finished
+
+I strengthened account cleanup so a successful provider response is followed by an independent check that the exact session is absent. If the evidence is missing or the check times out, the app keeps cleanup unconfirmed. I kept customer sign-in disabled while testing this composition with simulated providers. Five new focused checks passed, bringing the foundation suite to 555 passing tests. Real hosted account acceptance is still pending.
