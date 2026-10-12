@@ -26,6 +26,14 @@ describe('disconnected password account orchestration',()=>{
   expect(Object.isFrozen(password.mock.calls[0]?.[0])).toBe(true);
   await result.discard();await result.discard();expect(discard).toHaveBeenCalledTimes(1);
  });
+ it('refuses reuse of a discarded adapter session',async()=>{
+  const f=await fixture(),discard=vi.fn(async()=>true),lease={accessToken:f.token,discard};
+  const service=createAccountAccess(f.security,origin,{password:async()=>lease,exchange:vi.fn()});
+  const first=await service.password.submit(input,signal());expect(first.status).toBe('ready');
+  if(first.status!=='ready')throw Error();await first.discard();
+  expect(await service.password.submit(input,signal())).toEqual({status:'unavailable'});
+  expect(discard).toHaveBeenCalledTimes(1);expect(service.cleanupHeld()).toBe(false);
+ });
  it('returns confirmation only for registration and never returns account cookies',async()=>{
   const f=await fixture(),password=vi.fn(async()=>({status:'confirmationRequired' as const}));const service=createAccountAccess(f.security,origin,{password,exchange:vi.fn()});
   expect(await service.password.submit({...input,method:'signUp'},signal())).toEqual({status:'confirmationRequired'});

@@ -19,12 +19,12 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Accessibility and responsive UI | Agent narrow layout and keyboard checks; labeled fields, result focus, live status and assertive errors | Actual screen reader, physical iPhone, zoom and complete accessibility acceptance |
 | Production email | Not configured | Verified sender/DNS, approved email templates, rate limits, abuse protection, delivery/bounce monitoring and real delivery checks |
 | Apple maintenance | No credentials created or inspected | Document actual credential expiry, owner, renewal reminders/process and a tested rotation procedure |
-| Tests/review/phase exit | 346 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
+| Tests/review/phase exit | 347 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
 
 ## Local next steps
 
 1. Email/password HTTP handling is prepared locally with bounded parsing, same-origin protections and verified header-only cookies; actual server delivery and refresh adoption remain unverified.
-2. Prepare recovery-request acknowledgment and refresh/sign-out integration contracts without provider calls or email delivery.
+2. Recovery-request and sign-out HTTP composition are prepared with simulated adapters. Prepare refresh/session ownership without provider calls or email delivery.
 3. Keep the accepted eight-step account review recorded; verify the new reset step, actual screen reader/phone/zoom and every real-provider requirement separately.
 4. Record actual provider setup requirements without applying settings or requesting credentials prematurely.
 

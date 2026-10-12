@@ -50,7 +50,7 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
      if(value&&typeof value==='object'&&'status' in value&&value.status==='confirmationRequired'&&Object.keys(value).length===1)return {status:options.registration?'confirmationRequired':'unavailable'};
      session=value as PendingAccountSession;
      if(!session||typeof session!=='object'||typeof session.discard!=='function'){held=true;throw Error();}
-     if(controller.signal.aborted||typeof session.accessToken!=='string')throw Error();
+     if(controller.signal.aborted||cleanups.has(session)||typeof session.accessToken!=='string')throw Error();
      const cookie=await security.cookies.issue(session.accessToken,controller.signal);
      if(!cookie||controller.signal.aborted)throw Error();
      const identity=await security.authorize(new Request(appOrigin+'/api/account',{headers:{cookie:cookie.split(';')[0]!}}),controller.signal);

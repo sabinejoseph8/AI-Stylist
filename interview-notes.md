@@ -875,3 +875,8 @@ I prepared a disabled browser transport using fixed same-origin paths and cookie
 ## Testing sign-in and sign-out across the prepared components
 
 I tested the browser controller and transport with the actual prepared HTTP and session components, using a simulated cookie jar and provider authority. I verified that registration/recovery cannot create account access and that confirmed revocation denies the original token. I also tested failed revocation: local cookies clear, but the outcome stays unconfirmed because the old remote session can remain valid. All 346 foundation checks pass, with type checking and build. Actual browser and provider acceptance remain open.
+
+
+### Preventing discarded session reuse
+
+I confirmed that all eight sample account review steps worked and were readable. During local engineering review, I strengthened the session owner so an adapter cannot reuse a discarded session object to issue a fresh cookie. I kept cleanup idempotent and added a generated-token regression test. The foundation now passes 347 automated tests, type checking and build. This is local simulated evidence; real provider authentication and hosted acceptance remain open.

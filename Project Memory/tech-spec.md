@@ -1917,3 +1917,12 @@ Added composed tests using the actual browser transport/controller, password/rec
 All 346 foundation tests across 39 files, type checking and build pass. Five added checks cover sign-out header/status behavior, input rejection and the three full browser/controller/server scenarios. Actual browser cookie acceptance, real provider revocation, refresh-state adoption/persistence, rate/abuse controls, phone/accessibility and phase gates remain open. No credentials, actual account, hosted endpoint or paid activity was enabled.
 
 Exact next action: refresh private Memory with the 346-test checkpoint, then audit remaining local Task 2c lifecycle requirements and prepare refresh/session ownership without connecting real providers. Task 2c remains incomplete.
+
+
+## Discarded account session reuse protection, 11 October 2026
+
+Sabine confirmed all eight local account preview steps worked and were readable. This accepts that sample interface only, not real authentication, the later reset screen or physical-device accessibility.
+
+The shared session owner now refuses a provider adapter object that has already been discarded, before issuing another cookie. Cleanup remains idempotent and is not retried. A generated-token regression test proves the same disposed lease cannot restore account access, even if the simulated current-session authority still reports it current. All 347 foundation tests across 39 files, type checking and build pass. No real provider, hosted route, email or paid activity was enabled.
+
+Exact next action: refresh private Memory from the latest committed documents, then prepare disconnected refresh/session ownership with simulated tests. Task 2c remains incomplete; actual provider configuration, session persistence, customer activation and manual phase gates remain open.
