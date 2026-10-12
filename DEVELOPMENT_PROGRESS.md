@@ -2,7 +2,7 @@
 
 ## Current private Memory publication
 
-Private Memory publishes the reconciled 497-test checkpoint from source da7ddb74e6bc4c021f38d6421aaac29792e4c9a3. Deployment appgdep_6acc7095dea881919d4c408215984c8a succeeded with MCP enabled. All 16 website checks and artifact validation pass; owner-only access was verified with one allowed user and no groups.
+Private Memory publishes the 516-test checkpoint from source 7b5c9f8c475251a82f3c849959148dc14cb1b816. Deployment appgdep_6acc74bd4cc881919b28c0899e375b72 succeeded with MCP enabled. All 16 website checks and artifact validation pass; owner-only access was verified with one allowed user and no groups.
 
 Exact next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as default. Reconcile the private Memory publication after this checkpoint.
 

@@ -2224,3 +2224,7 @@ Prepared a metadata-only reset readiness endpoint in the dormant account factory
 Evidence: 516 foundation tests across 72 files pass; type checking and production build pass. The new integration checks cover repeated non-consuming readiness, missing cookie, extra input, metadata response and browser configuration refusal after shutdown. This is local synthetic-provider evidence, not real recovery acceptance. Task 2c and both phase exit gates remain open.
 
 Next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as the default; then run its focused browser checks. Private Memory still publishes the earlier 497-test checkpoint and needs reconciliation.
+
+## Private Memory publication, 12 October 2026
+
+The 516-test local account checkpoint is published privately. Source 7b5c9f8c475251a82f3c849959148dc14cb1b816; deployment appgdep_6acc74bd4cc881919b28c0899e375b72 succeeded with MCP enabled. All 16 site checks and artifact validation pass. Owner-only audience preserved. No phase or account activation gate was closed.
