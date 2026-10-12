@@ -1221,3 +1221,7 @@ I connected the prepared account handlers to a host wrapper with shared database
 ## Checking that logout really finished
 
 I strengthened account cleanup so a successful provider response is followed by an independent check that the exact session is absent. If the evidence is missing or the check times out, the app keeps cleanup unconfirmed. I kept customer sign-in disabled while testing this composition with simulated providers. Five new focused checks passed, bringing the foundation suite to 555 passing tests. Real hosted account acceptance is still pending.
+
+## Connecting account building blocks
+
+I connected Supabase account adapters, signed identity checks, encrypted session ownership and cleanup controls into one explicit host factory. Creating it starts no customer access. Startup protection, recovery requests and registration confirmation passed local HTTP checks with simulated services. All 559 foundation tests passed. Real hosted sign-in, email and device acceptance remain pending.
