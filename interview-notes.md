@@ -1035,3 +1035,7 @@ I tested both prepared social sign-in paths against a disposable database with s
 ## Separating password recovery from sign-in
 
 I added a separate check for a recent signed recovery authentication, alongside the existing signature and current-session checks. An ordinary sign-in token cannot pass this recovery check. I tested expiry separately from the normal access-token lifetime, keeping the actual reset adapter and live email acceptance as remaining work.
+
+## Preparing a reset-only recovery session
+
+I connected recovery verification to a one-use reset capability. The adapter rechecks session authority before a password update and requires independent session-removal evidence during cleanup. I also preserved cleanup when identity verification fails, so an error cannot silently abandon a provider session. The provider calls remain simulated and real email/device acceptance is still pending.

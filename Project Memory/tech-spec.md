@@ -2343,3 +2343,11 @@ The existing bounded asymmetric identity verifier now exposes a separate recover
 All 453 foundation tests across 58 files, type checking and build pass. New synthetic signed-token tests reject missing/password/stale/future/malformed recovery methods and confirm independent recovery expiry. Source: https://supabase.com/docs/guides/auth/jwt-fields documents amr recovery and timestamps; real project claims and provider/device behavior remain unverified.
 
 Exact next action: connect this proof to a prepared recovery provider adapter that creates reset-only capability, rechecks purpose/current authority before updating a password and independently confirms session cleanup. Keep normal account cookies unavailable through recovery. Private Memory currently publishes the earlier 451-test database checkpoint.
+
+## Reset-only recovery provider prepared
+
+Prepared an injected recovery adapter using signed recovery-purpose verification and current identity checks. Its server-only capability exposes one password update attempt, rechecks current recovery authority, and issues no normal account cookie. Discard always attempts scoped logout, then requires exact independent owner/session absence proof; logout acceptance alone is insufficient. Malformed proof or failed identity verification cannot authorize a reset. A late verification failure retains the remote cleanup capability, with unconfirmed cleanup held by the existing recovery owner.
+
+All 458 foundation tests across 59 files, type checking and build pass. Five new simulated tests cover one-use reset, ordinary-login refusal, revoked authority, unknown cleanup, lost logout reply with independent proof, and verification exceptions. No provider HTTP recovery transport, real password change, email, hosted configuration or route was activated. Task 2c remains incomplete.
+
+Exact next action: compose the recovery adapter with generated signed recovery identities and the existing recovery owner/browser binding, then prepare bounded recovery HTTP operations. Private Memory remains at the verified 451-test checkpoint.

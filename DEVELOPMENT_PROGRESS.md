@@ -4,7 +4,7 @@
 
 Private Memory publication succeeded with the 451-test checkpoint and OAuth/database composition evidence. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 63d0055a2820559712e21bac67cd6dd7f68732ce; deployment appgdep_6acc65e135d88191a4c24b19e5e79f99; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_00f8bd69b7c481919927db12e4b81b2a. Task 2c stays open.
 
-Exact next action: prepare the recovery provider adapter using signed recovery proof, reset-only capability and independent cleanup confirmation. No real calls or routes.
+Exact next action: compose reset-only recovery with generated signed identities and existing browser/owner boundaries, then prepare bounded provider HTTP operations.
 
 ## Previous publication checkpoint (historical)
 
@@ -1573,3 +1573,11 @@ The existing bounded asymmetric identity verifier now exposes a separate recover
 All 453 foundation tests across 58 files, type checking and build pass. New synthetic signed-token tests reject missing/password/stale/future/malformed recovery methods and confirm independent recovery expiry. Source: https://supabase.com/docs/guides/auth/jwt-fields documents amr recovery and timestamps; real project claims and provider/device behavior remain unverified.
 
 Exact next action: connect this proof to a prepared recovery provider adapter that creates reset-only capability, rechecks purpose/current authority before updating a password and independently confirms session cleanup. Keep normal account cookies unavailable through recovery. Private Memory currently publishes the earlier 451-test database checkpoint.
+
+## Reset-only recovery provider prepared
+
+Prepared an injected recovery adapter using signed recovery-purpose verification and current identity checks. Its server-only capability exposes one password update attempt, rechecks current recovery authority, and issues no normal account cookie. Discard always attempts scoped logout, then requires exact independent owner/session absence proof; logout acceptance alone is insufficient. Malformed proof or failed identity verification cannot authorize a reset. A late verification failure retains the remote cleanup capability, with unconfirmed cleanup held by the existing recovery owner.
+
+All 458 foundation tests across 59 files, type checking and build pass. Five new simulated tests cover one-use reset, ordinary-login refusal, revoked authority, unknown cleanup, lost logout reply with independent proof, and verification exceptions. No provider HTTP recovery transport, real password change, email, hosted configuration or route was activated. Task 2c remains incomplete.
+
+Exact next action: compose the recovery adapter with generated signed recovery identities and the existing recovery owner/browser binding, then prepare bounded recovery HTTP operations. Private Memory remains at the verified 451-test checkpoint.
