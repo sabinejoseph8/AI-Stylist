@@ -780,3 +780,11 @@ Exact next action: publish/copy the passing lost-acknowledgment checkpoint and r
 
 
 Recovery checkpoint 99b3669 is published and copied. Private Memory source 2cf60e751cdfcf464927409c84185b2a4e03dc89 deployed successfully as appgdep_6acc31c4b5948191aa1fde57bbfe00df; all 16 website checks pass and MCP is retained.
+
+
+## Local Task 2b acceptance audit
+
+Reviewed the agreed phase checks against current migrations, adapters, local SQL/Storage/resource evidence and CI configuration. docs/task-2b-acceptance-audit.md records requirement-level evidence and missing real/hosted acceptance. No additional mandatory local Task 2b implementation gap was identified; Task 2b and Phase 2 remain incomplete. Task 2c is not covered by the existing sequencing exception. Sabine has been asked whether to authorize local-only Task 2c preparation, with no hosted changes, credentials, real sign-in or paid calls. Do not treat the pending question as approval.
+
+
+Exact next action: publish/copy this audit and refresh Memory. Check Sabine's response to the local Task 2c sequencing question before implementing account preparation. If absent, preserve current gates and revalidate remaining Phase 1 actions; no spend or hosted action is authorized by this audit.

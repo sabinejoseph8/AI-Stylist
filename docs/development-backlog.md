@@ -1131,3 +1131,8 @@ All 215 foundation checks across 17 files, type checking and build pass. A separ
 ## Lost acknowledgments and consultation races, 11 October 2026
 
 The prepared adapter now passes actual local SQL checks that deliberately discard successful claim, provider-transition and end acknowledgments. An unknown claim keeps the unused reservation held until safe expiry; reconnect after a lost provider-transition reply observes provider state, and another provider transition is refused. A lost end reply does not let the old generation affect the next reservation. Two independent provider-start SQL transactions permit exactly one transition. Concurrent heartbeat and verified end leave the slot free, and later stale heartbeats are refused. Full local data-protection rehearsal and type checking pass. Foundation source is unchanged, with the existing 215-test evidence retained. Auth/provider usage is simulated and hosted activation remains gated.
+
+
+## Local Task 2b acceptance audit
+
+Reviewed the agreed phase checks against current migrations, adapters, local SQL/Storage/resource evidence and CI configuration. docs/task-2b-acceptance-audit.md records requirement-level evidence and missing real/hosted acceptance. No additional mandatory local Task 2b implementation gap was identified; Task 2b and Phase 2 remain incomplete. Task 2c is not covered by the existing sequencing exception. Sabine has been asked whether to authorize local-only Task 2c preparation, with no hosted changes, credentials, real sign-in or paid calls. Do not treat the pending question as approval.
