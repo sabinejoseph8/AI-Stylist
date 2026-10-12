@@ -1,6 +1,6 @@
 import type {AccountProvider,AccountRequest,AccountReply} from './account-flow.ts';
 /** Injected transport only. Not selected by the preview and never authorizes a server operation. */
-export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=15000):AccountProvider{
+export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=15000,social?:(provider:'google'|'apple',signal:AbortSignal)=>Promise<AccountReply>):AccountProvider{
  const base=new URL(origin);if(base.protocol!=='https:'||base.origin!==origin||typeof send!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>15000)throw Error('Account unavailable');
  let pending=0;
  async function call(path:string,input:unknown,external:AbortSignal):Promise<{status:string;http:number}>{
@@ -25,7 +25,8 @@ export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=150
  }
  return Object.freeze({
   async submit(input:AccountRequest,signal:AbortSignal):Promise<AccountReply>{
-   if(!input||typeof input!=='object'||Array.isArray(input)||input.method==='social')throw Error('Account unavailable');
+   if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Account unavailable');
+   if(input.method==='social'){if(Object.keys(input).sort().join(',')!=='method,provider'||!['google','apple'].includes(input.provider)||typeof social!=='function')throw Error('Account unavailable');return social(input.provider,signal);}
    const keys=Object.keys(input).sort().join(',');
    if(!['signIn','signUp','recover'].includes(input.method)||typeof input.email!=='string')throw Error('Account unavailable');
    const email=input.email.trim();if(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('Account unavailable');

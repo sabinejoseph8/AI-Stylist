@@ -1123,3 +1123,7 @@ I found that an undelivered recovery-request response could leave its browser tr
 ## Recovery disconnect verification, 12 October 2026
 
 I verified recovery-request cancellation over a real local HTTP disconnect. The pending browser transaction is removed and its callback is refused. I made the test observe cleanup before checking the callback, so it cannot accidentally consume the transaction and create a false pass. All 501 tests, type checking and build pass with simulated providers.
+
+## Browser social sign-in preparation, 12 October 2026
+
+I found that the browser transport still refused social sign-in even though the server paths were prepared. I added an explicit handoff adapter that validates the destination and callback before navigation, and refuses late canceled responses. The preview remains simulated. All 504 tests, type checking and build pass; real Google/Apple setup is still pending.
