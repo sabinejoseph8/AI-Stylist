@@ -12,6 +12,26 @@
       "file": "supabase/migrations/202610110002_private_image_bucket.sql",
       "sha256": "d196802064eb1d962697977ec9039018c7107d55ecb7192c549bb28ebccec32f",
       "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110003_controlled_wardrobe.sql",
+      "sha256": "02150c4c5298070662f9689c668070bb4f526ef78619bb5589c656950c9561bd",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110004_controlled_wardrobe_delete.sql",
+      "sha256": "0f1ca7fb1ebabe74346989ab59093d5d48e788beb7f5ef3ca466b422e206f757",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110005_controlled_profiles.sql",
+      "sha256": "96fe6c2bc31dcc7d386074e031cd80d4624e048c65195003ae443f8e2c0dc321",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110006_profile_revision_read.sql",
+      "sha256": "d833da45b58878dc535673d36759d88157b2433581f45343b45684704658a53c",
+      "status": "applied"
     }
   ],
   "notes": [
@@ -30,5 +50,10 @@
     "rls_enabled": true,
     "rls_forced": true
   },
-  "remaining_migrations": "202610110003 through 202610110020"
+  "remaining_migrations": "202610110007 through 202610110020",
+  "wardrobe_profile_verification": {
+    "checks": 16,
+    "all_passed": true,
+    "scope": "RLS enabled/forced, anonymous table denial, authenticated direct-write denial and owner-select grants, private schema/log denial, four security-definer functions with empty search_path and correct role grants, two SELECT policies"
+  }
 }

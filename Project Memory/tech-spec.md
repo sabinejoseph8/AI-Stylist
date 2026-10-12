@@ -2639,3 +2639,11 @@ Applied migrations 202610110001 and 202610110002 in the verified existing AI Sty
 Remaining: migrations 003 through 020, then complete schema/function/grant checks and live adapter isolation acceptance. This is partial hosted setup, not completion of Task 2b or 2c. Accounts, recovery emails and customer-facing hosted routes remain disabled. Foundation evidence remains 538 tests plus the separate synthetic WebKit HTTPS check; no extra spending or paid voice call occurred.
 
 Exact next action: inspect and apply migration 003 controlled wardrobe, continue the remaining chain sequentially, and verify the resulting functions/privileges. Do not rerun 001/002 blindly. Private Memory still shows the pre-migration recovery checkpoint and needs the hosted receipt in the next consolidated refresh.
+
+## Hosted wardrobe and preferences applied, 12 October 2026
+
+Applied migrations 003 through 006 sequentially in the existing AI Stylist Supabase project. Each transaction returned Success. The created wardrobe functions require explicit save/deletion confirmation and owner/revision checks; no save or deletion function was invoked. Saved preferences validate the approved bounded USD subset and keep a private revision signal. The private log has schema and table access revoked rather than customer grants. Live metadata verification returned 16 checks, all_passed=true: public-table RLS enabled/forced, anonymous table denial, direct-write denial, authenticated owner-select grants, private-schema/log denial, four security-definer functions with empty search_path and correct role grants, and the two SELECT policies.
+
+Source hashes and the verification scope are in docs/hosted-database-deployment.json. This proves installation and privileges, not real customer CRUD isolation or app acceptance. No account, customer record, email or provider call was created. Foundation source is unchanged from the 538-test/WebKit checkpoint.
+
+Exact next action: review/apply migration 007 saved looks, then 008 through 020 in dependency order and verify their privilege contracts. Migrations 001 through 006 are already applied; do not rerun blindly. Task 2b/2c and phase gates remain open. Refresh private Memory with the consolidated hosted receipt after the chain advances.
