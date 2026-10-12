@@ -8,6 +8,21 @@ import type {AddressInfo} from 'node:net';
 import {createAccountNodeListener} from '../src/server/account-node.ts';
 import {createAccountJsonBoundary,accountJsonResponse} from '../src/server/account-json.ts';
 const origin='https://stylist.example',path='/api/account/password';
+it('accepts only the three prepared callback routes alongside account APIs',()=>{
+ const handle=async()=>new Response(null);
+ for(const provider of ['google','apple','recovery'])expect(()=>createAccountNodeListener(origin,new Map([['/auth/callback/'+provider,{handle}]]))).not.toThrow();
+ for(const route of ['/auth/callback/other','/auth/callback/google/extra','/auth/admin','//auth/callback/google'])expect(()=>createAccountNodeListener(origin,new Map([[route,{handle}]]))).toThrow();
+});
+it('preserves callback redirects and separate cookies over actual local HTTP',async()=>{
+ const server=createServer(createAccountNodeListener(origin,new Map([['/auth/callback/recovery',{handle:async()=>new Response(null,{status:303,headers:[['location','/account/reset'],['set-cookie','__Host-stylist_reset=fixture; Secure; HttpOnly'],['set-cookie','__Host-stylist_flow=; Max-Age=0']]})}]])));
+ await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{
+  const reply=await new Promise<{status:number;location:string|undefined;cookies:string[];body:string}>((resolve,reject)=>{
+   const req=httpRequest({host:'127.0.0.1',port:(server.address() as AddressInfo).port,path:'/auth/callback/recovery?code=fixture',method:'GET',headers:{host:'stylist.example'}},res=>{let body='';res.on('data',part=>body+=part);res.on('end',()=>resolve({status:res.statusCode!,location:res.headers.location,cookies:res.headers['set-cookie']??[],body}));});req.on('error',reject);req.end();
+  });
+  expect(reply.status).toBe(303);expect(reply.location).toBe('/account/reset');expect(reply.cookies).toHaveLength(2);expect(reply.body).toBe('');
+ }finally{await new Promise<void>(resolve=>server.close(()=>resolve()));}
+});
 async function harness(handle:(r:Request,s:AbortSignal)=>Promise<Response>,discardResponse:(response:Response)=>Promise<unknown>=vi.fn(async()=>true),deadlineMs=10000){
  const server=createServer(createAccountNodeListener(origin,new Map([[path,{handle,discardResponse}]]),deadlineMs));
  await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));const port=(server.address() as AddressInfo).port;

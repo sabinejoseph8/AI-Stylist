@@ -1405,3 +1405,11 @@ Added the previously missing disabled callback-response adapter for Google and A
 All 472 foundation tests across 62 files, type checking and build pass. Four new synthetic checks cover cookie/redirect delivery, failure sanitization, canceled/external return cleanup and origin/method/path refusal. Actual callback browser delivery and Node disconnect composition remain separate checks; this is not hosted sign-in acceptance.
 
 Exact next action: add the analogous reset-only recovery callback delivery, then compose both callback handlers with the prepared Node transport and actual signed identities. Preserve all hosted and spending gates. Private Memory currently publishes the 468-test database checkpoint.
+
+## Recovery callback delivery, 12 October 2026
+
+Prepared a reset-only recovery callback HTTP adapter. A verified grant is installed in the existing opaque browser binding and redirects only to /account/reset, with reset/flow cookies and no account-access cookie or provider token body. Canceled delivery and refused installation clean the grant; undelivered successful responses retain cleanup. Failure statuses are sanitized with no-store/no-referrer headers. The Node listener now explicitly accepts only google/apple/recovery callback routes alongside its account API paths. No route is registered in the running application.
+
+All 477 foundation tests across 63 files, type checking and build pass. Five new tests cover reset-only delivery, cancellation/install cleanup, failure/path validation, exact Node callback allowlisting and actual loopback redirect/separate-cookie transport. The loopback transport fixture is synthetic and does not yet prove the generated-identity callback/disconnect composition. Hosted TLS/browser acceptance remains open.
+
+Exact next action: compose actual signed OAuth/recovery callback handlers with Node delivery, including a disconnected client and late provider result; keep the server activation disabled. Private Memory currently publishes the 468-test database checkpoint.

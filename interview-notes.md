@@ -1055,3 +1055,7 @@ I tested the prepared reset flow against a disposable database. The confirmed sy
 ## Completing the social callback delivery step
 
 I found that the prepared social sign-in exchange still needed an HTTP delivery adapter. I added safe local redirects, cookie-only delivery and cleanup for an undelivered successful response. Tests confirm that an external destination or canceled request cannot receive the account cookie. The handler remains disconnected from the real server.
+
+## Delivering a recovery callback safely
+
+I added the recovery callback delivery step so the reset grant becomes a reset-only browser cookie and a fixed local redirect. Canceled or failed delivery cleans up the grant. I also extended the local Node transport with an explicit allowlist for the three supported callbacks and verified separate cookies over loopback HTTP. Real account routes remain disabled.
