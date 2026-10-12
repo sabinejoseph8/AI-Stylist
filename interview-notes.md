@@ -1167,3 +1167,7 @@ I separated sample wording from explicitly configured connected account wording.
 ## Checking account wording in a browser
 
 I verified the explicitly connected account presentation in local WebKit using simulated responses. Confirmation and recovery messages were accurate, fields cleared as expected, and canceled Google/Apple handoffs could not update the page later. This gives local interaction evidence while keeping real email, credentials and hosted account activation separate.
+
+## Preventing stale account presentation
+
+I fixed account presentation so a changed provider or mode starts with fresh state and cancels the previous flow. A local WebKit check confirmed that old sign-in messages and fields clear and a late provider response cannot restore the previous handoff. The change preserves server authority and does not enable real accounts.

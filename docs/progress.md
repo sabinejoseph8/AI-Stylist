@@ -2262,3 +2262,9 @@ The last full foundation run remains 520 passing tests across 73 files with type
 ## Memory publication checkpoint, 12 October 2026
 
 Private Memory now publishes the 520-test account checkpoint and synthetic WebKit lifecycle evidence. Source 15ec6be6d48492813f8d7d3211b5730ee7dcfe86; deployment appgdep_6acc76cbf464819184482dba5ec88b9a succeeded with MCP enabled. All 16 site checks and artifact validation pass; owner-only audience preserved. Phase 1 and Task 2c remain open.
+
+## Account configuration-change isolation, 12 October 2026
+
+Changing the explicit account provider or connected/sample mode now remounts account presentation and cancels the old flow. This clears old sign-in state and entered details. Local WebKit verified replacement after sign-in clears fields, replacement during Google handoff aborts the old request, and its late reply cannot restore handoff state. Existing synthetic browser account scenarios also pass. All 520 foundation tests, type checking and build pass. No hosted or provider operation was activated.
+
+Exact next action: audit remaining local preparation against Phase 1 and Phase 2 requirements, distinguishing additional implementation from decisions and hosted acceptance. Private Memory remains at the prior 520-test browser checkpoint and will receive this fix in the next consolidated update.

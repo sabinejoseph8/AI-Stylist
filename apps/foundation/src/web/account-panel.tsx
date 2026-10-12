@@ -11,7 +11,14 @@ export const sampleAccountProvider:AccountProvider={
  },
  async signOut(signal){if(signal.aborted)throw Error();},
 };
-export function AccountPanel({provider=sampleAccountProvider,connected=false}:{provider?:AccountProvider;connected?:boolean}){
+type AccountPanelProps={provider?:AccountProvider;connected?:boolean};
+/** Configuration changes remount presentation state and cancel the old flow. */
+export function AccountPanel({provider=sampleAccountProvider,connected=false}:AccountPanelProps){
+ const [boundary,setBoundary]=useState({provider,connected,generation:0});
+ if(boundary.provider!==provider||boundary.connected!==connected)setBoundary({provider,connected,generation:boundary.generation+1});
+ return <AccountPanelSession key={boundary.generation} provider={provider} connected={connected}/>;
+}
+function AccountPanelSession({provider=sampleAccountProvider,connected=false}:AccountPanelProps){
  if(connected&&provider===sampleAccountProvider)throw Error("Connected account configuration unavailable");
  const preview=!connected;
  const flow=useMemo(()=>createAccountFlow(provider),[provider]);

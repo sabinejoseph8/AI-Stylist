@@ -1,5 +1,6 @@
 <!doctype html><html lang="en"><meta charset="utf-8"><title>Synthetic account check</title><div id="root"></div><script type="module">
 import React from 'react';import{createRoot}from'react-dom/client';import{AccountPanel}from'/src/web/account-panel.tsx';
 let resolve,signal;const provider={submit:(request,s)=>{signal=s;if(request.method==='social')return new Promise(r=>resolve=r);return Promise.resolve({status:request.method==='recover'?'recoveryRequested':request.method==='signUp'?'confirmationRequired':'signedIn'});},signOut:async()=>{}};
-window.check={aborted:()=>signal?.aborted,finish:()=>resolve({status:'redirecting'})};createRoot(document.getElementById('root')).render(React.createElement(AccountPanel,{connected:true,provider}));
+const root=createRoot(document.getElementById('root'));
+window.check={replace:()=>root.render(React.createElement(AccountPanel,{connected:true,provider:{...provider}})),aborted:()=>signal?.aborted,finish:()=>resolve({status:'redirecting'})};root.render(React.createElement(AccountPanel,{connected:true,provider}));
 </script></html>
