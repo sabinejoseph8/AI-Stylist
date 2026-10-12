@@ -1628,3 +1628,12 @@ Exact next action: consolidate private Memory with the 417-test and complete sca
 Reviewed actual account source and corrected the current acceptance audit, preserving historical evidence below it. Durable adoption, encryption, refresh rotation and local HTTP/database composition are no longer listed as wholly missing. Concrete password/registration provider transport, durable sign-out port, OAuth initiation/exchange and provider-verified recovery remain incomplete. All account factories remain disconnected and hosted acceptance remains gated. No new test run or functionality is claimed for this documentation audit.
 
 Exact next action: prepare a disconnected password/registration provider boundary with injected synthetic responses and shared staged-session ownership, then test confirmation-only registration, cancellation, malformed replies and exact-session cleanup. Preserve all live/financial gates. Consolidate private Memory at the next implementation checkpoint.
+
+
+## Sign-out HTTP and primary database evidence, 12 October 2026
+
+Extended the isolated database pipeline through the concrete stored sign-out port, sign-out HTTP factory, password HTTP logout and primary Auth session-presence authority. A synthetic accepted 204 without session-row deletion returns remoteUnconfirmed (409), clears browser cookies through headers and retains held ownership. When the injected provider actually deletes the synthetic Auth session, foreign-key cascade removes encrypted ownership, independent absence confirms signedOut (200), and the same still-signed token fails authorization. Explicit request counts show no automatic retries. Refused initial cleanup remains quarantined across the earlier actual restart.
+
+All 443 foundation tests across 56 files, type checking/build and the complete isolated SQL rehearsal pass. A missing cancellation argument in the test harness was corrected before the passing final run. Provider fetch is synthetic; no hosted or real-account acceptance is claimed. No live routes, credentials, emails or paid calls were used.
+
+Exact next action: consolidate private Memory with the complete 443-test account checkpoint, then prepare OAuth initiation/exchange transport contracts locally with synthetic responses and one-use PKCE transactions. Recovery purpose verification, real provider configuration, HTTPS browser/device checks and Phase 1/hosted approvals remain open. Task 2c remains incomplete.

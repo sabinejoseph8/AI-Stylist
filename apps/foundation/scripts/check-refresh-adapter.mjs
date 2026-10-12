@@ -14,6 +14,9 @@ import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts'
 import {createRefreshReconciliation} from '../src/server/refresh-reconciliation.ts';
 import {createAuthSessionPresence} from '../src/server/auth-session-presence.ts';
 import {createInitialSessionStager} from '../src/server/initial-session.ts';
+import {createStoredSignOut} from '../src/server/stored-signout.ts';
+import {createAccountSignOut} from '../src/server/account-signout.ts';
+import {createSignOutHttp} from '../src/server/signout-http.ts';
 import {createPasswordProviderHttp} from '../src/server/password-provider-http.ts';
 import {createPasswordProvider} from '../src/server/password-provider.ts';
 import {createPasswordAccounts} from '../src/server/password-account.ts';
@@ -261,11 +264,13 @@ console.log('Encrypted key transition PostgreSQL rehearsal passed: overlap reads
 // Actual initial password composition; provider replies remain synthetic.
 await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from stylist_private.refresh_ownership where session_id='${session}';`);
 const initialVerifier=createIdentityVerifier(project,async()=>pair.publicKey,createAuthSessionAuthority(rpc));
-let initialRevoked=true,initialCalls=0,initialLogouts=0;
+let initialRevoked=true,initialCalls=0,initialLogouts=0,deleteInitialSession=false;
 const initialHttp=createPasswordProviderHttp(project,'synthetic-password-http-key',async(url,init)=>{
  assert.equal(init.redirect,'error');assert.equal(init.credentials,'omit');
  if(url===project+'/auth/v1/logout?scope=local'){
-  initialLogouts++;assert.match(init.headers.authorization,/^Bearer /);return new Response(null,{status:initialRevoked?204:503});
+  initialLogouts++;assert.match(init.headers.authorization,/^Bearer /);
+  if(deleteInitialSession)await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id='${session}';`);
+  return new Response(null,{status:initialRevoked?204:503});
  }
  initialCalls++;assert.deepEqual(JSON.parse(init.body),{email:'sample@example.test',password:'made-up'});
  if(url===project+'/auth/v1/signup')return Response.json({id:owner});
@@ -294,7 +299,20 @@ console.log('Initial password HTTP/PostgreSQL composition passed: generated iden
 const presence=createAuthSessionPresence(rpc);
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'unconfirmed'});
 assert.deepEqual(await presence.confirm('33333333-3333-4333-8333-333333333333',session,signal()),{status:'unconfirmed'});
-await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id='${session}';`);
+const signOutPort=createStoredSignOut(security,store,presence,origin,(jwt,abort)=>initialHttp.revoke(jwt,'local',abort));
+const signOutHttp=createSignOutHttp(origin,createAccountSignOut(security,origin,signOutPort));
+const signOutToken=await token();
+const signOutRequest=()=>new Request(origin+'/api/account/sign-out',{method:'POST',headers:{origin,'content-type':'application/json',cookie:'__Host-stylist_access='+signOutToken},body:'{}'});
+// HTTP acceptance does not prove primary session removal.
+initialRevoked=true;
+const unconfirmedSignOut=await signOutHttp(signOutRequest(),signal());assert.equal(unconfirmedSignOut.status,409);assert.equal((await unconfirmedSignOut.json()).status,'remoteUnconfirmed');assert.match(unconfirmedSignOut.headers.get('set-cookie'),/Max-Age=0/);
+assert.equal((await store.inspect(owner,session,signal())).state,'held');
+// This injected provider actually deletes the synthetic Auth row, triggering ownership cascade.
+deleteInitialSession=true;
+const confirmedSignOut=await signOutHttp(signOutRequest(),signal());assert.equal(confirmedSignOut.status,200);assert.equal((await confirmedSignOut.json()).status,'signedOut');assert.match(confirmedSignOut.headers.get('set-cookie'),/Max-Age=0/);
+assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(initialLogouts,4);
+assert.equal(await security.authorize(new Request(origin+'/',{headers:{cookie:'__Host-stylist_access='+signOutToken}}),signal()),null);
+console.log('Stored sign-out HTTP/PostgreSQL composition passed: accepted-only reply remains unconfirmed, browser cookies clear, primary deletion confirms cleanup, and the old signed token is denied.');
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});
 assert.equal(await createRefreshReconciliation(scanStore,presence).reconcile({...scope,leaseId:null},signal()),'confirmed');
 console.log('Primary Auth session presence composition passed: present/mismatched owners remain unconfirmed; actual session deletion permits scoped reconciliation. Hosted activation remains unverified.');

@@ -1014,3 +1014,8 @@ I connected the password HTTP adapter to the verified session and encrypted data
 ## Confirming sign-out independently
 
 I prepared sign-out so clearing a browser cookie or receiving a successful HTTP reply does not automatically mean the remote session ended. I required an independent session-absence check and blocked saved refresh credentials before cleanup where possible. I kept uncertainty visible and tested owner isolation and cleanup ordering locally.
+
+
+## Checking sign-out against stored sessions
+
+I verified the prepared sign-out flow against an isolated database. A successful provider HTTP reply alone remained unconfirmed. Actual synthetic session deletion cleared encrypted ownership and caused the old signed token to be rejected. I kept cookie clearing separate from proof that the remote session ended.

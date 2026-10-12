@@ -2306,3 +2306,12 @@ Prepared createStoredSignOut as a disconnected port behind the existing bounded 
 All 443 foundation tests across 56 files, type checking/build pass after correcting incomplete test doubles and narrowing the identity dependency to authorize only. Four synthetic scenarios cover independent proof, lost acknowledgment, wrong owner/origin refusal and quarantine-before-cleanup ordering. The new port is not yet composed with isolated PostgreSQL or real providers. No route, hosted change, credential or paid call was added.
 
 Exact next action: compose the sign-out port, actual password HTTP logout and primary Auth presence authority in the isolated database harness; prove logout-response-without-row-deletion stays unconfirmed, actual synthetic session deletion confirms, and quarantine survives refused cleanup. Consolidate private Memory at that checkpoint. Task 2c remains incomplete.
+
+
+## Sign-out HTTP and primary database evidence, 12 October 2026
+
+Extended the isolated database pipeline through the concrete stored sign-out port, sign-out HTTP factory, password HTTP logout and primary Auth session-presence authority. A synthetic accepted 204 without session-row deletion returns remoteUnconfirmed (409), clears browser cookies through headers and retains held ownership. When the injected provider actually deletes the synthetic Auth session, foreign-key cascade removes encrypted ownership, independent absence confirms signedOut (200), and the same still-signed token fails authorization. Explicit request counts show no automatic retries. Refused initial cleanup remains quarantined across the earlier actual restart.
+
+All 443 foundation tests across 56 files, type checking/build and the complete isolated SQL rehearsal pass. A missing cancellation argument in the test harness was corrected before the passing final run. Provider fetch is synthetic; no hosted or real-account acceptance is claimed. No live routes, credentials, emails or paid calls were used.
+
+Exact next action: consolidate private Memory with the complete 443-test account checkpoint, then prepare OAuth initiation/exchange transport contracts locally with synthetic responses and one-use PKCE transactions. Recovery purpose verification, real provider configuration, HTTPS browser/device checks and Phase 1/hosted approvals remain open. Task 2c remains incomplete.
