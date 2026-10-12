@@ -933,3 +933,6 @@ I connected refresh ownership to verified request identity instead of browser-su
 
 
 I tested the prepared refresh flow over a real local HTTP connection. The cookie arrives only after adoption; disconnecting during adoption triggers one revocation and guarded storage cleanup. All 394 foundation tests, type checking and build pass. I updated the activation checklist to show this local evidence clearly, while keeping real provider, hosted database and HTTPS acceptance separate.
+
+
+I checked the provider documentation against our account design. I identified default sign-out scope, access-token validity after revocation and ambiguous cleanup as integration risks. I documented the exact evidence needed before activation, rather than treating simulated cleanup as a provider guarantee. This audit changed documentation only; the last verified foundation suite remains 394 passing tests.
