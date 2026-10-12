@@ -25,14 +25,17 @@ function input(value:AccountRequest):AccountRequest{
 }
 export function createAccountFlow(provider:AccountProvider,deadlineMs=15000){
  if(typeof provider?.submit!=='function'||typeof provider?.signOut!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>30000)throw Error('Account configuration unavailable');
+ let admitted=0;
  let generation=0,controller:AbortController|null=null;
  let state:AccountSnapshot=Object.freeze({status:'signedOut',message:'Sign in to use your stylist.',userId:null});
  const set=(status:AccountSnapshot['status'],message:string,userId:string|null=null)=>{state=Object.freeze({status,message,userId});};
  function invalidate(){generation++;controller?.abort();controller=null;}
  async function operation<T>(call:(signal:AbortSignal)=>Promise<T>):Promise<T>{
+  if(admitted>=4)throw Error();
+  admitted++;
   const current=new AbortController();controller=current;let timer:ReturnType<typeof setTimeout>|undefined;
   let abort!:()=>void;
-  try{return await Promise.race([Promise.resolve().then(()=>{if(current.signal.aborted)throw Error();return call(current.signal);}),new Promise<never>((_,reject)=>{
+  try{return await Promise.race([Promise.resolve().then(()=>{if(current.signal.aborted)throw Error();return call(current.signal);}).finally(()=>{admitted--;}),new Promise<never>((_,reject)=>{
    abort=()=>reject(Error());current.signal.addEventListener('abort',abort,{once:true});
    timer=setTimeout(()=>current.abort(),deadlineMs);
   })]);}finally{if(timer)clearTimeout(timer);current.signal.removeEventListener('abort',abort);if(controller===current)controller=null;}

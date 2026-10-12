@@ -787,3 +787,8 @@ I prepared short-lived browser-bound sign-in transactions with one-time use and 
 ### Making account flows reviewable before connecting providers
 
 I added clearly labeled simulated account screens so I could review sign-in, registration, recovery and social handoffs without creating accounts or sending email. I kept the stylist disabled even when a sample sign-in succeeded. I checked the flows in the browser and cleared temporary password fields after submission. Real provider and phone acceptance remain separate checks.
+
+
+### Checking the complete account boundary and keyboard flow
+
+I joined the prepared account security pieces and tested a generated signed token through cookie creation and request authorization. Revoking the simulated session denied both paths. I also checked small-screen wrapping and keyboard focus. I found that canceled requests could accumulate if a provider ignored cancellation, so I capped underlying work and tested recovery after it settled. I kept real provider, phone and screen-reader acceptance open.

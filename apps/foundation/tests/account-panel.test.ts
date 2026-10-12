@@ -6,7 +6,7 @@ import {createAccountFlow} from '../src/web/account-flow.ts';
 describe('local simulated account screens',()=>{
  it('renders explicit simulation notice, labeled inputs and all approved sign-in choices',()=>{
   const html=renderToStaticMarkup(React.createElement(AccountPanel));
-  for(const text of ['Simulated account preview','Use made-up details only','creates no account','Create account','Recover access','Preview Google sign-in','Preview Apple sign-in','role="status"','for="account-email"','for="account-password"','type="password"','autoComplete="off"'])expect(html).toContain(text);
+  for(const text of ['Simulated account preview','Use made-up details only','creates no account','Create account','Recover access','Preview Google sign-in','Preview Apple sign-in','role="status"','tabindex="-1"','for="account-email"','for="account-password"','type="password"','autoComplete="off"'])expect(html).toContain(text);
   expect(html).not.toContain('action=');expect(html).not.toContain('11111111');
  });
  it('keeps the sample registration and recovery outcomes distinct from signed-in identity',async()=>{

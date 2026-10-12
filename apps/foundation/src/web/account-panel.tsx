@@ -1,4 +1,4 @@
-import React,{useEffect,useMemo,useState} from 'react';
+import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {createAccountFlow,type AccountProvider,type AccountRequest} from './account-flow.ts';
 /** Explicitly simulated; no network, storage, account creation or styling authorization. */
 export const sampleAccountProvider:AccountProvider={
@@ -14,6 +14,8 @@ export function AccountPanel({provider=sampleAccountProvider}:{provider?:Account
  const flow=useMemo(()=>createAccountFlow(provider),[provider]);
  const [state,setState]=useState(flow.snapshot),[mode,setMode]=useState<'signIn'|'signUp'|'recover'>('signIn');
  const [email,setEmail]=useState(''),[password,setPassword]=useState('');
+ const statusRef=useRef<HTMLParagraphElement>(null),previous=useRef(state);
+ useEffect(()=>{if(previous.current!==state&&state.status!=='pending')statusRef.current?.focus();previous.current=state;},[state]);
  useEffect(()=>()=>flow.cancel(),[flow]);
  async function submit(request:AccountRequest){const work=flow.submit(request);setPassword('');setState(flow.snapshot());await work;setState(flow.snapshot());}
  function change(next:typeof mode){flow.cancel();setState(flow.snapshot());setPassword('');setMode(next);}
@@ -30,7 +32,7 @@ export function AccountPanel({provider=sampleAccountProvider}:{provider?:Account
    </form>
    {mode==='signIn'&&<div className="account-social"><button type="button" disabled={pending} onClick={()=>void submit({method:'social',provider:'google'})}>Preview Google sign-in</button><button type="button" disabled={pending} onClick={()=>void submit({method:'social',provider:'apple'})}>Preview Apple sign-in</button></div>}
   </>}
-  <p className="account-status" role={state.status==='error'?'alert':'status'} aria-live="polite">{state.status==='signedIn'?'Simulated sign-in complete. No real account is connected.':state.status==='confirmationRequired'?'Confirmation screen preview. No email was sent.':state.status==='recoveryRequested'?'Recovery screen preview. No email was sent.':state.status==='redirecting'?'Provider handoff preview. No external page was opened.':state.message}</p>
+  <p ref={statusRef} tabIndex={-1} className="account-status" role={state.status==='error'?'alert':'status'} aria-live={state.status==='error'?'assertive':'polite'}>{state.status==='signedIn'?'Simulated sign-in complete. No real account is connected.':state.status==='confirmationRequired'?'Confirmation screen preview. No email was sent.':state.status==='recoveryRequested'?'Recovery screen preview. No email was sent.':state.status==='redirecting'?'Provider handoff preview. No external page was opened.':state.message}</p>
   {(pending||state.status==='redirecting')&&<button type="button" onClick={()=>{flow.cancel();setState(flow.snapshot());}}>Cancel preview</button>}
  </section>;
 }

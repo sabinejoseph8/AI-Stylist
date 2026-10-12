@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 261 foundation tests across 25 files, type checking and build pass. Signed identity/current-session checks, bounded public signing-key transport, same-origin request authorization and verified secure cookie issuance are prepared locally. One-time browser-bound PKCE callback transactions now cover Google, Apple and recovery, with expiry, capacity limits, replay protection and safe internal destinations. Recovery stays scoped to password reset. No real accounts, provider code exchanges, hosted changes or paid calls occurred. Clearly simulated account screens are implemented and agent desktop browser QA passes; Sabine visual acceptance, responsive/accessibility checks and actual Auth/redirect/recovery/browser acceptance remain open.
+Task 2c local account preparation is active. All 265 foundation tests across 26 files pass. Prepared signing-key, current-session, cookie, request and callback gates now have a single disconnected composition factory tested with generated signed tokens and simulated RPC/HTTP ports. Revocation blocks both cookie issuance and request authorization; a callback alone grants no identity. Account screens pass agent desktop and narrow-layout checks, with keyboard focus reaching results and cancellation. Stalled canceled account operations are capped until underlying work settles. Sabine visual review is pending. Real Auth, email, recovery, OAuth, phone/screen-reader and hosted acceptance remain open; no live calls or hosted changes occurred.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -154,7 +154,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** A secure signed-in shell with the approved visual language.  
 **Dependencies:** Phase 1 exit for the full phase; Sabine approved Task 2a alone in parallel on 11 October 2026. Framework/hosting and core Supabase roles are approved; account configuration and other gates remain.
 **Product coverage:** PS-01, PS-09; A18 and foundational A12/A13.  
-**Status:** Task 2a completed, including Sabine’s successful visual review on 11 October 2026. Task 2b local preparation is in progress under Sabine’s additional exception; Task 2c remains unimplemented.
+**Status:** Task 2a completed, including Sabine’s successful visual review on 11 October 2026. Task 2b local preparation remains under Sabine’s exception with hosted acceptance open. Sabine also approved local-only Task 2c preparation; its simulated account UI and disconnected security boundaries are implemented, with actual provider and hosted acceptance pending.
 
 ### Task groups
 

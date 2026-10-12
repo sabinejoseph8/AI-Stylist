@@ -52,3 +52,15 @@ it('cancellation before dispatch makes no provider request',async()=>{
  const flow=createAccountFlow({submit,signOut:async()=>{}});const attempt=flow.submit(request);flow.cancel();await attempt;
  expect(submit).not.toHaveBeenCalled();expect(flow.snapshot().status).toBe('signedOut');
 });
+
+it('retains admission for canceled non-cooperative calls and resumes when they settle',async()=>{
+ const releases:Array<(reply:AccountReply)=>void>=[];const submit=vi.fn(()=>new Promise<AccountReply>(resolve=>releases.push(resolve)));
+ const flow=createAccountFlow({submit,signOut:async()=>{}},1000);
+ for(let i=0;i<4;i++){const attempt=flow.submit(request);await Promise.resolve();flow.cancel();await attempt;}
+ await flow.submit(request);expect(submit).toHaveBeenCalledTimes(4);expect(flow.snapshot().status).toBe('error');
+ releases[0]!({status:'signedIn',userId:user});await Promise.resolve();await Promise.resolve();
+ const fresh=flow.submit(request);await Promise.resolve();expect(submit).toHaveBeenCalledTimes(5);
+ releases[4]!({status:'signedIn',userId:user});await fresh;expect(flow.snapshot().userId).toBe(user);
+ for(const release of releases.slice(1,4))release({status:'signedIn',userId:'00000000-0000-0000-0000-000000000002'});
+ await Promise.resolve();expect(flow.snapshot().userId).toBe(user);
+});
