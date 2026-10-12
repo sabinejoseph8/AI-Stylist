@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The complete 209 foundation tests pass; revised SQL adapter-chain recovery and timestamp guards also pass isolated PostgreSQL verification.
+1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The complete 215 foundation tests pass; local SQL verification also covers media recovery, receipt maintenance and consultation-slot lost acknowledgments/races.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1126,3 +1126,8 @@ Migration 015 prepares the approved one-consultation capacity limit in a private
 Added a disconnected server port bound to one trusted owner. It validates UUIDs, exact lease fields, safe fences, explicit-offset timestamps and boolean mutation acknowledgments. It rejects overlapping calls, enforces an eight-second maximum response deadline, sanitizes errors and never retries. A timed-out mutation may still complete remotely; the caller must treat it as uncertain and use the same reservation evidence for reconciliation, without starting provider work. No token is exposed through a route and no key is read from the environment.
 
 All 215 foundation checks across 17 files, type checking and build pass. A separate actual local SQL rehearsal connects this TypeScript adapter to migration 015 and verifies reservation, reconnect, foreign isolation, provider authorization fencing and verified cleanup holds. Auth and transport identities in this rehearsal are synthetic. Actual provider/coordinator integration and hosted acceptance remain gated.
+
+
+## Lost acknowledgments and consultation races, 11 October 2026
+
+The prepared adapter now passes actual local SQL checks that deliberately discard successful claim, provider-transition and end acknowledgments. An unknown claim keeps the unused reservation held until safe expiry; reconnect after a lost provider-transition reply observes provider state, and another provider transition is refused. A lost end reply does not let the old generation affect the next reservation. Two independent provider-start SQL transactions permit exactly one transition. Concurrent heartbeat and verified end leave the slot free, and later stale heartbeats are refused. Full local data-protection rehearsal and type checking pass. Foundation source is unchanged, with the existing 215-test evidence retained. Auth/provider usage is simulated and hosted activation remains gated.

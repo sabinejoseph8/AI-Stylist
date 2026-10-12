@@ -769,3 +769,11 @@ Exact next action: publish/copy the tested adapter and refresh the private Memor
 
 
 Adapter checkpoint b104642 is published and copied. Private Memory source 14efb4ecc19a9d16a0fe175cfb8077529f27857a deployed successfully as appgdep_6acc3106867081918cc07eb02fc4426a, with MCP retained. Sixteen website checks and artifact validation pass.
+
+
+## Lost acknowledgments and consultation races, 11 October 2026
+
+The prepared adapter now passes actual local SQL checks that deliberately discard successful claim, provider-transition and end acknowledgments. An unknown claim keeps the unused reservation held until safe expiry; reconnect after a lost provider-transition reply observes provider state, and another provider transition is refused. A lost end reply does not let the old generation affect the next reservation. Two independent provider-start SQL transactions permit exactly one transition. Concurrent heartbeat and verified end leave the slot free, and later stale heartbeats are refused. Full local data-protection rehearsal and type checking pass. Foundation source is unchanged, with the existing 215-test evidence retained. Auth/provider usage is simulated and hosted activation remains gated.
+
+
+Exact next action: publish/copy the passing lost-acknowledgment checkpoint and refresh Memory; then audit remaining local Task 2b requirements against current evidence. Do not add live provider calls, hosted migrations or Auth integration under the local-only exception.

@@ -28,3 +28,21 @@ assert.equal(await slot.update(lease,'end'),false);
 assert.equal(await slot.update(lease,'end',true),true);
 assert.equal(await slot.update(lease,'check'),false);
 console.log('Prepared consultation adapter passes actual local SQL reservation, reconnect, provider fence and cleanup holds');
+
+// Lost replies occur after the database commits. The adapter must not retry.
+let submitted=0;
+const lost={async call(name:string,p:Record<string,unknown>){submitted++;await rpc.call(name,p);throw Error('simulated lost acknowledgment');}};
+await assert.rejects(createConsultationSlot(owner,lost).claim(session),/uncertain/);
+assert.equal(submitted,1);assert.equal(await slot.claim(session),null);
+// No token was received: retain the unused reservation until its safe expiry.
+sql("update stylist_private.consultation_slot set expires_at=now()-interval '1 second';");
+const resumed=await slot.claim(session);assert.ok(resumed);
+await assert.rejects(createConsultationSlot(owner,lost).update(resumed,'provider'),/uncertain/);
+assert.equal(submitted,2);
+const afterLostStart=await slot.claim(session,resumed.token);assert.equal(afterLostStart?.state,'provider');
+assert.equal(await slot.update(resumed,'provider'),false);assert.equal(await foreign.claim(session),null);
+await assert.rejects(createConsultationSlot(owner,lost).update(resumed,'end',true),/uncertain/);
+assert.equal(await slot.claim(session,resumed.token),null);
+const next=await foreign.claim(session);assert.ok(next);assert.ok(next.fence>resumed.fence);
+assert.equal(await slot.update(resumed,'end',true),false);assert.equal(await foreign.update(next,'end'),true);
+console.log('Lost reservation/start/end acknowledgments retain safe state without duplicate provider permission');

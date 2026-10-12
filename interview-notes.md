@@ -750,3 +750,6 @@ I prepared a database reservation so two customers cannot claim the stylist at t
 
 
 I connected the prepared consultation reservation adapter to a disposable real database. I checked reconnects, foreign-account denial and the rule that only one provider start is permitted. A failed acknowledgment stays uncertain, so the app cannot mistake a timeout for permission to start another call. This remains local preparation, with live account and provider acceptance still pending.
+
+
+I tested what happens when the database succeeds but its reply is lost. The app keeps the uncertain reservation safe, refuses duplicate provider permission and prevents old requests from affecting the next consultation. I also checked overlapping heartbeat and end requests against separate database connections; the ended consultation stayed ended.
