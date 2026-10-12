@@ -936,3 +936,6 @@ I tested the prepared refresh flow over a real local HTTP connection. The cookie
 
 
 I checked the provider documentation against our account design. I identified default sign-out scope, access-token validity after revocation and ambiguous cleanup as integration risks. I documented the exact evidence needed before activation, rather than treating simulated cleanup as a provider guarantee. This audit changed documentation only; the last verified foundation suite remains 394 passing tests.
+
+
+I prepared a provider bridge with explicit refresh input and current-session cleanup. It rejects malformed replies, preserves uncertainty and keeps unresolved requests within bounded capacity. All 398 foundation tests, type checking and build pass. Real provider transport remains disconnected, so these simulated checks do not establish remote revocation.
