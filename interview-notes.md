@@ -1359,3 +1359,6 @@ I separated the interruption experiment from the original end-only voice test. T
 
 
 I added a separate private recovery page rather than changing the original stop-only test. Its browser must verify local video-client destruction before asking for a replacement, and its server still requires verified old-room closure. The automated suite caught an early return that prevented replacement after restoring history; I fixed it before publishing. A real device test is still needed.
+
+
+I rehearsed recovery in a phone-sized WebKit browser using simulated media and provider responses. The check exposed an ordering bug: old callbacks were invalidated before their interrupt message could be sent. I moved the interrupt ahead of invalidation and added an assertion before client destruction. The rehearsal covers the UI and cleanup sequence, while the real phone test remains separate.
