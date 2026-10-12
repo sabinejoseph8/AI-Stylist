@@ -29,3 +29,13 @@ it('admits only one simultaneous reset and clears the cookie after an adapter er
 it('refuses duplicate installation and caps retained delivery grants',async()=>{
  const owner=createRecoveryBrowser(origin),g=grant();owner.install(g);expect(()=>owner.install(g)).toThrow();for(let i=1;i<128;i++)owner.install(grant());expect(()=>owner.install(grant())).toThrow();
 });
+
+it('explicit expiry cleans retained grants without admitting a reset',async()=>{
+ const owner=createRecoveryBrowser(origin),g=grant(),d=owner.install(g);vi.useFakeTimers();vi.setSystemTime(Date.now()+60001);expect(await owner.expire()).toBe(true);expect(g.discard).toHaveBeenCalledTimes(1);expect((await owner.submit(request(d.setCookie.split(';')[0]!),input,signal())).status).toBe('unavailable');
+});
+it('shutdown permanently closes delivery and deduplicates grant cleanup',async()=>{
+ const owner=createRecoveryBrowser(origin),g=grant(),d=owner.install(g);expect(await owner.close()).toBe(true);expect(await owner.close()).toBe(true);expect(()=>owner.install(grant())).toThrow();expect((await owner.submit(request(d.setCookie.split(';')[0]!),input,signal())).status).toBe('unavailable');expect(g.discard).toHaveBeenCalledTimes(1);
+});
+it('shutdown remains bounded and unconfirmed when grant cleanup stalls',async()=>{
+ vi.useFakeTimers();const owner=createRecoveryBrowser(origin,20),g={...grant(),discard:vi.fn(()=>new Promise<boolean>(()=>{}))};owner.install(g);const work=owner.close();await vi.advanceTimersByTimeAsync(21);expect(await work).toBe(false);expect(owner.cleanupHeld()).toBe(true);expect(await owner.close()).toBe(false);expect(g.discard).toHaveBeenCalledTimes(1);
+});

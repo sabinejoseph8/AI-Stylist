@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 313 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Task 2c local account preparation is active under Sabine's approved exception. All 317 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1174,7 +1174,7 @@ Sabine completed every step of the eight-step account preview and reported that 
 
 Extracted a common server-only session lifecycle and added disconnected email/password and registration ports. Password and OAuth callback methods share a four-operation admission limit and the same uncertainty hold after ambiguous creation or failed cleanup. Registration confirmation returns no account cookie. Email whitespace is trimmed; passwords are passed unchanged and never stored by these interfaces. Exact input keys and string methods are required, preventing object coercion into a supported action. HTTP origin/CSRF, rate/body limits, real provider policy and refresh adoption remain requirements before wiring any route.
 
-All 313 foundation tests across 33 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
+All 317 foundation tests across 33 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
 
 
 ## Local sign-out coordinator, 11 October 2026
@@ -1233,3 +1233,12 @@ Added integration checks using the actual disconnected callback/recovery owner, 
 All 313 foundation tests across 33 files, type checking and build pass. Four new composed tests prove these integration paths. No real provider-purpose proof, account session, password, browser cookie, email, hosted setting or paid call was used. The generated signing material and local adapter replies are test fixtures. Actual production recovery, HTTP delivery/limits, restart reconciliation, provider cleanup and physical-device accessibility still require acceptance.
 
 Exact next action: prepare explicit recovery-delivery expiration and shutdown disposal, including an in-flight reset during shutdown, then refresh the private Memory checkpoint. This lifecycle preparation remains local and does not authorize hosted activation. Task 2c remains incomplete.
+
+
+## Recovery delivery lifecycle, 11 October 2026
+
+Added explicit expire and close operations to the disconnected browser recovery owner. Expire removes expired delivery and confirms grant cleanup. Close permanently stops new installation/submission, removes browser handles and discards all active grants, including grants already consumed by an in-flight reset. Active reset controllers are aborted during public disposal/shutdown. Normal post-reset cleanup preserves confirmed completion; cancellation remains unconfirmed. Cleanup is deduplicated and independently response-bounded to at most eight seconds. A stalled/failed cleanup holds the owner and close returns false; a repeated close returns the same result instead of retrying uncertain provider work. Retained capacity now counts active consumed grants as well as pending delivery.
+
+All 317 foundation tests across 33 files, type checking and build pass. Four new checks cover explicit expiry, permanent/deduplicated shutdown, stalled cleanup deadline and composed shutdown during an actual recovery-owner reset with a simulated provider. No production timer, process hook, provider call, account or hosted setting was activated. The future HTTP/service owner must invoke expire on an appropriate schedule and close at graceful shutdown; forced process termination and durable reconciliation remain unproven. A true cleanup acknowledgment proves the adapter's contract only, not reversal of a password change that may already have occurred.
+
+Exact next action: refresh private Memory with the verified 317-test recovery checkpoint, then prepare the disconnected recovery/account HTTP boundary with bounded parsing and Origin/CSRF checks. Preserve no-real-provider/no-hosted-change scope and all existing phase/spending gates. Task 2c remains incomplete.

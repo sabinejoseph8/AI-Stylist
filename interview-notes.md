@@ -835,3 +835,8 @@ I prepared a separate secure reset cookie so account access cannot accidentally 
 ## Verifying the complete local reset path
 
 I connected the prepared recovery owner, browser delivery and account verifier in integration tests. I confirmed the reset cookie cannot access a profile, failed delivery discards permission, cancellation reaches the password-change operation and expiry prevents changes. These tests use simulated provider leases, so I kept real provider acceptance open. All 313 foundation tests pass, with type checking and build.
+
+
+## Cleaning up recovery when the service closes
+
+I added explicit expiration and shutdown disposal for temporary reset permission. Shutdown stops new work, cancels a reset in progress and cleans each grant once. I bounded cleanup so a stalled provider cannot make shutdown wait indefinitely, while keeping the outcome unconfirmed if cleanup fails. All 317 foundation tests pass, with type checking and build. Real service hooks and recovery after forced termination remain unverified.

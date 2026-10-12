@@ -42,4 +42,10 @@ describe('disconnected recovery owner and browser delivery composition',()=>{
   const f=await fixture(),value={...lease(),discard:vi.fn(async()=>false)},recovery=createAccountRecovery(f.security,{exchange:async()=>value}),browser=createRecoveryBrowser(origin),grant=await recovery.complete(f.begin('recovery').request,signal());if(grant.status!=='resetRequired')throw Error();
   const delivery=browser.install(grant);vi.useFakeTimers();vi.setSystemTime(Date.now()+60001);expect((await browser.submit(request(delivery.setCookie.split(';')[0]!),input,signal())).status).toBe('unavailable');expect(value.resetPassword).not.toHaveBeenCalled();expect(value.discard).toHaveBeenCalledTimes(1);expect(recovery.cleanupHeld()).toBe(true);expect(browser.cleanupHeld()).toBe(true);
  });
+ it('shutdown cancels a consumed in-flight grant and cleans provider state once',async()=>{
+  const f=await fixture(),value=lease();let resolve!:(v:boolean)=>void,started!:()=>void,scope!:AbortSignal;const began=new Promise<void>(r=>started=r);value.resetPassword=vi.fn((_password:string,s:AbortSignal)=>{scope=s;started();return new Promise<boolean>(r=>resolve=r);});
+  const recovery=createAccountRecovery(f.security,{exchange:async()=>value}),browser=createRecoveryBrowser(origin),grant=await recovery.complete(f.begin('recovery').request,signal());if(grant.status!=='resetRequired')throw Error();
+  const delivery=browser.install(grant),work=browser.submit(request(delivery.setCookie.split(';')[0]!),input,signal());await began;expect(await browser.close()).toBe(true);expect(scope.aborted).toBe(true);expect((await work).status).toBe('unconfirmed');resolve(true);await Promise.resolve();expect(value.discard).toHaveBeenCalledTimes(1);
+ });
+
 });
