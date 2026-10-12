@@ -942,3 +942,6 @@ I prepared a provider bridge with explicit refresh input and current-session cle
 
 
 I prepared fixed-project refresh and session-local logout HTTP operations. Simulated responses prove destination restrictions, bounded reading, no automatic retry and conservative cleanup reporting. All 402 foundation tests, type checking and build pass. I kept the exact provider success response and real revocation as activation checks, rather than treating a simulated 204 as live evidence.
+
+
+I rehearsed the complete prepared refresh pipeline against isolated PostgreSQL with synthetic provider HTTP. It preserved blocked claims after malformed responses and retained ownership after refused logout. This exposed a gap: cleanup uncertainty after adoption was held only in the current process. I recorded durable quarantine as the next required fix before activation. All 402 foundation tests, type checking and build pass; no real provider was contacted.

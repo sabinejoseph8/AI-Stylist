@@ -9,6 +9,8 @@ import {createAccountSessions} from '../src/server/account-session.ts';
 import {createStoredRefreshPort} from '../src/server/refresh-port.ts';
 import {createAccountRefresh} from '../src/server/account-refresh.ts';
 import {createRefreshHttp} from '../src/server/refresh-http.ts';
+import {createRefreshProvider} from '../src/server/refresh-provider.ts';
+import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 const container=process.argv[2];
@@ -120,3 +122,43 @@ const delivered=await http.handle(refreshRequest(),signal());assert.equal(delive
 assert.equal((await store.inspect(owner,session,signal())).scope.generation,2);
 assert.equal(await http.discardResponse(delivered),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
 console.log('Stored refresh port/HTTP PostgreSQL composition passed: verified cookie-derived scope, generation adoption, identity JSON refusal and failed-delivery cleanup. HTTP uses Request/Response factories, not a deployed server.');
+
+// All provider requests stop at this injected fixture fetch; no provider network is used.
+let providerMode='normal',providerRequests=0,logoutRequests=0;
+const operations=createRefreshProviderHttp(project,'fixture-private-api-key-not-real',async(url,init)=>{
+ providerRequests++;assert.equal(init.redirect,'error');assert.equal(init.credentials,'omit');
+ if(url===project+'/auth/v1/token?grant_type=refresh_token'){
+  assert.deepEqual(JSON.parse(init.body),{refresh_token:'transport-fixture'});
+  return new Response(providerMode==='malformed'?'not-json':JSON.stringify({access_token:providerToken,refresh_token:'transport-next-fixture',token_type:'bearer'}),{headers:{'content-type':'application/json'}});
+ }
+ assert.equal(url,project+'/auth/v1/logout?scope=local');logoutRequests++;assert.equal(init.headers.authorization,'Bearer '+providerToken);
+ return new Response(null,{status:providerMode==='refused-cleanup'?401:204});
+});
+const bridged=createRefreshProvider(operations,()=>scope.expiresAt),transportRotation=createRefreshRotation(store,bridged);
+function transportHttp(){
+ const account=createAccountRefresh(security,origin,createStoredRefreshPort(security,store,transportRotation,origin));
+ return {account,http:createRefreshHttp(origin,account)};
+}
+for(const mode of ['normal','lost-write','malformed','refused-cleanup']){
+ providerMode=mode;assert.equal(await store.adopt('transport-fixture',scope,signal()),'confirmed');
+ const composed=transportHttp();if(mode==='lost-write')loseNext='stylist_finish_refresh';
+ const response=await composed.http.handle(refreshRequest(),signal());
+ if(mode==='normal'){
+  assert.equal(response.status,200);assert.equal((await store.inspect(owner,session,signal())).scope.generation,2);
+  assert.equal(await composed.http.discardResponse(response),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+ }else if(mode==='lost-write'){
+  assert.equal(response.status,400);assert.equal(response.headers.get('set-cookie'),null);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+ }else if(mode==='malformed'){
+  assert.equal(response.status,400);assert.equal(response.headers.get('set-cookie'),null);assert.equal(composed.account.cleanupHeld(),true);
+  const unresolved=await store.inspect(owner,session,signal());assert.equal(unresolved.state,'rotating');assert.equal((await store.claim(owner,session,1,signal())).status,'refused');
+  // Fixture teardown only, not a claim that remote ambiguity was resolved.
+  assert.equal(await store.remove(unresolved.scope,unresolved.leaseId,true,signal()),'confirmed');
+ }else{
+  assert.equal(response.status,200);assert.equal(await composed.http.discardResponse(response),false);assert.equal(composed.account.cleanupHeld(),true);
+  const retained=await store.inspect(owner,session,signal());assert.equal(retained.status,'found');assert.equal(retained.scope.generation,2);
+  // Explicit synthetic teardown; production cannot assume this confirmation.
+  assert.equal(await store.remove(retained.scope,retained.leaseId,true,signal()),'confirmed');
+ }
+}
+assert.equal(providerRequests,7);assert.equal(logoutRequests,3);
+console.log('Provider HTTP/bridge/database/account composition passed: adoption, lost write acknowledgment, malformed response hold and unconfirmed cleanup retention. Provider fetch and teardown revocation are synthetic.');
