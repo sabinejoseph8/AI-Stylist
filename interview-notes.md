@@ -880,3 +880,6 @@ I tested the browser controller and transport with the actual prepared HTTP and 
 ### Preventing discarded session reuse
 
 I confirmed that all eight sample account review steps worked and were readable. During local engineering review, I strengthened the session owner so an adapter cannot reuse a discarded session object to issue a fresh cookie. I kept cleanup idempotent and added a generated-token regression test. The foundation now passes 347 automated tests, type checking and build. This is local simulated evidence; real provider authentication and hosted acceptance remain open.
+
+
+I also added a concurrent-session ownership check: two sign-in attempts cannot adopt the same adapter session object. Rejecting the duplicate leaves the first legitimate owner intact. The foundation passes 348 tests, type checking and build. I published the private Memory website through the preceding 347-test checkpoint, keeping it owner-only. Real provider and hosted account acceptance are still separate.

@@ -89,3 +89,6 @@ Private Memory source b2b033a7e17dc9e586e16096687a0f6f7e25084f deployed successf
 
 
 Private Memory account-request source 26312ecfdf8f701dfab7ecd958d248ea21ad1028 deployed successfully as appgdep_6acc46f2caf081918d224d2921d008e5. All 16 checks pass; owner-only access and MCP remain. It reflects 332 foundation tests and source through 30664a7. The subsequently verified status-only controller alignment brings local checks to 333 and is queued for the next consolidated refresh.
+
+
+Private progress refresh: source 64c11ab097cfc66146dd6e7f8533bea9a1c11d47, deployment appgdep_6acc4976b8308191b73f38788c6c4379, verified succeeded. Imported plan reflects 347 foundation tests and Sabine's accepted eight-step sample review. All 16 site checks pass. Owner-only access and MCP preserved. Customer authentication remains disabled.

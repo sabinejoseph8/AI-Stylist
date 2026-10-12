@@ -34,6 +34,15 @@ describe('disconnected password account orchestration',()=>{
   expect(await service.password.submit(input,signal())).toEqual({status:'unavailable'});
   expect(discard).toHaveBeenCalledTimes(1);expect(service.cleanupHeld()).toBe(false);
  });
+ it('claims a shared adapter session once across concurrent submissions',async()=>{
+  const f=await fixture(),discard=vi.fn(async()=>true),lease={accessToken:f.token,discard};
+  const service=createAccountAccess(f.security,origin,{password:async()=>lease,exchange:vi.fn()});
+  const results=await Promise.all([service.password.submit(input,signal()),service.password.submit(input,signal())]);
+  expect(results.map(r=>r.status).sort()).toEqual(['ready','unavailable']);
+  expect(discard).not.toHaveBeenCalled();
+  const ready=results.find(r=>r.status==='ready');if(!ready||ready.status!=='ready')throw Error();
+  await ready.discard();expect(discard).toHaveBeenCalledTimes(1);
+ });
  it('returns confirmation only for registration and never returns account cookies',async()=>{
   const f=await fixture(),password=vi.fn(async()=>({status:'confirmationRequired' as const}));const service=createAccountAccess(f.security,origin,{password,exchange:vi.fn()});
   expect(await service.password.submit({...input,method:'signUp'},signal())).toEqual({status:'confirmationRequired'});

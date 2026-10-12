@@ -17,6 +17,7 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
  const base=new URL(appOrigin);
  if(base.protocol!=='https:'||base.origin!==appOrigin||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Account session unavailable');
  let admitted=0,held=false;
+ const claimed=new WeakSet<PendingAccountSession>();
  const cleanups=new WeakMap<PendingAccountSession,Promise<boolean>>();
  async function discard(session:PendingAccountSession){
   const previous=cleanups.get(session);if(previous)return previous;
@@ -50,6 +51,8 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
      if(value&&typeof value==='object'&&'status' in value&&value.status==='confirmationRequired'&&Object.keys(value).length===1)return {status:options.registration?'confirmationRequired':'unavailable'};
      session=value as PendingAccountSession;
      if(!session||typeof session!=='object'||typeof session.discard!=='function'){held=true;throw Error();}
+     if(claimed.has(session))return {status:'unavailable'};
+     claimed.add(session);
      if(controller.signal.aborted||cleanups.has(session)||typeof session.accessToken!=='string')throw Error();
      const cookie=await security.cookies.issue(session.accessToken,controller.signal);
      if(!cookie||controller.signal.aborted)throw Error();

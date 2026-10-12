@@ -950,3 +950,12 @@ Sabine confirmed all eight local account preview steps worked and were readable.
 The shared session owner now refuses a provider adapter object that has already been discarded, before issuing another cookie. Cleanup remains idempotent and is not retried. A generated-token regression test proves the same disposed lease cannot restore account access, even if the simulated current-session authority still reports it current. All 347 foundation tests across 39 files, type checking and build pass. No real provider, hosted route, email or paid activity was enabled.
 
 Exact next action: refresh private Memory from the latest committed documents, then prepare disconnected refresh/session ownership with simulated tests. Task 2c remains incomplete; actual provider configuration, session persistence, customer activation and manual phase gates remain open.
+
+
+## One-time adapter session ownership, 11 October 2026
+
+The disconnected shared account owner atomically claims each adapter session object before asynchronous cookie verification. Concurrent submissions returning the same object produce one ready result and one unavailable result; the rejected duplicate does not revoke the legitimate owner's session. Discarded object reuse remains refused. The process-local WeakSet is a programming-contract guard, not durable refresh-token storage or cross-process provider replay protection.
+
+All 348 foundation tests across 39 files, type checking and build pass. No actual provider or route is enabled. Private Memory source 64c11ab097cfc66146dd6e7f8533bea9a1c11d47 deployed successfully as appgdep_6acc4976b8308191b73f38788c6c4379 with the preceding 347-test checkpoint. All 16 website checks pass; owner-only access and MCP remain. The additional concurrency test will be included in the next consolidated refresh.
+
+Exact next action: prepare disconnected refresh/session ownership with bounded cancellation, one-time rotation and simulated tests, without connecting real providers or promising durable persistence. Task 2c remains incomplete.
