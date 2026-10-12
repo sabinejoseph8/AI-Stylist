@@ -71,3 +71,6 @@ Signing-key checkpoint b4f79a8 is pushed and copied. Private Memory source 67023
 
 
 Callback checkpoint 582a4ea is pushed and copied. Private Memory source 837d55ac611e5cd35ced47020b515a93a419eb3a deployed successfully as appgdep_6acc39620ec881918125b6bb8e6fc79f. All 16 website checks pass; owner-only access and MCP remain. This snapshot includes request identity, cookie issuance and callback preparation with 257 foundation tests.
+
+
+Account usability/composition checkpoint 0c46182 is pushed and copied. Private Memory source 116c588dd2fedfa85d51ea2b90d9cec0e679c197 deployed successfully as appgdep_6acc3bee123c81918343be76e0a846f5. All 16 website checks pass; owner-only access and MCP are retained. This source reflects 265 foundation tests and the narrow-layout/keyboard evidence.

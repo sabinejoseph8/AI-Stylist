@@ -906,3 +906,6 @@ Viewport overrides of 390 and 320 pixels produced measured document widths of 37
 All 265 foundation tests across 26 files pass. Type checking and build are rerun for the final source before publication. Task 2c and Phase 2 remain incomplete.
 
 Exact next action: publish/copy the composed security and usability checkpoint and refresh private Memory (currently callback checkpoint 582a4ea). Continue local provider-independent account server orchestration and failure/cleanup contracts; do not enable real provider endpoints, sign-ins, emails or hosted settings. Sabine local visual review is pending but is not a blocker to independent local preparation.
+
+
+Account usability/composition checkpoint 0c46182 is pushed and copied. Private Memory source 116c588dd2fedfa85d51ea2b90d9cec0e679c197 deployed successfully as appgdep_6acc3bee123c81918343be76e0a846f5. All 16 website checks pass; owner-only access and MCP are retained. This source reflects 265 foundation tests and the narrow-layout/keyboard evidence.
