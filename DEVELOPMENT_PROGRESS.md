@@ -850,3 +850,12 @@ Exact next action: commit/push/copy this signing-key checkpoint and refresh priv
 
 
 Signing-key checkpoint b4f79a8 is pushed and copied. Private Memory source 6702373344f96025752389a1c412226c25f3096a deployed successfully as appgdep_6acc376ab93c8191b10c7a26cdb0cefb. All 16 website checks pass; owner-only access and MCP are retained. This refresh includes both the SQL identity and signing-key checkpoints. No customer app deployment occurred.
+
+
+## Local account request boundary
+
+Prepared a disconnected cookie-only identity gate for a configured HTTPS application origin. It refuses foreign URL/Host/Origin, cross-site and same-site browser requests, query strings, duplicate or malformed account cookies and alternate Authorization credentials. Mutations require exact Origin. Owner headers and forwarded-host headers do not determine identity. The single __Host-stylist_access token is passed only to the prepared signature/current-session verifier; cancellation and errors return no identity. This is a prepared cookie contract, not cookie issuance or a customer endpoint. Secure/HttpOnly/Path=/ and SameSite controls must be enforced when the issuer is implemented.
+
+All 245 foundation tests across 22 files pass, with type checking and build. The request suite includes a real generated ES256 signature, simulated session revocation and malformed/cross-origin request rejection. This proves local composition only; no browser cookie, actual Auth sign-in, OAuth or password recovery is accepted yet. No route, customer feature or hosted configuration is enabled.
+
+Exact next action: publish/copy this request boundary checkpoint; private Memory currently reflects b4f79a8. Then prepare verified cookie issuance and clearing, followed by one-time OAuth/recovery callback state and safe return-path validation, using local generated-key and simulated tests only. Keep all hosted, credentials and spending restrictions.

@@ -769,3 +769,8 @@ I tested the token verifier against a real local database with a synthetic Auth 
 ### Preparing trusted account signing keys
 
 I kept the account prototype local while preparing its trust boundary. I used generated signing keys to test rotation and failure cases without contacting a provider. I limited how often the app can fetch public keys and how much time and data a response can consume. I also tested a stalled connection so repeated requests could not create unlimited background work. These checks strengthen the account foundation, but they do not replace testing real sign-in and recovery later.
+
+
+### Separating browser requests from trusted identity
+
+I added a local request boundary that accepts one account cookie and verifies its signed identity and current session. I tested foreign sites, conflicting cookies and forged owner headers before connecting customer routes. A generated signed token worked until the simulated session was revoked. I kept actual sign-in and browser cookie acceptance open because these local checks do not prove provider behavior.
