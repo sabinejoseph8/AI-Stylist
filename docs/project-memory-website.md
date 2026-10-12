@@ -53,3 +53,6 @@ Single-slot checkpoint df10dc8 is published to GitHub and copied to the AI styli
 
 
 Adapter checkpoint b104642 is published and copied. Private Memory source 14efb4ecc19a9d16a0fe175cfb8077529f27857a deployed successfully as appgdep_6acc3106867081918cc07eb02fc4426a, with MCP retained. Sixteen website checks and artifact validation pass.
+
+
+Recovery checkpoint 99b3669 is published and copied. Private Memory source 2cf60e751cdfcf464927409c84185b2a4e03dc89 deployed successfully as appgdep_6acc31c4b5948191aa1fde57bbfe00df; all 16 website checks pass and MCP is retained.

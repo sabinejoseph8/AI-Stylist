@@ -777,3 +777,6 @@ The prepared adapter now passes actual local SQL checks that deliberately discar
 
 
 Exact next action: publish/copy the passing lost-acknowledgment checkpoint and refresh Memory; then audit remaining local Task 2b requirements against current evidence. Do not add live provider calls, hosted migrations or Auth integration under the local-only exception.
+
+
+Recovery checkpoint 99b3669 is published and copied. Private Memory source 2cf60e751cdfcf464927409c84185b2a4e03dc89 deployed successfully as appgdep_6acc31c4b5948191aa1fde57bbfe00df; all 16 website checks pass and MCP is retained.
