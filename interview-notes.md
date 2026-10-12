@@ -954,3 +954,6 @@ I proved lost quarantine acknowledgments remain blocked after actual local datab
 
 
 I fixed the database-exception path so cleanup still attempts bounded provider revocation when possible. Canceled cleanup never removes ownership based on a late success. All 406 foundation tests, type checking, build and isolated database rehearsals pass. I kept simultaneous database/provider failure as an unresolved reconciliation risk instead of claiming complete outage recovery.
+
+
+I prepared a separate cleanup reconciliation capability that requires independent proof of exact-session revocation before deleting matching ownership. It refuses stale scope and ambiguous evidence, including local absence without remote confirmation. All 411 foundation tests, type checking and build pass. Actual authority and durable work discovery remain open, so this does not claim complete outage recovery.
