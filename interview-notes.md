@@ -1309,3 +1309,7 @@ I added a transport boundary that accepts real TLS and refuses to trust an HTTPS
 ## Checking deployment assumptions
 
 I checked Render's own documentation before enabling accounts. I separated documented TLS termination from the unproven header trust and URL logging details, then prepared focused support questions without customer data. I kept real account activation gated while continuing independent preparation.
+
+## Keeping the delivery record consistent
+
+I updated the private project Memory with the tested runtime and transport work. I corrected an older account checklist that still treated my hosted setup and cross-device recovery approvals as pending. I kept those decisions separate from real provider and device checks, which are still required before launch.

@@ -4,7 +4,7 @@
 
 622 foundation tests across 94 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
-Private Memory synchronization succeeded from b96241fdf9ffb40eb828c67cfc210d2eb853b923 with MCP preserved. Exact next action: verify Render ingress trust and proof-bearing URL logging before preparing its proxy entry or configuring account email URLs. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory still publishes the prior 609-test checkpoint. Earlier publication records below are historical.
+Private Memory synchronization succeeded from 7dae8f45d0af96e08dc0d98df8d534a5251e356e with MCP preserved. Exact next action: verify Render ingress trust and proof-bearing URL logging before preparing its proxy entry or configuring account email URLs. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the current 622-test runtime and transport checkpoint. Earlier publication records below are historical.
 
 ## Previous publication checkpoint (historical)
 
@@ -2197,3 +2197,9 @@ Render documents managed TLS at https://render.com/docs/tls and public web servi
 Reviewed Render's primary tutorial and logging documentation. Edge TLS termination/plain HTTP and the recommended forwarded scheme header are documented. Exact immediate-peer trust, client-header overwrite behavior and query-value logging/redaction remain unproven. The tracked deployment remains the private voice prototype. Prepared docs/render-account-ingress-review.md with sources, acceptance checks and a credential-free support inquiry. Permission to send is pending; nothing was sent. No hosted setting, account, paid call or deployment changed.
 
 Next action: submit the prepared inquiry if Sabine authorizes it; independently synchronize the 622-test runtime/transport checkpoint to private Memory. No task or phase is complete based on this research.
+
+## Runtime and transport private Memory publication, 12 October 2026
+
+Verified succeeded: source 7dae8f45d0af96e08dc0d98df8d534a5251e356e, deployment appgdep_6accde5487888191be1a4cd345f892df, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_58599139381881918422d2d9e34566df, URL https://ai-stylist-project-memory.idealgnat256.chatgpt.site. MCP and owner-only access preserved (one allowed user, no groups). All 16 site checks, build and artifact validation pass. Includes 622-test runtime/HTTPS/transport evidence and Render findings; no task completion overrides changed.
+
+Also reconciled docs/task-2c-activation-checklist.md with approved hosted sequencing, cross-device recovery, seven-day sessions and actual current evidence. The remaining sender/social/linking/provider/device gates stay open. Next action: obtain authorization for the prepared Render support inquiry; inspect remaining live account readiness without new spending or customer activation while awaiting it. No support message has been sent.

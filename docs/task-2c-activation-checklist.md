@@ -1,33 +1,35 @@
 # Task 2c activation checklist
 
-Status: preparation only. This checklist authorizes no provider setup, hosted migration, email, sign-in or paid call.
+Status: hosted Tasks 2b/2c are approved before Phase 1 completion; implementation and acceptance are in progress. Updated 12 October 2026. No extra spending or paid voice call is authorized.
 
 ## Current boundary
 
-The account preview uses sample adapters. Prepared password, recovery, sign-out and refresh HTTP factories are not registered as routes. Verified tokens and generated keys in tests establish local contracts, not live Supabase configuration. Local Task 2b and Task 2c exceptions do not waive the Phase 1 exit or hosted acceptance gates.
+The sample preview remains separate from the connected account build. All twenty-one customer migrations are installed in the verified AI Stylist Supabase project. See hosted-database-deployment.json for source hashes and metadata evidence. Customer account handlers are composed and locally served through explicit runtime/network factories; the default server and existing Render prototype do not activate them.
 
-The explicit dormant factory now composes nine core account handlers plus metadata-only reset readiness. Request/Response factory paths for password, OAuth, recovery, refresh and sign-out pass isolated PostgreSQL checks with generated signed identities and synthetic providers. All 520 foundation tests, type checking and build pass. The future host must schedule expireRecovery maintenance and call close during shutdown; neither scheduling nor live route registration is enabled. An explicit process-local aggregate admission guard passes composition checks; guarded password delivery, disconnect and shutdown pass actual Node loopback checks. Durable abuse limits, remaining full-factory/browser checks and hosted acceptance remain open.
+622 foundation tests across 94 files, type checking and build pass. The combined HTTPS/WebKit/isolated PostgreSQL rehearsal covers signed login, encrypted refresh ownership, fixed seven-day cookies, browser profile relaunch, absolute expiry refusal, application replacement, one refresh without deadline extension, scoped logout and cross-device recovery. Auth and maintenance HTTP responses remain synthetic. Durable admission and startup/maintenance/shutdown are prepared and tested. Hosted provider/customer isolation, exact Render ingress/logging, sender/social credentials, linking policy, physical-device/accessibility and phase review remain open.
 
-## Ready local follow-up
+Sabine approved recovery on a different device and a fixed seven days from sign-in. These are accepted decisions, not pending questions. A generic emailed URL still does not authorize reset: the prepared scanner-safe landing requires explicit confirmation, verified recovery purpose and receiving-browser reset-only authority.
+
+## Current evidence and remaining acceptance
 
 | Work | Required evidence |
 | --- | --- |
 | Reset screen review | Accepted: Sabine confirmed all seven steps worked/readable. Retain this result separately from the earlier eight-step account review |
 | Session adoption | Local evidence: shared adoption/discard lifecycle and actual loopback disconnect cleanup pass with simulated provider/storage. Real provider revocation evidence remains required |
 | Refresh persistence | Local evidence: AES-256-GCM encrypted ownership bound to owner/session/generation/expiry, service-only SQL fencing, uncertainty and database restart checks pass. Actual hosted schema, private key provisioning and provider rotation still need acceptance |
-| Account route composition | Local evidence: isolated loopback HTTP verifies password and stored-refresh delivery, origin/Host refusal and disconnect cleanup with synthetic adapters. Target HTTPS, proxy configuration and hosted providers remain unverified |
+| Account route composition | Local evidence: combined HTTPS/WebKit/isolated PostgreSQL account lifecycle and transport guard pass with synthetic Auth. Actual Render proxy and hosted providers remain unverified |
 | Regression review | Run the full foundation suite, type checking and build after composition; keep phase-wide review open until the actual phase scope is ready |
 
-## Requires a hosted/account activation decision
+## Remaining hosted/account activation checks
 
-1. Confirm Phase 1 exit or an explicit sequencing exception before changing the live Supabase account configuration or applying prepared customer migrations.
-2. Identify the correct Supabase project and record public identifiers only. Keep secret credentials in private server configuration.
+1. Preserve the approved hosted Tasks 2b/2c sequencing exception. Later phases retain their dependencies; installed migrations do not complete customer acceptance.
+2. Continue using the verified AI Stylist Supabase project and installed migration receipt. Keep secret credentials in private server configuration.
 3. Inspect actual signing keys, Auth session schema and current-session lookup permissions. Rehearsed synthetic Auth schemas do not prove the hosted schema.
 4. Verify exact application origin and callback allowlists. Reject wildcard or caller-selected redirects. Validate cookie behavior over HTTPS on the target browser.
 5. Configure email/password confirmation, recovery sender and approved templates. Verify sender/DNS, recovery delivery, bounce behavior, abuse limits and non-enumerating public replies with synthetic accounts.
 6. Obtain Google and Apple credentials through the account owner. Record credential owner, expiry and renewal procedure without recording secret values. Verify both successful and canceled callbacks.
 7. Inspect actual identity-linking defaults and test duplicate/unverified identities without merging customer records. Any customer-facing linking policy needs Sabine's business decision.
-8. Resolve same-browser versus cross-device recovery before promising either. The local recovery flow currently requires its bound browser transaction; a generic emailed URL alone is not accepted recovery authority.
+8. Verify the approved cross-device recovery flow with the actual sender/provider and receiving device. Local scanner-safe confirmation and reset-only authority are implemented; real email acceptance remains open.
 9. Verify real refresh rotation, exact session revocation, old-token denial, failed delivery cleanup, concurrent requests and server restart recovery. A closed browser or cleared cookie does not prove remote revocation.
 10. Complete the Phase 2 manual checks and phase review before checking Task 2c or Phase 2 complete. Keep spending/provider-attempt limits intact.
 
@@ -35,11 +37,14 @@ The explicit dormant factory now composes nine core account handlers plus metada
 
 For each live check, record the deployed commit, environment, timestamp, synthetic scenario, expected/observed outcome and cleanup result. Record failures and unresolved remote cleanup explicitly. Exclude tokens, passwords, email addresses, recordings and private account IDs from public artifacts. Reference private evidence by a sanitized label when necessary.
 
-## Pending customer decisions
+## Pending customer decisions or actions
 
-- Whether hosted Task 2b/2c may begin before Phase 1 finishes.
-- Recovery behavior across devices and after server restart.
-- Any explicit account-linking or recovery policy that changes approved customer behavior.
+- Sender service/domain and privately entered credentials when required; new charges require authorization.
+- Google and Apple account-owner credentials and any customer-facing identity-linking policy.
+- Authorization for the prepared Render support inquiry; its platform contract remains unverified.
+- Physical-device and real customer acceptance steps when the hosted endpoint is ready.
+
+Hosted Tasks 2b/2c, cross-device recovery and the seven-day session lifetime are already approved. Do not request them again.
 
 Routine local engineering continues independently. This checklist is not a request to supply credentials in chat.
 
@@ -50,7 +55,7 @@ Refresh encryption preparation now has an AES-256-GCM codec tested with fixture 
 Migration 17 now rehearses service-only ownership and generation/lease fencing with synthetic PostgreSQL records, including a real restart. It is local preparation only. Codec/RPC/application integration and actual hosted Auth remain unverified.
 
 
-## Supabase provider contract audit, 11 October 2026
+## Supabase provider contract audit, 11 October 2026 (historical)
 
 Reviewed official refresh, session and sign-out documentation against the prepared account lifecycle; findings and primary links are in docs/task-2c-provider-contract-audit.md. Failed-delivery cleanup must target the exact current session explicitly, since a default sign-out scope can affect other devices. Signature validity alone is not remote session authority. Provider refresh reuse exceptions do not authorize blind retries. Local envelope expiry is not provider refresh expiry, and valid-JWT requirements leave expired/ambiguous cleanup authority as an unresolved adapter case.
 

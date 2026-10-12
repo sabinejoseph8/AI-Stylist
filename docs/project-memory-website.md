@@ -148,3 +148,9 @@ The same customer session-policy dependency has remained unanswered across three
 ## Verified private publication, 12 October 2026
 
 Source b96241fdf9ffb40eb828c67cfc210d2eb853b923; deployment appgdep_6accdb03dc04819182708bc95a76f03e; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_6d48706aa6048191a15310807e472ee9. Terminal status succeeded with MCP enabled at https://ai-stylist-project-memory.idealgnat256.chatgpt.site. Owner-only audience preserved: one allowed user, no groups. All 16 site checks, build and artifact validation pass. Published current 609-test summary, fixed seven-day decision, browser restoration/relaunch and expiry evidence. No task completion boxes were changed.
+
+## Runtime and transport private Memory publication, 12 October 2026
+
+Verified succeeded: source 7dae8f45d0af96e08dc0d98df8d534a5251e356e, deployment appgdep_6accde5487888191be1a4cd345f892df, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_58599139381881918422d2d9e34566df, URL https://ai-stylist-project-memory.idealgnat256.chatgpt.site. MCP and owner-only access preserved (one allowed user, no groups). All 16 site checks, build and artifact validation pass. Includes 622-test runtime/HTTPS/transport evidence and Render findings; no task completion overrides changed.
+
+Also reconciled docs/task-2c-activation-checklist.md with approved hosted sequencing, cross-device recovery, seven-day sessions and actual current evidence. The remaining sender/social/linking/provider/device gates stay open. Next action: obtain authorization for the prepared Render support inquiry; inspect remaining live account readiness without new spending or customer activation while awaiting it. No support message has been sent.
