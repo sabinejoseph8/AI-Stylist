@@ -1241,3 +1241,7 @@ I separated the connected account build from the sample preview and added restri
 ## Preparing deployment without enabling customers
 
 I added bounded build loading and connected it to the complete account application. The loader rejects unexpected files, symlinks, invalid text and oversized builds. Preparing the application starts no provider connection or listener. All 571 foundation tests and the actual connected-page HTTPS WebKit reset journey passed. Network deployment and real customer acceptance remain separate steps.
+
+## Making account startup and shutdown predictable
+
+I added explicit listener startup and bounded shutdown. Account maintenance must pass before a socket opens. Shutdown waits for sockets to close and reports uncertainty when it must force closure or application cleanup is unresolved. Focused tests exposed a timing issue in socket-close reporting, which I fixed. All 578 foundation tests passed, and the connected reset journey also passed over local HTTPS through the network wrapper. Hosted customer acceptance remains open.

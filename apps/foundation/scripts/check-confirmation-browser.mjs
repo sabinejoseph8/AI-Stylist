@@ -1,3 +1,4 @@
+import {createAccountNetwork} from '../src/server/account-network.ts';
 import {loadAccountBuild} from '../src/server/account-build.ts';
 import {createAccountWebsite} from '../src/server/account-website.ts';
 import {createRequire} from 'node:module';
@@ -15,7 +16,7 @@ import {createRecoveryConfirmationHttp} from '../src/server/recovery-confirmatio
 import {createRecoveryBrowser} from '../src/server/recovery-browser.ts';
 import {createAccountNodeListener} from '../src/server/account-node.ts';
 const require=createRequire(import.meta.url),{webkit}=require(process.env.PLAYWRIGHT_MODULE||'playwright');
-const temporary=mkdtempSync(join(tmpdir(),'stylist-confirmation-'));let browser,server,recoveryBrowser;
+const temporary=mkdtempSync(join(tmpdir(),'stylist-confirmation-'));let browser,network,recoveryBrowser;
 try{
  execFileSync('openssl',['req','-x509','-newkey','rsa:2048','-nodes','-keyout',join(temporary,'key.pem'),'-out',join(temporary,'cert.pem'),'-days','1','-subj','/CN=127.0.0.1'],{stdio:'ignore'});
  const origin='https://127.0.0.1:4326';let verifications=0,cleanups=0,resets=0;
@@ -25,8 +26,8 @@ try{
  const listener=createAccountNodeListener(origin,new Map([['/account/recovery',{handle:async(request,signal)=>http.landing(request,signal)}],['/api/account/recovery-confirm',{handle:http.confirm,discardResponse:http.discardResponse}],['/api/account/reset-ready',{handle:createRecoveryReadinessHttp(origin,recoveryBrowser)}],['/api/account/reset',{handle:createRecoveryHttp(origin,recoveryBrowser)}]]));
  const accountBuild=await loadAccountBuild(output);
  const website=createAccountWebsite(origin,'https://fixture.supabase.co',{handle:listener},accountBuild.html,accountBuild.assets);
- server=createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},website);
- await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(4326,'127.0.0.1',resolve);});
+ network=createAccountNetwork({handle:website,start:async()=>true,close:()=>recoveryBrowser.close()},listener=>createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},listener));
+ assert.equal(await network.start(4326,'127.0.0.1'),true);
  browser=await webkit.launch({headless:true,...(process.env.WEBKIT_EXECUTABLE?{executablePath:process.env.WEBKIT_EXECUTABLE}:{})});
  const context=await browser.newContext({ignoreHTTPSErrors:true}),page=await context.newPage(),errors=[];page.on('pageerror',error=>errors.push(error.message));
  await page.goto(origin+'/account/recovery?token_hash=synthetic-email-proof');await page.getByRole('button',{name:'Continue to password reset'}).waitFor();assert.equal(verifications,0);assert.equal(page.url(),origin+'/account/recovery');
@@ -45,4 +46,4 @@ try{
  await page.reload();await page.getByText('Recovery permission is unavailable. Request a new recovery link.',{exact:true}).waitFor();assert.equal(resets,1);assert.deepEqual(errors,[]);
  assert.equal(await recoveryBrowser.close(),true);assert.equal(cleanups,1);binding.close();
  console.log('WebKit HTTPS confirmation passed: scanner-safe landing, clean URL, CSP script, explicit click, secure reset-only cookie, confirmation clearing, redirect into the actual React reset form, one password update, cleared fields/cookies, disabled replay, unavailable reload and cleanup. Synthetic provider only.');
-}finally{await browser?.close();await recoveryBrowser?.close();if(server)await new Promise(resolve=>server.close(resolve));rmSync(temporary,{recursive:true,force:true});}
+}finally{await browser?.close();await recoveryBrowser?.close();if(network)assert.equal(await network.close(),true);rmSync(temporary,{recursive:true,force:true});}
