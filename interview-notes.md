@@ -912,3 +912,6 @@ I prepared encrypted server-held refresh state before adding durable storage. Th
 
 
 I accepted the completed seven-step reset-screen review and kept that evidence distinct from real recovery. I then rehearsed durable refresh ownership in an isolated PostgreSQL database: competing claims produce one winner, unresolved rotations stay blocked across an actual restart, and stale versions or leases cannot finish another operation. The rehearsal caught a PostgreSQL regex limit, which I fixed. The SQL rehearsal and all 374 foundation tests, type checking and build pass. No live database or real credential was changed.
+
+
+I connected refresh encryption to a prepared server-only storage adapter. Plaintext is never sent to the storage RPC, and reading a claimed secret is a one-use server capability. I kept refused writes separate from uncertain acknowledgments so a timeout cannot silently authorize a retry. All 380 foundation tests, type checking and build pass. The next check is actual isolated database composition; hosted services remain untouched.
