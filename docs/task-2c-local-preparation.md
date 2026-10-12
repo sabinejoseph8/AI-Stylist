@@ -292,3 +292,12 @@ Prepared disconnected refresh HTTP delivery on the bounded same-origin JSON boun
 All 355 foundation tests across 39 files, type checking and build pass. Three added checks prove same-session overlap rejection even after cancellation, full HTTP cookie/status/failed-delivery behavior and refusal of another signed session for the same customer. All provider behavior is simulated. The coordinator's lock is process-local and covers the adapter operation, not durable storage/adoption, other coordinators, processes or server restarts. Actual provider rotation, durable fencing, email/account setup and hosted acceptance remain open.
 
 Exact next action: compose refresh with the shared account lifecycle owner, verify uncertainty holds across account methods and prepare refresh-state adoption ownership with simulated tests. No provider activation, new credentials or spending is authorized. Task 2c remains incomplete. Private Memory remains at the preceding 347-test checkpoint pending the next consolidated refresh.
+
+
+## Shared refresh/account uncertainty lifecycle, 11 October 2026
+
+The disconnected account composition now optionally accepts an explicit refresh adapter and creates its refresh coordinator with the same session owner as password and OAuth. Without that injected adapter, refresh is null rather than implicitly enabled. Failed cleanup after a bad refresh session sets the shared uncertainty hold, preventing later password/OAuth provider work. Ambiguous password session creation likewise prevents refresh provider calls. The refresh adapter retains its original object binding. No HTTP route, provider transport or credential is installed.
+
+All 358 foundation tests across 39 files, type checking and build pass. Three added composed tests verify holds in both directions and absence of an unconfigured refresh interface. This is process-local simulated evidence, not actual remote cleanup or durable adoption.
+
+Exact next action: prepare explicit refresh-state adoption and failed-delivery ownership in the disconnected server composition, with simulated cancellation and cleanup tests. Audit real-adapter prerequisites before claiming account readiness. Actual provider setup, durable refresh storage, recovery/identity-linking policies, hosted changes and manual phase acceptance remain open. Task 2c remains incomplete; private Memory's latest verified publication reflects 347 tests pending the next consolidated refresh.

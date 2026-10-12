@@ -141,3 +141,26 @@ it('refuses a refresh token response for another session of the same customer',a
  const result=await service.submit(new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,cookie:'__Host-stylist_access='+f.token}}),signal());
  expect(result).toEqual({status:'unavailable'});expect(discard).toHaveBeenCalledTimes(1);
 });
+
+
+describe('shared local refresh and account lifecycle',()=>{
+ it('propagates failed refresh cleanup to password and OAuth methods',async()=>{
+  const f=await fixture(),discard=vi.fn(async()=>false),password=vi.fn(),exchange=vi.fn();
+  const service=createAccountAccess(f.security,origin,{password,exchange,refresh:async()=>({accessToken:'invalid',discard})});
+  expect(await service.refresh!.submit(new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,cookie:'__Host-stylist_access='+f.token}}),signal())).toEqual({status:'unavailable'});
+  expect(service.cleanupHeld()).toBe(true);expect(discard).toHaveBeenCalledTimes(1);
+  expect(await service.password.submit(input,signal())).toEqual({status:'unavailable'});
+  const flow=f.begin();expect(await service.callback.complete(flow.request,'google',signal())).toEqual({status:'unavailable'});
+  expect(password).not.toHaveBeenCalled();expect(exchange).not.toHaveBeenCalled();
+ });
+ it('propagates ambiguous password session creation to refresh without provider rotation',async()=>{
+  const f=await fixture(),refresh=vi.fn(),service=createAccountAccess(f.security,origin,{password:async()=>{throw Error('private');},exchange:vi.fn(),refresh});
+  await service.password.submit(input,signal());expect(service.cleanupHeld()).toBe(true);
+  expect(await service.refresh!.submit(new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,cookie:'__Host-stylist_access='+f.token}}),signal())).toEqual({status:'unavailable'});
+  expect(refresh).not.toHaveBeenCalled();
+ });
+ it('does not create a refresh interface without an explicitly supplied adapter',async()=>{
+  const f=await fixture(),service=createAccountAccess(f.security,origin,{password:vi.fn(),exchange:vi.fn()});
+  expect(service.refresh).toBeNull();
+ });
+});

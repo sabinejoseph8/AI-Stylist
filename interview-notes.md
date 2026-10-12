@@ -891,3 +891,6 @@ I prepared a local server-only refresh flow so a customer can eventually remain 
 
 
 I strengthened refresh handling to preserve the exact signed session and reject overlapping rotations for it. I added a local HTTP contract that accepts no refresh credentials from browser JSON and keeps cookies in headers. My tests confirm that failed delivery can discard the newly returned session and that cancellation does not prematurely release a running rotation. All 355 tests, type checking and build pass. These process-local controls still need durable ownership and real-provider acceptance before activation.
+
+
+I connected the local refresh preparation to the same lifecycle owner as password and social sign-in. A failed cleanup now prevents another account method from bypassing that uncertainty. Refresh stays absent unless a server adapter is explicitly supplied. Three composed tests verify this separation; all 358 foundation tests, type checking and build pass. Real provider and durable-state acceptance remain open.
