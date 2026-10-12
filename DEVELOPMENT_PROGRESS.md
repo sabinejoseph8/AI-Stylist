@@ -753,3 +753,6 @@ Migration 015 prepares the approved one-consultation capacity limit in a private
 
 
 Exact next action: finish migration-chain Storage regression and publish/copy this checkpoint; refresh the private Memory site. Then prepare a bounded server-only consultation-slot adapter with simulated RPC checks and connect it to the isolated SQL rehearsal. Keep actual Auth/provider/coordinator activation gated.
+
+
+Single-slot checkpoint df10dc8 is published to GitHub and copied to the AI stylist folder. Storage regression passes with all 15 migrations. Private Memory source 00b2dfc3a33edc027ddc2dfc3424ef04f49e38b3 deployed successfully as appgdep_6acc301929f88191930de39c086f4555; 16 website checks pass and MCP remains available.

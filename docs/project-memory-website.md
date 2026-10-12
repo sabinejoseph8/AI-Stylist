@@ -47,3 +47,6 @@ Document checkpoint 019fbb4 is published to GitHub and byte-verified in the AI s
 
 
 Concurrent-maintenance document checkpoint 299a2e2 is published and copied. Private Memory source dbbe8b403cd60d5ebed8d9cf35fcf55a3e08b2f7 deployed successfully as appgdep_6acc2f327e9081918d489f3cd4572952 with MCP retained; 16 site checks pass.
+
+
+Single-slot checkpoint df10dc8 is published to GitHub and copied to the AI stylist folder. Storage regression passes with all 15 migrations. Private Memory source 00b2dfc3a33edc027ddc2dfc3424ef04f49e38b3 deployed successfully as appgdep_6acc301929f88191930de39c086f4555; 16 website checks pass and MCP remains available.
