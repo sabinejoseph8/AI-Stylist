@@ -1,7 +1,7 @@
 # AI Stylist: Phased development plan and progress
 
 Status: Draft plan v0.8 for Sabine's review  
-Updated: 11 October 2026 (America/Cayman)
+Updated: 12 October 2026 (America/Cayman)
 
 Product: [Approved product specification v1.0](../Project%20Memory/product-spec.md)  
 Design: [Approved design specification v1.0](../Project%20Memory/design.md)  
@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 538 foundation tests across 75 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
+Hosted Tasks 2b/2c are authorized and in progress. Migrations 001 through 016 are applied with live privilege checks; 017 through 020 remain. Customer account routes remain disabled. Task 2c local account preparation is active. All 538 foundation tests across 75 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2366,3 +2366,11 @@ Applied migrations 011 and 012 sequentially in the verified AI Stylist Supabase 
 Live metadata verification returned 15 checks, all_passed=true: private receipt direct-access denial for anon/authenticated/service_role, private schema denial, enabled retired-ID trigger and denied browser guard execution, three service-only public function contracts with fixed search paths, retail RLS and direct-access/write denial, owner SELECT grant and policy. This is installation/privilege evidence, not functional customer acceptance. The approved seven-day receipt compaction still requires migration 014 and scheduled host maintenance before activation. Source hashes and scope are recorded in docs/hosted-database-deployment.json.
 
 Exact next action: inspect/apply 013 mixed saved looks and 014 approved receipt retention, then 015 through 020 and complete schema/function verification. Migrations 001 through 012 are applied; do not rerun blindly. Real account/email/retailer activation and all acceptance gates remain open. No extra spending or paid voice call occurred. Refresh private Memory with the consolidated hosted receipt after the chain advances.
+
+## Hosted mixed looks, retention and consultation controls, 12 October 2026
+
+Applied migrations 013 through 016 sequentially in the verified AI Stylist Supabase project. Each returned Success. Mixed saved looks now enforce one owned or retail source per component and same-owner references; the standalone retail writer is revoked from service_role. Approved seven-day receipt expiry and minimal retired IDs are installed, but expiry has not been invoked or scheduled. The single consultation slot and service-only current Auth session lookup are installed without starting any provider work or modifying managed Auth records.
+
+Live read-only verification returned 21 checks, all_passed=true: mixed constraints, cleanup/retired-ID triggers, denied private table/schema access, five service-only function grants and empty search paths, revoked standalone retail writer, receipt age filters and initially free single consultation slot. Source hashes are recorded in docs/hosted-database-deployment.json. This proves installation and privilege metadata, not customer CRUD, sign-in, recovery or concurrent consultation acceptance. Foundation source remains at the 538-test/WebKit checkpoint. No account, email, media deletion or paid provider call occurred.
+
+Exact next action: inspect/apply migration 017 refresh ownership, then 018 through 020 in order and verify service-only grants and private table protections. Migrations 001 through 016 are applied; do not rerun blindly. Schedule bounded receipt maintenance before customer activation. Hosted account configuration, email origin, durable abuse controls, physical-device checks and all remaining phase gates stay open. Private Memory needs the consolidated hosted receipt.

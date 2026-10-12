@@ -62,6 +62,26 @@
       "file": "supabase/migrations/202610110012_retail_history.sql",
       "sha256": "cd6e4d989f824b3360ea0e9beae7c6d388de6fdde8d047026411c47ec6aa242e",
       "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110013_mixed_saved_looks.sql",
+      "sha256": "5fa8229e20984b2c23a1a535d8a1a81c7f48a6d82c2eda592545519d5d46322f",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110014_receipt_retention.sql",
+      "sha256": "8b2ba55625384d427efc024cc4f365611f2aa3d301795d388fd7bd071a6e5b7d",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110015_consultation_slot.sql",
+      "sha256": "6d6c5dc9df92942bf313884819ba57d9429f32d34a9aaad56b0bb3e2dc2ac128",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110016_current_auth_session.sql",
+      "sha256": "4cc8c4ec14964c231b5409d8c1a0e506282e0c9b3f46739ccf3b6dd3282e276a",
+      "status": "applied"
     }
   ],
   "notes": [
@@ -80,7 +100,7 @@
     "rls_enabled": true,
     "rls_forced": true
   },
-  "remaining_migrations": "202610110013 through 202610110020",
+  "remaining_migrations": "202610110017 through 202610110020",
   "wardrobe_profile_verification": {
     "checks": 16,
     "all_passed": true,
@@ -95,5 +115,10 @@
     "checks": 15,
     "all_passed": true,
     "scope": "Private receipt direct-access denial for anon/authenticated/service_role, private schema denial, retired-ID trigger and browser guard denial, three service-only public function contracts, retail forced RLS, direct-access/write denial, owner SELECT grant and policy."
+  },
+  "mixed_retention_consultation_verification": {
+    "checks": 21,
+    "all_passed": true,
+    "scope": "Mixed source constraint and same-owner FK, cleanup and retired-ID triggers, private table/schema access denial, five service-only security-definer functions with empty search_path, standalone retail writer revoked, receipt age filters and initially free single consultation slot. Installation and metadata evidence only; no customer operation or expiry function invoked."
   }
 }

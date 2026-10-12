@@ -1199,3 +1199,7 @@ I extended the hosted foundation to wardrobe items and saved preferences. I kept
 I added hosted saved-look records and photo lifecycle controls. The database now prevents saved items from pointing at an upload that is incomplete or being deleted. Twenty-three live installation and access checks passed. Actual customer save/upload/deletion acceptance remains pending.
 
 I added private technical receipts for completed photo deletion and owner-readable historical shopping-item records. Fifteen live access checks passed. I kept historical product data distinct from current shopping availability. The seven-day receipt compaction and real customer acceptance are still pending before activation.
+
+## Moving from preparation to hosted database controls
+
+I approved hosted database and account setup while keeping the unfinished voice experiments separate. I installed the reviewed database changes in small transactions and checked access restrictions after each group. Mixed saved looks preserve ownership, detailed photo-deletion receipts expire after seven days, and a single consultation slot matches my initial launch capacity. The latest group passed 21 live metadata checks. I kept account activation and customer acceptance open because installation alone does not prove the full customer journey.
