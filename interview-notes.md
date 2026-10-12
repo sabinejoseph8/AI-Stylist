@@ -945,3 +945,6 @@ I prepared fixed-project refresh and session-local logout HTTP operations. Simul
 
 
 I rehearsed the complete prepared refresh pipeline against isolated PostgreSQL with synthetic provider HTTP. It preserved blocked claims after malformed responses and retained ownership after refused logout. This exposed a gap: cleanup uncertainty after adoption was held only in the current process. I recorded durable quarantine as the next required fix before activation. All 402 foundation tests, type checking and build pass; no real provider was contacted.
+
+
+I fixed the confirmed cleanup-failure path by claiming and holding the adopted credential before remote revocation. The actual local database restart check proves a replacement coordinator cannot refresh that held record. All 402 foundation tests, type checking and build pass. I kept uncertain database-write paths explicitly open instead of extending the restart result beyond what it proves.

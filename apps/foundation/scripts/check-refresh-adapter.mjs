@@ -155,7 +155,12 @@ for(const mode of ['normal','lost-write','malformed','refused-cleanup']){
   assert.equal(await store.remove(unresolved.scope,unresolved.leaseId,true,signal()),'confirmed');
  }else{
   assert.equal(response.status,200);assert.equal(await composed.http.discardResponse(response),false);assert.equal(composed.account.cleanupHeld(),true);
-  const retained=await store.inspect(owner,session,signal());assert.equal(retained.status,'found');assert.equal(retained.scope.generation,2);
+  const retained=await store.inspect(owner,session,signal());assert.equal(retained.status,'found');assert.equal(retained.scope.generation,2);assert.equal(retained.state,'held');
+  await execute(['restart',container]);
+  for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
+  const replacement=createRefreshStore(rpc,createRefreshEnvelopes(keyring,'fixture'));
+  assert.equal((await replacement.inspect(owner,session,signal())).state,'held');
+  assert.equal((await replacement.claim(owner,session,2,signal())).status,'refused');
   // Explicit synthetic teardown; production cannot assume this confirmation.
   assert.equal(await store.remove(retained.scope,retained.leaseId,true,signal()),'confirmed');
  }

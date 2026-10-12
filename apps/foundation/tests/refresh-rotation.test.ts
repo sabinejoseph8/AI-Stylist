@@ -5,7 +5,7 @@ const scope={ownerId:'11111111-1111-4111-8111-111111111111',sessionId:'22222222-
 const signal=()=>new AbortController().signal;
 function fixture(){
  const claim={status:'claimed',scope,leaseId:'33333333-3333-4333-8333-333333333333',readSecret:vi.fn(()=> 'old-fixture'),clearSecret:vi.fn()};
- const store={claim:vi.fn(async()=>claim),finish:vi.fn(async()=> 'confirmed'),inspect:vi.fn(async()=>({status:'found',scope:{...scope,generation:2},state:'ready',leaseId:null})),remove:vi.fn(async()=> 'confirmed')};
+ const store={claim:vi.fn(async(_owner:string,_session:string,generation:number)=>({...claim,scope:{...scope,generation}})),finish:vi.fn(async()=> 'confirmed'),inspect:vi.fn(async()=>({status:'found',scope:{...scope,generation:2},state:'ready',leaseId:null})),remove:vi.fn(async()=> 'confirmed'),hold:vi.fn(async()=> 'confirmed')};
  const revoke=vi.fn(async()=>true),rotate=vi.fn(async(_secret:string,_signal:AbortSignal)=>({accessToken:'access-fixture',refreshSecret:'new-fixture',expiresAt:scope.expiresAt,revoke}));
  return {store,claim,rotate,revoke,rotation:createRefreshRotation(store as unknown as ReturnType<typeof createRefreshStore>,{rotate})};
 }
@@ -19,7 +19,7 @@ it('keeps ambiguous provider rotation durably claimed and does not retry',async(
  const f=fixture();f.rotate.mockRejectedValue(Error('private'));await expect(f.rotation.stage(scope,signal())).rejects.toThrow('Account refresh unavailable');expect(f.claim.clearSecret).toHaveBeenCalled();expect(f.store.remove).not.toHaveBeenCalled();expect(f.rotate).toHaveBeenCalledTimes(1);
 });
 it('refuses removal if provider revocation is unconfirmed or a different generation is present',async()=>{
- const f=fixture(),session=await f.rotation.stage(scope,signal());f.revoke.mockResolvedValue(false);expect(await session.discard(signal())).toBe(false);expect(f.store.inspect).not.toHaveBeenCalled();
+ const f=fixture(),session=await f.rotation.stage(scope,signal());f.revoke.mockResolvedValue(false);expect(await session.discard(signal())).toBe(false);expect(f.store.remove).not.toHaveBeenCalled();expect(f.store.hold).toHaveBeenCalledTimes(1);
  const g=fixture(),other=await g.rotation.stage(scope,signal());g.store.inspect.mockResolvedValue({status:'found',scope:{...scope,generation:3},state:'ready',leaseId:null});expect(await other.discard(signal())).toBe(false);expect(g.store.remove).not.toHaveBeenCalled();
 });
 

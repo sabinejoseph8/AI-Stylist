@@ -22,6 +22,7 @@ async function fixture(stall=false){
  const call=vi.fn(async(name:string,p:Record<string,unknown>)=>{
   if(name==='stylist_inspect_refresh')return row;
   if(name==='stylist_claim_refresh'){if(!row||row.state!=='ready')return null;row={...row,state:'rotating',lease_id:lease};return row;}
+  if(name==='stylist_hold_refresh'){if(!row||row.lease_id!==p.p_lease)return false;row={...row,state:'held'};return true;}
   if(name==='stylist_finish_refresh'){began();if(stall)await gate;if(!row||row.lease_id!==p.p_lease)return false;row={...row,generation:2,state:'ready',lease_id:null,envelope:p.p_envelope};return true;}
   if(name==='stylist_remove_refresh'){if(!row||row.generation!==p.p_generation||row.lease_id!==p.p_lease)return false;row=null;return true;}
   throw Error('Unexpected fixture operation');

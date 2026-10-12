@@ -22,6 +22,7 @@ export function createRefreshRotation(store:ReturnType<typeof createRefreshStore
   if(!rotated||typeof rotated.revoke!=='function')throw unavailable();
   let adoption:Promise<boolean>|undefined,discarding:Promise<boolean>|undefined,disposed=false;
   let secret:string|null=rotated.refreshSecret;
+  let quarantineLease:string|undefined;
   const discard=(cleanup:AbortSignal)=>{
    if(discarding)return discarding;disposed=true;
    discarding=(async()=>{
@@ -29,13 +30,23 @@ export function createRefreshRotation(store:ReturnType<typeof createRefreshStore
     if(adoption)await adoption;
     secret=null;
     try{
+     // Fence adopted ownership before attempting remote cleanup, including timeout/failure paths.
+     const before=await store.inspect(scope.ownerId,scope.sessionId,cleanup);
+     if(before.status==='found'&&before.scope.generation===scope.generation+1&&before.state==='ready'){
+      const fenced=await store.claim(scope.ownerId,scope.sessionId,before.scope.generation,cleanup);
+      if(fenced.status==='claimed'){
+       fenced.clearSecret();quarantineLease=fenced.leaseId;
+       await store.hold(fenced.scope,fenced.leaseId,cleanup);
+      }
+     }
      if(await rotated.revoke(cleanup)!==true)return false;
      const current=await store.inspect(scope.ownerId,scope.sessionId,cleanup);
      if(current.status==='absent')return true;
      if(current.status!=='found')return false;
      const ownClaim=current.scope.generation===scope.generation&&current.leaseId===claim.leaseId;
      const ownAdoption=current.scope.generation===scope.generation+1&&current.state==='ready'&&current.leaseId===null;
-     if(!ownClaim&&!ownAdoption)return false;
+     const ownQuarantine=current.scope.generation===scope.generation+1&&quarantineLease!==undefined&&current.leaseId===quarantineLease;
+     if(!ownClaim&&!ownAdoption&&!ownQuarantine)return false;
      return await store.remove(current.scope,current.leaseId,true,cleanup)==='confirmed';
     }catch{return false;}
    })();return discarding;
