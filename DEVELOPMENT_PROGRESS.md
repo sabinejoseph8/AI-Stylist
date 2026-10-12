@@ -2,7 +2,7 @@
 
 ## Current private Memory publication
 
-Private Memory publishes the 516-test checkpoint from source 7b5c9f8c475251a82f3c849959148dc14cb1b816. Deployment appgdep_6acc74bd4cc881919b28c0899e375b72 succeeded with MCP enabled. All 16 website checks and artifact validation pass; owner-only access was verified with one allowed user and no groups.
+Private Memory publishes the 520-test checkpoint and synthetic WebKit account/reset evidence from source 15ec6be6d48492813f8d7d3211b5730ee7dcfe86. Deployment appgdep_6acc76cbf464819184482dba5ec88b9a succeeded with MCP enabled. All 16 website checks and artifact validation pass; owner-only access was verified with one allowed user and no groups.
 
 Exact next action: reconcile private Memory with the 520-test account checkpoint and successful synthetic WebKit account/reset checks, then audit remaining authorization prerequisites.
 

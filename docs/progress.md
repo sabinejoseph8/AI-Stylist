@@ -2258,3 +2258,7 @@ Exact next action: verify connected account presentation with a synthetic browse
 The repeatable local WebKit check passed with synthetic account responses: sign-in/sign-out, clearing email and password on sign-out, password clearing after creation, new-password autocomplete, confirmation and non-enumerating recovery messages, absence of the sample reset shortcut, and Google/Apple cancellation with late handoff refusal. Script: apps/foundation/scripts/check-account-browser.cjs; fixture: tests/browser/account.html. Uses the existing loopback-only port 4325 and injected Playwright installation, as documented for the reset browser check. No external provider, email or hosted setting was used.
 
 The last full foundation run remains 520 passing tests across 73 files with type checking and build passing. This browser evidence does not close physical-device, accessibility, live Auth or phase gates. Next: reconcile the private Memory website with current account/browser evidence and audit authorization prerequisites for the remaining backlog.
+
+## Memory publication checkpoint, 12 October 2026
+
+Private Memory now publishes the 520-test account checkpoint and synthetic WebKit lifecycle evidence. Source 15ec6be6d48492813f8d7d3211b5730ee7dcfe86; deployment appgdep_6acc76cbf464819184482dba5ec88b9a succeeded with MCP enabled. All 16 site checks and artifact validation pass; owner-only audience preserved. Phase 1 and Task 2c remain open.
