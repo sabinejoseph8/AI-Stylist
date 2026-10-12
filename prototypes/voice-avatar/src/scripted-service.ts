@@ -29,13 +29,17 @@ export class ScriptedService {
       outputTokens: this.fixture?.outputTokens ?? 0, maxSeconds: 90 };
   }
   heartbeat() { this.seenAt = Date.now(); }
-  async start() {
+  async start(recoveryReservation?: string) {
     if (this.busy || this.room || !['idle', 'ended', 'failed'].includes(this.state)) throw new Error('A test is already in progress.');
     this.busy = true; this.state = 'preparing'; this.message = this.spoken ? 'Checking the private spoken-test connection.' : 'Checking Echo configuration and generating the fixed OpenAI script.';
     this.fixture = null; this.connection = null; this.run = ''; this.room = ''; this.closing = null; this.createUncertain = false; this.automaticStop = '';
     this.abort = new AbortController(); this.heartbeat();
     try {
-      this.run = await this.budget.reserve(this.spoken ? 'spoken' : 'scripted');
+      if (recoveryReservation !== undefined) {
+        if (!this.spoken) throw new Error('Recovery requires a spoken room.');
+        await this.budget.claimRecoveryRoom(recoveryReservation);
+        this.run = recoveryReservation;
+      } else this.run = await this.budget.reserve(this.spoken ? 'spoken' : 'scripted');
       const pal = await tavus(this.keys.tavus, `/v2/pals/${PAL}`); verifyEchoPal(pal);
       const face = await tavus(this.keys.tavus, `/v2/faces/${FACE}`);
       if (face.status !== 'completed') throw new Error('Stock face is not ready.');

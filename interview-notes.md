@@ -1353,3 +1353,6 @@ I approved a tightly capped follow-up experiment to test interruption recovery i
 
 
 I tested the recovery experiment's spending rules in an isolated database before changing the hosted project. The checks show that prior attempts stay unchanged, both new rooms must be reserved together, and the replacement cannot be claimed before the initial room is recorded and closed. These database checks do not substitute for real playback acceptance.
+
+
+I separated the interruption experiment from the original end-only voice test. The new service copies only replies explicitly confirmed as heard, ends the old room, and refuses the replacement unless closure is verified. Simulated tests cover that lifecycle, but real phone playback remains a separate acceptance step.

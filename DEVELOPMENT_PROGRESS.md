@@ -2426,3 +2426,12 @@ Validation: 25 isolated PostgreSQL checks pass in a disposable network-disabled 
 Next: finish disabled replacement lifecycle and browser controls, review and test, then apply the approved migration to the confirmed project with full before/after history comparison. Do not reserve or start automatically; the final test begins only when Sabine has the complete instructions and presses Start. No hosted SQL, paid call or deployment occurred.
 
 Complete prototype validation: 1,288 tests across 85 files, type checking and build pass. Log: /private/tmp/ai-stylist-recovery-sql-final.log.
+
+
+## Dedicated replacement spoken service preparation, 12 October 2026
+
+Added RecoverySpokenService outside HTTP routes. It reserves the approved pair once, starts the initial room using a dedicated claimed reservation, accepts bounded spoken turns, captures explicitly confirmed history before old-room stop, discards pending interrupted content and requires verified ended status before claiming the replacement. It reconstructs only confirmed history for the existing stateless model request. Replacement is single-use, refused during generation, after expiry or without pending playback. End invalidates work and clears volatile context. Startup racing End cannot create a room after delayed reservation. ScriptedService accepts an optional recovery reservation only for spoken mode and claims it before provider preparation; ordinary routes retain their existing cap.
+
+Four new simulated lifecycle tests cover confirmed restoration, one replacement only, closure refusal, stale/expired requests and delayed-reservation cancellation. Browser renderer disposal must still gate replacement; no HTTP route or live browser uses this service yet. No hosted allowance, room, provider call or deployment changed. Next: add the private browser recovery controls and route bounds, integrate actual renderer teardown, then review and verify before hosted activation and user-started trial.
+
+Validation: 1,292 prototype tests across 86 files, type checking and build pass. Log: /private/tmp/ai-stylist-recovery-service-final.log. No hosted mutation or paid call.
