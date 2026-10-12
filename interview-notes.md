@@ -1362,3 +1362,8 @@ I added a separate private recovery page rather than changing the original stop-
 
 
 I rehearsed recovery in a phone-sized WebKit browser using simulated media and provider responses. The check exposed an ordering bug: old callbacks were invalidated before their interrupt message could be sent. I moved the interrupt ahead of invalidation and added an assertion before client destruction. The rehearsal covers the UI and cleanup sequence, while the real phone test remains separate.
+
+
+## Preserving experiment history while enabling recovery
+
+I approved one bounded $4 interruption-and-resume experiment, bringing the experiment allocation to $29. I kept the nine earlier test records intact and checked the full database history before and after applying the allowance. The update enabled the allowance without starting a call. I chose a separate recovery mode so ordinary tests cannot use that budget, and kept live phone acceptance separate from simulated test results.

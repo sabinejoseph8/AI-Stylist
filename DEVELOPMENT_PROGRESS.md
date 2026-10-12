@@ -2,6 +2,10 @@
 
 ## Current implementation and publication handoff
 
+The approved recovery amendment is installed and verified, preserving all nine previous records without reserving rooms. Local recovery implementation passes 1,295 tests and a synthetic mobile WebKit rehearsal. Next is protected Render recovery deployment and user-started iPhone acceptance. The historical checkpoints below do not override this current status.
+
+## Earlier account implementation checkpoint
+
 623 foundation tests across 94 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
 Private Memory synchronization succeeded from 28c383971e40af0e322567d67234678ad6534b50 with MCP preserved. Sabine approved automatic identity linking and sent the Render inquiry. Exact next action: review its reply and verify ingress/logging before configuring account email URLs. Read-only Supabase inspection confirms Google/Apple disabled, email confirmation on and provider session time-box unset; no settings changed. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the 623-test checkpoint, approved automatic linking, and user-confirmed Render inquiry submission. Earlier publication records below are historical.
@@ -2457,3 +2461,12 @@ Local review found that epoch invalidation made the queued sender refuse its own
 Reviewed reservation/claim bounds, stop/start races, history restoration and route body/origin guards. The requested code-review skill is unavailable in the installed skill inventory; this is a direct local review, not a claimed skill review or Phase 1 completion. Actual playback flush, provider state, acoustic echo and physical-phone acceptance remain unverified. Next: validate the hosted migration against the current private nine-record ledger, apply the authorized amendment without reserving, review the private deployment configuration, then provide final instructions before Sabine starts the trial.
 
 Validation: 1,295 tests across 87 files, type checking and build pass; mobile WebKit rehearsal passes and screenshot was visually inspected. Clarified the allowance label as one recovery experiment, not one room. No paid calls or hosted changes.
+
+
+## Hosted recovery allowance verified, 12 October 2026
+
+Applied the reviewed prototype recovery migration to the existing AI Stylist Supabase project after reading its current private ledger. A full deep comparison confirms all nine historical records and prior approval metadata are unchanged; only the exact approved $4 recovery amendment was added. The experiment allocation is $29, separate from recurring hosting. No pair was reserved and no provider call started. The private comparison checkpoint was removed after verification.
+
+The SQL editor reported success. Row security remains enabled; anonymous and customer writes remain denied and the existing server role remains allowed. The earlier isolated 25 PostgreSQL checks cover the new claim and compare-and-swap rules. Preparing the protected Render service with explicit --recovery startup; ordinary spoken/scripted modes cannot consume this allowance. The test must be started by Sabine after complete advance instructions. Physical interruption/resume acceptance and Phase 1 completion remain open.
+
+Exact next action: inspect the current Render settings, deploy the reviewed recovery mode with the existing private gate and Free plan, verify its non-starting status/allowance routes, then give the complete iPhone instructions. Do not start or reserve automatically.

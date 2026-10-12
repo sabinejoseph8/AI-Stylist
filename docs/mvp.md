@@ -1976,3 +1976,12 @@ Sabine explicitly approved the additional $4 experiment: at most two rooms and t
 Prepared local ledger support for a distinct recoveryTrial amendment after nine closed historical attempts. Both $2/five-minute room units reserve atomically, neither can be reused, and the replacement can be claimed only after the initial reservation is closed. Existing spoken/scripted routes cannot spend this amendment. Hosted amendment application remains explicitly refused by SupabaseBudget until its separate SQL migration is prepared and verified. No real allowance, reservation, room or deployment has changed.
 
 Next: finish the hosted compare-and-swap ledger migration and isolated SQL tests, then build the disabled replacement lifecycle and verify cleanup/history/deadlines before enabling a user-started trial. Approval does not authorize automatic start, retries, a third room or stronger acceptance claims.
+
+
+## Hosted recovery allowance verified, 12 October 2026
+
+Applied the reviewed prototype recovery migration to the existing AI Stylist Supabase project after reading its current private ledger. A full deep comparison confirms all nine historical records and prior approval metadata are unchanged; only the exact approved $4 recovery amendment was added. The experiment allocation is $29, separate from recurring hosting. No pair was reserved and no provider call started. The private comparison checkpoint was removed after verification.
+
+The SQL editor reported success. Row security remains enabled; anonymous and customer writes remain denied and the existing server role remains allowed. The earlier isolated 25 PostgreSQL checks cover the new claim and compare-and-swap rules. Preparing the protected Render service with explicit --recovery startup; ordinary spoken/scripted modes cannot consume this allowance. The test must be started by Sabine after complete advance instructions. Physical interruption/resume acceptance and Phase 1 completion remain open.
+
+Exact next action: inspect the current Render settings, deploy the reviewed recovery mode with the existing private gate and Free plan, verify its non-starting status/allowance routes, then give the complete iPhone instructions. Do not start or reserve automatically.

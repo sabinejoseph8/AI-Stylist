@@ -7,7 +7,7 @@ services:
     plan: free
     region: oregon
     buildCommand: npm ci && npm run build
-    startCommand: node src/server.ts --preview --spoken
+    startCommand: node src/server.ts --preview --recovery
     healthCheckPath: /healthz
     autoDeployTrigger: off
     envVars:
