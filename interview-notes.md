@@ -1135,3 +1135,7 @@ I verified the social handoff against the server initiation response and added t
 ## Browser reset ownership verification, 12 October 2026
 
 I connected the reset browser adapter to the prepared server grant owner in a simulated integration check. Cleanup failure remains unconfirmed, reset permission is one-use, and no account access is created. All 509 tests, type checking and build pass. Real password changes and hosted acceptance remain pending.
+
+## Account return-page boundaries, 12 October 2026
+
+I reviewed the account return pages and prepared routing that treats URLs only as presentation information. A reset page still requires server-verified permission, and a query string cannot claim the customer is signed in. All 511 tests, type checking and build pass. The preview remains simulated and live page mounting is pending.

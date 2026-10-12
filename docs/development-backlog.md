@@ -1835,3 +1835,9 @@ All 507 foundation tests across 70 files, type checking and build pass. Three ad
 Composed the reset-only browser HTTP adapter with the actual prepared reset handler and browser-grant owner using synthetic fetch. Confirmed cleanup returns resetComplete; failed cleanup returns unconfirmed. Both clear the reset cookie without account access, permit only one password operation and reject subsequent client/server attempts. Grant/provider operations are simulated; this is not real password change acceptance.
 
 All 509 foundation tests across 70 files, type checking and build pass. No hosted or paid work occurred. Exact next action: audit callback/reset page routing and preview-versus-live adapter selection against approved account flows, then consolidate current summaries/private Memory. Hosted activation, customer recovery/linking policy and phase gates remain open.
+
+## Account return-page routing preparation, 12 October 2026
+
+Reviewed App/AccountPanel/RecoveryPanel: current preview intentionally uses sample adapters and does not render live callback return paths. Added a disabled presentation-only resolver for /account and /account/reset. Only canceled/busy/unavailable notices are recognized; signedIn, token/grant query data, duplicate statuses, fragments, foreign origins and browser-side callback URLs are refused. Reset routing explicitly requires server permission and cannot infer it from the URL. This resolver is not selected in the preview.
+
+All 511 foundation tests across 71 files, type checking and build pass. Two focused checks cover accepted presentation routes and hostile/authority-like URL refusal. Live page mounting, server reset-permission readiness, provider selection and browser acceptance remain open. Exact next action: prepare explicit non-preview account/reset panel configuration and server-bound reset readiness without inferring authorization from URL state; preserve hosted activation gates.
