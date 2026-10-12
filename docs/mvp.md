@@ -1967,3 +1967,12 @@ Final validation: 1,284 prototype tests across 84 files, type checking and build
 ## Current acceptance boundary, 12 October 2026
 
 Local renderer teardown, recovery coordination and callback reentry checks are prepared; the current prototype suite is 1,285 tests across 84 files with type checking and build passing. Live continuous resume remains disabled. Tavus clarification does not prove browser buffer flush. A concrete two-room $4/ten-minute experiment proposal is awaiting Sabine's financial decision; no allowance changed. Hosted account activation still has the separately recorded ingress/logging, provider, permitted email and real isolation gates. Domain purchase remains deferred until public launch. Later phases retain predecessor dependencies. No phase is marked complete.
+
+
+## Additional recovery experiment approved, 12 October 2026
+
+Sabine explicitly approved the additional $4 experiment: at most two rooms and ten reserved avatar minutes, raising the experiment allocation from $25 to $29 with no retries or plan upgrades. Prior reservations and separately approved monthly hosting charges remain separate. This supersedes the pending financial decision for this one experiment only.
+
+Prepared local ledger support for a distinct recoveryTrial amendment after nine closed historical attempts. Both $2/five-minute room units reserve atomically, neither can be reused, and the replacement can be claimed only after the initial reservation is closed. Existing spoken/scripted routes cannot spend this amendment. Hosted amendment application remains explicitly refused by SupabaseBudget until its separate SQL migration is prepared and verified. No real allowance, reservation, room or deployment has changed.
+
+Next: finish the hosted compare-and-swap ledger migration and isolated SQL tests, then build the disabled replacement lifecycle and verify cleanup/history/deadlines before enabling a user-started trial. Approval does not authorize automatic start, retries, a third room or stronger acceptance claims.

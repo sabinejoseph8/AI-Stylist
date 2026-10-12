@@ -2404,3 +2404,14 @@ Local renderer teardown, recovery coordination and callback reentry checks are p
 This is the third consecutive dependency check after renderer preparation. No new approval or external account input was supplied. No authorized independent implementation can close the live acceptance or account activation boundary; the remaining publication is being completed before marking the incomplete goal blocked. Exact next action: Sabine answers the pending $4 experiment decision or shares the hosting follow-up/required existing account setup input. Preserve all limits; no paid calls or allowance mutation from automatic continuation.
 
 Private Memory deployment appgdep_6acd301cc59c8191a247bab1a2cd5233 succeeded, MCP enabled, owner-only access preserved; all 16 site checks, build and artifact validation pass. The incomplete goal is blocked after the three consecutive dependency checks above. No trial started and no financial approval was inferred.
+
+
+## Additional recovery experiment approved, 12 October 2026
+
+Sabine explicitly approved the additional $4 experiment: at most two rooms and ten reserved avatar minutes, raising the experiment allocation from $25 to $29 with no retries or plan upgrades. Prior reservations and separately approved monthly hosting charges remain separate. This supersedes the pending financial decision for this one experiment only.
+
+Prepared local ledger support for a distinct recoveryTrial amendment after nine closed historical attempts. Both $2/five-minute room units reserve atomically, neither can be reused, and the replacement can be claimed only after the initial reservation is closed. Existing spoken/scripted routes cannot spend this amendment. Hosted amendment application remains explicitly refused by SupabaseBudget until its separate SQL migration is prepared and verified. No real allowance, reservation, room or deployment has changed.
+
+Next: finish the hosted compare-and-swap ledger migration and isolated SQL tests, then build the disabled replacement lifecycle and verify cleanup/history/deadlines before enabling a user-started trial. Approval does not authorize automatic start, retries, a third room or stronger acceptance claims.
+
+Validation: 1,288 prototype tests across 85 files, type checking and build pass. Log: /private/tmp/ai-stylist-recovery-budget-final.log. Three new focused ledger regressions pass. No paid call or deployment.

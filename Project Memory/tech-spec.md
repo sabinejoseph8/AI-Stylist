@@ -2990,3 +2990,8 @@ Final validation: 1,284 prototype tests across 84 files, type checking and build
 ## Current acceptance boundary, 12 October 2026
 
 Local renderer teardown, recovery coordination and callback reentry checks are prepared; the current prototype suite is 1,285 tests across 84 files with type checking and build passing. Live continuous resume remains disabled. Tavus clarification does not prove browser buffer flush. A concrete two-room $4/ten-minute experiment proposal is awaiting Sabine's financial decision; no allowance changed. Hosted account activation still has the separately recorded ingress/logging, provider, permitted email and real isolation gates. Domain purchase remains deferred until public launch. Later phases retain predecessor dependencies. No phase is marked complete.
+
+
+## Approved replacement experiment reservation pattern
+
+On 12 October 2026 Sabine approved an additional $4 for one two-room interruption-and-resume experiment, up to ten reserved avatar minutes. Experiment allocation is $29, separate from recurring hosting. Local ledger preparation reserves both $2/five-minute units atomically and permits each room claim once. Replacement claim requires initial closure; no old route may spend this dedicated allowance. Hosted SQL, disabled lifecycle, actual cleanup and device acceptance remain pending. No real reservation or allowance mutation has been applied.

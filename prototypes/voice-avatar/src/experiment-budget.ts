@@ -1,7 +1,8 @@
 import { open, readFile, rename, unlink } from 'node:fs/promises';
 import { randomUUID } from 'node:crypto';
 
-export type Reservation = { id: string; cents: number; seconds: number; closed: boolean; room?: string; kind?: 'spoken' };
+export type Reservation = { id: string; cents: number; seconds: number; closed: boolean; room?: string; kind?: 'spoken' | 'recovery'; started?: boolean };
+export const RECOVERY_TRIAL = { approvedOn: '2026-10-12', baseAttempts: 9, extraAttempts: 2, cents: 400, seconds: 600, purpose: 'replacement-room-resume', totalBudgetCents: 2900 } as const;
 type Extension = { approvedOn: '2026-10-09'; baseAttempts: 4; extraAttempts: 1; cents: 200; seconds: 300 };
 type PhoneTrial = { approvedOn: '2026-10-09'; baseAttempts: 6; extraAttempts: 1; cents: 200; seconds: 300; source: 'reserve'; purpose: 'iphone-playback-interrupt'; totalBudgetCents: 2500 };
 const PHONE_TRIAL: PhoneTrial = { approvedOn: '2026-10-09', baseAttempts: 6, extraAttempts: 1, cents: 200, seconds: 300, source: 'reserve', purpose: 'iphone-playback-interrupt', totalBudgetCents: 2500 };
@@ -17,14 +18,15 @@ function sameFields(value: unknown, expected: object): boolean {
   return Object.keys(record).length === Object.keys(expected).length && Object.entries(expected).every(([key, field]) => record[key] === field);
 }
 function validTransfer(value: unknown): value is ReserveTransfer { return sameFields(value, RESERVE_TRANSFER); }
-export type Ledger = { version: 1; runs: Reservation[]; spokenExtension?: Extension; reserveTransfer?: ReserveTransfer; phoneTrial?: PhoneTrial; automaticTrial?: AutomaticTrial; repeatTrial?: RepeatTrial };
+export type Ledger = { version: 1; runs: Reservation[]; spokenExtension?: Extension; reserveTransfer?: ReserveTransfer; phoneTrial?: PhoneTrial; automaticTrial?: AutomaticTrial; repeatTrial?: RepeatTrial; recoveryTrial?: typeof RECOVERY_TRIAL };
 function validExtension(value: unknown): value is Extension {
   return sameFields(value, { approvedOn: '2026-10-09', baseAttempts: 4, extraAttempts: 1, cents: 200, seconds: 300 });
 }
 export function validateLedger(value: unknown): Ledger {
     const parsed = value as Ledger;
     if (!parsed || typeof parsed !== 'object') throw new Error('Usage ledger requires review.');
-    if (parsed.version !== 1 || !Array.isArray(parsed.runs) || parsed.runs.length > (validExtension(parsed.spokenExtension) ? (validTransfer(parsed.reserveTransfer) ? (sameFields(parsed.phoneTrial, PHONE_TRIAL) ? (sameFields(parsed.automaticTrial, AUTOMATIC_TRIAL) ? (sameFields(parsed.repeatTrial, REPEAT_TRIAL) ? 9 : 8) : 7) : 6) : 5) : 4)
+    if (parsed.version !== 1 || !Array.isArray(parsed.runs) || parsed.runs.length > (sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) ? 11 : (validExtension(parsed.spokenExtension) ? (validTransfer(parsed.reserveTransfer) ? (sameFields(parsed.phoneTrial, PHONE_TRIAL) ? (sameFields(parsed.automaticTrial, AUTOMATIC_TRIAL) ? (sameFields(parsed.repeatTrial, REPEAT_TRIAL) ? 9 : 8) : 7) : 6) : 5) : 4))
+      || (parsed.recoveryTrial !== undefined && (!sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) || !sameFields(parsed.repeatTrial, REPEAT_TRIAL) || ![9, 11].includes(parsed.runs.length)))
       || (parsed.spokenExtension !== undefined && !validExtension(parsed.spokenExtension))
       || (parsed.reserveTransfer !== undefined && (!validTransfer(parsed.reserveTransfer) || !validExtension(parsed.spokenExtension)))
       || (parsed.phoneTrial !== undefined && (!sameFields(parsed.phoneTrial, PHONE_TRIAL) || !validTransfer(parsed.reserveTransfer)))
@@ -35,7 +37,7 @@ export function validateLedger(value: unknown): Ledger {
       || (parsed.runs[6] !== undefined && parsed.runs[6].kind !== 'spoken')
       || (parsed.runs[5] !== undefined && parsed.runs[5].kind !== 'spoken')
       || (parsed.runs[4] !== undefined && parsed.runs[4].kind !== 'spoken')
-      || parsed.runs.some((r, i) => r.kind !== undefined && (i < 4 || i > 8 || r.kind !== 'spoken'))
+      || parsed.runs.some((r, i) => i >= 9 ? r.kind !== 'recovery' || (r.started !== undefined && typeof r.started !== 'boolean') : r.started !== undefined || (r.kind !== undefined && (i < 4 || r.kind !== 'spoken')))
       || parsed.runs.some(r => !r || typeof r.id !== 'string' || !/^[a-f0-9-]{36}$/.test(r.id)
         || r.cents !== 200 || r.seconds !== 300 || typeof r.closed !== 'boolean'
         || (r.room !== undefined && !/^[a-zA-Z0-9_-]{1,100}$/.test(r.room)))
@@ -95,6 +97,29 @@ export class ExperimentBudget {
       ledger.repeatTrial = { ...REPEAT_TRIAL };
     });
   }
+  async approveRecoveryTrial() {
+    await this.change(ledger => {
+      if (ledger.recoveryTrial || !sameFields(ledger.repeatTrial, REPEAT_TRIAL) || ledger.runs.length !== 9 || ledger.runs.some(r => !r.closed)) throw new Error('Recovery approval cannot be applied.');
+      ledger.recoveryTrial = { ...RECOVERY_TRIAL };
+    });
+  }
+  async reserveRecoveryPair(): Promise<readonly [string, string]> {
+    const ids = [randomUUID(), randomUUID()] as const;
+    await this.change(ledger => {
+      if (!sameFields(ledger.recoveryTrial, RECOVERY_TRIAL) || ledger.runs.length !== 9 || ledger.runs.some(r => !r.closed)) throw new Error('Recovery allowance unavailable.');
+      for (const id of ids) ledger.runs.push({id,cents:200,seconds:300,closed:false,kind:'recovery',started:false});
+    });
+    return ids;
+  }
+  async claimRecoveryRoom(id: string) {
+    await this.change(ledger => {
+      const index = ledger.runs.findIndex(r => r.id === id);
+      const run = ledger.runs[index];
+      if (!sameFields(ledger.recoveryTrial, RECOVERY_TRIAL) || ledger.runs.length !== 11 || index < 9 || !run || run.kind !== 'recovery' || run.closed || run.started
+        || (index === 10 && !ledger.runs[9]!.closed)) throw new Error('Recovery room unavailable.');
+      run.started = true;
+    });
+  }
   async reserve(kind: 'scripted' | 'spoken' = 'scripted'): Promise<string> {
     const id = randomUUID();
     await this.change(ledger => {
@@ -109,7 +134,7 @@ export class ExperimentBudget {
     if (!/^[a-zA-Z0-9_-]{1,100}$/.test(room)) throw new Error('Invalid room identifier.');
     await this.change(ledger => {
       const run = ledger.runs.find(r => r.id === id && !r.closed);
-      if (!run || run.room) throw new Error('Room reservation mismatch.'); run.room = room;
+      if (!run || run.room || (run.kind === 'recovery' && run.started !== true)) throw new Error('Room reservation mismatch.'); run.room = room;
     });
   }
   async closeVerified(id: string) {

@@ -2110,3 +2110,12 @@ Fixed reentrant cleanup: the shared disposal promise is installed before calling
 Next action: prepare the distinct replacement lifecycle locally using the existing reservation limits and confirmed snapshots, with no callable paid endpoint. Keep actual activation and live acceptance blocked pending financial authorization. Private Memory currently reflects the preceding 1,284-test checkpoint, not this follow-up.
 
 Validation: 1,285 tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-reentry-final.log. No paid call or deployment.
+
+
+## Additional recovery experiment approved, 12 October 2026
+
+Sabine explicitly approved the additional $4 experiment: at most two rooms and ten reserved avatar minutes, raising the experiment allocation from $25 to $29 with no retries or plan upgrades. Prior reservations and separately approved monthly hosting charges remain separate. This supersedes the pending financial decision for this one experiment only.
+
+Prepared local ledger support for a distinct recoveryTrial amendment after nine closed historical attempts. Both $2/five-minute room units reserve atomically, neither can be reused, and the replacement can be claimed only after the initial reservation is closed. Existing spoken/scripted routes cannot spend this amendment. Hosted amendment application remains explicitly refused by SupabaseBudget until its separate SQL migration is prepared and verified. No real allowance, reservation, room or deployment has changed.
+
+Next: finish the hosted compare-and-swap ledger migration and isolated SQL tests, then build the disabled replacement lifecycle and verify cleanup/history/deadlines before enabling a user-started trial. Approval does not authorize automatic start, retries, a third room or stronger acceptance claims.

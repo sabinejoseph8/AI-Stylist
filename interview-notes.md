@@ -1347,3 +1347,6 @@ I connected the recovery coordinator to the local disposal check. Cleanup now st
 
 
 I fixed a cleanup callback edge case: if invalidating old playback requested cleanup again, destruction could start recursively. I installed the shared cleanup result first and added a regression test. I also confirmed that the current model requests are stateless, so a future replacement flow must preserve explicitly confirmed context through a separate lifecycle instead of assuming the existing end action keeps it.
+
+
+I approved a tightly capped follow-up experiment to test interruption recovery in a replacement room. I chose to reserve both rooms before starting, keep prior attempts unchanged and prohibit retries. This makes the cost boundary explicit while the live cleanup and context behavior still need testing.

@@ -29,6 +29,7 @@ export class SupabaseBudget extends ExperimentBudget {
     const result = await this.rpc('stylist_prototype_budget_change', { expected: previous, replacement: next });
     if (result !== true) throw new Error('Durable experiment ledger requires review.');
   }
+  override async approveRecoveryTrial() { throw new Error('Hosted allowance amendments require a separate review.'); }
   override async approveAdditionalSpokenTest() { throw new Error('Hosted allowance amendments require a separate review.'); }
   override async approveRepeatTrial() { throw new Error('Hosted allowance amendments require a separate review.'); }
   override async approveAutomaticTrial() { throw new Error('Hosted allowance amendments require a separate review.'); }
