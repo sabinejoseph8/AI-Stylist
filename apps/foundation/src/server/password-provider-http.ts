@@ -51,7 +51,7 @@ export function createPasswordProviderHttp(projectUrl:string,serviceKey:string,f
    for(const part of parts){bytes.set(part,offset);offset+=part.length;}
    const parsed=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
    completed=true;
-   if(operation==='signUp'&&parsed&&typeof parsed==='object'&&!Array.isArray(parsed)&&!('access_token' in parsed)&&!('refresh_token' in parsed)&&typeof parsed.id==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(parsed.id))return Object.freeze({status:'confirmationRequired'});
+   if(operation==='signUp'&&parsed&&typeof parsed==='object'&&!Array.isArray(parsed)&&!('access_token' in parsed)&&!('refresh_token' in parsed)&&!('error' in parsed)&&!('session' in parsed)&&typeof parsed.id==='string'&&/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i.test(parsed.id))return Object.freeze({status:'confirmationRequired'});
    return parsed;
   }catch{throw Error('Supabase operation unavailable');}finally{
    clearTimeout(timer!);external?.removeEventListener('abort',stop);

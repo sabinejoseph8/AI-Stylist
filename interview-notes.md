@@ -1004,3 +1004,8 @@ I tested a sign-in save whose database acknowledgment was lost while sign-out al
 ## Preparing the password service connection
 
 I prepared password and registration HTTP requests with simulated responses, fixed destinations and bounded resource use. I kept registration confirmation separate from authenticated access and tested stalled and oversized responses. Real credentials and sign-ins remain disabled until the hosted acceptance gates are satisfied.
+
+
+## Testing the complete password preparation path
+
+I connected the password HTTP adapter to the verified session and encrypted database rehearsal. I checked that registration confirmation does not sign someone in, and that an uncertain save followed by failed cleanup remains blocked after restart. I also rejected ambiguous registration responses instead of treating them as confirmation.

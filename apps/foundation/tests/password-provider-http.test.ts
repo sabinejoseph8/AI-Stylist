@@ -31,3 +31,9 @@ it('rejects oversized and non-JSON replies without accepting confirmation',async
   const port=createPasswordProviderHttp(project,key,async()=>response);await expect(port.password({...input,method:'signUp'},signal())).rejects.toThrow('Supabase operation unavailable');
  }
 });
+
+it('does not normalize ambiguous signup session or error fields',async()=>{
+ for(const extra of [{error:'private'},{session:null},{session:{access_token:'fixture'}}]){
+  const value={id:'11111111-1111-4111-8111-111111111111',...extra};const port=createPasswordProviderHttp(project,key,async()=>Response.json(value));expect(await port.password({...input,method:'signUp'},signal())).toEqual(value);
+ }
+});

@@ -2288,3 +2288,12 @@ Prepared createPasswordProviderHttp with fixed HTTPS Supabase project endpoints:
 All 438 foundation tests across 55 files, type checking and build pass. Six synthetic-fetch scenarios verify fixed request contracts, confirmation normalization, logout, refusal before fetch, ignored-cancellation admission and oversized/non-JSON rejection. Actual provider behavior and complete HTTP/password/database composition remain unverified. Upstream SDK source was consulted for endpoint/request shape, not installed or treated as a pinned live contract: https://raw.githubusercontent.com/supabase/auth-js/master/src/GoTrueClient.ts .
 
 Exact next action: compose the HTTP adapter, normalized bridge and initial encrypted ownership in the isolated PostgreSQL harness with generated tokens and synthetic fetch; test confirmation-only signup and cleanup failure. Preserve hosted/account and financial gates. Private Memory remains at its verified 432-test checkpoint pending the next consolidation.
+
+
+## Password HTTP and database composition, 12 October 2026
+
+The isolated PostgreSQL harness now composes actual password HTTP operations, normalized provider bridge, generated signed identity, initial encrypted ownership and shared account lifecycle. Injected synthetic fetch confirms exact endpoints, body allowlisting, no redirects/cookies and no automatic retries. Registration confirmation returns no cookie or durable ownership. Successful sign-in adopts generation one and confirmed cleanup removes it. Lost adoption acknowledgment plus refused HTTP logout retains quarantine across actual database restart and replacement-store refusal. Counts are exactly three password/signup requests and two cleanup requests.
+
+The registration normalizer now also refuses ambiguous error/session fields rather than describing them as confirmation. All 439 foundation tests across 55 files, type checking/build pass. The full isolated database rehearsal passes with synthetic provider replies; real Supabase Auth and browser HTTPS behavior remain unverified. No real sign-in, email, credentials, hosted change or paid call occurred.
+
+Exact next action: prepare the concrete durable sign-out port using verified request identity, scoped encrypted ownership and independent session-presence confirmation. Keep provider response uncertainty explicit. Consolidate private Memory at the next checkpoint; its current publication contains 432 tests. Task 2c remains incomplete.

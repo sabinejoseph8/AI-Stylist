@@ -14,6 +14,7 @@ import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts'
 import {createRefreshReconciliation} from '../src/server/refresh-reconciliation.ts';
 import {createAuthSessionPresence} from '../src/server/auth-session-presence.ts';
 import {createInitialSessionStager} from '../src/server/initial-session.ts';
+import {createPasswordProviderHttp} from '../src/server/password-provider-http.ts';
 import {createPasswordProvider} from '../src/server/password-provider.ts';
 import {createPasswordAccounts} from '../src/server/password-account.ts';
 import {createIdentityVerifier} from '../src/server/verified-identity.ts';
@@ -260,11 +261,23 @@ console.log('Encrypted key transition PostgreSQL rehearsal passed: overlap reads
 // Actual initial password composition; provider replies remain synthetic.
 await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from stylist_private.refresh_ownership where session_id='${session}';`);
 const initialVerifier=createIdentityVerifier(project,async()=>pair.publicKey,createAuthSessionAuthority(rpc));
-let initialRevoked=true;
-const initialStager=createInitialSessionStager(store,initialVerifier,()=>scope.expiresAt,async()=>initialRevoked);
-const initialProvider=createPasswordProvider({password:async()=>({access_token:await token(),refresh_token:'initial-password-fixture',token_type:'bearer'}),revoke:async()=>initialRevoked},initialStager);
+let initialRevoked=true,initialCalls=0,initialLogouts=0;
+const initialHttp=createPasswordProviderHttp(project,'synthetic-password-http-key',async(url,init)=>{
+ assert.equal(init.redirect,'error');assert.equal(init.credentials,'omit');
+ if(url===project+'/auth/v1/logout?scope=local'){
+  initialLogouts++;assert.match(init.headers.authorization,/^Bearer /);return new Response(null,{status:initialRevoked?204:503});
+ }
+ initialCalls++;assert.deepEqual(JSON.parse(init.body),{email:'sample@example.test',password:'made-up'});
+ if(url===project+'/auth/v1/signup')return Response.json({id:owner});
+ assert.equal(url,project+'/auth/v1/token?grant_type=password');
+ return Response.json({access_token:await token(),refresh_token:'initial-password-fixture',token_type:'bearer'});
+});
+const initialStager=createInitialSessionStager(store,initialVerifier,()=>scope.expiresAt,(jwt,abort)=>initialHttp.revoke(jwt,'local',abort));
+const initialProvider=createPasswordProvider(initialHttp,initialStager);
 const passwordInput={method:'signIn',email:'sample@example.test',password:'made-up'};
 const initialAccounts=createPasswordAccounts(security,origin,initialProvider);
+const confirmation=await initialAccounts.submit({...passwordInput,method:'signUp'},signal());assert.deepEqual(confirmation,{status:'confirmationRequired'});assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(initialLogouts,0);
+
 const initialReady=await initialAccounts.submit(passwordInput,signal());assert.equal(initialReady.status,'ready');assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
 assert.equal(await initialReady.discard(),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
 loseNext='stylist_adopt_refresh';initialRevoked=false;
@@ -274,7 +287,8 @@ const uncertainInitial=await store.inspect(owner,session,signal());assert.equal(
 await execute(['restart',container]);
 for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
 assert.notEqual((await createRefreshStore(rpc,codec).claim(owner,session,1,signal())).status,'claimed');
-console.log('Initial password PostgreSQL composition passed: generated identity, first adoption, cleanup, and lost acknowledgment/refused revocation restart protection.');
+assert.equal(initialCalls,3);assert.equal(initialLogouts,2);
+console.log('Initial password HTTP/PostgreSQL composition passed: generated identity, first adoption, cleanup, and lost acknowledgment/refused revocation restart protection.');
 
 // Real primary-database presence authority, including cascade after actual session deletion.
 const presence=createAuthSessionPresence(rpc);
