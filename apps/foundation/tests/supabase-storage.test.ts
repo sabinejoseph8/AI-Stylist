@@ -9,6 +9,8 @@ const bytes=new TextEncoder().encode('synthetic webp payload');
 function response(status:number,body:Uint8Array|null=null,type='application/json'):StorageResponse{
  return {status,headers:{get:(name)=>name.toLowerCase()==='content-type'?type:null},body:body?new ReadableStream<Uint8Array>({start(c){c.enqueue(body);c.close();}}):null};
 }
+const uploadAck=(name=key)=>response(200,new TextEncoder().encode(JSON.stringify({Id:id,Key:`stylist-wardrobe/${name}`})));
+const deleteAck=(name=key)=>response(200,new TextEncoder().encode(JSON.stringify([{name,bucket_id:'stylist-wardrobe'}])));
 const adapter=(fetcher:StorageFetch,deadline=8000)=>createSupabaseStorage('https://stylist-test.supabase.co','x'.repeat(30),fetcher,deadline);
 
 describe('disabled Supabase Storage transport boundary',()=>{
@@ -19,7 +21,7 @@ describe('disabled Supabase Storage transport boundary',()=>{
   expect(()=>createSupabaseStorage('https://stylist.supabase.co','x'.repeat(30),vi.fn(),8001)).toThrow();
  });
  it('uploads only a bounded normalized image to a fixed private bucket without upsert or redirects',async()=>{
-  const fetcher=vi.fn(async(_url:string,_init:RequestInit)=>response(200));const store=adapter(fetcher);
+  const fetcher=vi.fn(async(_url:string,_init:RequestInit)=>uploadAck());const store=adapter(fetcher);
   await store.putIfAbsent(key,bytes);
   const [url,init]=fetcher.mock.calls[0]!;
   expect(url).toBe(`https://stylist-test.supabase.co/storage/v1/object/stylist-wardrobe/${key}`);
@@ -51,7 +53,7 @@ describe('disabled Supabase Storage transport boundary',()=>{
   expect(await adapter(vi.fn(async()=>response(200,bytes,'text/html'))).inspect(key)).toEqual({state:'unknown'});
  });
  it('removes one exact key through the documented Storage object deletion route',async()=>{
-  const fetcher=vi.fn(async(_url:string,_init:RequestInit)=>response(200));await adapter(fetcher).remove(key);
+  const fetcher=vi.fn(async(_url:string,_init:RequestInit)=>deleteAck());await adapter(fetcher).remove(key);
   const [url,init]=fetcher.mock.calls[0]!;
   expect(url).toBe('https://stylist-test.supabase.co/storage/v1/object/stylist-wardrobe');
   expect(init.method).toBe('DELETE');expect(JSON.parse(new TextDecoder().decode(init.body as ArrayBuffer))).toEqual({prefixes:[key]});
@@ -75,4 +77,53 @@ describe('disabled Supabase Storage transport boundary',()=>{
   expect(await adapter(vi.fn(async()=>response),15).inspect(key)).toEqual({state:'unknown'});
   expect(canceled).toBe(true);
  });
+});
+
+it('rejects malformed owner IDs and reserves upload keys for new WebP assets',async()=>{
+ const fetcher=vi.fn(async()=>response(200));const store=adapter(fetcher);
+ for(const value of [`${'-'.repeat(36)}/${id}.webp`,`${owner}/fixture.jpg`,`${owner}/fixture.webp`])await expect(store.putIfAbsent(value,bytes)).rejects.toThrow();
+ expect(fetcher).not.toHaveBeenCalled();
+});
+it('keeps a legacy single-file key readable and removable',async()=>{
+ const legacy=`${owner}/${'a'.repeat(128)}.jpeg`;
+ const fetcher=vi.fn(async(_url:string,init:RequestInit)=>init.method==='GET'?response(200,bytes,'image/jpeg'):deleteAck(legacy));
+ const store=adapter(fetcher);
+ expect((await store.inspect(legacy)).state).toBe('present');await store.remove(legacy);expect(fetcher).toHaveBeenCalledTimes(2);
+});
+it('never hashes a partial response as a full object',async()=>{
+ expect(await adapter(vi.fn(async()=>response(206,bytes,'image/webp'))).inspect(key)).toEqual({state:'unknown'});
+ const partial=response(200,bytes,'image/webp');partial.headers.get=name=>name==='content-range'?'bytes 0-2/90':name==='content-type'?'image/webp':null;
+ expect(await adapter(vi.fn(async()=>partial)).inspect(key)).toEqual({state:'unknown'});
+});
+it('uses one deadline for response headers and the remaining object body',async()=>{
+ vi.useFakeTimers();let canceled=false;
+ try{
+  const store=adapter(async()=>{await new Promise(resolve=>setTimeout(resolve,15));return {status:200,headers:{get:name=>name==='content-type'?'image/webp':null},body:new ReadableStream<Uint8Array>({cancel(){canceled=true;}})};},25);
+  const read=store.inspect(key);await vi.advanceTimersByTimeAsync(26);expect(await read).toEqual({state:'unknown'});expect(canceled).toBe(true);
+ }finally{vi.useRealTimers();}
+});
+it('does not wait indefinitely for a broken body cancellation',async()=>{
+ const stalledCancel=new ReadableStream<Uint8Array>({cancel(){return new Promise(()=>{});}});
+ const store=adapter(async()=>({status:409,headers:{get:()=>null},body:stalledCancel}),15);let timer:ReturnType<typeof setTimeout>;
+ try{await expect(Promise.race([store.remove(key),new Promise<never>((_,reject)=>{timer=setTimeout(()=>reject(Error('held by cancel')),100);})])).rejects.toThrow('Storage operation unavailable');}finally{clearTimeout(timer!);}
+});
+it('cancels a response that arrives after the request deadline',async()=>{
+ vi.useFakeTimers();let canceled=false;
+ try{
+  const store=adapter(async()=>{await new Promise(resolve=>setTimeout(resolve,30));return {status:200,headers:{get:()=>null},body:new ReadableStream<Uint8Array>({cancel(){canceled=true;}})};},15);
+  const result=store.inspect(key);await vi.advanceTimersByTimeAsync(16);expect(await result).toEqual({state:'unknown'});await vi.advanceTimersByTimeAsync(20);expect(canceled).toBe(true);
+ }finally{vi.useRealTimers();}
+});
+it('holds a successful HTTP status without an exact upload acknowledgment',async()=>{
+ for(const value of [true,{Id:id,Key:`stylist-wardrobe/${owner}/wrong.webp`},{Id:'bad',Key:`stylist-wardrobe/${key}`}]){
+  await expect(adapter(async()=>response(200,new TextEncoder().encode(JSON.stringify(value)))).putIfAbsent(key,bytes)).rejects.toThrow('Storage operation unavailable');
+ }
+});
+it('holds a deletion acknowledgment for no object, another key or another bucket',async()=>{
+ for(const value of [[],[{name:`${owner}/other.jpg`,bucket_id:'stylist-wardrobe'}],[{name:key,bucket_id:'other'}],true]){
+  await expect(adapter(async()=>response(200,new TextEncoder().encode(JSON.stringify(value)))).remove(key)).rejects.toThrow('Storage operation unavailable');
+ }
+});
+it('bounds mutation acknowledgments and rejects malformed JSON',async()=>{
+ for(const body of ['{',JSON.stringify('x'.repeat(65537))])await expect(adapter(async()=>response(200,new TextEncoder().encode(body))).remove(key)).rejects.toThrow();
 });

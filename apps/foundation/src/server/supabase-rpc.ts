@@ -22,8 +22,9 @@ export function createSupabaseRpc(projectUrl:string,serviceKey:string,fetcher:Su
  return Object.freeze({async call(name:string,payload:Record<string,unknown>):Promise<unknown>{
   if(typeof name!=='string'||!/^stylist_[a-z0-9_]{1,70}$/.test(name)||!payload||typeof payload!=='object'||Array.isArray(payload))
    throw Error('Supabase operation unavailable');
-  const body=JSON.stringify(payload);
-  if(Buffer.byteLength(body,'utf8')>MAX_REQUEST)throw Error('Supabase operation unavailable');
+  let body:string;
+  try{const serialized=JSON.stringify(payload);if(typeof serialized!=='string'||Buffer.byteLength(serialized,'utf8')>MAX_REQUEST)throw Error();body=serialized;}
+  catch{throw Error('Supabase operation unavailable');}
   const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;let response:SupabaseFetchResponse|undefined;
   let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;let completed=false;
   const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(Error('deadline'));},deadlineMs);});
@@ -32,7 +33,7 @@ export function createSupabaseRpc(projectUrl:string,serviceKey:string,fetcher:Su
     method:'POST',redirect:'error',signal:controller.signal,
     headers:{apikey:serviceKey,authorization:`Bearer ${serviceKey}`,'content-type':'application/json',accept:'application/json'},body,
    }).then(response=>{
-    if(controller.signal.aborted){void response.body?.cancel();throw Error('deadline');}
+    if(controller.signal.aborted){try{void response.body?.cancel().catch(()=>{});}catch{}throw Error('deadline');}
     return response;
    });
    response=await Promise.race([request,timeout]);
@@ -43,7 +44,7 @@ export function createSupabaseRpc(projectUrl:string,serviceKey:string,fetcher:Su
    while(true){
     const item=await Promise.race([reader.read(),timeout]);if(item.done)break;
     length+=item.value.byteLength;
-    if(length>MAX_RESPONSE){void reader.cancel();throw Error('response limit');}
+    if(length>MAX_RESPONSE)throw Error('response limit');
     parts.push(item.value);
    }
    const bytes=new Uint8Array(length);let offset=0;
@@ -52,7 +53,7 @@ export function createSupabaseRpc(projectUrl:string,serviceKey:string,fetcher:Su
    completed=true;return parsed;
   }catch{throw Error('Supabase operation unavailable');}finally{
    clearTimeout(timer!);
-   if(!completed){controller.abort();if(reader)void reader.cancel();else if(response?.body)void response.body.cancel();}
+   if(!completed){controller.abort();try{if(reader)void reader.cancel().catch(()=>{});else if(response?.body)void response.body.cancel().catch(()=>{});}catch{}}
    try{reader?.releaseLock();}catch{}
   }
  }});

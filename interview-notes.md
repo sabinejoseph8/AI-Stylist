@@ -701,3 +701,8 @@ I added a disabled server-side Supabase adapter for saved looks. It only targets
 ## Preparing private wardrobe image storage
 
 I added a disabled Supabase Storage adapter for the private wardrobe-image bucket. It accepts only bounded sanitized image bytes and exact owner-scoped paths, refuses overwrites and redirects, hashes downloaded bytes before reconciliation, and removes one confirmed object key at a time. I tested it with simulated requests, including stalled and oversized streams. The adapter is not connected to a live route, and I did not send a photo or call my Supabase project. The database timestamp checks and actual hosted storage still need verification.
+
+
+## Connecting image recovery safely
+
+I connected the image lifecycle to separate database and object-storage interfaces while binding every operation to one verified customer. Deletion claims use the customer's authenticated database context; server credentials perform the restricted persistence steps. I found that the earlier transport could restart its timeout after headers or wait indefinitely for cancellation. I replaced that with one deadline and tested stalled cleanup. I also made empty or mismatched deletion acknowledgments keep metadata pending until absence is confirmed. The simulated checks pass; the revised SQL rehearsal and actual hosted storage still need verification.

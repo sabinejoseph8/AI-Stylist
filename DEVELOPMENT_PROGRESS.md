@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2b local preparation is active. Latest evidence: 148 foundation tests (excluding the loopback-binding test), type checking/build and earlier SQL-backed recovery paths pass. SQL timestamp hardening still needs a rerun. Hosted changes and paid tests remain unauthorized. See the final checkpoint below for the exact next action.
+Task 2b local preparation is active. Latest evidence: 171 foundation tests across 14 files pass (excluding the loopback-binding test), with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The revised SQL-backed rehearsal and newest SQL timestamp guards still need execution when the approval limit clears. Hosted changes and paid tests remain unauthorized.
 
 ## Completed evidence
 
@@ -643,3 +643,14 @@ Added an explicitly constructed server-side Storage transport for the existing w
 Evidence: 148 foundation tests across 13 files pass when excluding the existing HTTP test that cannot bind loopback under the current execution limit. Type checking and production build pass. Ten checks cover host/key configuration, owner/path restrictions, no-overwrite uploads, response failures, checksum inspection, absent versus unknown reads, exact-key deletion and timeout/cancellation. SQL timestamp guards remain unverified because the approval system still blocks the isolated Docker run. No hosted Storage, signed URL, customer image or deployment was used.
 
 Exact next action: when the execution limit clears, rerun the isolated PostgreSQL suite including the newest timestamp checks, then complete local reconciliation wiring and its SQL-backed simulated-storage rehearsal. Copy completed docs to the AI Stylist folder, push pending commits and publish the refreshed private Memory site only when those actions are permitted. Task 2b remains local-only.
+
+
+## Owner-bound media composition and transport recovery, 11 October 2026
+
+Prepared `createMediaSupabasePort` to connect the image lifecycle/reconciler to RPC and Storage interfaces. The port binds one previously verified owner, rejects a mismatched customer-RPC context, whitelists staging fields, and validates exact owner-folder paths and database acknowledgments. Deletion claims run through the customer-authenticated context because the SQL function derives `auth.uid()`; stage/read/commit/finalization use the separate service context. The customer authentication transport remains unimplemented and must be verified before this is enabled.
+
+Fixed the Storage transport to use one deadline across response headers and body reads, contain broken cancellation promises, reject partial-object reads, support existing safe legacy filenames for reads/deletion, and restrict new uploads to ID-based WebP keys. Mutation acknowledgments are now bounded JSON and must identify the exact uploaded key or removed object. An empty or mismatched deletion response keeps metadata pending; later confirmed absence can finalize it. RPC serialization/cancellation failures now return redacted errors too.
+
+Evidence: 171 foundation tests across 14 files pass, excluding the existing loopback-binding file denied by the current environment. Type checking and production build pass. Simulated integration checks exercise sanitized image save, checksum-based reconciliation, lost/empty delete acknowledgments, exact-owner checks and durable receipt recognition. The SQL-backed media rehearsal now uses the prepared adapters and actual isolated SQL roles, but its revised execution is pending the Docker approval limit. Earlier SQL results apply to the preceding rehearsal; no claim is made that this revision has passed. No customer media, hosted data, provider call, allowance change or deployment occurred.
+
+Exact next action: run `python3 apps/foundation/scripts/check-data-protections.py` after the approval execution limit clears and fix any failure. It must verify the newest timestamp guards and the revised adapter-chain recovery rehearsal. Continue the remaining local Task 2b resource-limit/Storage acceptance preparation, preserving Phase 1 and hosted activation gates. Copy/push/site publishing remain pending the same execution limit. No action from Sabine is needed for this local preparation.

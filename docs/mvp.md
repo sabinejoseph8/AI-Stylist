@@ -3,13 +3,13 @@
 Updated: 11 October 2026
 Status: Working memory from approved requirements and actual findings. Phase 1 feasibility and launch are not approved by this file.
 
-## Current memory checkpoint, 10 October 2026
+## Current memory checkpoint, 11 October 2026
 
-1,264 prototype checks across 81 files, type checking and build last passed. Separate isolated verification passed 50 SQL checks, nineteen SQL-backed owner scenarios and twenty-seven SQL-backed browser scenarios. These are simulated providers/devices with local PostgreSQL and loopback connections, not real transcription quality, hosted notebook acceptance or production readiness.
+Task 2a is accepted. Task 2b local persistence preparation is active under the approved sequencing exception: 171 foundation tests across 14 files, type checking and build pass, excluding the loopback-binding test. The last recorded prototype run passed 1,273 checks. The newest SQL timestamp guards and revised adapter-chain recovery rehearsal await Docker execution. New migrations remain unapplied remotely; hosted identity, Storage and signed URL behavior are unverified.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
-**Next action:** Sabine agreed on 11 October 2026 to postpone Rakuten registration until the customer website is live. Both contact forms require a publisher SID, and neither inquiry was delivered. Do not present the GitHub repository or private project memory site as the finished customer app. Continue clearly labeled, non-purchasable sample-product work. Real shopping links and affiliate commissions require publisher and retailer approvals. FARFETCH remains unsent. Next: Task 2a is implemented under Sabine’s approved sequencing exception. Sabine confirmed all local visual review steps worked on 11 October 2026; Task 2a is complete. Preserve all remaining Phase 1 and Phase 2 acceptance gates.
+**Next action:** Finish independent local Task 2b preparation and rerun its isolated SQL checks when the execution limit clears, then copy/publish verified work. Phase 1 exit remains open. Rakuten registration is postponed until the customer website is live; neither retailer inquiry was delivered. Real shopping links and affiliate commissions still require publisher and retailer approvals.
 
 **Remaining gates:** Tavus recovery clarification, live validation of the dedicated transcription startup and remote cleanup contract, a new paid-trial allowance, permitted retailer/feed imagery and affiliate access, customer-provider privacy terms, and customer restart recovery remain open. All nine approved provider attempts are closed and the reserve is zero. No new spend is authorized; do not reset or reuse legacy reservations. Sabine asked to skip latest spending checks. Sabine authorized the OpenAI questions and received AI-assisted replies. Low delay and item correlation are documented; the selected-model startup URL remains an inference, and no stronger remote-finalization guarantee was established.
 
@@ -62,7 +62,7 @@ Use product acceptance A01 through A21 and the phased tests in docs/progress.md.
 | Real product access and rights | No shoppable launch | Select and approve a permitted program/feed and imagery terms; no scraping or assumed approval. |
 | Provider privacy | Private test consent does not authorize customer launch terms | Resolve no-training/DPA/retention requirements before customer media launch. |
 | Customer restart recovery | Prototype notes may be lost | Sabine accepted volatility only for private prototype; resolve customer recovery behavior before launch. |
-| Customer security | Account/isolation implementation not yet built | Complete Phase 1 exit, then owner-scoped migrations/auth and independent-user tests. |
+| Customer security | Local schema/access safeguards are prepared; hosted accounts and isolation remain unverified | Verify the revised local SQL suite, then complete the approved Phase 1/hosted activation gates before real account and Storage acceptance. |
 | Capacity and operating cost | One simultaneous launch consultation only | Measure provider unit cost/load and approve any expanded hosting or capacity separately. |
 
 ## Assumptions and engineering decisions
@@ -643,3 +643,8 @@ Added an explicitly constructed server-only RPC transport and mixed-look Supabas
 Evidence: 138 tests pass when excluding the existing HTTP test that cannot bind loopback under the current execution limit; type checking, build and whitespace checks pass. Simulated checks cover destination validation, headers, redirect refusal, request/response sizes, malformed/status errors, timeout, cancellation and mixed-look RPC response validation. No live Supabase request was made. The migration's latest timestamp guards remain unverified because the approval system blocked the isolated Docker run.
 
 Exact next action: rerun the isolated PostgreSQL suite after approval is available. Then copy the pending commits to the AI stylist folder, push to GitHub and publish the refreshed private Memory site. Continue local work without exceeding Phase 1 or spending boundaries.
+
+
+## Local media persistence risk checkpoint, 11 October 2026
+
+Task 2b now prepares an owner-bound media composition with separate customer-authenticated deletion claims and service-only persistence calls. Simulated checks cover sanitized uploads, full-byte checksum recovery, false deletion acknowledgments and deadline/cancellation failures. The updated SQL-backed adapter-chain rehearsal is typechecked but awaits execution, alongside the newest timestamp guards. Hosted identity verification, actual Storage behavior, signed URL protection, decoder OS limits and receipt retention remain acceptance gates. This changes no launch/privacy/spending decision and does not complete Task 2b or Phase 1.

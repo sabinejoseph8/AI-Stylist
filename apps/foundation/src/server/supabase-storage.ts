@@ -3,6 +3,10 @@ import {createHash} from 'node:crypto';
 const BUCKET='stylist-wardrobe';
 const MAX_OBJECT=10*1024*1024;
 const MAX_DEADLINE=8000;
+const UUID='[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}';
+const readableKey=new RegExp(`^${UUID}/[A-Za-z0-9_-]{1,128}\\.(?:webp|png|jpe?g)$`,'i');
+const uploadKey=new RegExp(`^${UUID}/${UUID}\\.webp$`,'i');
+const uuid=new RegExp(`^${UUID}$`,'i');
 export interface StorageResponse {
  status:number;
  headers:{get(name:string):string|null};
@@ -17,13 +21,11 @@ function project(url:string){
   return parsed;
  }catch{throw Error('Storage configuration unavailable');}
 }
-function validKey(key:string){
- if(typeof key!=='string'||key.length>120)return false;
- const pieces=key.split('/');
- return pieces.length===2&&/^[a-f0-9-]{36}$/i.test(pieces[0]!)&&/^(?:[a-f0-9-]{36}\.webp|[a-zA-Z0-9_-]{1,64}\.(?:png|jpe?g))$/i.test(pieces[1]!);
-}
 function storageUrl(base:URL,action:'object'|'authenticated',key:string){
  return new URL(`/storage/v1/${action==='object'?'object':'object/authenticated'}/${BUCKET}/${key.split('/').map(encodeURIComponent).join('/')}`,base).toString();
+}
+function cancel(body:ReadableStream<Uint8Array>|null|undefined){
+ try{void body?.cancel().catch(()=>{});}catch{}
 }
 
 /** Server-only, injected Supabase Storage boundary. It is not enabled by any route. */
@@ -33,69 +35,71 @@ export function createSupabaseStorage(projectUrl:string,serviceKey:string,fetche
   typeof fetcher!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>MAX_DEADLINE)
   throw Error('Storage configuration unavailable');
 
- async function request(method:'GET'|'POST'|'DELETE',url:string,body?:Uint8Array|undefined){
+ async function request<T>(method:'GET'|'POST'|'DELETE',url:string,read:(response:StorageResponse,wait:<R>(work:Promise<R>)=>Promise<R>,setReader:(value:ReadableStreamDefaultReader<Uint8Array>)=>void)=>Promise<T>,body?:Uint8Array){
   const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;
-  let response:StorageResponse|undefined;let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;let complete=false;
+  let response:StorageResponse|undefined;let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
   const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(Error('deadline'));},deadlineMs);});
+  const wait=<R>(work:Promise<R>)=>Promise.race([work,timeout]);
   try{
    const headers:Record<string,string>={apikey:serviceKey,authorization:`Bearer ${serviceKey}`};
-   if(method==='POST'){headers['content-type']='image/webp';headers['cache-control']='0';headers['x-upsert']='false';}
+   if(method==='POST'){headers['content-type']='image/webp';headers['cache-control']='max-age=0';headers['x-upsert']='false';}
    if(method==='DELETE')headers['content-type']='application/json';
-   const requestPromise=fetcher(url,{method,redirect:'error',signal:controller.signal,headers,...(body?{body:Uint8Array.from(body).buffer}: {})}).then(value=>{
-    if(controller.signal.aborted){void value.body?.cancel();throw Error('deadline');}
+   const pending=fetcher(url,{method,redirect:'error',signal:controller.signal,headers,...(body?{body:Uint8Array.from(body).buffer}:{})}).then(value=>{
+    if(controller.signal.aborted){cancel(value.body);throw Error('deadline');}
     return value;
    });
-   response=await Promise.race([requestPromise,timeout]);
-   complete=true;
-   return response;
+   response=await wait(pending);
+   return await wait(read(response,wait,value=>{reader=value;}));
   }catch{throw Error('Storage operation unavailable');}
   finally{
-   clearTimeout(timer!);
-   if(!complete){controller.abort();if(reader)void reader.cancel();else if(response?.body)void response.body.cancel();}
-   try{reader?.releaseLock();}catch{}
+   clearTimeout(timer!);controller.abort();
+   // A broken stream may never settle cancellation. Do not let it hold the deadline.
+   if(reader){try{void reader.cancel().catch(()=>{});}catch{}try{reader.releaseLock();}catch{}}
+   else cancel(response?.body);
   }
  }
- async function drain(response:StorageResponse){
-  try{await response.body?.cancel();}catch{}
+ async function json(response:StorageResponse,wait:<R>(work:Promise<R>)=>Promise<R>,setReader:(value:ReadableStreamDefaultReader<Uint8Array>)=>void):Promise<unknown>{
+  if(response.status<200||response.status>=300||!/^application\/json(?:\s*;|$)/i.test(response.headers.get('content-type')??'')||!response.body)throw Error('response');
+  const reader=response.body.getReader();setReader(reader);const parts:Uint8Array[]=[];let length=0;
+  while(true){const item=await wait(reader.read());if(item.done)break;length+=item.value.byteLength;if(length>65536)throw Error('size');parts.push(item.value);}
+  const bytes=new Uint8Array(length);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.length;}
+  return JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(bytes));
  }
  return Object.freeze({
   async putIfAbsent(key:string,bytes:Uint8Array){
-   if(!validKey(key)||!(bytes instanceof Uint8Array)||bytes.byteLength<1||bytes.byteLength>MAX_OBJECT)throw Error('Storage operation unavailable');
-   const response=await request('POST',storageUrl(base,'object',key),bytes);
-   await drain(response);
-   if(response.status<200||response.status>=300)throw Error('Storage operation unavailable');
+   if(typeof key!=='string'||!uploadKey.test(key)||!(bytes instanceof Uint8Array)||bytes.byteLength<1||bytes.byteLength>MAX_OBJECT)throw Error('Storage operation unavailable');
+   await request('POST',storageUrl(base,'object',key),async(response,wait,setReader)=>{
+    const result=await json(response,wait,setReader);
+    if(!result||typeof result!=='object'||Array.isArray(result))throw Error('acknowledgment');
+    const row=result as Record<string,unknown>;
+    if(row.Key!==`${BUCKET}/${key}`||typeof row.Id!=='string'||!uuid.test(row.Id))throw Error('acknowledgment');
+   },bytes);
   },
   async inspect(key:string):Promise<Readonly<{state:'absent'|'unknown'}|{state:'present';checksum:string}>>{
-   if(!validKey(key))return {state:'unknown'};
-   let response:StorageResponse;
-   try{response=await request('GET',storageUrl(base,'authenticated',key));}catch{return {state:'unknown'};}
-   if(response.status===404){await drain(response);return {state:'absent'};}
-   if(response.status<200||response.status>=300||!/^image\/(?:webp|jpeg|png)$/i.test(response.headers.get('content-type')??'')){
-    await drain(response);return {state:'unknown'};
-   }
-   if(!response.body)return {state:'unknown'};
-   const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
-   const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(Error('deadline'));},deadlineMs);});
-   let finished=false;
+   if(typeof key!=='string'||!readableKey.test(key))return {state:'unknown'};
    try{
-    reader=response.body.getReader();const hash=createHash('sha256');let total=0;
-    while(true){
-     const item=await Promise.race([reader.read(),timeout]);if(item.done)break;
-     total+=item.value.byteLength;if(total>MAX_OBJECT){void reader.cancel();return {state:'unknown'};}
-     hash.update(item.value);
-    }
-    if(total===0)return {state:'unknown'};
-    finished=true;
-    return {state:'present',checksum:hash.digest('hex')} as const;
+    return await request('GET',storageUrl(base,'authenticated',key),async(response,wait,setReader)=>{
+     if(response.status===404)return {state:'absent'} as const;
+     // Partial content cannot establish a full object's checksum.
+     if(response.status!==200||response.headers.get('content-range')||!/^image\/(?:webp|jpeg|png)(?:\s*;|$)/i.test(response.headers.get('content-type')??'')||!response.body)throw Error('response');
+     const reader=response.body.getReader();setReader(reader);
+     const hash=createHash('sha256');let total=0;
+     while(true){
+      const item=await wait(reader.read());if(item.done)break;
+      total+=item.value.byteLength;if(total>MAX_OBJECT)throw Error('size');
+      hash.update(item.value);
+     }
+     if(total===0)throw Error('empty');
+     return {state:'present',checksum:hash.digest('hex')} as const;
+    });
    }catch{return {state:'unknown'};}
-   finally{clearTimeout(timer!);if(reader){if(!finished)void reader.cancel();try{reader.releaseLock();}catch{}} }
   },
   async remove(key:string){
-   if(!validKey(key))throw Error('Storage operation unavailable');
-   const body=new TextEncoder().encode(JSON.stringify({prefixes:[key]}));
-   const response=await request('DELETE',new URL(`/storage/v1/object/${BUCKET}`,base).toString(),body);
-   await drain(response);
-   if(response.status<200||response.status>=300)throw Error('Storage operation unavailable');
+   if(typeof key!=='string'||!readableKey.test(key))throw Error('Storage operation unavailable');
+   await request('DELETE',new URL(`/storage/v1/object/${BUCKET}`,base).toString(),async(response,wait,setReader)=>{
+    const result=await json(response,wait,setReader);
+    if(!Array.isArray(result)||result.length!==1||!result[0]||typeof result[0]!=='object'||result[0].name!==key||result[0].bucket_id!==BUCKET)throw Error('acknowledgment');
+   },new TextEncoder().encode(JSON.stringify({prefixes:[key]})));
   },
  });
 }

@@ -55,3 +55,15 @@ it('cancels a response body that never completes',async()=>{
  await expect(createSupabaseRpc(url,key,fetcher as never,20).call('stylist_test',{})).rejects.toThrow('Supabase operation unavailable');
  expect(cancelled).toBe(true);
 });
+it('redacts serialization failures before any request',async()=>{
+ const fetcher=vi.fn(async()=>response('{}'));const rpc=createSupabaseRpc(url,key,fetcher);
+ const circular:Record<string,unknown>={};circular.self=circular;
+ for(const value of [circular,{value:1n},{toJSON(){throw Error('private content');}},{toJSON(){return undefined;}}])await expect(rpc.call('stylist_test',value)).rejects.toThrow('Supabase operation unavailable');
+ expect(fetcher).not.toHaveBeenCalled();
+});
+it('contains a rejecting cancellation without exposing a provider error',async()=>{
+ const body=new ReadableStream<Uint8Array>({cancel(){return Promise.reject(Error('private detail'));}});
+ const rpc=createSupabaseRpc(url,key,async()=>({status:403,headers:new Headers(),body}));
+ await expect(rpc.call('stylist_test',{})).rejects.toThrow('Supabase operation unavailable');
+ await new Promise(resolve=>setTimeout(resolve,0));
+});

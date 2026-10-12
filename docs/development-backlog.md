@@ -1,15 +1,15 @@
 # AI Stylist development backlog
 
-Updated: 10 October 2026
+Updated: 11 October 2026
 
 Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. This is the working status ledger for autonomous implementation. Later explicit Sabine decisions and the approved product/design specifications refine the older baseline: use look, one look at a time, USA/USD, real product links for launch and affiliate revenue. Demo fixtures never satisfy real shopping acceptance. docs/progress.md retains phased exit gates. No incomplete dependency is marked complete merely because an independent discovery component is ready.
 
 ## Current priorities
 
-1. D01 voice/avatar recovery and live-note acceptance: partial evidence, blocked on Tavus recovery reply and a new paid-test allowance.
-2. D02 catalog adapter contract: implemented with shared synthetic tests.
-3. D03 synthetic demonstration catalog: implemented for internal development only.
-4. Phase 1d source/rights/privacy discovery: desk research is actionable; partner applications and contractual commitments require Sabine.
+1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The latest 171 foundation tests pass; revised SQL adapter-chain recovery and timestamp guards await an execution-limit reset.
+2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
+3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
+4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
 
 ## Items
 
@@ -45,7 +45,7 @@ Baseline acceptance: Clearly marked demo products support search and styling; ca
 
 ### D04: Accounts and style profiles
 
-Priority: P0 | Release: R1 | Dependencies: None | Status: Not started
+Priority: P0 | Release: R1 | Dependencies: None | Status: Partial local Task 2b schema/profile protections; customer account methods and hosted acceptance remain open
 
 User story: As a shopper I can save sizes, style and budget.
 
@@ -85,7 +85,7 @@ Baseline acceptance: Understands occasion, budget and preferences; asks clarifyi
 
 ### D08: Photo capture and upload
 
-Priority: P0 | Release: R1 | Dependencies: D04 | Status: In progress: prototype evidence only; full acceptance pending
+Priority: P0 | Release: R1 | Dependencies: D04 | Status: Partial: local capture prototype, sanitizer and simulated upload/recovery adapters; hosted acceptance remains open
 
 User story: As a shopper I can show an owned garment.
 
@@ -115,7 +115,7 @@ Baseline acceptance: User can correct incorrect or uncertain attributes.
 
 ### D11: Persistent digital wardrobe
 
-Priority: P0 | Release: R1 | Dependencies: D04,D10 | Status: Not started
+Priority: P0 | Release: R1 | Dependencies: D04,D10 | Status: Partial local Task 2b persistence/access preparation; wardrobe feature and hosted acceptance remain open
 
 User story: As a shopper I can save and manage owned clothing.
 
@@ -155,7 +155,7 @@ Baseline acceptance: Voice or touch swap updates outfit and totals correctly.
 
 ### D15: Saved outfits
 
-Priority: P0 | Release: R1 | Dependencies: D13,D04 | Status: Not started
+Priority: P0 | Release: R1 | Dependencies: D13,D04 | Status: Partial local Task 2b owned/retail persistence preparation; full saved-look feature acceptance remains open
 
 User story: As a shopper I can revisit looks.
 
@@ -175,7 +175,7 @@ Baseline acceptance: Owned items excluded; demo items cannot trigger payment.
 
 ### D17: Consent, deletion and retention
 
-Priority: P0 | Release: R1 | Dependencies: D04,D08 | Status: Not started
+Priority: P0 | Release: R1 | Dependencies: D04,D08 | Status: Partial local consent/deletion recovery preparation; retention decisions and hosted acceptance remain open
 
 User story: As a shopper I control my data.
 
@@ -1072,3 +1072,8 @@ Added an explicitly constructed server-only RPC transport and mixed-look Supabas
 Evidence: 138 tests pass when excluding the existing HTTP test that cannot bind loopback under the current execution limit; type checking, build and whitespace checks pass. Simulated checks cover destination validation, headers, redirect refusal, request/response sizes, malformed/status errors, timeout, cancellation and mixed-look RPC response validation. No live Supabase request was made. The migration's latest timestamp guards remain unverified because the approval system blocked the isolated Docker run.
 
 Exact next action: rerun the isolated PostgreSQL suite after approval is available. Then copy the pending commits to the AI stylist folder, push to GitHub and publish the refreshed private Memory site. Continue local work without exceeding Phase 1 or spending boundaries.
+
+
+## Task 2b local media adapter checkpoint, 11 October 2026
+
+D08/D11/D15/D17 remain partial. Owner-bound media composition, sanitized upload mapping, checksum reconciliation, exact Storage acknowledgments and deletion-receipt recovery are prepared with simulated requests. Customer-authenticated deletion claims stay separate from the service credential; actual authentication/Storage acceptance is open. 171 foundation tests (excluding the denied loopback test), type checking and build pass. The revised SQL adapter-chain rehearsal and timestamp guards await an isolated Docker rerun when the execution limit clears. No hosted migration, paid call or activation is authorized by these checks.
