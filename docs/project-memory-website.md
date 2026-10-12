@@ -86,3 +86,6 @@ Private Memory recovery checkpoint source 303907a575eb112aa199c182519abe1753c5d0
 
 
 Private Memory source b2b033a7e17dc9e586e16096687a0f6f7e25084f deployed successfully as appgdep_6acc4523c4bc81918f6784c92c07bbdc. It includes local recovery delivery/lifecycle, reset HTTP preparation and full-composition evidence through afa375d. All 16 website checks pass; owner-only access and MCP are preserved. The imported plan shows 324 foundation tests. No customer endpoint or account was activated. Exact next action: prepare disconnected email/password account HTTP handling with the same bounded parsing/origin protections, verified header-only cookies and response-delivery cleanup, using simulated adapters. Recovery email delivery, actual OAuth/refresh and hosted acceptance remain open.
+
+
+Private Memory account-request source 26312ecfdf8f701dfab7ecd958d248ea21ad1028 deployed successfully as appgdep_6acc46f2caf081918d224d2921d008e5. All 16 checks pass; owner-only access and MCP remain. It reflects 332 foundation tests and source through 30664a7. The subsequently verified status-only controller alignment brings local checks to 333 and is queued for the next consolidated refresh.

@@ -860,3 +860,8 @@ I reused the tested bounded request handler for password sign-in instead of main
 ## Keeping recovery acknowledgments private
 
 I prepared recovery requests to return the same visible acknowledgment for an absent account and a provider failure. I fixed the callback destination internally, rejected extra fields and invalidated the bound callback when canceled. I kept the limitation clear: response-shape tests do not prove constant-time behavior or actual email delivery. All 332 foundation tests pass, with type checking and build. No real email was sent.
+
+
+## Aligning browser and server account replies
+
+I found that the local controller required a user ID while the prepared HTTP reply intentionally exposed only sign-in status. I aligned the browser presentation contract without inventing an account identity or granting server access. All 333 foundation tests pass, with type checking and build. The private Memory site now includes the preceding account-request checkpoint and remains owner-only.

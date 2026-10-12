@@ -3,7 +3,7 @@ export type AccountRequest=
  |{method:'signIn'|'signUp';email:string;password:string}
  |{method:'recover';email:string}
  |{method:'social';provider:'google'|'apple'};
-export type AccountReply={status:'signedIn';userId:string}|{status:'confirmationRequired'|'redirecting'|'canceled'};
+export type AccountReply={status:'signedIn';userId?:string}|{status:'confirmationRequired'|'redirecting'|'canceled'};
 export interface AccountProvider{
  submit(request:AccountRequest,signal:AbortSignal):Promise<AccountReply>;
  signOut(signal:AbortSignal):Promise<void>;
@@ -52,7 +52,9 @@ export function createAccountFlow(provider:AccountProvider,deadlineMs=15000){
     if(version!==generation)return;
     if(request.method==='recover'){set('recoveryRequested','If this address can receive account recovery, instructions will be sent.');return;}
     if(!reply||typeof reply!=='object'||Array.isArray(reply))throw Error();
-    if(reply.status==='signedIn'&&Object.keys(reply).sort().join(',')==='status,userId'&&typeof reply.userId==='string'&&uuid.test(reply.userId)){
+    if(reply.status==='signedIn'&&Object.keys(reply).join(',')==='status'){
+     set('signedIn','You are signed in.');
+    }else if(reply.status==='signedIn'&&Object.keys(reply).sort().join(',')==='status,userId'&&typeof reply.userId==='string'&&uuid.test(reply.userId)){
      set('signedIn','You are signed in.',reply.userId.toLowerCase());
     }else if(reply.status==='confirmationRequired'&&request.method==='signUp'&&Object.keys(reply).length===1){
      set('confirmationRequired','Check your email to confirm your account, then sign in.');

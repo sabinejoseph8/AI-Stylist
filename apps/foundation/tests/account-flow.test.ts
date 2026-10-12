@@ -64,3 +64,7 @@ it('retains admission for canceled non-cooperative calls and resumes when they s
  for(const release of releases.slice(1,4))release({status:'signedIn',userId:'00000000-0000-0000-0000-000000000002'});
  await Promise.resolve();expect(flow.snapshot().userId).toBe(user);
 });
+
+it('accepts status-only HTTP presentation without inventing a client account identity',async()=>{
+ const flow=createAccountFlow(provider({status:'signedIn'}));await flow.submit(request);expect(flow.snapshot().status).toBe('signedIn');expect(flow.snapshot().userId).toBeNull();expect(JSON.stringify(flow.snapshot())).not.toContain('private-fixture');
+});
