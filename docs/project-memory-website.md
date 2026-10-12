@@ -39,3 +39,8 @@ Resource-evidence refresh: 11 October 2026, document snapshot 297e31c and Site s
 
 
 Account-bound image refresh: 11 October 2026, document snapshot 96a0b73, Site source 184b43b395e580c69d241b8987b11bbb4902910b. Deployment appgdep_6acc2c90c43481918e1b07dbe2d8489b succeeded with private access and MCP tools retained. Sixteen website checks and artifact validation pass; imported evidence now includes 209 foundation checks and actual local Storage integration.
+
+
+## Retention checkpoint publication
+
+Document checkpoint 019fbb4 is published to GitHub and byte-verified in the AI stylist folder. Private Memory source cb2c35697e41e4183a51081ed9c686c77e666373 deployed successfully as appgdep_6acc2e8a5e708191a1bb8dc04b973415. All 16 website checks and artifact validation pass; existing private access and MCP tools are retained.

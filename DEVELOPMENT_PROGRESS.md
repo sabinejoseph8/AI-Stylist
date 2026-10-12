@@ -721,3 +721,11 @@ Exact next action: publish/copy the passing upgrade rehearsal and the retention 
 Sabine approved seven days for detailed technical photo-deletion receipts, followed by only the retired image ID linked to the account until account deletion. Migration 014 prepares this policy locally. Expired receipts cannot establish successful deletion, even before maintenance runs. A service-only bounded cleanup removes expired receipt details; the retired-ID trigger continues preventing reuse and account deletion cascades the minimal ledger. No photo, notes or conversation are retained by these records.
 
 Local PostgreSQL checks pass for the cutoff, customer denial, invalid limits, repeat cleanup, owner isolation, no ID reuse and account deletion. Hosted scheduling, monitoring and activation remain required before customer launch. Task 2b is still incomplete. No new provider attempts, spending, hosted changes or Auth activation occurred.
+
+
+Exact next action: finish the private Memory publication receipt, then extend the local retention rehearsal with bounded multi-batch cleanup and concurrent workers. Verify old detailed receipts are removed without affecting recent receipts, active photos or minimal retired IDs. Actual hosted maintenance setup remains gated. No action is required from Sabine for those local checks.
+
+
+## Retention checkpoint publication
+
+Document checkpoint 019fbb4 is published to GitHub and byte-verified in the AI stylist folder. Private Memory source cb2c35697e41e4183a51081ed9c686c77e666373 deployed successfully as appgdep_6acc2e8a5e708191a1bb8dc04b973415. All 16 website checks and artifact validation pass; existing private access and MCP tools are retained.
