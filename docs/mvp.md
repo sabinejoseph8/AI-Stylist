@@ -1599,3 +1599,11 @@ The last full foundation run remains 520 passing tests across 73 files with type
 Changing the explicit account provider or connected/sample mode now remounts account presentation and cancels the old flow. This clears old sign-in state and entered details. Local WebKit verified replacement after sign-in clears fields, replacement during Google handoff aborts the old request, and its late reply cannot restore handoff state. Existing synthetic browser account scenarios also pass. All 520 foundation tests, type checking and build pass. No hosted or provider operation was activated.
 
 Exact next action: audit remaining local preparation against Phase 1 and Phase 2 requirements, distinguishing additional implementation from decisions and hosted acceptance. Private Memory remains at the prior 520-test browser checkpoint and will receive this fix in the next consolidated update.
+
+## Current account database rehearsal and next-stage audit, 12 October 2026
+
+Re-ran apps/foundation/scripts/check-refresh-ownership.py against current source. The isolated PostgreSQL rehearsal passed account factory password, Google/Apple, recovery, refresh and sign-out composition, encrypted ownership, concurrency fencing, restart holds, key transition and primary-session cleanup. Provider responses remained synthetic; no hosted data or paid request was used. Disposable rehearsal resources were removed. This supplements the 520-test foundation and desktop WebKit evidence and does not establish hosted acceptance.
+
+The next substantial customer-account stage is gated by the existing local-only exception. Two decisions have been presented to Sabine and remain unanswered: whether recovery must work on another device, and whether hosted Tasks 2b/2c may begin before Phase 1 closes. Do not infer either answer from elapsed time. Phase 1 also needs the pending Tavus technical reply and a newly approved bounded paid-test allowance. Rakuten registration remains deferred until the customer site is live.
+
+Exact next action: incorporate Sabine's recovery and hosted-sequencing answers when received, then prepare the selected recovery contract or hosted database/account setup under that scope. Until then, preserve all current activation and spending gates; no backlog task or phase is marked complete by this audit.

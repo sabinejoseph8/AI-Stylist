@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 443 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Task 2c local account preparation is active under Sabine's approved exception. All 520 foundation tests pass; synthetic desktop WebKit account/reset checks also pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1897,3 +1897,11 @@ The last full foundation run remains 520 passing tests across 73 files with type
 Changing the explicit account provider or connected/sample mode now remounts account presentation and cancels the old flow. This clears old sign-in state and entered details. Local WebKit verified replacement after sign-in clears fields, replacement during Google handoff aborts the old request, and its late reply cannot restore handoff state. Existing synthetic browser account scenarios also pass. All 520 foundation tests, type checking and build pass. No hosted or provider operation was activated.
 
 Exact next action: audit remaining local preparation against Phase 1 and Phase 2 requirements, distinguishing additional implementation from decisions and hosted acceptance. Private Memory remains at the prior 520-test browser checkpoint and will receive this fix in the next consolidated update.
+
+## Current account database rehearsal and next-stage audit, 12 October 2026
+
+Re-ran apps/foundation/scripts/check-refresh-ownership.py against current source. The isolated PostgreSQL rehearsal passed account factory password, Google/Apple, recovery, refresh and sign-out composition, encrypted ownership, concurrency fencing, restart holds, key transition and primary-session cleanup. Provider responses remained synthetic; no hosted data or paid request was used. Disposable rehearsal resources were removed. This supplements the 520-test foundation and desktop WebKit evidence and does not establish hosted acceptance.
+
+The next substantial customer-account stage is gated by the existing local-only exception. Two decisions have been presented to Sabine and remain unanswered: whether recovery must work on another device, and whether hosted Tasks 2b/2c may begin before Phase 1 closes. Do not infer either answer from elapsed time. Phase 1 also needs the pending Tavus technical reply and a newly approved bounded paid-test allowance. Rakuten registration remains deferred until the customer site is live.
+
+Exact next action: incorporate Sabine's recovery and hosted-sequencing answers when received, then prepare the selected recovery contract or hosted database/account setup under that scope. Until then, preserve all current activation and spending gates; no backlog task or phase is marked complete by this audit.

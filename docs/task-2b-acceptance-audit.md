@@ -26,3 +26,11 @@ A request for local-only Task 2c preparation has been presented to Sabine. Until
 ## Local Task 2c preparation approved, 11 October 2026
 
 Sabine explicitly approved local Task 2c account preparation while Phase 1 remains open. This extends the earlier local Task 2b sequencing exception only to account interfaces and simulated tests. It includes no hosted configuration, real sign-in, new credentials, paid calls or customer launch. Prepare email/password, recovery, Google and Apple flows against injected provider interfaces, then real server identity-verification boundaries. Preserve every existing hosted, privacy, financial and Phase 1 acceptance gate. The pending-question wording in the preceding audit is now superseded by this approval.
+
+## Current account database rehearsal and next-stage audit, 12 October 2026
+
+Re-ran apps/foundation/scripts/check-refresh-ownership.py against current source. The isolated PostgreSQL rehearsal passed account factory password, Google/Apple, recovery, refresh and sign-out composition, encrypted ownership, concurrency fencing, restart holds, key transition and primary-session cleanup. Provider responses remained synthetic; no hosted data or paid request was used. Disposable rehearsal resources were removed. This supplements the 520-test foundation and desktop WebKit evidence and does not establish hosted acceptance.
+
+The next substantial customer-account stage is gated by the existing local-only exception. Two decisions have been presented to Sabine and remain unanswered: whether recovery must work on another device, and whether hosted Tasks 2b/2c may begin before Phase 1 closes. Do not infer either answer from elapsed time. Phase 1 also needs the pending Tavus technical reply and a newly approved bounded paid-test allowance. Rakuten registration remains deferred until the customer site is live.
+
+Exact next action: incorporate Sabine's recovery and hosted-sequencing answers when received, then prepare the selected recovery contract or hosted database/account setup under that scope. Until then, preserve all current activation and spending gates; no backlog task or phase is marked complete by this audit.
