@@ -1451,3 +1451,9 @@ The explicit dormant factory now builds all nine handlers with one shared accoun
 All 489 foundation tests across 67 files, type checking and build pass. New synthetic composition checks prove construction without provider calls, idempotent closure/refused admission and password capacity shared with OAuth while requests are pending. Existing signed-identity and isolated database tests remain separate evidence. Cross-route refresh, signed recovery shutdown and actual database factory composition still require focused checks.
 
 Exact next action: extend composition tests with signed recovery grant shutdown and shared refresh admission, then use the factory in the isolated database rehearsal. Preserve hosted, business-policy and spending gates. Private Memory is still at the 482-test checkpoint and needs reconciliation after these checks.
+
+## Account composition shutdown checks, 12 October 2026
+
+Two additional synthetic composition checks confirm that a delivered browser reset grant is discarded on shutdown, uncertain cleanup remains held, later reset requests are refused and no password change is attempted. Authenticated refresh shares the four-operation session capacity with password requests and cannot bypass it. These fixtures inject trusted identity/recovery ports; they do not verify real provider signatures or hosted recovery.
+
+All 491 foundation tests across 67 files, type checking and build pass. Task 2c remains open. Exact next action: compose the factory with generated signed identities and the isolated PostgreSQL adapters, then reconcile the private Memory publication and current summaries. No live routes, emails, credentials or paid calls were activated.
