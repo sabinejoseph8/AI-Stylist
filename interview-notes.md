@@ -1297,3 +1297,7 @@ I connected the saved-session check to the account screen. I verified reload wit
 ## Checking persistence beyond a page reload
 
 I closed and reopened a real WebKit browser profile and confirmed that its saved secure cookie restored sign-in without rotating credentials. I also expired the isolated database session and confirmed that the screen stayed signed out. I kept these results distinct from real customer and iPhone acceptance.
+
+## Making account server startup explicit
+
+I connected configuration, maintenance, account delivery and shutdown into one explicitly started runtime. I kept preparation separate from activation and verified that failed startup and shutdown clean up resources. I fixed a signal-only shutdown case that could otherwise report a successful later start. The real local runtime serves the account page and shuts down cleanly with synthetic maintenance; hosted activation remains pending.

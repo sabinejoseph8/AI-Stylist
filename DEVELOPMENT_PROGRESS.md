@@ -2,9 +2,9 @@
 
 ## Current implementation and publication handoff
 
-609 foundation tests across 90 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
+616 foundation tests across 92 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
-Private Memory synchronization succeeded from b96241fdf9ffb40eb828c67cfc210d2eb853b923 with MCP preserved. Exact next action: prepare explicit account runtime orchestration from the existing configuration, application, network and shutdown modules, without activating hosted customer routes; then assess exact hosted origin/sender/social readiness. Earlier publication records below are historical.
+Private Memory synchronization succeeded from b96241fdf9ffb40eb828c67cfc210d2eb853b923 with MCP preserved. Exact next action: prepare the separate deployment entrypoint and verify trusted proxy, exact origin and logging boundaries before hosted activation. Runtime orchestration now passes local combined tests; private Memory still publishes the prior 609-test checkpoint. Earlier publication records below are historical.
 
 ## Previous publication checkpoint (historical)
 
@@ -2173,3 +2173,11 @@ The actual connected account build restored sign-in after WebKit closed and reop
 ## Verified private publication, 12 October 2026
 
 Source b96241fdf9ffb40eb828c67cfc210d2eb853b923; deployment appgdep_6accdb03dc04819182708bc95a76f03e; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_6d48706aa6048191a15310807e472ee9. Terminal status succeeded with MCP enabled at https://ai-stylist-project-memory.idealgnat256.chatgpt.site. Owner-only audience preserved: one allowed user, no groups. All 16 site checks, build and artifact validation pass. Published current 609-test summary, fixed seven-day decision, browser restoration/relaunch and expiry evidence. No task completion boxes were changed.
+
+## Explicit account runtime orchestration, 12 October 2026
+
+Prepared prepareAccountRuntime to connect validated privately supplied settings, account build/application, network lifecycle and shutdown signals. Preparation reads no ambient environment and starts no listener, timer, provider call or signal handler. Explicit start attaches shutdown handling and performs maintenance before listening. Failed startup closes resources; close is idempotent; shutdown prevents restart and cannot turn late startup into successful activation. The caller must supply HTTPS or a separately verified trusted deployment proxy. No default entrypoint or hosted customer route was activated.
+
+Validation: 616 foundation tests across 92 files, type checking and build pass. Focused tests cover inert preparation, one startup, repeated/signaled/uncertain cleanup, bad settings, failed startup and close during startup. An actual loopback test composes the real build/application/network with synthetic maintenance, serves the account page and confirms signal cleanup. Test HTTP is local only and provides no production proxy assurance. Log: /private/tmp/ai-stylist-runtime-combined-tests.log.
+
+Next action: prepare a separately selected deployment entrypoint and verify exact trusted proxy/origin/logging behavior before configuring hosted email URLs. Sender credentials, Google/Apple setup, linking policy, real customer isolation and provider/device/accessibility checks remain open. Private Memory currently publishes the prior 609-test browser relaunch checkpoint; consolidate this runtime work in the next site update. No hosted setting, email, customer account or paid provider call changed.
