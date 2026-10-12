@@ -102,6 +102,11 @@
       "file": "supabase/migrations/202610110020_refresh_key_inventory.sql",
       "sha256": "099c8b2e0c0dd5e6d2a96d88861b7e3a15b1fb088767aee973577a20512b32b5",
       "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610120021_account_admission.sql",
+      "sha256": "20a63224b943459103915e9f197bc6dcbc5d18417b73bd7a7fc809ce8f65edfc",
+      "status": "applied"
     }
   ],
   "notes": [
@@ -146,5 +151,10 @@
     "checks": 17,
     "all_passed": true,
     "scope": "Refresh table RLS and denied direct access for anon/authenticated/service_role, two cascading managed-Auth FKs, empty credential table, all nine service-only functions with empty search_path, exact function count and prototype budget table presence. No credential written, managed Auth record changed or customer session started."
+  },
+  "account_admission_verification": {
+    "checks": 10,
+    "all_passed": true,
+    "scope": "RLS, denied direct table access for anon/authenticated/service_role, denied browser RPC execution, service-only security-definer function with empty search_path, unused singleton and preserved prototype table. No admission function invoked on hosted data; guard remains unmounted."
   }
 }

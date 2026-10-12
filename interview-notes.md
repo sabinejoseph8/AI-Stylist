@@ -1209,3 +1209,7 @@ I completed installation of the twenty reviewed customer database migrations and
 ## Testing the whole password recovery journey
 
 I connected the email confirmation screen to the actual password form in a local HTTPS browser test. This found a WebKit issue that separate component tests had missed: the browser sent a null origin header, so the server refused the request. I fixed the browser request to send only the fixed site root as its referrer while preserving strict server origin checks. The complete synthetic journey now confirms the link, updates once, clears sensitive fields and reset permission, and remains signed out. The 538-test suite still passes. Real email and physical-device testing are still required.
+
+## Preserving request limits across restarts
+
+I added a shared account request counter in the database so restarting a server cannot reset the allowance. It retains only aggregate technical metadata, not customer identifiers. I checked concurrent requests and a database restart in an isolated rehearsal, then installed the control and verified ten live access checks. I kept sign-out available for cleanup and left the host disabled until its remaining wiring and acceptance checks are complete. The full foundation suite now passes 544 tests.

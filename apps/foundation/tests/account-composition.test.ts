@@ -1,4 +1,5 @@
 import {describe,it,expect,vi} from 'vitest';
+import {createSharedAccountAdmission} from '../src/server/account-admission-shared.ts';
 import {createAccountAdmission} from '../src/server/account-admission.ts';
 import {createAccountComposition} from '../src/server/account-composition.ts';
 import {createAccountCallbacks} from '../src/server/account-callback.ts';
@@ -104,4 +105,20 @@ describe('optional cross-device account composition',()=>{
   const result=await routes.get('/api/account/reset')!.handle(new Request(origin+'/api/account/reset',{method:'POST',headers:{origin,cookie,'content-type':'application/json'},body:JSON.stringify({password:'new-synthetic-password',confirmation:'new-synthetic-password'})}),signal());
   expect(await result.json()).toEqual({status:'resetComplete'});expect(resetPassword).toHaveBeenCalledTimes(1);expect(discard).toHaveBeenCalledTimes(1);expect(f.security.cookies.issue).not.toHaveBeenCalled();expect(await app.close()).toBe(true);await f.app.close();
  });
+});
+
+it('shares durable admission across the real dormant account factory and refuses provider work when denied',async()=>{
+ const {app,ports}=setup();let allowed=false;
+ const consume=vi.fn(async()=>({allowed,retryAfter:allowed?0:30}));
+ const routes=createSharedAccountAdmission(app.routes(),{consume}).routes();
+ expect((await routes.get('/api/account/password')!.handle(passwordRequest(),signal())).status).toBe(429);
+ expect(ports.password.password).not.toHaveBeenCalled();
+ allowed=true;await routes.get('/api/account/password')!.handle(passwordRequest(),signal());expect(ports.password.password).toHaveBeenCalledTimes(1);
+ await app.close();await routes.get('/api/account/password')!.handle(passwordRequest(),signal());expect(ports.password.password).toHaveBeenCalledTimes(1);
+});
+it('keeps actual composed sign-out outside aggregate admission without bypassing its authorization',async()=>{
+ const {app,ports}=setup();const consume=vi.fn(async()=>({allowed:false,retryAfter:60}));
+ const routes=createSharedAccountAdmission(app.routes(),{consume}).routes();
+ const request=new Request(origin+'/api/account/sign-out',{method:'POST',headers:{origin,'content-type':'application/json'},body:'{}'});
+ await routes.get('/api/account/sign-out')!.handle(request,signal());expect(consume).not.toHaveBeenCalled();expect(ports.signOut.revoke).not.toHaveBeenCalled();await app.close();
 });
