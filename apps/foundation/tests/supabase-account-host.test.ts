@@ -24,10 +24,10 @@ async function harness(host:ReturnType<typeof createSupabaseAccountHost>){
   const req=httpRequest({host:'127.0.0.1',port:(server.address() as AddressInfo).port,path,method:'POST',headers:{host:'stylist.test',origin,'content-type':'application/json'}},res=>{let text='';res.on('data',chunk=>text+=chunk);res.on('end',()=>resolve({status:res.statusCode!,body:text,cookies:res.headers['set-cookie']??[]}));});req.on('error',reject);req.end(JSON.stringify(body));
  });return {send,close:()=>new Promise<void>(resolve=>server.close(()=>resolve()))};
 }
-it('constructs without work, requires expiry policies, and exposes only host capabilities',async()=>{
+it('constructs without work, defaults to approved lifetime, and rejects malformed policies',async()=>{
  const {options,host,fetcher}=setup();expect(fetcher).not.toHaveBeenCalled();expect(host.health().status).toBe('inactive');
  expect(Object.keys(host).sort()).toEqual(['close','handle','health','maintain','start']);
- expect(()=>createSupabaseAccountHost({...options,initialExpiry:undefined!})).toThrow('expiry');expect(()=>createSupabaseAccountHost({...options,rotatedExpiry:undefined!})).toThrow('expiry');await host.close();expect(fetcher).not.toHaveBeenCalled();
+ expect(()=>createSupabaseAccountHost({...options,initialExpiry:null!})).toThrow('expiry');expect(()=>createSupabaseAccountHost({...options,rotatedExpiry:null!})).toThrow('expiry');await host.close();expect(fetcher).not.toHaveBeenCalled();
 });
 it('gates actual HTTP and composes admitted recovery with fixed server-only transport',async()=>{
  const {host,calls}=setup();const h=await harness(host);
@@ -66,11 +66,12 @@ it('verifies a signed current identity and encrypts initial refresh ownership be
   if(url.pathname.endsWith('/stylist_adopt_refresh')){adopted=body;return Response.json(true);}
   throw Error('Unexpected synthetic operation');
  });
- const expiry=Date.now()+120000,host=createSupabaseAccountHost({...options,fetch:fetcher,initialExpiry:()=>expiry});const h=await harness(host);
+ const before=Date.now(),host=createSupabaseAccountHost({...options,fetch:fetcher,initialExpiry:undefined,rotatedExpiry:undefined});const h=await harness(host);
  try{
   expect(await host.start()).toBe(true);const reply=await h.send('/api/account/password',{method:'signIn',email:'sample@example.test',password:'synthetic-password'});
   expect(reply.status).toBe(200);expect(JSON.parse(reply.body)).toEqual({status:'signedIn'});expect(reply.cookies.some(cookie=>cookie.startsWith('__Host-stylist_access='+token+';'))).toBe(true);
   expect(reply.body).not.toContain(token);expect(reply.body).not.toContain('synthetic-refresh-secret');
+  const expiry=adopted!.p_expiry as number;expect(expiry).toBeGreaterThanOrEqual(before+604800000);expect(expiry).toBeLessThanOrEqual(Date.now()+604800000);expect(reply.cookies.some(cookie=>/Max-Age=604[78][0-9]{2}; Expires=/.test(cookie))).toBe(true);
   expect(adopted).toMatchObject({p_owner:owner,p_session:session,p_expiry:expiry});expect(JSON.stringify(adopted)).not.toContain('synthetic-refresh-secret');
   const codec=createRefreshEnvelopes(options.refreshKeyring,options.activeRefreshKeyId);expect(codec.open(adopted!.p_envelope,{ownerId:owner,sessionId:session,generation:1,expiresAt:expiry})).toBe('synthetic-refresh-secret');
   const paths=requests.map(r=>r.path);expect(paths.indexOf('/rest/v1/rpc/stylist_auth_session_active')).toBeLessThan(paths.indexOf('/rest/v1/rpc/stylist_adopt_refresh'));

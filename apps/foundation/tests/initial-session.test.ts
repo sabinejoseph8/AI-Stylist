@@ -32,3 +32,14 @@ it('quarantines an unacknowledged adoption without granting deletion authority',
  const staged=await createInitialSessionStager(store,verifier,()=>scope.expiresAt,async()=>false).stage(input,signal());
  expect(await staged.adopt?.(signal())).toBe(false);expect(await staged.discard(signal())).toBe(false);expect(hold).toHaveBeenCalledTimes(1);expect(remove).not.toHaveBeenCalled();
 });
+
+it('captures initial expiry once and preserves it across delayed adoption',async()=>{
+ vi.useFakeTimers();try{
+ const now=Date.UTC(2026,9,12);vi.setSystemTime(now);const expiry=vi.fn(()=>Date.now()+604800000),adopt=vi.fn(async()=> 'confirmed');
+ const store={adopt,inspect:async()=>({status:'absent'})} as unknown as ReturnType<typeof createRefreshStore>;
+ const staged=await createInitialSessionStager(store,verifier,expiry,async()=>true).stage(input,signal());
+ expect(staged.expiresAt).toBe(now+604800000);vi.setSystemTime(now+3600000);
+ expect(await staged.adopt?.(signal())).toBe(true);expect(expiry).toHaveBeenCalledTimes(1);
+ expect(adopt).toHaveBeenCalledWith('fixture-refresh',expect.objectContaining({expiresAt:now+604800000}),expect.any(AbortSignal));
+ }finally{vi.useRealTimers();}
+});

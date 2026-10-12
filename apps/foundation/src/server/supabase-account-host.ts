@@ -25,12 +25,14 @@ import {createAccountHost} from './account-host.ts';
 export interface SupabaseAccountHostOptions {
  appOrigin:string;projectUrl:string;serviceKey:string;fetch:typeof fetch;
  refreshKeyring:ReadonlyMap<string,Uint8Array>;activeRefreshKeyId:string;
- initialExpiry:()=>number;rotatedExpiry:(accessToken:string)=>number;
+ initialExpiry?:()=>number;rotatedExpiry?:(accessToken:string)=>number;
 }
 /** Explicit server composition only. No environment, listener, credentials generation or customer activation.
- * Both ownership expiry policies are mandatory; provider JWT expiry does not define customer retention. */
+ * Defaults implement the approved fixed seven-day application sign-in lifetime. Shorter injected experiment policies remain supported. */
 export function createSupabaseAccountHost(options:SupabaseAccountHostOptions){
- if(typeof options?.initialExpiry!=='function'||typeof options?.rotatedExpiry!=='function')throw Error('Account expiry policy required');
+ if(!options||(options.initialExpiry!==undefined&&typeof options.initialExpiry!=='function')||(options.rotatedExpiry!==undefined&&typeof options.rotatedExpiry!=='function'))throw Error('Account expiry policy required');
+ const initialExpiry=()=>Math.min(options.initialExpiry?.()??Date.now()+604800000,Date.now()+604800000);
+ const rotatedExpiry=(token:string)=>Math.min(options.rotatedExpiry?.(token)??Date.now()+604800000,Date.now()+604800000);
  const rpc=createSupabaseRpc(options.projectUrl,options.serviceKey,options.fetch);
  const verifier=createIdentityVerifier(options.projectUrl,createAuthKeys(options.projectUrl,options.fetch),createAuthSessionAuthority(rpc));
  const security=Object.freeze({authorize:createRequestIdentity(options.appOrigin,verifier),authorizeRefresh:createRefreshRequestIdentity(options.appOrigin,{verify:verifier.verifyRefresh}),cookies:createAccountCookies(verifier),callbacks:createAccountCallbacks(options.appOrigin)});
@@ -41,8 +43,8 @@ export function createSupabaseAccountHost(options:SupabaseAccountHostOptions){
  const refreshHttp=createRefreshProviderHttp(options.projectUrl,options.serviceKey,options.fetch);
  const revoke=createVerifiedRevocation(verifier,presence,passwordHttp.revoke);
  const scopedRevoke=(jwt:string,_scope:'local',signal:AbortSignal)=>revoke(jwt,signal);
- const stager=createInitialSessionStager(store,verifier,options.initialExpiry,revoke);
- const rotation=createRefreshRotation(store,createRefreshProvider({refresh:refreshHttp.refresh,revoke:async(jwt,_scope,signal)=>({status:await revoke(jwt,signal)?'accepted':'unconfirmed'})},options.rotatedExpiry));
+ const stager=createInitialSessionStager(store,verifier,initialExpiry,revoke);
+ const rotation=createRefreshRotation(store,createRefreshProvider({refresh:refreshHttp.refresh,revoke:async(jwt,_scope,signal)=>({status:await revoke(jwt,signal)?'accepted':'unconfirmed'})},rotatedExpiry));
  const recoveryOperations={exchange:recoveryHttp.exchange,updatePassword:recoveryHttp.updatePassword,revoke:scopedRevoke};
  const accounts=createAccountComposition(options.appOrigin,options.projectUrl,security,{
   password:createPasswordProvider({password:passwordHttp.password,revoke:scopedRevoke},stager),

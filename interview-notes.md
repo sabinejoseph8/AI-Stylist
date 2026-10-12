@@ -1273,3 +1273,7 @@ I connected the trusted server session deadline to secure persistent cookie issu
 ## Refreshing without weakening data access
 
 I added a separate identity check for the refresh endpoint so a signed expired access token can request renewal while the server session and stored refresh ownership remain valid. Expired tokens still cannot authorize customer data or password recovery. Regression checks cover revocation, old tokens and route/origin confinement. Full seven-day browser/database restart acceptance remains to be completed.
+
+## Verifying the session deadline survives server replacement
+
+I made seven days the account host default and verified that the original deadline is captured once. In the combined browser/database rehearsal, I replaced the server and refreshed a signed expired access token. The stored deadline and cookie expiry stayed unchanged, and sign-out still removed the session. Auth responses were synthetic, so real provider and complete browser restoration acceptance remain open.
