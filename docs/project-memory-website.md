@@ -50,3 +50,6 @@ Concurrent-maintenance document checkpoint 299a2e2 is published and copied. Priv
 
 
 Single-slot checkpoint df10dc8 is published to GitHub and copied to the AI stylist folder. Storage regression passes with all 15 migrations. Private Memory source 00b2dfc3a33edc027ddc2dfc3424ef04f49e38b3 deployed successfully as appgdep_6acc301929f88191930de39c086f4555; 16 website checks pass and MCP remains available.
+
+
+Adapter checkpoint b104642 is published and copied. Private Memory source 14efb4ecc19a9d16a0fe175cfb8077529f27857a deployed successfully as appgdep_6acc3106867081918cc07eb02fc4426a, with MCP retained. Sixteen website checks and artifact validation pass.

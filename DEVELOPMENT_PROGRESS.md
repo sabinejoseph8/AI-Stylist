@@ -766,3 +766,6 @@ All 215 foundation checks across 17 files, type checking and build pass. A separ
 
 
 Exact next action: publish/copy the tested adapter and refresh the private Memory site. Then verify lost-acknowledgment reconciliation and SQL heartbeat/start/end races, including ensuring timeout never authorizes a duplicate provider call. Preserve local-only Task 2b and all Phase 1/spending gates.
+
+
+Adapter checkpoint b104642 is published and copied. Private Memory source 14efb4ecc19a9d16a0fe175cfb8077529f27857a deployed successfully as appgdep_6acc3106867081918cc07eb02fc4426a, with MCP retained. Sixteen website checks and artifact validation pass.
