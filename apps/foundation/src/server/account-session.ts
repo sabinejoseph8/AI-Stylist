@@ -3,6 +3,8 @@ type Security=ReturnType<typeof createAccountSecurity>;
 /** Trusted server adapter owns any refresh material and cleanup bookkeeping. Never a browser/provider JSON object. */
 export interface PendingAccountSession {
  accessToken:string;
+ /** Optional explicit server-state adoption. True only after ownership is committed; discard must remove staged and adopted state. */
+ adopt?(signal:AbortSignal):Promise<boolean>;
  /** Idempotently revoke the newly created session and remove any adapter-held refresh material. */
  discard(signal:AbortSignal):Promise<boolean>;
 }
@@ -58,6 +60,9 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
      if(!cookie||controller.signal.aborted)throw Error();
      const identity=await security.authorize(new Request(appOrigin+'/api/account',{headers:{cookie:cookie.split(';')[0]!}}),controller.signal);
      if(!identity||controller.signal.aborted||(options.expectedOwner!==undefined&&identity.ownerId!==options.expectedOwner)||(options.expectedSessionId!==undefined&&identity.sessionId!==options.expectedSessionId))throw Error();
+     if(session.adopt!==undefined){
+      if(typeof session.adopt!=='function'||await session.adopt(controller.signal)!==true||controller.signal.aborted||!await identity.isCurrent(controller.signal)||controller.signal.aborted)throw Error();
+     }
      return Object.freeze({status:'ready' as const,userId:identity.ownerId,returnPath:options.returnPath,
       setCookies:Object.freeze(options.clearFlow?[cookie,security.callbacks.clear()]:[cookie]),discard:()=>discard(session!)});
     }catch{

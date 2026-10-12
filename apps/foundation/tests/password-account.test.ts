@@ -11,9 +11,10 @@ const signal=()=>new AbortController().signal;
 async function fixture(){
  const pair=await generateKeyPair('ES256');
  const token=await new SignJWT({session_id:sessionId,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
- const security=createAccountSecurity({appOrigin:origin,projectUrl:project,fetch:async()=>new Response(JSON.stringify({keys:[{...await exportJWK(pair.publicKey),kid:'test'}]})),rpc:{call:async()=>true}});
+ let active=true;
+ const security=createAccountSecurity({appOrigin:origin,projectUrl:project,fetch:async()=>new Response(JSON.stringify({keys:[{...await exportJWK(pair.publicKey),kid:'test'}]})),rpc:{call:async()=>active}});
  const begin=(purpose:'google'|'apple'|'recovery'='google')=>{const flow=security.callbacks.begin(purpose,'/wardrobe');return {flow,request:new Request(flow.callbackUrl+'&code=fixture-code',{headers:{cookie:flow.cookie.split(';')[0]!}})};};
- return {security,token,begin,tokenFor:async(subject:string,session=sessionId)=>new SignJWT({session_id:session,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(subject).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey)};
+ return {security,token,begin,revoke:()=>{active=false;},tokenFor:async(subject:string,session=sessionId)=>new SignJWT({session_id:session,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(subject).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey)};
 }
 
 const input={method:'signIn',email:' sample@example.test ',password:'made-up'};
@@ -163,4 +164,35 @@ describe('shared local refresh and account lifecycle',()=>{
   const f=await fixture(),service=createAccountAccess(f.security,origin,{password:vi.fn(),exchange:vi.fn()});
   expect(service.refresh).toBeNull();
  });
+});
+
+
+describe('explicit simulated server session adoption',()=>{
+ it('adopts server-held refresh state before ready and removes it on failed delivery cleanup',async()=>{
+  const f=await fixture(),storage=new Map<string,string>(),adopt=vi.fn(async()=>{storage.set(sessionId,'simulated-refresh-state');return true;}),discard=vi.fn(async()=>{storage.delete(sessionId);return true;});
+  const service=createAccountAccess(f.security,origin,{password:async()=>({accessToken:f.token,adopt,discard}),exchange:vi.fn()});
+  const result=await service.password.submit(input,signal());expect(result.status).toBe('ready');expect(storage.size).toBe(1);expect(adopt).toHaveBeenCalledTimes(1);
+  if(result.status!=='ready')throw Error();expect(JSON.stringify(result)).not.toContain('simulated-refresh-state');
+  await result.discard();await result.discard();expect(storage.size).toBe(0);expect(discard).toHaveBeenCalledTimes(1);
+ });
+ it('refuses unconfirmed adoption and cleans partial storage before exposing cookies',async()=>{
+  const f=await fixture(),storage=new Map<string,string>(),discard=vi.fn(async()=>{storage.clear();return true;});
+  const service=createAccountAccess(f.security,origin,{password:async()=>({accessToken:f.token,adopt:async()=>{storage.set(sessionId,'partial');return false;},discard}),exchange:vi.fn()});
+  expect(await service.password.submit(input,signal())).toEqual({status:'unavailable'});expect(storage.size).toBe(0);expect(discard).toHaveBeenCalledTimes(1);expect(service.cleanupHeld()).toBe(false);
+ });
+ it('waits for late adoption settlement before removing its state after cancellation',async()=>{
+  const f=await fixture(),storage=new Map<string,string>();let release!:(value:boolean)=>void,started!:()=>void;
+  const began=new Promise<void>(resolve=>started=resolve),discard=vi.fn(async()=>{storage.clear();return true;});
+  const adopt=vi.fn(async()=>{started();const result=await new Promise<boolean>(resolve=>release=resolve);storage.set(sessionId,'late');return result;});
+  const service=createAccountAccess(f.security,origin,{password:async()=>({accessToken:f.token,adopt,discard}),exchange:vi.fn()});
+  const controller=new AbortController(),work=service.password.submit(input,controller.signal);await began;controller.abort();
+  expect(await work).toEqual({status:'unavailable'});expect(discard).not.toHaveBeenCalled();release(true);
+  await vi.waitFor(()=>expect(discard).toHaveBeenCalledTimes(1));expect(storage.size).toBe(0);
+ });
+});
+
+it('rechecks authoritative session access after server adoption',async()=>{
+ const f=await fixture(),discard=vi.fn(async()=>true);
+ const service=createAccountAccess(f.security,origin,{password:async()=>({accessToken:f.token,adopt:async()=>{f.revoke();return true;},discard}),exchange:vi.fn()});
+ expect(await service.password.submit(input,signal())).toEqual({status:'unavailable'});expect(discard).toHaveBeenCalledTimes(1);
 });
