@@ -2055,3 +2055,9 @@ A customer sign-in duration decision is pending with Sabine: 7 days from sign-in
 Corrected docs/task-2c-acceptance-audit.md to reflect approved hosted Tasks 2b/2c, installed migrations through 021, approved cross-device recovery, the combined HTTPS/WebKit/isolated PostgreSQL rehearsal and the recorded 583-test checkpoint. Historical appendices remain labeled as historical. No new test or customer operation was run for this documentation correction, and no task was marked complete.
 
 Next action: continue independent deployment preparation while the sign-in duration decision remains pending. Real sender/origin, social credentials/linking, hosted customer isolation and physical-device/accessibility acceptance remain open.
+
+## Explicit deployment shutdown preparation, 12 October 2026
+
+Prepared attachAccountShutdown for explicitly supplied process signals and the existing network lifecycle. It starts no accounts or listener, never exits the process, coalesces repeated termination signals, waits for actual network cleanup and reports false for rejected or unconfirmed closure. It removes only its own listeners; reporting failure cannot change cleanup evidence. Deployment still owns activation and exit behavior.
+
+Four focused checks pass. All 587 foundation tests across 86 files, type checking and the two-entry build pass. The initial sandbox run could not complete local socket checks and was stopped; the permitted run passed. No hosted setting, customer account, email or paid request changed. Session duration remains pending. Exact next action: compose the explicit deployment startup once session policy is approved; continue independent acceptance work meanwhile. Private Memory still publishes the 578-test checkpoint and needs consolidated settings/shutdown evidence.

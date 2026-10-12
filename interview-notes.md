@@ -1253,3 +1253,7 @@ I ran the actual connected pages through HTTPS and WebKit with the complete acco
 ## Validating server settings before activation
 
 I prepared strict validation for deployment origins, private server settings and encryption-key configuration. Invalid settings fail with a generic message rather than exposing their contents. I kept sign-in duration as an explicit customer-facing decision, with no silent default. All 583 foundation tests passed. No credential was generated or hosted account setting changed.
+
+## Preparing graceful account shutdown
+
+I added an explicit shutdown helper so deployment can wait for connection cleanup before reporting success. Repeated stop signals share one cleanup operation, and uncertain cleanup stays unconfirmed. Four focused checks and the full 587-test suite pass. This prepares deployment without activating customer accounts or choosing an unapproved sign-in duration.
