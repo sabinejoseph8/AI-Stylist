@@ -1225,3 +1225,7 @@ I strengthened account cleanup so a successful provider response is followed by 
 ## Connecting account building blocks
 
 I connected Supabase account adapters, signed identity checks, encrypted session ownership and cleanup controls into one explicit host factory. Creating it starts no customer access. Startup protection, recovery requests and registration confirmation passed local HTTP checks with simulated services. All 559 foundation tests passed. Real hosted sign-in, email and device acceptance remain pending.
+
+## Proving session adoption before delivery
+
+I tested the assembled account host with a generated signed identity. The app checked the current session and stored the refresh secret in an encrypted envelope before sending the browser cookie. I verified that browser JSON and database requests did not expose the refresh secret. The full suite reached 560 passing tests. This remains simulated-service evidence; hosted customer acceptance is still open.

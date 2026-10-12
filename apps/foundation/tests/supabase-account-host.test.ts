@@ -1,3 +1,5 @@
+import {generateKeyPair,exportJWK,SignJWT} from 'jose';
+import {createRefreshEnvelopes} from '../src/server/refresh-envelope.ts';
 import {it,expect,vi} from 'vitest';
 import {createServer,request as httpRequest} from 'node:http';
 import type {AddressInfo} from 'node:net';
@@ -18,8 +20,8 @@ function setup(){
 }
 async function harness(host:ReturnType<typeof createSupabaseAccountHost>){
  const server=createServer(host.handle);await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));
- const send=(path:string,body:unknown)=>new Promise<{status:number;body:string}>((resolve,reject)=>{
-  const req=httpRequest({host:'127.0.0.1',port:(server.address() as AddressInfo).port,path,method:'POST',headers:{host:'stylist.test',origin,'content-type':'application/json'}},res=>{let text='';res.on('data',chunk=>text+=chunk);res.on('end',()=>resolve({status:res.statusCode!,body:text}));});req.on('error',reject);req.end(JSON.stringify(body));
+ const send=(path:string,body:unknown)=>new Promise<{status:number;body:string;cookies:string[]}>((resolve,reject)=>{
+  const req=httpRequest({host:'127.0.0.1',port:(server.address() as AddressInfo).port,path,method:'POST',headers:{host:'stylist.test',origin,'content-type':'application/json'}},res=>{let text='';res.on('data',chunk=>text+=chunk);res.on('end',()=>resolve({status:res.statusCode!,body:text,cookies:res.headers['set-cookie']??[]}));});req.on('error',reject);req.end(JSON.stringify(body));
  });return {send,close:()=>new Promise<void>(resolve=>server.close(()=>resolve()))};
 }
 it('constructs without work, requires expiry policies, and exposes only host capabilities',async()=>{
@@ -46,4 +48,31 @@ it('fails closed on maintenance errors before any provider operation',async()=>{
 it('composes registration confirmation without issuing a browser session',async()=>{
  const {host,calls}=setup();const h=await harness(host);
  try{await host.start();const result=await h.send('/api/account/password',{method:'signUp',email:'sample@example.test',password:'synthetic-password'});expect(result.status).toBe(200);expect(JSON.parse(result.body)).toEqual({status:'confirmationRequired'});expect(calls.map(c=>new URL(c.url).pathname)).toEqual(['/rest/v1/rpc/stylist_expire_media_receipts','/rest/v1/rpc/stylist_consume_account_admission','/auth/v1/signup']);}finally{await host.close();await h.close();}
+});
+
+it('verifies a signed current identity and encrypts initial refresh ownership before cookie delivery',async()=>{
+ const {options}=setup(),owner='11111111-1111-4111-8111-111111111111',session='22222222-2222-4222-8222-222222222222';
+ const pair=await generateKeyPair('ES256'),key={...await exportJWK(pair.publicKey),kid:'fixture'};
+ const token=await new SignJWT({session_id:session,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'fixture'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
+ const requests:Array<{path:string;body:Record<string,unknown>}>=[];let adopted:Record<string,unknown>|undefined;
+ const fetcher=vi.fn(async(input:RequestInfo|URL,init?:RequestInit)=>{
+  const url=new URL(String(input)),body=init?.body?JSON.parse(String(init.body)):{};requests.push({path:url.pathname,body});
+  if(url.pathname.endsWith('/stylist_expire_media_receipts'))return Response.json(0);
+  if(url.pathname.endsWith('/stylist_consume_account_admission'))return Response.json({allowed:true,retryAfter:0});
+  if(url.pathname==='/auth/v1/token')return Response.json({access_token:token,refresh_token:'synthetic-refresh-secret',token_type:'bearer'});
+  if(url.pathname.endsWith('/.well-known/jwks.json'))return Response.json({keys:[key]});
+  if(url.pathname.endsWith('/stylist_auth_session_active')){expect(body).toEqual({p_owner:owner,p_session:session});return Response.json(true);}
+  if(url.pathname.endsWith('/stylist_inspect_refresh'))return Response.json(null);
+  if(url.pathname.endsWith('/stylist_adopt_refresh')){adopted=body;return Response.json(true);}
+  throw Error('Unexpected synthetic operation');
+ });
+ const expiry=Date.now()+120000,host=createSupabaseAccountHost({...options,fetch:fetcher,initialExpiry:()=>expiry});const h=await harness(host);
+ try{
+  expect(await host.start()).toBe(true);const reply=await h.send('/api/account/password',{method:'signIn',email:'sample@example.test',password:'synthetic-password'});
+  expect(reply.status).toBe(200);expect(JSON.parse(reply.body)).toEqual({status:'signedIn'});expect(reply.cookies.some(cookie=>cookie.startsWith('__Host-stylist_access='+token+';'))).toBe(true);
+  expect(reply.body).not.toContain(token);expect(reply.body).not.toContain('synthetic-refresh-secret');
+  expect(adopted).toMatchObject({p_owner:owner,p_session:session,p_expiry:expiry});expect(JSON.stringify(adopted)).not.toContain('synthetic-refresh-secret');
+  const codec=createRefreshEnvelopes(options.refreshKeyring,options.activeRefreshKeyId);expect(codec.open(adopted!.p_envelope,{ownerId:owner,sessionId:session,generation:1,expiresAt:expiry})).toBe('synthetic-refresh-secret');
+  const paths=requests.map(r=>r.path);expect(paths.indexOf('/rest/v1/rpc/stylist_auth_session_active')).toBeLessThan(paths.indexOf('/rest/v1/rpc/stylist_adopt_refresh'));
+ }finally{await host.close();await h.close();}
 });

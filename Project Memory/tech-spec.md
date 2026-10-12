@@ -2725,3 +2725,9 @@ Prepared createSupabaseAccountHost with concrete bounded RPC/password/OAuth/reco
 Evidence: four synthetic integration checks cover no-work construction, required expiry policies, actual local HTTP startup gating and recovery transport, registration confirmation without a session, and maintenance failure. All 559 foundation tests across 79 files, type checking and build pass. Signed-token adoption/rotation through this complete factory, real customer isolation and device acceptance remain unproven.
 
 Next: exercise signed initial-session adoption, encrypted ownership and cleanup through the complete factory using synthetic HTTP and isolated PostgreSQL; integrate static HTTPS account/reset delivery before hosted configuration. Private Memory still publishes the 550-test checkpoint. Task 2b/2c and phase gates remain open.
+
+## Signed initial-session factory check, 12 October 2026
+
+The complete Supabase account host now passes a generated ES256 identity through actual local HTTP password submission, fixed-project JWKS loading, current-session lookup, encrypted generation-one refresh adoption and secure cookie delivery. The test decrypts the stored envelope with its exact owner/session/generation/expiry binding and verifies no refresh plaintext appears in RPC payloads or browser JSON. Provider HTTP and database replies are synthetic, not live Supabase acceptance.
+
+All 560 foundation tests across 79 files, type checking and build pass. The earlier 559-test host composition was published as 0bbdd81 after retrying a permission-review timeout. Next: extend the isolated PostgreSQL ownership rehearsal to the complete factory, including rotation and scoped sign-out; then complete static HTTPS delivery and hosted configuration gates. Private Memory needs these consolidated additions. No real account, email, hosted setting or paid request changed.
