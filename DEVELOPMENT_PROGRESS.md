@@ -2388,3 +2388,10 @@ The previous turn made implementation progress (reentrant disposal fixed and ver
 This is the first current check of the external activation boundary. No live process/deployment needs polling. Task 1b needs a newly approved live experiment allowance and remaining privacy/live-note acceptance. Hosted 2b/2c still require unresolved ingress/logging guarantees or an approved verified alternative, provider credentials, a permitted email test path and real customer isolation acceptance. Domain purchase remains deferred until launch. Later task groups remain gated. The private Memory website was published successfully at the prior checkpoint; no phase is complete.
 
 Exact next action: review new hosting evidence or existing setup credentials when supplied; otherwise prepare a concrete limited replacement-room trial proposal for Sabine's financial decision before any paid integration activation. No additional provider call, service deployment, purchase or email is authorized by this recheck.
+
+
+## Concrete replacement-room trial proposal, 12 October 2026
+
+Prepared docs/replacement-room-trial-proposal.md with a maximum two-room experiment, conservative $4/ten-minute reservation, no retries, original shorter deadlines, required ledger amendment, confirmed-only lifecycle, complete advance manual instructions and honest acceptance limits. This is a proposal only; no allowance, provider call or deployment changed. The existing experiment reserve is exhausted, so the proposal explicitly adds $4 rather than claiming it fits the prior $25. Separately approved monthly Supabase charges are excluded.
+
+This is the second consecutive check of the same external activation boundary. The remaining account prerequisites and phase gates are unchanged; no live process awaits observation. Next: obtain Sabine's financial decision on this concrete proposal, then implement its disabled lifecycle and verify all checks before enabling a user-started live trial. Do not treat elapsed time or an automatic goal continuation as approval.
