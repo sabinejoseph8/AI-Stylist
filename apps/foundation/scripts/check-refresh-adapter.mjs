@@ -132,14 +132,14 @@ const operations=createRefreshProviderHttp(project,'fixture-private-api-key-not-
   return new Response(providerMode==='malformed'?'not-json':JSON.stringify({access_token:providerToken,refresh_token:'transport-next-fixture',token_type:'bearer'}),{headers:{'content-type':'application/json'}});
  }
  assert.equal(url,project+'/auth/v1/logout?scope=local');logoutRequests++;assert.equal(init.headers.authorization,'Bearer '+providerToken);
- return new Response(null,{status:providerMode==='refused-cleanup'?401:204});
+ return new Response(null,{status:['refused-cleanup','lost-quarantine-claim','lost-quarantine-hold'].includes(providerMode)?401:204});
 });
 const bridged=createRefreshProvider(operations,()=>scope.expiresAt),transportRotation=createRefreshRotation(store,bridged);
 function transportHttp(){
  const account=createAccountRefresh(security,origin,createStoredRefreshPort(security,store,transportRotation,origin));
  return {account,http:createRefreshHttp(origin,account)};
 }
-for(const mode of ['normal','lost-write','malformed','refused-cleanup']){
+for(const mode of ['normal','lost-write','malformed','refused-cleanup','lost-quarantine-claim','lost-quarantine-hold']){
  providerMode=mode;assert.equal(await store.adopt('transport-fixture',scope,signal()),'confirmed');
  const composed=transportHttp();if(mode==='lost-write')loseNext='stylist_finish_refresh';
  const response=await composed.http.handle(refreshRequest(),signal());
@@ -154,16 +154,19 @@ for(const mode of ['normal','lost-write','malformed','refused-cleanup']){
   // Fixture teardown only, not a claim that remote ambiguity was resolved.
   assert.equal(await store.remove(unresolved.scope,unresolved.leaseId,true,signal()),'confirmed');
  }else{
-  assert.equal(response.status,200);assert.equal(await composed.http.discardResponse(response),false);assert.equal(composed.account.cleanupHeld(),true);
-  const retained=await store.inspect(owner,session,signal());assert.equal(retained.status,'found');assert.equal(retained.scope.generation,2);assert.equal(retained.state,'held');
+  assert.equal(response.status,200);
+  if(mode==='lost-quarantine-claim')loseNext='stylist_claim_refresh';
+  if(mode==='lost-quarantine-hold')loseNext='stylist_hold_refresh';
+  assert.equal(await composed.http.discardResponse(response),false);assert.equal(composed.account.cleanupHeld(),true);
+  const retained=await store.inspect(owner,session,signal());assert.equal(retained.status,'found');assert.equal(retained.scope.generation,2);assert.equal(retained.state,mode==='lost-quarantine-claim'?'rotating':'held');
   await execute(['restart',container]);
   for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
   const replacement=createRefreshStore(rpc,createRefreshEnvelopes(keyring,'fixture'));
-  assert.equal((await replacement.inspect(owner,session,signal())).state,'held');
+  assert.equal((await replacement.inspect(owner,session,signal())).state,retained.state);
   assert.equal((await replacement.claim(owner,session,2,signal())).status,'refused');
   // Explicit synthetic teardown; production cannot assume this confirmation.
   assert.equal(await store.remove(retained.scope,retained.leaseId,true,signal()),'confirmed');
  }
 }
-assert.equal(providerRequests,7);assert.equal(logoutRequests,3);
+assert.equal(providerRequests,11);assert.equal(logoutRequests,5);
 console.log('Provider HTTP/bridge/database/account composition passed: adoption, lost write acknowledgment, malformed response hold and unconfirmed cleanup retention. Provider fetch and teardown revocation are synthetic.');

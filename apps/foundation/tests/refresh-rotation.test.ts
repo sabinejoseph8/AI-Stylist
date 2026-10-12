@@ -30,3 +30,13 @@ it('waits for started adoption before revoking and removing ownership',async()=>
  expect(f.revoke).not.toHaveBeenCalled();finish('confirmed');expect(await adoption).toBe(true);expect(await discard).toBe(true);
  expect(f.revoke).toHaveBeenCalledTimes(1);expect(f.store.remove).toHaveBeenCalledTimes(1);
 });
+
+it('never removes ownership when cleanup inspection is unavailable',async()=>{
+ const f=fixture(),session=await f.rotation.stage(scope,signal());
+ f.store.inspect.mockRejectedValue(Error('fixture database unavailable'));
+ expect(await session.discard(signal())).toBe(false);expect(f.store.remove).not.toHaveBeenCalled();expect(f.revoke).not.toHaveBeenCalled();
+});
+it('does not quarantine or delete a competing newer generation',async()=>{
+ const f=fixture(),session=await f.rotation.stage(scope,signal());f.store.inspect.mockResolvedValue({status:'found',scope:{...scope,generation:3},state:'ready',leaseId:null});
+ expect(await session.discard(signal())).toBe(false);expect(f.store.claim).toHaveBeenCalledTimes(1);expect(f.store.hold).not.toHaveBeenCalled();expect(f.store.remove).not.toHaveBeenCalled();
+});

@@ -948,3 +948,6 @@ I rehearsed the complete prepared refresh pipeline against isolated PostgreSQL w
 
 
 I fixed the confirmed cleanup-failure path by claiming and holding the adopted credential before remote revocation. The actual local database restart check proves a replacement coordinator cannot refresh that held record. All 402 foundation tests, type checking and build pass. I kept uncertain database-write paths explicitly open instead of extending the restart result beyond what it proves.
+
+
+I proved lost quarantine acknowledgments remain blocked after actual local database restarts and that cleanup leaves a newer competing generation alone. All 404 foundation tests, type checking and build pass. A separate inspection-failure test exposed that remote revocation is skipped when the database throws. I recorded that concrete outage gap as the next fix, keeping live activation disabled.
