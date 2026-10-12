@@ -737,3 +737,11 @@ The local PostgreSQL rehearsal now runs eight cleanup transactions across four w
 
 
 Exact next action: publish the concurrency evidence, refresh the private Memory snapshot, then audit remaining local Task 2b gaps against the agreed phase checks. Hosted activation, real Auth and Phase 1 acceptance remain gated. Do not mark Task 2b or the goal complete from these local checks.
+
+
+## Next local Task 2b gap
+
+The agreed Phase 2 check P2-07 requires a durable single-consultation lease with concurrent-start protection, safe reconnect and stale-work rejection. No foundation lease schema currently exists (confirmed by searching the migration chain and server source). Next: inspect the existing prototype lease/recovery semantics and prepare the corresponding local-only database contract and race tests. Do not activate provider use or assume lease expiry proves a provider connection has closed. Task 2c Auth and hosted migration remain gated.
+
+
+Concurrent-maintenance document checkpoint 299a2e2 is published and copied. Private Memory source dbbe8b403cd60d5ebed8d9cf35fcf55a3e08b2f7 deployed successfully as appgdep_6acc2f327e9081918d489f3cd4572952 with MCP retained; 16 site checks pass.
