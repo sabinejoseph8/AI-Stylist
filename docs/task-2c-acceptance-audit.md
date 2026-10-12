@@ -23,9 +23,9 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 
 ## Local next steps
 
-1. Complete disconnected provider-independent account orchestration contracts, including bounded operations and cleanup after canceled or late provider results.
-2. Prepare failure/cancellation callback handling, recovery scope and safe request/response shapes. Keep no-provider tests explicit.
-3. Finish local UI manual review and keyboard/accessibility checks; preserve every open real-provider acceptance item.
+1. Prepare disconnected email/password HTTP handling using bounded parsing, same-origin protections and verified header-only cookies; discard sessions if response adoption fails.
+2. Prepare recovery-request acknowledgment and refresh/sign-out integration contracts without provider calls or email delivery.
+3. Keep the accepted eight-step account review recorded; verify the new reset step, actual screen reader/phone/zoom and every real-provider requirement separately.
 4. Record actual provider setup requirements without applying settings or requesting credentials prematurely.
 
 ## Human and external dependencies
