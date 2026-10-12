@@ -815,3 +815,8 @@ I prepared sign-out to clear browser access immediately while keeping remote rev
 ## Keeping password recovery separate from account access
 
 I designed recovery to grant temporary password-reset permission only. It never creates normal account access. I made each reset one-use before the provider call starts, so retries after a timeout cannot silently change the password twice. I require confirmation of both the change and cleanup before showing completion. I tested expiry, invalid proof, canceled work, busy admission and late results with simulated capabilities. All 295 foundation checks pass, with type checking and build. Real provider recovery and cross-device usability remain acceptance work.
+
+
+## Making password recovery understandable
+
+I added a simulated reset step that explains it does not sign the customer in. Matching passwords are required and both fields clear after submission. I made an uncertain result terminal so the interface cannot invite repeated password changes after a timeout. Local browser checks verified mismatch feedback, completion, disabled repeat submission and signed-out messaging. All 300 foundation tests pass, with type checking and build. Real recovery delivery and phone/accessibility acceptance remain open.

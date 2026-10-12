@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 295 foundation tests across 30 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Generated tokens and simulated adapters provide local evidence only. Sabine completed all eight account preview steps and confirmed they worked and were readable. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
+Task 2c local account preparation is active. All 300 foundation tests across 31 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Generated tokens and simulated adapters provide local evidence only. Sabine completed all eight account preview steps and confirmed they worked and were readable. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
 
 ## Completed evidence
 
@@ -968,3 +968,12 @@ ResetComplete requires exact password-change confirmation and confirmed cleanup 
 All 295 foundation tests across 30 files, type checking and build pass. Eight added checks cover one-time reset, no account access, expiry/input validation, rejection of ordinary access-token proof, cleanup failure holds, canceled late exchange, wrong/canceled callbacks, outstanding admission and delayed reset without retry. Tests use simulated trusted capabilities only. No real account, password, recovery email, provider call, hosted setting or spending changed. Task 2c and Phase 2 remain incomplete.
 
 Exact next action: audit recovery failure/cleanup and browser-binding integration requirements, prepare local recovery UI/controller behavior, and refresh private Memory after the next verified account checkpoint. Real provider activation, refresh lifecycle and physical-device/screen-reader acceptance remain open.
+
+
+## Simulated reset interface, 11 October 2026
+
+Recover access now offers a clearly labeled simulated reset step after its no-email acknowledgment. It requires matching made-up passwords, clears both fields after submission, announces errors/results with focus, disables completed or unconfirmed attempts and returns to account options without authentication. The independent browser controller stores no password in its snapshot, consumes a valid dispatch once, refuses expired permission, cancels on unmount and discards late results. Timeout and cancellation cannot retry an uncertain change. The sample five-minute permission is presentation only, never provider proof or a server authorization boundary. No new credential is actually created or changed.
+
+All 300 foundation tests across 31 files, type checking and build pass. Five new checks cover confirmation matching/one dispatch, expiry, cancellation/late results, timeout/no retry and accessible labeled simulated markup. Actual local browser QA confirmed mismatch feedback, matching completion, cleared fields, disabled repeat submission, status focus and continued signed-out messaging. Screenshot: /private/tmp/ai-stylist-reset-preview.png. Physical iPhone, screen reader and Sabine review of this newly added reset step remain open; the earlier eight-step account preview is already accepted and is not reopened.
+
+Exact next action: audit and strengthen recovery expiration, discard and cross-method cleanup behavior, then publish a consolidated private Memory refresh. Real providers, browser-bound server recovery delivery, refresh lifecycle and hosted acceptance remain gated. Task 2c remains incomplete.
