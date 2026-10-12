@@ -840,3 +840,8 @@ I connected the prepared recovery owner, browser delivery and account verifier i
 ## Cleaning up recovery when the service closes
 
 I added explicit expiration and shutdown disposal for temporary reset permission. Shutdown stops new work, cancels a reset in progress and cleans each grant once. I bounded cleanup so a stalled provider cannot make shutdown wait indefinitely, while keeping the outcome unconfirmed if cleanup fails. All 317 foundation tests pass, with type checking and build. Real service hooks and recovery after forced termination remain unverified.
+
+
+## Bounding password-reset requests
+
+I prepared the reset HTTP boundary with same-origin checks, strict bounded JSON parsing, cancellation and a limit on outstanding work. Cookies stay in headers and provider failures never appear in customer responses. I verified oversized and stalled requests without enabling a live endpoint. All 322 foundation tests pass, with type checking and build. Production rate protection and actual provider behavior remain open.

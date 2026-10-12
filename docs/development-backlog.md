@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 317 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Task 2c local account preparation is active under Sabine's approved exception. All 322 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1174,7 +1174,7 @@ Sabine completed every step of the eight-step account preview and reported that 
 
 Extracted a common server-only session lifecycle and added disconnected email/password and registration ports. Password and OAuth callback methods share a four-operation admission limit and the same uncertainty hold after ambiguous creation or failed cleanup. Registration confirmation returns no account cookie. Email whitespace is trimmed; passwords are passed unchanged and never stored by these interfaces. Exact input keys and string methods are required, preventing object coercion into a supported action. HTTP origin/CSRF, rate/body limits, real provider policy and refresh adoption remain requirements before wiring any route.
 
-All 317 foundation tests across 33 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
+All 322 foundation tests across 34 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
 
 
 ## Local sign-out coordinator, 11 October 2026
@@ -1242,3 +1242,14 @@ Added explicit expire and close operations to the disconnected browser recovery 
 All 317 foundation tests across 33 files, type checking and build pass. Four new checks cover explicit expiry, permanent/deduplicated shutdown, stalled cleanup deadline and composed shutdown during an actual recovery-owner reset with a simulated provider. No production timer, process hook, provider call, account or hosted setting was activated. The future HTTP/service owner must invoke expire on an appropriate schedule and close at graceful shutdown; forced process termination and durable reconciliation remain unproven. A true cleanup acknowledgment proves the adapter's contract only, not reversal of a password change that may already have occurred.
 
 Exact next action: refresh private Memory with the verified 317-test recovery checkpoint, then prepare the disconnected recovery/account HTTP boundary with bounded parsing and Origin/CSRF checks. Preserve no-real-provider/no-hosted-change scope and all existing phase/spending gates. Task 2c remains incomplete.
+
+
+## Prepared reset HTTP boundary, 11 October 2026
+
+Added a disconnected reset HTTP handler factory; it is not registered in a server or deployed. It requires the exact configured HTTPS origin and POST reset path, matching Origin/Host, allowed Fetch Metadata, JSON UTF-8 content type, no content encoding or alternate Authorization, no query/hash and a declared body length within 16 KiB where supplied. Actual streamed bytes are independently bounded to 16 KiB and decoded as strict UTF-8. Only exact matching password/confirmation input reaches delivery. Errors return generic status JSON, never credentials/provider text. Cookie changes are response headers only. Responses are no-store, nosniff and same-origin resource policy with no CORS grant.
+
+The handler has a maximum ten-second response deadline and four underlying admitted requests. Cancellation aborts delivery and cancels an active body reader. Non-cooperative delivery retains admission until it settles; timeout reports unconfirmed rather than promising rollback. Production durable rate/abuse controls, real server registration, header delivery and actual provider/restart behavior remain acceptance work. This factory alone is not a live account endpoint.
+
+All 322 foundation tests across 34 files, type checking and build pass. Five added checks cover header-only cookies, private status JSON, hostile origin/content/body rejection, generic provider errors, stalled-body cancellation and retained admission after delivery timeout. A fixture initially returned an invalid null-cookie shape for unconfirmed delivery; type checking caught it and the fixture was corrected before final verification. No actual provider, account, password, email, hosted setting or spending changed.
+
+Exact next action: refresh private Memory with the 322-test checkpoint, then integrate the reset HTTP factory with the actual disconnected recovery/delivery owners in simulated request tests. Task 2c and Phase 1/2 acceptance remain open.
