@@ -228,6 +228,25 @@ assert.equal((await scanStore.discover(null,10,signal())).candidates.length,0);
 await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id in ('${scanSecond}','${scanThird}');`);
 console.log('Reconciliation scan PostgreSQL composition passed: unknown-record preservation, confirmed-only removal, actual restart and replacement-scanner cursor resume, empty terminal page, and fresh full-sweep resolution. Authority remains synthetic.');
 
+// Key transition uses actual encrypted database rows, never a provider call.
+assert.equal(await store.adopt('old-key-fixture',scope,signal()),'confirmed');
+const replacementKey=randomBytes(32);
+const transitionCodec=createRefreshEnvelopes(new Map([['fixture',key],['replacement',replacementKey]]),'replacement');
+const transitionStore=createRefreshStore(rpc,transitionCodec);
+const transitionClaim=await transitionStore.claim(owner,session,1,signal());assert.equal(transitionClaim.status,'claimed');
+assert.equal(transitionClaim.readSecret(),'old-key-fixture');
+assert.equal(await transitionStore.finish('new-key-fixture',transitionClaim.scope,transitionClaim.leaseId,scope.expiresAt,signal()),'confirmed');
+await execute(['restart',container]);
+for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
+const retiredStore=createRefreshStore(rpc,createRefreshEnvelopes(new Map([['replacement',replacementKey]]),'replacement'));
+const afterRetirement=await retiredStore.claim(owner,session,2,signal());assert.equal(afterRetirement.status,'claimed');assert.equal(afterRetirement.readSecret(),'new-key-fixture');
+assert.equal(await retiredStore.remove(afterRetirement.scope,afterRetirement.leaseId,true,signal()),'confirmed');
+// Removing the old key before all records transition must not release an old secret.
+assert.equal(await store.adopt('unmigrated-fixture',scope,signal()),'confirmed');
+assert.notEqual((await retiredStore.claim(owner,session,1,signal())).status,'claimed');
+const unavailableRecord=await store.inspect(owner,session,signal());assert.equal(unavailableRecord.status,'found');assert.notEqual(unavailableRecord.state,'ready');
+console.log('Encrypted key transition PostgreSQL rehearsal passed: overlap reads, new-key write, actual restart, retirement read, and premature retirement retaining blocked ownership. No provider calls.');
+
 // Real primary-database presence authority, including cascade after actual session deletion.
 const presence=createAuthSessionPresence(rpc);
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'unconfirmed'});

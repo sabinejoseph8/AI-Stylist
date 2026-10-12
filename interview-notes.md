@@ -974,3 +974,8 @@ I verified the bounded scanner against actual local PostgreSQL. It resumed after
 ## Distinguishing a missing session from an outage
 
 I separated session absence from a failed lookup. A database outage must not be presented as a successful sign-out. I kept existing or uncertain sessions unresolved and prepared tests for mismatched owners, cancellation and expired sessions. This remains local preparation, with real account activation still pending.
+
+
+## Planning encryption-key replacement
+
+I rehearsed key replacement with sample data before provisioning production keys. I confirmed that overlapping keys support a transition and that removing a key early blocks unreadable sessions. I also identified a missing operational requirement: a complete inventory must show which records still depend on each key before retirement.

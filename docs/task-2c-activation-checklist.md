@@ -165,3 +165,10 @@ Official Supabase sessions guidance maps the verified JWT session_id to auth.ses
 Foundation: 421 tests across 51 files, type checking and build pass. The isolated PostgreSQL rehearsal checks service-only privileges, present/wrong-owner/absent replies, null rejection and preservation of expired but present rows. Task 2c and phase gates remain open. Private Memory's last verified publication remains the preceding 417-test checkpoint.
 
 Database-composed presence/reconciliation verification passed, including actual synthetic Auth session deletion and scoped reconciliation. Disposable databases and volumes are verified removed. Exact next action: consolidate private Memory and review the remaining account activation checklist. Keep real account operations and hosted changes gated.
+
+
+## Fixture encryption-key transition evidence
+
+The actual isolated PostgreSQL rehearsal now covers overlapping old/new keys, fenced next-generation writes under the replacement key, a real database restart and replacement-store reads after retiring the old fixture key. Premature retirement leaves the old encrypted row blocked and releases no secret. The final synthetic Auth session deletion permits scoped reconciliation. No provider calls or production keys were used. Disposable database cleanup completed. The unchanged application suite's last verified checkpoint remains 421 tests across 51 files with type checking/build passing; this change extends the database harness, not application functionality.
+
+Operational ordering and remaining gaps are in docs/refresh-key-operations.md. Safe retirement needs a complete envelope key-ID inventory, including blocked/expired rows and backups; current discovery metadata cannot prove this. No production rotation or bulk re-encryption is enabled. Task 2c remains open. Exact next action: prepare a service-only, secret-free key-ID inventory locally, with tests that include held and expired ownership and exclude ciphertext. Private Memory remains at the verified 421-test publication before this rehearsal.
