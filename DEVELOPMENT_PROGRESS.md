@@ -809,3 +809,6 @@ All 223 foundation tests across 18 files, type checking and build pass. These ei
 
 
 Exact next action: publish/copy this controller checkpoint and refresh Memory. Next prepare the server verified-identity/session contract and simulated checks before connecting account UI. Cover origin/cookie protections, callback state, cancellation and sign-out revocation; no hosted Auth activation or new credentials.
+
+
+Account-controller checkpoint 27aad35 is published and copied. Private Memory source f0094284ab004626c1d7e0e55ff15686172d3cd6 deployed successfully as appgdep_6acc33bbcd3881919f084176bec986ca, with MCP retained. All 16 website checks and artifact validation pass. Next: server verified-identity/session contract and simulated checks; real sign-in remains gated.

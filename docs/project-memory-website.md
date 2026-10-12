@@ -59,3 +59,6 @@ Recovery checkpoint 99b3669 is published and copied. Private Memory source 2cf60
 
 
 Audit and local Task 2c approval checkpoint a488a4a is published and copied. Private Memory source f2922ca4e5e99e2f8a62c8bc80860ee3dcd19158 deployed successfully as appgdep_6acc32c5ed6c81918c93b4ed0c53e91e; 16 website checks pass and MCP is retained. Task 2c implementation has not started at this checkpoint; the next action is the approved local account-flow controller.
+
+
+Account-controller checkpoint 27aad35 is published and copied. Private Memory source f0094284ab004626c1d7e0e55ff15686172d3cd6 deployed successfully as appgdep_6acc33bbcd3881919f084176bec986ca, with MCP retained. All 16 website checks and artifact validation pass. Next: server verified-identity/session contract and simulated checks; real sign-in remains gated.
