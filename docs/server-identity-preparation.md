@@ -34,3 +34,10 @@ All 234 foundation tests across 20 files, type checking and build pass. Full loc
 
 
 Official model references reviewed: [Supabase session model](https://github.com/supabase/auth/blob/master/internal/models/sessions.go), [Supabase user model](https://github.com/supabase/auth/blob/master/internal/models/user.go). The lookup checks persisted session existence/not_after and user state. It does not reproduce all configurable GoTrue lifetime/inactivity/MFA rules; hosted activation must verify those policies and incorporate the relevant authority. Synthetic schema checks must never be described as actual GoTrue authentication.
+
+
+## Local public signing-key transport
+
+Prepared a disconnected fixed-project JWKS resolver using jose and injected fetch. Only the configured HTTPS Supabase endpoint is fetched, never a token-supplied URL. Requests refuse redirects, omit credentials and bound response time to five seconds, body size to 64 KiB and key count to 32. Private/symmetric key material is refused. Public keys expire after ten minutes; refresh attempts have a thirty-second cooldown. Unknown signing keys can trigger one allowed refresh, with concurrent callers sharing the request. A response deadline also covers injected transports that ignore cancellation; their pending operation stays retained so repeated calls cannot launch unlimited requests. Production native fetch is expected to honor abort; a non-cooperative injected operation can leave this resolver unavailable until it settles. No automatic retries or stale-cache fallback after expiration.
+
+All 240 foundation tests across 21 files, type checking and build pass. Generated ES256 keys verify cryptographically through simulated HTTP responses. Rotation, unknown-key request storms, private keys, excessive response bodies, unsupported algorithms, ignored cancellation and stalled bodies are checked. No live JWKS request, actual signing configuration inspection or hosted account activation occurred. Cookie/origin and OAuth/recovery callback boundaries remain next.

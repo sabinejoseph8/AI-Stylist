@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 234 foundation tests across 20 files, type checking and build pass. A generated signed JWT and the prepared server port now exercise a real local PostgreSQL session lookup; removing its synthetic Auth session rejects the same unexpired token. Owner mismatch, bans, deletion, anonymous status, expiry and privilege denial pass. The sixteen-migration actual local Storage upgrade also passes. Real Auth, hosted configuration, JWKS transport, cookies and callbacks remain gated or unimplemented; no real sign-ins or paid calls occurred.
+Task 2c local account preparation is active. All 240 foundation tests across 21 files, type checking and build pass. The disconnected public signing-key resolver uses only the fixed Supabase project endpoint, bounds time/body/key count, refuses redirects and private keys, caches public keys for ten minutes and limits refreshes to once per thirty seconds. Generated-key rotation, unknown-key storms, ignored cancellation and stalled response bodies pass in simulated transport tests. The SQL-backed identity and sixteen-migration Storage rehearsals remain passing from the previous checkpoint. Real Auth, hosted configuration, request cookies and callbacks remain gated or unimplemented. No real sign-ins, key fetches or paid calls occurred.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 

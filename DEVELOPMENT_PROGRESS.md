@@ -833,3 +833,17 @@ All 234 foundation tests across 20 files, type checking and build pass. Full loc
 
 
 Exact next action: publish/copy this SQL authority checkpoint and refresh Memory. Next implement the bounded fixed-project JWKS transport with generated-key HTTP fixtures and rotation/unknown-key/error checks. Then prepare cookie/origin and OAuth/recovery callback protections. No real Auth/provider calls or hosted migration are authorized.
+
+
+## Signing key transport preparation in progress
+
+SQL authority checkpoint af84e3e is pushed and its 13 committed files are copied and byte verified in the AI stylist folder. Private Memory still reflects 79b060d and requires refresh. A disconnected fixed-project JWKS transport and generated-key tests are drafted. All 237 tests pass; completing type checks and transport deadline/rotation tests remains required before committing this draft. No real sign-ins, key requests, hosted migrations or paid calls were started. Exact next action: finish bounded deadline behavior including non-cooperative injected fetch, add rotation and unknown-key tests, then publish the completed checkpoint and refresh Memory.
+
+
+## Local public signing-key transport
+
+Prepared a disconnected fixed-project JWKS resolver using jose and injected fetch. Only the configured HTTPS Supabase endpoint is fetched, never a token-supplied URL. Requests refuse redirects, omit credentials and bound response time to five seconds, body size to 64 KiB and key count to 32. Private/symmetric key material is refused. Public keys expire after ten minutes; refresh attempts have a thirty-second cooldown. Unknown signing keys can trigger one allowed refresh, with concurrent callers sharing the request. A response deadline also covers injected transports that ignore cancellation; their pending operation stays retained so repeated calls cannot launch unlimited requests. Production native fetch is expected to honor abort; a non-cooperative injected operation can leave this resolver unavailable until it settles. No automatic retries or stale-cache fallback after expiration.
+
+All 240 foundation tests across 21 files, type checking and build pass. Generated ES256 keys verify cryptographically through simulated HTTP responses. Rotation, unknown-key request storms, private keys, excessive response bodies, unsupported algorithms, ignored cancellation and stalled bodies are checked. No live JWKS request, actual signing configuration inspection or hosted account activation occurred. Cookie/origin and OAuth/recovery callback boundaries remain next.
+
+Exact next action: commit/push/copy this signing-key checkpoint and refresh private Memory, which still reflects 79b060d. Then implement a disconnected same-origin server request identity boundary with strict cookie parsing and generated token tests, followed by callback/recovery protections. Preserve local-only Task 2c and spending limits.

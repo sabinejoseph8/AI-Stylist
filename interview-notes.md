@@ -764,3 +764,8 @@ I separated a valid sign-in token from a currently active session. The prepared 
 
 
 I tested the token verifier against a real local database with a synthetic Auth schema. The same signed token stopped working after its session row was removed, even though the token had not expired. I also checked account bans, deletion, anonymous status and cross-account session IDs. This strengthens local evidence while leaving actual Supabase sign-out and configured session policies as separate launch checks.
+
+
+### Preparing trusted account signing keys
+
+I kept the account prototype local while preparing its trust boundary. I used generated signing keys to test rotation and failure cases without contacting a provider. I limited how often the app can fetch public keys and how much time and data a response can consume. I also tested a stalled connection so repeated requests could not create unlimited background work. These checks strengthen the account foundation, but they do not replace testing real sign-in and recovery later.
