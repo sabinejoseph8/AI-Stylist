@@ -924,3 +924,6 @@ I restricted the prepared refresh storage transport to six explicit operations a
 
 
 I prepared staged credential rotation so the existing account lifecycle can adopt a replacement or discard it safely. Cleanup waits for adoption and requires confirmed revocation before removing the matching storage record. Ambiguous provider failures stay blocked. Four simulated scenarios bring the foundation suite to 387 passing tests, with type checking and build passing. Actual database and verified-session composition are the next evidence gates, so I have not enabled live accounts.
+
+
+I combined encrypted refresh storage, rotation and signed-session verification in an isolated PostgreSQL rehearsal. Successful adoption returns a cookie; a lost write acknowledgment, wrong session or expired access returns no cookie and follows guarded cleanup. The database and token checks are real local components, while provider rotation and revocation remain simulated. The rehearsal and all 387 foundation tests, type checking and build pass, and disposable database resources were removed.
