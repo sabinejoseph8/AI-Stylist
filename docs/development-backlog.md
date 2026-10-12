@@ -2035,3 +2035,9 @@ Exact next action: compose actual Supabase password/OAuth/recovery/refresh adapt
 ### Connected session restoration checkpoint
 
 The connected account screen now checks saved sign-in on mounting. It uses the bounded status/one-refresh/status helper. Cancellation, sign-out and newer submissions invalidate delayed replies. Sample previews do not restore real sessions. Fixed seven-day expiry remains enforced on server resources. Full browser restart, hosted identity/provider and physical-device acceptance remain open. No Phase 2 task is marked complete by this preparation.
+
+## Browser relaunch and expiry evidence, 12 October 2026
+
+The actual connected account build restored sign-in after WebKit closed and reopened the same persistent browser profile. No test cookie export/import was used, and the durable generation remained one. Setting the disposable database deadline in the past caused the account screen to remain signed out, with no credential rotation. The rehearsal then restored its fixture deadline and verified application replacement, browser-driven expired-token refresh without deadline extension, sign-out and separate-browser recovery. This is actual isolated PostgreSQL and HTTPS/WebKit evidence with synthetic Auth/maintenance responses, not hosted or physical-device acceptance. The expiry check changes a test database deadline; it does not simulate seven real elapsed days or replace cookie expiry unit tests.
+
+609 foundation tests, typechecking and build remain passing from the immediately preceding connected-screen implementation. Additional rehearsal: /private/tmp/ai-stylist-browser-relaunch-postgres.log. Next: consolidate and publish the private Memory site, then address the remaining account activation readiness work within existing approval and spending boundaries. Hosted configuration, real provider/email/social and device acceptance stay open.

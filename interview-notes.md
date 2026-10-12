@@ -1293,3 +1293,7 @@ I chose a fixed seven-day sign-in window. I added a status check that reveals no
 ## Restoring sign-in after reload
 
 I connected the saved-session check to the account screen. I verified reload without unnecessary refresh, then replaced the application and refreshed an expired access token without extending the original seven-day deadline. I protected cancellation and sign-out from late responses. These checks use an isolated database and synthetic Auth responses, so real hosted acceptance remains a separate gate.
+
+## Checking persistence beyond a page reload
+
+I closed and reopened a real WebKit browser profile and confirmed that its saved secure cookie restored sign-in without rotating credentials. I also expired the isolated database session and confirmed that the screen stayed signed out. I kept these results distinct from real customer and iPhone acceptance.

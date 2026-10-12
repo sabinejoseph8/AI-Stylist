@@ -7,7 +7,7 @@ Status: preparation in progress, 12 October 2026. Hosted Tasks 2b/2c are authori
 - Existing AI Stylist Supabase project: all twenty-one customer migrations installed. Source hashes and metadata checks are in hosted-database-deployment.json. SQL Editor execution does not register CLI history.
 - Customer account handlers are prepared but absent from the default server. The current Render service is the private voice prototype, not a deployed customer account application.
 - Read-only dashboard inspection: Site URL is http://localhost:3000; no redirect URLs; built-in email sender with a production-use warning; password reset template uses ConfirmationURL.
-- Local evidence: 587 foundation tests, type checking/build, combined HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks. Auth replies remain synthetic; this does not prove real email, hosted provider, physical-device or complete accessibility acceptance.
+- Local evidence: 609 foundation tests, type checking/build, combined HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks. Auth replies remain synthetic; this does not prove real email, hosted provider, physical-device or complete accessibility acceptance.
 
 ## Required order
 
@@ -119,3 +119,9 @@ The connected account screen now restores status on opening through the bounded 
 Validation: 609 tests across 90 files, TypeScript checking and build pass. Actual HTTPS/WebKit/isolated PostgreSQL rehearsal confirms fresh reload without rotation, application replacement, browser-driven expired-access generation-two refresh with the identical absolute deadline, resource expiry/hold refusal, scoped sign-out revocation and separate-browser recovery. Auth and maintenance HTTP responses are synthetic. No customer account, email, hosted configuration or paid call changed. Logs: /private/tmp/ai-stylist-connected-restore-tests.log and /private/tmp/ai-stylist-connected-restore-postgres.log.
 
 Next action: check persistence across a completely closed and reopened browser context and refuse restoration at the absolute seven-day boundary; consolidate the private Memory publication. Hosted accounts, real provider/email/social credentials, physical-phone/accessibility and phase exit remain open. Do not mark Tasks 2b or 2c complete.
+
+## Browser relaunch and expiry evidence, 12 October 2026
+
+The actual connected account build restored sign-in after WebKit closed and reopened the same persistent browser profile. No test cookie export/import was used, and the durable generation remained one. Setting the disposable database deadline in the past caused the account screen to remain signed out, with no credential rotation. The rehearsal then restored its fixture deadline and verified application replacement, browser-driven expired-token refresh without deadline extension, sign-out and separate-browser recovery. This is actual isolated PostgreSQL and HTTPS/WebKit evidence with synthetic Auth/maintenance responses, not hosted or physical-device acceptance. The expiry check changes a test database deadline; it does not simulate seven real elapsed days or replace cookie expiry unit tests.
+
+609 foundation tests, typechecking and build remain passing from the immediately preceding connected-screen implementation. Additional rehearsal: /private/tmp/ai-stylist-browser-relaunch-postgres.log. Next: consolidate and publish the private Memory site, then address the remaining account activation readiness work within existing approval and spending boundaries. Hosted configuration, real provider/email/social and device acceptance stay open.

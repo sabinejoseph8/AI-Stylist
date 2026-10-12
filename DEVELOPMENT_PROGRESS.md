@@ -1,10 +1,10 @@
 # AI Stylist development progress
 
-## Current private Memory publication
+## Current implementation and publication handoff
 
-Private Memory publishes the approved hosted Tasks 2b/2c scope, cross-device recovery decision and 522-test checkpoint from source 1b9db981220f3dd4a709f1af8059779e220fc60b. Deployment appgdep_6acc7963986481918ca23368b72fa7e0 succeeded with MCP enabled. All 16 site checks and artifact validation pass. Owner-only access remains one allowed user and no groups.
+609 foundation tests across 90 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
-Exact next action: review/apply the customer migration chain to the verified hosted project and compose cross-device token verification with receiving-browser confirmation and reset-only authority. Both scope decisions are approved; spending limits remain unchanged.
+Private Memory synchronization succeeded from b96241fdf9ffb40eb828c67cfc210d2eb853b923 with MCP preserved. Exact next action: prepare explicit account runtime orchestration from the existing configuration, application, network and shutdown modules, without activating hosted customer routes; then assess exact hosted origin/sender/social readiness. Earlier publication records below are historical.
 
 ## Previous publication checkpoint (historical)
 
@@ -2163,3 +2163,13 @@ The connected account screen now restores status on opening through the bounded 
 Validation: 609 tests across 90 files, TypeScript checking and build pass. Actual HTTPS/WebKit/isolated PostgreSQL rehearsal confirms fresh reload without rotation, application replacement, browser-driven expired-access generation-two refresh with the identical absolute deadline, resource expiry/hold refusal, scoped sign-out revocation and separate-browser recovery. Auth and maintenance HTTP responses are synthetic. No customer account, email, hosted configuration or paid call changed. Logs: /private/tmp/ai-stylist-connected-restore-tests.log and /private/tmp/ai-stylist-connected-restore-postgres.log.
 
 Next action: check persistence across a completely closed and reopened browser context and refuse restoration at the absolute seven-day boundary; consolidate the private Memory publication. Hosted accounts, real provider/email/social credentials, physical-phone/accessibility and phase exit remain open. Do not mark Tasks 2b or 2c complete.
+
+## Browser relaunch and expiry evidence, 12 October 2026
+
+The actual connected account build restored sign-in after WebKit closed and reopened the same persistent browser profile. No test cookie export/import was used, and the durable generation remained one. Setting the disposable database deadline in the past caused the account screen to remain signed out, with no credential rotation. The rehearsal then restored its fixture deadline and verified application replacement, browser-driven expired-token refresh without deadline extension, sign-out and separate-browser recovery. This is actual isolated PostgreSQL and HTTPS/WebKit evidence with synthetic Auth/maintenance responses, not hosted or physical-device acceptance. The expiry check changes a test database deadline; it does not simulate seven real elapsed days or replace cookie expiry unit tests.
+
+609 foundation tests, typechecking and build remain passing from the immediately preceding connected-screen implementation. Additional rehearsal: /private/tmp/ai-stylist-browser-relaunch-postgres.log. Next: consolidate and publish the private Memory site, then address the remaining account activation readiness work within existing approval and spending boundaries. Hosted configuration, real provider/email/social and device acceptance stay open.
+
+## Verified private publication, 12 October 2026
+
+Source b96241fdf9ffb40eb828c67cfc210d2eb853b923; deployment appgdep_6accdb03dc04819182708bc95a76f03e; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_6d48706aa6048191a15310807e472ee9. Terminal status succeeded with MCP enabled at https://ai-stylist-project-memory.idealgnat256.chatgpt.site. Owner-only audience preserved: one allowed user, no groups. All 16 site checks, build and artifact validation pass. Published current 609-test summary, fixed seven-day decision, browser restoration/relaunch and expiry evidence. No task completion boxes were changed.
