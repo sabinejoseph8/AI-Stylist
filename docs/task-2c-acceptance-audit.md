@@ -241,3 +241,12 @@ The full isolated SQL/composition rehearsal and all 417 foundation tests across 
 Remaining requirements: real independent revocation authority, operational authorization and durable scan cursor scheduling still need evidence before activation. Candidate discovery includes legitimate ready records, so the scanner cannot infer that they should be revoked. Simultaneous database/provider failure remains unconfirmed rather than automatically reset.
 
 Exact next action: consolidate private Memory with the 417-test and complete scan/database evidence, then implement an independent, error-distinguishing server-side revocation authority contract using verified provider/session semantics. Keep hosted configuration, real credentials and phase gates closed until separately authorized. Task 2c remains incomplete.
+
+
+## Normalized password provider bridge, 12 October 2026
+
+Prepared createPasswordProvider with explicitly injected normalized operations and a server-only session stager. Exact confirmation-only results are accepted only for registration. Valid access/refresh results pass to staged ownership, while malformed replies with usable access authority retain idempotent exact-session cleanup. Late replies retain cleanup capability after cancellation. Failed staging attempts remote cleanup but stays unconfirmed because partial local ownership is possible. The shared account lifecycle supplies deadlines/admission and cleanup holds; this bridge must not be exposed directly. No route or credentials are activated.
+
+All 428 foundation tests across 53 files, type checking and build pass. Four synthetic scenarios cover staging, confirmation, malformed/staging-failure cleanup and cancellation. Concrete HTTP operations, initial durable session staging and actual provider behavior remain incomplete. Supabase documents confirmation-enabled registration without an authenticated session: https://supabase.com/docs/reference/javascript/auth-signup . The exact normalized confirmation contract still requires a concrete adapter; arbitrary provider JSON is not treated as confirmed.
+
+Exact next action: implement initial durable session staging with verified owner/session identity, encrypted generation-one adoption and conservative discard/reconciliation, then compose the password bridge with isolated PostgreSQL using synthetic operations. Preserve hosted/account/financial gates. Private Memory remains at its earlier verified 421-test publication pending consolidation.

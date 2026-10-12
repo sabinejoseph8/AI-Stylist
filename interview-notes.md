@@ -984,3 +984,8 @@ I rehearsed key replacement with sample data before provisioning production keys
 ## Making key usage visible without exposing credentials
 
 I added a private count of records that depend on each encryption key. I included blocked and expired records so a misleading empty inventory cannot justify early key removal. I tested access protection and malformed replies, and kept production retirement dependent on backup and concurrent-writer checks.
+
+
+## Handling incomplete sign-in responses
+
+I prepared the password-provider connection without enabling real sign-ins. I separated registration confirmation from authenticated sessions and kept cleanup possible when replies arrived late or contained incomplete session data. When saving might have partly succeeded, I kept the result unresolved rather than reporting successful cleanup.
