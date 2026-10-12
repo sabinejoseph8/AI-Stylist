@@ -4,7 +4,7 @@
 
 Private Memory publishes the 516-test checkpoint from source 7b5c9f8c475251a82f3c849959148dc14cb1b816. Deployment appgdep_6acc74bd4cc881919b28c0899e375b72 succeeded with MCP enabled. All 16 website checks and artifact validation pass; owner-only access was verified with one allowed user and no groups.
 
-Exact next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as default. Reconcile the private Memory publication after this checkpoint.
+Exact next action: reconcile private Memory with the 520-test account checkpoint and successful synthetic WebKit account/reset checks, then audit remaining authorization prerequisites.
 
 ## Previous publication checkpoint (historical)
 
@@ -1803,3 +1803,9 @@ Prepared opt-in connected account wording with an explicit injected provider req
 Evidence: 520 foundation tests across 73 files pass, including connected configuration refusal, labels and request-free rendering. Type checking and build pass. Connected browser interaction and real-provider acceptance remain open.
 
 Exact next action: verify connected account presentation with a synthetic browser provider, including recovery messaging and cancellation, then reconcile the Memory site. Preserve all activation and spending gates.
+
+## Connected account WebKit evidence, 12 October 2026
+
+The repeatable local WebKit check passed with synthetic account responses: sign-in/sign-out, clearing email and password on sign-out, password clearing after creation, new-password autocomplete, confirmation and non-enumerating recovery messages, absence of the sample reset shortcut, and Google/Apple cancellation with late handoff refusal. Script: apps/foundation/scripts/check-account-browser.cjs; fixture: tests/browser/account.html. Uses the existing loopback-only port 4325 and injected Playwright installation, as documented for the reset browser check. No external provider, email or hosted setting was used.
+
+The last full foundation run remains 520 passing tests across 73 files with type checking and build passing. This browser evidence does not close physical-device, accessibility, live Auth or phase gates. Next: reconcile the private Memory website with current account/browser evidence and audit authorization prerequisites for the remaining backlog.

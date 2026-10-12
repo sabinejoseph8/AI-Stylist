@@ -1163,3 +1163,7 @@ I used a local WebKit browser to check the prepared reset flow with simulated da
 ## Making account presentation accurate
 
 I separated sample wording from explicitly configured connected account wording. The connected screen requires an injected provider, uses appropriate password-manager hints and does not offer a simulated recovery shortcut. The ordinary preview remains simulated. All 520 local tests, type checking and build pass; live account acceptance remains pending.
+
+## Checking account wording in a browser
+
+I verified the explicitly connected account presentation in local WebKit using simulated responses. Confirmation and recovery messages were accurate, fields cleared as expected, and canceled Google/Apple handoffs could not update the page later. This gives local interaction evidence while keeping real email, credentials and hosted account activation separate.
