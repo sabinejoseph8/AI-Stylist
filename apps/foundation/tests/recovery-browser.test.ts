@@ -39,3 +39,17 @@ it('shutdown permanently closes delivery and deduplicates grant cleanup',async()
 it('shutdown remains bounded and unconfirmed when grant cleanup stalls',async()=>{
  vi.useFakeTimers();const owner=createRecoveryBrowser(origin,20),g={...grant(),discard:vi.fn(()=>new Promise<boolean>(()=>{}))};owner.install(g);const work=owner.close();await vi.advanceTimersByTimeAsync(21);expect(await work).toBe(false);expect(owner.cleanupHeld()).toBe(true);expect(await owner.close()).toBe(false);expect(g.discard).toHaveBeenCalledTimes(1);
 });
+
+it('returns only reset expiry without consuming permission and refuses hostile readiness requests',async()=>{
+ const owner=createRecoveryBrowser(origin),g=grant(),d=owner.install(g),cookie=d.setCookie.split(';')[0]!;
+ const ready=(headers:Record<string,string>={})=>new Request(origin+'/api/account/reset-ready',{method:'POST',headers:{origin,cookie,...headers}});
+ expect(await owner.readiness(ready(),signal())).toEqual({status:'resetReady',expiresAt:g.expiresAt});
+ expect(await owner.readiness(ready(),signal())).toEqual({status:'resetReady',expiresAt:g.expiresAt});expect(g.reset).not.toHaveBeenCalled();
+ for(const headers of [{origin:'https://evil.example'},{cookie:cookie+'; '+cookie},{authorization:'Bearer refused'}] as Record<string,string>[])expect(await owner.readiness(ready(headers),signal())).toEqual({status:'unavailable'});
+ expect((await owner.submit(request(cookie),input,signal())).status).toBe('resetComplete');expect(await owner.readiness(ready(),signal())).toEqual({status:'unavailable'});
+});
+it('readiness removes expired grants without admitting reset or exposing credentials',async()=>{
+ const owner=createRecoveryBrowser(origin),g=grant(),d=owner.install(g);vi.useFakeTimers();vi.setSystemTime(Date.now()+60001);
+ const r=new Request(origin+'/api/account/reset-ready',{method:'POST',headers:{origin,cookie:d.setCookie.split(';')[0]!}});
+ expect(await owner.readiness(r,signal())).toEqual({status:'unavailable'});expect(g.discard).toHaveBeenCalledOnce();expect(g.reset).not.toHaveBeenCalled();await owner.close();
+});

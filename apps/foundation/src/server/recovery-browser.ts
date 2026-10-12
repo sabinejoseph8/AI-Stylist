@@ -27,6 +27,20 @@ export function createRecoveryBrowser(origin:string,cleanupDeadlineMs=8000){
    return Object.freeze({setCookie:`${name}=${token}; ${attributes}; Max-Age=${Math.max(1,Math.floor((expires-Date.now())/1000))}`,
     discard(){entries.delete(key);return discard(grant);}});
   },
+  /** Readiness is presentation metadata only; submit still independently consumes authority. */
+  async readiness(request:Request,signal:AbortSignal):Promise<Readonly<{status:'resetReady';expiresAt:number}>|Readonly<{status:'unavailable'}>>{
+   const unavailable={status:'unavailable' as const};
+   try{
+    const url=new URL(request.url),site=request.headers.get('sec-fetch-site');
+    if(closed||held||signal.aborted||request.signal.aborted||request.method!=='POST'||url.origin!==origin||url.pathname!=='/api/account/reset-ready'||url.search||url.hash||request.headers.get('origin')!==origin||request.headers.has('authorization')||(request.headers.has('host')&&request.headers.get('host')!==base.host)||(site!==null&&site!=='same-origin'&&site!=='none'))return unavailable;
+    const raw=request.headers.get('cookie');if(!raw||raw.length>18000)return unavailable;let token:string|undefined;
+    for(const part of raw.split(';')){const pair=part.trim(),split=pair.indexOf('=');if(split<1)return unavailable;if(pair.slice(0,split)===name){if(token!==undefined)return unavailable;token=pair.slice(split+1);}}
+    if(!token||!opaque.test(token))return unavailable;
+    const key=hash(token),item=entries.get(key);if(!item)return unavailable;
+    if(item.expires<=Date.now()){entries.delete(key);await discard(item.grant);return unavailable;}
+    return Object.freeze({status:'resetReady' as const,expiresAt:item.expires});
+   }catch{return unavailable;}
+  },
   async submit(request:Request,input:unknown,signal:AbortSignal){
    const unavailable=Object.freeze({status:'unavailable' as const,setCookie:null});
    try{

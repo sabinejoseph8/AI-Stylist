@@ -1143,3 +1143,7 @@ I reviewed the account return pages and prepared routing that treats URLs only a
 ## Reset panel configuration, 12 October 2026
 
 I separated the reset panel's simulated preview from explicitly configured reset behavior. The panel starts no request on render and still relies on server permission. All 512 tests, type checking and build pass, including the existing preview checks. Live configuration and browser acceptance remain pending.
+
+## Reset-page readiness, 12 October 2026
+
+I prepared a server-side readiness check that verifies the opaque reset cookie and returns only expiry metadata. It cannot reset a password or sign the customer in, and expired grants are cleaned. All 514 tests, type checking and build pass. HTTP/page integration and hosted acceptance remain pending.
