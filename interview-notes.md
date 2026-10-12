@@ -906,3 +906,6 @@ I added an explicit server-state ownership step before account access can be ret
 
 
 I verified the late-adoption cleanup through an actual local HTTP disconnect, alongside the prepared password and signed-identity owners. The late simulated state is removed once after storage settles. All 369 foundation tests, type checking and build pass. I refreshed my private Memory website through the preceding 368-test checkpoint, retaining the explicit live-provider and acceptance limitations.
+
+
+I prepared encrypted server-held refresh state before adding durable storage. The encryption context ties each record to its customer, session, rotation version and expiry, so moving ciphertext to another scope fails. I tested tampering, expiry and explicit key rotation using generated keys and fixture strings. All 374 foundation tests, type checking and build pass. Production keys, durable fencing and real provider activation remain separate work.

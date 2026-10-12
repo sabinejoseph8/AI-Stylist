@@ -19,7 +19,7 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Accessibility and responsive UI | Agent narrow layout and keyboard checks; labeled fields, result focus, live status and assertive errors | Actual screen reader, physical iPhone, zoom and complete accessibility acceptance |
 | Production email | Not configured | Verified sender/DNS, approved email templates, rate limits, abuse protection, delivery/bounce monitoring and real delivery checks |
 | Apple maintenance | No credentials created or inspected | Document actual credential expiry, owner, renewal reminders/process and a tested rotation procedure |
-| Tests/review/phase exit | 369 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
+| Tests/review/phase exit | 374 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
 
 ## Local next steps
 
@@ -48,3 +48,5 @@ Generated-token password verification is now composed over actual loopback HTTP 
 Explicit optional server adoption now runs after signed-identity verification and before ready, with current-session revalidation and simulated-storage cancellation/partial-failure tests. Durable ownership, actual adapter adoption and local HTTP adoption composition remain pending.
 
 Explicit adoption cancellation is now tested through generated-token password ownership and actual loopback HTTP disconnect. Late simulated storage is removed once after it settles. Durable storage/restart and real provider acceptance remain open.
+
+A disconnected server-only encrypted refresh envelope is prepared and tested with generated keys. Context binds owner/session/generation/expiry. Durable storage, atomic generation enforcement, key provisioning/retirement and real provider adoption remain open.

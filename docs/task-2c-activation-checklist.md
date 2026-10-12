@@ -40,3 +40,6 @@ For each live check, record the deployed commit, environment, timestamp, synthet
 - Any explicit account-linking or recovery policy that changes approved customer behavior.
 
 Routine local engineering continues independently. This checklist is not a request to supply credentials in chat.
+
+
+Refresh encryption preparation now has an AES-256-GCM codec tested with fixture data. Activation also requires approved private key provisioning, a bounded rotation/retirement procedure, durable service-only storage, generation fencing and reconciliation. Never commit a production encryption key or refresh envelope containing real account data.
