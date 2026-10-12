@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2b local preparation is active. Latest evidence: 215 foundation tests across 17 files pass, with type checking and build passing. The prepared owner-bound consultation-slot adapter also passes actual local PostgreSQL reservation, reconnect, provider-fence and cleanup-hold checks. Receipt retention and concurrent cleanup are verified locally; the Storage upgrade chain passes. Hosted activation, real Auth, cleanup scheduling and Phase 1 acceptance remain open. No paid calls were started.
+Task 2c local account preparation is active under Sabine’s 11 October sequencing approval. Latest evidence: 223 foundation tests across 18 files, type checking and build pass. The account UI controller covers simulated email/password, registration confirmation, recovery, Google/Apple, cancellation, stale replies and sign-out. No live Auth, hosted change, provider call or customer access is enabled. Task 2b hosted acceptance and Phase 1 gates remain open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1410,3 +1410,10 @@ Reviewed the agreed phase checks against current migrations, adapters, local SQL
 ## Local Task 2c preparation approved, 11 October 2026
 
 Sabine explicitly approved local Task 2c account preparation while Phase 1 remains open. This extends the earlier local Task 2b sequencing exception only to account interfaces and simulated tests. It includes no hosted configuration, real sign-in, new credentials, paid calls or customer launch. Prepare email/password, recovery, Google and Apple flows against injected provider interfaces, then real server identity-verification boundaries. Preserve every existing hosted, privacy, financial and Phase 1 acceptance gate. The pending-question wording in the preceding audit is now superseded by this approval.
+
+
+## Local account-flow controller
+
+Added a disconnected UI controller with injected provider operations, generation fencing, cancellation and a bounded deadline. It covers email/password, confirmation-required registration, generic recovery acknowledgment, Google/Apple pending/canceled states and immediate local sign-out. Failed remote sign-out is explicitly unconfirmed. Snapshots contain no passwords, email addresses, session tokens or raw provider errors. Canceled-before-dispatch operations never invoke the provider; late replies cannot restore local identity. Browser state is not server authorization.
+
+All 223 foundation tests across 18 files, type checking and build pass. These eight new controller checks use synthetic responses; email delivery, actual OAuth, server tokens, cookies, callback/recovery validation and remote revocation are not implemented. The controller is not yet displayed in the foundation UI. Task 2c remains in progress and local-only.

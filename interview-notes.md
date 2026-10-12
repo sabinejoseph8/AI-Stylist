@@ -753,3 +753,8 @@ I connected the prepared consultation reservation adapter to a disposable real d
 
 
 I tested what happens when the database succeeds but its reply is lost. The app keeps the uncertain reservation safe, refuses duplicate provider permission and prevents old requests from affecting the next consultation. I also checked overlapping heartbeat and end requests against separate database connections; the ended consultation stayed ended.
+
+
+## Preparing account access
+
+I prepared the account flow locally so customers can sign in with email/password, Google or Apple without an upfront style questionnaire. I kept registration confirmation separate from signed-in access and made recovery messages generic. I tested cancellation, stale replies and failed sign-out so the interface cannot silently restore an old account. The tests use simulated providers; actual authentication and server access remain to be built.
