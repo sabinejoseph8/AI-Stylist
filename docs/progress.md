@@ -1920,3 +1920,10 @@ Prepared migration 20 and a disconnected bounded store method for per-key counts
 All 424 foundation tests across 52 files, type checking and build pass. Isolated PostgreSQL checks verify ordinary-role denial, exact counts, empty-key usage, invalid identifiers, rotating usage during key transition and a held expired record. The full database composition passes with fixture keys and synthetic provider responses. No hosted migration or production key was used. This is point-in-time primary-database evidence only: concurrent writers and backup key dependencies prevent treating zero as automatic retirement permission.
 
 Exact next action: consolidate private Memory with the 424-test checkpoint, then audit remaining local account preparation against the activation checklist. Task 2c and phase gates remain open.
+
+
+## Account requirement reconciliation, 12 October 2026
+
+Reviewed actual account source and corrected the current acceptance audit, preserving historical evidence below it. Durable adoption, encryption, refresh rotation and local HTTP/database composition are no longer listed as wholly missing. Concrete password/registration provider transport, durable sign-out port, OAuth initiation/exchange and provider-verified recovery remain incomplete. All account factories remain disconnected and hosted acceptance remains gated. No new test run or functionality is claimed for this documentation audit.
+
+Exact next action: prepare a disconnected password/registration provider boundary with injected synthetic responses and shared staged-session ownership, then test confirmation-only registration, cancellation, malformed replies and exact-session cleanup. Preserve all live/financial gates. Consolidate private Memory at the next implementation checkpoint.

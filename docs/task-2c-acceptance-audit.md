@@ -19,14 +19,31 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Accessibility and responsive UI | Agent narrow layout and keyboard checks; labeled fields, result focus, live status and assertive errors | Actual screen reader, physical iPhone, zoom and complete accessibility acceptance |
 | Production email | Not configured | Verified sender/DNS, approved email templates, rate limits, abuse protection, delivery/bounce monitoring and real delivery checks |
 | Apple maintenance | No credentials created or inspected | Document actual credential expiry, owner, renewal reminders/process and a tested rotation procedure |
-| Tests/review/phase exit | 417 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
+| Tests/review/phase exit | 424 local foundation checks across 52 files plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
 
-## Local next steps
+## Current local next steps
 
-1. Email/password HTTP handling is prepared locally with bounded parsing, same-origin protections and verified header-only cookies; actual server delivery and refresh adoption remain unverified.
-2. Recovery-request and sign-out HTTP composition are prepared with simulated adapters. Early refresh ownership and expected signed-owner checks are prepared. Session-specific concurrent rotation and refresh HTTP composition are prepared locally. Shared lifecycle uncertainty holds are composed and tested. Adoption composition and durable refresh state remain pending.
-3. Keep the accepted eight-step account review recorded; verify the new reset step, actual screen reader/phone/zoom and every real-provider requirement separately.
-4. Record actual provider setup requirements without applying settings or requesting credentials prematurely.
+1. Prepare the password/registration provider boundary with injected synthetic responses. It must produce the shared staged-session capability, preserve confirmation-only registration, use explicit session cleanup and never activate a route or read credentials by default.
+2. Compose explicit sign-out with the encrypted store and primary session-presence authority. Current sign-out orchestration still relies on an injected abstract revocation port; refresh cleanup evidence does not prove that port is complete.
+3. Prepare provider-specific OAuth and recovery adapters only after auditing the actual provider purpose/state contracts. A normal access token is insufficient recovery authorization.
+4. Keep both accepted local manual reviews. Physical-device, screen-reader, browser HTTPS-cookie and real-provider acceptance remain separate gates.
+
+## Current implementation reconciliation, 12 October 2026
+
+The following evidence supersedes older pending-next-action paragraphs below. Those paragraphs remain as historical checkpoints.
+
+| Area | Inspected source/evidence | Current conclusion |
+| --- | --- | --- |
+| Server activation | apps/foundation/src/server/main.ts and http.ts | Foundation starts its existing server; account factories remain disconnected. No customer activation is claimed |
+| Password and registration | password-account.ts, password-http.ts and account-session.ts | Input validation, verified adoption and local HTTP lifecycle exist. Concrete password/registration provider transport remains missing |
+| OAuth callbacks | account-callback.ts and account-exchange.ts | Browser-bound one-use PKCE and shared adoption exist. Real provider initiation/exchange adapters remain missing |
+| Recovery | account-recovery.ts, recovery-browser.ts and recovery-http.ts | Recovery-only capabilities and one-use UI flow exist. Provider-purpose verification and real password update remain missing |
+| Refresh storage and rotation | refresh-store.ts, refresh-rotation.ts, refresh-port.ts and scripts/check-refresh-adapter.mjs | Actual isolated PostgreSQL and encryption composition pass with synthetic provider HTTP. Hosted Auth, real transport and early-refresh limitations remain |
+| Cleanup reconciliation | auth-session-presence.ts, refresh-reconciliation.ts, refresh-scan.ts and migrations 19/20 | Primary database absence is distinguished from lookup failure; scoped reconciliation and metadata inventory are prepared. No scheduler is installed; unknown records stay unresolved |
+| Key operations | refresh-envelope.ts, docs/refresh-key-operations.md and isolated database rehearsal | Overlap/restart/early-retirement evidence passes. Point-in-time counts do not prove backup or concurrent-writer retirement safety |
+| Sign-out | account-signout.ts and signout-http.ts | Cookie clearing and bounded orchestration exist. Concrete durable session revocation port still requires composition |
+
+All 424 foundation tests, type checking/build and the latest isolated database rehearsal passed at the preceding implementation checkpoint. This audit adds no application behavior and claims no new test run. No credentials, emails, hosted migrations or paid calls were used.
 
 ## Human and external dependencies
 
@@ -39,7 +56,7 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 
 ## Activation preparation
 
-See docs/task-2c-activation-checklist.md for evidence and approval boundaries. Sabine accepted all seven newer reset-screen review steps as working/readable; the original eight-step review also remains accepted. Further local preparation must address adoption, storage and actual local HTTP composition rather than treating generated-token tests as hosted readiness.
+See docs/task-2c-activation-checklist.md for evidence and approval boundaries. Sabine accepted all seven newer reset-screen review steps as working/readable; the original eight-step review also remains accepted. Adoption, encrypted storage and local HTTP/database composition now have evidence. Further preparation must address concrete password, sign-out, OAuth and recovery provider boundaries without treating synthetic evidence as hosted readiness.
 
 Local Node loopback delivery checks now cover separate cookie headers, Host/Origin rejection and late response cleanup after client disconnect. They use simulated operation handlers and are not yet the generated-token full account composition or browser/TLS acceptance.
 
