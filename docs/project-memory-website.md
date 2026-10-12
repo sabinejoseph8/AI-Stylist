@@ -74,3 +74,6 @@ Callback checkpoint 582a4ea is pushed and copied. Private Memory source 837d55ac
 
 
 Account usability/composition checkpoint 0c46182 is pushed and copied. Private Memory source 116c588dd2fedfa85d51ea2b90d9cec0e679c197 deployed successfully as appgdep_6acc3bee123c81918343be76e0a846f5. All 16 website checks pass; owner-only access and MCP are retained. This source reflects 265 foundation tests and the narrow-layout/keyboard evidence.
+
+
+Account exchange checkpoint ef17952 and reconciled summaries 353b5e1 are pushed and copied. Private Memory source 08ddbfd888edb17575ef22658ea5cad4cfbb5fbb deployed successfully as appgdep_6acc3e3ad5d481918c1fce4b5db66104. All 16 website checks pass; owner-only access and MCP remain. The live imported plan shows 277 foundation tests. No customer account or app deployment occurred. Next: shared verified-session orchestration for email/password and registration, with simulated cancellation/cleanup checks.
