@@ -2413,3 +2413,9 @@ Prepared the missing JSON initiation HTTP boundary at /api/account/oauth, withou
 All 485 foundation tests across 65 files, type checking and build pass. Three new synthetic checks cover public handoff shape/binding, abandoned transaction refusal, cross-origin/extra-field/provider/external-return rejection and destination-port restrictions. No sign-in page, provider call, route or hosted configuration was activated.
 
 Exact next action: compose the prepared initiation, password, callback, refresh, recovery and sign-out handlers into one explicit disabled account route factory, sharing lifecycle owners and preserving undelivered-response cleanup. Task 2c remains open. Private Memory remains at the verified 482-test checkpoint.
+
+## Dormant account route registry, 12 October 2026
+
+Added an explicit nine-route registry for password, OAuth initiation, refresh, sign-out, recovery request/reset and the three callbacks. It snapshots handlers and preserves undelivered-response cleanup without opening a listener or invoking a provider. Two focused tests cover exact route membership, cleanup forwarding, snapshot isolation and missing/extra handler refusal. All 487 tests across 66 files, type checking and build pass with authorized local loopback access. The first restricted run was interrupted after loopback refusals; it is not acceptance evidence.
+
+Shared owner construction and recovery shutdown composition still need implementation. The registry alone does not prove those lifecycles. No hosted routes, real sign-ins, emails or spending were enabled. Exact next action: build the explicit account composition around this registry with shared session ownership and recovery close, then test cross-route capacity and shutdown cleanup.

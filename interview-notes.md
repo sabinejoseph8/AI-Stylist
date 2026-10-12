@@ -1071,3 +1071,7 @@ I reproduced the delayed recovery result after cancellation against a disposable
 ## Preparing social sign-in initiation
 
 I added the same-origin handler that prepares a Google or Apple sign-in handoff. It accepts only the supported providers and local return pages. The browser binding is delivered in a secure cookie while the verifier stays on the server. If the response cannot be delivered, the pending transaction can be removed immediately. Real sign-in is still disabled.
+
+## Account route preparation, 12 October 2026
+
+I added one explicit registry for the prepared account routes so delivery cleanup remains attached to each handler. I kept it disconnected while provider configuration and acceptance checks remain open. All 487 focused tests, type checking and build pass. Sharing the account lifecycle owners and testing shutdown are the next steps.
