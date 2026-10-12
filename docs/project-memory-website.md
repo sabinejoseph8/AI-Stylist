@@ -36,3 +36,6 @@ This website is project tooling. The customer app's approved Supabase + Render h
 Latest verified deployment: 11 October 2026, document snapshot c657681, Site source b5fefcdb071ddf4ef4f1645e8a8e7a4519c24ece, deployment appgdep_6acc27c1058c819194a7c5ccb2271445. Native status succeeded; owner-private audience and MCP tools retained. Sixteen site checks and artifact validation pass. The subsequent full foundation result is 188 tests and will appear after the next snapshot refresh.
 
 Resource-evidence refresh: 11 October 2026, document snapshot 297e31c and Site source d53970805466b21ffd55e9f99ad4ae7ce92d5d14. Native deployment appgdep_6acc2916d7188191ac1325a2a8e78015 succeeded at the existing private URL with MCP tools retained. The imported overview now reports all 188 foundation checks and six local decoder resource scenarios. Sixteen website checks and artifact validation pass.
+
+
+Account-bound image refresh: 11 October 2026, document snapshot 96a0b73, Site source 184b43b395e580c69d241b8987b11bbb4902910b. Deployment appgdep_6acc2c90c43481918e1b07dbe2d8489b succeeded with private access and MCP tools retained. Sixteen website checks and artifact validation pass; imported evidence now includes 209 foundation checks and actual local Storage integration.
