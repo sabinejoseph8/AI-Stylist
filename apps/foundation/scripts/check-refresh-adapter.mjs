@@ -11,6 +11,7 @@ import {createAccountRefresh} from '../src/server/account-refresh.ts';
 import {createRefreshHttp} from '../src/server/refresh-http.ts';
 import {createRefreshProvider} from '../src/server/refresh-provider.ts';
 import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts';
+import {createRefreshReconciliation} from '../src/server/refresh-reconciliation.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 const container=process.argv[2];
@@ -170,3 +171,30 @@ for(const mode of ['normal','lost-write','malformed','refused-cleanup','lost-qua
 }
 assert.equal(providerRequests,11);assert.equal(logoutRequests,5);
 console.log('Provider HTTP/bridge/database/account composition passed: adoption, lost write acknowledgment, malformed response hold and unconfirmed cleanup retention. Provider fetch and teardown revocation are synthetic.');
+
+const revokedProof={status:'revoked',ownerId:owner,sessionId:session};
+assert.equal(await store.adopt('reconcile-fixture',scope,signal()),'confirmed');
+const reconcileClaim=await store.claim(owner,session,1,signal());assert.equal(reconcileClaim.status,'claimed');reconcileClaim.clearSecret();
+assert.equal(await store.hold(reconcileClaim.scope,reconcileClaim.leaseId,signal()),'confirmed');
+const cleanupScope={ownerId:owner,sessionId:session,generation:1,leaseId:reconcileClaim.leaseId};
+const uncertain=createRefreshReconciliation(store,{confirm:async()=>({status:'unconfirmed'})});
+assert.equal(await uncertain.reconcile(cleanupScope,signal()),'unconfirmed');assert.equal((await store.inspect(owner,session,signal())).state,'held');
+await execute(['restart',container]);
+for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
+const reconciliationStore=createRefreshStore(rpc,createRefreshEnvelopes(keyring,'fixture'));
+const reconciliation=createRefreshReconciliation(reconciliationStore,{confirm:async()=>revokedProof});
+assert.equal(await reconciliation.reconcile({...cleanupScope,generation:2},signal()),'stale');
+loseNext='stylist_remove_refresh';assert.equal(await reconciliation.reconcile(cleanupScope,signal()),'unconfirmed');
+assert.equal((await reconciliationStore.inspect(owner,session,signal())).status,'absent');
+// Explicit trusted recheck after an uncertain removal, never a rotation retry.
+assert.equal(await reconciliation.reconcile(cleanupScope,signal()),'confirmed');
+assert.equal(await store.adopt('competing-fixture',scope,signal()),'confirmed');
+const racing=createRefreshReconciliation(store,{confirm:async()=>{
+ const newer=await store.claim(owner,session,1,signal());assert.equal(newer.status,'claimed');newer.clearSecret();
+ assert.equal(await store.finish('competing-next-fixture',newer.scope,newer.leaseId,scope.expiresAt,signal()),'confirmed');return revokedProof;
+}});
+assert.equal(await racing.reconcile({...cleanupScope,leaseId:null},signal()),'unconfirmed');
+const competing=await store.inspect(owner,session,signal());assert.equal(competing.scope.generation,2);assert.equal(competing.state,'ready');
+// Synthetic teardown only. The authority above is a fixture, not real provider termination.
+assert.equal(await store.remove(competing.scope,competing.leaseId,true,signal()),'confirmed');
+console.log('Cleanup reconciliation PostgreSQL composition passed: held restart persistence, stale-scope refusal, lost removal acknowledgment with explicit proof recheck, and concurrent-generation fencing. Revocation authority is synthetic.');

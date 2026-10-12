@@ -957,3 +957,6 @@ I fixed the database-exception path so cleanup still attempts bounded provider r
 
 
 I prepared a separate cleanup reconciliation capability that requires independent proof of exact-session revocation before deleting matching ownership. It refuses stale scope and ambiguous evidence, including local absence without remote confirmation. All 411 foundation tests, type checking and build pass. Actual authority and durable work discovery remain open, so this does not claim complete outage recovery.
+
+
+I tested reconciliation against actual isolated PostgreSQL, including restart persistence, lost removal acknowledgment and a concurrent newer generation. The scoped checks preserve uncertainty and refuse stale deletion. All 411 foundation tests, type checking and build pass. Proof remains synthetic, and durable discovery of unresolved work is the next implementation requirement.
