@@ -138,3 +138,9 @@ Owner-private publication succeeded with its one-user/no-group audience and MCP 
 Owner-private publication succeeded with the existing one-user/no-group audience and MCP preserved. All 16 site checks and artifact validation passed. Source 8ded04a7e3e8b66817e75f90a890846c46f41d99; deployment appgdep_6acc9a9ad5648191bdd3a0c87c169f6d; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_0995d9d029108191a0cc8d26f232f7ed. The site includes explicit runtime settings, shutdown preparation and 587-test evidence. No task was marked complete by publication.
 
 Next action: continue authorized independent account acceptance work; implement the customer session contract after Sabine answers the pending duration question. Production sender/origin, social credentials/linking, hosted customer isolation and physical-device/accessibility gates remain open.
+
+## Latest verification published and human dependency confirmed, 12 October 2026
+
+Private Memory publication succeeded with owner-only access and MCP preserved; all 16 checks and artifact validation pass. Source 2402ff3f75cb9e76b6732ba961c0a1624504c9d6; deployment appgdep_6acc9c9de6448191a5f19bdc82d7ed59; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_c87bf562b5e481919176fa6d1fcfacc0. Includes reset reflow/keyboard evidence and corrected phase approval scope.
+
+The same customer session-policy dependency has remained unanswered across three consecutive goal turns. Independent preparation and publication are now recorded; no further backlog group is authorized past the unresolved phase dependencies. Next required human action: choose 7 days, 24 hours or 30 days from sign-in. Resume by implementing the complete chosen session contract, not a storage TTL alone. Remaining provider/financial/credential/manual gates are documented above. The project is incomplete; no task or phase has been marked done.

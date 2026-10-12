@@ -2091,3 +2091,9 @@ The customer sign-in duration decision is the immediate account implementation d
 The working backlog header still showed the obsolete local-only exception and 520-test checkpoint. Corrected it to hosted Tasks 2b/2c approval, 21 installed migrations, 587 recorded foundation tests and the actual connected synthetic account/browser evidence. Later phase dependencies and real acceptance gates remain unchanged. No implementation task was checked off.
 
 Immediate next action requires Sabine's customer sign-in duration choice. Phase 1 live checks also require provider clarification and new financial authorization; production account acceptance requires sender/origin/social credentials and manual checks. No new independent task is inferred merely to bypass these gates. Reassess independent authorized work when the pending answer or external evidence arrives.
+
+## Latest verification published and human dependency confirmed, 12 October 2026
+
+Private Memory publication succeeded with owner-only access and MCP preserved; all 16 checks and artifact validation pass. Source 2402ff3f75cb9e76b6732ba961c0a1624504c9d6; deployment appgdep_6acc9c9de6448191a5f19bdc82d7ed59; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_c87bf562b5e481919176fa6d1fcfacc0. Includes reset reflow/keyboard evidence and corrected phase approval scope.
+
+The same customer session-policy dependency has remained unanswered across three consecutive goal turns. Independent preparation and publication are now recorded; no further backlog group is authorized past the unresolved phase dependencies. Next required human action: choose 7 days, 24 hours or 30 days from sign-in. Resume by implementing the complete chosen session contract, not a storage TTL alone. Remaining provider/financial/credential/manual gates are documented above. The project is incomplete; no task or phase has been marked done.
