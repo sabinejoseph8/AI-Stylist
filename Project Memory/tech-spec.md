@@ -2985,3 +2985,8 @@ Added withRendererTeardown to supply the recovery coordinator's local-renderer v
 Next action: publish the pending Memory site updates, then inspect the actual provider teardown and restoration paths for a disabled end-to-end adapter. Keep interrupt-and-end active and preserve the exhausted live-test allowance; do not start a replacement room without financial authorization. Task 1b remains incomplete.
 
 Final validation: 1,284 prototype tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-recovery-final.log.
+
+
+## Current acceptance boundary, 12 October 2026
+
+Local renderer teardown, recovery coordination and callback reentry checks are prepared; the current prototype suite is 1,285 tests across 84 files with type checking and build passing. Live continuous resume remains disabled. Tavus clarification does not prove browser buffer flush. A concrete two-room $4/ten-minute experiment proposal is awaiting Sabine's financial decision; no allowance changed. Hosted account activation still has the separately recorded ingress/logging, provider, permitted email and real isolation gates. Domain purchase remains deferred until public launch. Later phases retain predecessor dependencies. No phase is marked complete.
