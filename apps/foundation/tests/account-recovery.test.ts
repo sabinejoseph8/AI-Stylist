@@ -56,4 +56,14 @@ describe('scoped disconnected recovery',()=>{
   vi.useFakeTimers();const work=result.reset('new',signal());await vi.advanceTimersByTimeAsync(21);expect(await work).toEqual({status:'unconfirmed'});expect(await result.reset('retry',signal())).toEqual({status:'unconfirmed'});resolve(true);await vi.advanceTimersByTimeAsync(0);expect(value.discard).toHaveBeenCalledTimes(1);expect(value.resetPassword).toHaveBeenCalledTimes(1);
  });
 
+ it('discarding permission aborts an in-flight password reset and forbids late completion',async()=>{
+  const f=await fixture(),value=lease();let resolve!:(v:boolean)=>void,started!:()=>void;let scope!:AbortSignal;const began=new Promise<void>(r=>started=r);value.resetPassword=vi.fn((_password:string,signal:AbortSignal)=>{scope=signal;started();return new Promise<boolean>(r=>resolve=r);});
+  const service=createAccountRecovery(f.security,{exchange:async()=>value});const result=await service.complete(f.begin('recovery').request,signal());if(result.status!=='resetRequired')throw Error();
+  const work=result.reset('new',signal());await began;expect(await result.discard()).toBe(true);expect(scope.aborted).toBe(true);expect(await work).toEqual({status:'unconfirmed'});resolve(true);await Promise.resolve();expect(value.discard).toHaveBeenCalledTimes(1);expect(await result.reset('again',signal())).toEqual({status:'unconfirmed'});
+ });
+ it('does not reuse a discarded adapter capability',async()=>{
+  const f=await fixture(),value=lease(),service=createAccountRecovery(f.security,{exchange:async()=>value});const result=await service.complete(f.begin('recovery').request,signal());if(result.status!=='resetRequired')throw Error();await result.discard();
+  expect(await service.complete(f.begin('recovery').request,signal())).toEqual({status:'unavailable'});expect(value.discard).toHaveBeenCalledTimes(1);
+ });
+
 });

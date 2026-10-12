@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 300 foundation tests across 31 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Generated tokens and simulated adapters provide local evidence only. Sabine completed all eight account preview steps and confirmed they worked and were readable. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
+Task 2c local account preparation is active. All 302 foundation tests across 31 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Generated tokens and simulated adapters provide local evidence only. Sabine completed all eight account preview steps and confirmed they worked and were readable. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
 
 ## Completed evidence
 
@@ -977,3 +977,12 @@ Recover access now offers a clearly labeled simulated reset step after its no-em
 All 300 foundation tests across 31 files, type checking and build pass. Five new checks cover confirmation matching/one dispatch, expiry, cancellation/late results, timeout/no retry and accessible labeled simulated markup. Actual local browser QA confirmed mismatch feedback, matching completion, cleared fields, disabled repeat submission, status focus and continued signed-out messaging. Screenshot: /private/tmp/ai-stylist-reset-preview.png. Physical iPhone, screen reader and Sabine review of this newly added reset step remain open; the earlier eight-step account preview is already accepted and is not reopened.
 
 Exact next action: audit and strengthen recovery expiration, discard and cross-method cleanup behavior, then publish a consolidated private Memory refresh. Real providers, browser-bound server recovery delivery, refresh lifecycle and hosted acceptance remain gated. Task 2c remains incomplete.
+
+
+## Recovery discard audit, 11 October 2026
+
+Found and fixed a recovery cancellation gap: discarding a grant while its password-change call was pending did not abort that call. Each reset now owns a cancellation scope; public discard aborts it, consumes permission and invokes deduplicated cleanup. The caller receives unconfirmed, and a late adapter success cannot become resetComplete. A provider may already have changed a password before cancellation, so this does not promise rollback; real adapter/reconciliation semantics remain required. Reused active or discarded adapter capability objects are rejected. A cancellation detected at the final exchange boundary discards a returned grant before exposing permission.
+
+All 302 foundation tests across 31 files, type checking and build pass. Two new regressions cover in-flight discard and disposed-capability reuse. Tests use simulated providers; no real credentials, accounts, provider calls or hosted settings changed. The previous local reset UI browser evidence remains valid; no UI behavior changed in this audit.
+
+Exact next action: publish the consolidated private Memory account/recovery checkpoint, then prepare the browser-bound reset-delivery contract and failure/expiration checks locally. Full Task 2c requires real-provider integration, refresh/sign-out confirmation, phone/accessibility acceptance and the existing phase gates.

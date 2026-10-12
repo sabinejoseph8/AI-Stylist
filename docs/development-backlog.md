@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 300 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Task 2c local account preparation is active under Sabine's approved exception. All 302 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1174,7 +1174,7 @@ Sabine completed every step of the eight-step account preview and reported that 
 
 Extracted a common server-only session lifecycle and added disconnected email/password and registration ports. Password and OAuth callback methods share a four-operation admission limit and the same uncertainty hold after ambiguous creation or failed cleanup. Registration confirmation returns no account cookie. Email whitespace is trimmed; passwords are passed unchanged and never stored by these interfaces. Exact input keys and string methods are required, preventing object coercion into a supported action. HTTP origin/CSRF, rate/body limits, real provider policy and refresh adoption remain requirements before wiring any route.
 
-All 300 foundation tests across 31 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
+All 302 foundation tests across 31 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
 
 
 ## Local sign-out coordinator, 11 October 2026
@@ -1204,3 +1204,12 @@ Recover access now offers a clearly labeled simulated reset step after its no-em
 All 300 foundation tests across 31 files, type checking and build pass. Five new checks cover confirmation matching/one dispatch, expiry, cancellation/late results, timeout/no retry and accessible labeled simulated markup. Actual local browser QA confirmed mismatch feedback, matching completion, cleared fields, disabled repeat submission, status focus and continued signed-out messaging. Screenshot: /private/tmp/ai-stylist-reset-preview.png. Physical iPhone, screen reader and Sabine review of this newly added reset step remain open; the earlier eight-step account preview is already accepted and is not reopened.
 
 Exact next action: audit and strengthen recovery expiration, discard and cross-method cleanup behavior, then publish a consolidated private Memory refresh. Real providers, browser-bound server recovery delivery, refresh lifecycle and hosted acceptance remain gated. Task 2c remains incomplete.
+
+
+## Recovery discard audit, 11 October 2026
+
+Found and fixed a recovery cancellation gap: discarding a grant while its password-change call was pending did not abort that call. Each reset now owns a cancellation scope; public discard aborts it, consumes permission and invokes deduplicated cleanup. The caller receives unconfirmed, and a late adapter success cannot become resetComplete. A provider may already have changed a password before cancellation, so this does not promise rollback; real adapter/reconciliation semantics remain required. Reused active or discarded adapter capability objects are rejected. A cancellation detected at the final exchange boundary discards a returned grant before exposing permission.
+
+All 302 foundation tests across 31 files, type checking and build pass. Two new regressions cover in-flight discard and disposed-capability reuse. Tests use simulated providers; no real credentials, accounts, provider calls or hosted settings changed. The previous local reset UI browser evidence remains valid; no UI behavior changed in this audit.
+
+Exact next action: publish the consolidated private Memory account/recovery checkpoint, then prepare the browser-bound reset-delivery contract and failure/expiration checks locally. Full Task 2c requires real-provider integration, refresh/sign-out confirmation, phone/accessibility acceptance and the existing phase gates.

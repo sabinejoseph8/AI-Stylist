@@ -42,7 +42,7 @@ export function createAccountRecovery(security:ReturnType<typeof createAccountSe
    const callback=security.callbacks.fromRequest(request,'recovery');if(!callback)return {status:'unavailable'};
    if(callback.status==='canceled')return {status:'canceled'};
    const controller=new AbortController();const stop=()=>controller.abort();external.addEventListener('abort',stop,{once:true});request.signal.addEventListener('abort',stop,{once:true});
-   try{return await bounded(async signal=>{
+   try{const result=await bounded<RecoveryGrant|Readonly<{status:'unavailable'}>>(async signal=>{
     let value:VerifiedRecovery|undefined;
     try{
      if(signal.aborted)return {status:'unavailable' as const};
@@ -51,21 +51,22 @@ export function createAccountRecovery(security:ReturnType<typeof createAccountSe
      value=reply as VerifiedRecovery;
      if(!value||typeof value.discard!=='function'){held=true;throw Error();}
      if(signal.aborted||typeof value.resetPassword!=='function'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.ownerId)||!Number.isSafeInteger(value.expiresAt)||value.expiresAt<=Date.now())throw Error();
-     const grant=value,expires=Math.min(grant.expiresAt,Date.now()+300000);let used=false;grants.set(grant,expires);
-     return Object.freeze({status:'resetRequired' as const,discard:()=>{used=true;return discard(grant);},
+     if(cleanups.has(value)||grants.has(value))throw Error();
+     const grant=value,expires=Math.min(grant.expiresAt,Date.now()+300000);let used=false;let resetController:AbortController|undefined;grants.set(grant,expires);
+     return Object.freeze({status:'resetRequired' as const,discard:()=>{used=true;resetController?.abort();return discard(grant);},
       async reset(password:unknown,signal:AbortSignal){
        if(used||held||signal.aborted||typeof password!=='string'||password.length<1||password.length>4096)return {status:'unconfirmed' as const};
        if(Date.now()>=expires){used=true;await discard(grant);return {status:'unconfirmed' as const};}
        if(pending>=4)return {status:'unconfirmed' as const};
-       used=true;
-       return bounded(async scope=>{
+       used=true;resetController=new AbortController();const resetScope=resetController;const stopReset=()=>resetScope.abort();signal.addEventListener('abort',stopReset,{once:true});
+       try{return await bounded(async scope=>{
         let changed=false;try{if(!scope.aborted)changed=await grant.resetPassword(password,scope)===true;}catch{held=true;}
         const cleaned=await discard(grant);
         return {status:changed&&cleaned&&!scope.aborted?'resetComplete' as const:'unconfirmed' as const};
-       },signal,{status:'unconfirmed' as const});
+       },resetScope.signal,{status:'unconfirmed' as const});}finally{signal.removeEventListener('abort',stopReset);}
       }});
     }catch{if(value&&typeof value.discard==='function')await discard(value);else held=true;return {status:'unavailable' as const};}
-   },controller.signal,{status:'unavailable' as const});}finally{external.removeEventListener('abort',stop);request.signal.removeEventListener('abort',stop);}
+   },controller.signal,{status:'unavailable' as const});if(controller.signal.aborted&&result.status==='resetRequired'){await result.discard();return {status:'unavailable'};}return result;}finally{external.removeEventListener('abort',stop);request.signal.removeEventListener('abort',stop);}
   },
  });
 }

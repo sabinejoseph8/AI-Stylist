@@ -820,3 +820,8 @@ I designed recovery to grant temporary password-reset permission only. It never 
 ## Making password recovery understandable
 
 I added a simulated reset step that explains it does not sign the customer in. Matching passwords are required and both fields clear after submission. I made an uncertain result terminal so the interface cannot invite repeated password changes after a timeout. Local browser checks verified mismatch feedback, completion, disabled repeat submission and signed-out messaging. All 300 foundation tests pass, with type checking and build. Real recovery delivery and phone/accessibility acceptance remain open.
+
+
+## Fixing cancellation during password recovery
+
+I found that discarding reset permission did not abort a password change already in progress. I linked those lifecycles and added tests proving that late success cannot replace an unconfirmed outcome or reuse discarded permission. I kept the limitation explicit: cancellation cannot roll back a password a provider may already have changed. All 302 local foundation checks pass, with type checking and build; actual provider cleanup and reconciliation remain unverified.
