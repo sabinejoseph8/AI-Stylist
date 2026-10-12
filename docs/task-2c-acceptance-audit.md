@@ -371,3 +371,11 @@ Exact next action: extend the isolated recovery database rehearsal with the canc
 Extended the actual isolated PostgreSQL rehearsal with a canceled caller and delayed recovery result. Cleanup verifies the signed identity with its independent signal, invokes scoped synthetic logout, and confirms actual primary-session deletion. No password update or reset permission occurs, and cleanup does not remain unnecessarily held. The full ownership rehearsal passes and disposable containers/volumes were verified removed. Provider replies remain synthetic; no hosted changes occurred. Foundation evidence remains 482 passing tests, type checking and build.
 
 Next authorized local work: prepare the missing OAuth initiation HTTP boundary, then compose disabled account handlers into an explicit route factory. Do not register real account routes or configure providers. Task 2c remains open.
+
+## Same-origin OAuth initiation delivery, 12 October 2026
+
+Prepared the missing JSON initiation HTTP boundary at /api/account/oauth, without registering it. It accepts only provider and returnPath, uses the existing same-origin/JSON/body/deadline checks and the fixed Google/Apple authorization builder, and delivers only a public handoff URL plus a Secure/HttpOnly browser-binding cookie. The verifier remains server-only. Pending transactions now expose a server-only idempotent discard capability; undelivered responses remove them. Also rejected nondefault Supabase ports in the URL builder.
+
+All 485 foundation tests across 65 files, type checking and build pass. Three new synthetic checks cover public handoff shape/binding, abandoned transaction refusal, cross-origin/extra-field/provider/external-return rejection and destination-port restrictions. No sign-in page, provider call, route or hosted configuration was activated.
+
+Exact next action: compose the prepared initiation, password, callback, refresh, recovery and sign-out handlers into one explicit disabled account route factory, sharing lifecycle owners and preserving undelivered-response cleanup. Task 2c remains open. Private Memory remains at the verified 482-test checkpoint.

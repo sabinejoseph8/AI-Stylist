@@ -22,7 +22,7 @@ describe('prepared OAuth initiation',()=>{
   expect(createHash('sha256').update(consumed.verifier).digest('base64url')).toBe(url.searchParams.get('code_challenge'));
   expect(consumed.returnPath).toBe('/profile');
   expect(callbacks.fromRequest(request,provider)).toBeNull();
-  expect(Object.keys(result).sort()).toEqual(['setCookies','url']);
+  expect(Object.keys(result).sort()).toEqual(['discard','setCookies','url']);
   expect(result.setCookies[0]).toContain('Secure; HttpOnly; SameSite=Lax');
  });
  it('rejects destinations and return paths outside the fixed allowlists',()=>{

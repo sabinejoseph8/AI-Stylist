@@ -1067,3 +1067,7 @@ I tested signed callbacks over local HTTP, including a delayed reply after the c
 ## Confirming the disconnect fix with primary data
 
 I reproduced the delayed recovery result after cancellation against a disposable database. The cleanup verified the signed identity, removed the test session and independently confirmed that removal. No password update or reset permission was granted. This confirms the local fix, while actual hosted provider and device acceptance remain open.
+
+## Preparing social sign-in initiation
+
+I added the same-origin handler that prepares a Google or Apple sign-in handoff. It accepts only the supported providers and local return pages. The browser binding is delivered in a secure cookie while the verifier stays on the server. If the response cannot be delivered, the pending transaction can be removed immediately. Real sign-in is still disabled.
