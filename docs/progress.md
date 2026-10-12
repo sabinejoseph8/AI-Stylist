@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password, OAuth, recovery and sign-out compose with generated signed identities and actual isolated PostgreSQL authority using synthetic provider responses. Recovery checks signed purpose, permits one browser-bound reset, issues no account cookie and requires primary session-removal proof. Real configuration, restart/cross-device policy, HTTPS/device/accessibility acceptance and Phase 1/hosted gates remain open. No real sign-in, emails, password changes or paid calls were activated.
+Task 2c local account preparation is active. All 482 foundation tests across 64 files, type checking and build pass. Signed OAuth/recovery callbacks now have actual local HTTP delivery and disconnect checks. Password, OAuth, recovery and sign-out have isolated PostgreSQL composition with synthetic provider replies. The late-recovery cleanup fix is verified against primary-session deletion without reset access. Real configuration, restart/cross-device policy, HTTPS/device/accessibility acceptance and Phase 1/hosted gates remain open. No real account routes, emails or paid calls were activated.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2074,3 +2074,9 @@ The recovery disconnect test exposed an unnecessary unresolved-cleanup hold: can
 All 482 foundation tests across 64 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
 
 Exact next action: extend the isolated recovery database rehearsal with the canceled/late result case and rerun it, then update private Memory from the 468-test checkpoint. Task 2c and hosted/device gates remain open.
+
+## Late recovery cleanup database verification, 12 October 2026
+
+Extended the actual isolated PostgreSQL rehearsal with a canceled caller and delayed recovery result. Cleanup verifies the signed identity with its independent signal, invokes scoped synthetic logout, and confirms actual primary-session deletion. No password update or reset permission occurs, and cleanup does not remain unnecessarily held. The full ownership rehearsal passes and disposable containers/volumes were verified removed. Provider replies remain synthetic; no hosted changes occurred. Foundation evidence remains 482 passing tests, type checking and build.
+
+Next authorized local work: prepare the missing OAuth initiation HTTP boundary, then compose disabled account handlers into an explicit route factory. Do not register real account routes or configure providers. Task 2c remains open.

@@ -395,3 +395,24 @@ for(const scenario of ['confirmed','unconfirmed','ordinary']){
  assert.equal((await presence.confirm(owner,session,signal())).status,scenario==='confirmed'?'revoked':'unconfirmed');
 }
 console.log('Recovery HTTP/PostgreSQL/browser composition passed: request and PKCE, signed purpose, one reset, no account cookie, primary deletion proof, ordinary-token refusal and unconfirmed cleanup. Provider calls were synthetic.');
+
+// The provider may ignore cancellation and create a session after the caller leaves.
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`insert into auth.sessions values('${session}','${owner}',null);`);
+const lateRecoveryJwt=await new SignJWT({session_id:session,role:'authenticated',is_anonymous:false,amr:[{method:'recovery',timestamp:Math.floor(Date.now()/1000)}]}).setProtectedHeader({alg:'ES256',kid:'rehearsal'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
+let releaseLateRecovery,markLateStarted,markLateConfirmed,lateUpdates=0;
+const lateStarted=new Promise(resolve=>markLateStarted=resolve),lateConfirmed=new Promise(resolve=>markLateConfirmed=resolve);
+deleteInitialSession=true;initialRevoked=true;
+const lateProvider=createRecoveryProvider({
+ exchange:()=>{markLateStarted();return new Promise(resolve=>releaseLateRecovery=resolve);},
+ updatePassword:async()=>{lateUpdates++;return true;},
+ revoke:(jwt,scope,abort)=>initialHttp.revoke(jwt,scope,abort),
+},initialVerifier,{async confirm(ownerId,sessionId,abort){const result=await presence.confirm(ownerId,sessionId,abort);markLateConfirmed(result);return result;}});
+const lateRecovery=createAccountRecovery(security,lateProvider),lateFlow=security.callbacks.begin('recovery'),lateController=new AbortController();
+const lateWork=lateRecovery.complete(new Request(lateFlow.callbackUrl+'&code=synthetic',{headers:{cookie:lateFlow.cookie.split(';')[0]}}),lateController.signal);
+await lateStarted;lateController.abort();assert.deepEqual(await lateWork,{status:'unavailable'});
+releaseLateRecovery({access_token:lateRecoveryJwt,token_type:'bearer'});
+let lateTimer;
+try{assert.deepEqual(await Promise.race([lateConfirmed,new Promise((_,reject)=>{lateTimer=setTimeout(()=>reject(Error('Late cleanup unconfirmed')),8000);})]),{status:'revoked',ownerId:owner,sessionId:session});}finally{clearTimeout(lateTimer);}
+await new Promise(resolve=>setTimeout(resolve,0));assert.equal(lateRecovery.cleanupHeld(),false);assert.equal(lateUpdates,0);
+assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});
+console.log('Late canceled recovery PostgreSQL composition passed: independent cleanup identity verification, actual primary session deletion, no reset permission/update and no unnecessary cleanup hold.');

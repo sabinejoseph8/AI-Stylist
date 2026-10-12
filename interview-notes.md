@@ -1063,3 +1063,7 @@ I added the recovery callback delivery step so the reset grant becomes a reset-o
 ## Fixing recovery cleanup after a disconnect
 
 I tested signed callbacks over local HTTP, including a delayed reply after the client disconnected. This exposed a case where cancellation stopped identity verification too early for cleanup. I fixed it by verifying identity again using the cleanup operation, without restoring reset permission. The tests now confirm cleanup and no reset access; database verification of the new case is next.
+
+## Confirming the disconnect fix with primary data
+
+I reproduced the delayed recovery result after cancellation against a disposable database. The cleanup verified the signed identity, removed the test session and independently confirmed that removal. No password update or reset permission was granted. This confirms the local fix, while actual hosted provider and device acceptance remain open.

@@ -11,12 +11,12 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Accounts before styling | Sample UI and coordinator keep customer styling locked | Approved route activation with verified identity on all customer routes |
 | Password/registration | Bounded HTTP adapter, signed identity, initial encrypted ownership and isolated PostgreSQL composition; confirmation gives no cookie | Real project configuration, registration/email policy and delivery acceptance |
 | Google/Apple | Fixed authorization links, browser-bound one-use PKCE, HTTP exchange, signed identity and encrypted ownership with database restart protection | Actual credentials, callback allowlists, linking defaults and device/provider checks |
-| Recovery | Signed recent recovery-purpose verification, bounded HTTP request/exchange/update, one-use browser reset and actual primary-session cleanup composition with synthetic provider replies | Real email/reset acceptance, customer restart/cross-device decision and HTTPS browser checks |
+| Recovery | Signed recent recovery-purpose verification, bounded HTTP request/exchange/update, one-use browser reset and actual primary-session cleanup composition with synthetic provider replies | Callback delivery and late-cleanup verification now pass locally; real email/reset acceptance, customer restart/cross-device decision and HTTPS browser checks |
 | Refresh/cleanup | Actual isolated SQL ownership/fencing/restart tests, metadata reconciliation and key usage inventory | Hosted Auth schema/configuration, real concurrency/disconnect checks and operational recovery policy |
 | Sign-out | Stored revocation port, HTTP cookie clearing and actual primary absence composition; accepted-only logout stays unconfirmed | Actual provider/session policy and device/concurrent sign-out acceptance |
 | Accessibility | Original eight-step account and seven-step reset reviews accepted | Physical iPhone, screen reader, zoom and complete accessibility acceptance |
 | Identity linking | Owner derives from signed user ID; no app email-based merging | Provider-default audit and business decision on customer linking behavior |
-| Phase exit | 468 foundation tests across 61 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
+| Phase exit | 482 foundation tests across 64 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
 
 All provider operations in these tests are synthetic. Actual isolated PostgreSQL evidence is not hosted Supabase acceptance. No account route, real sign-in, email or password change has been activated.
 
@@ -365,3 +365,9 @@ The recovery disconnect test exposed an unnecessary unresolved-cleanup hold: can
 All 482 foundation tests across 64 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
 
 Exact next action: extend the isolated recovery database rehearsal with the canceled/late result case and rerun it, then update private Memory from the 468-test checkpoint. Task 2c and hosted/device gates remain open.
+
+## Late recovery cleanup database verification, 12 October 2026
+
+Extended the actual isolated PostgreSQL rehearsal with a canceled caller and delayed recovery result. Cleanup verifies the signed identity with its independent signal, invokes scoped synthetic logout, and confirms actual primary-session deletion. No password update or reset permission occurs, and cleanup does not remain unnecessarily held. The full ownership rehearsal passes and disposable containers/volumes were verified removed. Provider replies remain synthetic; no hosted changes occurred. Foundation evidence remains 482 passing tests, type checking and build.
+
+Next authorized local work: prepare the missing OAuth initiation HTTP boundary, then compose disabled account handlers into an explicit route factory. Do not register real account routes or configure providers. Task 2c remains open.

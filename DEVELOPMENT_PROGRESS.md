@@ -2,9 +2,9 @@
 
 ## Current private Memory publication
 
-Private Memory publication succeeded with the 468-test checkpoint and recovery HTTP/browser/database composition. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 3348bcfabe803133132827f099d538a613765666; deployment appgdep_6acc68a64aa48191996a3cca2b7d4f9a; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_fe8d7e7bcd4881918a1280f9d1a8ecfa. Task 2c stays open.
+Private Memory publication succeeded with the 482-test checkpoint, signed callback delivery and late-recovery database cleanup fix. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 38faf6a604d4916150e7d709421e716cede61a22; deployment appgdep_6acc6b7b21608191a7c17b718de5783a; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_76ad037345088191a1444cf9259f9920. Task 2c stays open.
 
-Exact next action: extend isolated PostgreSQL recovery composition with late canceled results, verify cleanup identity correlation, then publish private Memory.
+Exact next action: prepare the same-origin OAuth initiation HTTP boundary, then compose explicit disabled account routes; preserve activation gates.
 
 ## Previous publication checkpoint (historical)
 
@@ -26,7 +26,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password, OAuth, recovery and sign-out compose with generated signed identities and actual isolated PostgreSQL authority using synthetic provider responses. Recovery checks signed purpose, permits one browser-bound reset, issues no account cookie and requires primary session-removal proof. Real configuration, restart/cross-device policy, HTTPS/device/accessibility acceptance and Phase 1/hosted gates remain open. No real sign-in, emails, password changes or paid calls were activated.
+Task 2c local account preparation is active. All 482 foundation tests across 64 files, type checking and build pass. Signed OAuth/recovery callbacks now have actual local HTTP delivery and disconnect checks. Password, OAuth, recovery and sign-out have isolated PostgreSQL composition with synthetic provider replies. The late-recovery cleanup fix is verified against primary-session deletion without reset access. Real configuration, restart/cross-device policy, HTTPS/device/accessibility acceptance and Phase 1/hosted gates remain open. No real account routes, emails or paid calls were activated.
 
 ## Completed evidence
 
@@ -1629,3 +1629,9 @@ The recovery disconnect test exposed an unnecessary unresolved-cleanup hold: can
 All 482 foundation tests across 64 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
 
 Exact next action: extend the isolated recovery database rehearsal with the canceled/late result case and rerun it, then update private Memory from the 468-test checkpoint. Task 2c and hosted/device gates remain open.
+
+## Late recovery cleanup database verification, 12 October 2026
+
+Extended the actual isolated PostgreSQL rehearsal with a canceled caller and delayed recovery result. Cleanup verifies the signed identity with its independent signal, invokes scoped synthetic logout, and confirms actual primary-session deletion. No password update or reset permission occurs, and cleanup does not remain unnecessarily held. The full ownership rehearsal passes and disposable containers/volumes were verified removed. Provider replies remain synthetic; no hosted changes occurred. Foundation evidence remains 482 passing tests, type checking and build.
+
+Next authorized local work: prepare the missing OAuth initiation HTTP boundary, then compose disabled account handlers into an explicit route factory. Do not register real account routes or configure providers. Task 2c remains open.
