@@ -1904,3 +1904,11 @@ Observed the existing AI Stylist dashboard directly, without changing or saving 
 The tested application-owned seven-day absolute deadline is distinct from the provider's currently unbounded session setting. No claim is made that Supabase itself has been configured to seven days. Customer account activation remains gated; no real sign-in, email, credential access or hosted mutation occurred. Current provider observations replace assumptions about enabled methods and make the remaining Google/Apple setup explicit.
 
 Next: obtain authorization for the prepared Render inquiry, resolve ingress/logging guarantees, then select the working HTTPS origin and production sender before configuring callbacks. Inspect hosted automatic-linking behavior before proposing its customer policy. Preserve approved account scope and spending; do not treat existing email-provider enablement as delivery acceptance.
+
+## Identity-linking boundary and pending policy, 12 October 2026
+
+Reviewed Supabase's primary identity-linking documentation and prepared docs/account-linking-decision.md. Automatic matching-email linking is distinct from the disabled manual-linking setting. Proposed accepting the documented provider behavior while keeping manual linking and application-driven merges disabled; Sabine's customer-policy decision is pending. No social provider was enabled and no data merged.
+
+Added a focused OAuth adapter regression with misleading user ID, email and identities metadata. Only accessToken and refreshSecret reach the verified session stager; ownership remains derived from signed identity/current session. All 623 tests across 94 files, type checking and build pass (/private/tmp/ai-stylist-identity-metadata-tests.log). This does not prove live provider linking or close P2-06.
+
+Next required actions: Sabine's linking-policy choice and authorization for the prepared Render support inquiry. Hosted origin/sender/social credentials and real provider/isolation/device checks remain open. Preserve later-phase dependencies and spending. Do not manufacture additional feature work past those boundaries or claim activation from adapter tests.

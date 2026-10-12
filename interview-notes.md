@@ -1317,3 +1317,7 @@ I updated the private project Memory with the tested runtime and transport work.
 ## Separating application and provider session policy
 
 I inspected the live account settings without changing them. Email confirmation is on, Google and Apple still need setup, and provider sessions are not time-boxed. I documented that my tested seven-day application deadline is separate from Supabase's provider setting, so the evidence does not overstate hosted readiness.
+
+## Defining account linking before launch
+
+I separated Supabase's automatic linking behavior from its manual-linking switch and prepared a clear MVP policy for review. I added a regression showing that returned email and user metadata never determine application ownership. I kept that narrow evidence separate from real provider security acceptance.

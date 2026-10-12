@@ -36,3 +36,10 @@ it('retains cleanup ownership for a late provider session after cancellation',as
  const result=await provider.exchange(input,stop.signal);expect(stage).toHaveBeenCalled();
  if(!('discard' in result))throw Error('Missing cleanup');await result.discard(signal());expect(discard).toHaveBeenCalledOnce();
 });
+
+it('never passes returned email or user metadata to session ownership staging',async()=>{
+ const stage=vi.fn(async()=>({accessToken:'fixture',adopt:async()=>true,discard:async()=>true}));
+ const provider=createOAuthProvider({exchange:async()=>({access_token:'fixture',refresh_token:'secret',token_type:'bearer',user:{id:'untrusted-other-owner',email:'same@example.test',email_confirmed_at:'untrusted'},ownerId:'untrusted-other-owner',identities:[{email:'same@example.test'}]}),revoke:async()=>true},{stage});
+ await provider.exchange(input,signal());
+ expect(stage).toHaveBeenCalledExactlyOnceWith({accessToken:'fixture',refreshSecret:'secret'},expect.any(AbortSignal));
+});
