@@ -132,3 +132,9 @@ Next: prepare separate connected account/reset browser entry and strictly bounde
 ## Private Memory synchronized to combined account acceptance, 12 October 2026
 
 Owner-private publication succeeded with its one-user/no-group audience and MCP preserved. All 16 site checks and artifact validation passed. Source 9471cb4d572de8600085a264e4565d7c37ad47cf; deployment appgdep_6acc980aa18c819197abe9625dba4e57; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_f428658312108191936f6867a5a284f8. The site now includes connected build/static delivery, bounded loader/network lifecycle, 578-test evidence and combined HTTPS/WebKit/PostgreSQL rehearsal. No task was marked complete by publication.
+
+## Private Memory synchronized to 587-test checkpoint, 12 October 2026
+
+Owner-private publication succeeded with the existing one-user/no-group audience and MCP preserved. All 16 site checks and artifact validation passed. Source 8ded04a7e3e8b66817e75f90a890846c46f41d99; deployment appgdep_6acc9a9ad5648191bdd3a0c87c169f6d; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_0995d9d029108191a0cc8d26f232f7ed. The site includes explicit runtime settings, shutdown preparation and 587-test evidence. No task was marked complete by publication.
+
+Next action: continue authorized independent account acceptance work; implement the customer session contract after Sabine answers the pending duration question. Production sender/origin, social credentials/linking, hosted customer isolation and physical-device/accessibility gates remain open.

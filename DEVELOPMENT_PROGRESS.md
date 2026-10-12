@@ -2061,3 +2061,9 @@ Next action: continue independent deployment preparation while the sign-in durat
 Prepared attachAccountShutdown for explicitly supplied process signals and the existing network lifecycle. It starts no accounts or listener, never exits the process, coalesces repeated termination signals, waits for actual network cleanup and reports false for rejected or unconfirmed closure. It removes only its own listeners; reporting failure cannot change cleanup evidence. Deployment still owns activation and exit behavior.
 
 Four focused checks pass. All 587 foundation tests across 86 files, type checking and the two-entry build pass. The initial sandbox run could not complete local socket checks and was stopped; the permitted run passed. No hosted setting, customer account, email or paid request changed. Session duration remains pending. Exact next action: compose the explicit deployment startup once session policy is approved; continue independent acceptance work meanwhile. Private Memory still publishes the 578-test checkpoint and needs consolidated settings/shutdown evidence.
+
+## Private Memory synchronized to 587-test checkpoint, 12 October 2026
+
+Owner-private publication succeeded with the existing one-user/no-group audience and MCP preserved. All 16 site checks and artifact validation passed. Source 8ded04a7e3e8b66817e75f90a890846c46f41d99; deployment appgdep_6acc9a9ad5648191bdd3a0c87c169f6d; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_0995d9d029108191a0cc8d26f232f7ed. The site includes explicit runtime settings, shutdown preparation and 587-test evidence. No task was marked complete by publication.
+
+Next action: continue authorized independent account acceptance work; implement the customer session contract after Sabine answers the pending duration question. Production sender/origin, social credentials/linking, hosted customer isolation and physical-device/accessibility gates remain open.
