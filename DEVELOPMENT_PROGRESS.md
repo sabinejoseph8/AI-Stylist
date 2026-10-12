@@ -2248,3 +2248,10 @@ Exact next action: obtain the still-pending authorization for the prepared Rende
 Sabine explicitly authorized sending the prepared technical questions to Render support. Opened the signed-in Render dashboard and official contact page. The dashboard navigation exposed no support form; the official contact page lists support@render.com. Attempted the existing Mail application as the alternate route, but macOS Computer Use permissions were not granted. No inquiry was submitted, no email content was entered, and no credentials or customer data were transmitted.
 
 Exact next action: Sabine grants Accessibility and Screen Recording to ChatGPT through its Computer Use permission window, or sends the prepared inquiry herself to support@render.com. Once access is available, send the already-authorized draft and verify Sent status. Authorization no longer blocks sending; local application access does. Existing hosted activation and spending limits remain unchanged.
+
+
+## Render inquiry sent by Sabine, 12 October 2026
+
+Sabine confirmed she sent the prepared ingress-header and recovery/OAuth logging questions to support@render.com. This is user-reported submission, not an independently verified delivery receipt. Render's response is pending. Local Mail permissions no longer block submission. No platform guarantee, hosted activation, additional spending or task completion follows from sending the inquiry.
+
+Next action: review Render's reply when Sabine shares it, record the verified ingress/logging contract, and perform the required synthetic checks before real customer account activation. Existing origin, sender, social-provider credentials and live security/manual acceptance gates remain open.

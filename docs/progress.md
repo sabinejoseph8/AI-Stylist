@@ -2636,3 +2636,10 @@ Next required actions: Sabine's linking-policy choice and authorization for the 
 Sabine approved Supabase automatic linking for Google or Apple identities using the same verified email. Manual linking and application-driven account merging remain disabled. Ownership continues to use the verified identity ID and current session, never email matching in application code. Different provider or Apple relay emails are not promised the same account. See docs/account-linking-decision.md for required live security acceptance.
 
 This resolves the linking-policy decision only. Hosted Google/Apple providers remain disabled; no account merge, credential change, paid call or hosted activation occurred. Real matching-email, unconfirmed-account, callback replay and second-customer database/Storage isolation checks remain required. Existing 623-test evidence is unchanged; this documentation-only update does not add test evidence.
+
+
+## Render inquiry sent by Sabine, 12 October 2026
+
+Sabine confirmed she sent the prepared ingress-header and recovery/OAuth logging questions to support@render.com. This is user-reported submission, not an independently verified delivery receipt. Render's response is pending. Local Mail permissions no longer block submission. No platform guarantee, hosted activation, additional spending or task completion follows from sending the inquiry.
+
+Next action: review Render's reply when Sabine shares it, record the verified ingress/logging contract, and perform the required synthetic checks before real customer account activation. Existing origin, sender, social-provider credentials and live security/manual acceptance gates remain open.

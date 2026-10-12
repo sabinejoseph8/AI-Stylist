@@ -23,7 +23,7 @@ The current transport guard requires independently established proxy trust. A pr
 
 ## Prepared support inquiry
 
-Authorized by Sabine on 12 October 2026. Not sent: the signed-in dashboard exposed no support form, and macOS denied Mail access because Computer Use permissions are not granted. Render's official contact page confirms support@render.com as the support address. Do not report this inquiry as submitted.
+Authorized by Sabine and sent by her on 12 October 2026. Sabine confirmed “sent” in chat. Recipient: support@render.com. Awaiting reply; no ticket ID or delivery receipt was supplied. The earlier Mail permission blocker no longer prevents submission because Sabine sent the email herself. Platform guarantees remain unverified until the response and applicable checks are reviewed.
 
 Subject: Account recovery/OAuth URL logging and trusted ingress headers
 
