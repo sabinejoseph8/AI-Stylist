@@ -4,7 +4,7 @@ export function createAccountStatusTransport(origin:string,send:typeof fetch,dea
  const base=new URL(origin);if(base.protocol!=='https:'||base.origin!==origin||typeof send!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>15000)throw Error('Account unavailable');
  let pending=0;
  async function call(path:string,input:unknown,external:AbortSignal):Promise<{status:string;http:number;expiresAt?:number}>{
-  if(!['/api/account/password','/api/account/recover','/api/account/sign-out','/api/account/reset','/api/account/reset-ready'].includes(path)||external.aborted||pending>=4)throw Error('Account unavailable');pending++;
+  if(!['/api/account/session','/api/account/refresh','/api/account/password','/api/account/recover','/api/account/sign-out','/api/account/reset','/api/account/reset-ready'].includes(path)||external.aborted||pending>=4)throw Error('Account unavailable');pending++;
   const controller=new AbortController();let body:ReadableStream<Uint8Array>|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined,timer:ReturnType<typeof setTimeout>|undefined;let abort!:()=>void;
   const canceled=new Promise<never>((_,reject)=>{abort=()=>{controller.abort();if(reader)void reader.cancel().catch(()=>{});reject(Error('Account unavailable'));};external.addEventListener('abort',abort,{once:true});timer=setTimeout(abort,deadlineMs);});
   const work=(async()=>{

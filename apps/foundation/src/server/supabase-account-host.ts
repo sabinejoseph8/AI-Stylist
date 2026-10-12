@@ -1,3 +1,4 @@
+import {createAccountSessionStatus} from './account-session-status.ts';
 import {createAccountResourceIdentity} from './account-resource-identity.ts';
 import {createAuthKeys} from './auth-keys.ts';
 import {createAuthSessionAuthority} from './auth-session.ts';
@@ -47,6 +48,7 @@ export function createSupabaseAccountHost(options:SupabaseAccountHostOptions){
  const stager=createInitialSessionStager(store,verifier,initialExpiry,revoke);
  const rotation=createRefreshRotation(store,createRefreshProvider({refresh:refreshHttp.refresh,revoke:async(jwt,_scope,signal)=>({status:await revoke(jwt,signal)?'accepted':'unconfirmed'})},rotatedExpiry));
  const recoveryOperations={exchange:recoveryHttp.exchange,updatePassword:recoveryHttp.updatePassword,revoke:scopedRevoke};
+ const authorizeResource=createAccountResourceIdentity(security.authorize,store);
  const accounts=createAccountComposition(options.appOrigin,options.projectUrl,security,{
   password:createPasswordProvider({password:passwordHttp.password,revoke:scopedRevoke},stager),
   exchange:createOAuthProvider({exchange:passwordHttp.exchange,revoke:scopedRevoke},stager),
@@ -55,6 +57,7 @@ export function createSupabaseAccountHost(options:SupabaseAccountHostOptions){
   recovery:createRecoveryProvider(recoveryOperations,verifier,presence),
   tokenRecovery:createRecoveryTokenProvider({...recoveryOperations,verifyRecoveryToken:recoveryHttp.verifyRecoveryToken},verifier,presence),
   recoveryRequest:{request:recoveryHttp.request},
+  sessionStatus:{handle:createAccountSessionStatus(options.appOrigin,authorizeResource)},
  });
- return Object.freeze({...createAccountHost(options.appOrigin,accounts,rpc),authorizeResource:createAccountResourceIdentity(security.authorize,store)});
+ return Object.freeze({...createAccountHost(options.appOrigin,accounts,rpc),authorizeResource});
 }

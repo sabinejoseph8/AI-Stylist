@@ -2562,3 +2562,13 @@ Expanded the actual HTTPS/WebKit/disposable PostgreSQL account journey to invoke
 The full isolated ownership/restart/fencing and combined browser rehearsal passed. All resources were cleaned up; no stylist-refresh container or volume remains. The foundation code is unchanged in this checkpoint; its recorded 598-test/typecheck/build result remains the latest suite. Auth and maintenance HTTP replies remain synthetic, and no customer-resource route is activated. This does not establish hosted isolation or all-route integration.
 
 Exact next action: add a bounded account session-status endpoint backed by authorizeResource, then connect explicit browser session restoration and refresh only when needed. Test page reload/browser replacement, no cookie exposure or local storage, cancellation/sign-out races and absolute seven-day expiry. Preserve all real-provider/device/phase gates and existing financial limits.
+
+## Session restoration preparation, 12 October 2026
+
+Prepared POST /api/account/session with an empty JSON body, same-origin cookie boundary, shared hosted admission and shutdown cancellation. It returns only signedIn or signedOut after durable resource authorization and a final current-session check. No tokens or customer identifiers are returned. Customer account hosting remains inactive.
+
+Prepared a browser restoration helper: check status, attempt refresh once only after an explicit signedOut response, and independently recheck status. Ambiguous refresh outcomes stop without retry. The helper stores no credentials and starts no background polling. It is not yet mounted in the account UI.
+
+Validation: 606 foundation tests, TypeScript checking and production build pass with loopback permission. The first sandbox-only run could not run network checks; the permitted run is the evidence. New tests cover status-only output, origin/input refusal, revoked access, cancellation, bounded refresh and independent confirmation. These are simulated service tests, not real customer acceptance.
+
+Next action: integrate restoration into the connected account flow with cancellation and sign-out race protection, then extend the isolated HTTPS/browser/database rehearsal. Keep the seven-day absolute deadline unchanged. Existing hosted activation, SMTP/social credentials, Phase 1 and spending gates remain open. No new customer or paid provider calls were made.

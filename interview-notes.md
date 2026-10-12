@@ -1285,3 +1285,7 @@ I prepared a resource-access guard that requires a current signed identity and r
 ## Proving session expiry blocks resource access
 
 I extended the combined database/browser rehearsal to verify the actual resource guard. Expired and quarantined records blocked access; expired access tokens could refresh without authorizing resources; sign-out invalidated existing resource permission. The checks used disposable data and synthetic Auth, so hosted customer isolation remains a separate gate.
+
+## Preparing safe session restoration
+
+I chose a fixed seven-day sign-in window. I added a status check that reveals no customer details and requires the saved session to remain valid. I prepared one refresh attempt followed by another status check, so an uncertain refresh cannot silently become a successful sign-in. Browser integration and hosted acceptance are still pending.

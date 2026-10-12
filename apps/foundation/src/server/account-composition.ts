@@ -26,6 +26,7 @@ import type {AccountNodeRoute} from './account-node.ts';
 export function createAccountComposition(origin:string,projectUrl:string,security:ReturnType<typeof createAccountSecurity>,ports:Readonly<{
  password:PasswordAccountPort;exchange:AccountExchangePort;refresh:AccountRefreshPort;
  signOut:AccountRevocationPort;recovery:RecoveryPort;recoveryRequest:RecoveryRequestPort;
+ sessionStatus?:AccountNodeRoute;
  tokenRecovery?:Parameters<typeof createTokenRecoveryOwner>[0];
 }>){
  const sessions=createAccountSessions(security,origin);
@@ -57,6 +58,7 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
   prepared.set('/account/recovery',{handle:async(request,signal)=>confirmationHttp.landing(request,signal)});
   prepared.set('/api/account/recovery-confirm',{handle:confirmationHttp.confirm,discardResponse:confirmationHttp.discardResponse});
  }
+ if(ports.sessionStatus)prepared.set('/api/account/session',ports.sessionStatus);
  prepared.set('/api/account/reset-ready',{handle:createRecoveryReadinessHttp(origin,browser)});
  for(const [path,route] of prepared)routes.set(path,Object.freeze({
   discardResponse:route.discardResponse,
