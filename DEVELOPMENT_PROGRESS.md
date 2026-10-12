@@ -4,7 +4,7 @@
 
 Private Memory updated successfully on 11 October 2026 (America/Cayman) with the 443-test checkpoint, password HTTP/database composition, durable sign-out evidence and remaining activation gates. All 16 website checks and artifact validation passed. Owner-only access and MCP preserved. Source 2fe7abc3b4cc4d29612b808dbf200edfb3e1468b; deployment appgdep_6acc6333ed80819188082b135948adb5; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_4e0b0a1438f4819189007362056de737. Task 2c and phase gates remain open.
 
-Exact next action: prepare bounded PKCE code-exchange HTTP transport and compose with verified initial session ownership using synthetic provider responses. No real provider setup, credentials or paid calls are authorized by this update.
+Exact next action: compose the prepared OAuth code exchange with actual isolated PostgreSQL refresh ownership, then publish the newer private Memory checkpoint. No real provider setup, credentials or paid calls are authorized by this update.
 
 ## Previous publication checkpoint (historical)
 
@@ -1551,3 +1551,11 @@ Prepared fixed-destination Google and Apple authorization links with browser-bou
 Exact next action: prepare the bounded PKCE code-exchange HTTP transport, then compose it with verified initial session ownership using synthetic provider responses. Full-suite evidence is recorded in DEVELOPMENT_PROGRESS.md after completion.
 
 Verification: all 446 foundation tests across 57 files, type checking and build pass. The restricted run could not use loopback listeners; the authorized loopback-capable run passed. Latest private Memory publication remains the 443-test checkpoint and needs this incremental update.
+
+## Local OAuth exchange preparation
+
+Prepared PKCE code exchange through the existing bounded Supabase HTTP transport. Only auth_code and code_verifier are sent to the fixed token endpoint; requests refuse redirects and browser cookies. Google and Apple reuse shared token normalization, initial-session staging and late-result cleanup. Five new synthetic tests cover request validation, malformed responses, late canceled results and the composed browser-bound callback to verified cookie preparation. All 451 foundation tests across 58 files, type checking and build pass. No real provider, credentials, account route or hosted settings were activated. Database composition of this OAuth path remains pending, and Task 2c stays open.
+
+Next action: compose OAuth code exchange with the actual isolated PostgreSQL refresh-ownership store and confirm failed adoption and callback replay cannot issue access. Then update the private Memory publication, currently at 443 tests.
+
+Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (_exchangeCodeForSession). The reviewed upstream source is not a pinned installed SDK or evidence of live compatibility.

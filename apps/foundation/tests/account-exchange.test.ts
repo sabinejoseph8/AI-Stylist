@@ -2,6 +2,8 @@ import {describe,it,expect,vi,afterEach} from 'vitest';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {createAccountExchange,type PendingAccountSession} from '../src/server/account-exchange.ts';
+import {createPasswordProviderHttp} from '../src/server/password-provider-http.ts';
+import {createOAuthProvider} from '../src/server/oauth-provider.ts';
 const origin='https://stylist.example',project='https://example.supabase.co';
 const owner='11111111-1111-4111-8111-111111111111',sessionId='22222222-2222-4222-8222-222222222222';
 const signal=()=>new AbortController().signal;
@@ -13,6 +15,20 @@ async function fixture(){
  return {security,token,begin};
 }
 describe('prepared callback exchange orchestration',()=>{
+ it('composes bound callback, PKCE transport, staging and verified cookie issuance',async()=>{
+  const f=await fixture(),adopt=vi.fn(async()=>true),discard=vi.fn(async()=>true);
+  const fetcher=vi.fn(async(_url:string,_init:RequestInit)=>Response.json({access_token:f.token,refresh_token:'synthetic-refresh',token_type:'bearer'}));
+  const http=createPasswordProviderHttp(project,'synthetic-server-key-only',fetcher);
+  const stage=vi.fn(async()=>({accessToken:f.token,adopt,discard}));
+  const service=createAccountExchange(f.security,origin,createOAuthProvider(http,{stage}));
+  const a=f.begin('apple'),result=await service.complete(a.request,'apple',signal());
+  expect(result.status).toBe('ready');expect(adopt).toHaveBeenCalledOnce();
+  expect(fetcher.mock.calls[0][0]).toBe(project+'/auth/v1/token?grant_type=pkce');
+  expect(JSON.parse(fetcher.mock.calls[0][1].body as string)).toEqual({auth_code:'fixture-code',code_verifier:expect.stringMatching(/^[A-Za-z0-9_-]{43}$/)});
+  expect(await service.complete(a.request,'apple',signal())).toEqual({status:'unavailable'});expect(fetcher).toHaveBeenCalledOnce();
+  if(result.status!=='ready')throw Error('Missing verified result');
+  expect(result.userId).toBe(owner);expect(result.setCookies[1]).toContain('Max-Age=0');expect(await result.discard()).toBe(true);
+ });
  afterEach(()=>vi.useRealTimers());
  it('exchanges one bound code, verifies identity and prepares header-only cookies',async()=>{
   const f=await fixture(),discard=vi.fn(async()=>true),exchange=vi.fn(async(_input:unknown,_signal:AbortSignal)=>({accessToken:f.token,discard}));

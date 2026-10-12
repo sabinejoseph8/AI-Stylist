@@ -1643,3 +1643,11 @@ Exact next action: consolidate private Memory with the complete 443-test account
 Prepared fixed-destination Google and Apple authorization links with browser-bound, one-use PKCE transactions. Three focused synthetic checks pass: both providers round-trip through the existing callback validator, missing browser binding and replay fail, and external destinations/return paths are rejected. No route, credentials, real sign-in or hosted configuration was activated. This does not prove provider compatibility or complete Task 2c.
 
 Exact next action: prepare the bounded PKCE code-exchange HTTP transport, then compose it with verified initial session ownership using synthetic provider responses. Full-suite evidence is recorded in DEVELOPMENT_PROGRESS.md after completion.
+
+## Local OAuth exchange preparation
+
+Prepared PKCE code exchange through the existing bounded Supabase HTTP transport. Only auth_code and code_verifier are sent to the fixed token endpoint; requests refuse redirects and browser cookies. Google and Apple reuse shared token normalization, initial-session staging and late-result cleanup. Five new synthetic tests cover request validation, malformed responses, late canceled results and the composed browser-bound callback to verified cookie preparation. All 451 foundation tests across 58 files, type checking and build pass. No real provider, credentials, account route or hosted settings were activated. Database composition of this OAuth path remains pending, and Task 2c stays open.
+
+Next action: compose OAuth code exchange with the actual isolated PostgreSQL refresh-ownership store and confirm failed adoption and callback replay cannot issue access. Then update the private Memory publication, currently at 443 tests.
+
+Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (_exchangeCodeForSession). The reviewed upstream source is not a pinned installed SDK or evidence of live compatibility.

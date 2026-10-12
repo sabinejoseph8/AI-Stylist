@@ -1023,3 +1023,7 @@ I verified the prepared sign-out flow against an isolated database. A successful
 ## Preparing secure social sign-in
 
 I prepared Google and Apple sign-in links so each callback is tied to the browser that started it and cannot be replayed. I kept real provider connections disabled while checking the local behavior with synthetic responses. The remaining work includes the code exchange, real provider configuration and device acceptance.
+
+## Connecting the prepared social sign-in steps
+
+I connected the simulated social sign-in callback to the code exchange and the same session validation used for password sign-in. This reduced duplicate security logic. I checked that malformed responses cannot create access, replayed callbacks fail, and late responses after cancellation retain cleanup ownership. I still need database composition and real provider/device acceptance before calling sign-in complete.

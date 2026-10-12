@@ -1,4 +1,5 @@
 import type {PasswordAccountRequest} from './password-account.ts';
+import type {AccountExchangePort} from './account-exchange.ts';
 import type {SupabaseFetch,SupabaseFetchResponse} from './supabase-rpc.ts';
 /** Disabled transport boundary. No key is read from the environment and no route calls this by default. */
 export function createPasswordProviderHttp(projectUrl:string,serviceKey:string,fetcher:SupabaseFetch,deadlineMs=8000){
@@ -11,15 +12,19 @@ export function createPasswordProviderHttp(projectUrl:string,serviceKey:string,f
  if(typeof serviceKey!=='string'||serviceKey.length<20||serviceKey.length>8192||/[\r\n\s]/.test(serviceKey)||
   typeof fetcher!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)
   throw Error('Supabase configuration unavailable');
+ type ExchangeInput=Parameters<AccountExchangePort['exchange']>[0];
  let pending=0;
- async function request(operation:'signIn'|'signUp'|'revoke',credential:string|PasswordAccountRequest,external:AbortSignal):Promise<unknown>{
+ async function request(operation:'signIn'|'signUp'|'revoke'|'exchange',credential:string|PasswordAccountRequest|ExchangeInput,external:AbortSignal):Promise<unknown>{
   if(external?.aborted||pending>=4)throw Error('Supabase operation unavailable');
   if(operation==='revoke'){
    if(typeof credential!=='string'||credential.length<1||Buffer.byteLength(credential,'utf8')>8192||/[\s\u0000-\u001f\u007f]/.test(credential))throw Error('Supabase operation unavailable');
+  }else if(operation==='exchange'){
+   const value=credential as ExchangeInput;
+   if(!value||!['google','apple'].includes(value.purpose)||typeof value.code!=='string'||!/^[-._~A-Za-z0-9]{1,2048}$/.test(value.code)||typeof value.verifier!=='string'||!/^[-_A-Za-z0-9]{43}$/.test(value.verifier))throw Error('Supabase operation unavailable');
   }else{
-   if(!credential||typeof credential!=='object'||credential.method!==operation||typeof credential.email!=='string'||credential.email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credential.email)||typeof credential.password!=='string'||credential.password.length<1||credential.password.length>4096)throw Error('Supabase operation unavailable');
+   if(!credential||typeof credential!=='object'||!('method' in credential)||credential.method!==operation||typeof credential.email!=='string'||credential.email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(credential.email)||typeof credential.password!=='string'||credential.password.length<1||credential.password.length>4096)throw Error('Supabase operation unavailable');
   }
-  const body=typeof credential==='object'?JSON.stringify({email:credential.email,password:credential.password}):undefined;
+  const body=typeof credential==='object'?(operation==='exchange'?JSON.stringify({auth_code:(credential as ExchangeInput).code,code_verifier:(credential as ExchangeInput).verifier}):JSON.stringify({email:(credential as PasswordAccountRequest).email,password:(credential as PasswordAccountRequest).password})):undefined;
   pending++;let fetchSettled=false,finished=false,cleanupSettled=true,released=false;
   const release=()=>{if(finished&&fetchSettled&&cleanupSettled&&!released){released=true;pending--;}};
   const cancel=(resource:{cancel():Promise<unknown>}|null|undefined)=>{if(!resource)return;cleanupSettled=false;try{void resource.cancel().then(()=>{cleanupSettled=true;release();},()=>{});}catch{}};
@@ -28,7 +33,7 @@ export function createPasswordProviderHttp(projectUrl:string,serviceKey:string,f
   let stop!:()=>void;
   const timeout=new Promise<never>((_,reject)=>{stop=()=>{controller.abort();reject(Error('deadline'));};timer=setTimeout(stop,deadlineMs);external?.addEventListener('abort',stop,{once:true});});
   try{
-   const request=Promise.resolve().then(()=>{if(controller.signal.aborted)throw Error();return fetcher(new URL(operation==='signIn'?'/auth/v1/token?grant_type=password':operation==='signUp'?'/auth/v1/signup':'/auth/v1/logout?scope=local',target).toString(),{
+   const request=Promise.resolve().then(()=>{if(controller.signal.aborted)throw Error();return fetcher(new URL(operation==='signIn'?'/auth/v1/token?grant_type=password':operation==='signUp'?'/auth/v1/signup':operation==='exchange'?'/auth/v1/token?grant_type=pkce':'/auth/v1/logout?scope=local',target).toString(),{
     method:'POST',redirect:'error',credentials:'omit',signal:controller.signal,
     headers:{apikey:serviceKey,authorization:`Bearer ${operation==='revoke'?credential:serviceKey}`,'content-type':'application/json',accept:'application/json'},body,
    });}).then(response=>{
@@ -61,6 +66,7 @@ export function createPasswordProviderHttp(projectUrl:string,serviceKey:string,f
   }
  }
  return Object.freeze({
+  exchange(input:ExchangeInput,signal:AbortSignal){return request('exchange',input,signal);},
   password(input:PasswordAccountRequest,signal:AbortSignal){
    if(!input||!['signIn','signUp'].includes(input.method))return Promise.reject(Error('Supabase operation unavailable'));
    return request(input.method,input,signal);
