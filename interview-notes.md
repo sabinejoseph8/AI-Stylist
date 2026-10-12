@@ -782,3 +782,8 @@ I prepared cookie creation only after identity and current-session checks succee
 ### Protecting account callbacks
 
 I prepared short-lived browser-bound sign-in transactions with one-time use and PKCE. I tested replay, the wrong browser, expired links and unsafe return destinations. I kept recovery directed to password reset instead of treating a recovery link as permission to start styling. I recorded the remaining same-browser, restart and provider integration questions so local security checks would not be mistaken for verified customer sign-in.
+
+
+### Making account flows reviewable before connecting providers
+
+I added clearly labeled simulated account screens so I could review sign-in, registration, recovery and social handoffs without creating accounts or sending email. I kept the stylist disabled even when a sample sign-in succeeded. I checked the flows in the browser and cleared temporary password fields after submission. Real provider and phone acceptance remain separate checks.

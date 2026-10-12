@@ -53,3 +53,26 @@ The request parser allows only an exact configured origin and purpose-specific G
 All 257 foundation tests across 24 files, type checking and build pass. New checks cover challenge derivation, replay/concurrent winner, wrong browser/purpose, expiration/restart, admission bounds, safe return paths and hostile callback requests. No provider code was exchanged, actual OAuth state/redirect preservation verified or hosted setting changed. Same-browser recovery and process-restart UX need acceptance review before activation; cross-device recovery is not silently declared unsupported by the product. Actual Supabase flow-ID/version handling and Apple redirect behavior must be verified at integration.
 
 References: [Supabase PKCE flow](https://supabase.com/docs/guides/auth/sessions/pkce-flow), [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636.html). The prepared flow uses an application-owned browser transaction alongside provider code exchange; it is not a replacement for provider OAuth state validation.
+
+
+## Simulated local account screens
+
+Profile now displays an account panel, also reached by Preview account screens on Stylist. It uses approved design tokens and offers email/password, account creation, recovery, Google and Apple preview actions. Every screen states that only made-up details should be used, no account/email/provider connection is created and simulated sign-in never unlocks the stylist. Inputs are labeled, status uses a live region, errors use an alert, modes expose pressed state and pending/handoff work can be canceled. Password input clears after submission; sample sign-out clears local input fields. Leaving Profile cancels its controller and discards its local state. No browser storage or network provider is used.
+
+All 261 foundation tests across 25 files pass, with type checking and build. Static markup and simulated provider/controller checks cover the available methods and outcomes. Agent browser QA verified sample sign-in, sign-out, confirmation, recovery, both social handoffs and cancel in the actual local page, plus a desktop layout inspection. Sabine's visual review, narrow viewport, keyboard/screen-reader acceptance and real providers remain open; Task 2c is not complete. The existing loopback preview on port 4322 was reused after a duplicate start reported the port occupied; no second service was launched.
+
+
+### Complete local visual review instructions
+
+Use only made-up details at http://127.0.0.1:4322/ on this computer.
+
+1. Open Profile or select Preview account screens. Confirm the simulation notice is readable.
+2. Enter sample@example.test and a made-up password, then Preview sign-in. Confirm the message says no real account is connected.
+3. Sign out of sample account. Confirm inputs are cleared.
+4. Select Create account, enter the made-up details and preview account creation. Confirm no email was sent.
+5. Select Recover access, enter the made-up email and preview recovery. Confirm no email was sent.
+6. Select Sign in, preview Google and cancel, then preview Apple and cancel. No external page should open.
+7. Return to Stylist. The stylist must remain unavailable. Expand and collapse My Styling Notes.
+8. Refresh. Return to Profile and confirm the sample account and input details have been discarded.
+
+Report any unreadable labels, overlapping controls or unexpected behavior. These steps do not validate actual sign-in or email delivery.

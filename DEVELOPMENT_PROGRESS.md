@@ -884,3 +884,12 @@ Exact next action: publish/copy this callback checkpoint and refresh private Mem
 
 
 Callback checkpoint 582a4ea is pushed and copied. Private Memory source 837d55ac611e5cd35ced47020b515a93a419eb3a deployed successfully as appgdep_6acc39620ec881918125b6bb8e6fc79f. All 16 website checks pass; owner-only access and MCP remain. This snapshot includes request identity, cookie issuance and callback preparation with 257 foundation tests.
+
+
+## Simulated local account screens
+
+Profile now displays an account panel, also reached by Preview account screens on Stylist. It uses approved design tokens and offers email/password, account creation, recovery, Google and Apple preview actions. Every screen states that only made-up details should be used, no account/email/provider connection is created and simulated sign-in never unlocks the stylist. Inputs are labeled, status uses a live region, errors use an alert, modes expose pressed state and pending/handoff work can be canceled. Password input clears after submission; sample sign-out clears local input fields. Leaving Profile cancels its controller and discards its local state. No browser storage or network provider is used.
+
+All 261 foundation tests across 25 files pass, with type checking and build. Static markup and simulated provider/controller checks cover the available methods and outcomes. Agent browser QA verified sample sign-in, sign-out, confirmation, recovery, both social handoffs and cancel in the actual local page, plus a desktop layout inspection. Sabine's visual review, narrow viewport, keyboard/screen-reader acceptance and real providers remain open; Task 2c is not complete. The existing loopback preview on port 4322 was reused after a duplicate start reported the port occupied; no second service was launched.
+
+Exact next action: publish/copy local account UI checkpoint, then check narrow viewport, keyboard focus and accessible status in the preview. Provide Sabine the complete local visual review instructions once. While that review remains pending, continue independent local Task 2c integration tests and provider-independent account server interfaces. Private Memory currently reflects callback checkpoint 582a4ea; refresh after the next UI acceptance checkpoint. No hosted work or paid calls.
