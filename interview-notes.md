@@ -850,3 +850,8 @@ I prepared the reset HTTP boundary with same-origin checks, strict bounded JSON 
 ## Testing the full local password-reset response
 
 I verified the HTTP handler with the actual prepared recovery and browser-delivery owners. The response contains only status, clears reset permission in a header and creates no normal account access. A hostile request cannot consume the legitimate reset. All 324 foundation tests pass, with type checking and build. These are local simulated-provider tests; real server/browser and provider acceptance remain open.
+
+
+## Sharing account request protections
+
+I reused the tested bounded request handler for password sign-in instead of maintaining separate request protections. I verified that signed-in status contains no token or identity details, cookies stay in headers and failed or canceled delivery has an explicit session cleanup path. Registration confirmation cannot sign someone in. All 328 foundation tests pass, with type checking and build. Real provider transport, refresh-state adoption and hosted acceptance remain open.
