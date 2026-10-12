@@ -1,0 +1,34 @@
+{
+  "project_ref": "kwuhpuuqzbxvgjcejsow",
+  "date": "2026-10-12",
+  "method": "Supabase dashboard SQL editor",
+  "migrations": [
+    {
+      "file": "supabase/migrations/202610110001_customer_media_foundation.sql",
+      "sha256": "671aebb27827e9a50ee730d230d9aaa239e127262943a599c88d5f2d1a3287f0",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110002_private_image_bucket.sql",
+      "sha256": "d196802064eb1d962697977ec9039018c7107d55ecb7192c549bb28ebccec32f",
+      "status": "applied"
+    }
+  ],
+  "notes": [
+    "001 included an additional precondition refusing an existing media table.",
+    "SQL Editor execution does not populate Supabase CLI migration history.",
+    "No customer data, account credential, email or paid provider request was created."
+  ],
+  "verification": {
+    "anonymous_blocked": true,
+    "browser_writes_blocked": true,
+    "bucket_owner_policy": true,
+    "media_owner_policy": true,
+    "owner_reads_granted": true,
+    "private_bucket_correct": true,
+    "prototype_budget_preserved": true,
+    "rls_enabled": true,
+    "rls_forced": true
+  },
+  "remaining_migrations": "202610110003 through 202610110020"
+}

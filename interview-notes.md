@@ -1189,3 +1189,7 @@ I separated opening a reset email from confirming the reset. Opening the link cr
 I connected the cross-device reset confirmation to the prepared account server. A synthetic journey now opens the email link on a receiving browser, confirms it and changes the password once without signing the customer in. Failed cookie delivery cleans up reset permission. I still need real email, hosted configuration and physical-device acceptance before calling account recovery complete.
 
 I checked the actual reset confirmation page in desktop WebKit over a temporary local HTTPS server. The browser honored the secure cookies and content policy, redirected after confirmation and rejected a repeated confirmation. This uses a synthetic provider and a placeholder reset destination, so it does not replace the real emailed-link and phone acceptance checks.
+
+## First hosted customer-data protections, 12 October 2026
+
+I began the approved hosted database setup with photo records and a private wardrobe bucket. I checked all nine live protection indicators, including row security, blocked direct writes and owner-only read policies. The existing prototype budget table remains present. This is the first two migrations only; the remaining customer schema and real account acceptance are still pending.
