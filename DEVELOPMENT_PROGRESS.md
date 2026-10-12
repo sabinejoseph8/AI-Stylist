@@ -2521,3 +2521,8 @@ Applied prototype-recovery-repeat.sql to the confirmed existing project after a 
 
 
 Repeat deployment dep-db6kbtff3r2c73cn907g succeeded for source 6610c4ea9ffbf1bfaf8a4e6fb8ad562189775e83, retaining explicit protected recovery mode and Free service. No new provider room or reservation started. Sabine can now perform exactly one repeat using the complete advance instructions, keeping Safari visible until End. Actual iPhone recovery acceptance remains pending. Private Memory website still reflects the earlier initial-trial deployment; synchronize this repeat outcome on the next site update.
+
+
+## Repeat stopped after refresh, 12 October 2026
+
+Sabine reports refreshing after Start. Read-only ledger/provider verification confirms thirteen lifetime reservations. The repeat initial room was started, its ledger record is closed and Tavus reports ended. The repeat replacement was never started and has no room; its reserved unit remains recorded and unavailable for reuse. No provider room is running for this repeat. No new allowance, refund, ledger mutation or media request was made. Recovery acceptance remains unproven. The approved $33 experiment allocation is exhausted for further starts; do not enable or suggest another attempt without separate authorization. Next: record this outcome in private Memory on its next synchronization and review a local-only usability improvement to prevent accidental refresh/navigation before proposing further billed testing.
