@@ -921,3 +921,6 @@ I connected the real encryption and storage adapter to isolated PostgreSQL. I te
 
 
 I restricted the prepared refresh storage transport to six explicit operations and added caller cancellation with bounded capacity. If a request ignores cancellation, I keep its slot occupied until it actually settles, preventing hidden work from accumulating. I fixed a test assertion timing issue and confirmed all 383 foundation tests, type checking and build pass. This evidence uses simulated HTTP, so I keep it separate from live provider acceptance.
+
+
+I prepared staged credential rotation so the existing account lifecycle can adopt a replacement or discard it safely. Cleanup waits for adoption and requires confirmed revocation before removing the matching storage record. Ambiguous provider failures stay blocked. Four simulated scenarios bring the foundation suite to 387 passing tests, with type checking and build passing. Actual database and verified-session composition are the next evidence gates, so I have not enabled live accounts.
