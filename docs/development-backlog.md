@@ -6,10 +6,10 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Hosted Tasks 2b/2c are approved and in progress before Phase 1 finishes. All 623 foundation tests pass. The connected HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks pass with synthetic Auth. All 21 customer migrations are installed; real customer isolation and account acceptance remain open. Sabine approved a fixed seven days from sign-in; complete persistence implementation remains in progress.
-2. Phase 1 voice/avatar recovery and live-note acceptance remain open, Tavus has clarified the interruption contract; actual replacement playback, privacy decisions and a newly authorized paid-test amount are still required for remaining live checks.
+1. Hosted Tasks 2b/2c are approved and in progress before Phase 1 finishes. All 623 foundation tests pass. The connected HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks pass with synthetic Auth. All 21 customer migrations are installed; real customer isolation and account acceptance remain open. Sabine approved a fixed seven days from sign-in; local persistence, restoration and expiry checks pass with synthetic Auth. Real hosted acceptance remains open.
+2. Phase 1 voice/avatar recovery and live-note acceptance remain open. Tavus clarified the interruption contract. Sabine approved the additional $4 two-room experiment, the exact hosted allowance is installed with all nine prior records unchanged, and the protected recovery preview is deployed. Actual iPhone replacement playback and context acceptance require Sabine’s user-started test; no automatic start or retry is authorized.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
-4. Complete Tasks 2b/2c only after applicable real SQL/Storage/customer isolation and account/provider/manual checks. The hosted exception applies to these task groups only; later phases retain their dependencies. No additional spending or paid calls are authorized.
+4. Complete Tasks 2b/2c only after applicable real SQL/Storage/customer isolation and account/provider/manual checks. The hosted exception applies to these task groups only; later phases retain their dependencies. Only the explicitly approved $4 recovery experiment may use the new allowance; no other additional spending or paid calls are authorized.
 
 ## Items
 

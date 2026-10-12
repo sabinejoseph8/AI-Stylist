@@ -2480,3 +2480,10 @@ Next action requiring Sabine: open https://ai-stylist-private-preview.onrender.c
 
 
 Private Memory publication succeeded for source 534176d6a93d94ee49433b9c304f3cc269cb98fb, deployment appgdep_6acd3bc91f3c8191a3a1a6ae6c961ed7, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_ecc326b4eba081919529b54ec237de43. Owner-private publication and MCP preserved; all 16 site checks, build and artifact validation pass. The live trial remains unstarted. Exact next action is Sabine's iPhone recovery check using the complete chat instructions, followed by private ledger cleanup verification and recording actual results.
+
+
+## Actionability audit after recovery deployment, 12 October 2026
+
+The preceding goal turn made authoritative progress: the exact recovery allowance was applied and compared, the protected recovery preview deployed, and private Memory published. This follow-up reviewed current backlog priorities and phase dependencies. Corrected obsolete funding and local session-persistence wording at the top of the backlog. All later phases retain their predecessor gates; the hosted exception covers Tasks 2b/2c, not later implementation. No phase completion is inferred from synthetic tests.
+
+The next Task 1b evidence requires Sabine’s iPhone recovery test using the complete instructions already supplied. No live job is awaiting a poll, and automatic goal continuation does not authorize starting the room. Hosted accounts still need the unresolved platform verification and permitted email/social configuration before real acceptance. Real affiliate access still requires the live customer site. This is the first actionability check at this new post-deployment boundary, not a completed goal. Exact next action: receive Sabine’s iPhone observations, then privately verify ledger cleanup and record actual results before deciding the next media integration work.
