@@ -2363,3 +2363,10 @@ Added withRendererTeardown to supply the recovery coordinator's local-renderer v
 Next action: publish the pending Memory site updates, then inspect the actual provider teardown and restoration paths for a disabled end-to-end adapter. Keep interrupt-and-end active and preserve the exhausted live-test allowance; do not start a replacement room without financial authorization. Task 1b remains incomplete.
 
 Final validation: 1,284 prototype tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-recovery-final.log.
+
+
+## Private Memory recovery publication, 12 October 2026
+
+Successfully published source 98c1ec4cf6bfbb05a9d3550e396943d144c48fea; deployment appgdep_6acd2e8338d88191a1118b392ae79354; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_e9344f8943f881919e78427eac4c5f2e. Native deployment status succeeded with MCP enabled. Existing owner-only custom audience, one user and no sharing changes, preserved. All 16 site checks, build and artifact validation pass. Imported four documents, 41 tasks in eight phases; no task overrides changed. Includes the sanitized unresolved hosting status and latest 1,284-test recovery preparation.
+
+Next action: inspect real provider shutdown and confirmed-history restoration paths for a disabled recovery adapter. Strict room replacement and actual phone acceptance remain unverified, with paid attempts exhausted. Hosted account activation remains gated by the separately recorded ingress/logging, provider and sender prerequisites. No customer app or voice service deployment occurred.
