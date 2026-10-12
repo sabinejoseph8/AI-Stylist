@@ -2643,3 +2643,10 @@ This resolves the linking-policy decision only. Hosted Google/Apple providers re
 Sabine confirmed she sent the prepared ingress-header and recovery/OAuth logging questions to support@render.com. This is user-reported submission, not an independently verified delivery receipt. Render's response is pending. Local Mail permissions no longer block submission. No platform guarantee, hosted activation, additional spending or task completion follows from sending the inquiry.
 
 Next action: review Render's reply when Sabine shares it, record the verified ingress/logging contract, and perform the required synthetic checks before real customer account activation. Existing origin, sender, social-provider credentials and live security/manual acceptance gates remain open.
+
+
+## Domain purchase deferred until public launch, 12 October 2026
+
+Sabine explicitly decided to delay purchasing a domain until ready to launch publicly. Do not keep requesting a domain name or purchase during prototype development. A Render-provided website address can be used subject to the existing ingress/logging and deployment checks; no custom domain is required for the website prototype. The planned verified production email sender remains a pre-launch dependency. This decision does not approve another sender, paid service, new account credentials or weaker email/security acceptance. Any private email testing must use a separately verified permitted sender path.
+
+Next action: review Render's reply when supplied and continue other authorized readiness work when its existing dependencies are satisfied. Google/Apple credentials, live account/provider isolation and phase acceptance remain open. No domain was bought and no spending limit changed.

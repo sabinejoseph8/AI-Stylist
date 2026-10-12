@@ -2942,3 +2942,10 @@ Sabine confirmed she does not own a sender domain. Asked for the desired app/dom
 A bounded unauthenticated HTTPS GET to the fixed AI Stylist Supabase JWKS endpoint returned HTTP 200 and one EC P-256/ES256 public key with no private key fields. The existing createAuthKeys resolver successfully imported the live public key; two lookups through the same resolver made one fetch, confirming cache reuse. Sanitized result is in docs/hosted-auth-metadata-review.json. No source behavior changed, real JWT was verified, account/session created, private credential used or paid voice call started.
 
 This proves public-key retrieval/import/cache compatibility only. Real token claims, current-session behavior, provider security, hosted email/OAuth and customer isolation/device acceptance remain incomplete. Next action: await Sabine's app/domain naming choice for sender-domain options and Render's response for ingress/logging; existing social credentials and phase/spending limits remain.
+
+
+## Domain purchase deferred until public launch, 12 October 2026
+
+Sabine explicitly decided to delay purchasing a domain until ready to launch publicly. Do not keep requesting a domain name or purchase during prototype development. A Render-provided website address can be used subject to the existing ingress/logging and deployment checks; no custom domain is required for the website prototype. The planned verified production email sender remains a pre-launch dependency. This decision does not approve another sender, paid service, new account credentials or weaker email/security acceptance. Any private email testing must use a separately verified permitted sender path.
+
+Next action: review Render's reply when supplied and continue other authorized readiness work when its existing dependencies are satisfied. Google/Apple credentials, live account/provider isolation and phase acceptance remain open. No domain was bought and no spending limit changed.

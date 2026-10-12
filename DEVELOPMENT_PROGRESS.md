@@ -2292,3 +2292,10 @@ After the last public-key compatibility progress, three consecutive goal checks 
 Sabine asked how long she can delay buying a domain. Explained there is no purchase deadline: a Render-provided address can serve the website, while the planned production sender eventually needs a verified domain. This question did not authorize a purchase or require one now. Do not treat naming or domain purchase as the sole blocker or repeatedly request an immediate purchase. No new budget or service is approved.
 
 Goal remains incomplete and is being marked blocked after the repeated-blocker audit. Exact resume action: share Render's technical response, or provide the business/credential input needed for another existing account-setup gate. Review that evidence and continue authorized hosted readiness work; do not bypass sender, provider, security, phase or spending gates. Latest code evidence remains 623 tests across 94 files plus the separately recorded live public-key and metadata checks. Private Memory last verified source a49307bb8a3d05a7bc15b6767723d84de6554de1; later metadata receipts are in GitHub and the AI stylist folder.
+
+
+## Domain purchase deferred until public launch, 12 October 2026
+
+Sabine explicitly decided to delay purchasing a domain until ready to launch publicly. Do not keep requesting a domain name or purchase during prototype development. A Render-provided website address can be used subject to the existing ingress/logging and deployment checks; no custom domain is required for the website prototype. The planned verified production email sender remains a pre-launch dependency. This decision does not approve another sender, paid service, new account credentials or weaker email/security acceptance. Any private email testing must use a separately verified permitted sender path.
+
+Next action: review Render's reply when supplied and continue other authorized readiness work when its existing dependencies are satisfied. Google/Apple credentials, live account/provider isolation and phase acceptance remain open. No domain was bought and no spending limit changed.

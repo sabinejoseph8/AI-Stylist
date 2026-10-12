@@ -1326,3 +1326,8 @@ I separated Supabase's automatic linking behavior from its manual-linking switch
 ## Choosing account linking, 12 October 2026
 
 I chose Supabase automatic linking so customers using Google or Apple with the same verified email can return to their existing account. I kept manual linking and application-driven merging disabled. My tradeoff is relying on the provider's linking rules while requiring live security checks before activation. Different Apple relay emails are not guaranteed to resolve to the same account. The application still identifies owners by verified identity ID rather than email.
+
+
+## Deferring the custom domain, 12 October 2026
+
+I decided to delay buying a domain until the app is ready for public launch. The prototype can use a Render-provided website address, so I can avoid an early purchase. I kept verified production email delivery and real account security checks as launch requirements rather than treating the temporary website address as proof that accounts are ready.
