@@ -2,7 +2,7 @@
 
 ## Current private Memory publication
 
-Private Memory publishes the 520-test checkpoint and synthetic WebKit account/reset evidence from source 15ec6be6d48492813f8d7d3211b5730ee7dcfe86. Deployment appgdep_6acc76cbf464819184482dba5ec88b9a succeeded with MCP enabled. All 16 website checks and artifact validation pass; owner-only access was verified with one allowed user and no groups.
+Private Memory publishes the approved hosted Tasks 2b/2c scope, cross-device recovery decision and 522-test checkpoint from source 1b9db981220f3dd4a709f1af8059779e220fc60b. Deployment appgdep_6acc7963986481918ca23368b72fa7e0 succeeded with MCP enabled. All 16 site checks and artifact validation pass. Owner-only access remains one allowed user and no groups.
 
 Exact next action: review/apply the customer migration chain to the verified hosted project and compose cross-device token verification with receiving-browser confirmation and reset-only authority. Both scope decisions are approved; spending limits remain unchanged.
 

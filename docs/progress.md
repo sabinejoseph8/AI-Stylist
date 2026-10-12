@@ -2292,3 +2292,7 @@ The bounded recovery provider transport now supports token-hash verification wit
 Read-only hosted inventory confirms the existing AI Stylist project has only the prototype budget table in the inspected app schemas and no tracked customer migrations. Required managed Auth columns match the prepared checks. No customer schema migration, email or provider operation has been activated yet. See docs/cross-device-recovery.md for the selected direction, primary sources and remaining checks. Hosted Tasks 2b/2c are now explicitly authorized before Phase 1 finishes; prior local-only and pending-question statements are historical. Spending limits remain unchanged.
 
 Exact next action: review and apply the customer migration chain to the verified project with post-application privilege checks, and compose cross-device token verification with receiving-browser confirmation and reset-only authority. Credentials/new financial decisions still require Sabine.
+
+## Approved-scope Memory publication, 12 October 2026
+
+Private Memory publication succeeded for source 1b9db981220f3dd4a709f1af8059779e220fc60b, deployment appgdep_6acc7963986481918ca23368b72fa7e0, with MCP enabled and owner-only audience preserved. It includes hosted setup approval, cross-device recovery requirement and 522-test transport checkpoint. All 16 site checks and artifact validation pass. No hosted customer migration is claimed.
