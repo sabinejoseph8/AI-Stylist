@@ -897,3 +897,6 @@ I connected the local refresh preparation to the same lifecycle owner as passwor
 
 
 I added actual local HTTP delivery tests to complement in-memory account tests. They verify that cookie headers remain separate, hostile Host/Origin values cannot reach operation work and a disconnected client cannot keep a late returned session response. All 361 foundation tests, type checking and build pass. The operations are simulated, and browser/TLS, durable adoption and real provider acceptance remain open.
+
+
+I composed the prepared password verifier and generated signed identity with an actual local HTTP listener. I verified that the token stays out of response JSON and that its secure cookie authorizes only the generated customer/session. I also bounded delivery time and outstanding handlers, including providers that ignore cancellation. All 364 foundation tests, type checking and build pass. The provider remains simulated; actual browser acceptance and durable refresh adoption are separate work.

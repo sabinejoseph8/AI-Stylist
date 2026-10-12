@@ -1975,3 +1975,14 @@ Prepared a disconnected Node HTTP listener that accepts only an explicitly suppl
 All 361 foundation tests across 40 files, type checking and build pass. Three new tests use actual loopback Node HTTP with the prepared shared JSON boundary and simulated operation handlers. They verify cookie/header separation, wrong Host/Origin rejection before operation work and late-response cleanup after actual client disconnect. These tests do not compose a real provider, verify a real browser cookie jar or demonstrate hosted TLS. Prior generated-token account composition remains separate evidence.
 
 Exact next action: compose the local Node listener with generated-token password/refresh owners and simulated adoption storage; test response loss and cancellation at that composition boundary. Add explicit delivery deadlines/resource checks before production use. Sabine's newer reset review is still pending. Task 2c remains incomplete. Private Memory remains at its preceding 347-test checkpoint pending a consolidated refresh.
+
+
+## Bounded Node delivery and verified password composition, 11 October 2026
+
+The prepared Node account listener now bounds delivery to at most ten seconds, cancels stalled response readers and closes timed-out sockets. At most four underlying handler operations are admitted. A timed-out handler that ignores cancellation retains admission until it actually settles; late returned responses are discarded. Duplicate Host/Origin/Cookie/Authorization headers are refused before dispatch. These are process-local limits, not distributed abuse protection. Routes remain unregistered in the default server.
+
+Added actual loopback HTTP composition with the prepared password owner, cryptographic verifier, generated ES256 token, simulated current-session authority and password adapter. Returned JSON contains signedIn only, while the distinct Secure/HttpOnly/Strict access cookie can authorize the same generated owner/session through the prepared gate. This manually forwards a cookie header; it does not prove browser cookie acceptance or hosted TLS. Two more loopback scenarios verify stalled response cancellation/cleanup and retained admission for four timed-out handlers. A test-helper typing mismatch was fixed before the final clean run.
+
+All 364 foundation tests across 40 files, type checking and build pass. No live provider, credential, hosted route or paid activity was used. Durable refresh-state adoption and reconciliation remain unimplemented. Node's successful end callback proves local response completion, not that a remote user received every byte.
+
+Exact next action: implement and test explicit simulated refresh-state adoption ownership at the server composition boundary, then consolidate private Memory publication. Incorporate Sabine's newer reset review when received. Task 2c and phase acceptance remain open; private Memory's current verified live checkpoint is still 347 tests.
