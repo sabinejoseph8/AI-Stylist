@@ -1095,3 +1095,7 @@ I extended the disposable database rehearsal to password and Google/Apple sign-i
 ## Refresh and sign-out factory verification, 12 October 2026
 
 I completed the factory-level database checks for refresh and sign-out. Refresh cannot accept a browser-supplied identity, and logout is not reported as confirmed until the primary session is absent. The full disposable database rehearsal and all 491 foundation tests pass, with type checking and build. Hosted acceptance and customer recovery decisions remain open.
+
+## Expired recovery permission maintenance, 12 October 2026
+
+I exposed expiry cleanup through the prepared account factory so a future host can clean expired reset permissions without waiting for another customer request. A focused test confirms cleanup happens once. All 492 tests, type checking and build pass. Scheduling and hosted lifecycle acceptance remain pending.

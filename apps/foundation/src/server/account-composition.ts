@@ -57,6 +57,8 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
  return Object.freeze({
   routes:():ReadonlyMap<string,AccountNodeRoute>=>new Map(routes),
   cleanupHeld:()=>sessions.cleanupHeld()||recovery.cleanupHeld()||browser.cleanupHeld(),
+  /** Future host must schedule this maintenance explicitly; no timer starts here. */
+  expireRecovery:()=>browser.expire(),
   /** Result confirms browser reset-grant cleanup only, never remote provider termination. */
   close(){if(closure)return closure;closed=true;for(const controller of active)controller.abort();closure=browser.close();return closure;},
  });

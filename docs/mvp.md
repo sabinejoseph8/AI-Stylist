@@ -1477,3 +1477,9 @@ The full isolated rehearsal passes and disposable resources were verified remove
 Moved stored refresh and sign-out through the actual dormant account factory in the isolated PostgreSQL rehearsal. Refresh derives scope from verified cookies, refuses browser identity fields, advances encrypted ownership and discards undelivered results. Sign-out clears browser cookies but remains unconfirmed until actual primary-session deletion; the old signed token then loses authorization. Provider operations remain synthetic.
 
 The full isolated rehearsal passes and disposable resources were verified removed. All 491 foundation tests across 67 files, type checking and build pass. Password, OAuth, recovery, refresh and sign-out now have factory-level Request/Response/database evidence; this is not full factory Node/browser/hosted acceptance. Task 2c remains open. Exact next action: reconcile the activation checklist and remaining local abuse-protection/shutdown gaps, implementing independent local work before any hosted activation. Private Memory still publishes the earlier 491-test recovery checkpoint.
+
+## Recovery expiry maintenance hook, 12 October 2026
+
+Exposed the existing reset-grant expiry cleanup through the dormant account factory as expireRecovery. A focused synthetic test advances time after callback delivery and verifies maintenance discards the expired grant once without another customer request. No timer or background job starts automatically. A future host must explicitly schedule this maintenance and call close on shutdown; hosted lifecycle acceptance remains open.
+
+All 492 foundation tests across 67 files, type checking and build pass. No hosted changes or paid calls occurred. Exact next action: add bounded local account abuse-admission preparation and test it before host activation; keep durable/multi-process limits and real provider settings as acceptance gates.

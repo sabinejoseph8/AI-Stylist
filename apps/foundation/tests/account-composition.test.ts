@@ -54,4 +54,15 @@ describe('explicit dormant account composition',()=>{
   expect(ports.refresh.refresh).not.toHaveBeenCalled();await app.close();await Promise.all(pending);for(const release of releases)release();
  });
 
+ it('exposes expired recovery cleanup without another customer request',async()=>{
+  const {app,ports,security}=setup();const discard=vi.fn(async()=>true);
+  ports.recovery.exchange.mockImplementation((async()=>({ownerId:'11111111-1111-4111-8111-111111111111',expiresAt:Date.now()+60000,resetPassword:async()=>true,discard})) as never);
+  const flow=security.callbacks.begin('recovery');
+  const response=await app.routes().get('/auth/callback/recovery')!.handle(new Request(flow.callbackUrl+'&code=synthetic',{headers:{cookie:flow.cookie.split(';')[0]!}}),signal());
+  expect(response.headers.get('location')).toBe('/account/reset');
+  vi.useFakeTimers();
+  try{vi.setSystemTime(Date.now()+60001);expect(await app.expireRecovery()).toBe(true);expect(discard).toHaveBeenCalledTimes(1);expect(await app.expireRecovery()).toBe(true);expect(discard).toHaveBeenCalledTimes(1);}
+  finally{vi.useRealTimers();await app.close();}
+ });
+
 });

@@ -6,6 +6,8 @@ Status: preparation only. This checklist authorizes no provider setup, hosted mi
 
 The account preview uses sample adapters. Prepared password, recovery, sign-out and refresh HTTP factories are not registered as routes. Verified tokens and generated keys in tests establish local contracts, not live Supabase configuration. Local Task 2b and Task 2c exceptions do not waive the Phase 1 exit or hosted acceptance gates.
 
+The explicit dormant factory now composes all nine account handlers. Request/Response factory paths for password, OAuth, recovery, refresh and sign-out pass isolated PostgreSQL checks with generated signed identities and synthetic providers. All 492 foundation tests, type checking and build pass. The future host must schedule expireRecovery maintenance and call close during shutdown; neither scheduling nor live route registration is enabled. Durable abuse limits, full factory Node/browser checks and hosted acceptance remain open.
+
 ## Ready local follow-up
 
 | Work | Required evidence |
