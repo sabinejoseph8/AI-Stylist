@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2b local preparation is active. Latest evidence: 209 foundation tests across all 16 files pass, with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Six isolated Linux decoder resource scenarios also pass; actual hosted limits remain unverified. Hosted changes and paid tests remain unauthorized.
+Task 2b local preparation is active. Latest evidence: 209 foundation tests across 16 files, type checking and build pass. Local PostgreSQL protections and actual local Storage API upgrade checks pass. Sabine approved seven-day detailed photo-deletion receipts on 11 October 2026; migration 014 and cutoff, authorization, repeated-cleanup, retired-ID and account-cascade checks pass locally. Hosted activation, cleanup scheduling and Phase 1 acceptance remain open. No paid calls were started.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1371,3 +1371,10 @@ Prepared a disconnected image-read handler with a fresh trusted identity gate pe
 ## Actual Storage upgrade compatibility, 11 October 2026
 
 The disposable API/database rehearsal now seeds a legacy JPEG, wardrobe item and saved-look reference before lifecycle migrations. The newer chain preserves exact bytes, owner isolation and both references, including account-bound legacy delivery. A deletion claim is refused while either reference remains; after explicit removal of both, actual object deletion, owner-only receipt finalization and retired-ID protection pass. The existing 209-test foundation evidence is unchanged because only this integration harness and documentation changed. Hosted activation and actual Auth remain gated. A concrete seven-day technical-receipt/minimal-retired-ID retention proposal is in docs/deletion-receipt-retention-proposal.md for Sabine's business/privacy decision; it is not approved or implemented.
+
+
+## Approved deletion-receipt retention, 11 October 2026
+
+Sabine approved seven days for detailed technical photo-deletion receipts, followed by only the retired image ID linked to the account until account deletion. Migration 014 prepares this policy locally. Expired receipts cannot establish successful deletion, even before maintenance runs. A service-only bounded cleanup removes expired receipt details; the retired-ID trigger continues preventing reuse and account deletion cascades the minimal ledger. No photo, notes or conversation are retained by these records.
+
+Local PostgreSQL checks pass for the cutoff, customer denial, invalid limits, repeat cleanup, owner isolation, no ID reuse and account deletion. Hosted scheduling, monitoring and activation remain required before customer launch. Task 2b is still incomplete. No new provider attempts, spending, hosted changes or Auth activation occurred.

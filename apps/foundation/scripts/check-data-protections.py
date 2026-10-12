@@ -257,6 +257,24 @@ try:
  checked=run(['node',str(Path(__file__).resolve().parent/'check-mixed-look-db.ts'),name,mixed_asset],timeout=30)
  assert checked.returncode==0, checked.stderr
  print(checked.stdout.strip())
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110014_receipt_retention.sql').read_text())
+ receipt_id='00000000-0000-0000-0000-000000000099'
+ sql(f"insert into stylist_private.media_deletion_receipts(id,user_id,storage_key,deletion_token) values('{receipt_id}','{a}','opaque','{receipt_id}');")
+ assert sql(f"select count(*) from stylist_private.retired_media_ids where id='{receipt_id}';")=='1'
+ sql('set role authenticated; select public.stylist_expire_media_receipts(100);',False)
+ sql('set role service_role; select public.stylist_expire_media_receipts(0);',False)
+ assert sql('set role service_role; select public.stylist_expire_media_receipts(100);')=='0'
+ assert sql(f"set role service_role; select public.stylist_read_media_operation('{receipt_id}','{b}');")==''
+ # One transaction freezes the exact cutoff and verifies both sides of it.
+ assert sql(f"begin; update stylist_private.media_deletion_receipts set created_at=statement_timestamp()-interval '7 days'+interval '1 second' where id='{receipt_id}'; select public.stylist_read_media_operation('{receipt_id}','{a}') is not null; rollback;")=='t'
+ assert sql(f"begin; update stylist_private.media_deletion_receipts set created_at=statement_timestamp()-interval '7 days' where id='{receipt_id}'; select public.stylist_read_media_operation('{receipt_id}','{a}') is null; select public.stylist_expire_media_receipts(100); commit;")=='t\n1'
+ assert sql('set role service_role; select public.stylist_expire_media_receipts(100);')=='0'
+ assert sql(f"select count(*) from stylist_private.retired_media_ids where id='{receipt_id}';")=='1'
+ sql(f"set role service_role; select public.stylist_stage_media('{receipt_id}','{a}','{'d'*64}',10,10);",False)
+ sql(f"set role authenticated; select * from stylist_private.retired_media_ids;",False)
+ sql(f"delete from auth.users where id='{a}';")
+ assert sql(f"select count(*) from stylist_private.retired_media_ids where user_id='{a}';")=='0'
+ print('Approved receipt retention passes cutoff, authorization, idempotency, retired-ID protection and account cascade checks')
  print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])

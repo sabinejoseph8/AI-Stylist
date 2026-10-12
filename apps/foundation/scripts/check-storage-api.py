@@ -131,7 +131,7 @@ select coalesce(nullif(current_setting('request.jwt.claim.sub',true),''),
         raise RuntimeError('Local Storage API startup timeout')
     sql('grant usage on schema auth to authenticated,anon,service_role; grant execute on function auth.uid() to authenticated,anon,service_role;')
     migrations = sorted((ROOT / 'supabase/migrations').glob('*.sql'))
-    require(len(migrations) == 13, 'Review upgrade rehearsal boundaries after changing migration count')
+    require(len(migrations) == 14, 'Review upgrade rehearsal boundaries after changing migration count')
     for migration in migrations[:8]:
         sql(migration.read_text())
     owner, other, service, anon = token('authenticated', a), token('authenticated', b), token('service_role'), token('anon')

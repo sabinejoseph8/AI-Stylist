@@ -734,3 +734,8 @@ I prepared image delivery that checks the customer on each request instead of ex
 ### Preserving existing data during schema changes
 
 I seeded a real local photo and its saved references before applying newer migrations. The upgrade preserved the image and both references. I then confirmed that removing one reference did not delete a photo still used by a saved look. Only after removing both could cleanup delete the object and record its completion. I kept the technical-receipt retention period as an explicit privacy decision.
+
+
+## Limiting technical deletion records
+
+I chose to keep detailed photo-deletion receipts for seven days so a lost response can be checked without keeping technical details indefinitely. After that, I retain only an image ID linked to the account to prevent accidental reuse, and remove it when the account is deleted. My local database checks cover the time boundary, access restrictions and repeated cleanup. Hosted scheduling still needs verification before launch.
