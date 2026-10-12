@@ -805,3 +805,8 @@ I prepared callback exchange orchestration that verifies the returned identity b
 ## Validating account access before connecting providers
 
 I completed the local account preview and confirmed every step worked and was readable. I kept this separate from real account acceptance because the preview creates no accounts or emails. I added a shared session lifecycle so password and social sign-in cannot bypass one another's pending-work limit or uncertain-cleanup hold. Registration confirmation grants no account access. I tested malformed actions, cancellation and cross-method protection with generated signed tokens and simulated adapters. All 283 local foundation checks pass, along with type checking and build; real recovery, provider configuration and hosted acceptance remain open.
+
+
+## Distinguishing local sign-out from remote revocation
+
+I prepared sign-out to clear browser access immediately while keeping remote revocation status explicit. A failed or delayed provider response cannot be presented as confirmed sign-out. I bounded pending work so repeated attempts cannot accumulate unlimited stalled requests. I corrected a test that mixed fake-clock deadlines with asynchronous signature checks, then verified all 287 foundation tests, type checking and build. This remains local preparation; real provider revocation and hosted behavior still need acceptance.
