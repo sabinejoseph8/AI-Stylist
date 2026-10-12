@@ -1111,3 +1111,7 @@ I checked the request guard around the actual account factory, then verified pas
 ## Browser disconnect and server shutdown, 12 October 2026
 
 I verified that the account factory cleans a late session save when the browser disconnects or the service closes. Shutdown returns an unconfirmed result without an account cookie, and cleanup occurs once after the simulated save settles. All 497 tests, type checking and build pass. Real provider and hosted acceptance remain open.
+
+## Complete callback lifecycle verification, 12 October 2026
+
+I moved social and recovery callback HTTP checks through the actual account factory. Late results after browser disconnect or server shutdown are cleaned without granting access. Recovery still cannot issue a normal account cookie. All 499 tests, type checking and build pass using generated signed identities and simulated providers. Hosted acceptance remains open.

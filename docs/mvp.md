@@ -1501,3 +1501,9 @@ All 496 foundation tests across 68 files, type checking and build pass. No live 
 Upgraded the existing late-adoption disconnect test to use the guarded account factory over actual local HTTP. Added server-shutdown coverage: cancellation delivers unconfirmed with no account cookie, late simulated adoption is discarded once after settling, and new requests receive unavailable. Generated identities are signed; provider/current-session/storage fixtures remain synthetic.
 
 All 497 foundation tests across 68 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
+
+## Complete factory callback HTTP lifecycle, 12 October 2026
+
+Upgraded the five signed callback Node composition checks to use the actual dormant account factory instead of separately assembled handlers. Google and Apple cookie/redirect delivery and replay refusal pass; signed recovery delivers only reset permission and closes it on shutdown. Added late OAuth/recovery results after factory shutdown alongside browser disconnect cases. Cleanup occurs without granting account/reset access or changing a password. Provider/session-presence authority remains simulated; generated signatures are verified.
+
+All 499 foundation tests across 68 files, type checking and build pass. No hosted or paid operation occurred. Exact next action: review the account preparation against the approved user requirements and remaining acceptance gates, prioritizing concrete runtime gaps rather than repeating completed checks. Private Memory remains at the 497-test checkpoint.

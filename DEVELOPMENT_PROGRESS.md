@@ -1717,3 +1717,9 @@ All 497 foundation tests across 68 files, type checking and build pass. The init
 ## Current summaries and private Memory reconciled, 12 October 2026
 
 Reconciled current plan, handoff and account acceptance summaries with 497 passing foundation tests across 68 files and the actual factory/database/HTTP evidence. Published the private Memory snapshot from source da7ddb74e6bc4c021f38d6421aaac29792e4c9a3; deployment appgdep_6acc7095dea881919d4c408215984c8a succeeded with MCP enabled. All 16 site checks and artifact validation pass. Owner-only access remains one user and no groups. No task or phase completion gate was bypassed.
+
+## Complete factory callback HTTP lifecycle, 12 October 2026
+
+Upgraded the five signed callback Node composition checks to use the actual dormant account factory instead of separately assembled handlers. Google and Apple cookie/redirect delivery and replay refusal pass; signed recovery delivers only reset permission and closes it on shutdown. Added late OAuth/recovery results after factory shutdown alongside browser disconnect cases. Cleanup occurs without granting account/reset access or changing a password. Provider/session-presence authority remains simulated; generated signatures are verified.
+
+All 499 foundation tests across 68 files, type checking and build pass. No hosted or paid operation occurred. Exact next action: review the account preparation against the approved user requirements and remaining acceptance gates, prioritizing concrete runtime gaps rather than repeating completed checks. Private Memory remains at the 497-test checkpoint.
