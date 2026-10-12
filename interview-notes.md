@@ -800,3 +800,8 @@ I added a generic canceled-account result for provider failures and tested that 
 ### Handling sign-in results that arrive too late
 
 I prepared callback exchange orchestration that verifies the returned identity before preparing an account cookie. I tested sessions arriving after cancellation and made the adapter discard them. When cleanup could not be confirmed, the coordinator held further exchanges instead of assuming the session was gone. I kept recovery outside normal sign-in and documented that real provider cleanup and refresh handling still need acceptance.
+
+
+## Validating account access before connecting providers
+
+I completed the local account preview and confirmed every step worked and was readable. I kept this separate from real account acceptance because the preview creates no accounts or emails. I added a shared session lifecycle so password and social sign-in cannot bypass one another's pending-work limit or uncertain-cleanup hold. Registration confirmation grants no account access. I tested malformed actions, cancellation and cross-method protection with generated signed tokens and simulated adapters. All 283 local foundation checks pass, along with type checking and build; real recovery, provider configuration and hosted acceptance remain open.

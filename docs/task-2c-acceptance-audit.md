@@ -9,17 +9,17 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Requirement | Current evidence | Still required |
 | --- | --- | --- |
 | Account access before styling | Foundation coordinator refuses customer sessions; sample UI never unlocks styling | Connect actual verified identity to all customer routes after approval |
-| Email/password and registration | Local labeled screens and simulated controller; stale/canceled replies discarded | Actual provider transport, registration policy, email confirmation, failure recovery and remote-session cleanup |
+| Email/password and registration | Local labeled screens, simulated controller and shared verified-session orchestration; stale/canceled replies discarded; confirmation grants no cookie | Actual provider transport, registration policy, email confirmation, failure recovery and remote-session cleanup |
 | Google and Apple | Simulated handoff/cancel UI; one-time browser-bound PKCE transaction store and sanitized failure consumption | Real provider configuration/transport, redirect/state preservation, actual failure callbacks and physical-device checks; local code exchange orchestration and cleanup are simulated |
 | Password recovery | Generic simulated acknowledgment; callback purpose forces reset destination | Provider-verified recovery authorization, scoped password update, expired/replayed recovery handling, cross-device behavior and confirmation UX |
 | Signed server identity | Generated ES256/RS256 checks, fixed-project bounded JWKS transport, real local SQL session lookup with synthetic Auth schema | Actual signing configuration and Auth schema verification; live provider and configured session policy acceptance |
 | Cookies and origin checks | Verified Secure/HttpOnly/host-only/Strict cookie preparation and same-origin request gate; generated-token composition tests | Actual browser cookie acceptance, secure route wiring, refresh-token/session lifecycle and CSRF integration |
 | Sign-out | Immediate local UI closure; failed simulated remote sign-out is explicit; revoked synthetic sessions deny requests | Actual provider revocation, cookie clearing route and concurrent sign-out; local late callback-result cleanup is prepared but actual cleanup proof is open |
 | Identity linking | Owner derives only from signed user ID; no email-based data merging is implemented | Review provider linking defaults, prove two accounts cannot merge through unverified or duplicate input, choose any customer linking flow with Sabine |
-| Accessibility and responsive UI | Agent narrow layout and keyboard checks; labeled fields, result focus, live status and assertive errors | Sabine visual review, actual screen reader, physical iPhone, zoom and complete accessibility acceptance |
+| Accessibility and responsive UI | Agent narrow layout and keyboard checks; labeled fields, result focus, live status and assertive errors | Actual screen reader, physical iPhone, zoom and complete accessibility acceptance |
 | Production email | Not configured | Verified sender/DNS, approved email templates, rate limits, abuse protection, delivery/bounce monitoring and real delivery checks |
 | Apple maintenance | No credentials created or inspected | Document actual credential expiry, owner, renewal reminders/process and a tested rotation procedure |
-| Tests/review/phase exit | 277 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
+| Tests/review/phase exit | 283 local foundation checks plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
 
 ## Local next steps
 
@@ -30,7 +30,7 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 
 ## Human and external dependencies
 
-- Sabine's local visual review is pending; independent local work may continue.
+- Sabine completed all eight local account preview steps and confirmed all worked and were readable. Physical-device and screen-reader acceptance remain open.
 - Phase 1 completion and a hosted/account activation decision are still required before real account configuration or tests.
 - Production email sender, Google/Apple credentials and actual callback allowlists are not approved by local preparation.
 - Refresh/session persistence and same-browser versus cross-device recovery must be reviewed before promising customer behavior.

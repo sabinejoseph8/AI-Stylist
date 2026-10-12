@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 277 foundation tests across 27 files, type checking and build pass. The disconnected callback coordinator now verifies signed identity before preparing account cookies, cleans up rejected/canceled/late sessions, bounds pending work and holds further exchanges after uncertain cleanup. Recovery remains separate and its transaction is not consumed by normal access. These checks use generated tokens and simulated adapters only. Account UI narrow-layout/keyboard checks pass; Sabine visual review is pending. Actual email/password and provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No live calls or hosted changes occurred.
+Task 2c local account preparation is active. All 283 foundation tests across 28 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. Generated tokens and simulated adapters provide local evidence only. Sabine completed all eight account preview steps and confirmed they worked and were readable. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
 
 ## Completed evidence
 
@@ -936,3 +936,12 @@ Opening summaries in DEVELOPMENT_PROGRESS.md, docs/mvp.md, Project Memory/tech-s
 
 
 Account exchange checkpoint ef17952 and reconciled summaries 353b5e1 are pushed and copied. Private Memory source 08ddbfd888edb17575ef22658ea5cad4cfbb5fbb deployed successfully as appgdep_6acc3e3ad5d481918c1fce4b5db66104. All 16 website checks pass; owner-only access and MCP remain. The live imported plan shows 277 foundation tests. No customer account or app deployment occurred. Next: shared verified-session orchestration for email/password and registration, with simulated cancellation/cleanup checks.
+
+
+## Shared local account lifecycle and accepted preview, 11 October 2026
+
+Sabine completed every step of the eight-step account preview and reported that all steps worked and were readable. This accepts the local simulated screens only, not real sign-in or email delivery.
+
+Extracted a common server-only session lifecycle and added disconnected email/password and registration ports. Password and OAuth callback methods share a four-operation admission limit and the same uncertainty hold after ambiguous creation or failed cleanup. Registration confirmation returns no account cookie. Email whitespace is trimmed; passwords are passed unchanged and never stored by these interfaces. Exact input keys and string methods are required, preventing object coercion into a supported action. HTTP origin/CSRF, rate/body limits, real provider policy and refresh adoption remain requirements before wiring any route.
+
+All 283 foundation tests across 28 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
