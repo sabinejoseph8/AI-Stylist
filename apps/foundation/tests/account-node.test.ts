@@ -88,18 +88,20 @@ async function identityFixture(){
  return {security,token,owner,session};
 }
 
-it('cleans late adopted state after a real HTTP disconnect during sign-in',async()=>{
+it('cleans guarded factory late adoption after a real HTTP disconnect',async()=>{
  const {security,token,session}=await identityFixture(),storage=new Map<string,string>();
  let release!:(value:boolean)=>void,started!:()=>void;const began=new Promise<void>(resolve=>started=resolve);
  const discard=vi.fn(async()=>{storage.clear();return true;}),adopt=vi.fn(async()=>{started();await new Promise<boolean>(resolve=>release=resolve);storage.set(session,'late-fixture');return true;});
- const http=createPasswordHttp(origin,createPasswordAccounts(security,origin,{password:async()=>({accessToken:token,adopt,discard})}));
+ const unexpected=async()=>{throw Error('Unexpected provider operation');};
+ const app=createAccountComposition(origin,'https://example.supabase.co',security,{password:{password:async()=>({accessToken:token,adopt,discard})},exchange:{exchange:unexpected},refresh:{refresh:unexpected},signOut:{revoke:unexpected},recovery:{exchange:unexpected},recoveryRequest:{request:unexpected}});
+ const http=createAccountAdmission(app.routes(),{limit:2,windowMs:60000}).routes().get(path)!;
  const h=await harness(http.handle,vi.fn(http.discardResponse));
  try{
   const req=httpRequest({host:'127.0.0.1',port:h.port,path,method:'POST',headers:{host:'stylist.example',origin,'content-type':'application/json'}});req.on('error',()=>{});
   req.end(JSON.stringify({method:'signIn',email:'sample@example.test',password:'made-up'}));await began;req.destroy();
   await new Promise(resolve=>setTimeout(resolve,20));expect(discard).not.toHaveBeenCalled();release(true);
   await vi.waitFor(()=>expect(discard).toHaveBeenCalledTimes(1));expect(storage.size).toBe(0);expect(adopt).toHaveBeenCalledTimes(1);
- }finally{release?.(false);await h.close();}
+ }finally{release?.(false);await app.close();await h.close();}
 });
 
 
@@ -114,4 +116,21 @@ it('delivers guarded factory password cookies over loopback without exposing tok
   const reply=await h.send(body);expect(reply.status).toBe(200);expect(JSON.parse(reply.body)).toEqual({status:'signedIn'});expect(reply.body).not.toContain(token);expect(reply.cookies).toHaveLength(1);
   const blocked=await h.send(body);expect(blocked.status).toBe(429);expect(blocked.cookies).toHaveLength(0);expect(password).toHaveBeenCalledTimes(1);
  }finally{await app.close();await h.close();}
+});
+
+it('cleans late factory adoption after shutdown without delivering account access',async()=>{
+ const {security,token}=await identityFixture();let release!:(value:boolean)=>void,started!:()=>void;
+ const began=new Promise<void>(resolve=>started=resolve),storage=new Set<string>();
+ const discard=vi.fn(async()=>{storage.clear();return true;});
+ const adopt=async()=>{started();await new Promise<boolean>(resolve=>release=resolve);storage.add('synthetic');return true;};
+ const unexpected=async()=>{throw Error('Unexpected provider operation');};
+ const app=createAccountComposition(origin,'https://example.supabase.co',security,{password:{password:async()=>({accessToken:token,adopt,discard})},exchange:{exchange:unexpected},refresh:{refresh:unexpected},signOut:{revoke:unexpected},recovery:{exchange:unexpected},recoveryRequest:{request:unexpected}});
+ const route=app.routes().get(path)!,h=await harness(route.handle,route.discardResponse);
+ try{
+  const pending=h.send(JSON.stringify({method:'signIn',email:'sample@example.test',password:'made-up'}));
+  await began;await app.close();const reply=await pending;
+  expect(reply.status).toBe(409);expect(JSON.parse(reply.body)).toEqual({status:'unconfirmed'});expect(reply.cookies).toHaveLength(0);expect(discard).not.toHaveBeenCalled();
+  release(true);await vi.waitFor(()=>expect(discard).toHaveBeenCalledTimes(1));expect(storage.size).toBe(0);
+  expect((await h.send('{}')).status).toBe(503);
+ }finally{release?.(false);await app.close();await h.close();}
 });
