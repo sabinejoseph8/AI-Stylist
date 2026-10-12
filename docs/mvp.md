@@ -1837,3 +1837,11 @@ Prepared createAccountResourceIdentity and explicitly exposed authorizeResource 
 Four focused synthetic checks pass. All 598 foundation tests across 88 files, type checking and build pass. An existing application capability-list assertion required updating for the new explicit gate; the full rerun passed. This is local gate evidence, not full hosted customer isolation or proof that all future routes use it.
 
 Exact next action: exercise authorizeResource with the actual disposable PostgreSQL/HTTPS lifecycle across server replacement, stored expiry/hold and sign-out, then connect browser session restoration/refresh scheduling and complete seven-day boundary acceptance. Real provider/device/phase gates remain open. No hosted setting, real account, email or paid call changed.
+
+## Resource lifetime verified in combined PostgreSQL/browser rehearsal, 12 October 2026
+
+Expanded the actual HTTPS/WebKit/disposable PostgreSQL account journey to invoke authorizeResource. Verified ready ownership permits a scoped resource capability; setting stored expiry in the past invalidates both reuse and new authorization; held ownership refuses authorization; expired signed access cannot authorize a resource even though the dedicated refresh endpoint renews it; replacement-server refresh preserves the absolute deadline; confirmed sign-out invalidates the existing resource capability and refuses new authorization. Test-only SQL changes are confined to disposable synthetic rows and restored before refresh.
+
+The full isolated ownership/restart/fencing and combined browser rehearsal passed. All resources were cleaned up; no stylist-refresh container or volume remains. The foundation code is unchanged in this checkpoint; its recorded 598-test/typecheck/build result remains the latest suite. Auth and maintenance HTTP replies remain synthetic, and no customer-resource route is activated. This does not establish hosted isolation or all-route integration.
+
+Exact next action: add a bounded account session-status endpoint backed by authorizeResource, then connect explicit browser session restoration and refresh only when needed. Test page reload/browser replacement, no cookie exposure or local storage, cancellation/sign-out races and absolute seven-day expiry. Preserve all real-provider/device/phase gates and existing financial limits.

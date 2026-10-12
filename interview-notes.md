@@ -1281,3 +1281,7 @@ I made seven days the account host default and verified that the original deadli
 ## Enforcing the stored session deadline for customer data
 
 I prepared a resource-access guard that requires a current signed identity and ready server-held session ownership before customer data can be used. It checks the stored deadline again during reuse and refuses held, missing or expired records. The 598-test suite passes; real route integration and hosted isolation acceptance remain open.
+
+## Proving session expiry blocks resource access
+
+I extended the combined database/browser rehearsal to verify the actual resource guard. Expired and quarantined records blocked access; expired access tokens could refresh without authorizing resources; sign-out invalidated existing resource permission. The checks used disposable data and synthetic Auth, so hosted customer isolation remains a separate gate.
