@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The complete 188 foundation tests pass; revised SQL adapter-chain recovery and timestamp guards also pass isolated PostgreSQL verification.
+1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The complete 189 foundation tests pass; revised SQL adapter-chain recovery and timestamp guards also pass isolated PostgreSQL verification.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1087,3 +1087,8 @@ The isolated PostgreSQL suite passed after execution became available, including
 ## Local decoder containment verified, 11 October 2026
 
 Six isolated Linux resource scenarios pass through the actual sanitizer and Sharp 0.35.5: kernel limits/read-only non-root runtime, PNG/JPEG/WebP through 16 MP, corrupt/dimension refusal, hung-child kill/reap, measured CPU throttling and native-buffer OOM containment. Each temporary container has no network, 384 MiB memory/no swap, half a CPU and 64-process cap and is removed after its scenario. The app uses no Docker runtime or new hosted service. See docs/image-decoder-resource-rehearsal.md for the command and limits of evidence. Actual Render containment, hosted identity, Storage and signed URLs remain gates; Task 2b remains local-only and incomplete. No spending, customer media or hosted changes occurred.
+
+
+## Actual local Storage API verification, 11 October 2026
+
+The disposable Storage API rehearsal passes owner-only reads, public/foreign/anonymous denial, direct customer mutation protection, signed-link issuance/expiry, exact service acknowledgments and the prepared transport against actual HTTP responses. It exposed and fixed missing-object recovery: a bounded NoSuchKey JSON envelope under HTTP 400 or 404 is required; ambiguous responses remain unknown. All 189 foundation tests, type checking, build and isolated SQL/media recovery checks pass. See docs/local-storage-api-rehearsal.md for scope and evidence. Hosted Auth/Storage and account-bound image delivery remain unverified. Signed links are bearer credentials before expiry; do not expose them as account-bound URLs. Task 2b remains local-only and incomplete.

@@ -719,3 +719,8 @@ I kept the new persistence features disabled while I verified their database beh
 ### Testing the image decoder beyond its JavaScript heap
 
 I treated native image decoding as a resource risk because a JavaScript heap limit does not cap the image library. I verified the actual sanitizer in isolated Linux containers, including an intentional native-memory overload that the kernel contained, CPU throttling and stopping a hung worker. I kept those local results separate from Render acceptance and left customer uploads disabled until the hosted controls can be verified.
+
+
+### Replacing simulated Storage evidence with a real local API
+
+I tested private image access against a disposable Storage API and database. The real service exposed a missing-object response mismatch that had kept recovery pending; I corrected the transport and reran its checks. I also confirmed that expiring signed links are bearer credentials, so I kept account-bound image delivery as a separate requirement rather than treating expiry as customer isolation.

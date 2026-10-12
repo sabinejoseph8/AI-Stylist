@@ -51,7 +51,7 @@ function prepared(objects:Map<string,Uint8Array>,failure:Failure='none'){
   }
   if(init.method==='GET'){
    assert(path.startsWith('/storage/v1/object/authenticated/stylist-wardrobe/'));const key=path.slice('/storage/v1/object/authenticated/stylist-wardrobe/'.length),bytes=objects.get(key);
-   return bytes?new Response(Uint8Array.from(bytes).buffer,{headers:{'content-type':key.endsWith('.jpg')?'image/jpeg':'image/webp'}}):new Response(null,{status:404});
+   return bytes?new Response(Uint8Array.from(bytes).buffer,{headers:{'content-type':key.endsWith('.jpg')?'image/jpeg':'image/webp'}}):new Response(JSON.stringify({code:'NoSuchKey',statusCode:'404',error:'not_found'}),{status:400,headers:{'content-type':'application/json'}});
   }
   assert.equal(init.method,'DELETE');assert.equal(path,'/storage/v1/object/stylist-wardrobe');
   const {prefixes}=JSON.parse(new TextDecoder().decode(init.body as ArrayBuffer));assert.equal(prefixes.length,1);const key=prefixes[0];

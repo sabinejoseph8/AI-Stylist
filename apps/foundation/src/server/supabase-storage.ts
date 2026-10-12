@@ -58,8 +58,8 @@ export function createSupabaseStorage(projectUrl:string,serviceKey:string,fetche
    else cancel(response?.body);
   }
  }
- async function json(response:StorageResponse,wait:<R>(work:Promise<R>)=>Promise<R>,setReader:(value:ReadableStreamDefaultReader<Uint8Array>)=>void):Promise<unknown>{
-  if(response.status<200||response.status>=300||!/^application\/json(?:\s*;|$)/i.test(response.headers.get('content-type')??'')||!response.body)throw Error('response');
+ async function json(response:StorageResponse,wait:<R>(work:Promise<R>)=>Promise<R>,setReader:(value:ReadableStreamDefaultReader<Uint8Array>)=>void,readError=false):Promise<unknown>{
+  if((!readError&&(response.status<200||response.status>=300))||!/^application\/json(?:\s*;|$)/i.test(response.headers.get('content-type')??'')||!response.body)throw Error('response');
   const reader=response.body.getReader();setReader(reader);const parts:Uint8Array[]=[];let length=0;
   while(true){const item=await wait(reader.read());if(item.done)break;length+=item.value.byteLength;if(length>65536)throw Error('size');parts.push(item.value);}
   const bytes=new Uint8Array(length);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.length;}
@@ -79,7 +79,16 @@ export function createSupabaseStorage(projectUrl:string,serviceKey:string,fetche
    if(typeof key!=='string'||!readableKey.test(key))return {state:'unknown'};
    try{
     return await request('GET',storageUrl(base,'authenticated',key),async(response,wait,setReader)=>{
-     if(response.status===404)return {state:'absent'} as const;
+     if(response.status===400||response.status===404){
+      // Storage may wrap NoSuchKey in HTTP 400. A bare status or missing bucket
+      // cannot prove this specific object is absent.
+      const error=await json(response,wait,setReader,true);
+      if(error&&typeof error==='object'&&!Array.isArray(error)){
+       const row=error as Record<string,unknown>;
+       if(row.code==='NoSuchKey'&&(row.statusCode==='404'||row.statusCode===404)&&row.error==='not_found')return {state:'absent'} as const;
+      }
+      throw Error('unverified absence');
+     }
      // Partial content cannot establish a full object's checksum.
      if(response.status!==200||response.headers.get('content-range')||!/^image\/(?:webp|jpeg|png)(?:\s*;|$)/i.test(response.headers.get('content-type')??'')||!response.body)throw Error('response');
      const reader=response.body.getReader();setReader(reader);

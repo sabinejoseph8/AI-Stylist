@@ -67,7 +67,7 @@ it('retains deletion metadata after an empty removal acknowledgment, then finali
   const name=new URL(_url).pathname.split('/').at(-1);return new Response(JSON.stringify(name==='stylist_read_media_operation'?{id,ownerId:owner,key,checksum:hash,state:'deleting',deletionToken:token}:true),{headers:{'content-type':'application/json'}});
  });
  const rpc=createSupabaseRpc('https://fixture.supabase.co','x'.repeat(30),db);
- const storageFetch=vi.fn(async(_url:string,init:RequestInit)=>init.method==='DELETE'?new Response('[]',{headers:{'content-type':'application/json'}}):new Response(null,{status:404}));
+ const storageFetch=vi.fn(async(_url:string,init:RequestInit)=>init.method==='DELETE'?new Response('[]',{headers:{'content-type':'application/json'}}):new Response(JSON.stringify({code:'NoSuchKey',statusCode:'404',error:'not_found'}),{status:400,headers:{'content-type':'application/json'}}));
  const port=createMediaSupabasePort(owner,rpc,x.customer,createSupabaseStorage('https://fixture.supabase.co','x'.repeat(30),storageFetch));
  await expect(deleteImage(port,owner,id,2,true)).rejects.toThrow('Image deletion not confirmed');expect(db).not.toHaveBeenCalled();
  expect(await reconcileMedia(port,owner,id)).toBe('deleted');expect(db).toHaveBeenCalledTimes(2);expect(storageFetch.mock.calls.map(c=>c[1].method)).toEqual(['DELETE','GET']);

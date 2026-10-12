@@ -47,8 +47,9 @@ describe('disabled Supabase Storage transport boundary',()=>{
   expect(await store.inspect(key)).toEqual({state:'present',checksum:createHash('sha256').update(bytes).digest('hex')});
   expect(fetcher).toHaveBeenCalledWith(`https://stylist-test.supabase.co/storage/v1/object/authenticated/stylist-wardrobe/${key}`,expect.objectContaining({method:'GET',redirect:'error'}));
  });
- it('treats only a 404 as absent and other read failures as unknown',async()=>{
-  expect(await adapter(vi.fn(async()=>response(404))).inspect(key)).toEqual({state:'absent'});
+ it('requires a structured NoSuchKey response for verified absence',async()=>{
+  for(const status of [400,404])expect(await adapter(vi.fn(async()=>response(status,new TextEncoder().encode(JSON.stringify({code:'NoSuchKey',statusCode:'404',error:'not_found',message:'Object not found'}))))).inspect(key)).toEqual({state:'absent'});
+  expect(await adapter(vi.fn(async()=>response(404))).inspect(key)).toEqual({state:'unknown'});
   expect(await adapter(vi.fn(async()=>response(403))).inspect(key)).toEqual({state:'unknown'});
   expect(await adapter(vi.fn(async()=>response(200,bytes,'text/html'))).inspect(key)).toEqual({state:'unknown'});
  });
@@ -126,4 +127,13 @@ it('holds a deletion acknowledgment for no object, another key or another bucket
 });
 it('bounds mutation acknowledgments and rejects malformed JSON',async()=>{
  for(const body of ['{',JSON.stringify('x'.repeat(65537))])await expect(adapter(async()=>response(200,new TextEncoder().encode(body))).remove(key)).rejects.toThrow();
+});
+
+it('holds ambiguous missing-object responses rather than deleting metadata',async()=>{
+ for(const value of [{code:'NoSuchBucket',statusCode:'404',error:'not_found'},{code:'NoSuchKey',statusCode:'403',error:'not_found'},{code:'NoSuchKey',statusCode:'404',error:'AccessDenied'},true]){
+  expect(await adapter(async()=>response(400,new TextEncoder().encode(JSON.stringify(value)))).inspect(key)).toEqual({state:'unknown'});
+ }
+ for(const body of ['{',JSON.stringify({code:'NoSuchKey',statusCode:'404',error:'not_found',message:'x'.repeat(65537)})]){
+  expect(await adapter(async()=>response(400,new TextEncoder().encode(body))).inspect(key)).toEqual({state:'unknown'});
+ }
 });

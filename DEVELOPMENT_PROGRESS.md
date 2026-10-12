@@ -687,3 +687,10 @@ Exact next action: publish/copy the verified resource harness and updated memory
 The private Memory website now publishes document snapshot 297e31c with all 188 foundation checks and the six local decoder resource scenarios. Sixteen website checks and artifact validation pass. Native deployment appgdep_6acc2916d7188191ac1325a2a8e78015 succeeded; private access and MCP tools remain. Site source commit d53970805466b21ffd55e9f99ad4ae7ce92d5d14.
 
 Next actionable local Task 2b work: rehearse actual Storage API owner access, direct mutation denial and signed-link expiry against a disposable database and cached Storage image, on an isolated internal Docker network with generated test identities/images and no host ports. The existing Storage evidence uses a simulated schema/transport. Official self-hosting configuration and cached image startup/migrations were inspected; no service is started yet. This remains local preparation, not hosted acceptance or a request to change Supabase + Render hosting.
+
+
+## Actual local Storage API and recovery fix, 11 October 2026
+
+The actual Storage API on an internal disposable Docker network passes private owner reads, foreign/anonymous/public read denial, direct customer upload/overwrite/deletion protection, owner-only signed-link issuance, signed-link expiry and exact service upload/removal responses. The prepared TypeScript transport runs against the local API through a test-only origin mapper. It exposed a missing-object envelope mismatch, fixed by requiring bounded NoSuchKey JSON under HTTP 400/404 rather than trusting status alone. All 189 foundation tests, type checking, build and isolated SQL/media recovery checks pass. No hosted credential, migration, provider, customer image or spending change occurred. Temporary containers and network were removed.
+
+Exact next action: publish/copy this evidence and prepare an owner-authorized image-read interface. Raw signed URLs remain bearer credentials until expiry, so copied-link isolation requires account-bound delivery. Keep actual customer authentication and hosted activation gated by Phase 1/Task 2c; deletion-receipt retention remains open.
