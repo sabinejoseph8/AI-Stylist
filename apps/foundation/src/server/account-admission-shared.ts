@@ -30,5 +30,5 @@ export function createSharedAccountAdmission(routes:ReadonlyMap<string,AccountNo
    return accountJsonResponse(503,'unavailable');
   }}));
  }
- return Object.freeze({routes:():ReadonlyMap<string,AccountNodeRoute>=>new Map(guarded)});
+ return Object.freeze({routes:():ReadonlyMap<string,AccountNodeRoute>=>new Map(guarded),pending:()=>pending});
 }

@@ -1213,3 +1213,7 @@ I connected the email confirmation screen to the actual password form in a local
 ## Preserving request limits across restarts
 
 I added a shared account request counter in the database so restarting a server cannot reset the allowance. It retains only aggregate technical metadata, not customer identifiers. I checked concurrent requests and a database restart in an isolated rehearsal, then installed the control and verified ten live access checks. I kept sign-out available for cleanup and left the host disabled until its remaining wiring and acceptance checks are complete. The full foundation suite now passes 544 tests.
+
+## Preparing the account host lifecycle
+
+I connected the prepared account handlers to a host wrapper with shared database request limits and explicit startup checks. A failed cleanup check keeps account work unavailable while sign-out remains possible. I tested startup, shutdown, late replies and recurring maintenance over local HTTP, and made unresolved shutdown work visible instead of claiming cleanup had finished. All 550 foundation tests pass. Actual customer hosting and real provider acceptance remain separate.
