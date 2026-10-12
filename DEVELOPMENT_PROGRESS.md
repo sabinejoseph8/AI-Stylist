@@ -2499,3 +2499,10 @@ Read-only hosted ledger counts confirm nine attempts, all nine closed, the appro
 Revalidated the current worktree and backlog. No new manual result, required account configuration or platform clarification was supplied; the same human/external dependency boundary has persisted for three consecutive goal checks. There is no confirmed live job to wait on and no independent authorized task that can close these acceptance gates. The goal remains incomplete and is being marked blocked, not complete.
 
 Exact unblock action: Sabine completes the deployed private iPhone recovery test using the full advance chat instructions and reports interruption, replacement context and End behavior. Alternatively, provide the pending platform clarification or required existing account setup input for hosted account acceptance. Preserve the $29 experiment allocation, single two-room trial, no retries and all later-phase gates. Once input arrives, verify private ledger closure and continue the next authorized task.
+
+
+## Interrupted manual recovery attempt, 12 October 2026
+
+Sabine reports closing the browser window after her first sentence. Read-only checks show eleven lifetime reservations: nine earlier closed attempts, the recovery initial unit started with its room and now closed, and the replacement unit unstarted with no room. Tavus independently reports the initial conversation ended. No active replacement room exists. The unclaimed replacement unit remains conservatively reserved, not refunded or reused; its open ledger flag is not evidence of a running provider call. No ledger mutation or new provider call was performed during verification.
+
+Interruption-and-resume acceptance was not reached. Do not count this as a passing recovery trial. The single approved recovery experiment has been consumed; another attempt requires a separately approved allowance, preserving all prior history and existing spending limits. Exact next action: prepare a concrete repeat proposal if Sabine wants to repeat, then obtain explicit financial authorization before enabling it. Account/provider setup and later-phase gates remain unchanged.
