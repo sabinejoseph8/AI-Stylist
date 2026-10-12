@@ -1059,3 +1059,7 @@ I found that the prepared social sign-in exchange still needed an HTTP delivery 
 ## Delivering a recovery callback safely
 
 I added the recovery callback delivery step so the reset grant becomes a reset-only browser cookie and a fixed local redirect. Canceled or failed delivery cleans up the grant. I also extended the local Node transport with an explicit allowlist for the three supported callbacks and verified separate cookies over loopback HTTP. Real account routes remain disabled.
+
+## Fixing recovery cleanup after a disconnect
+
+I tested signed callbacks over local HTTP, including a delayed reply after the client disconnected. This exposed a case where cancellation stopped identity verification too early for cleanup. I fixed it by verifying identity again using the cleanup operation, without restoring reset permission. The tests now confirm cleanup and no reset access; database verification of the new case is next.

@@ -33,13 +33,17 @@ export function createRecoveryProvider(operations:RecoveryOperations,verifier:Pi
     disposed=true;
     return cleanup??=(async()=>{
      if(s.aborted)return false;
+     // A late result may arrive after the request signal was canceled. Cleanup has its own
+     // bounded signal and may verify identity solely to correlate primary absence.
+     let cleanupIdentity=identity;
+     if(!cleanupIdentity)try{cleanupIdentity=await verifier.verify(jwt,s);}catch{}
      try{await operations.revoke(jwt,'local',s);}catch{}
-     if(!identity?.sessionId||s.aborted)return false;
+     if(!cleanupIdentity?.sessionId||s.aborted)return false;
      try{
-      const value=await presence.confirm(identity.ownerId,identity.sessionId,s);
+      const value=await presence.confirm(cleanupIdentity.ownerId,cleanupIdentity.sessionId,s);
       if(!value||typeof value!=='object'||Array.isArray(value))return false;
       const result=value as Record<string,unknown>;
-      return !s.aborted&&Object.keys(result).sort().join(',')==='ownerId,sessionId,status'&&result.status==='revoked'&&result.ownerId===identity.ownerId&&result.sessionId===identity.sessionId;
+      return !s.aborted&&Object.keys(result).sort().join(',')==='ownerId,sessionId,status'&&result.status==='revoked'&&result.ownerId===cleanupIdentity.ownerId&&result.sessionId===cleanupIdentity.sessionId;
      }catch{return false;}
     })();
    },

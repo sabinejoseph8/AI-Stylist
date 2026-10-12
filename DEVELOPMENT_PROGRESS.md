@@ -4,7 +4,7 @@
 
 Private Memory publication succeeded with the 468-test checkpoint and recovery HTTP/browser/database composition. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 3348bcfabe803133132827f099d538a613765666; deployment appgdep_6acc68a64aa48191996a3cca2b7d4f9a; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_fe8d7e7bcd4881918a1280f9d1a8ecfa. Task 2c stays open.
 
-Exact next action: compose signed OAuth/recovery callback delivery with Node HTTP and client-disconnect cleanup, without application activation.
+Exact next action: extend isolated PostgreSQL recovery composition with late canceled results, verify cleanup identity correlation, then publish private Memory.
 
 ## Previous publication checkpoint (historical)
 
@@ -1619,3 +1619,13 @@ Prepared a reset-only recovery callback HTTP adapter. A verified grant is instal
 All 477 foundation tests across 63 files, type checking and build pass. Five new tests cover reset-only delivery, cancellation/install cleanup, failure/path validation, exact Node callback allowlisting and actual loopback redirect/separate-cookie transport. The loopback transport fixture is synthetic and does not yet prove the generated-identity callback/disconnect composition. Hosted TLS/browser acceptance remains open.
 
 Exact next action: compose actual signed OAuth/recovery callback handlers with Node delivery, including a disconnected client and late provider result; keep the server activation disabled. Private Memory currently publishes the 468-test database checkpoint.
+
+## Signed callbacks and disconnect cleanup, 12 October 2026
+
+Five new composed loopback HTTP tests use generated ES256 identities and actual OAuth/recovery owners with callback response adapters. Google and Apple deliver account cookies/relative redirects and refuse replay. Recovery delivers only its reset cookie. A late OAuth session after client disconnect is discarded. A late recovery result is revoked without installing reset permission.
+
+The recovery disconnect test exposed an unnecessary unresolved-cleanup hold: cancellation prevented initial identity verification, leaving cleanup unable to correlate primary absence. Fixed by verifying identity with the independent bounded cleanup signal before revocation, solely for cleanup correlation. Failed verification still attempts logout and remains unconfirmed. This does not restore reset authority or issue cookies.
+
+All 482 foundation tests across 64 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
+
+Exact next action: extend the isolated recovery database rehearsal with the canceled/late result case and rerun it, then update private Memory from the 468-test checkpoint. Task 2c and hosted/device gates remain open.
