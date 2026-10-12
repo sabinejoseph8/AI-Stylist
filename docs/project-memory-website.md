@@ -128,3 +128,7 @@ Exact next action: prepare an error-distinguishing, service-only authoritative s
 Owner-private publication succeeded, preserving the existing one-user/no-group audience and MCP capability. All 16 site checks and artifact validation passed. Source 535e97d629d274eb89ec9ca7ea4cc6eb2a327e60; deployment appgdep_6acc9132db8c8191957bac163dcff385; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_2dadc742200c8191a46f73a91ce9d86d. The site now includes 560-test account host integration and the complete isolated PostgreSQL lifecycle rehearsal. No task was marked complete by publication.
 
 Next: prepare separate connected account/reset browser entry and strictly bounded static HTTPS delivery around the explicit host. Preserve the sample preview and all customer activation gates.
+
+## Private Memory synchronized to combined account acceptance, 12 October 2026
+
+Owner-private publication succeeded with its one-user/no-group audience and MCP preserved. All 16 site checks and artifact validation passed. Source 9471cb4d572de8600085a264e4565d7c37ad47cf; deployment appgdep_6acc980aa18c819197abe9625dba4e57; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_f428658312108191936f6867a5a284f8. The site now includes connected build/static delivery, bounded loader/network lifecycle, 578-test evidence and combined HTTPS/WebKit/PostgreSQL rehearsal. No task was marked complete by publication.

@@ -1249,3 +1249,7 @@ I added explicit listener startup and bounded shutdown. Account maintenance must
 ## Connecting the browser to the isolated account database
 
 I ran the actual connected pages through HTTPS and WebKit with the complete account application and a disposable PostgreSQL database. Signed login, encrypted refresh storage, refresh and confirmed sign-out passed. Recovery also passed in a separate browser context with no original cookies, with exactly one password update and no reuse after reload. I corrected a test that checked sign-out too early and removed misleading retry advice from an unconfirmed sign-out message. All 578 foundation tests passed. Auth responses remained simulated, so real email and phone acceptance are still open.
+
+## Validating server settings before activation
+
+I prepared strict validation for deployment origins, private server settings and encryption-key configuration. Invalid settings fail with a generic message rather than exposing their contents. I kept sign-in duration as an explicit customer-facing decision, with no silent default. All 583 foundation tests passed. No credential was generated or hosted account setting changed.

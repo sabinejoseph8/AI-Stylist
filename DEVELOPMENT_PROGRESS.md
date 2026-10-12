@@ -2037,3 +2037,15 @@ Verified generated signed sign-in, secure HttpOnly cookie, encrypted initial own
 The first attempt checked cookies after local UI closure but before server acknowledgment; corrected the test to await the confirmed sign-out message. Also corrected misleading sign-out error copy that advised retry even after the access cookie was cleared. Unconfirmed remote cleanup remains explicitly unconfirmed; no new cleanup authority was introduced. Both focused and integration assertions cover the accurate text. All 578 foundation tests, type checking and two-entry build pass. Verified no disposable database containers/volumes remain. Browser/server/certificate/build resources were removed.
 
 Exact next action: synchronize private Memory with connected delivery/lifecycle and combined rehearsal evidence, then prepare explicit hosted runtime configuration. Real SMTP sender, exact hosted origin, Google/Apple credentials/linking, hosted provider/isolation, physical-device/accessibility and phase review remain open. No live account, email, setting change or paid call occurred.
+
+## Private Memory synchronized to combined account acceptance, 12 October 2026
+
+Owner-private publication succeeded with its one-user/no-group audience and MCP preserved. All 16 site checks and artifact validation passed. Source 9471cb4d572de8600085a264e4565d7c37ad47cf; deployment appgdep_6acc980aa18c819197abe9625dba4e57; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_f428658312108191936f6867a5a284f8. The site now includes connected build/static delivery, bounded loader/network lifecycle, 578-test evidence and combined HTTPS/WebKit/PostgreSQL rehearsal. No task was marked complete by publication.
+
+## Explicit runtime settings prepared, 12 October 2026
+
+Prepared a server-only settings parser for exact HTTPS app/Supabase origins, a privately supplied server key, one-to-four canonical 256-bit refresh keys with explicit active ID, absolute deployment build directory, explicit port and restricted bind addresses. Missing, duplicate, malformed or noncanonical values produce a generic error without private input. Parsing generates no credential, reads no ambient environment and starts no work. There is deliberately no default session expiry or activation flag.
+
+Five focused settings checks pass; all 583 foundation tests across 85 files, type checking and build pass. No live key was read or generated, and no hosted setting/account/email/paid call changed.
+
+A customer sign-in duration decision is pending with Sabine: 7 days from sign-in recommended, or 24 hours / 30 days. Do not treat elapsed time as approval or promise that behavior yet. Existing access-cookie/refresh behavior still requires the agreed persistence contract before activation. Next: continue independent deployment preparation, then implement the chosen session policy after Sabine replies. Real sender, hosted origin, social credentials/linking and remaining live/device/phase gates stay open. Private Memory currently publishes the 578-test combined checkpoint; include settings preparation in its next consolidated update.
