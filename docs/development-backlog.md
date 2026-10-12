@@ -1153,3 +1153,10 @@ All 223 foundation tests across 18 files, type checking and build pass. These ei
 ## Cryptographic identity gate preparation
 
 Prepared a disconnected jose 6.2.12 verifier with exact Supabase issuer/audience, asymmetric-only signing, required user/session claims and an injected current-session authority. It refuses expiry, malformed/anonymous/forged tokens and revoked/uncertain sessions. Downstream current-session checks are available without exposing tokens. Eight-second deadlines and four underlying operations bound unresolved work; timed-out underlying checks keep admission until they settle. All 231 foundation tests across 19 files, type checking and build pass. Generated keys and simulated session status are the only identities used. See docs/server-identity-preparation.md for source references and remaining real Auth/JWKS/cookie/callback requirements.
+
+
+## Protected current-session lookup
+
+Migration 016 prepares a service-only boolean lookup joining auth.sessions and auth.users by both signed IDs. It rejects missing/expired sessions and deleted, banned or anonymous users. It never creates or changes managed Auth tables. A disconnected authority adapter accepts only exact true and discards canceled/error replies. The isolated fixture now includes a minimal synthetic Auth schema; a generated signed token passes the actual local SQL lookup and is rejected after its session row is removed. Direct browser table/function access is denied.
+
+All 234 foundation tests across 20 files, type checking and build pass. Full local PostgreSQL and actual Storage upgrade rehearsals pass with sixteen migrations. This does not prove actual GoTrue sign-out, live schema privileges, configured inactivity/timebox policies or email/OAuth behavior. Supabase model fields were reviewed from its official source; the actual hosted schema and session configuration still require verification before activation.

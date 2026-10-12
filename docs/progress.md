@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 231 foundation tests across 19 files, type checking and build pass. The prepared cryptographic identity gate verifies generated ES256/RS256 signatures, required Supabase claims and simulated current-session authority, including revocation and bounded unresolved checks. Account UI state, actual Auth/SQL sessions, JWKS transport, cookies and callbacks are not yet connected. Task 2b hosted acceptance and Phase 1 gates remain open; no paid calls or real sign-ins occurred.
+Task 2c local account preparation is active. All 234 foundation tests across 20 files, type checking and build pass. A generated signed JWT and the prepared server port now exercise a real local PostgreSQL session lookup; removing its synthetic Auth session rejects the same unexpired token. Owner mismatch, bans, deletion, anonymous status, expiry and privilege denial pass. The sixteen-migration actual local Storage upgrade also passes. Real Auth, hosted configuration, JWKS transport, cookies and callbacks remain gated or unimplemented; no real sign-ins or paid calls occurred.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1422,3 +1422,10 @@ All 223 foundation tests across 18 files, type checking and build pass. These ei
 ## Cryptographic identity gate preparation
 
 Prepared a disconnected jose 6.2.12 verifier with exact Supabase issuer/audience, asymmetric-only signing, required user/session claims and an injected current-session authority. It refuses expiry, malformed/anonymous/forged tokens and revoked/uncertain sessions. Downstream current-session checks are available without exposing tokens. Eight-second deadlines and four underlying operations bound unresolved work; timed-out underlying checks keep admission until they settle. All 231 foundation tests across 19 files, type checking and build pass. Generated keys and simulated session status are the only identities used. See docs/server-identity-preparation.md for source references and remaining real Auth/JWKS/cookie/callback requirements.
+
+
+## Protected current-session lookup
+
+Migration 016 prepares a service-only boolean lookup joining auth.sessions and auth.users by both signed IDs. It rejects missing/expired sessions and deleted, banned or anonymous users. It never creates or changes managed Auth tables. A disconnected authority adapter accepts only exact true and discards canceled/error replies. The isolated fixture now includes a minimal synthetic Auth schema; a generated signed token passes the actual local SQL lookup and is rejected after its session row is removed. Direct browser table/function access is denied.
+
+All 234 foundation tests across 20 files, type checking and build pass. Full local PostgreSQL and actual Storage upgrade rehearsals pass with sixteen migrations. This does not prove actual GoTrue sign-out, live schema privileges, configured inactivity/timebox policies or email/OAuth behavior. Supabase model fields were reviewed from its official source; the actual hosted schema and session configuration still require verification before activation.

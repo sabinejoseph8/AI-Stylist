@@ -761,3 +761,6 @@ I prepared the account flow locally so customers can sign in with email/password
 
 
 I separated a valid sign-in token from a currently active session. The prepared server verifier checks actual cryptographic signatures and asks a separate authority whether the session remains active. I also limited stalled checks so repeated timeouts cannot create unlimited background work. These checks use generated keys and simulated session status, so live sign-out and Supabase integration remain open.
+
+
+I tested the token verifier against a real local database with a synthetic Auth schema. The same signed token stopped working after its session row was removed, even though the token had not expired. I also checked account bans, deletion, anonymous status and cross-account session IDs. This strengthens local evidence while leaving actual Supabase sign-out and configured session policies as separate launch checks.

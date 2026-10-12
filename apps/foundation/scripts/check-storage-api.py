@@ -90,7 +90,8 @@ create function auth.uid() returns uuid language sql stable as $$
 select coalesce(nullif(current_setting('request.jwt.claim.sub',true),''),
 (nullif(current_setting('request.jwt.claims',true),'')::jsonb)->>'sub')::uuid $$;
 """)
-    sql(f"insert into auth.users values ('{a}'),('{b}');")
+    sql("create table auth.sessions(id uuid primary key,user_id uuid not null references auth.users(id) on delete cascade,not_after timestamptz); alter table auth.users add column banned_until timestamptz, add column deleted_at timestamptz, add column is_anonymous boolean default false;")
+    sql(f"insert into auth.users(id) values ('{a}'),('{b}');")
     env = os.environ.copy()
     env.update({'AUTH_JWT_SECRET': secret, 'ANON_KEY': token('anon'),
                 'SERVICE_KEY': token('service_role'), 'DATABASE_URL': 'postgres://postgres@db:5432/postgres',
@@ -131,7 +132,7 @@ select coalesce(nullif(current_setting('request.jwt.claim.sub',true),''),
         raise RuntimeError('Local Storage API startup timeout')
     sql('grant usage on schema auth to authenticated,anon,service_role; grant execute on function auth.uid() to authenticated,anon,service_role;')
     migrations = sorted((ROOT / 'supabase/migrations').glob('*.sql'))
-    require(len(migrations) == 15, 'Review upgrade rehearsal boundaries after changing migration count')
+    require(len(migrations) == 16, 'Review upgrade rehearsal boundaries after changing migration count')
     for migration in migrations[:8]:
         sql(migration.read_text())
     owner, other, service, anon = token('authenticated', a), token('authenticated', b), token('service_role'), token('anon')

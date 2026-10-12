@@ -24,3 +24,13 @@ Eight new tests use generated ES256/RS256 keys and actual signatures. They cover
 - Wire media/consultation routes only after the corresponding Auth and hosted approvals. No live provider, key, request or customer data has been used.
 
 Sources reviewed on 11 October 2026: [Supabase JWT verification](https://supabase.com/docs/guides/auth/jwts), [Supabase sessions](https://supabase.com/docs/guides/auth/sessions), [sign-out semantics](https://supabase.com/docs/guides/auth/signout). The docs distinguish JWT validity from current session status and describe checking session_id against auth.sessions. This implementation uses that distinction; it does not claim remote sign-out acceptance.
+
+
+## Protected current-session lookup
+
+Migration 016 prepares a service-only boolean lookup joining auth.sessions and auth.users by both signed IDs. It rejects missing/expired sessions and deleted, banned or anonymous users. It never creates or changes managed Auth tables. A disconnected authority adapter accepts only exact true and discards canceled/error replies. The isolated fixture now includes a minimal synthetic Auth schema; a generated signed token passes the actual local SQL lookup and is rejected after its session row is removed. Direct browser table/function access is denied.
+
+All 234 foundation tests across 20 files, type checking and build pass. Full local PostgreSQL and actual Storage upgrade rehearsals pass with sixteen migrations. This does not prove actual GoTrue sign-out, live schema privileges, configured inactivity/timebox policies or email/OAuth behavior. Supabase model fields were reviewed from its official source; the actual hosted schema and session configuration still require verification before activation.
+
+
+Official model references reviewed: [Supabase session model](https://github.com/supabase/auth/blob/master/internal/models/sessions.go), [Supabase user model](https://github.com/supabase/auth/blob/master/internal/models/user.go). The lookup checks persisted session existence/not_after and user state. It does not reproduce all configurable GoTrue lifetime/inactivity/MFA rules; hosted activation must verify those policies and incorporate the relevant authority. Synthetic schema checks must never be described as actual GoTrue authentication.

@@ -22,7 +22,8 @@ try:
   time.sleep(.2)
  else: raise RuntimeError('Database startup timed out')
  sql("create role anon; create role authenticated; create role service_role; create schema auth; create table auth.users(id uuid primary key); create function auth.uid() returns uuid language sql stable as $$ select nullif(current_setting('request.jwt.claim.sub',true),'')::uuid $$; grant usage on schema auth to authenticated; grant execute on function auth.uid() to authenticated;")
- sql(f"insert into auth.users values ('{a}'),('{b}');")
+ sql("create table auth.sessions(id uuid primary key,user_id uuid not null references auth.users(id) on delete cascade,not_after timestamptz); alter table auth.users add column banned_until timestamptz, add column deleted_at timestamptz, add column is_anonymous boolean default false;")
+ sql(f"insert into auth.users(id) values ('{a}'),('{b}');")
  sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110001_customer_media_foundation.sql').read_text())
  sql(f"insert into public.stylist_media_assets(user_id,storage_key,content_type,width,height) values ('{a}','{a}/fixture.jpg','image/jpeg',100,100);")
  def actor(uid,query): return f"set role authenticated; set request.jwt.claim.sub='{uid}'; "+query
@@ -340,6 +341,26 @@ try:
  assert not change(owner,race,'heartbeat')
  print('Concurrent provider starts permit one transition; heartbeat/end race cannot revive the freed slot')
  print('Single consultation SQL slot passes concurrent claim, reconnect, fencing, expiry and cleanup-hold scenarios')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110016_current_auth_session.sql').read_text())
+ auth_session=str(uuid.uuid4())
+ sql(f"insert into auth.sessions(id,user_id) values('{auth_session}','{a}');")
+ def active(owner,session=auth_session):
+  return sql(f"set role service_role; select public.stylist_auth_session_active('{owner}','{session}');")=='t'
+ assert active(a) and not active(b) and not active(a,str(uuid.uuid4()))
+ for role in ['anon','authenticated']:
+  sql(f"set role {role}; select public.stylist_auth_session_active('{a}','{auth_session}');",False)
+  sql(f"set role {role}; select * from auth.sessions;",False)
+ for column,value in [('banned_until',"now()+interval '1 day'"),('deleted_at','now()'),('is_anonymous','true')]:
+  sql(f"update auth.users set {column}={value} where id='{a}';");assert not active(a)
+  reset='false' if column=='is_anonymous' else 'null'
+  sql(f"update auth.users set {column}={reset} where id='{a}';");assert active(a)
+ sql(f"update auth.sessions set not_after=now()-interval '1 second' where id='{auth_session}';");assert not active(a)
+ sql(f"update auth.sessions set not_after=now()+interval '1 day' where id='{auth_session}';");assert active(a)
+ sql(f"delete from auth.sessions where id='{auth_session}';");assert not active(a)
+ checked=run(['node',str(Path(__file__).resolve().parent/'check-auth-session-db.ts'),name],timeout=30)
+ assert checked.returncode==0,checked.stderr
+ print(checked.stdout.strip())
+ print('Protected Auth session SQL passes owner binding, deletion/ban/anonymous/expiry and privilege checks; Auth schema remains synthetic')
  sql(f"delete from auth.users where id='{a}';")
  assert sql(f"select count(*) from stylist_private.retired_media_ids where user_id='{a}';")=='0'
  print('Approved receipt retention passes cutoff, authorization, idempotency, retired-ID protection and account cascade checks')
