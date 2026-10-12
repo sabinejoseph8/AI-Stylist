@@ -12,6 +12,7 @@ import {createRefreshHttp} from '../src/server/refresh-http.ts';
 import {createRefreshProvider} from '../src/server/refresh-provider.ts';
 import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts';
 import {createRefreshReconciliation} from '../src/server/refresh-reconciliation.ts';
+import {createAuthSessionPresence} from '../src/server/auth-session-presence.ts';
 import {createRefreshScan} from '../src/server/refresh-scan.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
@@ -32,6 +33,7 @@ function execute(args,input=''){
 }
 const signatures={
  stylist_list_refresh_candidates:[['p_after','uuid'],['p_limit','integer']],
+ stylist_auth_session_presence:[['p_owner','uuid'],['p_session','uuid']],
  stylist_auth_session_active:[['p_owner','uuid'],['p_session','uuid']],
  stylist_adopt_refresh:[['p_owner','uuid'],['p_session','uuid'],['p_expiry','bigint'],['p_envelope','jsonb']],
  stylist_inspect_refresh:[['p_owner','uuid'],['p_session','uuid']],
@@ -225,3 +227,12 @@ const finalPage=await finalScan.page(null,10,signal());assert.equal(finalPage.co
 assert.equal((await scanStore.discover(null,10,signal())).candidates.length,0);
 await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id in ('${scanSecond}','${scanThird}');`);
 console.log('Reconciliation scan PostgreSQL composition passed: unknown-record preservation, confirmed-only removal, actual restart and replacement-scanner cursor resume, empty terminal page, and fresh full-sweep resolution. Authority remains synthetic.');
+
+// Real primary-database presence authority, including cascade after actual session deletion.
+const presence=createAuthSessionPresence(rpc);
+assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'unconfirmed'});
+assert.deepEqual(await presence.confirm('33333333-3333-4333-8333-333333333333',session,signal()),{status:'unconfirmed'});
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id='${session}';`);
+assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});
+assert.equal(await createRefreshReconciliation(scanStore,presence).reconcile({...scope,leaseId:null},signal()),'confirmed');
+console.log('Primary Auth session presence composition passed: present/mismatched owners remain unconfirmed; actual session deletion permits scoped reconciliation. Hosted activation remains unverified.');

@@ -154,3 +154,14 @@ The full isolated SQL/composition rehearsal and all 417 foundation tests across 
 Remaining requirements: real independent revocation authority, operational authorization and durable scan cursor scheduling still need evidence before activation. Candidate discovery includes legitimate ready records, so the scanner cannot infer that they should be revoked. Simultaneous database/provider failure remains unconfirmed rather than automatically reset.
 
 Exact next action: consolidate private Memory with the 417-test and complete scan/database evidence, then implement an independent, error-distinguishing server-side revocation authority contract using verified provider/session semantics. Keep hosted configuration, real credentials and phase gates closed until separately authorized. Task 2c remains incomplete.
+
+
+## Primary Auth session presence preparation, 11 October 2026
+
+Prepared a service-only primary-database session-presence RPC and disconnected reconciliation authority. Only an explicit absent row produces exact owner/session revocation evidence. Present sessions, wrong owners, database errors, malformed replies, cancellation and deadlines remain unconfirmed. Expired authorization does not imply a missing session. Four underlying lookups maximum retain capacity until settlement after ignored cancellation. No route, scheduler, hosted migration, credentials or paid calls were added.
+
+Official Supabase sessions guidance maps the verified JWT session_id to auth.sessions and documents a missing row as signed out: https://supabase.com/docs/guides/auth/sessions . This local authority requires the authoritative primary database and non-reused session IDs; it proves session absence, not final provider billing or all remote processing completion. Hosted Auth schema and behavior still need acceptance before activation.
+
+Foundation: 421 tests across 51 files, type checking and build pass. The isolated PostgreSQL rehearsal checks service-only privileges, present/wrong-owner/absent replies, null rejection and preservation of expired but present rows. Task 2c and phase gates remain open. Private Memory's last verified publication remains the preceding 417-test checkpoint.
+
+Database-composed presence/reconciliation verification passed, including actual synthetic Auth session deletion and scoped reconciliation. Disposable databases and volumes are verified removed. Exact next action: consolidate private Memory and review the remaining account activation checklist. Keep real account operations and hosted changes gated.

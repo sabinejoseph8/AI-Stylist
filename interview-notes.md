@@ -969,3 +969,8 @@ I prepared a bounded reconciliation scan with resumable progress and separate co
 
 
 I verified the bounded scanner against actual local PostgreSQL. It resumed after a database restart, preserved unknown records and removed only records with synthetic exact-session revocation proof. An empty final page did not hide unresolved work. All 417 foundation tests, type checking and build pass. Real authority and scheduled operation remain separate activation requirements.
+
+
+## Distinguishing a missing session from an outage
+
+I separated session absence from a failed lookup. A database outage must not be presented as a successful sign-out. I kept existing or uncertain sessions unresolved and prepared tests for mismatched owners, cancellation and expired sessions. This remains local preparation, with real account activation still pending.
