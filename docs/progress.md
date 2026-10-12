@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password/OAuth paths have isolated database composition evidence. Recovery signed-purpose verification, reset-only browser flow and bounded HTTP transport are prepared with synthetic tests; recovery HTTP/database composition is next. Real provider configuration, HTTPS/device acceptance, Phase 1 and hosted gates remain open. No real account routes, emails or paid calls were activated.
+Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password, OAuth, recovery and sign-out compose with generated signed identities and actual isolated PostgreSQL authority using synthetic provider responses. Recovery checks signed purpose, permits one browser-bound reset, issues no account cookie and requires primary session-removal proof. Real configuration, restart/cross-device policy, HTTPS/device/accessibility acceptance and Phase 1/hosted gates remain open. No real sign-in, emails, password changes or paid calls were activated.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2042,3 +2042,9 @@ Prepared explicit injected HTTP operations for recovery requests, PKCE code exch
 All 468 foundation tests across 61 files, type checking and build pass. Seven new synthetic checks cover destination/callback restrictions, exact recovery and PKCE bodies, owner correlation, ignored cancellation and malformed/oversized/non-JSON/failure responses. No real email, password update, provider request, route or hosted configuration was activated. Task 2c stays open.
 
 Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (resetPasswordForEmail, _exchangeCodeForSession, _updateUser). Upstream source is research, not a pinned installed SDK or live acceptance. Exact next action: compose recovery HTTP with signed recovery identity and actual isolated primary database cleanup, then refresh private Memory from its current 451-test checkpoint.
+
+## Recovery database composition verified
+
+The disposable PostgreSQL rehearsal now composes the prepared recovery request/PKCE/password-update HTTP transport, generated signed recovery identity, callback owner, browser reset cookie and independent primary-session presence RPC. Synthetic confirmed reset deletes the actual synthetic Auth session, while accepted-only logout leaves cleanup unconfirmed. An ordinary signed password token is rejected and cleaned up. Replay and repeated reset are refused; no normal account cookie is issued. Provider and password-update responses are synthetic, not real hosted password changes or email delivery. Containers and volumes were verified removed.
+
+Current foundation evidence: 468 tests across 61 files, type checking and build pass. Full isolated ownership rehearsal passes including password, OAuth, recovery and sign-out compositions. Task 2c stays open for real configuration, cross-device/restart policy, HTTPS/device/accessibility checks and phase gates. Next: review the remaining local account acceptance gaps and prepare the highest-priority authorized one; do not activate hosted Auth or spend.

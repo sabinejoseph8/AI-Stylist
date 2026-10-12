@@ -23,6 +23,12 @@ import {createPasswordAccounts} from '../src/server/password-account.ts';
 import {createOAuthProvider} from '../src/server/oauth-provider.ts';
 import {createAccountExchange} from '../src/server/account-exchange.ts';
 import {createOAuthStart} from '../src/server/oauth-start.ts';
+import {createRecoveryProviderHttp} from '../src/server/recovery-provider-http.ts';
+import {createRecoveryProvider} from '../src/server/recovery-provider.ts';
+import {createAccountRecovery} from '../src/server/account-recovery.ts';
+import {createRecoveryBrowser} from '../src/server/recovery-browser.ts';
+import {createRecoveryHttp} from '../src/server/recovery-http.ts';
+import {createRecoveryRequest} from '../src/server/recovery-request.ts';
 import {createIdentityVerifier} from '../src/server/verified-identity.ts';
 import {createAuthSessionAuthority} from '../src/server/auth-session.ts';
 import {createRefreshScan} from '../src/server/refresh-scan.ts';
@@ -353,3 +359,39 @@ await execute(['restart',container]);
 for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
 assert.notEqual((await createRefreshStore(rpc,codec).claim(owner,session,1,signal())).status,'claimed');assert.equal(oauthCalls,3);
 console.log('OAuth HTTP/PostgreSQL composition passed: both bound providers, one-use callbacks, encrypted adoption and lost-save/refused-cleanup protection across database restart. No real provider calls.');
+
+// Recovery HTTP and browser composition uses actual primary-session presence, synthetic provider calls.
+for(const scenario of ['confirmed','unconfirmed','ordinary']){
+ await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from auth.sessions where id='${session}';insert into auth.sessions values('${session}','${owner}',null);`);
+ const recoveryJwt=await new SignJWT({session_id:session,role:'authenticated',is_anonymous:false,amr:[{method:scenario==='ordinary'?'password':'recovery',timestamp:Math.floor(Date.now()/1000)}]}).setProtectedHeader({alg:'ES256',kid:'rehearsal'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
+ let callbackUrl,updates=0,exchanges=0;
+ const recoveryHttp=createRecoveryProviderHttp(project,origin,'synthetic-recovery-http-key',async(url,init)=>{
+  assert.equal(init.redirect,'error');assert.equal(init.credentials,'omit');
+  const target=new URL(url),body=JSON.parse(init.body);
+  if(target.pathname==='/auth/v1/recover'){
+   callbackUrl=target.searchParams.get('redirect_to');assert.deepEqual(Object.keys(body).sort(),['code_challenge','code_challenge_method','email']);return Response.json({});
+  }
+  if(target.pathname==='/auth/v1/token'){
+   exchanges++;assert.equal(target.searchParams.get('grant_type'),'pkce');assert.equal(body.auth_code,'synthetic-recovery-code');assert.match(body.code_verifier,/^[A-Za-z0-9_-]{43}$/);return Response.json({access_token:recoveryJwt,refresh_token:'discarded-recovery-refresh',token_type:'bearer'});
+  }
+  assert.equal(url,project+'/auth/v1/user');assert.equal(init.method,'PUT');assert.deepEqual(body,{password:'synthetic-reset-password'});assert.equal(init.headers.authorization,'Bearer '+recoveryJwt);updates++;return Response.json({id:owner});
+ });
+ const requestRecovery=createRecoveryRequest(origin,security,recoveryHttp);
+ const requested=await requestRecovery(new Request(origin+'/api/account/recover',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({email:'sample@example.test'})}),signal());
+ assert.equal(requested.status,202);assert.equal((await requested.json()).status,'recoveryRequested');
+ const callback=new Request(callbackUrl+'&code=synthetic-recovery-code',{headers:{cookie:requested.headers.get('set-cookie').split(';')[0]}});
+ deleteInitialSession=scenario!=='unconfirmed';initialRevoked=true;
+ const recoveryProvider=createRecoveryProvider({...recoveryHttp,revoke:(jwt,scope,abort)=>initialHttp.revoke(jwt,scope,abort)},initialVerifier,presence);
+ const recovery=createAccountRecovery(security,recoveryProvider),browser=createRecoveryBrowser(origin),reset=createRecoveryHttp(origin,browser);
+ const grant=await recovery.complete(callback,signal());assert.equal(exchanges,1);
+ if(scenario==='ordinary'){
+  assert.deepEqual(grant,{status:'unavailable'});assert.equal(updates,0);assert.equal(await browser.close(),true);continue;
+ }
+ assert.equal(grant.status,'resetRequired');assert.deepEqual(await recovery.complete(callback,signal()),{status:'unavailable'});assert.equal(exchanges,1);
+ const cookie=browser.install(grant).setCookie.split(';')[0];
+ const request=()=>new Request(origin+'/api/account/reset',{method:'POST',headers:{origin,'content-type':'application/json',cookie},body:JSON.stringify({password:'synthetic-reset-password',confirmation:'synthetic-reset-password'})});
+ const result=await reset(request(),signal());assert.equal(result.status,scenario==='confirmed'?200:409);assert.equal((await result.json()).status,scenario==='confirmed'?'resetComplete':'unconfirmed');assert.match(result.headers.get('set-cookie'),/Max-Age=0/);assert.doesNotMatch(result.headers.get('set-cookie'),/__Host-stylist_access/);assert.equal(updates,1);
+ assert.equal((await reset(request(),signal())).status,400);assert.equal(await browser.close(),scenario==='confirmed');
+ assert.equal((await presence.confirm(owner,session,signal())).status,scenario==='confirmed'?'revoked':'unconfirmed');
+}
+console.log('Recovery HTTP/PostgreSQL/browser composition passed: request and PKCE, signed purpose, one reset, no account cookie, primary deletion proof, ordinary-token refusal and unconfirmed cleanup. Provider calls were synthetic.');

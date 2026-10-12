@@ -2,9 +2,9 @@
 
 ## Current private Memory publication
 
-Private Memory publication succeeded with the 451-test checkpoint and OAuth/database composition evidence. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 63d0055a2820559712e21bac67cd6dd7f68732ce; deployment appgdep_6acc65e135d88191a4c24b19e5e79f99; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_00f8bd69b7c481919927db12e4b81b2a. Task 2c stays open.
+Private Memory publication succeeded with the 468-test checkpoint and recovery HTTP/browser/database composition. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 3348bcfabe803133132827f099d538a613765666; deployment appgdep_6acc68a64aa48191996a3cca2b7d4f9a; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_fe8d7e7bcd4881918a1280f9d1a8ecfa. Task 2c stays open.
 
-Exact next action: compose recovery HTTP operations and signed purpose with isolated primary database cleanup, then publish the newer private Memory checkpoint.
+Exact next action: audit remaining local account integration and cleanup gaps against current source and acceptance checklist, then implement the highest-priority authorized gap. No hosted activation or paid calls.
 
 ## Previous publication checkpoint (historical)
 
@@ -26,7 +26,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password/OAuth paths have isolated database composition evidence. Recovery signed-purpose verification, reset-only browser flow and bounded HTTP transport are prepared with synthetic tests; recovery HTTP/database composition is next. Real provider configuration, HTTPS/device acceptance, Phase 1 and hosted gates remain open. No real account routes, emails or paid calls were activated.
+Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password, OAuth, recovery and sign-out compose with generated signed identities and actual isolated PostgreSQL authority using synthetic provider responses. Recovery checks signed purpose, permits one browser-bound reset, issues no account cookie and requires primary session-removal proof. Real configuration, restart/cross-device policy, HTTPS/device/accessibility acceptance and Phase 1/hosted gates remain open. No real sign-in, emails, password changes or paid calls were activated.
 
 ## Completed evidence
 
@@ -1597,3 +1597,9 @@ Prepared explicit injected HTTP operations for recovery requests, PKCE code exch
 All 468 foundation tests across 61 files, type checking and build pass. Seven new synthetic checks cover destination/callback restrictions, exact recovery and PKCE bodies, owner correlation, ignored cancellation and malformed/oversized/non-JSON/failure responses. No real email, password update, provider request, route or hosted configuration was activated. Task 2c stays open.
 
 Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (resetPasswordForEmail, _exchangeCodeForSession, _updateUser). Upstream source is research, not a pinned installed SDK or live acceptance. Exact next action: compose recovery HTTP with signed recovery identity and actual isolated primary database cleanup, then refresh private Memory from its current 451-test checkpoint.
+
+## Recovery database composition verified
+
+The disposable PostgreSQL rehearsal now composes the prepared recovery request/PKCE/password-update HTTP transport, generated signed recovery identity, callback owner, browser reset cookie and independent primary-session presence RPC. Synthetic confirmed reset deletes the actual synthetic Auth session, while accepted-only logout leaves cleanup unconfirmed. An ordinary signed password token is rejected and cleaned up. Replay and repeated reset are refused; no normal account cookie is issued. Provider and password-update responses are synthetic, not real hosted password changes or email delivery. Containers and volumes were verified removed.
+
+Current foundation evidence: 468 tests across 61 files, type checking and build pass. Full isolated ownership rehearsal passes including password, OAuth, recovery and sign-out compositions. Task 2c stays open for real configuration, cross-device/restart policy, HTTPS/device/accessibility checks and phase gates. Next: review the remaining local account acceptance gaps and prepare the highest-priority authorized one; do not activate hosted Auth or spend.

@@ -1047,3 +1047,7 @@ I tested a signed recovery identity through the callback, reset-only adapter and
 ## Preparing recovery service calls
 
 I prepared the recovery request, code exchange and password-update calls with fixed destinations, bounded responses and cancellation handling. Tests use simulated replies and confirm that external callbacks and mismatched account responses fail. Real email delivery, password changes and hosted configuration stay separate from this local preparation.
+
+## Verifying recovery cleanup against primary data
+
+I tested the prepared reset flow against a disposable database. The confirmed synthetic provider removed the actual test session; a logout acknowledgment without deletion stayed unconfirmed. I checked both ordinary-token refusal and reset replay protection. This proves the local composition, while real email delivery and hosted password changes remain untested.

@@ -4,46 +4,29 @@ Status: Local preparation only. Task 2c and Phase 2 remain open.
 
 Sabine approved local account interfaces and simulated tests while Phase 1 remains open. This does not authorize real sign-ins, provider credentials, hosted changes, emails or paid calls.
 
-## Evidence and remaining work
+## Current evidence and remaining work
 
-| Requirement | Current evidence | Still required |
+| Requirement | Verified local evidence | Still required |
 | --- | --- | --- |
-| Account access before styling | Foundation coordinator refuses customer sessions; sample UI never unlocks styling | Connect actual verified identity to all customer routes after approval |
-| Email/password and registration | Local labeled screens, simulated controller and shared verified-session orchestration; stale/canceled replies discarded; confirmation grants no cookie | Actual provider transport, registration policy, email confirmation, failure recovery and remote-session cleanup |
-| Google and Apple | Simulated handoff/cancel UI; one-time browser-bound PKCE transaction store and sanitized failure consumption | Real provider configuration/transport, redirect/state preservation, actual failure callbacks and physical-device checks; local code exchange orchestration and cleanup are simulated |
-| Password recovery | Generic simulated acknowledgment and reset confirmation UI; recovery-only callback and expiring one-use server reset capability; simulated provider-purpose contract, separate opaque browser-delivery cookie and cleanup/replay tests | Provider-verified recovery authorization, scoped password update, expired/replayed recovery handling, cross-device behavior and confirmation UX |
-| Signed server identity | Generated ES256/RS256 checks, fixed-project bounded JWKS transport, real local SQL session lookup with synthetic Auth schema | Actual signing configuration and Auth schema verification; live provider and configured session policy acceptance |
-| Cookies and origin checks | Verified Secure/HttpOnly/host-only/Strict cookie preparation and same-origin request gate; generated-token composition tests | Actual browser cookie acceptance, secure route wiring, refresh-token/session lifecycle and CSRF integration |
-| Sign-out | Immediate local UI closure; disconnected same-origin POST coordinator clears cookies and reports remote success only with exact adapter confirmation; stalled work is bounded; revoked synthetic sessions deny requests | Actual provider revocation, cookie clearing route and concurrent sign-out; local late callback-result cleanup is prepared but actual cleanup proof is open |
-| Identity linking | Owner derives only from signed user ID; no email-based data merging is implemented | Review provider linking defaults, prove two accounts cannot merge through unverified or duplicate input, choose any customer linking flow with Sabine |
-| Accessibility and responsive UI | Agent narrow layout and keyboard checks; labeled fields, result focus, live status and assertive errors | Actual screen reader, physical iPhone, zoom and complete accessibility acceptance |
-| Production email | Not configured | Verified sender/DNS, approved email templates, rate limits, abuse protection, delivery/bounce monitoring and real delivery checks |
-| Apple maintenance | No credentials created or inspected | Document actual credential expiry, owner, renewal reminders/process and a tested rotation procedure |
-| Tests/review/phase exit | 424 local foundation checks across 52 files plus type checking/build; earlier SQL/Storage evidence | Actual provider/manual phase checks and required phase-wide code review; no phase exit is claimed |
+| Accounts before styling | Sample UI and coordinator keep customer styling locked | Approved route activation with verified identity on all customer routes |
+| Password/registration | Bounded HTTP adapter, signed identity, initial encrypted ownership and isolated PostgreSQL composition; confirmation gives no cookie | Real project configuration, registration/email policy and delivery acceptance |
+| Google/Apple | Fixed authorization links, browser-bound one-use PKCE, HTTP exchange, signed identity and encrypted ownership with database restart protection | Actual credentials, callback allowlists, linking defaults and device/provider checks |
+| Recovery | Signed recent recovery-purpose verification, bounded HTTP request/exchange/update, one-use browser reset and actual primary-session cleanup composition with synthetic provider replies | Real email/reset acceptance, customer restart/cross-device decision and HTTPS browser checks |
+| Refresh/cleanup | Actual isolated SQL ownership/fencing/restart tests, metadata reconciliation and key usage inventory | Hosted Auth schema/configuration, real concurrency/disconnect checks and operational recovery policy |
+| Sign-out | Stored revocation port, HTTP cookie clearing and actual primary absence composition; accepted-only logout stays unconfirmed | Actual provider/session policy and device/concurrent sign-out acceptance |
+| Accessibility | Original eight-step account and seven-step reset reviews accepted | Physical iPhone, screen reader, zoom and complete accessibility acceptance |
+| Identity linking | Owner derives from signed user ID; no app email-based merging | Provider-default audit and business decision on customer linking behavior |
+| Phase exit | 468 foundation tests across 61 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
 
-## Current local next steps
+All provider operations in these tests are synthetic. Actual isolated PostgreSQL evidence is not hosted Supabase acceptance. No account route, real sign-in, email or password change has been activated.
 
-1. Prepare the password/registration provider boundary with injected synthetic responses. It must produce the shared staged-session capability, preserve confirmation-only registration, use explicit session cleanup and never activate a route or read credentials by default.
-2. Compose explicit sign-out with the encrypted store and primary session-presence authority. Current sign-out orchestration still relies on an injected abstract revocation port; refresh cleanup evidence does not prove that port is complete.
-3. Prepare provider-specific OAuth and recovery adapters only after auditing the actual provider purpose/state contracts. A normal access token is insufficient recovery authorization.
-4. Keep both accepted local manual reviews. Physical-device, screen-reader, browser HTTPS-cookie and real-provider acceptance remain separate gates.
+## Next authorized local work
 
-## Current implementation reconciliation, 12 October 2026
+1. Reconcile the complete account acceptance checklist against current source and tests, including late-result cleanup and recovery credential lifetime.
+2. Prepare any remaining independent local integration checks without real provider calls or hosted activation.
+3. Preserve accepted manual reviews and all business, budget, Phase 1, hosted and device gates.
 
-The following evidence supersedes older pending-next-action paragraphs below. Those paragraphs remain as historical checkpoints.
-
-| Area | Inspected source/evidence | Current conclusion |
-| --- | --- | --- |
-| Server activation | apps/foundation/src/server/main.ts and http.ts | Foundation starts its existing server; account factories remain disconnected. No customer activation is claimed |
-| Password and registration | password-account.ts, password-http.ts and account-session.ts | Input validation, verified adoption and local HTTP lifecycle exist. Concrete password/registration provider transport remains missing |
-| OAuth callbacks | account-callback.ts and account-exchange.ts | Browser-bound one-use PKCE and shared adoption exist. Real provider initiation/exchange adapters remain missing |
-| Recovery | account-recovery.ts, recovery-browser.ts and recovery-http.ts | Recovery-only capabilities and one-use UI flow exist. Provider-purpose verification and real password update remain missing |
-| Refresh storage and rotation | refresh-store.ts, refresh-rotation.ts, refresh-port.ts and scripts/check-refresh-adapter.mjs | Actual isolated PostgreSQL and encryption composition pass with synthetic provider HTTP. Hosted Auth, real transport and early-refresh limitations remain |
-| Cleanup reconciliation | auth-session-presence.ts, refresh-reconciliation.ts, refresh-scan.ts and migrations 19/20 | Primary database absence is distinguished from lookup failure; scoped reconciliation and metadata inventory are prepared. No scheduler is installed; unknown records stay unresolved |
-| Key operations | refresh-envelope.ts, docs/refresh-key-operations.md and isolated database rehearsal | Overlap/restart/early-retirement evidence passes. Point-in-time counts do not prove backup or concurrent-writer retirement safety |
-| Sign-out | account-signout.ts and signout-http.ts | Cookie clearing and bounded orchestration exist. Concrete durable session revocation port still requires composition |
-
-All 424 foundation tests, type checking/build and the latest isolated database rehearsal passed at the preceding implementation checkpoint. This audit adds no application behavior and claims no new test run. No credentials, emails, hosted migrations or paid calls were used.
+Earlier dated appendices below are historical checkpoints, superseded by this current matrix.
 
 ## Human and external dependencies
 
@@ -350,3 +333,9 @@ Prepared explicit injected HTTP operations for recovery requests, PKCE code exch
 All 468 foundation tests across 61 files, type checking and build pass. Seven new synthetic checks cover destination/callback restrictions, exact recovery and PKCE bodies, owner correlation, ignored cancellation and malformed/oversized/non-JSON/failure responses. No real email, password update, provider request, route or hosted configuration was activated. Task 2c stays open.
 
 Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (resetPasswordForEmail, _exchangeCodeForSession, _updateUser). Upstream source is research, not a pinned installed SDK or live acceptance. Exact next action: compose recovery HTTP with signed recovery identity and actual isolated primary database cleanup, then refresh private Memory from its current 451-test checkpoint.
+
+## Recovery database composition verified
+
+The disposable PostgreSQL rehearsal now composes the prepared recovery request/PKCE/password-update HTTP transport, generated signed recovery identity, callback owner, browser reset cookie and independent primary-session presence RPC. Synthetic confirmed reset deletes the actual synthetic Auth session, while accepted-only logout leaves cleanup unconfirmed. An ordinary signed password token is rejected and cleaned up. Replay and repeated reset are refused; no normal account cookie is issued. Provider and password-update responses are synthetic, not real hosted password changes or email delivery. Containers and volumes were verified removed.
+
+Current foundation evidence: 468 tests across 61 files, type checking and build pass. Full isolated ownership rehearsal passes including password, OAuth, recovery and sign-out compositions. Task 2c stays open for real configuration, cross-device/restart policy, HTTPS/device/accessibility checks and phase gates. Next: review the remaining local account acceptance gaps and prepare the highest-priority authorized one; do not activate hosted Auth or spend.
