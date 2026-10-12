@@ -52,6 +52,16 @@
       "file": "supabase/migrations/202610110010_media_operation_read.sql",
       "sha256": "2cca661928581511f0b0ba9f9668e328fcabad2b4ca66c028d52ce928ede1cd2",
       "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110011_media_deletion_receipts.sql",
+      "sha256": "5d6341ddc608511cd8cbe812e1d9e1f3fd2b863bd45fb3773d9277382245ef34",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110012_retail_history.sql",
+      "sha256": "cd6e4d989f824b3360ea0e9beae7c6d388de6fdde8d047026411c47ec6aa242e",
+      "status": "applied"
     }
   ],
   "notes": [
@@ -70,7 +80,7 @@
     "rls_enabled": true,
     "rls_forced": true
   },
-  "remaining_migrations": "202610110011 through 202610110020",
+  "remaining_migrations": "202610110013 through 202610110020",
   "wardrobe_profile_verification": {
     "checks": 16,
     "all_passed": true,
@@ -80,5 +90,10 @@
     "checks": 23,
     "all_passed": true,
     "scope": "Two tables with enabled/forced RLS, anonymous denial, direct-write denial and owner SELECT grants/policies; seven public functions with fixed empty search_path and intended authenticated/service-only roles; two enabled media-ready triggers; three lifecycle columns; private guard execution blocked to browser roles."
+  },
+  "receipt_retail_verification": {
+    "checks": 15,
+    "all_passed": true,
+    "scope": "Private receipt direct-access denial for anon/authenticated/service_role, private schema denial, retired-ID trigger and browser guard denial, three service-only public function contracts, retail forced RLS, direct-access/write denial, owner SELECT grant and policy."
   }
 }
