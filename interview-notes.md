@@ -777,3 +777,8 @@ I added a local request boundary that accepts one account cookie and verifies it
 
 
 I prepared cookie creation only after identity and current-session checks succeed. I used secure browser-only cookie attributes and a matching clear operation. I kept remote sign-out and actual browser acceptance separate from simulated cookie tests so I would not mistake a passing unit test for a finished account system.
+
+
+### Protecting account callbacks
+
+I prepared short-lived browser-bound sign-in transactions with one-time use and PKCE. I tested replay, the wrong browser, expired links and unsafe return destinations. I kept recovery directed to password reset instead of treating a recovery link as permission to start styling. I recorded the remaining same-browser, restart and provider integration questions so local security checks would not be mistaken for verified customer sign-in.
