@@ -4,7 +4,7 @@
 
 622 foundation tests across 94 files, type checking and build pass. Connected account restoration after reload and persistent-profile WebKit relaunch passes against isolated PostgreSQL with synthetic Auth. Absolute expiry refuses restoration; expired access refresh after application replacement preserves the original seven-day deadline. Hosted customer accounts remain inactive and acceptance gates stay open.
 
-Private Memory synchronization succeeded from 7dae8f45d0af96e08dc0d98df8d534a5251e356e with MCP preserved. Exact next action: verify Render ingress trust and proof-bearing URL logging before preparing its proxy entry or configuring account email URLs. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the current 622-test runtime and transport checkpoint. Earlier publication records below are historical.
+Private Memory synchronization succeeded from 7dae8f45d0af96e08dc0d98df8d534a5251e356e with MCP preserved. Exact next action: obtain authorization for the prepared Render support inquiry and verify ingress/logging before configuring account email URLs. Read-only Supabase inspection confirms Google/Apple disabled, email confirmation on and provider session time-box unset; no settings changed. A separate direct-HTTPS entry is now locally tested. Runtime orchestration now passes local combined tests; private Memory now publishes the current 622-test runtime and transport checkpoint. Earlier publication records below are historical.
 
 ## Previous publication checkpoint (historical)
 
@@ -2203,3 +2203,14 @@ Next action: submit the prepared inquiry if Sabine authorizes it; independently 
 Verified succeeded: source 7dae8f45d0af96e08dc0d98df8d534a5251e356e, deployment appgdep_6accde5487888191be1a4cd345f892df, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_58599139381881918422d2d9e34566df, URL https://ai-stylist-project-memory.idealgnat256.chatgpt.site. MCP and owner-only access preserved (one allowed user, no groups). All 16 site checks, build and artifact validation pass. Includes 622-test runtime/HTTPS/transport evidence and Render findings; no task completion overrides changed.
 
 Also reconciled docs/task-2c-activation-checklist.md with approved hosted sequencing, cross-device recovery, seven-day sessions and actual current evidence. The remaining sender/social/linking/provider/device gates stay open. Next action: obtain authorization for the prepared Render support inquiry; inspect remaining live account readiness without new spending or customer activation while awaiting it. No support message has been sent.
+
+## Read-only Supabase account configuration inspection, 12 October 2026
+
+Observed the existing AI Stylist dashboard directly, without changing or saving settings:
+
+- Sign In / Providers: new signups enabled, email confirmation enabled, email provider enabled; anonymous sign-ins and manual linking disabled; Google and Apple providers disabled. Manual linking off does not prove automatic identity linking is off or safe.
+- Sessions: single-session enforcement off; provider time-box and inactivity timeout both 0 (never); access token lifetime 3600 seconds; refresh compromise detection enabled and reuse interval 10 seconds.
+
+The tested application-owned seven-day absolute deadline is distinct from the provider's currently unbounded session setting. No claim is made that Supabase itself has been configured to seven days. Customer account activation remains gated; no real sign-in, email, credential access or hosted mutation occurred. Current provider observations replace assumptions about enabled methods and make the remaining Google/Apple setup explicit.
+
+Next: obtain authorization for the prepared Render inquiry, resolve ingress/logging guarantees, then select the working HTTPS origin and production sender before configuring callbacks. Inspect hosted automatic-linking behavior before proposing its customer policy. Preserve approved account scope and spending; do not treat existing email-provider enablement as delivery acceptance.

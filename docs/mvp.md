@@ -1893,3 +1893,14 @@ Render documents managed TLS at https://render.com/docs/tls and public web servi
 Reviewed Render's primary tutorial and logging documentation. Edge TLS termination/plain HTTP and the recommended forwarded scheme header are documented. Exact immediate-peer trust, client-header overwrite behavior and query-value logging/redaction remain unproven. The tracked deployment remains the private voice prototype. Prepared docs/render-account-ingress-review.md with sources, acceptance checks and a credential-free support inquiry. Permission to send is pending; nothing was sent. No hosted setting, account, paid call or deployment changed.
 
 Next action: submit the prepared inquiry if Sabine authorizes it; independently synchronize the 622-test runtime/transport checkpoint to private Memory. No task or phase is complete based on this research.
+
+## Read-only Supabase account configuration inspection, 12 October 2026
+
+Observed the existing AI Stylist dashboard directly, without changing or saving settings:
+
+- Sign In / Providers: new signups enabled, email confirmation enabled, email provider enabled; anonymous sign-ins and manual linking disabled; Google and Apple providers disabled. Manual linking off does not prove automatic identity linking is off or safe.
+- Sessions: single-session enforcement off; provider time-box and inactivity timeout both 0 (never); access token lifetime 3600 seconds; refresh compromise detection enabled and reuse interval 10 seconds.
+
+The tested application-owned seven-day absolute deadline is distinct from the provider's currently unbounded session setting. No claim is made that Supabase itself has been configured to seven days. Customer account activation remains gated; no real sign-in, email, credential access or hosted mutation occurred. Current provider observations replace assumptions about enabled methods and make the remaining Google/Apple setup explicit.
+
+Next: obtain authorization for the prepared Render inquiry, resolve ingress/logging guarantees, then select the working HTTPS origin and production sender before configuring callbacks. Inspect hosted automatic-linking behavior before proposing its customer policy. Preserve approved account scope and spending; do not treat existing email-provider enablement as delivery acceptance.

@@ -204,3 +204,14 @@ Sabine explicitly approved hosted Tasks 2b and 2c before Phase 1 finishes, inclu
 Sabine selected password recovery that works when the emailed link is opened on another device. The existing browser-bound PKCE rehearsal does not satisfy that requirement. Prepare a server-verified cross-device recovery contract using current official Supabase guidance; inspect actual project/email/callback settings before applying changes. Do not present same-browser-only recovery as completed MVP behavior.
 
 Exact next action: inspect the existing AI Stylist Supabase project and current recovery contracts, review the prepared migration chain against hosted state, then implement/configure the approved scope. No hosted change has occurred merely from recording this approval.
+
+## Read-only Supabase account configuration inspection, 12 October 2026
+
+Observed the existing AI Stylist dashboard directly, without changing or saving settings:
+
+- Sign In / Providers: new signups enabled, email confirmation enabled, email provider enabled; anonymous sign-ins and manual linking disabled; Google and Apple providers disabled. Manual linking off does not prove automatic identity linking is off or safe.
+- Sessions: single-session enforcement off; provider time-box and inactivity timeout both 0 (never); access token lifetime 3600 seconds; refresh compromise detection enabled and reuse interval 10 seconds.
+
+The tested application-owned seven-day absolute deadline is distinct from the provider's currently unbounded session setting. No claim is made that Supabase itself has been configured to seven days. Customer account activation remains gated; no real sign-in, email, credential access or hosted mutation occurred. Current provider observations replace assumptions about enabled methods and make the remaining Google/Apple setup explicit.
+
+Next: obtain authorization for the prepared Render inquiry, resolve ingress/logging guarantees, then select the working HTTPS origin and production sender before configuring callbacks. Inspect hosted automatic-linking behavior before proposing its customer policy. Preserve approved account scope and spending; do not treat existing email-provider enablement as delivery acceptance.

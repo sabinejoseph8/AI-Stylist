@@ -1313,3 +1313,7 @@ I checked Render's own documentation before enabling accounts. I separated docum
 ## Keeping the delivery record consistent
 
 I updated the private project Memory with the tested runtime and transport work. I corrected an older account checklist that still treated my hosted setup and cross-device recovery approvals as pending. I kept those decisions separate from real provider and device checks, which are still required before launch.
+
+## Separating application and provider session policy
+
+I inspected the live account settings without changing them. Email confirmation is on, Google and Apple still need setup, and provider sessions are not time-boxed. I documented that my tested seven-day application deadline is separate from Supabase's provider setting, so the evidence does not overstate hosted readiness.
