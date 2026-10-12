@@ -1483,3 +1483,9 @@ The full isolated rehearsal passes and disposable resources were verified remove
 Exposed the existing reset-grant expiry cleanup through the dormant account factory as expireRecovery. A focused synthetic test advances time after callback delivery and verifies maintenance discards the expired grant once without another customer request. No timer or background job starts automatically. A future host must explicitly schedule this maintenance and call close on shutdown; hosted lifecycle acceptance remains open.
 
 All 492 foundation tests across 67 files, type checking and build pass. No hosted changes or paid calls occurred. Exact next action: add bounded local account abuse-admission preparation and test it before host activation; keep durable/multi-process limits and real provider settings as acceptance gates.
+
+## Local aggregate account admission, 12 October 2026
+
+Prepared an explicitly configured process-local aggregate request guard for account route maps. It snapshots routes, shares one allowance across methods, refuses excess requests before handler/provider work with Retry-After, preserves response-discard cleanup and refuses invalid/regressing clock readings. Canceled requests start no work. No IP, email or account identifier is stored. Policy has no automatic/default activation.
+
+All 494 foundation tests across 68 files, type checking and build pass. Two focused synthetic tests verify shared limits, replenishment, cleanup forwarding, invalid policy, clock regression and cancellation. This bounded single-process guard is not durable/multi-process abuse protection and does not replace provider email/password limits or production policy acceptance. Exact next action: compose the guard with the real dormant account factory and verify rejected requests make no provider calls, then reconcile remaining activation gaps and private Memory.

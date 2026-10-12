@@ -1099,3 +1099,7 @@ I completed the factory-level database checks for refresh and sign-out. Refresh 
 ## Expired recovery permission maintenance, 12 October 2026
 
 I exposed expiry cleanup through the prepared account factory so a future host can clean expired reset permissions without waiting for another customer request. A focused test confirms cleanup happens once. All 492 tests, type checking and build pass. Scheduling and hosted lifecycle acceptance remain pending.
+
+## Local account request limits, 12 October 2026
+
+I prepared a bounded aggregate request guard so account methods cannot independently bypass a shared local allowance. Excess requests stop before provider work and receive a retry delay. I avoided storing customer identifiers. All 494 tests, type checking and build pass. Durable hosted abuse controls and production settings remain separate acceptance work.
