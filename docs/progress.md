@@ -152,9 +152,9 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 ## Phase 2: Foundation, accounts and customer isolation
 
 **Goal:** A secure signed-in shell with the approved visual language.  
-**Dependencies:** Phase 1 exit for the full phase; Sabine approved Task 2a alone in parallel on 11 October 2026. Framework/hosting and core Supabase roles are approved; account configuration and other gates remain.
+**Dependencies:** Phase 1 exit remains required for full phase completion. Sabine approved Task 2a, then local Tasks 2b/2c, and subsequently hosted Tasks 2b/2c before Phase 1 finishes. These exceptions do not authorize later phases or remove acceptance gates.
 **Product coverage:** PS-01, PS-09; A18 and foundational A12/A13.  
-**Status:** Task 2a completed, including Sabine’s successful visual review on 11 October 2026. Task 2b local preparation remains under Sabine’s exception with hosted acceptance open. Sabine also approved local-only Task 2c preparation; its simulated account UI and disconnected security boundaries are implemented, with actual provider and hosted acceptance pending.
+**Status:** Task 2a completed with Sabine’s visual review. Hosted Tasks 2b/2c are authorized and in progress. All 21 database migrations are installed; connected account/recovery delivery and isolated database/browser checks are prepared. Customer activation, real provider/isolation, session policy and manual acceptance remain open.
 
 ### Task groups
 

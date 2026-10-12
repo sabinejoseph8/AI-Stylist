@@ -7,7 +7,7 @@ Status: preparation in progress, 12 October 2026. Hosted Tasks 2b/2c are authori
 - Existing AI Stylist Supabase project: all twenty-one customer migrations installed. Source hashes and metadata checks are in hosted-database-deployment.json. SQL Editor execution does not register CLI history.
 - Customer account handlers are prepared but absent from the default server. The current Render service is the private voice prototype, not a deployed customer account application.
 - Read-only dashboard inspection: Site URL is http://localhost:3000; no redirect URLs; built-in email sender with a production-use warning; password reset template uses ConfirmationURL.
-- Local synthetic evidence: 560 tests, type checking, build, isolated database rehearsal and desktop WebKit checks. The rendered confirmation-to-password-form journey now passes. This does not prove real email, hosted provider or physical-device acceptance.
+- Local evidence: 587 foundation tests, type checking/build, combined HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks. Auth replies remain synthetic; this does not prove real email, hosted provider, physical-device or complete accessibility acceptance.
 
 ## Required order
 
@@ -26,7 +26,7 @@ Schedule bounded seven-day receipt expiry and recovery-grant cleanup before cust
 
 ## Exact next implementation
 
-The dormant explicit Supabase host composition and durable shared admission are prepared. Prepare separate connected account/reset browser delivery and strictly bounded static HTTPS serving, then test the complete browser journey. Do not change the live email template until a verified HTTPS destination and sender configuration are ready.
+The explicit host, shared admission, connected account/reset build, bounded static delivery, network lifecycle, runtime-settings parser and shutdown helper are prepared. Next implement the session persistence contract after Sabine chooses the sign-in duration. Deployment must then establish an exact HTTPS destination before email URLs/templates change. Production sender/social credentials and real customer isolation acceptance remain open. Historical dated appendices below retain earlier checkpoints.
 
 ## Shared account admission prepared and installed, 12 October 2026
 
