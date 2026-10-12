@@ -4,7 +4,7 @@
 
 Private Memory publication succeeded with the 451-test checkpoint and OAuth/database composition evidence. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 63d0055a2820559712e21bac67cd6dd7f68732ce; deployment appgdep_6acc65e135d88191a4c24b19e5e79f99; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_00f8bd69b7c481919927db12e4b81b2a. Task 2c stays open.
 
-Exact next action: compose reset-only recovery with generated signed identities and existing browser/owner boundaries, then prepare bounded provider HTTP operations.
+Exact next action: prepare bounded recovery HTTP operations, then verify composed recovery cleanup against the isolated database.
 
 ## Previous publication checkpoint (historical)
 
@@ -1581,3 +1581,11 @@ Prepared an injected recovery adapter using signed recovery-purpose verification
 All 458 foundation tests across 59 files, type checking and build pass. Five new simulated tests cover one-use reset, ordinary-login refusal, revoked authority, unknown cleanup, lost logout reply with independent proof, and verification exceptions. No provider HTTP recovery transport, real password change, email, hosted configuration or route was activated. Task 2c remains incomplete.
 
 Exact next action: compose the recovery adapter with generated signed recovery identities and the existing recovery owner/browser binding, then prepare bounded recovery HTTP operations. Private Memory remains at the verified 451-test checkpoint.
+
+## Recovery owner/browser composition verified locally
+
+Three new composed synthetic checks use generated ES256 recovery JWTs, actual identity verification, the recovery provider adapter, one-use callback owner, reset browser binding and reset HTTP response. The correct reset cookie permits one update and clears itself without issuing an access cookie. Wrong browser binding and callback replay fail. An ordinarily signed password token fails recovery-purpose verification and is cleaned up. An update with unproved primary session cleanup returns HTTP 409/unconfirmed, clears the reset cookie and holds both recovery and browser owners.
+
+All 461 foundation tests across 60 files, type checking and build pass. Provider operations and session presence are simulated here, not actual hosted or isolated database evidence. Real password changes and email delivery remain disabled. Task 2c stays open.
+
+Exact next action: prepare bounded HTTP recovery-request, PKCE exchange and password-update operations, then compose with the isolated primary database. No real provider call, credential or route is authorized by this checkpoint. Private Memory remains at 451 tests.

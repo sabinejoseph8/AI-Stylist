@@ -1039,3 +1039,7 @@ I added a separate check for a recent signed recovery authentication, alongside 
 ## Preparing a reset-only recovery session
 
 I connected recovery verification to a one-use reset capability. The adapter rechecks session authority before a password update and requires independent session-removal evidence during cleanup. I also preserved cleanup when identity verification fails, so an error cannot silently abandon a provider session. The provider calls remain simulated and real email/device acceptance is still pending.
+
+## Testing the complete local reset boundary
+
+I tested a signed recovery identity through the callback, reset-only adapter and browser form handler together. The wrong browser and repeated callback were rejected. When the simulated password update succeeded but session cleanup was uncertain, the form reported an unconfirmed result and cleared its reset cookie. Real provider and database composition remain separate checks.
