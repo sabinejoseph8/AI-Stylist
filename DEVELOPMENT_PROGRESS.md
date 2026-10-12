@@ -2492,3 +2492,10 @@ The next Task 1b evidence requires Sabine’s iPhone recovery test using the com
 ## Second post-deployment dependency check, 12 October 2026
 
 Read-only hosted ledger counts confirm nine attempts, all nine closed, the approved recovery amendment present, and zero recovery reservations. Therefore no user-started recovery test is currently represented in the ledger. No active job was identified for a verified wait. Reviewed Phase 2 task/exit dependencies: real account methods, recovery and cross-customer acceptance remain open; later phases are not authorized by the sequencing exception. No new provider result, credentials or platform clarification arrived. Next action remains Sabine’s complete iPhone recovery test, or the existing account configuration/platform input needed for independent hosted acceptance. This is the second consecutive check of the same post-deployment boundary. No call was started and no approval limit changed.
+
+
+## Third post-deployment dependency check, 12 October 2026
+
+Revalidated the current worktree and backlog. No new manual result, required account configuration or platform clarification was supplied; the same human/external dependency boundary has persisted for three consecutive goal checks. There is no confirmed live job to wait on and no independent authorized task that can close these acceptance gates. The goal remains incomplete and is being marked blocked, not complete.
+
+Exact unblock action: Sabine completes the deployed private iPhone recovery test using the full advance chat instructions and reports interruption, replacement context and End behavior. Alternatively, provide the pending platform clarification or required existing account setup input for hosted account acceptance. Preserve the $29 experiment allocation, single two-room trial, no retries and all later-phase gates. Once input arrives, verify private ledger closure and continue the next authorized task.
