@@ -17,14 +17,15 @@ export function createIdentityVerifier(projectUrl:string,keys:JWTVerifyGetKey,se
    abort=()=>reject(Error());controller.signal.addEventListener('abort',abort,{once:true});timer=setTimeout(()=>controller.abort(),deadlineMs);
   })]);}finally{if(timer)clearTimeout(timer);external.removeEventListener('abort',relay);controller.signal.removeEventListener('abort',abort);}
  }
- async function verify(token:string,signal:AbortSignal,recovery=false):Promise<(VerifiedMediaAccess&{expiresAt?:number})|null>{
+ async function verify(token:string,signal:AbortSignal,recovery=false,refresh=false):Promise<(VerifiedMediaAccess&{expiresAt?:number})|null>{
   if(typeof token!=='string'||token.length>16384||!/^[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+\.[-_A-Za-z0-9]+$/.test(token))return null;
   try{return await bounded(signal,async scope=>{
-   const {payload,protectedHeader}=await jwtVerify(token,keys,{issuer,audience:'authenticated',algorithms:['ES256','RS256'],requiredClaims:['exp','iat','sub','session_id','role']});
+   const {payload,protectedHeader}=await jwtVerify(token,keys,{issuer,audience:'authenticated',algorithms:['ES256','RS256'],requiredClaims:['exp','iat','sub','session_id','role'],clockTolerance:refresh?604800:0});
    if(scope.aborted||typeof protectedHeader.kid!=='string'||protectedHeader.kid.length<1||protectedHeader.kid.length>128||
     typeof payload.sub!=='string'||!uuid.test(payload.sub)||typeof payload.session_id!=='string'||!uuid.test(payload.session_id)||
     payload.role!=='authenticated'||payload.is_anonymous!==false||!Number.isSafeInteger(payload.exp)||!Number.isSafeInteger(payload.iat)||
     (payload.iat as number)>Date.now()/1000+30)throw Error();
+   if(refresh&&((payload.iat as number)<=Date.now()/1000-604800||(payload.exp as number)<=(payload.iat as number)||(payload.nbf!==undefined&&(typeof payload.nbf!=='number'||payload.nbf>Date.now()/1000))))throw Error();
    let recoveryExpiry:number|undefined;
    if(recovery){
     const methods=payload.amr,now=Math.floor(Date.now()/1000);
@@ -39,13 +40,13 @@ export function createIdentityVerifier(projectUrl:string,keys:JWTVerifyGetKey,se
    }
    const owner=payload.sub.toLowerCase(),session=payload.session_id.toLowerCase(),expires=payload.exp as number;
    const current=async(check:AbortSignal)=>{
-    if(check.aborted||Date.now()/1000>=expires||(recoveryExpiry!==undefined&&Date.now()>=recoveryExpiry))return false;
+    if(check.aborted||(!refresh&&Date.now()/1000>=expires)||(refresh&&Date.now()/1000>=(payload.iat as number)+604800)||(recoveryExpiry!==undefined&&Date.now()>=recoveryExpiry))return false;
     const active=await sessions.active(owner,session,check);
-    return active===true&&!check.aborted&&Date.now()/1000<expires&&(recoveryExpiry===undefined||Date.now()<recoveryExpiry);
+    return active===true&&!check.aborted&&(refresh?Date.now()/1000<(payload.iat as number)+604800:Date.now()/1000<expires)&&(recoveryExpiry===undefined||Date.now()<recoveryExpiry);
    };
    if(!await current(scope))throw Error();
    return Object.freeze({ownerId:owner,sessionId:session,...(recoveryExpiry===undefined?{}:{expiresAt:recoveryExpiry}),async isCurrent(check:AbortSignal){try{return await bounded(check,current);}catch{return false;}}});
   });}catch{return null;}
  }
- return Object.freeze({verify:(token:string,signal:AbortSignal)=>verify(token,signal),verifyRecovery:(token:string,signal:AbortSignal)=>verify(token,signal,true)});
+ return Object.freeze({verifyRefresh:(token:string,signal:AbortSignal)=>verify(token,signal,false,true),verify:(token:string,signal:AbortSignal)=>verify(token,signal),verifyRecovery:(token:string,signal:AbortSignal)=>verify(token,signal,true)});
 }

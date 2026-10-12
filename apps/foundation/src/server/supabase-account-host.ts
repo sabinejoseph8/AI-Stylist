@@ -1,7 +1,7 @@
 import {createAuthKeys} from './auth-keys.ts';
 import {createAuthSessionAuthority} from './auth-session.ts';
 import {createIdentityVerifier} from './verified-identity.ts';
-import {createRequestIdentity} from './request-identity.ts';
+import {createRequestIdentity,createRefreshRequestIdentity} from './request-identity.ts';
 import {createAccountCookies} from './account-cookie.ts';
 import {createAccountCallbacks} from './account-callback.ts';
 import {createSupabaseRpc} from './supabase-rpc.ts';
@@ -33,7 +33,7 @@ export function createSupabaseAccountHost(options:SupabaseAccountHostOptions){
  if(typeof options?.initialExpiry!=='function'||typeof options?.rotatedExpiry!=='function')throw Error('Account expiry policy required');
  const rpc=createSupabaseRpc(options.projectUrl,options.serviceKey,options.fetch);
  const verifier=createIdentityVerifier(options.projectUrl,createAuthKeys(options.projectUrl,options.fetch),createAuthSessionAuthority(rpc));
- const security=Object.freeze({authorize:createRequestIdentity(options.appOrigin,verifier),cookies:createAccountCookies(verifier),callbacks:createAccountCallbacks(options.appOrigin)});
+ const security=Object.freeze({authorize:createRequestIdentity(options.appOrigin,verifier),authorizeRefresh:createRefreshRequestIdentity(options.appOrigin,{verify:verifier.verifyRefresh}),cookies:createAccountCookies(verifier),callbacks:createAccountCallbacks(options.appOrigin)});
  const presence=createAuthSessionPresence(rpc);
  const store=createRefreshStore(rpc,createRefreshEnvelopes(options.refreshKeyring,options.activeRefreshKeyId));
  const passwordHttp=createPasswordProviderHttp(options.projectUrl,options.serviceKey,options.fetch);

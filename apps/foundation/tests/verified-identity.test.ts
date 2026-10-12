@@ -67,3 +67,16 @@ it('verifies the second approved asymmetric algorithm with its own public key',a
  const verify=createIdentityVerifier(url,createLocalJWKSet({keys:[publicKey]}),{active:async()=>true});
  expect((await verify.verify(signed,signal()))?.ownerId).toBe(owner);
 });
+
+it('accepts a signed expired token only for refresh identity while preserving primary-session checks',async()=>{
+ const now=Math.floor(Date.now()/1000),active=vi.fn(async()=>true),verifier=createIdentityVerifier(url,keys,{active});
+ const jwt=await token({iat:now-3600,exp:now-1});
+ expect(await verifier.verify(jwt,signal())).toBeNull();expect(await verifier.verifyRecovery(jwt,signal())).toBeNull();
+ const proof=await verifier.verifyRefresh(jwt,signal());expect(proof?.ownerId).toBe(owner);expect(await proof?.isCurrent(signal())).toBe(true);
+ active.mockResolvedValue(false);expect(await proof?.isCurrent(signal())).toBe(false);expect(await verifier.verifyRefresh(jwt,signal())).toBeNull();
+});
+it('refuses old, future-not-before and invalid lifetime refresh identities',async()=>{
+ const now=Math.floor(Date.now()/1000),active=vi.fn(async()=>true),verifier=createIdentityVerifier(url,keys,{active});
+ for(const claims of [{iat:now-604800,exp:now-604700},{iat:now-100,exp:now-200},{iat:now-100,exp:now-1,nbf:now+1}])expect(await verifier.verifyRefresh(await token(claims),signal())).toBeNull();
+ expect(active).not.toHaveBeenCalled();
+});

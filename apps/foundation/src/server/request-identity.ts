@@ -30,3 +30,11 @@ export function createRequestIdentity(origin:string,verifier:RequestIdentityVeri
   }catch{return null;}
  };
 }
+
+/** Refresh-only identity. Expired signed access is never authorized for protected resources. */
+export function createRefreshRequestIdentity(origin:string,verifier:RequestIdentityVerifier){
+ const authorize=createRequestIdentity(origin,verifier);
+ return async(request:Request,signal:AbortSignal)=>{
+  try{const url=new URL(request.url);if(request.method!=='POST'||url.pathname!=='/api/account/refresh'||url.origin!==origin)return null;return await authorize(request,signal);}catch{return null;}
+ };
+}

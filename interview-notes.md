@@ -1269,3 +1269,7 @@ I chose seven days from sign-in for customer sessions. Refreshing should not sil
 ## Preserving the sign-in deadline in the browser
 
 I connected the trusted server session deadline to secure persistent cookie issuance. The cookie uses only the remaining time and refuses deadlines beyond seven days. The full 590-test suite passes, but safe refresh after access-token expiry and restart acceptance still need integration before the seven-day sign-in feature is complete.
+
+## Refreshing without weakening data access
+
+I added a separate identity check for the refresh endpoint so a signed expired access token can request renewal while the server session and stored refresh ownership remain valid. Expired tokens still cannot authorize customer data or password recovery. Regression checks cover revocation, old tokens and route/origin confinement. Full seven-day browser/database restart acceptance remains to be completed.

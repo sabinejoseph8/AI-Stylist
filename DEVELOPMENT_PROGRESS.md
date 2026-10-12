@@ -2113,3 +2113,11 @@ Trusted initial and rotated PendingAccountSession values now carry their absolut
 All 590 foundation tests across 86 files, type checking and build pass. Fake-clock regression checks verify the seven-day cap, reduced remaining lifetime and invalid deadline refusal. This implements persistent cookie issuance, not the full session contract: trusted original sign-in anchoring and refresh after access-token expiry still need integration and restart/expiry acceptance. Customer activation remains disabled; no hosted setting, email or paid call changed.
 
 Exact next action: introduce a dedicated refresh-only signed-expired-token identity boundary tied to current server session and durable ownership, while keeping expired tokens forbidden on protected data routes. Then compose the approved original seven-day anchor and verify full browser/database restart behavior.
+
+## Dedicated expired-access refresh identity, 12 October 2026
+
+Prepared verifyRefresh with asymmetric signature, issuer/audience/role/owner/session validation and authoritative current-session lookup. It permits expired access only within a bounded seven-day issued-token window, refuses invalid lifetime and future not-before claims, and rechecks current session on reuse. Ordinary verify and recovery remain strict about access-token expiry. The explicit Supabase host supplies a separate refresh-only request identity limited to the exact same-origin POST /api/account/refresh endpoint. The coordinator and stored-refresh port use it only for refresh; durable ready ownership and its absolute expiry still gate provider rotation. Returned replacement tokens must pass ordinary fresh-token verification before cookie delivery.
+
+Three new checks prove expired ordinary/recovery refusal, refresh current-session revocation, stale/future/invalid claim refusal and exact route/origin confinement. All 593 foundation tests across 87 files and type checking pass; the build passed after the implementation change. No live provider operation or hosted setting changed.
+
+Exact next action: compose an original seven-day sign-in anchor in the production host and exercise expired-access refresh plus absolute expiry through the actual isolated PostgreSQL/HTTPS browser harness, including restart. This boundary alone is not complete seven-day persistence or hosted acceptance.

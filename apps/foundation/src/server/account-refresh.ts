@@ -4,8 +4,8 @@ export interface AccountRefreshPort {
  /** Resolve and rotate only this verified session's server-held refresh material. Never read credentials from request JSON. */
  refresh(request:Request,ownerId:string,signal:AbortSignal):Promise<AccountSessionReply>;
 }
-/** Disconnected early-refresh preparation. Expired access requires sign-in; no persistence or real adapter is installed. */
-export function createAccountRefresh(security:ReturnType<typeof createAccountSecurity>,origin:string,port:AccountRefreshPort,deadlineMs=8000,shared?:ReturnType<typeof createAccountSessions>){
+/** Explicit refresh preparation. A separately injected refresh identity may accept signed expired access; protected resource authorization stays strict. */
+export function createAccountRefresh(security:ReturnType<typeof createAccountSecurity>&{authorizeRefresh?:ReturnType<typeof createAccountSecurity>['authorize']},origin:string,port:AccountRefreshPort,deadlineMs=8000,shared?:ReturnType<typeof createAccountSessions>){
  const base=new URL(origin);
  if(base.origin!==origin||base.protocol!=='https:'||typeof port?.refresh!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Account refresh unavailable');
  const sessions=shared??createAccountSessions(security,origin,deadlineMs);
@@ -24,7 +24,7 @@ export function createAccountRefresh(security:ReturnType<typeof createAccountSec
    const canceled=new Promise<AccountSessionResult>(resolve=>{stop=()=>{controller.abort();resolve(unavailable);};external.addEventListener('abort',stop,{once:true});request.signal.addEventListener('abort',stop,{once:true});timer=setTimeout(stop,deadlineMs);});
    const work=(async():Promise<AccountSessionResult>=>{
     try{
-     const identity=await security.authorize(request,controller.signal);
+     const identity=await (security.authorizeRefresh??security.authorize)(request,controller.signal);
      if(!identity||controller.signal.aborted||typeof identity.sessionId!=='string'||!/^[a-f0-9-]{36}$/.test(identity.sessionId))return unavailable;
      const key=identity.ownerId+':'+identity.sessionId;
      if(rotating.has(key))return {status:'busy'};
