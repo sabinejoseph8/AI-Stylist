@@ -2049,3 +2049,9 @@ Prepared a server-only settings parser for exact HTTPS app/Supabase origins, a p
 Five focused settings checks pass; all 583 foundation tests across 85 files, type checking and build pass. No live key was read or generated, and no hosted setting/account/email/paid call changed.
 
 A customer sign-in duration decision is pending with Sabine: 7 days from sign-in recommended, or 24 hours / 30 days. Do not treat elapsed time as approval or promise that behavior yet. Existing access-cookie/refresh behavior still requires the agreed persistence contract before activation. Next: continue independent deployment preparation, then implement the chosen session policy after Sabine replies. Real sender, hosted origin, social credentials/linking and remaining live/device/phase gates stay open. Private Memory currently publishes the 578-test combined checkpoint; include settings preparation in its next consolidated update.
+
+## Account acceptance summary reconciled, 12 October 2026
+
+Corrected docs/task-2c-acceptance-audit.md to reflect approved hosted Tasks 2b/2c, installed migrations through 021, approved cross-device recovery, the combined HTTPS/WebKit/isolated PostgreSQL rehearsal and the recorded 583-test checkpoint. Historical appendices remain labeled as historical. No new test or customer operation was run for this documentation correction, and no task was marked complete.
+
+Next action: continue independent deployment preparation while the sign-in duration decision remains pending. Real sender/origin, social credentials/linking, hosted customer isolation and physical-device/accessibility acceptance remain open.

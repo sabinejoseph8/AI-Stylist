@@ -1,42 +1,43 @@
 # Task 2c acceptance audit
 
-Status: Local preparation only. Task 2c and Phase 2 remain open.
+Status: Hosted Tasks 2b/2c are authorized and in progress. Task 2c and Phase 2 remain open. Updated 12 October 2026.
 
-Sabine approved local account interfaces and simulated tests while Phase 1 remains open. This does not authorize real sign-ins, provider credentials, hosted changes, emails or paid calls.
+Sabine approved hosted database and account setup before Phase 1 finishes. This supersedes the earlier local-only restriction. Existing spending limits still apply. No real customer account route, email delivery or paid voice test has been activated.
 
 ## Current evidence and remaining work
 
-| Requirement | Verified local evidence | Still required |
+| Requirement | Verified evidence | Still required |
 | --- | --- | --- |
-| Accounts before styling | Sample UI and coordinator keep customer styling locked | Approved route activation with verified identity on all customer routes |
-| Password/registration | Bounded HTTP adapter, signed identity, initial encrypted ownership and isolated PostgreSQL composition; confirmation gives no cookie | Real project configuration, registration/email policy and delivery acceptance |
+| Accounts before styling | Sample UI and coordinator keep customer styling locked; connected account build remains separately prepared | Approved route activation with verified identity on all customer routes |
+| Password/registration | Signed login, current-session SQL authority, encrypted initial ownership and actual connected HTTPS/WebKit sign-in in isolated PostgreSQL with synthetic Auth | Real project registration/email configuration and delivery acceptance |
 | Google/Apple | Fixed authorization links, browser-bound one-use PKCE, HTTP exchange, signed identity and encrypted ownership with database restart protection | Actual credentials, callback allowlists, linking defaults and device/provider checks |
-| Recovery | Signed recent recovery-purpose verification, bounded HTTP request/exchange/update, one-use browser reset and actual primary-session cleanup composition with synthetic provider replies | Real email/reset acceptance, customer restart/cross-device decision and HTTPS browser checks |
-| Refresh/cleanup | Actual isolated SQL ownership/fencing/restart tests, metadata reconciliation and key usage inventory | Hosted Auth schema/configuration, real concurrency/disconnect checks and operational recovery policy |
-| Sign-out | Stored revocation port, HTTP cookie clearing and actual primary absence composition; accepted-only logout stays unconfirmed | Actual provider/session policy and device/concurrent sign-out acceptance |
+| Recovery | Cross-device recovery approved; separate browser context passes scanner-safe landing, explicit confirmation, actual connected reset form, one synthetic password update, cookie/field clearing and replay refusal | Real email delivery and receiving-device acceptance; production sender and exact hosted HTTPS origin |
+| Refresh/cleanup | Isolated PostgreSQL ownership/fencing/restart checks and full connected browser generation-two refresh; hosted migrations 001 through 021 installed with privilege checks | Customer sign-in duration decision; hosted Auth lifecycle, concurrency/disconnect checks and operational recovery acceptance |
+| Sign-out | Combined browser/database rehearsal confirms scoped synthetic Auth logout, independent primary-session absence, ownership cascade and cookie clearing | Actual provider/session policy and physical-device/concurrent sign-out acceptance |
 | Accessibility | Original eight-step account and seven-step reset reviews accepted | Physical iPhone, screen reader, zoom and complete accessibility acceptance |
 | Identity linking | Owner derives from signed user ID; no app email-based merging | Provider-default audit and business decision on customer linking behavior |
-| Phase exit | 520 foundation tests across 73 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
+| Deployment | Actual connected build, bounded build loader, strict website handler, explicit network lifecycle and server-only runtime-settings parser prepared | Session policy implementation, production runtime wiring, exact hosted origin, private configuration and deployment acceptance |
+| Phase exit | 583 foundation tests across 85 files; recorded type checking/build; combined HTTPS/WebKit/isolated PostgreSQL rehearsal | Remaining manual/provider gates and phase-wide code review |
 
-All provider operations in these tests are synthetic. Actual isolated PostgreSQL evidence is not hosted Supabase acceptance. No account route, real sign-in, email or password change has been activated.
+Auth HTTP and media-receipt maintenance responses in the combined rehearsal are synthetic. Actual isolated PostgreSQL evidence is not hosted Supabase Auth/PostgREST acceptance. Installed hosted database protections do not prove real customer isolation or account readiness.
 
-The dormant account factory now has Request/Response integration against isolated PostgreSQL for password, Google/Apple initiation/callbacks, recovery request/callback/reset, refresh and sign-out. Generated identities are signed and database authority is actual local SQL; all provider responses remain synthetic. Response-discard cleanup, shared admission, reset shutdown and uncertain cleanup have local checks. Guarded factory password delivery now passes actual Node loopback checks with generated signed identity and simulated authority. Guarded password disconnect and factory shutdown now pass actual loopback checks with late simulated adoption cleanup. Google/Apple/recovery callback delivery, replay and late-result disconnect/shutdown now pass complete-factory Node checks with generated signed identities and simulated authority. Synthetic desktop WebKit now verifies optional reset readiness/cancellation/password clearing/replay refusal and explicit connected account wording, recovery and Google/Apple cancellation. Physical-device, live-provider/HTTPS acceptance and durable deployment abuse protection remain open.
+## Next authorized work
 
-## Next authorized local work
-
-1. Reconcile the complete account acceptance checklist against current source and tests, including late-result cleanup and recovery credential lifetime.
-2. Prepare any remaining independent local integration checks without real provider calls or hosted activation.
-3. Preserve accepted manual reviews and all business, budget, Phase 1, hosted and device gates.
-
-Earlier dated appendices below are historical checkpoints, superseded by this current matrix.
+1. Continue independent account/deployment preparation within approved Tasks 2b/2c.
+2. Implement the customer session policy after Sabine answers the pending duration question. Do not assume a duration or promise persistence beyond the implemented contract.
+3. Configure and verify real email, exact HTTPS origin, social providers and customer isolation only within existing authorization and credential boundaries.
+4. Preserve accepted manual reviews and all remaining Phase 1, spending, device, accessibility and phase-review gates.
 
 ## Human and external dependencies
 
-- Sabine completed all eight local account preview steps and confirmed all worked and were readable. Physical-device and screen-reader acceptance remain open.
-- Phase 1 completion and a hosted/account activation decision are still required before real account configuration or tests.
-- Production email sender, Google/Apple credentials and actual callback allowlists are not approved by local preparation.
-- Refresh/session persistence and same-browser versus cross-device recovery must be reviewed before promising customer behavior.
+- Sabine accepted both local account/reset reviews. Physical-device and screen-reader acceptance remain open.
+- Hosted Tasks 2b/2c are approved before Phase 1 completion; Phase 1 remains incomplete.
+- The sign-in duration question is pending: 7 days, 24 hours or 30 days from sign-in. No answer has been recorded.
+- Production email sender, social provider credentials, callback allowlists and linking behavior remain unresolved.
+- Cross-device recovery is approved and locally rehearsed in a separate browser context; actual email/device acceptance remains open.
 - No spending allowance or additional provider attempt is created by this audit.
+
+Earlier dated appendices below are historical checkpoints, superseded by this current matrix. Their local-only restrictions, counts and pending decisions describe the state at those earlier checkpoints.
 
 
 ## Activation preparation
