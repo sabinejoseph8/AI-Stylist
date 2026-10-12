@@ -1869,3 +1869,11 @@ Prepared an explicit recovery page that accepts only the clean reset return path
 Evidence: 519 foundation tests across 73 files pass; type checking and build pass. Tests cover forbidden return paths, expired readiness, canceled late preparation and request-free initial rendering. This is not physical browser or real recovery acceptance.
 
 Next action: add browser lifecycle verification for the optional reset page, then review remaining local Task 2c activation prerequisites. Private Memory publishes the prior 516-test checkpoint.
+
+## Reset-page browser lifecycle verification, 12 October 2026
+
+A local WebKit run using synthetic reset data verified readiness before fields appear, immediate cancellation on Return, refusal of a late response after Return, reset submission, clearing both password fields, disabled replay and cancellation on unmount. Fixed Return to cancel immediately even if the parent does not unmount the screen. The optional connected screen remains absent from the default App. No provider, email or hosted account operation was started.
+
+The full foundation suite still passes 519 tests across 73 files, type checking and build. Browser script: apps/foundation/scripts/check-recovery-browser.cjs; serve the foundation on loopback port 4325, supply PLAYWRIGHT_MODULE and optionally WEBKIT_EXECUTABLE for an existing installation. Fixture: tests/browser/recovery.html. Desktop WebKit simulation does not replace physical iPhone, accessibility or real recovery acceptance.
+
+Next action: review remaining local Task 2c prerequisites and explicit account-panel composition. Private Memory remains at the 516-test checkpoint; update it with the next consolidated publication.

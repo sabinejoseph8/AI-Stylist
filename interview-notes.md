@@ -1155,3 +1155,7 @@ I separated permission to display the password reset screen from permission to c
 ## Preparing the recovery return screen
 
 I made the reset screen wait for server-checked permission before showing password fields. Changing pages cancels the check and prevents late results from restoring an old form. The normal local preview remains simulated. All 519 local tests, type checking and build pass; real recovery acceptance remains open.
+
+## Fixing reset-screen cancellation
+
+I used a local WebKit browser to check the prepared reset flow with simulated data. I found that Return needed to cancel immediately instead of relying on the parent to remove the screen. I fixed it and confirmed late results cannot reopen the form. Password clearing and replay prevention also passed. Real customer recovery remains unverified.

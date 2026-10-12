@@ -1,0 +1,6 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><title>Synthetic recovery lifecycle check</title><div id="root"></div><script type="module">
+import React from 'react';import{createRoot}from'react-dom/client';import{RecoveryPage}from'/src/web/recovery-page.tsx';
+const root=createRoot(document.getElementById('root'));let resolve,signal;
+const load=s=>{signal=s;return new Promise(r=>resolve=r)};
+window.check={mount:()=>root.render(React.createElement(RecoveryPage,{origin:'https://stylist.example',href:'/account/reset',load,onClose:()=>{}})),ready:()=>resolve({expiresAt:Date.now()+60000,provider:{reset:async()=>({status:'resetComplete'})}}),aborted:()=>signal?.aborted,unmount:()=>root.unmount()};window.check.mount();
+</script></html>
