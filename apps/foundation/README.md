@@ -1,6 +1,6 @@
 # AI Stylist local foundation
 
-Task 2a only. No real sign-in, providers, storage, shopping or deployment.
+Task 2a app foundation with prepared Task 2b/2c database and account modules. The customer UI defaults to local sample mode. Customer sign-in, email, storage operations and shopping are not activated. The reviewed customer migration chain is installed in the approved Supabase project; see ../../docs/hosted-database-deployment.json for installation evidence and remaining acceptance gates.
 
 Run `npm ci`, then `npm run dev` for http://127.0.0.1:4322/. In another terminal, `npm run dev:server` starts the local health service at http://127.0.0.1:4323/healthz.
 

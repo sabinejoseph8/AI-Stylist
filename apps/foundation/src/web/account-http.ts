@@ -10,7 +10,8 @@ export function createAccountStatusTransport(origin:string,send:typeof fetch,dea
   const work=(async()=>{
    try{
     if(controller.signal.aborted)throw Error();
-    const url=origin+path,response=await send(url,{method:'POST',mode:'same-origin',credentials:'same-origin',redirect:'error',cache:'no-store',referrerPolicy:'no-referrer',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal:controller.signal});
+    // WebKit makes Origin null for POST with no-referrer. Send only the fixed origin root, never a proof-bearing path.
+    const url=origin+path,response=await send(url,{method:'POST',mode:'same-origin',credentials:'same-origin',redirect:'error',cache:'no-store',referrer:origin+'/',referrerPolicy:'same-origin',headers:{'Content-Type':'application/json'},body:JSON.stringify(input),signal:controller.signal});
     body=response.body??undefined;
     if(controller.signal.aborted){void body?.cancel().catch(()=>{});throw Error();}
     if(response.redirected||(response.url&&response.url!==url)||!/^application\/json(?:\s*;\s*charset=utf-8)?$/i.test(response.headers.get('content-type')??'')||!response.body)throw Error();

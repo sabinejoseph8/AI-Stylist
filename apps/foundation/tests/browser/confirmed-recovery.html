@@ -1,0 +1,9 @@
+<!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Synthetic confirmed recovery check</title><div id="root"></div><script type="module">
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {RecoveryPage} from '/src/web/recovery-page.tsx';
+import {createRecoveryConfiguration} from '/src/web/recovery-configuration.ts';
+const origin=window.location.origin;
+const load=createRecoveryConfiguration(origin,window.fetch.bind(window));
+createRoot(document.getElementById('root')).render(React.createElement(RecoveryPage,{origin,href:window.location.href,load,onClose:()=>{window.location.replace('/account/options');}}));
+</script></html>

@@ -6,7 +6,7 @@ const reply=(status:string,http=200)=>new Response(JSON.stringify({status}),{sta
 afterEach(()=>vi.useRealTimers());
 it('uses fixed same-origin cookie transport and accepts only status presentation',async()=>{
  const send=vi.fn(async(_url:RequestInfo|URL,_init?:RequestInit)=>reply('signedIn')),provider=createAccountHttp(origin,send);expect(await provider.submit(input,signal())).toEqual({status:'signedIn'});
- expect(send.mock.calls[0]?.[0]).toBe(origin+'/api/account/password');expect(send.mock.calls[0]?.[1]).toMatchObject({credentials:'same-origin',mode:'same-origin',redirect:'error',cache:'no-store',referrerPolicy:'no-referrer'});expect(send.mock.calls[0]?.[1]?.headers).toEqual({'Content-Type':'application/json'});expect(JSON.parse(String(send.mock.calls[0]?.[1]?.body))).toEqual({...input,email:'sample@example.test'});
+ expect(send.mock.calls[0]?.[0]).toBe(origin+'/api/account/password');expect(send.mock.calls[0]?.[1]).toMatchObject({credentials:'same-origin',mode:'same-origin',redirect:'error',cache:'no-store',referrer:origin+'/',referrerPolicy:'same-origin'});expect(send.mock.calls[0]?.[1]?.headers).toEqual({'Content-Type':'application/json'});expect(JSON.parse(String(send.mock.calls[0]?.[1]?.body))).toEqual({...input,email:'sample@example.test'});
 });
 it('separates registration confirmation and generic recovery acknowledgment',async()=>{
  const provider=createAccountHttp(origin,async url=>String(url).endsWith('/recover')?reply('recoveryRequested',202):reply('confirmationRequired'));
