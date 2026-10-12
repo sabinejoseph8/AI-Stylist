@@ -2350,3 +2350,11 @@ Applied migrations 003 through 006 sequentially in the existing AI Stylist Supab
 Source hashes and the verification scope are in docs/hosted-database-deployment.json. This proves installation and privileges, not real customer CRUD isolation or app acceptance. No account, customer record, email or provider call was created. Foundation source is unchanged from the 538-test/WebKit checkpoint.
 
 Exact next action: review/apply migration 007 saved looks, then 008 through 020 in dependency order and verify their privilege contracts. Migrations 001 through 006 are already applied; do not rerun blindly. Task 2b/2c and phase gates remain open. Refresh private Memory with the consolidated hosted receipt after the chain advances.
+
+## Hosted saved looks and photo lifecycle applied, 12 October 2026
+
+Applied migrations 007 through 010 sequentially to the existing AI Stylist Supabase project. Each transaction returned Success. Saved looks and their components have owner SELECT policies, forced RLS and no direct browser writes. Controlled functions require explicit consent/confirmation and expected revisions. Photo staging, commit and final deletion are service-only; deletion claims remain owner-authorized. Enabled triggers prevent references to non-ready images. No save or deletion function was invoked.
+
+Live metadata checks returned 23 checks, all_passed=true, covering table privileges/policies, seven function access/search-path contracts, two enabled triggers, three lifecycle columns and the private guard's denied browser execution. This verifies installation and privileges; live customer CRUD, actual upload/deletion and application isolation acceptance remain pending. The source hashes and scope are recorded in docs/hosted-database-deployment.json. No accounts, customer records, emails or paid provider calls were created.
+
+Exact next action: inspect/apply migration 011 deletion receipts, then 012 through 020 in dependency order and verify the remaining schema/function grants. Migrations 001 through 010 are applied; do not rerun blindly. Task 2b/2c remain incomplete. Private Memory needs the consolidated hosted changes after the chain advances.
