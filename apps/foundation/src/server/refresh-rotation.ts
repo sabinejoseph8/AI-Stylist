@@ -29,7 +29,9 @@ export function createRefreshRotation(store:ReturnType<typeof createRefreshStore
     // Never remove a record while a previously started adoption can still write it.
     if(adoption)await adoption;
     secret=null;
+    if(cleanup.aborted)return false;
     try{
+     try{
      // Fence adopted ownership before attempting remote cleanup, including timeout/failure paths.
      const before=await store.inspect(scope.ownerId,scope.sessionId,cleanup);
      if(before.status==='found'&&before.scope.generation===scope.generation+1&&before.state==='ready'){
@@ -39,7 +41,8 @@ export function createRefreshRotation(store:ReturnType<typeof createRefreshStore
        await store.hold(fenced.scope,fenced.leaseId,cleanup);
       }
      }
-     if(await rotated.revoke(cleanup)!==true)return false;
+     }catch{/* Quarantine failure must not suppress a bounded revocation attempt. */}
+     if(cleanup.aborted||await rotated.revoke(cleanup)!==true||cleanup.aborted)return false;
      const current=await store.inspect(scope.ownerId,scope.sessionId,cleanup);
      if(current.status==='absent')return true;
      if(current.status!=='found')return false;

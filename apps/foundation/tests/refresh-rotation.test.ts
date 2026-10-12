@@ -34,9 +34,19 @@ it('waits for started adoption before revoking and removing ownership',async()=>
 it('never removes ownership when cleanup inspection is unavailable',async()=>{
  const f=fixture(),session=await f.rotation.stage(scope,signal());
  f.store.inspect.mockRejectedValue(Error('fixture database unavailable'));
- expect(await session.discard(signal())).toBe(false);expect(f.store.remove).not.toHaveBeenCalled();expect(f.revoke).not.toHaveBeenCalled();
+ expect(await session.discard(signal())).toBe(false);expect(f.store.remove).not.toHaveBeenCalled();expect(f.revoke).toHaveBeenCalledTimes(1);
 });
 it('does not quarantine or delete a competing newer generation',async()=>{
  const f=fixture(),session=await f.rotation.stage(scope,signal());f.store.inspect.mockResolvedValue({status:'found',scope:{...scope,generation:3},state:'ready',leaseId:null});
  expect(await session.discard(signal())).toBe(false);expect(f.store.claim).toHaveBeenCalledTimes(1);expect(f.store.hold).not.toHaveBeenCalled();expect(f.store.remove).not.toHaveBeenCalled();
+});
+
+it('does not start cleanup work with an already canceled scope',async()=>{
+ const f=fixture(),session=await f.rotation.stage(scope,signal()),control=new AbortController();control.abort();
+ expect(await session.discard(control.signal)).toBe(false);expect(f.revoke).not.toHaveBeenCalled();expect(f.store.inspect).not.toHaveBeenCalled();expect(f.store.remove).not.toHaveBeenCalled();
+});
+it('does not remove ownership when cancellation arrives during revocation',async()=>{
+ const f=fixture(),session=await f.rotation.stage(scope,signal()),control=new AbortController();
+ f.revoke.mockImplementation(async()=>{control.abort();return true;});
+ expect(await session.discard(control.signal)).toBe(false);expect(f.store.remove).not.toHaveBeenCalled();expect(f.revoke).toHaveBeenCalledTimes(1);
 });

@@ -951,3 +951,6 @@ I fixed the confirmed cleanup-failure path by claiming and holding the adopted c
 
 
 I proved lost quarantine acknowledgments remain blocked after actual local database restarts and that cleanup leaves a newer competing generation alone. All 404 foundation tests, type checking and build pass. A separate inspection-failure test exposed that remote revocation is skipped when the database throws. I recorded that concrete outage gap as the next fix, keeping live activation disabled.
+
+
+I fixed the database-exception path so cleanup still attempts bounded provider revocation when possible. Canceled cleanup never removes ownership based on a late success. All 406 foundation tests, type checking, build and isolated database rehearsals pass. I kept simultaneous database/provider failure as an unresolved reconciliation risk instead of claiming complete outage recovery.
