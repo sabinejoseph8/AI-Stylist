@@ -706,3 +706,6 @@ I added a disabled Supabase Storage adapter for the private wardrobe-image bucke
 ## Connecting image recovery safely
 
 I connected the image lifecycle to separate database and object-storage interfaces while binding every operation to one verified customer. Deletion claims use the customer's authenticated database context; server credentials perform the restricted persistence steps. I found that the earlier transport could restart its timeout after headers or wait indefinitely for cancellation. I replaced that with one deadline and tested stalled cleanup. I also made empty or mismatched deletion acknowledgments keep metadata pending until absence is confirmed. The simulated checks pass; the revised SQL rehearsal and actual hosted storage still need verification.
+
+
+I found a stale test count in the project-memory website even after the source documents had been updated. I changed the overview to import the plan's current evidence summary during each refresh. A rendering check verifies the displayed text follows that source and stays escaped. This makes the overview easier to trust while keeping hosted acceptance and pending verification explicit.

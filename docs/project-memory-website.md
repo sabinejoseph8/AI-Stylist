@@ -2,6 +2,8 @@
 
 Published: 11 October 2026
 
+Latest local preparation: the Tech Spec evidence banner now imports the canonical Plan Summary instead of maintaining a separate count. Sixteen local website checks pass. The snapshot imports application commit `6e32fff`; this latest refresh is not deployed because the execution approval limit prevents publishing.
+
 Private website: https://ai-stylist-project-memory.idealgnat256.chatgpt.site
 
 Four tabs: Product Spec, Design Spec, Tech Spec and Plan. The complete source Markdown is retained behind readable summaries. The design section includes 13 named color swatches, typography and spacing tables, seven component descriptions and the main screens. Architecture and data-model SVG diagrams have labeled relationships and text descriptions.
@@ -20,12 +22,12 @@ Only verified outcomes may be checked off. The initial published snapshot preser
 
 Website source is in tools/project-memory-site and the AI stylist folder's Project Memory Website directory. Its original Sites checkout is in the Capstone 2 workspace under sites/ai-stylist-memory. Reuse the project_id in .openai/hosting.json; never create a second Site. No credentials are stored there.
 
-Run scripts/sync-docs.py with the development checkout path, review curated summaries, build, test and republish through the Sites skill. Snapshots do not automatically pull from GitHub. The published snapshot references application commit 185e40c.
+Run scripts/sync-docs.py with the development checkout path, review curated summaries, build, test and republish through the Sites skill. Snapshots do not automatically pull from GitHub. The initial publication recorded application commit `185e40c`. The latest prepared local snapshot references `6e32fff`; inspect the live publication after the execution limit clears before claiming it has that snapshot.
 
 Shared task evidence is stored as a JSON file in the provisioned R2 binding. Saves require private identity, evidence and a matching revision; conflicts cannot silently overwrite another update. A changed task source hash invalidates its old override. Missing storage disables updates. The local preview has synthetic identity and memory-only test data, and is never deployed.
 
 ## Verification
 
-All 15 focused website tests pass. Desktop and phone browser checks cover four tabs, 13 swatches, task search/filter, completion dialog, save/reload in the synthetic preview and labeled diagrams. A cramped phone toolbar and diagram label were fixed and checked again. Native Sites confirms successful private deployment with MCP. Authenticated production persistence is verified: Task 1a was temporarily reopened with an explicit verification note, reloaded, restored to its previously approved completed status, and reloaded again. Shared record revision 2 shows 4/41 tasks complete and Aligned. No incomplete application task was accepted.
+The original 15 focused website tests passed at publication. The current 16-test local suite also checks that the visible evidence banner comes from the imported Plan Summary and escapes that text before rendering. Desktop and phone browser checks cover four tabs, 13 swatches, task search/filter, completion dialog, save/reload in the synthetic preview and labeled diagrams. A cramped phone toolbar and diagram label were fixed and checked again. Native Sites confirms successful private deployment with MCP. Authenticated production persistence is verified: Task 1a was temporarily reopened with an explicit verification note, reloaded, restored to its previously approved completed status, and reloaded again. Shared record revision 2 shows 4/41 tasks complete and Aligned. No incomplete application task was accepted.
 
 This website is project tooling. The customer app's approved Supabase + Render hosting, provider limits and acceptance gates are unchanged.

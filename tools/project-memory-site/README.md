@@ -39,3 +39,5 @@ Install or connect the private plugin provisioned by Sites to expose these tools
 Automated coverage: assets, complete sources, auth, same-origin writes, required evidence, unknown tasks, revision conflicts, concurrent saves, changed source hashes, unavailable storage, malformed/oversized requests, and MCP discovery/read/write behavior.
 
 Manual checks: switch all four tabs with mouse and keyboard; inspect all 13 swatches; verify table scrolling and both diagrams at phone/desktop widths; search/filter tasks; cancel a change; save a synthetic preview update and reload; verify the changed task and source difference are shown; inspect automated and manual phase checks. Synthetic preview updates are never copied into production.
+
+The Tech Spec current-evidence banner is imported from the first paragraph of the Plan Summary during snapshot synchronization. It does not maintain an independent hardcoded test count.

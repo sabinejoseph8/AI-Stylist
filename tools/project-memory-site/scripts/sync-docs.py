@@ -77,6 +77,8 @@ for phase,chunk in zip(phases,phasechunks):
  phase['automatedHtml']=render(auto[1]) if auto else '<p>See the complete plan for the phase checks.</p>'
  phase['manualHtml']=render(manual[1]) if manual else '<p>See the complete plan for the manual verification steps.</p>'
  phase['dependency']=next((l.split('**Dependencies:**',1)[1].strip() for l in text.splitlines() if '**Dependencies:**' in l),'Follow the preceding phase exit gate.')
-data={'snapshot':'11 October 2026','sourceCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'docs':docs,'requirements':product,'principles':[{'title':a.rstrip('.'),'description':b} for a,b in principles],'palette':palette,'components':components,'phases':phases,'tasks':tasks}
+summary_match=re.search(r'^## Summary\s*\n+(.*?)(?=\n\s*\n|\Z)',plan,re.M|re.S)
+current_checkpoint=summary_match[1].strip() if summary_match else 'The plan summary is unavailable. Read the complete source plan for current evidence.'
+data={'currentCheckpoint':current_checkpoint,'snapshot':'11 October 2026','sourceCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'docs':docs,'requirements':product,'principles':[{'title':a.rstrip('.'),'description':b} for a,b in principles],'palette':palette,'components':components,'phases':phases,'tasks':tasks}
 Path('content/documents.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
 print(f'Imported 4 documents, {len(product)} requirements, {len(palette)} colors, {len(tasks)} tasks in {len(phases)} phases.')

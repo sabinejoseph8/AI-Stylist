@@ -1,5 +1,6 @@
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
+import {runInNewContext} from 'node:vm';
 import worker from '../worker/index.js';
 class Bucket{value=null;etag=0;async get(){return this.value?{etag:String(this.etag),json:async()=>JSON.parse(this.value)}:null}async put(k,v,o){if(o.onlyIf.etagMatches!==undefined&&o.onlyIf.etagMatches!==String(this.etag)||o.onlyIf.etagDoesNotMatch==='*'&&this.value)return null;this.value=v;this.etag++;return {etag:String(this.etag)}}}
 const req=(path='/api/plan',options={})=>new Request('https://memory.example'+path,options);
@@ -21,3 +22,14 @@ test('MCP discovery and tool list require no private record access',async()=>{fo
 test('MCP data tools enforce identity',async()=>{let r=await(await worker.fetch(req('/mcp',{method:'POST',body:JSON.stringify({jsonrpc:'2.0',id:2,method:'tools/call',params:{name:'list_plan_tasks'}})}))).json();assert.equal(r.result.isError,true)});
 test('MCP update uses same durable evidence rules',async()=>{let env={BUCKET:new Bucket()};let r=await(await worker.fetch(req('/mcp',{method:'POST',headers:auth,body:JSON.stringify({jsonrpc:'2.0',id:3,method:'tools/call',params:{name:'update_plan_task',arguments:args}})}),env)).json();assert.equal(r.result.isError,false);assert.equal(JSON.parse(r.result.content[0].text).revision,1)});
 test('unknown routes and malformed or oversized JSON fail safely',async()=>{assert.equal((await worker.fetch(req('/missing'))).status,404);for(let b of ['{','x'.repeat(9000)]){let r=await worker.fetch(req('/api/plan',{method:'PATCH',headers:{...auth,Origin:'https://memory.example','Content-Type':'application/json'},body:b}),{BUCKET:new Bucket()});assert.ok([400,413].includes(r.status))}});
+
+test('visible current evidence stays aligned with the imported plan summary',async()=>{
+ const d=await(await worker.fetch(req('/api/documents'))).json();
+ const expected=d.docs.plan.markdown.match(/^## Summary\s*\n+([\s\S]*?)(?=\n\s*\n|$)/m)?.[1].trim();
+ assert.ok(expected);assert.equal(d.currentCheckpoint,expected);
+ const script=await(await worker.fetch(req('/app.js'))).text(),start=script.indexOf('function tech()');
+ const source=script.slice(start,script.indexOf('async ',start));
+ const marker='Updated evidence <script>unsafe</script>';
+ const rendered=runInNewContext(source+';tech()', {docs:{currentCheckpoint:marker},hero:()=>'',heading:()=>'',banner:t=>t,table:()=>'',svgDiagram:()=>'',archive:()=>'',esc:t=>String(t).replaceAll('<','&lt;').replaceAll('>','&gt;')});
+ assert.ok(rendered.includes('Updated evidence &lt;script&gt;unsafe&lt;/script&gt;'));assert.ok(!rendered.includes(marker));
+});
