@@ -724,3 +724,8 @@ I treated native image decoding as a resource risk because a JavaScript heap lim
 ### Replacing simulated Storage evidence with a real local API
 
 I tested private image access against a disposable Storage API and database. The real service exposed a missing-object response mismatch that had kept recovery pending; I corrected the transport and reran its checks. I also confirmed that expiring signed links are bearer credentials, so I kept account-bound image delivery as a separate requirement rather than treating expiry as customer isolation.
+
+
+### Keeping wardrobe URLs tied to an account
+
+I prepared image delivery that checks the customer on each request instead of exposing a reusable Storage link. I tested it with actual local Storage and database records: the owner received the image, while another generated customer using the same app URL did not. I also tested cancellation, sign-out during a download and deletion-state changes. I kept real authentication and hosted acceptance open, since the local identity gate was simulated.

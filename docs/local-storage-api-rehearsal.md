@@ -32,3 +32,6 @@ The approved requirement says another customer cannot access saved wardrobe phot
 This verifies a cached local Storage version with actual RLS and HTTP behavior, using synthetic JWTs and a minimal Auth schema. It does not verify hosted Supabase configuration, secret-key formats, GoTrue token validation/revocation, actual Render limits, recovery across hosting restarts or deletion-receipt retention. Task 2b remains incomplete and its new migrations remain unapplied remotely.
 
 Configuration reference: [Supabase Docker self-hosting](https://supabase.com/docs/guides/self-hosting/docker). This disposable rehearsal is not a change to the approved Supabase + Render hosting plan.
+
+
+Follow-up: the rehearsal now also executes the prepared account-bound TypeScript handler against service-role local SQL metadata and actual Storage downloads. The owner receives exact bytes, and another generated identity copying the app URL receives 404 with no bytes. Authentication stays simulated; no app route installs the handler. See account-bound-image-delivery.md.

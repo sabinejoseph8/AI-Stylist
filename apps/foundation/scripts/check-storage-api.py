@@ -177,6 +177,10 @@ select coalesce(nullif(current_setting('request.jwt.claim.sub',true),''),
     writer = run(['docker', 'exec', '-i', api, 'node', '-e',
                   "require('fs').writeFileSync('/tmp/stylist-storage.ts',require('fs').readFileSync(0))"], input=transport)
     require(writer.returncode == 0, 'Local adapter fixture unavailable')
+    reader_source = (ROOT / 'apps/foundation/src/server/media-read.ts').read_text()
+    writer = run(['docker', 'exec', '-i', api, 'node', '-e',
+                  "require('fs').writeFileSync('/tmp/stylist-media-read.ts',require('fs').readFileSync(0))"], input=reader_source)
+    require(writer.returncode == 0, 'Local image-read fixture unavailable')
     adapter_check = r"""const fs=require('fs');const assert=require('assert/strict');
 const {createHash}=require('crypto');const x=JSON.parse(fs.readFileSync(0,'utf8'));
 (async()=>{const {createSupabaseStorage}=await import('file:///tmp/stylist-storage.ts');
@@ -187,12 +191,33 @@ const port=createSupabaseStorage('https://fixture.supabase.co/',x.token,(url,ini
 });
 const bytes=Buffer.from(x.image,'base64');await port.putIfAbsent(x.key,bytes);
 assert.deepEqual(await port.inspect(x.key),{state:'present',checksum:createHash('sha256').update(bytes).digest('hex')});
-await assert.rejects(port.putIfAbsent(x.key,bytes));await port.remove(x.key);
+await assert.rejects(port.putIfAbsent(x.key,bytes));
+const {createMediaReadHandler}=await import('file:///tmp/stylist-media-read.ts');
+const {Client}=require('pg');const db=new Client({connectionString:'postgres://postgres@db:5432/postgres'});await db.connect();
+try{
+ const id=x.key.split('/')[1].slice(0,-5);const owner=x.key.split('/')[0];
+ await db.query("insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height,checksum,state) values($1,$2,$3,'image/webp',2,2,$4,'ready')",[id,owner,x.key,createHash('sha256').update(bytes).digest('hex')]);
+ await db.query('set role service_role');
+ const handle=createMediaReadHandler('https://stylist.example',{
+  // Identity verification stays simulated; actual Auth integration belongs to 2c.
+  authorize:async(request)=>({ownerId:request.headers.get('authorization')===x.ownerToken?owner:x.otherOwner,isCurrent:async()=>true}),
+  read:async(asset,who)=>(await db.query('select public.stylist_read_media_operation($1,$2) value',[asset,who])).rows[0].value,
+  download:(key,signal)=>port.download(key,signal),
+ });
+ const url='https://stylist.example/api/media/'+id;
+ const allowed=await handle(new Request(url,{headers:{authorization:x.ownerToken}}));
+ assert.equal(allowed.status,200);assert.deepEqual(Buffer.from(await allowed.arrayBuffer()),bytes);
+ assert.equal((await handle(new Request(url,{headers:{authorization:x.otherToken}}))).status,404);
+ assert.ok(allowed.headers.get('cache-control').includes('no-store'));assert.equal(allowed.headers.has('location'),false);
+ console.log('Account-bound read handler passes actual local SQL/Storage bytes and copied-URL owner-isolation checks with simulated Auth');
+}finally{await db.end();}
+await port.remove(x.key);
 assert.deepEqual(await port.inspect(x.key),{state:'absent'});
 console.log('Prepared Storage transport passes actual local upload/checksum/no-overwrite/remove/absence checks');
 })().catch(e=>{console.error(e.message);process.exit(1)});"""
     check_input = {'token': service, 'image': base64.b64encode(image).decode(),
-                   'key': a + '/' + str(uuid.uuid4()) + '.webp'}
+                   'key': a + '/' + str(uuid.uuid4()) + '.webp',
+                   'ownerToken': owner, 'otherToken': other, 'otherOwner': b}
     checked = run(['docker', 'exec', '-i', api, 'node', '-e', adapter_check], input=json.dumps(check_input))
     require(checked.returncode == 0, 'Prepared adapter local API check failed: ' + checked.stderr[:500])
     print(checked.stdout.strip())

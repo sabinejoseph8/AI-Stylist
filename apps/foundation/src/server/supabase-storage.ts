@@ -35,12 +35,18 @@ export function createSupabaseStorage(projectUrl:string,serviceKey:string,fetche
   typeof fetcher!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>MAX_DEADLINE)
   throw Error('Storage configuration unavailable');
 
- async function request<T>(method:'GET'|'POST'|'DELETE',url:string,read:(response:StorageResponse,wait:<R>(work:Promise<R>)=>Promise<R>,setReader:(value:ReadableStreamDefaultReader<Uint8Array>)=>void)=>Promise<T>,body?:Uint8Array){
+ async function request<T>(method:'GET'|'POST'|'DELETE',url:string,read:(response:StorageResponse,wait:<R>(work:Promise<R>)=>Promise<R>,setReader:(value:ReadableStreamDefaultReader<Uint8Array>)=>void)=>Promise<T>,body?:Uint8Array,externalSignal?:AbortSignal){
   const controller=new AbortController();let timer:ReturnType<typeof setTimeout>;
   let response:StorageResponse|undefined;let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
-  const timeout=new Promise<never>((_,reject)=>{timer=setTimeout(()=>{controller.abort();reject(Error('deadline'));},deadlineMs);});
+  let abortExternal=()=>{};
+  const timeout=new Promise<never>((_,reject)=>{
+   abortExternal=()=>{controller.abort();reject(Error('aborted'));};
+   timer=setTimeout(()=>{controller.abort();reject(Error('deadline'));},deadlineMs);
+   externalSignal?.addEventListener('abort',abortExternal,{once:true});
+  });
   const wait=<R>(work:Promise<R>)=>Promise.race([work,timeout]);
   try{
+   if(externalSignal?.aborted)throw Error('aborted');
    const headers:Record<string,string>={apikey:serviceKey,authorization:`Bearer ${serviceKey}`};
    if(method==='POST'){headers['content-type']='image/webp';headers['cache-control']='max-age=0';headers['x-upsert']='false';}
    if(method==='DELETE')headers['content-type']='application/json';
@@ -52,7 +58,7 @@ export function createSupabaseStorage(projectUrl:string,serviceKey:string,fetche
    return await wait(read(response,wait,value=>{reader=value;}));
   }catch{throw Error('Storage operation unavailable');}
   finally{
-   clearTimeout(timer!);controller.abort();
+   clearTimeout(timer!);externalSignal?.removeEventListener('abort',abortExternal);controller.abort();
    // A broken stream may never settle cancellation. Do not let it hold the deadline.
    if(reader){try{void reader.cancel().catch(()=>{});}catch{}try{reader.releaseLock();}catch{}}
    else cancel(response?.body);
@@ -102,6 +108,18 @@ export function createSupabaseStorage(projectUrl:string,serviceKey:string,fetche
      return {state:'present',checksum:hash.digest('hex')} as const;
     });
    }catch{return {state:'unknown'};}
+  },
+  async download(key:string,signal?:AbortSignal):Promise<Readonly<{bytes:Uint8Array;contentType:'image/webp'|'image/jpeg'|'image/png';checksum:string}>>{
+   if(typeof key!=='string'||!readableKey.test(key))throw Error('Storage operation unavailable');
+   return await request('GET',storageUrl(base,'authenticated',key),async(response,wait,setReader)=>{
+    const type=(response.headers.get('content-type')??'').split(';')[0].trim().toLowerCase();
+    if(response.status!==200||response.headers.get('content-range')||!['image/webp','image/jpeg','image/png'].includes(type)||!response.body)throw Error('response');
+    const reader=response.body.getReader();setReader(reader);const parts:Uint8Array[]=[];let size=0;
+    while(true){const item=await wait(reader.read());if(item.done)break;size+=item.value.byteLength;if(size>MAX_OBJECT)throw Error('size');parts.push(item.value);}
+    if(size===0)throw Error('empty');
+    const bytes=new Uint8Array(size);let offset=0;for(const part of parts){bytes.set(part,offset);offset+=part.byteLength;}
+    return Object.freeze({bytes,contentType:type as 'image/webp'|'image/jpeg'|'image/png',checksum:createHash('sha256').update(bytes).digest('hex')});
+   },undefined,signal);
   },
   async remove(key:string){
    if(typeof key!=='string'||!readableKey.test(key))throw Error('Storage operation unavailable');

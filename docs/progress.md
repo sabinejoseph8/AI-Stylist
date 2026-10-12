@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2b local preparation is active. Latest evidence: 189 foundation tests across all 15 files pass, with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Six isolated Linux decoder resource scenarios also pass; actual hosted limits remain unverified. Hosted changes and paid tests remain unauthorized.
+Task 2b local preparation is active. Latest evidence: 209 foundation tests across all 16 files pass, with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Six isolated Linux decoder resource scenarios also pass; actual hosted limits remain unverified. Hosted changes and paid tests remain unauthorized.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1361,3 +1361,8 @@ Exact next action: rerun the isolated PostgreSQL suite after approval is availab
 ## Actual local Storage API verification, 11 October 2026
 
 The disposable Storage API rehearsal passes owner-only reads, public/foreign/anonymous denial, direct customer mutation protection, signed-link issuance/expiry, exact service acknowledgments and the prepared transport against actual HTTP responses. It exposed and fixed missing-object recovery: a bounded NoSuchKey JSON envelope under HTTP 400 or 404 is required; ambiguous responses remain unknown. All 189 foundation tests, type checking, build and isolated SQL/media recovery checks pass. See docs/local-storage-api-rehearsal.md for scope and evidence. Hosted Auth/Storage and account-bound image delivery remain unverified. Signed links are bearer credentials before expiry; do not expose them as account-bound URLs. Task 2b remains local-only and incomplete.
+
+
+## Account-bound image interface preparation, 11 October 2026
+
+Prepared a disconnected image-read handler with a fresh trusted identity gate per request, owner/ready metadata validation, bounded verified bytes, a second metadata/session check, cancellation/deadlines, no-store/same-origin headers and four-request admission. It exposes no signed Storage URL. The actual local SQL/Storage rehearsal verifies owner bytes and copied-URL denial for another generated identity; authentication remains simulated. All 209 foundation tests across 16 files, type checking and build pass. See docs/account-bound-image-delivery.md for evidence and remaining hosted/auth/race gates. No app route constructs it; Task 2b remains incomplete and local-only.

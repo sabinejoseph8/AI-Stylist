@@ -137,3 +137,22 @@ it('holds ambiguous missing-object responses rather than deleting metadata',asyn
   expect(await adapter(async()=>response(400,new TextEncoder().encode(body))).inspect(key)).toEqual({state:'unknown'});
  }
 });
+
+it('downloads bounded complete bytes with a server-computed checksum',async()=>{
+ const store=adapter(async()=>response(200,bytes,'image/webp'));
+ const image=await store.download(key);expect(image.bytes).toEqual(bytes);expect(image.contentType).toBe('image/webp');
+ expect(image.checksum).toBe(createHash('sha256').update(bytes).digest('hex'));
+});
+it('refuses partial, empty, unsupported and oversized download responses',async()=>{
+ for(const result of [response(206,bytes,'image/webp'),response(200,null,'image/webp'),response(200,bytes,'image/svg+xml'),response(200,new Uint8Array(10*1024*1024+1),'image/webp')])await expect(adapter(async()=>result).download(key)).rejects.toThrow('Storage operation unavailable');
+});
+it('aborts a stalled download when the enclosing image request ends',async()=>{
+ let canceled=false;let started!:(()=>void);const ready=new Promise<void>(r=>{started=r;});
+ const controller=new AbortController();const store=adapter(async()=>{started();return {status:200,headers:{get:()=> 'image/webp'},body:new ReadableStream<Uint8Array>({cancel(){canceled=true;}})};});
+ const download=store.download(key,controller.signal);const rejected=expect(download).rejects.toThrow('Storage operation unavailable');
+ await ready;controller.abort();await rejected;expect(canceled).toBe(true);
+});
+it('refuses a pre-aborted download before requesting Storage',async()=>{
+ const fetcher=vi.fn(async()=>response(200,bytes,'image/webp'));const controller=new AbortController();controller.abort();
+ await expect(adapter(fetcher).download(key,controller.signal)).rejects.toThrow();expect(fetcher).not.toHaveBeenCalled();
+});
