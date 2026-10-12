@@ -2222,3 +2222,13 @@ Reviewed Supabase's primary identity-linking documentation and prepared docs/acc
 Added a focused OAuth adapter regression with misleading user ID, email and identities metadata. Only accessToken and refreshSecret reach the verified session stager; ownership remains derived from signed identity/current session. All 623 tests across 94 files, type checking and build pass (/private/tmp/ai-stylist-identity-metadata-tests.log). This does not prove live provider linking or close P2-06.
 
 Next required actions: Sabine's linking-policy choice and authorization for the prepared Render support inquiry. Hosted origin/sender/social credentials and real provider/isolation/device checks remain open. Preserve later-phase dependencies and spending. Do not manufacture additional feature work past those boundaries or claim activation from adapter tests.
+
+## Goal blocker audit, 12 October 2026
+
+The same account-activation decision boundary remains unresolved across three consecutive goal turns, including the policy-request turn. Revalidated current policy/draft files and worktree: linking policy remains proposed, Render inquiry remains unsent, and only the pre-existing AGENTS.md change is dirty. No active test or deployment is being awaited.
+
+Phase 1 still needs provider clarification/privacy acceptance and separately authorized remaining live tests; existing attempts and reserve are exhausted. Real catalog/affiliate access remains unapproved. Tasks 2b/2c retain hosted provider/customer isolation, sender/social credentials, linking policy, Render ingress/logging and manual acceptance gates. The later phases explicitly depend on unfinished earlier phases; no further sequencing exception has been granted. Current independent local runtime, transport, session and adapter preparation is published. No additional authorized implementation can close these gates without human input or external evidence.
+
+Goal is incomplete and is being marked blocked, not complete or paused. Exact next human actions: answer the pending MVP automatic-linking policy question and authorize or decline the prepared Render support inquiry. Upon resumption, record the answers; send the inquiry only if explicitly authorized; pursue permitted hosted readiness work while preserving spending and security limits. Do not enable providers, merge data or start another paid test from this handoff alone.
+
+Latest code evidence: 623 tests across 94 files, type checking/build pass. Private Memory's verified publication remains the accurately labeled 622-test runtime/transport checkpoint; subsequent identity-policy and live-setting evidence is in the repository. Original scope and all remaining tasks are retained.
