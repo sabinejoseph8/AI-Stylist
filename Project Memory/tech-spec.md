@@ -2279,3 +2279,12 @@ Composed the normalized password bridge, initial session stager, generated ES256
 All 432 foundation tests across 54 files, type checking/build and the full isolated SQL composition pass. Provider replies and revocation remain synthetic. This proves the confirmed-quarantine path, not simultaneous database/provider outages. No real sign-in, email, production key or hosted change occurred. Task 2c remains open.
 
 Exact next action: consolidate private Memory with this checkpoint, then prepare concrete password HTTP operations and registration-response normalization with simulated fetch. Keep startup routes disabled and preserve all activation/financial gates.
+
+
+## Disconnected password HTTP operations, 12 October 2026
+
+Prepared createPasswordProviderHttp with fixed HTTPS Supabase project endpoints: password grant, signup and explicit local logout. It whitelists email/password request fields, refuses redirects/browser cookies, bounds JSON responses to 64 KiB, limits four underlying operations and deadlines to eight seconds, retains admission for unresolved late requests/cleanup, and sanitizes errors. Only an empty 204 confirms logout. A token-free signup user reply with a UUID id normalizes to confirmationRequired; this is not proof an email was delivered or an account created. Session-bearing replies still require the verified staged-session owner. No SDK persistence, retries, environment credentials or installed routes.
+
+All 438 foundation tests across 55 files, type checking and build pass. Six synthetic-fetch scenarios verify fixed request contracts, confirmation normalization, logout, refusal before fetch, ignored-cancellation admission and oversized/non-JSON rejection. Actual provider behavior and complete HTTP/password/database composition remain unverified. Upstream SDK source was consulted for endpoint/request shape, not installed or treated as a pinned live contract: https://raw.githubusercontent.com/supabase/auth-js/master/src/GoTrueClient.ts .
+
+Exact next action: compose the HTTP adapter, normalized bridge and initial encrypted ownership in the isolated PostgreSQL harness with generated tokens and synthetic fetch; test confirmation-only signup and cleanup failure. Preserve hosted/account and financial gates. Private Memory remains at its verified 432-test checkpoint pending the next consolidation.

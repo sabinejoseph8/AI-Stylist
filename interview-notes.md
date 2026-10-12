@@ -999,3 +999,8 @@ I connected initial sign-in preparation to encrypted session ownership. I requir
 ## Fixing an uncertain initial-save restart bug
 
 I tested a sign-in save whose database acknowledgment was lost while sign-out also failed. The record could remain ready after a restart, so I changed cleanup to quarantine any attempted save before sign-out. I kept uncertain ownership from authorizing deletion and verified the fix against a real isolated database restart.
+
+
+## Preparing the password service connection
+
+I prepared password and registration HTTP requests with simulated responses, fixed destinations and bounded resource use. I kept registration confirmation separate from authenticated access and tested stalled and oversized responses. Real credentials and sign-ins remain disabled until the hosted acceptance gates are satisfied.
