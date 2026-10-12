@@ -23,3 +23,9 @@ it('timeout never retries an uncertain change or exposes provider errors',async(
 it('renders labeled reset confirmation and an explicit simulation notice',()=>{
  const html=renderToStaticMarkup(React.createElement(RecoveryPanel,{onClose:()=>{}}));expect(html).toContain('Confirm new password');expect(html).toContain('No recovery link was verified');expect(html).toContain('role="status"');expect(html).not.toContain('type="email"');
 });
+
+it('renders explicit reset configuration without activating a provider on render',()=>{
+ const reset=vi.fn(async()=>({status:'resetComplete' as const}));
+ const html=renderToStaticMarkup(React.createElement(RecoveryPanel,{onClose:()=>{},configuration:{provider:{reset},expiresAt:Date.now()+60000}}));
+ expect(html).toContain('Choose a new password');expect(html).toContain('server-verified recovery permission');expect(html).toContain('Update password');expect(html).toMatch(/autocomplete="new-password"/i);expect(html).not.toContain('No password was changed');expect(reset).not.toHaveBeenCalled();
+});

@@ -1139,3 +1139,7 @@ I connected the reset browser adapter to the prepared server grant owner in a si
 ## Account return-page boundaries, 12 October 2026
 
 I reviewed the account return pages and prepared routing that treats URLs only as presentation information. A reset page still requires server-verified permission, and a query string cannot claim the customer is signed in. All 511 tests, type checking and build pass. The preview remains simulated and live page mounting is pending.
+
+## Reset panel configuration, 12 October 2026
+
+I separated the reset panel's simulated preview from explicitly configured reset behavior. The panel starts no request on render and still relies on server permission. All 512 tests, type checking and build pass, including the existing preview checks. Live configuration and browser acceptance remain pending.
