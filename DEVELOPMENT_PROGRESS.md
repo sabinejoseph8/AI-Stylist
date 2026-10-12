@@ -661,3 +661,9 @@ Exact next action: run `python3 apps/foundation/scripts/check-data-protections.p
 Replaced the website's hardcoded foundation-test count with the canonical first paragraph of docs/progress.md's Summary, imported on snapshot refresh. Updated top-level technical/MVP/backlog summaries to distinguish local preparation from hosted acceptance and pending publication. The site build, 16 focused checks and artifact validation pass; a rendering check verifies the imported evidence text is escaped. The prepared site snapshot references `6e32fff`. Its source is saved in tools/project-memory-site; remote deployment and the AI stylist output-folder copy remain pending the execution approval limit. No task checkbox was completed from simulated evidence.
 
 Exact next action remains the isolated SQL rerun, including newest timestamp guards and the revised adapter-chain media rehearsal, when Docker approval is available. Then verify and publish pending work. Preserve the local-only Task 2b boundary; later feature groups still depend on Phase 1 completion.
+
+## Execution restored and SQL verification, 11 October 2026
+
+The approval mechanism accepted the pending isolated PostgreSQL run after goal resumption. `python3 apps/foundation/scripts/check-data-protections.py` passed, including the latest source timestamp guards, owner isolation, atomic mixed-look history and the revised media RPC/Storage adapter rehearsal covering six lost-acknowledgment paths and legacy JPEG deletion. Storage HTTP and customer authentication remain simulated; hosted acceptance and decoder OS limits remain open. No hosted migration or paid provider call occurred.
+
+Next: publish the verified local commits and copy the completed source/documents to the AI stylist folder, then refresh the private Memory site. Task 2b remains local-only and incomplete.
