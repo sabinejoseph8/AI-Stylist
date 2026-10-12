@@ -6,6 +6,9 @@ import {createRefreshEnvelopes} from '../src/server/refresh-envelope.ts';
 import {createRefreshStore} from '../src/server/refresh-store.ts';
 import {createRefreshRotation} from '../src/server/refresh-rotation.ts';
 import {createAccountSessions} from '../src/server/account-session.ts';
+import {createStoredRefreshPort} from '../src/server/refresh-port.ts';
+import {createAccountRefresh} from '../src/server/account-refresh.ts';
+import {createRefreshHttp} from '../src/server/refresh-http.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 const container=process.argv[2];
@@ -102,3 +105,18 @@ for(const invalid of [await token('44444444-4444-4444-8444-444444444444'),await 
 }
 assert.equal(revocations,4);
 console.log('Refresh coordinator/session PostgreSQL composition passed: verified cookie after adoption, ambiguous-write cleanup, wrong-session refusal and expired-access refusal. Provider rotation/revocation remain synthetic.');
+
+providerToken=await token();
+assert.equal(await store.adopt('coordinator-fixture',scope,signal()),'confirmed');
+const port=createStoredRefreshPort(security,store,rotation,origin);
+const accounts=createAccountRefresh(security,origin,port);
+const http=createRefreshHttp(origin,accounts);
+function refreshRequest(body='{}'){
+ return new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,host:'stylist.example',cookie:'__Host-stylist_access='+providerToken,'content-type':'application/json'},body});
+}
+const invalidBody=await http.handle(refreshRequest(JSON.stringify({ownerId:'foreign'})),signal());assert.equal(invalidBody.status,400);
+assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
+const delivered=await http.handle(refreshRequest(),signal());assert.equal(delivered.status,200);assert.deepEqual(await delivered.json(),{status:'signedIn'});assert.match(delivered.headers.get('set-cookie'),/__Host-stylist_access=/);
+assert.equal((await store.inspect(owner,session,signal())).scope.generation,2);
+assert.equal(await http.discardResponse(delivered),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+console.log('Stored refresh port/HTTP PostgreSQL composition passed: verified cookie-derived scope, generation adoption, identity JSON refusal and failed-delivery cleanup. HTTP uses Request/Response factories, not a deployed server.');

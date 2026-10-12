@@ -927,3 +927,6 @@ I prepared staged credential rotation so the existing account lifecycle can adop
 
 
 I combined encrypted refresh storage, rotation and signed-session verification in an isolated PostgreSQL rehearsal. Successful adoption returns a cookie; a lost write acknowledgment, wrong session or expired access returns no cookie and follows guarded cleanup. The database and token checks are real local components, while provider rotation and revocation remain simulated. The rehearsal and all 387 foundation tests, type checking and build pass, and disposable database resources were removed.
+
+
+I connected refresh ownership to verified request identity instead of browser-supplied account fields. The local database and HTTP-factory rehearsal confirm valid adoption, identity-input refusal and failed-delivery cleanup. All 392 foundation tests, type checking and build pass. Provider behavior is still simulated, and the customer account routes remain disabled.
