@@ -1,5 +1,6 @@
 // Test-only composition. Receives a disposable container name, never a credential.
 import assert from 'node:assert/strict';
+import {createAccountComposition} from '../src/server/account-composition.ts';
 import {spawn} from 'node:child_process';
 import {randomBytes} from 'node:crypto';
 import {createRefreshEnvelopes} from '../src/server/refresh-envelope.ts';
@@ -376,25 +377,29 @@ for(const scenario of ['confirmed','unconfirmed','ordinary']){
   }
   assert.equal(url,project+'/auth/v1/user');assert.equal(init.method,'PUT');assert.deepEqual(body,{password:'synthetic-reset-password'});assert.equal(init.headers.authorization,'Bearer '+recoveryJwt);updates++;return Response.json({id:owner});
  });
- const requestRecovery=createRecoveryRequest(origin,security,recoveryHttp);
- const requested=await requestRecovery(new Request(origin+'/api/account/recover',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({email:'sample@example.test'})}),signal());
+ const recoveryProvider=createRecoveryProvider({...recoveryHttp,revoke:(jwt,scope,abort)=>initialHttp.revoke(jwt,scope,abort)},initialVerifier,presence);
+ const app=createAccountComposition(origin,project,security,{password:initialProvider,exchange:oauthProvider,
+  refresh:{refresh:async()=>{throw Error('Unexpected refresh');}},signOut:signOutPort,recovery:recoveryProvider,recoveryRequest:recoveryHttp});
+ const routes=app.routes();
+ const requested=await routes.get('/api/account/recover').handle(new Request(origin+'/api/account/recover',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({email:'sample@example.test'})}),signal());
  assert.equal(requested.status,202);assert.equal((await requested.json()).status,'recoveryRequested');
  const callback=new Request(callbackUrl+'&code=synthetic-recovery-code',{headers:{cookie:requested.headers.get('set-cookie').split(';')[0]}});
  deleteInitialSession=scenario!=='unconfirmed';initialRevoked=true;
- const recoveryProvider=createRecoveryProvider({...recoveryHttp,revoke:(jwt,scope,abort)=>initialHttp.revoke(jwt,scope,abort)},initialVerifier,presence);
- const recovery=createAccountRecovery(security,recoveryProvider),browser=createRecoveryBrowser(origin),reset=createRecoveryHttp(origin,browser);
- const grant=await recovery.complete(callback,signal());assert.equal(exchanges,1);
+ const delivered=await routes.get('/auth/callback/recovery').handle(callback,signal());assert.equal(exchanges,1);
+ assert.equal(delivered.status,303);assert.doesNotMatch(delivered.headers.get('set-cookie'),/__Host-stylist_access/);
  if(scenario==='ordinary'){
-  assert.deepEqual(grant,{status:'unavailable'});assert.equal(updates,0);assert.equal(await browser.close(),true);continue;
+  assert.equal(delivered.headers.get('location'),'/account?status=unavailable');assert.equal(updates,0);assert.equal(await app.close(),true);continue;
  }
- assert.equal(grant.status,'resetRequired');assert.deepEqual(await recovery.complete(callback,signal()),{status:'unavailable'});assert.equal(exchanges,1);
- const cookie=browser.install(grant).setCookie.split(';')[0];
+ assert.equal(delivered.headers.get('location'),'/account/reset');
+ const replay=await routes.get('/auth/callback/recovery').handle(callback,signal());assert.equal(replay.headers.get('location'),'/account?status=unavailable');assert.equal(exchanges,1);
+ const cookie=delivered.headers.getSetCookie().find(x=>x.startsWith('__Host-stylist_reset=')).split(';')[0];
  const request=()=>new Request(origin+'/api/account/reset',{method:'POST',headers:{origin,'content-type':'application/json',cookie},body:JSON.stringify({password:'synthetic-reset-password',confirmation:'synthetic-reset-password'})});
- const result=await reset(request(),signal());assert.equal(result.status,scenario==='confirmed'?200:409);assert.equal((await result.json()).status,scenario==='confirmed'?'resetComplete':'unconfirmed');assert.match(result.headers.get('set-cookie'),/Max-Age=0/);assert.doesNotMatch(result.headers.get('set-cookie'),/__Host-stylist_access/);assert.equal(updates,1);
- assert.equal((await reset(request(),signal())).status,400);assert.equal(await browser.close(),scenario==='confirmed');
+ const result=await routes.get('/api/account/reset').handle(request(),signal());assert.equal(result.status,scenario==='confirmed'?200:409);assert.equal((await result.json()).status,scenario==='confirmed'?'resetComplete':'unconfirmed');assert.match(result.headers.get('set-cookie'),/Max-Age=0/);assert.doesNotMatch(result.headers.get('set-cookie'),/__Host-stylist_access/);assert.equal(updates,1);
+ assert.equal((await routes.get('/api/account/reset').handle(request(),signal())).status,400);assert.equal(await app.close(),scenario==='confirmed');
+ assert.equal((await routes.get('/api/account/reset').handle(request(),signal())).status,503);
  assert.equal((await presence.confirm(owner,session,signal())).status,scenario==='confirmed'?'revoked':'unconfirmed');
 }
-console.log('Recovery HTTP/PostgreSQL/browser composition passed: request and PKCE, signed purpose, one reset, no account cookie, primary deletion proof, ordinary-token refusal and unconfirmed cleanup. Provider calls were synthetic.');
+console.log('Account factory recovery HTTP/PostgreSQL/browser composition passed: request and PKCE, signed purpose, one reset, no account cookie, primary deletion proof, ordinary-token refusal and unconfirmed cleanup. Provider calls were synthetic.');
 
 // The provider may ignore cancellation and create a session after the caller leaves.
 await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`insert into auth.sessions values('${session}','${owner}',null);`);

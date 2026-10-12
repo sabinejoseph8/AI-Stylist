@@ -2433,3 +2433,11 @@ Exact next action: extend composition tests with signed recovery grant shutdown 
 Two additional synthetic composition checks confirm that a delivered browser reset grant is discarded on shutdown, uncertain cleanup remains held, later reset requests are refused and no password change is attempted. Authenticated refresh shares the four-operation session capacity with password requests and cannot bypass it. These fixtures inject trusted identity/recovery ports; they do not verify real provider signatures or hosted recovery.
 
 All 491 foundation tests across 67 files, type checking and build pass. Task 2c remains open. Exact next action: compose the factory with generated signed identities and the isolated PostgreSQL adapters, then reconcile the private Memory publication and current summaries. No live routes, emails, credentials or paid calls were activated.
+
+## Account factory database rehearsal, 12 October 2026
+
+Replaced direct recovery-owner assembly in the isolated PostgreSQL rehearsal with the actual account composition factory and its route registry. Generated signed recovery identities now pass through request, callback delivery and reset handlers, backed by actual local primary-session presence. Checks cover ordinary-token rejection, callback replay, single reset, no account cookie, confirmed deletion, unconfirmed cleanup and post-close refusal. Provider replies and password updates remain synthetic.
+
+The full isolated ownership rehearsal passes; disposable containers and volumes were verified absent. All 491 foundation tests across 67 files, type checking and build pass. This verifies the factory recovery path, not every factory route or real hosted Auth.
+
+Exact next action: update and publish the private Memory site to this checkpoint, then extend the factory rehearsal to password/OAuth/refresh/sign-out routes. All hosted, sequencing, customer-policy and spending gates remain unchanged.
