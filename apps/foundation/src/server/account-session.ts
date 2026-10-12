@@ -30,7 +30,7 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
   cleanupHeld:()=>held,
   availability:()=>held?'unavailable' as const:admitted>=4?'busy' as const:null,
   async run(start:(signal:AbortSignal)=>Promise<AccountSessionReply>,external:AbortSignal,
-   options:Readonly<{returnPath:string;registration?:boolean;clearFlow?:boolean}>,requestSignal?:AbortSignal):Promise<AccountSessionResult>{
+   options:Readonly<{returnPath:string;registration?:boolean;clearFlow?:boolean;expectedOwner?:string}>,requestSignal?:AbortSignal):Promise<AccountSessionResult>{
    if(external.aborted||requestSignal?.aborted||held)return {status:'unavailable'};
    if(admitted>=4)return {status:'busy'};
    if(!['/','/wardrobe','/saved-looks','/profile'].includes(options.returnPath))return {status:'unavailable'};
@@ -57,7 +57,7 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
      const cookie=await security.cookies.issue(session.accessToken,controller.signal);
      if(!cookie||controller.signal.aborted)throw Error();
      const identity=await security.authorize(new Request(appOrigin+'/api/account',{headers:{cookie:cookie.split(';')[0]!}}),controller.signal);
-     if(!identity||controller.signal.aborted)throw Error();
+     if(!identity||controller.signal.aborted||(options.expectedOwner!==undefined&&identity.ownerId!==options.expectedOwner))throw Error();
      return Object.freeze({status:'ready' as const,userId:identity.ownerId,returnPath:options.returnPath,
       setCookies:Object.freeze(options.clearFlow?[cookie,security.callbacks.clear()]:[cookie]),discard:()=>discard(session!)});
     }catch{

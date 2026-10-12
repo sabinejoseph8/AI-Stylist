@@ -1331,3 +1331,14 @@ The disconnected shared account owner atomically claims each adapter session obj
 All 348 foundation tests across 39 files, type checking and build pass. No actual provider or route is enabled. Private Memory source 64c11ab097cfc66146dd6e7f8533bea9a1c11d47 deployed successfully as appgdep_6acc4976b8308191b73f38788c6c4379 with the preceding 347-test checkpoint. All 16 website checks pass; owner-only access and MCP remain. The additional concurrency test will be included in the next consolidated refresh.
 
 Exact next action: prepare disconnected refresh/session ownership with bounded cancellation, one-time rotation and simulated tests, without connecting real providers or promising durable persistence. Task 2c remains incomplete.
+
+
+## Disconnected early account refresh, 11 October 2026
+
+Prepared a server-only refresh coordinator for POST /api/account/refresh. A trusted injected adapter receives only the verified request and signed owner identity and must resolve/rotate server-held refresh material. No refresh credential is accepted from JSON or returned to the browser. The coordinator requires current verified access, fixed application origin/path and cancellation checks; expired access cannot use this early-refresh preparation and must sign in again. No actual adapter, HTTP route, refresh storage or scheduler is installed.
+
+The shared session verifier now accepts an internal expectedOwner constraint. A refreshed signed session for a different customer is discarded before any cookie is exposed. The coordinator caps outstanding work at four, bounds response time to eight seconds and propagates request/external cancellation; a late rotated session is discarded and cannot restore access. Session cleanup uncertainty remains a hold in the shared owner. Production must share this owner with password/OAuth, implement durable session-specific single-flight rotation and reconcile failures; the current coordinator alone does not prove rotation atomicity across concurrent requests or processes.
+
+All 352 foundation tests across 39 files, type checking and build pass. Four added generated-token/simulated-adapter checks cover verified refresh, missing/foreign access rejection, wrong-owner cleanup and canceled late cleanup. No real provider, email, hosted setting or paid activity was used.
+
+Exact next action: prepare session-specific rotation ownership and concurrent refresh tests, then compose a disconnected refresh HTTP boundary. Durable refresh persistence, expired-session behavior, real-provider rotation/revocation and customer activation remain open; Task 2c is incomplete. Private Memory remains at the preceding 347-test checkpoint pending the next consolidated refresh.

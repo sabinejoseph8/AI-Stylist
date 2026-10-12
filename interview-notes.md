@@ -883,3 +883,8 @@ I confirmed that all eight sample account review steps worked and were readable.
 
 
 I also added a concurrent-session ownership check: two sign-in attempts cannot adopt the same adapter session object. Rejecting the duplicate leaves the first legitimate owner intact. The foundation passes 348 tests, type checking and build. I published the private Memory website through the preceding 347-test checkpoint, keeping it owner-only. Real provider and hosted account acceptance are still separate.
+
+
+### Preparing session refresh safely
+
+I prepared a local server-only refresh flow so a customer can eventually remain signed in without exposing refresh credentials to browser code. I required verified current access and checked that the refreshed signed identity belongs to the same customer. My tests also cover a late provider result after cancellation. The foundation passes 352 tests, type checking and build. Durable storage, concurrent rotation and real-provider acceptance are still pending, so I kept this disconnected.
