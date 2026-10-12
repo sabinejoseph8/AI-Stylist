@@ -2085,3 +2085,9 @@ No app code changed in this checkpoint. The latest foundation suite remains 587 
 Rechecked the actual phase dependencies and activation runbook. Corrected the Phase 2 section that still described superseded local-only restrictions, and replaced the activation runbook's obsolete next implementation step with current prepared capabilities and remaining gates. Phase 3 still depends on Phase 2 and the verified Phase 1 transcription contract; no new sequencing exception is inferred.
 
 The customer sign-in duration decision is the immediate account implementation dependency; the choices were presented again because no answer is recorded. Next action after an answer: implement and test a complete fixed-duration session contract, including refresh after access-token expiry, cookie lifetime, absolute expiry and restart behavior. Do not merely change refresh-storage TTL. Other live gates remain production sender/exact HTTPS origin, Google/Apple credentials/linking, hosted customer isolation, physical-device/accessibility and Phase 1 provider/budget evidence. No task or phase was marked complete.
+
+## Working backlog priority reconciliation, 12 October 2026
+
+The working backlog header still showed the obsolete local-only exception and 520-test checkpoint. Corrected it to hosted Tasks 2b/2c approval, 21 installed migrations, 587 recorded foundation tests and the actual connected synthetic account/browser evidence. Later phase dependencies and real acceptance gates remain unchanged. No implementation task was checked off.
+
+Immediate next action requires Sabine's customer sign-in duration choice. Phase 1 live checks also require provider clarification and new financial authorization; production account acceptance requires sender/origin/social credentials and manual checks. No new independent task is inferred merely to bypass these gates. Reassess independent authorized work when the pending answer or external evidence arrives.

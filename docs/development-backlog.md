@@ -1,15 +1,15 @@
 # AI Stylist development backlog
 
-Updated: 11 October 2026
+Updated: 12 October 2026
 
 Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. This is the working status ledger for autonomous implementation. Later explicit Sabine decisions and the approved product/design specifications refine the older baseline: use look, one look at a time, USA/USD, real product links for launch and affiliate revenue. Demo fixtures never satisfy real shopping acceptance. docs/progress.md retains phased exit gates. No incomplete dependency is marked complete merely because an independent discovery component is ready.
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 520 foundation tests pass; synthetic desktop WebKit account/reset checks also pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Hosted Tasks 2b/2c are approved and in progress before Phase 1 finishes. All 587 foundation tests pass. The connected HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks pass with synthetic Auth. All 21 customer migrations are installed; real customer isolation and account acceptance remain open. The customer sign-in duration decision is pending.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
-4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
+4. Complete Tasks 2b/2c only after applicable real SQL/Storage/customer isolation and account/provider/manual checks. The hosted exception applies to these task groups only; later phases retain their dependencies. No additional spending or paid calls are authorized.
 
 ## Items
 
