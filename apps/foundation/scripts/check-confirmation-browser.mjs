@@ -40,8 +40,24 @@ try{
  await page.getByLabel('New password',{exact:true}).waitFor();
  const resetLayout=await page.getByLabel('New password',{exact:true}).evaluate(input=>({height:input.getBoundingClientRect().height,fontSize:getComputedStyle(input).fontSize,layout:getComputedStyle(input.form).display}));
  assert.ok(resetLayout.height>=48);assert.equal(resetLayout.fontSize,'16px');assert.equal(resetLayout.layout,'grid');
+ for(const width of [320,390,768]){
+  await page.setViewportSize({width,height:844});
+  for(const size of ['16px','32px']){
+   await page.evaluate(size=>document.documentElement.style.fontSize=size,size);
+   assert.equal(await page.evaluate(()=>document.documentElement.scrollWidth<=innerWidth),true,'Reset page must not overflow at '+width+'px with '+size+' text');
+   for(const label of ['New password','Confirm new password'])assert.ok((await page.getByLabel(label,{exact:true}).boundingBox()).height>=44);
+  }
+ }
+ await page.evaluate(()=>document.documentElement.style.fontSize='16px');
+ await page.setViewportSize({width:390,height:844});
+ await page.getByLabel('New password',{exact:true}).focus();await page.keyboard.press('Tab');
+ assert.equal(await page.getByLabel('Confirm new password',{exact:true}).evaluate(input=>document.activeElement===input),true);
+ const focus=await page.getByLabel('Confirm new password',{exact:true}).evaluate(input=>({style:getComputedStyle(input).outlineStyle,width:parseFloat(getComputedStyle(input).outlineWidth)}));
+ assert.notEqual(focus.style,'none');assert.ok(focus.width>=3);
+ // Desktop WebKit may skip buttons in Tab navigation according to host keyboard preferences.
+ await page.getByRole('button',{name:'Update password',exact:true}).focus();assert.equal(await page.getByRole('button',{name:'Update password',exact:true}).evaluate(button=>document.activeElement===button),true);
  await page.getByLabel('New password',{exact:true}).fill('Made-up-password-123!');await page.getByLabel('Confirm new password',{exact:true}).fill('Made-up-password-123!');
- await page.getByRole('button',{name:'Update password',exact:true}).click();
+ await page.getByRole('button',{name:'Update password',exact:true}).focus();await page.keyboard.press('Enter');
  await page.getByText('Password updated. Sign in to use your stylist.',{exact:true}).waitFor();
  assert.equal(resets,1);assert.equal(cleanups,1);assert.equal(await page.getByLabel('New password',{exact:true}).inputValue(), '');
  assert.equal(await page.getByLabel('Confirm new password',{exact:true}).inputValue(), '');assert.equal(await page.getByRole('button',{name:'Update password',exact:true}).isDisabled(),true);
