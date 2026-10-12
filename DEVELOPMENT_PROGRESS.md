@@ -1141,3 +1141,12 @@ The disconnected account composition now optionally accepts an explicit refresh 
 All 358 foundation tests across 39 files, type checking and build pass. Three added composed tests verify holds in both directions and absence of an unconfigured refresh interface. This is process-local simulated evidence, not actual remote cleanup or durable adoption.
 
 Exact next action: prepare explicit refresh-state adoption and failed-delivery ownership in the disconnected server composition, with simulated cancellation and cleanup tests. Audit real-adapter prerequisites before claiming account readiness. Actual provider setup, durable refresh storage, recovery/identity-linking policies, hosted changes and manual phase acceptance remain open. Task 2c remains incomplete; private Memory's latest verified publication reflects 347 tests pending the next consolidated refresh.
+
+
+## Account readiness audit and reset review handoff, 11 October 2026
+
+Reviewed the current Task 2c requirements, acceptance audit, prepared server boundaries and phase dependencies. Added docs/task-2c-activation-checklist.md to distinguish remaining local adoption/persistence/server-composition work from actual hosted/provider decisions. It records concrete evidence needed for real signing/session authority, email, Google/Apple callbacks, linking, recovery across devices, refresh/revocation and phase exit. No provider settings or credentials were changed.
+
+The existing local preview serves HTTP 200 at http://127.0.0.1:4322/. The in-app open request was queued; it is not evidence that Sabine saw it. Sent Sabine the complete seven-step newer reset-screen review in one question. This review is pending and separate from her accepted eight-step account review. No test suite was rerun for this documentation-only audit; the latest code evidence remains 358 passing foundation tests, type checking and build.
+
+Exact next action: implement the local adoption/persistence ownership contract with simulated storage and failure tests; incorporate Sabine's reset review when received, and refresh private Memory at the next consolidated checkpoint. Task 2c, hosted account activation and phase exit remain incomplete.

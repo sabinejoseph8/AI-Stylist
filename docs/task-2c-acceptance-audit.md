@@ -35,3 +35,8 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 - Production email sender, Google/Apple credentials and actual callback allowlists are not approved by local preparation.
 - Refresh/session persistence and same-browser versus cross-device recovery must be reviewed before promising customer behavior.
 - No spending allowance or additional provider attempt is created by this audit.
+
+
+## Activation preparation
+
+See docs/task-2c-activation-checklist.md for evidence and approval boundaries. The seven-step newer reset-screen review is pending; the original eight-step review remains accepted. Further local preparation must address adoption, storage and actual local HTTP composition rather than treating generated-token tests as hosted readiness.
