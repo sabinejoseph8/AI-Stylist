@@ -796,3 +796,6 @@ Sabine explicitly approved local Task 2c account preparation while Phase 1 remai
 
 
 Exact next action: publish/copy the audit and new sequencing approval; refresh Memory. Start Task 2c with a testable account-flow controller and injected provider interface. Cover email/password submission, confirmation-required registration, generic recovery acknowledgment, OAuth pending/cancel/failure, stale asynchronous replies, sign-out and guest-styling refusal. Keep credentials ephemeral and provider responses private; do not wire hosted Auth or present simulated sign-in as real. Then prepare the server verification contract and callback/session protections.
+
+
+Audit and local Task 2c approval checkpoint a488a4a is published and copied. Private Memory source f2922ca4e5e99e2f8a62c8bc80860ee3dcd19158 deployed successfully as appgdep_6acc32c5ed6c81918c93b4ed0c53e91e; 16 website checks pass and MCP is retained. Task 2c implementation has not started at this checkpoint; the next action is the approved local account-flow controller.
