@@ -1131,3 +1131,7 @@ I found that the browser transport still refused social sign-in even though the 
 ## Browser account transport completion, 12 October 2026
 
 I verified the social handoff against the server initiation response and added the missing reset HTTP adapter. Reset uses the server's cookie authority, sends once, and does not sign the customer in. The preview still uses simulated behavior. All 507 tests, type checking and build pass; real provider acceptance remains open.
+
+## Browser reset ownership verification, 12 October 2026
+
+I connected the reset browser adapter to the prepared server grant owner in a simulated integration check. Cleanup failure remains unconfirmed, reset permission is one-use, and no account access is created. All 509 tests, type checking and build pass. Real password changes and hosted acceptance remain pending.

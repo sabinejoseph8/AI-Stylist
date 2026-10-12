@@ -1829,3 +1829,9 @@ All 504 foundation tests across 69 files, type checking and build pass. Three sy
 Composed the browser OAuth handoff with the actual server initiation response using synthetic fetch and navigation. The returned flow cookie binds the Apple callback once. Added the missing disabled browser reset HTTP adapter, reusing an extracted bounded same-origin status transport with an exact four-endpoint allowlist. It sends password/confirmation once with cookie credentials, accepts resetComplete or unconfirmed only, rejects token-bearing JSON and never creates account access. Preview selection remains unchanged.
 
 All 507 foundation tests across 70 files, type checking and build pass. Three added checks cover server/browser social composition and reset-only request/response semantics. No real email, navigation, sign-in or hosted change occurred. Exact next action: compose the browser reset adapter with the actual reset-only server/browser-grant owner, including one-use refusal and unconfirmed cleanup, then reconcile private Memory.
+
+## Browser/server reset composition, 12 October 2026
+
+Composed the reset-only browser HTTP adapter with the actual prepared reset handler and browser-grant owner using synthetic fetch. Confirmed cleanup returns resetComplete; failed cleanup returns unconfirmed. Both clear the reset cookie without account access, permit only one password operation and reject subsequent client/server attempts. Grant/provider operations are simulated; this is not real password change acceptance.
+
+All 509 foundation tests across 70 files, type checking and build pass. No hosted or paid work occurred. Exact next action: audit callback/reset page routing and preview-versus-live adapter selection against approved account flows, then consolidate current summaries/private Memory. Hosted activation, customer recovery/linking policy and phase gates remain open.
