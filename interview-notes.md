@@ -963,3 +963,6 @@ I tested reconciliation against actual isolated PostgreSQL, including restart pe
 
 
 I added service-only, bounded discovery of retained session metadata without exposing encrypted credentials. Actual local database checks prove access restrictions, restart rediscovery and deletion cascade. All 413 foundation tests, type checking and build pass. I kept candidates separate from cleanup authority because legitimate active sessions must not be removed simply because a scan finds them.
+
+
+I prepared a bounded reconciliation scan with resumable progress and separate confirmed, stale and unknown counts. Unknown records remain untouched, and cancellation preserves a safe cursor. All 417 foundation tests, type checking and build pass. I documented that reaching the end of a scan is not proof that cleanup finished, and real authority/scheduling remain disconnected.
