@@ -1151,3 +1151,7 @@ I prepared a server-side readiness check that verifies the opaque reset cookie a
 ## Preparing secure reset-screen readiness, 12 October 2026
 
 I separated permission to display the password reset screen from permission to change a password. The prepared browser receives only a status and expiry; the server checks its private reset cookie again on submission. This avoids treating a visible screen as proof of account authority. The local suite passes 516 tests, type checking and build. Real recovery and hosted account activation remain pending.
+
+## Preparing the recovery return screen
+
+I made the reset screen wait for server-checked permission before showing password fields. Changing pages cancels the check and prevents late results from restoring an old form. The normal local preview remains simulated. All 519 local tests, type checking and build pass; real recovery acceptance remains open.

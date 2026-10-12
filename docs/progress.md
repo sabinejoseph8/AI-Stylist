@@ -2228,3 +2228,11 @@ Next action: connect the explicit account return-page resolver and reset configu
 ## Private Memory publication, 12 October 2026
 
 The 516-test local account checkpoint is published privately. Source 7b5c9f8c475251a82f3c849959148dc14cb1b816; deployment appgdep_6acc74bd4cc881919b28c0899e375b72 succeeded with MCP enabled. All 16 site checks and artifact validation pass. Owner-only audience preserved. No phase or account activation gate was closed.
+
+## Optional recovery-page composition, 12 October 2026
+
+Prepared an explicit recovery page that accepts only the clean reset return path, waits for server-cookie readiness metadata before showing password fields, cancels on page changes/unmount, and ignores late or stale configurations. The default sample App does not mount it. No live authentication, email, hosted change or paid call was enabled.
+
+Evidence: 519 foundation tests across 73 files pass; type checking and build pass. Tests cover forbidden return paths, expired readiness, canceled late preparation and request-free initial rendering. This is not physical browser or real recovery acceptance.
+
+Next action: add browser lifecycle verification for the optional reset page, then review remaining local Task 2c activation prerequisites. Private Memory publishes the prior 516-test checkpoint.
