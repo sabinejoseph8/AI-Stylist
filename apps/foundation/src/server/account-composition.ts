@@ -1,3 +1,4 @@
+import {createRecoveryReadinessHttp} from './recovery-readiness-http.ts';
 import type {createAccountSecurity} from './account-security.ts';
 import {createAccountSessions} from './account-session.ts';
 import {createPasswordAccounts,type PasswordAccountPort} from './password-account.ts';
@@ -45,7 +46,9 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
  let closed=false;let closure:Promise<boolean>|undefined;
  const active=new Set<AbortController>();
  const routes=new Map<string,AccountNodeRoute>();
- for(const [path,route] of registry.routes())routes.set(path,Object.freeze({
+ const prepared=new Map(registry.routes());
+ prepared.set('/api/account/reset-ready',{handle:createRecoveryReadinessHttp(origin,browser)});
+ for(const [path,route] of prepared)routes.set(path,Object.freeze({
   discardResponse:route.discardResponse,
   async handle(request:Request,signal:AbortSignal){
    if(closed)return accountJsonResponse(503,'unavailable');

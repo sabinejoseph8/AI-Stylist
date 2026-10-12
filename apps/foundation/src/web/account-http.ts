@@ -3,8 +3,8 @@ import type {AccountProvider,AccountRequest,AccountReply} from './account-flow.t
 export function createAccountStatusTransport(origin:string,send:typeof fetch,deadlineMs=15000){
  const base=new URL(origin);if(base.protocol!=='https:'||base.origin!==origin||typeof send!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>15000)throw Error('Account unavailable');
  let pending=0;
- async function call(path:string,input:unknown,external:AbortSignal):Promise<{status:string;http:number}>{
-  if(!['/api/account/password','/api/account/recover','/api/account/sign-out','/api/account/reset'].includes(path)||external.aborted||pending>=4)throw Error('Account unavailable');pending++;
+ async function call(path:string,input:unknown,external:AbortSignal):Promise<{status:string;http:number;expiresAt?:number}>{
+  if(!['/api/account/password','/api/account/recover','/api/account/sign-out','/api/account/reset','/api/account/reset-ready'].includes(path)||external.aborted||pending>=4)throw Error('Account unavailable');pending++;
   const controller=new AbortController();let body:ReadableStream<Uint8Array>|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined,timer:ReturnType<typeof setTimeout>|undefined;let abort!:()=>void;
   const canceled=new Promise<never>((_,reject)=>{abort=()=>{controller.abort();if(reader)void reader.cancel().catch(()=>{});reject(Error('Account unavailable'));};external.addEventListener('abort',abort,{once:true});timer=setTimeout(abort,deadlineMs);});
   const work=(async()=>{
@@ -17,7 +17,12 @@ export function createAccountStatusTransport(origin:string,send:typeof fetch,dea
     const length=response.headers.get('content-length');if(length!==null&&(!/^\d+$/.test(length)||Number(length)>1024))throw Error();
     reader=response.body.getReader();const decoder=new TextDecoder('utf-8',{fatal:true});let size=0,text='';
     while(true){const chunk=await reader.read();if(controller.signal.aborted)throw Error();if(chunk.done)break;size+=chunk.value.byteLength;if(size>1024){void reader.cancel().catch(()=>{});throw Error();}text+=decoder.decode(chunk.value,{stream:true});}
-    text+=decoder.decode();const result:unknown=JSON.parse(text);if(!result||typeof result!=='object'||Array.isArray(result)||Object.keys(result).join(',')!=='status'||typeof (result as {status?:unknown}).status!=='string')throw Error();
+    text+=decoder.decode();const result:unknown=JSON.parse(text);
+    if(path==='/api/account/reset-ready'&&response.status===200){
+     const x=result as {status?:unknown;expiresAt?:unknown};if(!x||Array.isArray(x)||Object.keys(x).sort().join(',')!=='expiresAt,status'||x.status!=='resetReady'||!Number.isSafeInteger(x.expiresAt)||typeof x.expiresAt!=='number'||x.expiresAt<=Date.now()||x.expiresAt>Date.now()+300000)throw Error();
+     return {status:'resetReady',http:200,expiresAt:x.expiresAt};
+    }
+    if(!result||typeof result!=='object'||Array.isArray(result)||Object.keys(result).join(',')!=='status'||typeof (result as {status?:unknown}).status!=='string')throw Error();
     return {status:(result as {status:string}).status,http:response.status};
    }catch{throw Error('Account unavailable');}finally{pending--;if(reader)void reader.cancel().catch(()=>{});else if(body)void body.cancel().catch(()=>{});try{reader?.releaseLock();}catch{}}
   })();

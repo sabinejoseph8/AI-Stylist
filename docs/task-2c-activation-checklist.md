@@ -183,3 +183,11 @@ Prepared migration 20 and a disconnected bounded store method for per-key counts
 All 424 foundation tests across 52 files, type checking and build pass. Isolated PostgreSQL checks verify ordinary-role denial, exact counts, empty-key usage, invalid identifiers, rotating usage during key transition and a held expired record. The full database composition passes with fixture keys and synthetic provider responses. No hosted migration or production key was used. This is point-in-time primary-database evidence only: concurrent writers and backup key dependencies prevent treating zero as automatic retirement permission.
 
 Exact next action: consolidate private Memory with the 424-test checkpoint, then audit remaining local account preparation against the activation checklist. Task 2c and phase gates remain open.
+
+## Reset readiness HTTP and browser preparation, 12 October 2026
+
+Prepared a metadata-only reset readiness endpoint in the dormant account factory. It accepts only an empty same-origin JSON request, checks the server-owned reset cookie without consuming it, returns only status and expiry, and sets no cookie. The browser adapter validates bounded expiry before preparing the explicit reset panel. Password submission independently checks the server-owned permission again. Missing, expired, consumed or closed permission cannot enable this configuration. No live routes, provider calls, email or hosted settings were activated.
+
+Evidence: 516 foundation tests across 72 files pass; type checking and production build pass. The new integration checks cover repeated non-consuming readiness, missing cookie, extra input, metadata response and browser configuration refusal after shutdown. This is local synthetic-provider evidence, not real recovery acceptance. Task 2c and both phase exit gates remain open.
+
+Next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as the default; then run its focused browser checks. Private Memory still publishes the earlier 497-test checkpoint and needs reconciliation.

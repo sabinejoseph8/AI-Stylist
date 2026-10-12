@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 497 foundation tests across 68 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
+Task 2c local account preparation is active. All 516 foundation tests across 72 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2157,7 +2157,7 @@ All 496 foundation tests across 68 files, type checking and build pass. No live 
 
 Upgraded the existing late-adoption disconnect test to use the guarded account factory over actual local HTTP. Added server-shutdown coverage: cancellation delivers unconfirmed with no account cookie, late simulated adoption is discarded once after settling, and new requests receive unavailable. Generated identities are signed; provider/current-session/storage fixtures remain synthetic.
 
-All 497 foundation tests across 68 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
+All 516 foundation tests across 72 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
 
 ## Current summaries and private Memory reconciled, 12 October 2026
 
@@ -2216,3 +2216,11 @@ All 512 foundation tests across 71 files, type checking and build pass. A static
 Prepared a server-only recovery-browser readiness method for exact same-origin POST /api/account/reset-ready. It validates the opaque reset cookie without consuming valid permission and returns only resetReady/expiry metadata. It refuses duplicate cookies, hostile origins, Authorization headers, expired/used grants, canceled requests and closed/held ownership. Expired grants are discarded without password work. Reset submission still independently claims and validates permission. No HTTP route is registered.
 
 All 514 foundation tests across 71 files, type checking and build pass. Two synthetic tests verify metadata-only non-consuming readiness, hostile refusal, post-use refusal and expired cleanup. A header fixture type was corrected after type checking. Exact next action: wrap readiness with the bounded JSON HTTP boundary and explicitly compose it into the dormant account factory, then prepare the browser readiness adapter. No hosted or paid activity is authorized by this preparation.
+
+## Reset readiness HTTP and browser preparation, 12 October 2026
+
+Prepared a metadata-only reset readiness endpoint in the dormant account factory. It accepts only an empty same-origin JSON request, checks the server-owned reset cookie without consuming it, returns only status and expiry, and sets no cookie. The browser adapter validates bounded expiry before preparing the explicit reset panel. Password submission independently checks the server-owned permission again. Missing, expired, consumed or closed permission cannot enable this configuration. No live routes, provider calls, email or hosted settings were activated.
+
+Evidence: 516 foundation tests across 72 files pass; type checking and production build pass. The new integration checks cover repeated non-consuming readiness, missing cookie, extra input, metadata response and browser configuration refusal after shutdown. This is local synthetic-provider evidence, not real recovery acceptance. Task 2c and both phase exit gates remain open.
+
+Next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as the default; then run its focused browser checks. Private Memory still publishes the earlier 497-test checkpoint and needs reconciliation.

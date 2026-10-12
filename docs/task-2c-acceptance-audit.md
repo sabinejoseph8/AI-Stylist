@@ -381,3 +381,11 @@ Prepared the missing JSON initiation HTTP boundary at /api/account/oauth, withou
 All 485 foundation tests across 65 files, type checking and build pass. Three new synthetic checks cover public handoff shape/binding, abandoned transaction refusal, cross-origin/extra-field/provider/external-return rejection and destination-port restrictions. No sign-in page, provider call, route or hosted configuration was activated.
 
 Exact next action: compose the prepared initiation, password, callback, refresh, recovery and sign-out handlers into one explicit disabled account route factory, sharing lifecycle owners and preserving undelivered-response cleanup. Task 2c remains open. Private Memory remains at the verified 482-test checkpoint.
+
+## Reset readiness HTTP and browser preparation, 12 October 2026
+
+Prepared a metadata-only reset readiness endpoint in the dormant account factory. It accepts only an empty same-origin JSON request, checks the server-owned reset cookie without consuming it, returns only status and expiry, and sets no cookie. The browser adapter validates bounded expiry before preparing the explicit reset panel. Password submission independently checks the server-owned permission again. Missing, expired, consumed or closed permission cannot enable this configuration. No live routes, provider calls, email or hosted settings were activated.
+
+Evidence: 516 foundation tests across 72 files pass; type checking and production build pass. The new integration checks cover repeated non-consuming readiness, missing cookie, extra input, metadata response and browser configuration refusal after shutdown. This is local synthetic-provider evidence, not real recovery acceptance. Task 2c and both phase exit gates remain open.
+
+Next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as the default; then run its focused browser checks. Private Memory still publishes the earlier 497-test checkpoint and needs reconciliation.

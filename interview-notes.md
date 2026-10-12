@@ -1147,3 +1147,7 @@ I separated the reset panel's simulated preview from explicitly configured reset
 ## Reset-page readiness, 12 October 2026
 
 I prepared a server-side readiness check that verifies the opaque reset cookie and returns only expiry metadata. It cannot reset a password or sign the customer in, and expired grants are cleaned. All 514 tests, type checking and build pass. HTTP/page integration and hosted acceptance remain pending.
+
+## Preparing secure reset-screen readiness, 12 October 2026
+
+I separated permission to display the password reset screen from permission to change a password. The prepared browser receives only a status and expiry; the server checks its private reset cookie again on submission. This avoids treating a visible screen as proof of account authority. The local suite passes 516 tests, type checking and build. Real recovery and hosted account activation remain pending.
