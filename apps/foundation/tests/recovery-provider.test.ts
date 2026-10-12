@@ -1,5 +1,5 @@
 import {it,expect,vi} from 'vitest';
-import {createRecoveryProvider} from '../src/server/recovery-provider.ts';
+import {createRecoveryProvider,createRecoveryTokenProvider} from '../src/server/recovery-provider.ts';
 const owner='11111111-1111-4111-8111-111111111111',session='22222222-2222-4222-8222-222222222222';
 const signal=()=>new AbortController().signal,input={code:'fixture',verifier:'a'.repeat(43)};
 function fixture(){
@@ -32,4 +32,21 @@ it('retains remote cleanup when identity verification throws',async()=>{
  const port=createRecoveryProvider({exchange:async()=>({access_token:'fixture',token_type:'bearer'}),revoke,updatePassword},{verify:async()=>{throw Error('private');},verifyRecovery:async()=>{throw Error('private');}},{confirm:async()=>({status:'unconfirmed'})});
  const grant=await port.exchange(input,signal());if('status' in grant)throw Error();
  expect(await grant.resetPassword('made-up',signal())).toBe(false);expect(await grant.discard(signal())).toBe(false);expect(revoke).toHaveBeenCalledOnce();expect(updatePassword).not.toHaveBeenCalled();
+});
+
+it('cross-device proof creates only a reset capability without a requesting-browser verifier',async()=>{
+ const f=fixture(),verifyRecoveryToken=vi.fn(async(_tokenHash:string,_signal:AbortSignal)=>({access_token:'fixture',token_type:'bearer'}));
+ const identity={ownerId:owner,sessionId:session,isCurrent:async()=>true};
+ const provider=createRecoveryTokenProvider({...f.operations,verifyRecoveryToken},{verify:async()=>identity,verifyRecovery:async()=>({...identity,expiresAt:Date.now()+60000})},{confirm:async()=>({status:'revoked',ownerId:owner,sessionId:session})});
+ const grant=await provider.verifyToken('synthetic-email-proof',signal());expect(verifyRecoveryToken.mock.calls[0][0]).toBe('synthetic-email-proof');
+ expect(Object.keys(grant).sort()).toEqual(['discard','expiresAt','ownerId','resetPassword']);expect(await grant.resetPassword('made-up',signal())).toBe(true);expect(await grant.resetPassword('again',signal())).toBe(false);expect(await grant.discard(signal())).toBe(true);
+});
+it('cross-device proof refuses ordinary login purpose and still cleans its session',async()=>{
+ const f=fixture(),identity={ownerId:owner,sessionId:session,isCurrent:async()=>true};
+ const provider=createRecoveryTokenProvider({...f.operations,verifyRecoveryToken:async()=>({access_token:'fixture',token_type:'bearer'})},{verify:async()=>identity,verifyRecovery:async()=>null},{confirm:async()=>({status:'revoked',ownerId:owner,sessionId:session})});
+ const grant=await provider.verifyToken('synthetic',signal());expect(await grant.resetPassword('made-up',signal())).toBe(false);expect(f.operations.updatePassword).not.toHaveBeenCalled();expect(await grant.discard(signal())).toBe(true);
+});
+it('cross-device provider refuses malformed proof before verification',async()=>{
+ const f=fixture(),verifyRecoveryToken=vi.fn(),provider=createRecoveryTokenProvider({...f.operations,verifyRecoveryToken},{verify:async()=>null,verifyRecovery:async()=>null},{confirm:async()=>({status:'unconfirmed'})});
+ await expect(provider.verifyToken('bad proof',signal())).rejects.toThrow();expect(verifyRecoveryToken).not.toHaveBeenCalled();
 });

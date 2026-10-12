@@ -1175,3 +1175,7 @@ I fixed account presentation so a changed provider or mode starts with fresh sta
 ## Approving the next account stage
 
 I chose password recovery that works when a customer opens the email on another device. I also approved hosted database and account setup before the remaining voice feasibility checks finish. This lets independent account work move forward while preserving the voice-test spending limits. The older same-browser recovery preparation does not yet satisfy my selected experience.
+
+## Reusing recovery safeguards across devices
+
+I kept the same verified, reset-only permission and cleanup rules when adding email-token recovery on another device. An ordinary sign-in token cannot become password-reset authority. The local checks pass, while receiving-browser confirmation and real email acceptance remain unfinished.

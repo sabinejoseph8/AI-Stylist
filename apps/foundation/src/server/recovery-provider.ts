@@ -7,9 +7,9 @@ interface RecoveryOperations{
  revoke(jwt:string,scope:'local',signal:AbortSignal):Promise<boolean>;
 }
 /** Prepared reset-only adapter. Account recovery owner bounds work and cleans late capabilities. */
-export function createRecoveryProvider(operations:RecoveryOperations,verifier:Pick<ReturnType<typeof createIdentityVerifier>,'verify'|'verifyRecovery'>,presence:RevocationAuthority):RecoveryPort{
+function createRecoveryProviderCore<Input>(operations:Omit<RecoveryOperations,'exchange'>&{exchange(input:Input,signal:AbortSignal):Promise<unknown>},verifier:Pick<ReturnType<typeof createIdentityVerifier>,'verify'|'verifyRecovery'>,presence:RevocationAuthority){
  if(typeof operations?.exchange!=='function'||typeof operations?.updatePassword!=='function'||typeof operations?.revoke!=='function'||typeof verifier?.verifyRecovery!=='function'||typeof verifier?.verify!=='function'||typeof presence?.confirm!=='function')throw Error('Recovery provider unavailable');
- return Object.freeze({async exchange(input:Readonly<{code:string;verifier:string}>,signal:AbortSignal):Promise<VerifiedRecovery>{
+ return Object.freeze({async exchange(input:Input,signal:AbortSignal):Promise<VerifiedRecovery>{
   if(signal.aborted)throw Error('Recovery provider unavailable');
   let reply:unknown;try{reply=await operations.exchange(input,signal);}catch{throw Error('Recovery provider unavailable');}
   if(!reply||typeof reply!=='object'||Array.isArray(reply))throw Error('Recovery provider unavailable');
@@ -49,4 +49,22 @@ export function createRecoveryProvider(operations:RecoveryOperations,verifier:Pi
    },
   });
  }});
+}
+
+/** Original PKCE entry point retained for existing integrations. */
+export function createRecoveryProvider(operations:RecoveryOperations,verifier:Pick<ReturnType<typeof createIdentityVerifier>,'verify'|'verifyRecovery'>,presence:RevocationAuthority):RecoveryPort{
+ return createRecoveryProviderCore(operations,verifier,presence);
+}
+/** Cross-device email proof enters exactly the same reset-only verification and cleanup lifecycle. */
+export function createRecoveryTokenProvider(operations:Omit<RecoveryOperations,'exchange'>&{verifyRecoveryToken(tokenHash:string,signal:AbortSignal):Promise<unknown>},verifier:Pick<ReturnType<typeof createIdentityVerifier>,'verify'|'verifyRecovery'>,presence:RevocationAuthority){
+ if(typeof operations?.verifyRecoveryToken!=='function'||typeof operations?.updatePassword!=='function'||typeof operations?.revoke!=='function')throw Error('Recovery provider unavailable');
+ const core=createRecoveryProviderCore<string>({
+  exchange:(tokenHash,signal)=>{
+   if(typeof tokenHash!=='string'||!/^[-_A-Za-z0-9]{1,256}$/.test(tokenHash))return Promise.reject(Error('Recovery provider unavailable'));
+   return operations.verifyRecoveryToken(tokenHash,signal);
+  },
+  updatePassword:(jwt,password,signal)=>operations.updatePassword(jwt,password,signal),
+  revoke:(jwt,scope,signal)=>operations.revoke(jwt,scope,signal),
+ },verifier,presence);
+ return Object.freeze({verifyToken:core.exchange});
 }

@@ -23,3 +23,9 @@ Read-only inspection of the existing AI Stylist project on 12 October 2026 found
 ## Next action
 
 Compose token-hash verification with the reset-only provider lifecycle and receiving-browser confirmation. Review/apply the existing customer migration chain under the newly approved hosted scope; preserve the prototype budget table. Configure the recovery email only when the receiving endpoint and exact HTTPS origin are ready. No extra spending or paid voice test is approved.
+
+## Cross-device reset-only lifecycle, 12 October 2026
+
+The cross-device token provider now uses the same signed identity, recent recovery purpose, current-session check, one-use password operation and independently verified scoped cleanup as the existing PKCE provider. It accepts no requesting-browser verifier and exposes only a reset capability. Ordinary login purpose is refused while cleanup is retained. Malformed proof is rejected before the provider operation. The receiving-browser confirmation and HTTP owner are still to be composed; no live email or customer migration has been activated.
+
+Evidence: 525 foundation tests across 73 files pass; type checking and build pass. Provider replies remain synthetic. Exact next action: compose receiving-browser confirmation with bounded recovery ownership and delivery cleanup, then apply/review the approved hosted migration chain. Hosted setup and cross-device behavior are approved; spending remains unchanged.
