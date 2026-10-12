@@ -2320,3 +2320,10 @@ Mark the incomplete goal blocked after this fresh three-turn audit. Exact resume
 The hosting inquiry has received a partial answer. Customer account activation still requires confirmation of trusted proxy-header handling and protection of sensitive callback query values in upstream logs. Published platform log-retention periods do not establish query redaction. Next: obtain engineering clarification or review a design that avoids relying on these unknowns. No account route, provider setting, spending limit or domain-purchase timing changed.
 
 Sabine authorized publishing this short sanitized summary. Support email text and account/credential details are excluded.
+
+
+## Follow-up pending and resumed dependency check, 12 October 2026
+
+Sabine reports awaiting the hosting follow-up reply. No email text or private support payload is reproduced. The previously approved sanitized status remains current: account activation requires unresolved proxy-header and callback-log protections. Rechecked Phase 2 and later-phase dependency gates, current worktree and handoff. No independent implementation can close those gates without external confirmation or another existing setup input. The prior publication was progress; this is the first resumed check of the persistent external blocker.
+
+Exact next action: review the follow-up when Sabine shares it, or proceed with another account prerequisite once the necessary input is available. No background test/deployment is live. Domain purchase stays deferred until public launch, and paid voice attempts remain exhausted. Do not reopen the domain purchase question or mark a task complete from a support acknowledgment.
