@@ -1,5 +1,5 @@
 import {createSupabaseRpc,type SupabaseFetch} from './supabase-rpc.ts';
-const allowed=new Set(['stylist_adopt_refresh','stylist_inspect_refresh','stylist_claim_refresh','stylist_finish_refresh','stylist_hold_refresh','stylist_remove_refresh','stylist_list_refresh_candidates']);
+const allowed=new Set(['stylist_adopt_refresh','stylist_inspect_refresh','stylist_claim_refresh','stylist_finish_refresh','stylist_hold_refresh','stylist_remove_refresh','stylist_list_refresh_candidates','stylist_refresh_key_usage']);
 /** Explicitly injected, disconnected server transport. Reads no environment key and installs no route. */
 export function createRefreshRpc(projectUrl:string,serviceKey:string,fetcher:SupabaseFetch,deadlineMs=8000){
  const rpc=createSupabaseRpc(projectUrl,serviceKey,fetcher,deadlineMs);

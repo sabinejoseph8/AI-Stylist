@@ -24,6 +24,17 @@ export function createRefreshStore(rpc:RefreshStoreRpc,codec:ReturnType<typeof c
  }
  async function mutation(name:string,input:Record<string,unknown>,signal:AbortSignal){const result=await call(name,input,signal);return result.status==='confirmed'&&typeof result.value==='boolean'?result.value?'confirmed' as const:'refused' as const:'unconfirmed' as const;}
  return Object.freeze({
+  async keyUsage(keyId:string,signal:AbortSignal){
+   if(typeof keyId!=='string'||!/^[A-Za-z0-9_-]{1,64}$/.test(keyId))return {status:'unconfirmed' as const};
+   const result=await call('stylist_refresh_key_usage',{p_key_id:keyId},signal);
+   if(result.status!=='confirmed'||!result.value||typeof result.value!=='object'||Array.isArray(result.value))return {status:'unconfirmed' as const};
+   const x=result.value as Record<string,unknown>;
+   if(Object.keys(x).sort().join(',')!=='expired,held,key_id,ready,rotating,total'||x.key_id!==keyId)return {status:'unconfirmed' as const};
+   for(const field of ['total','ready','rotating','held','expired'])if(!Number.isSafeInteger(x[field])||(x[field] as number)<0)return {status:'unconfirmed' as const};
+   const total=x.total as number,ready=x.ready as number,rotating=x.rotating as number,held=x.held as number,expired=x.expired as number;
+   if(ready+rotating+held!==total||expired>total)return {status:'unconfirmed' as const};
+   return Object.freeze({status:'found' as const,keyId,total,ready,rotating,held,expired});
+  },
   async discover(after:string|null,limit:number,signal:AbortSignal){
    if((after!==null&&!uuid.test(after))||!Number.isSafeInteger(limit)||limit<1||limit>100)return {status:'unconfirmed' as const};
    const result=await call('stylist_list_refresh_candidates',{p_after:after,p_limit:limit},signal);

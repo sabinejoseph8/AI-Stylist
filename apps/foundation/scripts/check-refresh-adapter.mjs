@@ -32,6 +32,7 @@ function execute(args,input=''){
  });
 }
 const signatures={
+ stylist_refresh_key_usage:[['p_key_id','text']],
  stylist_list_refresh_candidates:[['p_after','uuid'],['p_limit','integer']],
  stylist_auth_session_presence:[['p_owner','uuid'],['p_session','uuid']],
  stylist_auth_session_active:[['p_owner','uuid'],['p_session','uuid']],
@@ -235,6 +236,7 @@ const transitionCodec=createRefreshEnvelopes(new Map([['fixture',key],['replacem
 const transitionStore=createRefreshStore(rpc,transitionCodec);
 const transitionClaim=await transitionStore.claim(owner,session,1,signal());assert.equal(transitionClaim.status,'claimed');
 assert.equal(transitionClaim.readSecret(),'old-key-fixture');
+assert.deepEqual(await transitionStore.keyUsage('fixture',signal()),{status:'found',keyId:'fixture',total:1,ready:0,rotating:1,held:0,expired:0});
 assert.equal(await transitionStore.finish('new-key-fixture',transitionClaim.scope,transitionClaim.leaseId,scope.expiresAt,signal()),'confirmed');
 await execute(['restart',container]);
 for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
@@ -244,7 +246,10 @@ assert.equal(await retiredStore.remove(afterRetirement.scope,afterRetirement.lea
 // Removing the old key before all records transition must not release an old secret.
 assert.equal(await store.adopt('unmigrated-fixture',scope,signal()),'confirmed');
 assert.notEqual((await retiredStore.claim(owner,session,1,signal())).status,'claimed');
+assert.equal((await store.keyUsage('replacement',signal())).total,0);
 const unavailableRecord=await store.inspect(owner,session,signal());assert.equal(unavailableRecord.status,'found');assert.notEqual(unavailableRecord.state,'ready');
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`update stylist_private.refresh_ownership set state='held',expires_at_ms=1 where session_id='${session}';`);
+assert.deepEqual(await store.keyUsage('fixture',signal()),{status:'found',keyId:'fixture',total:1,ready:0,rotating:0,held:1,expired:1});
 console.log('Encrypted key transition PostgreSQL rehearsal passed: overlap reads, new-key write, actual restart, retirement read, and premature retirement retaining blocked ownership. No provider calls.');
 
 // Real primary-database presence authority, including cascade after actual session deletion.

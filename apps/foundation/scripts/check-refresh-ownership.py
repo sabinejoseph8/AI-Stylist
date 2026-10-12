@@ -23,7 +23,7 @@ try:
  sql("create role anon;create role authenticated;create role service_role;create schema auth;create schema stylist_private;create table auth.users(id uuid primary key,deleted_at timestamptz,is_anonymous boolean default false,banned_until timestamptz);create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id),not_after timestamptz);")
  sql(f"insert into auth.users(id) values('{owner}'),('{other}');insert into auth.sessions values('{session}','{owner}',null);")
  root=Path(__file__).resolve().parents[3]
- for migration in ['202610110016_current_auth_session.sql','202610110017_refresh_ownership.sql','202610110018_refresh_discovery.sql','202610110019_auth_session_presence.sql']:sql((root/'supabase/migrations'/migration).read_text())
+ for migration in ['202610110016_current_auth_session.sql','202610110017_refresh_ownership.sql','202610110018_refresh_discovery.sql','202610110019_auth_session_presence.sql','202610110020_refresh_key_inventory.sql']:sql((root/'supabase/migrations'/migration).read_text())
  for role in ['anon','authenticated']:sql(f"set role {role};select public.stylist_auth_session_presence('{owner}','{session}');",False)
  assert sql(f"set role service_role;select public.stylist_auth_session_presence('{owner}','{session}');")=='present'
  assert sql(f"select public.stylist_auth_session_presence('{other}','{session}');")=='mismatch'
@@ -34,6 +34,12 @@ try:
  sql(f"update auth.sessions set not_after=null where id='{session}';")
  adopt=f"select public.stylist_adopt_refresh('{owner}','{session}',{expiry},'{envelope}'::jsonb);"
  assert sql('set role service_role;'+adopt)=='t'
+ for role in ['anon','authenticated']:sql(f"set role {role};select public.stylist_refresh_key_usage('fixture');",False)
+ usage=json.loads(sql("set role service_role;select public.stylist_refresh_key_usage('fixture');"));assert usage==dict(key_id='fixture',total=1,ready=1,rotating=0,held=0,expired=0)
+ assert json.loads(sql("select public.stylist_refresh_key_usage('missing');"))['total']==0
+ sql("select public.stylist_refresh_key_usage(null);",False)
+ sql("select public.stylist_refresh_key_usage('bad key');",False)
+
  assert sql('set role service_role;'+adopt)=='f'
  for role in ['anon','authenticated']:sql(f'set role {role};select public.stylist_list_refresh_candidates(null,10);',False)
  page=json.loads(sql('set role service_role;select public.stylist_list_refresh_candidates(null,1);'))

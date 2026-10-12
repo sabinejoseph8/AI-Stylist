@@ -979,3 +979,8 @@ I separated session absence from a failed lookup. A database outage must not be 
 ## Planning encryption-key replacement
 
 I rehearsed key replacement with sample data before provisioning production keys. I confirmed that overlapping keys support a transition and that removing a key early blocks unreadable sessions. I also identified a missing operational requirement: a complete inventory must show which records still depend on each key before retirement.
+
+
+## Making key usage visible without exposing credentials
+
+I added a private count of records that depend on each encryption key. I included blocked and expired records so a misleading empty inventory cannot justify early key removal. I tested access protection and malformed replies, and kept production retirement dependent on backup and concurrent-writer checks.
