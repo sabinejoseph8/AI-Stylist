@@ -2241,3 +2241,10 @@ Sabine approved Supabase automatic linking for Google or Apple identities using 
 This resolves the linking-policy decision only. Hosted Google/Apple providers remain disabled; no account merge, credential change, paid call or hosted activation occurred. Real matching-email, unconfirmed-account, callback replay and second-customer database/Storage isolation checks remain required. Existing 623-test evidence is unchanged; this documentation-only update does not add test evidence.
 
 Exact next action: obtain the still-pending authorization for the prepared Render support inquiry, then send it only if authorized. Resolve ingress/logging, hosted origin, sender and provider credentials before hosted account acceptance. The goal remains blocked on these separate dependencies; the automatic-linking policy is no longer a blocker.
+
+
+## Render support authorization and sending blocker, 12 October 2026
+
+Sabine explicitly authorized sending the prepared technical questions to Render support. Opened the signed-in Render dashboard and official contact page. The dashboard navigation exposed no support form; the official contact page lists support@render.com. Attempted the existing Mail application as the alternate route, but macOS Computer Use permissions were not granted. No inquiry was submitted, no email content was entered, and no credentials or customer data were transmitted.
+
+Exact next action: Sabine grants Accessibility and Screen Recording to ChatGPT through its Computer Use permission window, or sends the prepared inquiry herself to support@render.com. Once access is available, send the already-authorized draft and verify Sent status. Authorization no longer blocks sending; local application access does. Existing hosted activation and spending limits remain unchanged.
