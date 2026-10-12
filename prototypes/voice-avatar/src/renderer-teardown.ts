@@ -11,7 +11,13 @@ export class RendererTeardown {
   constructor(client: RendererClient, elements: readonly RendererElement[], invalidateAttachments: () => void) {
     this.client = client; this.elements = [...elements]; this.invalidateAttachments = invalidateAttachments;
   }
-  begin(): void { if (!this.result) this.result = this.run(); }
+  begin(): void {
+    if (this.result) return;
+    // Install the shared result before calling owner code, which may re-enter.
+    let settle!: (value: boolean) => void;
+    this.result = new Promise<boolean>(resolve => { settle = resolve; });
+    void this.run().then(settle, () => settle(false));
+  }
   dispose(signal: AbortSignal): Promise<boolean> {
     if (signal.aborted) return Promise.resolve(false);
     this.begin();

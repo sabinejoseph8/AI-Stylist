@@ -2101,3 +2101,12 @@ Added withRendererTeardown to supply the recovery coordinator's local-renderer v
 Next action: publish the pending Memory site updates, then inspect the actual provider teardown and restoration paths for a disabled end-to-end adapter. Keep interrupt-and-end active and preserve the exhausted live-test allowance; do not start a replacement room without financial authorization. Task 1b remains incomplete.
 
 Final validation: 1,284 prototype tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-recovery-final.log.
+
+
+## Renderer callback reentry and provider-path review, 12 October 2026
+
+Fixed reentrant cleanup: the shared disposal promise is installed before calling owner attachment invalidation, so a synchronous callback cannot recursively start another destruction. Added a focused regression. Reviewed actual provider paths: spoken generation uses a fresh OpenAI WebSocket for each bounded request with explicit confirmed history, while ScriptedService verifies Tavus status ended before closing a reservation. SpokenService.stop intentionally clears all volatile history. Therefore a generic persistent-context restore acknowledgment cannot simply be wired onto these routes; a replacement flow needs a separate owner lifecycle and the existing ledger/deadline gates. Do not bypass them or relabel local client destruction as provider finalization.
+
+Next action: prepare the distinct replacement lifecycle locally using the existing reservation limits and confirmed snapshots, with no callable paid endpoint. Keep actual activation and live acceptance blocked pending financial authorization. Private Memory currently reflects the preceding 1,284-test checkpoint, not this follow-up.
+
+Validation: 1,285 tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-reentry-final.log. No paid call or deployment.

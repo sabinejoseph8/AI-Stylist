@@ -1344,3 +1344,6 @@ I separated local playback cleanup from provider shutdown. I added a disposal he
 
 
 I connected the recovery coordinator to the local disposal check. Cleanup now starts before waiting for remote closure, and a new context cannot open until both checks succeed. I tested this coordination with simulated clients, while keeping the live page on interrupt-and-end until real provider and phone acceptance is authorized.
+
+
+I fixed a cleanup callback edge case: if invalidating old playback requested cleanup again, destruction could start recursively. I installed the shared cleanup result first and added a regression test. I also confirmed that the current model requests are stateless, so a future replacement flow must preserve explicitly confirmed context through a separate lifecycle instead of assuming the existing end action keeps it.

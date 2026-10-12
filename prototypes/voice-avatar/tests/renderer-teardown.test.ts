@@ -41,4 +41,13 @@ describe('local renderer disposal', () => {
     expect(destroy).toHaveBeenCalledTimes(1);
   });
 
+  it('shares disposal even when attachment invalidation re-enters cleanup', async () => {
+    const destroy = vi.fn(async () => {});
+    let teardown!: RendererTeardown;
+    const invalidate = vi.fn(() => teardown.begin());
+    teardown = new RendererTeardown({destroy,isDestroyed:()=>true},[],invalidate);
+    expect(await teardown.dispose(new AbortController().signal)).toBe(true);
+    expect(invalidate).toHaveBeenCalledOnce();expect(destroy).toHaveBeenCalledOnce();
+  });
+
 });

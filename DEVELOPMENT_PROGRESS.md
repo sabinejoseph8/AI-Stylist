@@ -2370,3 +2370,12 @@ Final validation: 1,284 prototype tests across 84 files, type checking and build
 Successfully published source 98c1ec4cf6bfbb05a9d3550e396943d144c48fea; deployment appgdep_6acd2e8338d88191a1118b392ae79354; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_e9344f8943f881919e78427eac4c5f2e. Native deployment status succeeded with MCP enabled. Existing owner-only custom audience, one user and no sharing changes, preserved. All 16 site checks, build and artifact validation pass. Imported four documents, 41 tasks in eight phases; no task overrides changed. Includes the sanitized unresolved hosting status and latest 1,284-test recovery preparation.
 
 Next action: inspect real provider shutdown and confirmed-history restoration paths for a disabled recovery adapter. Strict room replacement and actual phone acceptance remain unverified, with paid attempts exhausted. Hosted account activation remains gated by the separately recorded ingress/logging, provider and sender prerequisites. No customer app or voice service deployment occurred.
+
+
+## Renderer callback reentry and provider-path review, 12 October 2026
+
+Fixed reentrant cleanup: the shared disposal promise is installed before calling owner attachment invalidation, so a synchronous callback cannot recursively start another destruction. Added a focused regression. Reviewed actual provider paths: spoken generation uses a fresh OpenAI WebSocket for each bounded request with explicit confirmed history, while ScriptedService verifies Tavus status ended before closing a reservation. SpokenService.stop intentionally clears all volatile history. Therefore a generic persistent-context restore acknowledgment cannot simply be wired onto these routes; a replacement flow needs a separate owner lifecycle and the existing ledger/deadline gates. Do not bypass them or relabel local client destruction as provider finalization.
+
+Next action: prepare the distinct replacement lifecycle locally using the existing reservation limits and confirmed snapshots, with no callable paid endpoint. Keep actual activation and live acceptance blocked pending financial authorization. Private Memory currently reflects the preceding 1,284-test checkpoint, not this follow-up.
+
+Validation: 1,285 tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-reentry-final.log. No paid call or deployment.
