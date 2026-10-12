@@ -4,7 +4,7 @@
 
 Private Memory publication succeeded with the 451-test checkpoint and OAuth/database composition evidence. All 16 website checks and artifact validation pass; owner-only access and MCP preserved. Source 63d0055a2820559712e21bac67cd6dd7f68732ce; deployment appgdep_6acc65e135d88191a4c24b19e5e79f99; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_00f8bd69b7c481919927db12e4b81b2a. Task 2c stays open.
 
-Exact next action: prepare provider-verified recovery authorization with synthetic tests. An ordinary account JWT is not recovery proof; no live settings or account routes are authorized.
+Exact next action: prepare the recovery provider adapter using signed recovery proof, reset-only capability and independent cleanup confirmation. No real calls or routes.
 
 ## Previous publication checkpoint (historical)
 
@@ -1565,3 +1565,11 @@ Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueCl
 The disposable PostgreSQL rehearsal passes with the prepared OAuth HTTP transport, generated signed identities and actual encrypted refresh ownership. Google and Apple each adopt generation one, reject callback replay, and clean up the staged ownership. A lost adoption acknowledgment combined with refused synthetic logout blocks access and keeps the ownership unclaimable after an actual database restart. All provider/network responses are synthetic. No hosted database changes or real provider calls occurred; this does not complete Task 2c. The earlier 451-test suite, type checking and build passed.
 
 Exact next implementation action: prepare provider-verified recovery authorization, without treating an ordinary account JWT as recovery proof. Private Memory publication follows this checkpoint.
+
+## Signed recovery-purpose verification prepared
+
+The existing bounded asymmetric identity verifier now exposes a separate recovery check. It requires a signed amr recovery method with a valid recent timestamp, normal issuer/audience/role/identity checks, and a current authoritative Auth session. Recovery authority expires at the earlier of token expiry or five minutes after the recovery authentication, and isCurrent rechecks both expiry and session status. Normal identity verification keeps its original result shape. This is an application freshness rule, not a claim that Supabase promises this reset lifetime. No reset grant, password update, email or hosted route was activated.
+
+All 453 foundation tests across 58 files, type checking and build pass. New synthetic signed-token tests reject missing/password/stale/future/malformed recovery methods and confirm independent recovery expiry. Source: https://supabase.com/docs/guides/auth/jwt-fields documents amr recovery and timestamps; real project claims and provider/device behavior remain unverified.
+
+Exact next action: connect this proof to a prepared recovery provider adapter that creates reset-only capability, rechecks purpose/current authority before updating a password and independently confirms session cleanup. Keep normal account cookies unavailable through recovery. Private Memory currently publishes the earlier 451-test database checkpoint.

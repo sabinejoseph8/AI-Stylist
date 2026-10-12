@@ -1031,3 +1031,7 @@ I connected the simulated social sign-in callback to the code exchange and the s
 ## Checking social sign-in against the database
 
 I tested both prepared social sign-in paths against a disposable database with synthetic provider replies. I verified that a callback could not be reused and that an uncertain session save stayed blocked after a database restart. This gave me stronger evidence than a mocked database alone, while real provider and phone acceptance remain separate.
+
+## Separating password recovery from sign-in
+
+I added a separate check for a recent signed recovery authentication, alongside the existing signature and current-session checks. An ordinary sign-in token cannot pass this recovery check. I tested expiry separately from the normal access-token lifetime, keeping the actual reset adapter and live email acceptance as remaining work.

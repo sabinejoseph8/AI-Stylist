@@ -2,7 +2,7 @@ import type {createIdentityVerifier} from './verified-identity.ts';
 import type {createRefreshStore} from './refresh-store.ts';
 import type {PasswordSessionStager} from './password-provider.ts';
 /** Initial ownership preparation only. No provider call, credential configuration or route is installed. */
-export function createInitialSessionStager(store:ReturnType<typeof createRefreshStore>,verifier:ReturnType<typeof createIdentityVerifier>,expiryPolicy:()=>number,revoke:(token:string,signal:AbortSignal)=>Promise<boolean>):PasswordSessionStager{
+export function createInitialSessionStager(store:ReturnType<typeof createRefreshStore>,verifier:Pick<ReturnType<typeof createIdentityVerifier>,'verify'>,expiryPolicy:()=>number,revoke:(token:string,signal:AbortSignal)=>Promise<boolean>):PasswordSessionStager{
  if(typeof store?.adopt!=='function'||typeof verifier?.verify!=='function'||typeof expiryPolicy!=='function'||typeof revoke!=='function')throw Error('Session staging unavailable');
  return Object.freeze({async stage(input:Readonly<{accessToken:string;refreshSecret:string}>,signal:AbortSignal){
   const identity=await verifier.verify(input.accessToken,signal);

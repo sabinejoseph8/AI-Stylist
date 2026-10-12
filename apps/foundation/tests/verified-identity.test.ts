@@ -5,6 +5,19 @@ const owner='00000000-0000-0000-0000-000000000001',session='00000000-0000-0000-0
 const url='https://fixture.supabase.co',issuer=url+'/auth/v1';
 const pair=await generateKeyPair('ES256');const jwk=await exportJWK(pair.publicKey);jwk.kid='fixture';
 const keys=createLocalJWKSet({keys:[jwk]});const signal=()=>new AbortController().signal;
+it('requires signed fresh recovery authentication rather than ordinary account access',async()=>{
+ const verify=createIdentityVerifier(url,keys,{active:async()=>true}),now=Math.floor(Date.now()/1000);
+ for(const amr of [undefined,[],[{method:'password',timestamp:now}],[{method:'recovery',timestamp:now-301}],[{method:'recovery',timestamp:now+60}],[{method:'recovery',timestamp:'now'}]]){
+  expect(await verify.verifyRecovery(await token({amr}),signal())).toBeNull();
+ }
+ const signed=await token({amr:[{method:'recovery',timestamp:now}]});
+ const proof=await verify.verifyRecovery(signed,signal());expect(proof?.ownerId).toBe(owner);expect(proof?.sessionId).toBe(session);expect(proof?.expiresAt).toBe((now+300)*1000);expect(await proof?.isCurrent(signal())).toBe(true);
+});
+it('expires recovery authority independently of a longer-lived access token',async()=>{
+ const now=Math.floor(Date.now()/1000),verify=createIdentityVerifier(url,keys,{active:async()=>true});
+ const proof=await verify.verifyRecovery(await token({exp:now+3600,amr:[{method:'recovery',timestamp:now-299}]}),signal());expect(proof).not.toBeNull();
+ vi.useFakeTimers();try{vi.setSystemTime((now+2)*1000);expect(await proof?.isCurrent(signal())).toBe(false);}finally{vi.useRealTimers();}
+});
 async function token(changes:Record<string,unknown>={},kid='fixture'){
  const now=Math.floor(Date.now()/1000);
  return new SignJWT({iss:issuer,aud:'authenticated',sub:owner,session_id:session,role:'authenticated',is_anonymous:false,iat:now,exp:now+300,...changes})
