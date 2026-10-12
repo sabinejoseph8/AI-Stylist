@@ -1797,3 +1797,11 @@ Four focused checks pass. All 587 foundation tests across 86 files, type checkin
 The connected recovery page lacked the account-panel class, so its standalone password form did not receive the account input and grid styles. Applied the existing shared styles rather than adding a separate design. A static-render regression checks the wrapper; actual HTTPS desktop WebKit now checks password-field height of at least 48px, 16px text and grid form layout before completing the synthetic reset journey. All 587 tests, type checking and build pass. The browser command initially used the repository directory instead of the required foundation directory; rerunning from foundation passed. This is not physical-device or screen-reader acceptance.
 
 Next: continue independent account accessibility checks while the sign-in duration decision is pending. No hosted account, email, configuration or paid operation changed. Private Memory currently publishes the preceding 587-test shutdown checkpoint.
+
+## Seven-day sign-in decision approved, 12 October 2026
+
+Sabine selected 7 days from sign-in. This is a fixed absolute lifetime, not seven days after each refresh. It supersedes the unanswered-duration statements in earlier dated checkpoints. The decision blocker is resolved; customer activation remains disabled.
+
+Implemented the first invariant: refreshed encrypted ownership uses the earlier of its existing absolute expiry and the provider adapter expiry, so rotation cannot extend the original session. Two regression checks cover later and earlier provider expiries. All 589 foundation tests across 86 files, type checking and build pass. The first type check found mock tuple assertion typing; corrected the assertions and reran successfully.
+
+Exact next action: implement the complete seven-day sign-in contract, including a trusted original sign-in anchor, persistent cookie expiry, refresh authorization after access-token expiry without admitting expired tokens to protected resources, restart behavior and absolute-expiry refusal. Do not claim seven-day persistence from this rotation fix alone. Hosted provider, sender/origin/social credentials, physical-device/accessibility and remaining phase gates stay open. No paid request, hosted setting or customer account changed.

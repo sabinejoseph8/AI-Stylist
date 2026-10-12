@@ -2097,3 +2097,11 @@ Immediate next action requires Sabine's customer sign-in duration choice. Phase 
 Private Memory publication succeeded with owner-only access and MCP preserved; all 16 checks and artifact validation pass. Source 2402ff3f75cb9e76b6732ba961c0a1624504c9d6; deployment appgdep_6acc9c9de6448191a5f19bdc82d7ed59; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_c87bf562b5e481919176fa6d1fcfacc0. Includes reset reflow/keyboard evidence and corrected phase approval scope.
 
 The same customer session-policy dependency has remained unanswered across three consecutive goal turns. Independent preparation and publication are now recorded; no further backlog group is authorized past the unresolved phase dependencies. Next required human action: choose 7 days, 24 hours or 30 days from sign-in. Resume by implementing the complete chosen session contract, not a storage TTL alone. Remaining provider/financial/credential/manual gates are documented above. The project is incomplete; no task or phase has been marked done.
+
+## Seven-day sign-in decision approved, 12 October 2026
+
+Sabine selected 7 days from sign-in. This is a fixed absolute lifetime, not seven days after each refresh. It supersedes the unanswered-duration statements in earlier dated checkpoints. The decision blocker is resolved; customer activation remains disabled.
+
+Implemented the first invariant: refreshed encrypted ownership uses the earlier of its existing absolute expiry and the provider adapter expiry, so rotation cannot extend the original session. Two regression checks cover later and earlier provider expiries. All 589 foundation tests across 86 files, type checking and build pass. The first type check found mock tuple assertion typing; corrected the assertions and reran successfully.
+
+Exact next action: implement the complete seven-day sign-in contract, including a trusted original sign-in anchor, persistent cookie expiry, refresh authorization after access-token expiry without admitting expired tokens to protected resources, restart behavior and absolute-expiry refusal. Do not claim seven-day persistence from this rotation fix alone. Hosted provider, sender/origin/social credentials, physical-device/accessibility and remaining phase gates stay open. No paid request, hosted setting or customer account changed.

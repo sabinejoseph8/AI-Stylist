@@ -95,3 +95,11 @@ Prepared a server-only settings parser for exact HTTPS app/Supabase origins, a p
 Five focused settings checks pass; all 583 foundation tests across 85 files, type checking and build pass. No live key was read or generated, and no hosted setting/account/email/paid call changed.
 
 A customer sign-in duration decision is pending with Sabine: 7 days from sign-in recommended, or 24 hours / 30 days. Do not treat elapsed time as approval or promise that behavior yet. Existing access-cookie/refresh behavior still requires the agreed persistence contract before activation. Next: continue independent deployment preparation, then implement the chosen session policy after Sabine replies. Real sender, hosted origin, social credentials/linking and remaining live/device/phase gates stay open. Private Memory currently publishes the 578-test combined checkpoint; include settings preparation in its next consolidated update.
+
+## Seven-day sign-in decision approved, 12 October 2026
+
+Sabine selected 7 days from sign-in. This is a fixed absolute lifetime, not seven days after each refresh. It supersedes the unanswered-duration statements in earlier dated checkpoints. The decision blocker is resolved; customer activation remains disabled.
+
+Implemented the first invariant: refreshed encrypted ownership uses the earlier of its existing absolute expiry and the provider adapter expiry, so rotation cannot extend the original session. Two regression checks cover later and earlier provider expiries. All 589 foundation tests across 86 files, type checking and build pass. The first type check found mock tuple assertion typing; corrected the assertions and reran successfully.
+
+Exact next action: implement the complete seven-day sign-in contract, including a trusted original sign-in anchor, persistent cookie expiry, refresh authorization after access-token expiry without admitting expired tokens to protected resources, restart behavior and absolute-expiry refusal. Do not claim seven-day persistence from this rotation fix alone. Hosted provider, sender/origin/social credentials, physical-device/accessibility and remaining phase gates stay open. No paid request, hosted setting or customer account changed.

@@ -1261,3 +1261,7 @@ I added an explicit shutdown helper so deployment can wait for connection cleanu
 ## Making the reset form consistent
 
 I found that the standalone reset page was missing the shared account form styles. I corrected the wrapper so password fields use readable text, consistent spacing and large controls. I added a regression check and verified the rendered dimensions in desktop WebKit through the complete synthetic reset journey. Physical-phone and screen-reader checks remain open.
+
+## Choosing a fixed sign-in lifetime
+
+I chose seven days from sign-in for customer sessions. Refreshing should not silently extend that deadline. I added a regression-tested guard that prevents refresh ownership from extending the original expiry. Persistent cookies and safe refresh after access-token expiry still need integration before I can claim the complete behavior works.

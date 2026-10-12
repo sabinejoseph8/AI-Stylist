@@ -57,7 +57,7 @@ export function createRefreshRotation(store:ReturnType<typeof createRefreshStore
   return Object.freeze({accessToken:rotated.accessToken,
    adopt(adoptSignal:AbortSignal){
     if(disposed||adoptSignal.aborted)return Promise.resolve(false);
-    if(!adoption){const value=secret;secret=null;adoption=(async()=>typeof value==='string'&&await store.finish(value,claim.scope,claim.leaseId,rotated.expiresAt,adoptSignal)==='confirmed')();}
+    if(!adoption){const value=secret;secret=null;adoption=(async()=>typeof value==='string'&&await store.finish(value,claim.scope,claim.leaseId,Math.min(claim.scope.expiresAt,rotated.expiresAt),adoptSignal)==='confirmed')();}
     return adoption;
    },discard,
   });

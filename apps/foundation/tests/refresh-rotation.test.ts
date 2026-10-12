@@ -50,3 +50,14 @@ it('does not remove ownership when cancellation arrives during revocation',async
  f.revoke.mockImplementation(async()=>{control.abort();return true;});
  expect(await session.discard(control.signal)).toBe(false);expect(f.store.remove).not.toHaveBeenCalled();expect(f.revoke).toHaveBeenCalledTimes(1);
 });
+
+it('never extends the original absolute expiry when a provider returns a later expiry',async()=>{
+ const f=fixture();f.rotate.mockImplementation(async()=>({accessToken:'access-fixture',refreshSecret:'new-fixture',expiresAt:scope.expiresAt+604800000,revoke:f.revoke}));
+ const session=await f.rotation.stage(scope,signal());expect(await session.adopt!(signal())).toBe(true);
+ expect(f.store.finish).toHaveBeenCalledWith('new-fixture',scope,f.claim.leaseId,scope.expiresAt,expect.any(AbortSignal));
+});
+it('retains an earlier provider expiry rather than lengthening it to the session cap',async()=>{
+ const f=fixture();const earlier=scope.expiresAt-1000;f.rotate.mockImplementation(async()=>({accessToken:'access-fixture',refreshSecret:'new-fixture',expiresAt:earlier,revoke:f.revoke}));
+ const session=await f.rotation.stage(scope,signal());expect(await session.adopt!(signal())).toBe(true);
+ expect(f.store.finish).toHaveBeenCalledWith('new-fixture',scope,f.claim.leaseId,earlier,expect.any(AbortSignal));
+});
