@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 234 foundation tests across 20 files, type checking and build pass. A generated signed JWT and the prepared server port now exercise a real local PostgreSQL session lookup; removing its synthetic Auth session rejects the same unexpired token. Owner mismatch, bans, deletion, anonymous status, expiry and privilege denial pass. The sixteen-migration actual local Storage upgrade also passes. Real Auth, hosted configuration, JWKS transport, cookies and callbacks remain gated or unimplemented; no real sign-ins or paid calls occurred.
+Task 2c local account preparation is active. All 277 foundation tests across 27 files, type checking and build pass. The disconnected callback coordinator now verifies signed identity before preparing account cookies, cleans up rejected/canceled/late sessions, bounds pending work and holds further exchanges after uncertain cleanup. Recovery remains separate and its transaction is not consumed by normal access. These checks use generated tokens and simulated adapters only. Account UI narrow-layout/keyboard checks pass; Sabine visual review is pending. Actual email/password and provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No live calls or hosted changes occurred.
 
 ## Completed evidence
 
@@ -931,3 +931,5 @@ Responses are bounded to eight seconds and at most four underlying exchanges are
 All 277 foundation tests across 27 files, type checking and build pass. Generated signed-token integration and simulated adapter tests cover ready identity/cookies, replay, invalid identity cleanup, cancellation/late arrival, failed/ignored cleanup, ambiguous failure holds, explicit no-session proof, recovery isolation, admission recovery, pre-canceled/invalid requests and malformed cleanup capabilities. No real session, OAuth exchange, refresh token, sign-in, email, credential or hosted configuration was created or used. Actual adapter cleanup semantics and response-delivery handling remain acceptance requirements.
 
 Exact next action: publish/copy this exchange checkpoint and refresh private Memory (currently 0c46182/265 tests). Next prepare email/password and registration orchestration using the same verified session/cleanup contract, followed by scoped recovery and sign-out interfaces. Continue simulated local work while Sabine visual review remains pending; keep hosted/provider activation and spending gates.
+
+Opening summaries in DEVELOPMENT_PROGRESS.md, docs/mvp.md, Project Memory/tech-spec.md and the identity activation checklist are reconciled with the current 277-test local account checkpoint. Historical dated evidence is retained. No approval or phase-completion status changed.

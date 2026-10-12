@@ -16,10 +16,10 @@ Eight new tests use generated ES256/RS256 keys and actual signatures. They cover
 
 ## Remaining activation requirements
 
-- Prepare a protected local SQL function to check auth.sessions against both signed IDs; direct browser access must remain denied. Verify real schema semantics before hosted use.
-- Prepare a fixed-project JWKS transport with response/timeout bounds, rotation handling and no untrusted header URLs. The current resolver is injected and local in tests.
+- The protected local session SQL function and privilege checks are prepared. Verify actual hosted Auth schema semantics and configured session policies before activation.
+- The fixed-project bounded JWKS resolver is prepared and tested with generated keys. Verify actual signing configuration and real key rotation before activation.
 - Verify the actual project's signing-key configuration. This gate deliberately refuses legacy symmetric tokens; changing keys or configuring a compatibility path is not authorized by this local preparation.
-- Add the request/cookie/origin gate and OAuth/recovery callback handling. This file alone does not authenticate browser cookies or create sessions.
+- Request/cookie/origin and callback gates plus disconnected exchange are prepared. Actual browser/route integration, refresh lifecycle and provider-verified recovery remain open.
 - Check real sign-out, account confirmation, user deletion/disablement and provider linking; do not infer those properties from the UI controller.
 - Wire media/consultation routes only after the corresponding Auth and hosted approvals. No live provider, key, request or customer data has been used.
 
