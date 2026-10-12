@@ -17,7 +17,7 @@ try:
  r=run(['docker','volume','create',volume]);assert r.returncode==0,r.stderr;volume_created=True
  r=run(['docker','run','-d','--rm','--pull=never','--network','none','--name',name,'-v',volume+':/var/lib/postgresql/data','-e','POSTGRES_HOST_AUTH_METHOD=trust',image]);assert r.returncode==0,r.stderr;created=True
  for _ in range(100):
-  if run(['docker','exec',name,'pg_isready','-U','postgres']).returncode==0: break
+  if run(['docker','exec',name,'pg_isready','-h','127.0.0.1','-U','postgres']).returncode==0: break
   time.sleep(.2)
  else: raise RuntimeError('Database startup timed out')
  sql("create role anon;create role authenticated;create role service_role;create schema auth;create schema stylist_private;create table auth.users(id uuid primary key,deleted_at timestamptz,is_anonymous boolean default false,banned_until timestamptz);create table auth.sessions(id uuid primary key,user_id uuid references auth.users(id),not_after timestamptz);")
@@ -36,7 +36,7 @@ try:
  lease=winners[0]['lease_id'];assert winners[0]['state']=='rotating'
  r=run(['docker','restart',name]);assert r.returncode==0,r.stderr
  for _ in range(100):
-  if run(['docker','exec',name,'pg_isready','-U','postgres']).returncode==0: break
+  if run(['docker','exec',name,'pg_isready','-h','127.0.0.1','-U','postgres']).returncode==0: break
   time.sleep(.2)
  else: raise RuntimeError('Database restart timed out')
  assert sql(claim)=='' # a real database/container restart does not reclaim an unresolved rotation
@@ -56,6 +56,9 @@ try:
  sql(f"update stylist_private.refresh_ownership set envelope='{{\"plaintext\":\"forbidden\"}}';",False)
  sql(f"delete from auth.sessions where id='{session}';")
  assert sql('select count(*) from stylist_private.refresh_ownership;')=='0'
+ sql(f"insert into auth.sessions values('{session}','{owner}',null);")
+ composed=run(['node',str(Path(__file__).with_name('check-refresh-adapter.mjs')),name],timeout=90);assert composed.returncode==0,composed.stderr
+ print(composed.stdout.strip())
  print('Refresh ownership PostgreSQL rehearsal passed: service-only access, one concurrent winner, database restart hold, fencing, confirmed removal, rotation and cascade.')
 finally:
  if created:run(['docker','rm','-f',name])

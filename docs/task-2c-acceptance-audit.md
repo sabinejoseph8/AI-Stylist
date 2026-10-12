@@ -55,3 +55,6 @@ A disconnected server-only encrypted refresh envelope is prepared and tested wit
 Local migration 17 and the isolated PostgreSQL refresh-ownership rehearsal pass, including an actual database/container restart, one concurrent winner and service-only reconciliation. Ciphertext is placeholder fixture data; codec/RPC integration and real hosted Auth remain open. Sabine accepted all seven newer reset UI steps.
 
 The encrypted migration-17 RPC adapter passes simulated response tests, including one-use server secret capability and ambiguous-write handling. Actual PostgreSQL adapter composition, provider revocation proof and hosted key/storage configuration remain open.
+
+
+Actual codec/store-adapter composition with isolated PostgreSQL now passes lost-acknowledgment, concurrency, next-generation decryption, database restart and wrong-key hold checks. The psql bridge is test-only. Real Supabase HTTP transport, provider rotation/revocation, process key provisioning and hosted acceptance remain open.

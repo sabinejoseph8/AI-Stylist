@@ -915,3 +915,6 @@ I accepted the completed seven-step reset-screen review and kept that evidence d
 
 
 I connected refresh encryption to a prepared server-only storage adapter. Plaintext is never sent to the storage RPC, and reading a claimed secret is a one-use server capability. I kept refused writes separate from uncertain acknowledgments so a timeout cannot silently authorize a retry. All 380 foundation tests, type checking and build pass. The next check is actual isolated database composition; hosted services remain untouched.
+
+
+I connected the real encryption and storage adapter to isolated PostgreSQL. I tested lost write acknowledgments without allowing a blind retry, competing claims with one winner, encrypted rotation, a database restart and a wrong key that leaves the record blocked. I also fixed a test-harness startup race by waiting for TCP readiness. The composed rehearsal and all 380 foundation tests, type checking and build pass. Real providers and hosted services remain untouched.
