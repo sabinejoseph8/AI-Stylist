@@ -1513,3 +1513,9 @@ All 499 foundation tests across 68 files, type checking and build pass. No hoste
 Fixed a concrete factory lifecycle gap: successful recovery-request responses now retain an idempotent server-only discard callback. The account factory forwards it to transport cleanup, so an undelivered response consumes its pending browser transaction immediately rather than leaving it until expiry. The existing callable recovery-request interface is preserved; provider emails cannot be recalled by this local cleanup.
 
 All 500 foundation tests across 68 files, type checking and build pass. A new focused factory check verifies double discard makes the recovery callback unusable without a recovery exchange. No real email or hosted action occurred. Exact next action: verify this recovery-request discard over actual Node disconnect/delivery failure, then consolidate current acceptance evidence. Private Memory remains at the 497-test checkpoint.
+
+## Recovery request actual disconnect verification, 12 October 2026
+
+Added a complete-factory Node loopback check that disconnects the client while a synthetic recovery request is pending. A test-only observer confirms the runtime consumes the transaction, then a single callback attempt is refused. The assertion does not poll the consuming callback API, avoiding a false pass caused by the test consuming state itself. Immutable callback methods are observed through copied injected dependencies rather than patched.
+
+All 501 foundation tests across 68 files, type checking and build pass. No real email, hosted change or paid call occurred. This covers pending-request cancellation; successful-response discard remains separately covered by the factory test. Exact next action: consolidate account acceptance and inspect remaining customer requirements, avoiding duplicate checks of already verified local paths. Private Memory remains at the 497-test checkpoint.

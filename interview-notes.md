@@ -1119,3 +1119,7 @@ I moved social and recovery callback HTTP checks through the actual account fact
 ## Undelivered recovery request fix, 12 October 2026
 
 I found that an undelivered recovery-request response could leave its browser transaction pending until expiry. I added idempotent transport cleanup that removes the transaction immediately. It does not claim to recall an email. All 500 tests, type checking and build pass with simulated providers.
+
+## Recovery disconnect verification, 12 October 2026
+
+I verified recovery-request cancellation over a real local HTTP disconnect. The pending browser transaction is removed and its callback is refused. I made the test observe cleanup before checking the callback, so it cannot accidentally consume the transaction and create a false pass. All 501 tests, type checking and build pass with simulated providers.

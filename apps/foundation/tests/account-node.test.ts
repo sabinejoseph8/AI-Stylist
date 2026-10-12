@@ -134,3 +134,20 @@ it('cleans late factory adoption after shutdown without delivering account acces
   expect((await h.send('{}')).status).toBe(503);
  }finally{release?.(false);await app.close();await h.close();}
 });
+
+it('abandons a pending factory recovery transaction after a real HTTP disconnect',async()=>{
+ const {security}=await identityFixture();let release!:()=>void,started!:()=>void,redirectTo='';
+ const began=new Promise<void>(resolve=>started=resolve),unexpected=async()=>{throw Error('Unexpected provider operation');};
+ const begin=vi.fn(security.callbacks.begin),consume=vi.fn(security.callbacks.consume),observed={...security,callbacks:{...security.callbacks,begin,consume}};
+ const app=createAccountComposition(origin,'https://example.supabase.co',observed,{password:{password:unexpected},exchange:{exchange:unexpected},refresh:{refresh:unexpected},signOut:{revoke:unexpected},recovery:{exchange:unexpected},recoveryRequest:{request:async input=>{redirectTo=input.redirectTo;started();await new Promise<void>(resolve=>release=resolve);}}});
+ const path='/api/account/recover',server=createServer(createAccountNodeListener(origin,app.routes()));
+ await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));
+ try{
+  const req=httpRequest({host:'127.0.0.1',port:(server.address() as AddressInfo).port,path,method:'POST',headers:{host:'stylist.example',origin,'content-type':'application/json'}});req.on('error',()=>{});
+  req.end(JSON.stringify({email:'sample@example.test'}));await began;req.destroy();
+  await new Promise(resolve=>setTimeout(resolve,20));release();
+  const flow=begin.mock.results[0]!.value as ReturnType<typeof security.callbacks.begin>;
+  await vi.waitFor(()=>expect(consume).toHaveBeenCalled());
+  expect(security.callbacks.fromRequest(new Request(redirectTo+'&code=synthetic',{headers:{cookie:flow.cookie.split(';')[0]!}}),'recovery')).toBeNull();
+ }finally{release?.();await app.close();await new Promise<void>(resolve=>server.close(()=>resolve()));}
+});
