@@ -909,3 +909,12 @@ Exact next action: publish/copy the composed security and usability checkpoint a
 
 
 Account usability/composition checkpoint 0c46182 is pushed and copied. Private Memory source 116c588dd2fedfa85d51ea2b90d9cec0e679c197 deployed successfully as appgdep_6acc3bee123c81918343be76e0a846f5. All 16 website checks pass; owner-only access and MCP are retained. This source reflects 265 foundation tests and the narrow-layout/keyboard evidence.
+
+
+## Canceled and failed callback handling
+
+The disconnected callback parser now distinguishes exchange-required success from a bound provider failure. A valid failure consumes its transaction once and returns only canceled purpose plus /account; it exposes no verifier, code or raw error text. Duplicate fields, mixed error/code input, unknown fields, oversized error fields and oversized URLs fail without consuming a valid transaction. This prepares safe account-access return behavior, not a real provider callback route or styling session. Actual provider error field/redirect preservation still requires integration verification.
+
+All 267 foundation tests across 26 files, type checking and build pass. The new checks prove one-time failure consumption, sensitive error-text suppression and rejection of ambiguous success/failure callbacks. docs/task-2c-acceptance-audit.md separates local evidence from every remaining real-provider, recovery, refresh, sign-out, identity-linking, email, Apple maintenance, phone and accessibility requirement. No Task 2c or phase completion is claimed.
+
+Exact next action: publish/copy this callback-failure and acceptance-audit checkpoint. Continue disconnected provider-independent account orchestration, including bounded code exchange and late-result cleanup contracts; keep recovery authorization separate from normal access. Sabine local visual review is still pending and does not block this independent work. Private Memory currently reflects 0c46182/265 tests; refresh after the next account integration checkpoint. No real sign-ins or hosted changes.

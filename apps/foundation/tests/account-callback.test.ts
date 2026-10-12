@@ -57,4 +57,19 @@ describe('prepared account callback transactions',()=>{
   expect(flows.fromRequest(new Request(a.callbackUrl+'&code=a',{headers:{cookie}}),'google')).not.toBeNull();
  });
 
+ it('consumes a bound provider failure without exposing raw errors or code material',()=>{
+  const flows=createAccountCallbacks(origin),a=flows.begin('google','/wardrobe');
+  const request=new Request(a.callbackUrl+'&error=access_denied&error_description=private-provider-detail',{headers:{cookie:a.cookie.split(';')[0]!}});
+  const result=flows.fromRequest(request,'google');
+  expect(result).toEqual({status:'canceled',purpose:'google',returnPath:'/account'});
+  expect(JSON.stringify(result)).not.toContain('private-provider-detail');
+  expect(flows.fromRequest(request,'google')).toBeNull();
+  expect(flows.consume(a.state,binding(a.cookie),'google')).toBeNull();
+ });
+ it('refuses ambiguous provider success/failure or duplicate errors before consuming',()=>{
+  const flows=createAccountCallbacks(origin),a=flows.begin('apple'),cookie=a.cookie.split(';')[0]!;
+  for(const suffix of ['&error=access_denied&code=a','&error=a&error=b','&error=a&next=/profile','&error='])expect(flows.fromRequest(new Request(a.callbackUrl+suffix,{headers:{cookie}}),'apple')).toBeNull();
+  expect(flows.fromRequest(new Request(a.callbackUrl+'&error=access_denied',{headers:{cookie}}),'apple')).toEqual({status:'canceled',purpose:'apple',returnPath:'/account'});
+ });
+
 });

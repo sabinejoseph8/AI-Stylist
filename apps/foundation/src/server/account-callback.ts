@@ -30,14 +30,23 @@ export function createAccountCallbacks(origin:string){
   fromRequest(request:Request,purpose:AccountPurpose){
    try{
     const url=new URL(request.url);
-    if(!['google','apple','recovery'].includes(purpose)||request.signal.aborted||request.method!=='GET'||url.origin!==origin||url.pathname!=='/auth/callback/'+purpose||url.hash||url.username||url.password||request.headers.has('authorization'))return null;
+    if(!['google','apple','recovery'].includes(purpose)||request.signal.aborted||request.method!=='GET'||request.url.length>8192||url.origin!==origin||url.pathname!=='/auth/callback/'+purpose||url.hash||url.username||url.password||request.headers.has('authorization'))return null;
     if(request.headers.has('host')&&request.headers.get('host')!==base.host)return null;
     const mode=request.headers.get('sec-fetch-mode'),destination=request.headers.get('sec-fetch-dest');
     if((mode!==null&&mode!=='navigate')||(destination!==null&&destination!=='document'))return null;
     const fields=Array.from(url.searchParams.keys());
-    if(fields.length!==2||fields.filter(key=>key==='flow').length!==1||fields.filter(key=>key==='code').length!==1)return null;
-    const state=url.searchParams.get('flow')!,code=url.searchParams.get('code')!;
-    if(!opaque.test(state)||!/^[-._~A-Za-z0-9]{1,2048}$/.test(code))return null;
+    if(new Set(fields).size!==fields.length)return null;
+    const state=url.searchParams.get('flow');if(!state||!opaque.test(state))return null;
+    const failed=url.searchParams.has('error');
+    let code:string|null=null;
+    if(failed){
+     if(fields.length<2||fields.length>4||fields.some(key=>!['flow','error','error_code','error_description'].includes(key)))return null;
+     const error=url.searchParams.get('error')!;
+     if(!/^[-_A-Za-z0-9]{1,128}$/.test(error)||(url.searchParams.get('error_code')?.length??0)>128||(url.searchParams.get('error_description')?.length??0)>2048)return null;
+    }else{
+     if(fields.length!==2||!fields.includes('code'))return null;
+     code=url.searchParams.get('code');if(!code||!/^[-._~A-Za-z0-9]{1,2048}$/.test(code))return null;
+    }
     const raw=request.headers.get('cookie');if(!raw||raw.length>18000)return null;
     let binding:string|undefined;
     for(const part of raw.split(';')){
@@ -47,7 +56,8 @@ export function createAccountCallbacks(origin:string){
     }
     if(!binding)return null;
     const transaction=consume(state,binding,purpose);
-    return transaction?Object.freeze({...transaction,code}):null;
+    if(!transaction)return null;
+    return failed?Object.freeze({status:'canceled' as const,purpose:transaction.purpose,returnPath:'/account'}):Object.freeze({...transaction,status:'exchangeRequired' as const,code:code!});
    }catch{return null;}
   },
   clear(){return '__Host-stylist_flow=; Path=/; Secure; HttpOnly; SameSite=Lax; Max-Age=0';},

@@ -792,3 +792,6 @@ I added clearly labeled simulated account screens so I could review sign-in, reg
 ### Checking the complete account boundary and keyboard flow
 
 I joined the prepared account security pieces and tested a generated signed token through cookie creation and request authorization. Revoking the simulated session denied both paths. I also checked small-screen wrapping and keyboard focus. I found that canceled requests could accumulate if a provider ignored cancellation, so I capped underlying work and tested recovery after it settled. I kept real provider, phone and screen-reader acceptance open.
+
+
+I added a generic canceled-account result for provider failures and tested that it consumes the transaction only once. I kept provider error descriptions out of the result and rejected callbacks that mixed success and failure fields. I also wrote a requirement-level account audit so the remaining real-provider, recovery and session lifecycle work stays visible.
