@@ -12,6 +12,7 @@ export interface RecoveryPort {
 }
 export type RecoveryGrant=Readonly<{
  status:'resetRequired';
+ expiresAt:number;
  /** Server-only, never serialize this result. The future browser binding must be separate from account access. */
  reset(password:unknown,signal:AbortSignal):Promise<Readonly<{status:'resetComplete'|'unconfirmed'}>>;
  discard():Promise<boolean>;
@@ -53,7 +54,7 @@ export function createAccountRecovery(security:ReturnType<typeof createAccountSe
      if(signal.aborted||typeof value.resetPassword!=='function'||!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(value.ownerId)||!Number.isSafeInteger(value.expiresAt)||value.expiresAt<=Date.now())throw Error();
      if(cleanups.has(value)||grants.has(value))throw Error();
      const grant=value,expires=Math.min(grant.expiresAt,Date.now()+300000);let used=false;let resetController:AbortController|undefined;grants.set(grant,expires);
-     return Object.freeze({status:'resetRequired' as const,discard:()=>{used=true;resetController?.abort();return discard(grant);},
+     return Object.freeze({status:'resetRequired' as const,expiresAt:expires,discard:()=>{used=true;resetController?.abort();return discard(grant);},
       async reset(password:unknown,signal:AbortSignal){
        if(used||held||signal.aborted||typeof password!=='string'||password.length<1||password.length>4096)return {status:'unconfirmed' as const};
        if(Date.now()>=expires){used=true;await discard(grant);return {status:'unconfirmed' as const};}

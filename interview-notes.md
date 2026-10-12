@@ -825,3 +825,8 @@ I added a simulated reset step that explains it does not sign the customer in. M
 ## Fixing cancellation during password recovery
 
 I found that discarding reset permission did not abort a password change already in progress. I linked those lifecycles and added tests proving that late success cannot replace an unconfirmed outcome or reuse discarded permission. I kept the limitation explicit: cancellation cannot roll back a password a provider may already have changed. All 302 local foundation checks pass, with type checking and build; actual provider cleanup and reconciliation remain unverified.
+
+
+## Tying recovery permission to a separate browser cookie
+
+I prepared a separate secure reset cookie so account access cannot accidentally authorize password recovery. I made delivery one-use before the asynchronous password change, tested concurrent replay and limited retained permissions. I kept raw provider errors out of results and made cleanup failure explicit. All 309 foundation tests pass, with type checking and build. This is disconnected local preparation; actual browser delivery, provider proof and restart reconciliation remain acceptance work.

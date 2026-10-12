@@ -20,7 +20,7 @@ describe('scoped disconnected recovery',()=>{
  it('permits one password reset but produces no normal account access',async()=>{
   const f=await fixture(),value=lease(),exchange=vi.fn(async()=>value),service=createAccountRecovery(f.security,{exchange});
   const a=f.begin('recovery'),result=await service.complete(a.request,signal());expect(result.status).toBe('resetRequired');if(result.status!=='resetRequired')throw Error();
-  expect(Object.keys(result).sort()).toEqual(['discard','reset','status']);expect(await result.reset('new-made-up-password',signal())).toEqual({status:'resetComplete'});
+  expect(Object.keys(result).sort()).toEqual(['discard','expiresAt','reset','status']);expect(await result.reset('new-made-up-password',signal())).toEqual({status:'resetComplete'});
   expect(await result.reset('another',signal())).toEqual({status:'unconfirmed'});expect(value.resetPassword).toHaveBeenCalledTimes(1);expect(value.discard).toHaveBeenCalledTimes(1);
   expect(await service.complete(a.request,signal())).toEqual({status:'unavailable'});
  });
