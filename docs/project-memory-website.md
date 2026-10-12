@@ -92,3 +92,6 @@ Private Memory account-request source 26312ecfdf8f701dfab7ecd958d248ea21ad1028 d
 
 
 Private progress refresh: source 64c11ab097cfc66146dd6e7f8533bea9a1c11d47, deployment appgdep_6acc4976b8308191b73f38788c6c4379, verified succeeded. Imported plan reflects 347 foundation tests and Sabine's accepted eight-step sample review. All 16 site checks pass. Owner-only access and MCP preserved. Customer authentication remains disabled.
+
+
+Verified private publication: source 7bc7d55b602c23ca17e6791d1352140b3216fd95, deployment appgdep_6acc4d8337588191960f5476c57ef265, status succeeded, MCP available. All 16 site checks pass. Imported plan reflects 368 foundation tests through bdd242a and pending newer reset review. Owner-only sharing remains.

@@ -903,3 +903,6 @@ I composed the prepared password verifier and generated signed identity with an 
 
 
 I added an explicit server-state ownership step before account access can be returned. I tested partial storage failure, a late write after cancellation and a session revoked during the handoff. Cleanup waits for a late write to finish, then removes its simulated state. All 368 foundation tests, type checking and build pass. This prepares the contract; durable refresh storage and real provider acceptance remain open.
+
+
+I verified the late-adoption cleanup through an actual local HTTP disconnect, alongside the prepared password and signed-identity owners. The late simulated state is removed once after storage settles. All 369 foundation tests, type checking and build pass. I refreshed my private Memory website through the preceding 368-test checkpoint, retaining the explicit live-provider and acceptance limitations.

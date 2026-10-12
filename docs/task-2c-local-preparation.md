@@ -341,3 +341,12 @@ False, throwing, revoked or canceled adoption refuses access and discards the se
 All 368 foundation tests across 40 files, type checking and build pass. Four new generated-token/simulated-storage scenarios cover successful ownership before ready and failed-delivery cleanup, partial failed adoption, late adoption after cancellation and authoritative revocation during adoption. No refresh credential, provider account, hosted change or paid call is used. The storage Map holds fixture strings only and is not production persistence.
 
 Exact next action: consolidate private Memory publication with this checkpoint, then test explicit adoption through the actual local HTTP composition and prepare durable ownership/failure reconciliation locally. Sabine's newer reset screen review is pending. Task 2c remains incomplete.
+
+
+## HTTP adoption cancellation and Memory refresh, 11 October 2026
+
+Composed explicit session adoption with generated signed identity, the actual password owner/HTTP factory and real loopback Node delivery. A real HTTP client disconnect during simulated adoption aborts the request without prematurely running cleanup. After non-cooperative storage settles and writes its fixture state, the shared owner discards once and removes that state. The adapter is simulated and no real refresh material is used. This adds transport-composition evidence to the previous direct adoption tests.
+
+All 369 foundation tests across 40 files, type checking and build pass. Private Memory source 7bc7d55b602c23ca17e6791d1352140b3216fd95 deployed successfully as appgdep_6acc4d8337588191960f5476c57ef265. All 16 website checks pass; owner-only access and MCP are preserved. That publication includes the preceding 368-test checkpoint, current account limitations and pending reset review. The additional HTTP adoption test will appear in the next consolidated refresh.
+
+Exact next action: prepare durable server refresh-state ownership and reconciliation locally, including generation fencing, partial adoption and restart evidence; continue to keep real provider/hosted activation gated. Sabine's seven-step reset review remains pending. Task 2c and phase acceptance remain incomplete.

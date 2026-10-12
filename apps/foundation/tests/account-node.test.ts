@@ -41,9 +41,7 @@ it('bounds stalled response delivery and discards its session once',async()=>{
 });
 
 it('composes actual password verification and cookie delivery over loopback HTTP',async()=>{
- const pair=await generateKeyPair('ES256'),owner='11111111-1111-4111-8111-111111111111',session='22222222-2222-4222-8222-222222222222',project='https://example.supabase.co';
- const token=await new SignJWT({session_id:session,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
- const security=createAccountSecurity({appOrigin:origin,projectUrl:project,fetch:async()=>new Response(JSON.stringify({keys:[{...await exportJWK(pair.publicKey),kid:'test'}]})),rpc:{call:async()=>true}});
+ const {security,token,owner,session}=await identityFixture();
  const discard=vi.fn(async()=>true),http=createPasswordHttp(origin,createPasswordAccounts(security,origin,{password:async()=>({accessToken:token,discard})}));
  const h=await harness(http.handle,vi.fn(http.discardResponse));
  try{
@@ -64,4 +62,25 @@ it('retains admission for timed-out handlers until they actually settle',async()
   releases.forEach(resolve=>resolve(accountJsonResponse(200,'signedIn')));
   await vi.waitFor(()=>expect(cleanup).toHaveBeenCalledTimes(4));
  }finally{releases.forEach(resolve=>resolve(accountJsonResponse(400,'unavailable')));await h.close();}
+});
+
+async function identityFixture(){
+ const pair=await generateKeyPair('ES256'),owner='11111111-1111-4111-8111-111111111111',session='22222222-2222-4222-8222-222222222222',project='https://example.supabase.co';
+ const token=await new SignJWT({session_id:session,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
+ const security=createAccountSecurity({appOrigin:origin,projectUrl:project,fetch:async()=>new Response(JSON.stringify({keys:[{...await exportJWK(pair.publicKey),kid:'test'}]})),rpc:{call:async()=>true}});
+ return {security,token,owner,session};
+}
+
+it('cleans late adopted state after a real HTTP disconnect during sign-in',async()=>{
+ const {security,token,session}=await identityFixture(),storage=new Map<string,string>();
+ let release!:(value:boolean)=>void,started!:()=>void;const began=new Promise<void>(resolve=>started=resolve);
+ const discard=vi.fn(async()=>{storage.clear();return true;}),adopt=vi.fn(async()=>{started();await new Promise<boolean>(resolve=>release=resolve);storage.set(session,'late-fixture');return true;});
+ const http=createPasswordHttp(origin,createPasswordAccounts(security,origin,{password:async()=>({accessToken:token,adopt,discard})}));
+ const h=await harness(http.handle,vi.fn(http.discardResponse));
+ try{
+  const req=httpRequest({host:'127.0.0.1',port:h.port,path,method:'POST',headers:{host:'stylist.example',origin,'content-type':'application/json'}});req.on('error',()=>{});
+  req.end(JSON.stringify({method:'signIn',email:'sample@example.test',password:'made-up'}));await began;req.destroy();
+  await new Promise(resolve=>setTimeout(resolve,20));expect(discard).not.toHaveBeenCalled();release(true);
+  await vi.waitFor(()=>expect(discard).toHaveBeenCalledTimes(1));expect(storage.size).toBe(0);expect(adopt).toHaveBeenCalledTimes(1);
+ }finally{release?.(false);await h.close();}
 });
