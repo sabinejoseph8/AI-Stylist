@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 328 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Task 2c local account preparation is active under Sabine's approved exception. All 332 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1174,7 +1174,7 @@ Sabine completed every step of the eight-step account preview and reported that 
 
 Extracted a common server-only session lifecycle and added disconnected email/password and registration ports. Password and OAuth callback methods share a four-operation admission limit and the same uncertainty hold after ambiguous creation or failed cleanup. Registration confirmation returns no account cookie. Email whitespace is trimmed; passwords are passed unchanged and never stored by these interfaces. Exact input keys and string methods are required, preventing object coercion into a supported action. HTTP origin/CSRF, rate/body limits, real provider policy and refresh adoption remain requirements before wiring any route.
 
-All 328 foundation tests across 35 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
+All 332 foundation tests across 36 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
 
 
 ## Local sign-out coordinator, 11 October 2026
@@ -1273,3 +1273,12 @@ Added a disconnected /api/account/password handler factory composed with the act
 All 328 foundation tests across 35 files, type checking and build pass. Four added composed checks cover signed cookie/status separation, confirmation, invalid input and canceled late-session cleanup. All providers are simulated and signing material is generated test data. No actual sign-in, account, email, browser cookie, hosted setting or paid call was created. Production rate controls, real provider policy and manual acceptance remain open.
 
 Exact next action: prepare the disconnected recovery-request acknowledgment contract and simulated tests, including account-enumeration-safe replies and cancellation, then refresh private Memory. Task 2c remains incomplete.
+
+
+## Generic recovery request preparation, 11 October 2026
+
+Prepared disconnected POST /api/account/recover handling on the shared bounded same-origin JSON boundary. It accepts only a valid email field, trims whitespace and chooses the recovery callback internally. The trusted adapter receives that address, fixed-purpose callback and S256 challenge; no caller-selected redirect or account cookie is accepted. The same 202 recoveryRequested body and flow-cookie shape are returned for a simulated absent account and provider error. This is a generic acknowledgment, not a promise that email was sent. Cancellation abandons the bound transaction and never retries delivery. The shared response deadline and underlying admission limits remain in effect; a non-cooperative provider may still send a late email, but its canceled callback is no longer usable.
+
+All 332 foundation tests across 36 files, type checking and build pass. Four added checks cover internal callback/challenge handoff, generic response shape, malformed input/redirect rejection and cancellation verified with the actual original browser binding. No actual email adapter, account, provider call or hosted route is installed. These checks do not prove constant-time behavior or eliminate provider timing side channels; production anti-enumeration, rate/abuse controls and actual delivery policies need acceptance. Same-browser/cross-device recovery remains a customer UX review gate.
+
+Exact next action: refresh private Memory with the password HTTP and recovery-request checkpoint, then audit pending local account transport and refresh/session lifecycle requirements. Real provider activation, email sender setup, credentials and hosted changes remain outside this local preparation. Task 2c remains incomplete.

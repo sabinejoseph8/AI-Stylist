@@ -855,3 +855,8 @@ I verified the HTTP handler with the actual prepared recovery and browser-delive
 ## Sharing account request protections
 
 I reused the tested bounded request handler for password sign-in instead of maintaining separate request protections. I verified that signed-in status contains no token or identity details, cookies stay in headers and failed or canceled delivery has an explicit session cleanup path. Registration confirmation cannot sign someone in. All 328 foundation tests pass, with type checking and build. Real provider transport, refresh-state adoption and hosted acceptance remain open.
+
+
+## Keeping recovery acknowledgments private
+
+I prepared recovery requests to return the same visible acknowledgment for an absent account and a provider failure. I fixed the callback destination internally, rejected extra fields and invalidated the bound callback when canceled. I kept the limitation clear: response-shape tests do not prove constant-time behavior or actual email delivery. All 332 foundation tests pass, with type checking and build. No real email was sent.
