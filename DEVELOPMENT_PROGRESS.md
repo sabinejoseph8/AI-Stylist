@@ -1,16 +1,22 @@
 # AI Stylist development progress
 
-## Current publication, 12 October 2026
+## Current private Memory publication
+
+Private Memory updated successfully on 11 October 2026 (America/Cayman) with the 443-test checkpoint, password HTTP/database composition, durable sign-out evidence and remaining activation gates. All 16 website checks and artifact validation passed. Owner-only access and MCP preserved. Source 2fe7abc3b4cc4d29612b808dbf200edfb3e1468b; deployment appgdep_6acc6333ed80819188082b135948adb5; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_4e0b0a1438f4819189007362056de737. Task 2c and phase gates remain open.
+
+Exact next action: prepare OAuth initiation/exchange transport contracts locally with synthetic responses and existing one-use PKCE transactions. No real provider setup, credentials or paid calls are authorized by this update.
+
+## Previous publication checkpoint (historical)
 
 Private Memory publication verified: 432 foundation tests, initial password/database composition and lost-save restart fix. All 16 website checks and artifact validation passed. Owner-only access and MCP preserved. Source 66fbc8d57a29d5d98f54539869f19632c92e8169; deployment appgdep_6acc6073b8e88191bf3a1c658e13f8bd; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_88f9fe0a7ebc81918bfb2020f781cd89. Task 2c and hosted/provider acceptance remain open. Exact next action: prepare concrete password HTTP operations with simulated fetch and confirmation normalization; no live route or credentials.
 
-## Latest private Memory publication
+## Earlier private Memory publication (historical)
 
 Private Memory now includes the 421-test checkpoint, accepted account/reset reviews and primary Auth presence/database reconciliation evidence. All 16 site checks and artifact validation pass. Owner-only access was verified and preserved; deployment succeeded with MCP enabled. Source dac55da7fc932bb0e28956ba5f76dff820dfe2eb; deployment appgdep_6acc5cf643ec8191846df5bdf1bcdeab; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_3d341d3d34908191b456945c1b61fca8. No account route, hosted migration or paid provider call was activated. Task 2c and phase gates remain open.
 
-Password bridge and initial encrypted ownership now pass isolated PostgreSQL composition. Exact next action: prepare concrete password HTTP operations with simulated fetch after publishing this checkpoint.
+Current next action: prepare OAuth initiation/exchange transport contracts locally with synthetic responses after this website update.
 
-Updated: 12 October 2026
+Updated: 11 October 2026 (America/Cayman)
 
 ## Authority and sources
 
@@ -20,7 +26,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 432 foundation tests across 54 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Recovery now has a separate expiring, one-use reset capability and simulated confirmation UI; discarding permission aborts an in-flight reset and disposed permission cannot be reused. Password and reset HTTP factories share bounded same-origin JSON protections; recovery-request acknowledgment keeps visible replies generic. These factories are not registered as routes. Generated tokens and simulated adapters provide local evidence only. Sabine completed both the eight-step account preview and seven-step reset review; all steps worked and were readable. The encrypted refresh store, rotation coordinator and verified-session lifecycle pass isolated PostgreSQL composition with synthetic provider results. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
+Task 2c local account preparation is active. All 443 foundation tests across 56 files, type checking and build pass. Password HTTP operations, verified initial adoption, encrypted refresh ownership, scoped sign-out and independent primary-session absence checks are prepared and composed against isolated PostgreSQL with generated identities and synthetic provider fetch. A successful logout reply alone stays unconfirmed; actual synthetic session deletion removes encrypted ownership and denies the old signed token. Lost-save cleanup quarantine survives database restart. Both local account and reset-screen reviews are accepted. OAuth transport, provider-verified recovery, real configuration, HTTPS/browser/device acceptance and Phase 1/hosted gates remain open. No real account routes, emails, credentials or paid calls were activated.
 
 ## Completed evidence
 

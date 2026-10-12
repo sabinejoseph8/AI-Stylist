@@ -1,7 +1,7 @@
 # AI Stylist: Phased development plan and progress
 
 Status: Draft plan v0.8 for Sabine's review  
-Updated: 12 October 2026
+Updated: 11 October 2026 (America/Cayman)
 
 Product: [Approved product specification v1.0](../Project%20Memory/product-spec.md)  
 Design: [Approved design specification v1.0](../Project%20Memory/design.md)  
@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 432 foundation tests across 54 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Recovery now has a separate expiring, one-use reset capability and simulated confirmation UI; discarding permission aborts an in-flight reset and disposed permission cannot be reused. Password and reset HTTP factories share bounded same-origin JSON protections; recovery-request acknowledgment keeps visible replies generic. These factories are not registered as routes. Generated tokens and simulated adapters provide local evidence only. Sabine completed both the eight-step account preview and seven-step reset review; all steps worked and were readable. The encrypted refresh store, rotation coordinator and verified-session lifecycle pass isolated PostgreSQL composition with synthetic provider results. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
+Task 2c local account preparation is active. All 443 foundation tests across 56 files, type checking and build pass. Password HTTP operations, verified initial adoption, encrypted refresh ownership, scoped sign-out and independent primary-session absence checks are prepared and composed against isolated PostgreSQL with generated identities and synthetic provider fetch. A successful logout reply alone stays unconfirmed; actual synthetic session deletion removes encrypted ownership and denies the old signed token. Lost-save cleanup quarantine survives database restart. Both local account and reset-screen reviews are accepted. OAuth transport, provider-verified recovery, real configuration, HTTPS/browser/device acceptance and Phase 1/hosted gates remain open. No real account routes, emails, credentials or paid calls were activated.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
