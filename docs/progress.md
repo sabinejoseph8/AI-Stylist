@@ -2677,3 +2677,12 @@ Added RendererTeardown, a disabled integration helper for the recovery adapter. 
 Five focused synthetic tests cover ordering, repeated disposal, missing destruction proof, destruction failure, cancellation and cleanup after local errors. This is local disposal evidence only, not provider room termination, final usage or an exact heard offset. It is not wired into the live page and does not authorize replacement-room output. Task 1b remains open; all paid attempts remain exhausted. Next: integrate this helper into a disabled recovery adapter with separately verified provider closure, confirmed-only restoration and replacement configuration, then seek the required financial approval before any live trial.
 
 Validation: final prototype suite 1,281 tests across 83 files passes; type checking and build pass. Log: /private/tmp/ai-stylist-renderer-teardown-final.log. No provider call or deployment.
+
+
+## Renderer disposal connected to recovery preparation, 12 October 2026
+
+Added withRendererTeardown to supply the recovery coordinator's local-renderer verifier from RendererTeardown rather than a caller-provided boolean. Disposal begins synchronously before remote model closure, so old media is detached while closure is pending. Opening replacement context still requires both separate remote closure and verified local client destruction, followed by acknowledged fresh configuration and confirmed-only restoration. The helper creates no room and remains outside the live phone page. Three combined synthetic tests prove immediate detachment, waiting for destruction, refusal without destruction evidence and cleanup despite remote closure refusal. These do not prove live Daily playback or provider closure.
+
+Next action: publish the pending Memory site updates, then inspect the actual provider teardown and restoration paths for a disabled end-to-end adapter. Keep interrupt-and-end active and preserve the exhausted live-test allowance; do not start a replacement room without financial authorization. Task 1b remains incomplete.
+
+Final validation: 1,284 prototype tests across 84 files, type checking and build pass. Log: /private/tmp/ai-stylist-renderer-recovery-final.log.

@@ -11,9 +11,10 @@ export class RendererTeardown {
   constructor(client: RendererClient, elements: readonly RendererElement[], invalidateAttachments: () => void) {
     this.client = client; this.elements = [...elements]; this.invalidateAttachments = invalidateAttachments;
   }
+  begin(): void { if (!this.result) this.result = this.run(); }
   dispose(signal: AbortSignal): Promise<boolean> {
     if (signal.aborted) return Promise.resolve(false);
-    if (!this.result) this.result = this.run();
+    this.begin();
     return new Promise(resolve => {
       const abort = () => resolve(false);
       signal.addEventListener('abort', abort, { once: true });

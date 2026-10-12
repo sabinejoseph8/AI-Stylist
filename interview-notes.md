@@ -1341,3 +1341,6 @@ I found that a local audio sender could reuse an earlier inference identity afte
 ## Preparing safe playback replacement
 
 I separated local playback cleanup from provider shutdown. I added a disposal helper that invalidates old media callbacks, detaches playback and checks that the video client is destroyed. Failure keeps recovery blocked, even though remaining cleanup is still attempted. This helps prevent an old reply from returning, but I have not claimed that it proves provider termination or completed a real replacement-room test. The live prototype still ends on interruption.
+
+
+I connected the recovery coordinator to the local disposal check. Cleanup now starts before waiting for remote closure, and a new context cannot open until both checks succeed. I tested this coordination with simulated clients, while keeping the live page on interrupt-and-end until real provider and phone acceptance is authorized.
