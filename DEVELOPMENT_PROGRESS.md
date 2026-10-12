@@ -2,7 +2,7 @@
 
 ## Current implementation and publication handoff
 
-The approved recovery amendment is installed and verified, preserving all nine previous records without reserving rooms. Local recovery implementation passes 1,295 tests and a synthetic mobile WebKit rehearsal. Protected Render recovery deployment succeeded; user-started iPhone acceptance is next. The historical checkpoints below do not override this current status.
+The repeat recovery test ended after a page refresh. Its initial room is closed and provider-ended; the unused replacement has no room. Recovery acceptance remains unproven. The approved experiment allocation is $33, with no further repeat authorized. A local improvement now adds a best-effort browser leave warning and a sticky reminder with expandable test steps. All 1,299 prototype tests, type checking, build and the synthetic mobile WebKit recovery rehearsal pass. This change is not yet deployed. Exact next action: publish and deploy the page improvement, synchronize the private Memory website, then obtain a new financial authorization before any further paid test.
 
 ## Earlier account implementation checkpoint
 
