@@ -881,3 +881,6 @@ All 257 foundation tests across 24 files, type checking and build pass. New chec
 References: [Supabase PKCE flow](https://supabase.com/docs/guides/auth/sessions/pkce-flow), [RFC 7636](https://www.rfc-editor.org/rfc/rfc7636.html). The prepared flow uses an application-owned browser transaction alongside provider code exchange; it is not a replacement for provider OAuth state validation.
 
 Exact next action: publish/copy this callback checkpoint and refresh private Memory from current source. Then add clearly simulated local account screens using approved design tokens and the existing controller, including email/password, registration, recovery, Google/Apple and accessible status/error/cancel states. No actual providers or hosted routes.
+
+
+Callback checkpoint 582a4ea is pushed and copied. Private Memory source 837d55ac611e5cd35ced47020b515a93a419eb3a deployed successfully as appgdep_6acc39620ec881918125b6bb8e6fc79f. All 16 website checks pass; owner-only access and MCP remain. This snapshot includes request identity, cookie issuance and callback preparation with 257 foundation tests.

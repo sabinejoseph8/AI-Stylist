@@ -68,3 +68,6 @@ Identity checkpoint 79b060d is published and copied. Private Memory source 5ee28
 
 
 Signing-key checkpoint b4f79a8 is pushed and copied. Private Memory source 6702373344f96025752389a1c412226c25f3096a deployed successfully as appgdep_6acc376ab93c8191b10c7a26cdb0cefb. All 16 website checks pass; owner-only access and MCP are retained. This refresh includes both the SQL identity and signing-key checkpoints. No customer app deployment occurred.
+
+
+Callback checkpoint 582a4ea is pushed and copied. Private Memory source 837d55ac611e5cd35ced47020b515a93a419eb3a deployed successfully as appgdep_6acc39620ec881918125b6bb8e6fc79f. All 16 website checks pass; owner-only access and MCP remain. This snapshot includes request identity, cookie issuance and callback preparation with 257 foundation tests.
