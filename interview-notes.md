@@ -888,3 +888,6 @@ I also added a concurrent-session ownership check: two sign-in attempts cannot a
 ### Preparing session refresh safely
 
 I prepared a local server-only refresh flow so a customer can eventually remain signed in without exposing refresh credentials to browser code. I required verified current access and checked that the refreshed signed identity belongs to the same customer. My tests also cover a late provider result after cancellation. The foundation passes 352 tests, type checking and build. Durable storage, concurrent rotation and real-provider acceptance are still pending, so I kept this disconnected.
+
+
+I strengthened refresh handling to preserve the exact signed session and reject overlapping rotations for it. I added a local HTTP contract that accepts no refresh credentials from browser JSON and keeps cookies in headers. My tests confirm that failed delivery can discard the newly returned session and that cancellation does not prematurely release a running rotation. All 355 tests, type checking and build pass. These process-local controls still need durable ownership and real-provider acceptance before activation.

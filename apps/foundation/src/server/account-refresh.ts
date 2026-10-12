@@ -10,6 +10,7 @@ export function createAccountRefresh(security:ReturnType<typeof createAccountSec
  if(base.origin!==origin||base.protocol!=='https:'||typeof port?.refresh!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Account refresh unavailable');
  const sessions=shared??createAccountSessions(security,origin,deadlineMs);
  let pending=0;
+ const rotating=new Set<string>();
  return Object.freeze({
   cleanupHeld:sessions.cleanupHeld,
   async submit(request:Request,external:AbortSignal):Promise<AccountSessionResult>{
@@ -24,8 +25,13 @@ export function createAccountRefresh(security:ReturnType<typeof createAccountSec
    const work=(async():Promise<AccountSessionResult>=>{
     try{
      const identity=await security.authorize(request,controller.signal);
-     if(!identity||controller.signal.aborted)return unavailable;
-     const result=await sessions.run(scope=>port.refresh(request,identity.ownerId,scope),controller.signal,{returnPath:'/',expectedOwner:identity.ownerId});
+     if(!identity||controller.signal.aborted||typeof identity.sessionId!=='string'||!/^[a-f0-9-]{36}$/.test(identity.sessionId))return unavailable;
+     const key=identity.ownerId+':'+identity.sessionId;
+     if(rotating.has(key))return {status:'busy'};
+     rotating.add(key);let started=false;
+     let result:AccountSessionResult;
+     try{result=await sessions.run(async scope=>{started=true;try{return await port.refresh(request,identity.ownerId,scope);}finally{rotating.delete(key);}},controller.signal,{returnPath:'/',expectedOwner:identity.ownerId,expectedSessionId:identity.sessionId});}
+     finally{if(!started)rotating.delete(key);}
      if(controller.signal.aborted&&result.status==='ready'){await result.discard();return unavailable;}
      return result;
     }catch{return unavailable;}finally{pending--;}

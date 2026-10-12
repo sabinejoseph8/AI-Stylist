@@ -12,8 +12,8 @@ async function token(changes:Record<string,unknown>={},kid='fixture'){
 }
 it('verifies an actual asymmetric signature and binds authoritative session lookup',async()=>{
  const active=vi.fn(async()=>true);const verified=await createIdentityVerifier(url,keys,{active}).verify(await token(),signal());
- expect(verified?.ownerId).toBe(owner);expect(await verified?.isCurrent(signal())).toBe(true);
- expect(active).toHaveBeenCalledWith(owner,session,expect.any(AbortSignal));expect(Object.keys(verified!)).toEqual(['ownerId','isCurrent']);
+ expect(verified?.ownerId).toBe(owner);expect(verified?.sessionId).toBe(session);expect(await verified?.isCurrent(signal())).toBe(true);
+ expect(active).toHaveBeenCalledWith(owner,session,expect.any(AbortSignal));expect(Object.keys(verified!)).toEqual(['ownerId','sessionId','isCurrent']);
 });
 it('denies wrong issuer/audience/role, malformed IDs, anonymous and expired claims',async()=>{
  const active=vi.fn(async()=>true);const verify=createIdentityVerifier(url,keys,{active});

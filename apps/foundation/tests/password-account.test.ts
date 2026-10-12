@@ -1,5 +1,6 @@
 import {describe,it,expect,vi,afterEach} from 'vitest';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
+import {createRefreshHttp} from '../src/server/refresh-http.ts';
 import {createAccountRefresh} from '../src/server/account-refresh.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {createAccountAccess} from '../src/server/account-access.ts';
@@ -12,7 +13,7 @@ async function fixture(){
  const token=await new SignJWT({session_id:sessionId,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(owner).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey);
  const security=createAccountSecurity({appOrigin:origin,projectUrl:project,fetch:async()=>new Response(JSON.stringify({keys:[{...await exportJWK(pair.publicKey),kid:'test'}]})),rpc:{call:async()=>true}});
  const begin=(purpose:'google'|'apple'|'recovery'='google')=>{const flow=security.callbacks.begin(purpose,'/wardrobe');return {flow,request:new Request(flow.callbackUrl+'&code=fixture-code',{headers:{cookie:flow.cookie.split(';')[0]!}})};};
- return {security,token,begin,tokenFor:async(subject:string)=>new SignJWT({session_id:sessionId,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(subject).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey)};
+ return {security,token,begin,tokenFor:async(subject:string,session=sessionId)=>new SignJWT({session_id:session,role:'authenticated',is_anonymous:false}).setProtectedHeader({alg:'ES256',kid:'test'}).setSubject(subject).setIssuer(project+'/auth/v1').setAudience('authenticated').setIssuedAt().setExpirationTime('5m').sign(pair.privateKey)};
 }
 
 const input={method:'signIn',email:' sample@example.test ',password:'made-up'};
@@ -108,4 +109,35 @@ describe('disconnected early account refresh',()=>{
   }
   expect(refresh).not.toHaveBeenCalled();
  });
+});
+
+
+describe('local refresh rotation and HTTP composition',()=>{
+ it('blocks overlapping rotation for the same verified session until the provider settles',async()=>{
+  const f=await fixture();let release!:(value:AccountSessionReply)=>void,started!:()=>void;
+  const began=new Promise<void>(resolve=>started=resolve),refresh=vi.fn(async()=>{started();return new Promise<AccountSessionReply>(resolve=>release=resolve);});
+  const service=createAccountRefresh(f.security,origin,{refresh});
+  const request=()=>new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,cookie:'__Host-stylist_access='+f.token}});
+  const controller=new AbortController(),first=service.submit(request(),controller.signal);await began;
+  expect(await service.submit(request(),signal())).toEqual({status:'busy'});
+  controller.abort();expect(await first).toEqual({status:'unavailable'});
+  expect(await service.submit(request(),signal())).toEqual({status:'busy'});expect(refresh).toHaveBeenCalledTimes(1);
+  release({status:'notCreated'});
+ });
+ it('delivers only status JSON and header cookies, with explicit failed-delivery cleanup',async()=>{
+  const f=await fixture(),discard=vi.fn(async()=>true),refresh=vi.fn(async()=>({accessToken:f.token,discard}));
+  const http=createRefreshHttp(origin,createAccountRefresh(f.security,origin,{refresh}));
+  const request=(body:unknown)=>new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,cookie:'__Host-stylist_access='+f.token,'content-type':'application/json'},body:JSON.stringify(body)});
+  const bad=await http.handle(request({refreshToken:'not-accepted'}),signal());expect(bad.status).toBe(400);expect(refresh).not.toHaveBeenCalled();
+  const response=await http.handle(request({}),signal());expect(response.status).toBe(200);expect(await response.json()).toEqual({status:'signedIn'});
+  expect(response.headers.get('set-cookie')).toContain('HttpOnly');expect(response.headers.get('cache-control')).toBe('no-store');
+  await http.discardResponse(response);await http.discardResponse(response);expect(discard).toHaveBeenCalledTimes(1);
+ });
+});
+
+it('refuses a refresh token response for another session of the same customer',async()=>{
+ const f=await fixture(),discard=vi.fn(async()=>true),other=await f.tokenFor(owner,'44444444-4444-4444-8444-444444444444');
+ const service=createAccountRefresh(f.security,origin,{refresh:async()=>({accessToken:other,discard})});
+ const result=await service.submit(new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,cookie:'__Host-stylist_access='+f.token}}),signal());
+ expect(result).toEqual({status:'unavailable'});expect(discard).toHaveBeenCalledTimes(1);
 });

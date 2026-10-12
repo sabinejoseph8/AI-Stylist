@@ -281,3 +281,14 @@ The shared session verifier now accepts an internal expectedOwner constraint. A 
 All 352 foundation tests across 39 files, type checking and build pass. Four added generated-token/simulated-adapter checks cover verified refresh, missing/foreign access rejection, wrong-owner cleanup and canceled late cleanup. No real provider, email, hosted setting or paid activity was used.
 
 Exact next action: prepare session-specific rotation ownership and concurrent refresh tests, then compose a disconnected refresh HTTP boundary. Durable refresh persistence, expired-session behavior, real-provider rotation/revocation and customer activation remain open; Task 2c is incomplete. Private Memory remains at the preceding 347-test checkpoint pending the next consolidated refresh.
+
+
+## Session-specific refresh and HTTP delivery, 11 October 2026
+
+The cryptographic identity gate now retains the verified session ID as server-only context. Refresh requires that ID and prevents overlapping adapter rotation for the same verified owner/session in this coordinator. Cancellation does not release the rotation lock while an adapter ignores cancellation; the lock is released when that provider operation actually settles. The shared verifier requires both the same signed customer and exact signed session in the returned access token. A different session for the same customer is discarded. Existing media callers need only owner/current access and remain compatible. Session identity is not added to browser JSON.
+
+Prepared disconnected refresh HTTP delivery on the bounded same-origin JSON boundary. Only an empty object is accepted; refresh tokens, owner IDs and other input fields are refused before provider work. Successful replies contain only signedIn status, with verified cookies in headers and no-store. A server-only discardResponse capability cleans the returned session if refresh-state adoption or response delivery fails. No route is registered. The future caller must use this capability and adopt refresh state atomically.
+
+All 355 foundation tests across 39 files, type checking and build pass. Three added checks prove same-session overlap rejection even after cancellation, full HTTP cookie/status/failed-delivery behavior and refusal of another signed session for the same customer. All provider behavior is simulated. The coordinator's lock is process-local and covers the adapter operation, not durable storage/adoption, other coordinators, processes or server restarts. Actual provider rotation, durable fencing, email/account setup and hosted acceptance remain open.
+
+Exact next action: compose refresh with the shared account lifecycle owner, verify uncertainty holds across account methods and prepare refresh-state adoption ownership with simulated tests. No provider activation, new credentials or spending is authorized. Task 2c remains incomplete. Private Memory remains at the preceding 347-test checkpoint pending the next consolidated refresh.

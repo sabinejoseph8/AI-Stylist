@@ -32,7 +32,7 @@ export function createIdentityVerifier(projectUrl:string,keys:JWTVerifyGetKey,se
     return active===true&&!check.aborted&&Date.now()/1000<expires;
    };
    if(!await current(scope))throw Error();
-   return Object.freeze({ownerId:owner,async isCurrent(check:AbortSignal){try{return await bounded(check,current);}catch{return false;}}});
+   return Object.freeze({ownerId:owner,sessionId:session,async isCurrent(check:AbortSignal){try{return await bounded(check,current);}catch{return false;}}});
   });}catch{return null;}
  }});
 }

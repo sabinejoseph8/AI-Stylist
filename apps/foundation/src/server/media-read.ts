@@ -2,6 +2,8 @@ import {createHash} from 'node:crypto';
 
 export interface VerifiedMediaAccess {
  readonly ownerId:string;
+ /** Verified server-only session identifier when supplied by the cryptographic gate. */
+ readonly sessionId?:string;
  /** Must check the current authenticated session, including sign-out/revocation. */
  isCurrent(signal:AbortSignal):Promise<boolean>;
 }
