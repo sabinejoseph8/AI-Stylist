@@ -1,5 +1,11 @@
 # AI Stylist development progress
 
+## Latest private Memory publication
+
+Private Memory now includes the 421-test checkpoint, accepted account/reset reviews and primary Auth presence/database reconciliation evidence. All 16 site checks and artifact validation pass. Owner-only access was verified and preserved; deployment succeeded with MCP enabled. Source dac55da7fc932bb0e28956ba5f76dff820dfe2eb; deployment appgdep_6acc5cf643ec8191846df5bdf1bcdeab; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_3d341d3d34908191b456945c1b61fca8. No account route, hosted migration or paid provider call was activated. Task 2c and phase gates remain open.
+
+Exact next action: prepare a local encrypted-refresh key rotation rehearsal using fixture keys, including reads during transition and refusal after premature retirement. Document operational ordering without provisioning any production key.
+
 Updated: 11 October 2026
 
 ## Authority and sources

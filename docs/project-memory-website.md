@@ -1,5 +1,7 @@
 # Project memory website
 
+Private Memory now includes the 421-test checkpoint, accepted account/reset reviews and primary Auth presence/database reconciliation evidence. All 16 site checks and artifact validation pass. Owner-only access was verified and preserved; deployment succeeded with MCP enabled. Source dac55da7fc932bb0e28956ba5f76dff820dfe2eb; deployment appgdep_6acc5cf643ec8191846df5bdf1bcdeab; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_3d341d3d34908191b456945c1b61fca8. No account route, hosted migration or paid provider call was activated. Task 2c and phase gates remain open.
+
 Published: 11 October 2026
 
 Latest local preparation: the Tech Spec evidence banner now imports the canonical Plan Summary instead of maintaining a separate count. Sixteen local website checks pass. The snapshot imports application commit `6e32fff`; this latest refresh is not deployed because the execution approval limit prevents publishing.
