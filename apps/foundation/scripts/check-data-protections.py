@@ -292,6 +292,40 @@ try:
  for rid in ids[:7]:
   assert sql(f"set role service_role; select public.stylist_read_media_operation('{rid}','{b}');")==''
  print('Concurrent bounded receipt cleanup preserves recent receipts, live media and every retired ID')
+ sql((Path(__file__).resolve().parents[3]/'supabase/migrations/202610110015_consultation_slot.sql').read_text())
+ sessions=[str(uuid.uuid4()),str(uuid.uuid4())]
+ def claim(owner,session,token=None):
+  token_sql=f"'{token}'" if token else 'null'
+  raw=sql(f"set role service_role; select public.stylist_claim_consultation('{owner}','{session}',{token_sql});")
+  return json.loads(raw) if raw else None
+ def change(owner,lease,action,verified=False):
+  return sql(f"set role service_role; select public.stylist_update_consultation('{owner}','{lease['sessionId']}','{lease['token']}',{lease['fence']},'{action}',{str(verified).lower()});")=='t'
+ with ThreadPoolExecutor(max_workers=2) as pool:
+  leases=list(pool.map(lambda pair:claim(*pair),[(a,sessions[0]),(b,sessions[1])]))
+ assert sum(x is not None for x in leases)==1
+ winner=0 if leases[0] else 1;owner=[a,b][winner];other=[b,a][winner];lease=leases[winner]
+ assert claim(owner,lease['sessionId'],lease['token'])==lease
+ assert claim(other,lease['sessionId'],lease['token']) is None
+ assert not change(other,lease,'provider')
+ assert change(owner,lease,'provider')
+ assert not change(owner,lease,'provider') # Never permit a second provider start.
+ assert change(owner,lease,'heartbeat')
+ assert not change(owner,lease,'end')
+ sql("update stylist_private.consultation_slot set expires_at=now()-interval '1 second';")
+ assert not change(owner,lease,'check') and not change(owner,lease,'heartbeat')
+ assert claim(other,str(uuid.uuid4())) is None # Expired provider work remains held.
+ assert change(owner,lease,'end',True)
+ replacement=claim(other,str(uuid.uuid4()));assert replacement['fence']>lease['fence']
+ assert not change(owner,lease,'end',True)
+ sql("update stylist_private.consultation_slot set expires_at=now()-interval '1 second';")
+ assert claim(other,replacement['sessionId'],replacement['token']) is None
+ fresh=claim(owner,str(uuid.uuid4()));assert fresh['fence']>replacement['fence']
+ assert not change(other,replacement,'provider')
+ sql('set role authenticated; select public.stylist_claim_consultation(null,null);',False)
+ sql('set role anon; select * from stylist_private.consultation_slot;',False)
+ sql('set role service_role; select * from stylist_private.consultation_slot;',False)
+ assert change(owner,fresh,'end')
+ print('Single consultation SQL slot passes concurrent claim, reconnect, fencing, expiry and cleanup-hold scenarios')
  sql(f"delete from auth.users where id='{a}';")
  assert sql(f"select count(*) from stylist_private.retired_media_ids where user_id='{a}';")=='0'
  print('Approved receipt retention passes cutoff, authorization, idempotency, retired-ID protection and account cascade checks')

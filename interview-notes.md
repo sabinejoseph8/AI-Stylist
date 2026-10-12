@@ -742,3 +742,8 @@ I chose to keep detailed photo-deletion receipts for seven days so a lost respon
 
 
 I also checked overlapping cleanup workers. They removed only expired technical receipts, respected each batch limit and left recent records, live photos and retired IDs intact. This helped me separate a verified local database rule from the hosted scheduling and monitoring still needed before launch.
+
+
+## Protecting the one-customer capacity limit
+
+I prepared a database reservation so two customers cannot claim the stylist at the same time. A reconnect keeps the same reservation, and old requests cannot change a newer one. I also separated reservation expiry from provider cleanup: if a remote call may still exist, the slot stays held until closure is verified. Local race checks pass; real account and provider integration remains open.

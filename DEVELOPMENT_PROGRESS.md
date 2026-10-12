@@ -745,3 +745,11 @@ The agreed Phase 2 check P2-07 requires a durable single-consultation lease with
 
 
 Concurrent-maintenance document checkpoint 299a2e2 is published and copied. Private Memory source dbbe8b403cd60d5ebed8d9cf35fcf55a3e08b2f7 deployed successfully as appgdep_6acc2f327e9081918d489f3cd4572952 with MCP retained; 16 site checks pass.
+
+
+## Local single-consultation slot, 11 October 2026
+
+Migration 015 prepares the approved one-consultation capacity limit in a private singleton database row. Real local PostgreSQL checks pass for simultaneous claims with one winner, owner/session/token-bound reconnect, exactly-once provider authorization, heartbeat, expired-provider cleanup holds, verified release, expired unused reservation reclamation and stale-generation fencing. Direct table access and browser function calls are denied. Provider work must be marked before the call; expiry alone never frees possibly active remote work. See docs/consultation-slot-preparation.md. No actual Auth, coordinator or provider route is wired. The existing spending ledger and Phase 1/hosted gates remain unchanged.
+
+
+Exact next action: finish migration-chain Storage regression and publish/copy this checkpoint; refresh the private Memory site. Then prepare a bounded server-only consultation-slot adapter with simulated RPC checks and connect it to the isolated SQL rehearsal. Keep actual Auth/provider/coordinator activation gated.
