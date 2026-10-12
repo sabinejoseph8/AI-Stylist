@@ -16,11 +16,11 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Sign-out | Stored revocation port, HTTP cookie clearing and actual primary absence composition; accepted-only logout stays unconfirmed | Actual provider/session policy and device/concurrent sign-out acceptance |
 | Accessibility | Original eight-step account and seven-step reset reviews accepted | Physical iPhone, screen reader, zoom and complete accessibility acceptance |
 | Identity linking | Owner derives from signed user ID; no app email-based merging | Provider-default audit and business decision on customer linking behavior |
-| Phase exit | 496 foundation tests across 68 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
+| Phase exit | 497 foundation tests across 68 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
 
 All provider operations in these tests are synthetic. Actual isolated PostgreSQL evidence is not hosted Supabase acceptance. No account route, real sign-in, email or password change has been activated.
 
-The dormant account factory now has Request/Response integration against isolated PostgreSQL for password, Google/Apple initiation/callbacks, recovery request/callback/reset, refresh and sign-out. Generated identities are signed and database authority is actual local SQL; all provider responses remain synthetic. Response-discard cleanup, shared admission, reset shutdown and uncertain cleanup have local checks. Guarded factory password delivery now passes actual Node loopback checks with generated signed identity and simulated authority. Complete factory disconnect/shutdown, browser/hosted acceptance and durable deployment abuse protection remain open.
+The dormant account factory now has Request/Response integration against isolated PostgreSQL for password, Google/Apple initiation/callbacks, recovery request/callback/reset, refresh and sign-out. Generated identities are signed and database authority is actual local SQL; all provider responses remain synthetic. Response-discard cleanup, shared admission, reset shutdown and uncertain cleanup have local checks. Guarded factory password delivery now passes actual Node loopback checks with generated signed identity and simulated authority. Guarded password disconnect and factory shutdown now pass actual loopback checks with late simulated adoption cleanup. Complete browser/hosted acceptance, callback delivery across all factory routes and durable deployment abuse protection remain open.
 
 ## Next authorized local work
 
@@ -364,7 +364,7 @@ Five new composed loopback HTTP tests use generated ES256 identities and actual 
 
 The recovery disconnect test exposed an unnecessary unresolved-cleanup hold: cancellation prevented initial identity verification, leaving cleanup unable to correlate primary absence. Fixed by verifying identity with the independent bounded cleanup signal before revocation, solely for cleanup correlation. Failed verification still attempts logout and remains unconfirmed. This does not restore reset authority or issue cookies.
 
-All 496 foundation tests across 68 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
+All 497 foundation tests across 68 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
 
 Exact next action: extend the isolated recovery database rehearsal with the canceled/late result case and rerun it, then update private Memory from the 468-test checkpoint. Task 2c and hosted/device gates remain open.
 

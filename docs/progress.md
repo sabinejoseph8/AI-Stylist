@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 491 foundation tests across 67 files, type checking and build pass. The dormant account factory shares password/OAuth/refresh lifecycle controls, preserves delivery cleanup and closes reset grants on shutdown. Its recovery routes now pass the isolated PostgreSQL rehearsal with generated signed identities and synthetic providers. Hosted configuration, customer restart/cross-device policy, HTTPS/device/accessibility acceptance and remaining Phase 1 gates stay open. Real account routes, emails and paid calls remain disabled.
+Task 2c local account preparation is active. All 497 foundation tests across 68 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2158,3 +2158,7 @@ All 496 foundation tests across 68 files, type checking and build pass. No live 
 Upgraded the existing late-adoption disconnect test to use the guarded account factory over actual local HTTP. Added server-shutdown coverage: cancellation delivers unconfirmed with no account cookie, late simulated adoption is discarded once after settling, and new requests receive unavailable. Generated identities are signed; provider/current-session/storage fixtures remain synthetic.
 
 All 497 foundation tests across 68 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
+
+## Current summaries and private Memory reconciled, 12 October 2026
+
+Reconciled current plan, handoff and account acceptance summaries with 497 passing foundation tests across 68 files and the actual factory/database/HTTP evidence. Published the private Memory snapshot from source da7ddb74e6bc4c021f38d6421aaac29792e4c9a3; deployment appgdep_6acc7095dea881919d4c408215984c8a succeeded with MCP enabled. All 16 site checks and artifact validation pass. Owner-only access remains one user and no groups. No task or phase completion gate was bypassed.
