@@ -2232,3 +2232,12 @@ Phase 1 still needs provider clarification/privacy acceptance and separately aut
 Goal is incomplete and is being marked blocked, not complete or paused. Exact next human actions: answer the pending MVP automatic-linking policy question and authorize or decline the prepared Render support inquiry. Upon resumption, record the answers; send the inquiry only if explicitly authorized; pursue permitted hosted readiness work while preserving spending and security limits. Do not enable providers, merge data or start another paid test from this handoff alone.
 
 Latest code evidence: 623 tests across 94 files, type checking/build pass. Private Memory's verified publication remains the accurately labeled 622-test runtime/transport checkpoint; subsequent identity-policy and live-setting evidence is in the repository. Original scope and all remaining tasks are retained.
+
+
+## Automatic identity linking approved, 12 October 2026
+
+Sabine approved Supabase automatic linking for Google or Apple identities using the same verified email. Manual linking and application-driven account merging remain disabled. Ownership continues to use the verified identity ID and current session, never email matching in application code. Different provider or Apple relay emails are not promised the same account. See docs/account-linking-decision.md for required live security acceptance.
+
+This resolves the linking-policy decision only. Hosted Google/Apple providers remain disabled; no account merge, credential change, paid call or hosted activation occurred. Real matching-email, unconfirmed-account, callback replay and second-customer database/Storage isolation checks remain required. Existing 623-test evidence is unchanged; this documentation-only update does not add test evidence.
+
+Exact next action: obtain the still-pending authorization for the prepared Render support inquiry, then send it only if authorized. Resolve ingress/logging, hosted origin, sender and provider credentials before hosted account acceptance. The goal remains blocked on these separate dependencies; the automatic-linking policy is no longer a blocker.

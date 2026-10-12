@@ -1321,3 +1321,8 @@ I inspected the live account settings without changing them. Email confirmation 
 ## Defining account linking before launch
 
 I separated Supabase's automatic linking behavior from its manual-linking switch and prepared a clear MVP policy for review. I added a regression showing that returned email and user metadata never determine application ownership. I kept that narrow evidence separate from real provider security acceptance.
+
+
+## Choosing account linking, 12 October 2026
+
+I chose Supabase automatic linking so customers using Google or Apple with the same verified email can return to their existing account. I kept manual linking and application-driven merging disabled. My tradeoff is relying on the provider's linking rules while requiring live security checks before activation. Different Apple relay emails are not guaranteed to resolve to the same account. The application still identifies owners by verified identity ID rather than email.

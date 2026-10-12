@@ -2629,3 +2629,10 @@ Reviewed Supabase's primary identity-linking documentation and prepared docs/acc
 Added a focused OAuth adapter regression with misleading user ID, email and identities metadata. Only accessToken and refreshSecret reach the verified session stager; ownership remains derived from signed identity/current session. All 623 tests across 94 files, type checking and build pass (/private/tmp/ai-stylist-identity-metadata-tests.log). This does not prove live provider linking or close P2-06.
 
 Next required actions: Sabine's linking-policy choice and authorization for the prepared Render support inquiry. Hosted origin/sender/social credentials and real provider/isolation/device checks remain open. Preserve later-phase dependencies and spending. Do not manufacture additional feature work past those boundaries or claim activation from adapter tests.
+
+
+## Automatic identity linking approved, 12 October 2026
+
+Sabine approved Supabase automatic linking for Google or Apple identities using the same verified email. Manual linking and application-driven account merging remain disabled. Ownership continues to use the verified identity ID and current session, never email matching in application code. Different provider or Apple relay emails are not promised the same account. See docs/account-linking-decision.md for required live security acceptance.
+
+This resolves the linking-policy decision only. Hosted Google/Apple providers remain disabled; no account merge, credential change, paid call or hosted activation occurred. Real matching-email, unconfirmed-account, callback replay and second-customer database/Storage isolation checks remain required. Existing 623-test evidence is unchanged; this documentation-only update does not add test evidence.
