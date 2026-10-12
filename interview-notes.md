@@ -795,3 +795,8 @@ I joined the prepared account security pieces and tested a generated signed toke
 
 
 I added a generic canceled-account result for provider failures and tested that it consumes the transaction only once. I kept provider error descriptions out of the result and rejected callbacks that mixed success and failure fields. I also wrote a requirement-level account audit so the remaining real-provider, recovery and session lifecycle work stays visible.
+
+
+### Handling sign-in results that arrive too late
+
+I prepared callback exchange orchestration that verifies the returned identity before preparing an account cookie. I tested sessions arriving after cancellation and made the adapter discard them. When cleanup could not be confirmed, the coordinator held further exchanges instead of assuming the session was gone. I kept recovery outside normal sign-in and documented that real provider cleanup and refresh handling still need acceptance.
