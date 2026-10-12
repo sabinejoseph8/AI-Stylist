@@ -1905,3 +1905,19 @@ Re-ran apps/foundation/scripts/check-refresh-ownership.py against current source
 The next substantial customer-account stage is gated by the existing local-only exception. Two decisions have been presented to Sabine and remain unanswered: whether recovery must work on another device, and whether hosted Tasks 2b/2c may begin before Phase 1 closes. Do not infer either answer from elapsed time. Phase 1 also needs the pending Tavus technical reply and a newly approved bounded paid-test allowance. Rakuten registration remains deferred until the customer site is live.
 
 Exact next action: incorporate Sabine's recovery and hosted-sequencing answers when received, then prepare the selected recovery contract or hosted database/account setup under that scope. Until then, preserve all current activation and spending gates; no backlog task or phase is marked complete by this audit.
+
+## Approved hosted setup and cross-device recovery, 12 October 2026
+
+Sabine explicitly approved hosted Tasks 2b and 2c before Phase 1 finishes, including applying prepared customer database protections and configuring accounts in the existing AI Stylist Supabase project. This supersedes the previous local-only sequencing boundary for that work. It authorizes no extra spending or paid voice test. Credentials and any new financial or irreversible action retain their gates. Phase 1 and all hosted acceptance checks remain open.
+
+Sabine selected password recovery that works when the emailed link is opened on another device. The existing browser-bound PKCE rehearsal does not satisfy that requirement. Prepare a server-verified cross-device recovery contract using current official Supabase guidance; inspect actual project/email/callback settings before applying changes. Do not present same-browser-only recovery as completed MVP behavior.
+
+Exact next action: inspect the existing AI Stylist Supabase project and current recovery contracts, review the prepared migration chain against hosted state, then implement/configure the approved scope. No hosted change has occurred merely from recording this approval.
+
+## Cross-device transport and hosted preflight, 12 October 2026
+
+The bounded recovery provider transport now supports token-hash verification with a fixed recovery purpose and fixed Supabase destination. Malformed/canceled proofs are refused before fetch. All 522 foundation tests across 73 files, type checking and build pass. This is transport preparation, not a completed cross-device flow. The receiving-browser confirmation, reset-only lifecycle composition, email configuration and real-device acceptance remain to implement.
+
+Read-only hosted inventory confirms the existing AI Stylist project has only the prototype budget table in the inspected app schemas and no tracked customer migrations. Required managed Auth columns match the prepared checks. No customer schema migration, email or provider operation has been activated yet. See docs/cross-device-recovery.md for the selected direction, primary sources and remaining checks. Hosted Tasks 2b/2c are now explicitly authorized before Phase 1 finishes; prior local-only and pending-question statements are historical. Spending limits remain unchanged.
+
+Exact next action: review and apply the customer migration chain to the verified project with post-application privilege checks, and compose cross-device token verification with receiving-browser confirmation and reset-only authority. Credentials/new financial decisions still require Sabine.

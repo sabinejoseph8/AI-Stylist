@@ -191,3 +191,11 @@ Prepared a metadata-only reset readiness endpoint in the dormant account factory
 Evidence: 516 foundation tests across 72 files pass; type checking and production build pass. The new integration checks cover repeated non-consuming readiness, missing cookie, extra input, metadata response and browser configuration refusal after shutdown. This is local synthetic-provider evidence, not real recovery acceptance. Task 2c and both phase exit gates remain open.
 
 Next action: connect the explicit account return-page resolver and reset configuration in a disabled local composition, retaining the sample preview as the default; then run its focused browser checks. Private Memory still publishes the earlier 497-test checkpoint and needs reconciliation.
+
+## Approved hosted setup and cross-device recovery, 12 October 2026
+
+Sabine explicitly approved hosted Tasks 2b and 2c before Phase 1 finishes, including applying prepared customer database protections and configuring accounts in the existing AI Stylist Supabase project. This supersedes the previous local-only sequencing boundary for that work. It authorizes no extra spending or paid voice test. Credentials and any new financial or irreversible action retain their gates. Phase 1 and all hosted acceptance checks remain open.
+
+Sabine selected password recovery that works when the emailed link is opened on another device. The existing browser-bound PKCE rehearsal does not satisfy that requirement. Prepare a server-verified cross-device recovery contract using current official Supabase guidance; inspect actual project/email/callback settings before applying changes. Do not present same-browser-only recovery as completed MVP behavior.
+
+Exact next action: inspect the existing AI Stylist Supabase project and current recovery contracts, review the prepared migration chain against hosted state, then implement/configure the approved scope. No hosted change has occurred merely from recording this approval.

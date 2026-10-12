@@ -1171,3 +1171,7 @@ I verified the explicitly connected account presentation in local WebKit using s
 ## Preventing stale account presentation
 
 I fixed account presentation so a changed provider or mode starts with fresh state and cancels the previous flow. A local WebKit check confirmed that old sign-in messages and fields clear and a late provider response cannot restore the previous handoff. The change preserves server authority and does not enable real accounts.
+
+## Approving the next account stage
+
+I chose password recovery that works when a customer opens the email on another device. I also approved hosted database and account setup before the remaining voice feasibility checks finish. This lets independent account work move forward while preserving the voice-test spending limits. The older same-browser recovery preparation does not yet satisfy my selected experience.

@@ -42,3 +42,14 @@ it('rejects oversized, non-JSON and canceled requests without exposing provider 
  }
  const fetcher=vi.fn(),stop=new AbortController();stop.abort();await expect(createRecoveryProviderHttp(project,origin,key,fetcher).request(input,stop.signal)).rejects.toThrow();expect(fetcher).not.toHaveBeenCalled();
 });
+
+it('verifies a cross-device email proof only for fixed recovery purpose and fixed provider destination',async()=>{
+ const fetcher=vi.fn(async(_url:string,_init:RequestInit)=>Response.json({access_token:'synthetic'}));
+ const http=createRecoveryProviderHttp(project,origin,key,fetcher);await http.verifyRecoveryToken('synthetic-email-token-hash',signal());
+ const [url,init]=fetcher.mock.calls[0];expect(url).toBe(project+'/auth/v1/verify');expect(init.method).toBe('POST');expect(JSON.parse(init.body as string)).toEqual({token_hash:'synthetic-email-token-hash',type:'recovery'});expect(init.redirect).toBe('error');expect(init.credentials).toBe('omit');
+});
+it('refuses malformed or canceled cross-device proof before contacting the provider',async()=>{
+ const fetcher=vi.fn(),http=createRecoveryProviderHttp(project,origin,key,fetcher);
+ for(const hash of ['', 'a'.repeat(257),'hash with spaces','https://other.test/hash','hash\n'])await expect(http.verifyRecoveryToken(hash,signal())).rejects.toThrow();
+ const stop=new AbortController();stop.abort();await expect(http.verifyRecoveryToken('synthetic',stop.signal)).rejects.toThrow();expect(fetcher).not.toHaveBeenCalled();
+});

@@ -55,6 +55,12 @@ export function createRecoveryProviderHttp(projectUrl:string,appOrigin:string,se
    if(typeof input.email!=='string'||input.email.length>254||!/^\S+@\S+\.\S+$/.test(input.email)||redirect.origin!==appOrigin||redirect.pathname!=='/auth/callback/recovery'||redirect.hash||redirect.username||redirect.password||[...redirect.searchParams.keys()].join(',')!=='flow'||!/^[-_A-Za-z0-9]{43}$/.test(redirect.searchParams.get('flow')??'')||input.challengeMethod!=='S256'||!/^[-_A-Za-z0-9]{43}$/.test(input.challenge))throw Error('Supabase operation unavailable');
    await request('/auth/v1/recover?redirect_to='+encodeURIComponent(redirect.href),'POST',{email:input.email,code_challenge:input.challenge,code_challenge_method:'S256'},undefined,signal);
   },
+  // Cross-device recovery consumes the email bearer proof only after explicit confirmation.
+  // Returned tokens still require independent signed recovery-purpose verification.
+  verifyRecoveryToken(tokenHash:string,signal:AbortSignal){
+   if(typeof tokenHash!=='string'||!/^[-_A-Za-z0-9]{1,256}$/.test(tokenHash))return Promise.reject(Error('Supabase operation unavailable'));
+   return request('/auth/v1/verify','POST',{token_hash:tokenHash,type:'recovery'},undefined,signal);
+  },
   exchange(input:Readonly<{code:string;verifier:string}>,signal:AbortSignal){
    if(!input||typeof input.code!=='string'||!/^[-._~A-Za-z0-9]{1,2048}$/.test(input.code)||typeof input.verifier!=='string'||!/^[-_A-Za-z0-9]{43}$/.test(input.verifier))return Promise.reject(Error('Supabase operation unavailable'));
    return request('/auth/v1/token?grant_type=pkce','POST',{auth_code:input.code,code_verifier:input.verifier},undefined,signal);
