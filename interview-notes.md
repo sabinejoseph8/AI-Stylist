@@ -1043,3 +1043,7 @@ I connected recovery verification to a one-use reset capability. The adapter rec
 ## Testing the complete local reset boundary
 
 I tested a signed recovery identity through the callback, reset-only adapter and browser form handler together. The wrong browser and repeated callback were rejected. When the simulated password update succeeded but session cleanup was uncertain, the form reported an unconfirmed result and cleared its reset cookie. Real provider and database composition remain separate checks.
+
+## Preparing recovery service calls
+
+I prepared the recovery request, code exchange and password-update calls with fixed destinations, bounded responses and cancellation handling. Tests use simulated replies and confirm that external callbacks and mismatched account responses fail. Real email delivery, password changes and hosted configuration stay separate from this local preparation.

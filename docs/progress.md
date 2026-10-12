@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 451 foundation tests across 58 files, type checking and build pass. Password and OAuth HTTP exchange now compose with verified identity and actual isolated PostgreSQL encrypted refresh ownership using synthetic provider responses. Both Google and Apple callbacks are browser-bound and one-use. Lost-save/refused-cleanup ownership stays blocked across database restart. Sign-out still requires independent primary-session absence. Both local account/reset reviews are accepted. Real provider configuration, recovery-purpose verification, HTTPS/device acceptance and Phase 1/hosted gates remain open. No real sign-in, account route, credentials or paid calls were activated.
+Task 2c local account preparation is active. All 468 foundation tests across 61 files, type checking and build pass. Password/OAuth paths have isolated database composition evidence. Recovery signed-purpose verification, reset-only browser flow and bounded HTTP transport are prepared with synthetic tests; recovery HTTP/database composition is next. Real provider configuration, HTTPS/device acceptance, Phase 1 and hosted gates remain open. No real account routes, emails or paid calls were activated.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -2034,3 +2034,11 @@ Three new composed synthetic checks use generated ES256 recovery JWTs, actual id
 All 461 foundation tests across 60 files, type checking and build pass. Provider operations and session presence are simulated here, not actual hosted or isolated database evidence. Real password changes and email delivery remain disabled. Task 2c stays open.
 
 Exact next action: prepare bounded HTTP recovery-request, PKCE exchange and password-update operations, then compose with the isolated primary database. No real provider call, credential or route is authorized by this checkpoint. Private Memory remains at 451 tests.
+
+## Bounded recovery HTTP preparation
+
+Prepared explicit injected HTTP operations for recovery requests, PKCE code exchange and password updates. Requests use fixed Supabase HTTPS/default-port destinations, refuse redirects and browser credentials, validate the exact recovery callback and flow, and send allowlisted fields only. Transport has four underlying operations, an eight-second maximum deadline, bounded request/response sizes, redacted failures and retained admission while ignored cancellation or late response cleanup is unresolved. Password-update confirmation requires a matching returned owner ID; decoding the input JWT only correlates this response, while the recovery adapter performs signature/purpose/current-session authorization. Existing scoped logout transport is composed separately.
+
+All 468 foundation tests across 61 files, type checking and build pass. Seven new synthetic checks cover destination/callback restrictions, exact recovery and PKCE bodies, owner correlation, ignored cancellation and malformed/oversized/non-JSON/failure responses. No real email, password update, provider request, route or hosted configuration was activated. Task 2c stays open.
+
+Protocol reference: https://github.com/supabase/auth-js/blob/master/src/GoTrueClient.ts (resetPasswordForEmail, _exchangeCodeForSession, _updateUser). Upstream source is research, not a pinned installed SDK or live acceptance. Exact next action: compose recovery HTTP with signed recovery identity and actual isolated primary database cleanup, then refresh private Memory from its current 451-test checkpoint.
