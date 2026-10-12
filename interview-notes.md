@@ -1159,3 +1159,7 @@ I made the reset screen wait for server-checked permission before showing passwo
 ## Fixing reset-screen cancellation
 
 I used a local WebKit browser to check the prepared reset flow with simulated data. I found that Return needed to cancel immediately instead of relying on the parent to remove the screen. I fixed it and confirmed late results cannot reopen the form. Password clearing and replay prevention also passed. Real customer recovery remains unverified.
+
+## Making account presentation accurate
+
+I separated sample wording from explicitly configured connected account wording. The connected screen requires an injected provider, uses appropriate password-manager hints and does not offer a simulated recovery shortcut. The ordinary preview remains simulated. All 520 local tests, type checking and build pass; live account acceptance remains pending.

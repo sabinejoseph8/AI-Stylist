@@ -26,7 +26,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 516 foundation tests across 72 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
+Task 2c local account preparation is active. All 520 foundation tests across 73 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
 
 ## Completed evidence
 
@@ -1712,7 +1712,7 @@ All 496 foundation tests across 68 files, type checking and build pass. No live 
 
 Upgraded the existing late-adoption disconnect test to use the guarded account factory over actual local HTTP. Added server-shutdown coverage: cancellation delivers unconfirmed with no account cookie, late simulated adoption is discarded once after settling, and new requests receive unavailable. Generated identities are signed; provider/current-session/storage fixtures remain synthetic.
 
-All 516 foundation tests across 72 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
+All 520 foundation tests across 73 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
 
 ## Current summaries and private Memory reconciled, 12 October 2026
 
@@ -1795,3 +1795,11 @@ A local WebKit run using synthetic reset data verified readiness before fields a
 The full foundation suite still passes 519 tests across 73 files, type checking and build. Browser script: apps/foundation/scripts/check-recovery-browser.cjs; serve the foundation on loopback port 4325, supply PLAYWRIGHT_MODULE and optionally WEBKIT_EXECUTABLE for an existing installation. Fixture: tests/browser/recovery.html. Desktop WebKit simulation does not replace physical iPhone, accessibility or real recovery acceptance.
 
 Next action: review remaining local Task 2c prerequisites and explicit account-panel composition. Private Memory remains at the 516-test checkpoint; update it with the next consolidated publication.
+
+## Explicit account presentation mode, 12 October 2026
+
+Prepared opt-in connected account wording with an explicit injected provider requirement. The sample provider cannot enable connected mode. Connected labels, password-manager autocomplete and status messages describe account operations accurately; simulated reset entry remains preview-only. Rendering does not call the provider. The default App stays in sample mode, and no live route or hosted operation is enabled.
+
+Evidence: 520 foundation tests across 73 files pass, including connected configuration refusal, labels and request-free rendering. Type checking and build pass. Connected browser interaction and real-provider acceptance remain open.
+
+Exact next action: verify connected account presentation with a synthetic browser provider, including recovery messaging and cancellation, then reconcile the Memory site. Preserve all activation and spending gates.

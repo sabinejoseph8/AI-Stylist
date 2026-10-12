@@ -24,3 +24,11 @@ describe('local simulated account screens',()=>{
   const controller=new AbortController();controller.abort();await expect(sampleAccountProvider.submit({method:'social',provider:'google'},controller.signal)).rejects.toThrow();
  });
 });
+
+it('requires an explicit non-sample provider for connected wording and never requests data on render',()=>{
+ const calls={count:0};const provider={submit:async()=>{calls.count++;return {status:'signedIn' as const};},signOut:async()=>{calls.count++;}};
+ expect(()=>renderToStaticMarkup(React.createElement(AccountPanel,{connected:true}))).toThrow();
+ const html=renderToStaticMarkup(React.createElement(AccountPanel,{connected:true,provider}));
+ for(const text of ['Account access','Continue with Google','Continue with Apple','autoComplete="email"','autoComplete="current-password"'])expect(html).toContain(text);
+ expect(html).not.toContain('made-up');expect(html).not.toContain('Preview sign-in');expect(calls.count).toBe(0);
+});
