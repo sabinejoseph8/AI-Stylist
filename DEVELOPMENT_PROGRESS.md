@@ -2262,3 +2262,10 @@ Next action: review Render's reply when Sabine shares it, record the verified in
 Deployment succeeded: source a49307bb8a3d05a7bc15b6767723d84de6554de1; deployment appgdep_6acd17d9ae4481919d58e71b645c95f5; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_dd3d6c93f7308191b13ec4f49e4f5fb8. MCP remains enabled; owner-private audience preserved with one allowed user and no groups. All 16 site tests, build and artifact validation passed. No task completion override changed.
 
 Reconciled current summary and activation checklist: policy approval and inquiry submission are resolved, while provider security acceptance and Render's reply remain pending. Previous goal turn made progress by recording the sent inquiry; this turn made progress by publishing current memory and correcting active handoff wording. No running provider test, extra spending or customer activation occurred. Exact next action remains review Render's reply and obtain the working origin, production sender and social-provider credentials for approved hosted account setup. Later-phase dependencies remain unchanged.
+
+
+## Read-only hosted signing-key inspection, 12 October 2026
+
+The verified AI Stylist Supabase dashboard JWT Signing Keys page reports a current ECC (P-256) key and a previous Legacy HS256 (Shared Secret) key. No secret was opened, copied or recorded. No key was created, rotated or revoked. The prepared verifier explicitly permits ES256/RS256 and rejects HS256; the current displayed algorithm is compatible with that allowlist. This does not prove JWKS retrieval, real token claims, current-session lookup or acceptance of a live customer token. Legacy tokens must not be accepted by weakening the allowlist.
+
+Remaining evidence: actual hosted public-key retrieval, session-schema/lookup permissions, real signed-token/provider verification, exact Render ingress/logging, working HTTPS customer origin, production sender, Google/Apple credentials and customer isolation/device acceptance. Sabine has been asked whether she owns an email-sender domain; no service, domain purchase or spending is assumed. Render's sent inquiry is pending.

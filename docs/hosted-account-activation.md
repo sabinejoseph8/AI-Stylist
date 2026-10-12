@@ -7,7 +7,7 @@ Status: preparation in progress, 12 October 2026. Hosted Tasks 2b/2c are authori
 - Existing AI Stylist Supabase project: all twenty-one customer migrations installed. Source hashes and metadata checks are in hosted-database-deployment.json. SQL Editor execution does not register CLI history.
 - Customer account handlers are prepared but absent from the default server. The current Render service is the private voice prototype, not a deployed customer account application.
 - Read-only dashboard inspection: Site URL is http://localhost:3000; no redirect URLs; built-in email sender with a production-use warning; password reset template uses ConfirmationURL.
-- Local evidence: 609 foundation tests, type checking/build, combined HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks. Auth replies remain synthetic; this does not prove real email, hosted provider, physical-device or complete accessibility acceptance.
+- Local evidence: 623 foundation tests, type checking/build, combined HTTPS/WebKit/isolated PostgreSQL account lifecycle, reset reflow and keyboard activation checks. Auth replies remain synthetic; this does not prove real email, hosted provider, physical-device or complete accessibility acceptance.
 
 ## Required order
 
@@ -26,7 +26,7 @@ Schedule bounded seven-day receipt expiry and recovery-grant cleanup before cust
 
 ## Exact next implementation
 
-The explicit host, shared admission, connected account/reset build, bounded static delivery, network lifecycle, runtime-settings parser and shutdown helper are prepared. Next implement the session persistence contract after Sabine chooses the sign-in duration. Deployment must then establish an exact HTTPS destination before email URLs/templates change. Production sender/social credentials and real customer isolation acceptance remain open. Historical dated appendices below retain earlier checkpoints.
+The explicit host, shared admission, connected account/reset build, bounded static delivery, network lifecycle, runtime-settings parser and shutdown helper are prepared. The approved fixed seven-day session contract and connected restoration are locally prepared and verified with synthetic Auth. Deployment must then establish an exact HTTPS destination before email URLs/templates change. Production sender/social credentials and real customer isolation acceptance remain open. Historical dated appendices below retain earlier checkpoints.
 
 ## Shared account admission prepared and installed, 12 October 2026
 
@@ -160,3 +160,10 @@ Observed the existing AI Stylist dashboard directly, without changing or saving 
 The tested application-owned seven-day absolute deadline is distinct from the provider's currently unbounded session setting. No claim is made that Supabase itself has been configured to seven days. Customer account activation remains gated; no real sign-in, email, credential access or hosted mutation occurred. Current provider observations replace assumptions about enabled methods and make the remaining Google/Apple setup explicit.
 
 Next: obtain authorization for the prepared Render inquiry, resolve ingress/logging guarantees, then select the working HTTPS origin and production sender before configuring callbacks. Inspect hosted automatic-linking behavior before proposing its customer policy. Preserve approved account scope and spending; do not treat existing email-provider enablement as delivery acceptance.
+
+
+## Read-only hosted signing-key inspection, 12 October 2026
+
+The verified AI Stylist Supabase dashboard JWT Signing Keys page reports a current ECC (P-256) key and a previous Legacy HS256 (Shared Secret) key. No secret was opened, copied or recorded. No key was created, rotated or revoked. The prepared verifier explicitly permits ES256/RS256 and rejects HS256; the current displayed algorithm is compatible with that allowlist. This does not prove JWKS retrieval, real token claims, current-session lookup or acceptance of a live customer token. Legacy tokens must not be accepted by weakening the allowlist.
+
+Remaining evidence: actual hosted public-key retrieval, session-schema/lookup permissions, real signed-token/provider verification, exact Render ingress/logging, working HTTPS customer origin, production sender, Google/Apple credentials and customer isolation/device acceptance. Sabine has been asked whether she owns an email-sender domain; no service, domain purchase or spending is assumed. Render's sent inquiry is pending.

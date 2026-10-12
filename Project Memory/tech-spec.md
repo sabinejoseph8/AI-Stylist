@@ -2921,3 +2921,10 @@ Next required actions: Sabine's linking-policy choice and authorization for the 
 Sabine approved Supabase automatic linking for Google or Apple identities using the same verified email. Manual linking and application-driven account merging remain disabled. Ownership continues to use the verified identity ID and current session, never email matching in application code. Different provider or Apple relay emails are not promised the same account. See docs/account-linking-decision.md for required live security acceptance.
 
 This resolves the linking-policy decision only. Hosted Google/Apple providers remain disabled; no account merge, credential change, paid call or hosted activation occurred. Real matching-email, unconfirmed-account, callback replay and second-customer database/Storage isolation checks remain required. Existing 623-test evidence is unchanged; this documentation-only update does not add test evidence.
+
+
+## Read-only hosted signing-key inspection, 12 October 2026
+
+The verified AI Stylist Supabase dashboard JWT Signing Keys page reports a current ECC (P-256) key and a previous Legacy HS256 (Shared Secret) key. No secret was opened, copied or recorded. No key was created, rotated or revoked. The prepared verifier explicitly permits ES256/RS256 and rejects HS256; the current displayed algorithm is compatible with that allowlist. This does not prove JWKS retrieval, real token claims, current-session lookup or acceptance of a live customer token. Legacy tokens must not be accepted by weakening the allowlist.
+
+Remaining evidence: actual hosted public-key retrieval, session-schema/lookup permissions, real signed-token/provider verification, exact Render ingress/logging, working HTTPS customer origin, production sender, Google/Apple credentials and customer isolation/device acceptance. Sabine has been asked whether she owns an email-sender domain; no service, domain purchase or spending is assumed. Render's sent inquiry is pending.

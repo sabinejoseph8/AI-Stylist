@@ -154,7 +154,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** A secure signed-in shell with the approved visual language.  
 **Dependencies:** Phase 1 exit remains required for full phase completion. Sabine approved Task 2a, then local Tasks 2b/2c, and subsequently hosted Tasks 2b/2c before Phase 1 finishes. These exceptions do not authorize later phases or remove acceptance gates.
 **Product coverage:** PS-01, PS-09; A18 and foundational A12/A13.  
-**Status:** Task 2a completed with Sabine’s visual review. Hosted Tasks 2b/2c are authorized and in progress. All 21 database migrations are installed; connected account/recovery delivery and isolated database/browser checks are prepared. Customer activation, real provider/isolation, identity-linking policy and manual acceptance remain open. The fixed seven-day application session policy is approved and locally verified; provider-level time-box remains unconfigured.
+**Status:** Task 2a completed with Sabine’s visual review. Hosted Tasks 2b/2c are authorized and in progress. All 21 database migrations are installed; connected account/recovery delivery and isolated database/browser checks are prepared. Customer activation, real provider/isolation, identity-linking security acceptance and manual acceptance remain open. The fixed seven-day application session policy is approved and locally verified; provider-level time-box remains unconfigured.
 
 ### Task groups
 
