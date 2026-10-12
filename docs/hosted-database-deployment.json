@@ -82,12 +82,33 @@
       "file": "supabase/migrations/202610110016_current_auth_session.sql",
       "sha256": "4cc8c4ec14964c231b5409d8c1a0e506282e0c9b3f46739ccf3b6dd3282e276a",
       "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110017_refresh_ownership.sql",
+      "sha256": "4f42929f3912bb7173bc9b6bea6d351ccd70cb2737a3160a82d1e6076039c280",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110018_refresh_discovery.sql",
+      "sha256": "078d6bc1f25a90386905d2c8584e508bbb826f55964b1476725b2feeaaf17700",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110019_auth_session_presence.sql",
+      "sha256": "f1a1129af2ff3cf4cc2ad5b147d42bc72424d9a6728c5d6ae9dc71ea7fc6e9ef",
+      "status": "applied"
+    },
+    {
+      "file": "supabase/migrations/202610110020_refresh_key_inventory.sql",
+      "sha256": "099c8b2e0c0dd5e6d2a96d88861b7e3a15b1fb088767aee973577a20512b32b5",
+      "status": "applied"
     }
   ],
   "notes": [
     "001 included an additional precondition refusing an existing media table.",
     "SQL Editor execution does not populate Supabase CLI migration history.",
-    "No customer data, account credential, email or paid provider request was created."
+    "No customer data, account credential, email or paid provider request was created.",
+    "018 through 020 ran in source order in one SQL Editor submission, preserving each BEGIN/COMMIT transaction. All returned Success."
   ],
   "verification": {
     "anonymous_blocked": true,
@@ -100,7 +121,7 @@
     "rls_enabled": true,
     "rls_forced": true
   },
-  "remaining_migrations": "202610110017 through 202610110020",
+  "remaining_migrations": null,
   "wardrobe_profile_verification": {
     "checks": 16,
     "all_passed": true,
@@ -120,5 +141,10 @@
     "checks": 21,
     "all_passed": true,
     "scope": "Mixed source constraint and same-owner FK, cleanup and retired-ID triggers, private table/schema access denial, five service-only security-definer functions with empty search_path, standalone retail writer revoked, receipt age filters and initially free single consultation slot. Installation and metadata evidence only; no customer operation or expiry function invoked."
+  },
+  "refresh_session_verification": {
+    "checks": 17,
+    "all_passed": true,
+    "scope": "Refresh table RLS and denied direct access for anon/authenticated/service_role, two cascading managed-Auth FKs, empty credential table, all nine service-only functions with empty search_path, exact function count and prototype budget table presence. No credential written, managed Auth record changed or customer session started."
   }
 }

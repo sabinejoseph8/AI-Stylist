@@ -1203,3 +1203,5 @@ I added private technical receipts for completed photo deletion and owner-readab
 ## Moving from preparation to hosted database controls
 
 I approved hosted database and account setup while keeping the unfinished voice experiments separate. I installed the reviewed database changes in small transactions and checked access restrictions after each group. Mixed saved looks preserve ownership, detailed photo-deletion receipts expire after seven days, and a single consultation slot matches my initial launch capacity. The latest group passed 21 live metadata checks. I kept account activation and customer acceptance open because installation alone does not prove the full customer journey.
+
+I completed installation of the twenty reviewed customer database migrations and checked the final refresh-session permissions with seventeen live checks. I confirmed the credential table remained empty and ordinary clients could not read or write it directly. I treated this as database setup evidence and kept sign-in, recovery, email delivery and device acceptance open.
