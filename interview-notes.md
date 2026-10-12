@@ -830,3 +830,8 @@ I found that discarding reset permission did not abort a password change already
 ## Tying recovery permission to a separate browser cookie
 
 I prepared a separate secure reset cookie so account access cannot accidentally authorize password recovery. I made delivery one-use before the asynchronous password change, tested concurrent replay and limited retained permissions. I kept raw provider errors out of results and made cleanup failure explicit. All 309 foundation tests pass, with type checking and build. This is disconnected local preparation; actual browser delivery, provider proof and restart reconciliation remain acceptance work.
+
+
+## Verifying the complete local reset path
+
+I connected the prepared recovery owner, browser delivery and account verifier in integration tests. I confirmed the reset cookie cannot access a profile, failed delivery discards permission, cancellation reaches the password-change operation and expiry prevents changes. These tests use simulated provider leases, so I kept real provider acceptance open. All 313 foundation tests pass, with type checking and build.
