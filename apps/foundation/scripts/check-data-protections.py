@@ -272,6 +272,26 @@ try:
  assert sql(f"select count(*) from stylist_private.retired_media_ids where id='{receipt_id}';")=='1'
  sql(f"set role service_role; select public.stylist_stage_media('{receipt_id}','{a}','{'d'*64}',10,10);",False)
  sql(f"set role authenticated; select * from stylist_private.retired_media_ids;",False)
+ # Multi-worker batches must never remove recent receipts or live media.
+ active_before=sql('select count(*) from public.stylist_media_assets;')
+ retired_before=int(sql('select count(*) from stylist_private.retired_media_ids;'))
+ ids=[str(uuid.uuid4()) for _ in range(8)]
+ for i,rid in enumerate(ids):
+  age="8 days" if i<7 else "1 day"
+  sql(f"insert into stylist_private.media_deletion_receipts(id,user_id,storage_key,deletion_token,created_at) values('{rid}','{b}','batch-{i}','{rid}',now()-interval '{age}');")
+ sql('set role anon; select public.stylist_expire_media_receipts(2);',False)
+ sql('set role service_role; select public.stylist_expire_media_receipts(null);',False)
+ sql('set role service_role; select public.stylist_expire_media_receipts(1001);',False)
+ with ThreadPoolExecutor(max_workers=4) as pool:
+  counts=list(pool.map(lambda _: int(sql('begin; set local role service_role; select public.stylist_expire_media_receipts(2); select pg_sleep(0.2); commit;').strip()),range(8)))
+ assert sum(counts)==7 and all(0<=n<=2 for n in counts),counts
+ assert sql(f"select count(*) from stylist_private.media_deletion_receipts where id='{ids[-1]}';")=='1'
+ assert sql('select count(*) from public.stylist_media_assets;')==active_before
+ assert int(sql('select count(*) from stylist_private.retired_media_ids;'))==retired_before+8
+ assert sql('set role service_role; select public.stylist_expire_media_receipts(2);')=='0'
+ for rid in ids[:7]:
+  assert sql(f"set role service_role; select public.stylist_read_media_operation('{rid}','{b}');")==''
+ print('Concurrent bounded receipt cleanup preserves recent receipts, live media and every retired ID')
  sql(f"delete from auth.users where id='{a}';")
  assert sql(f"select count(*) from stylist_private.retired_media_ids where user_id='{a}';")=='0'
  print('Approved receipt retention passes cutoff, authorization, idempotency, retired-ID protection and account cascade checks')

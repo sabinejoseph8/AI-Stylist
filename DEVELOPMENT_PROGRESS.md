@@ -729,3 +729,11 @@ Exact next action: finish the private Memory publication receipt, then extend th
 ## Retention checkpoint publication
 
 Document checkpoint 019fbb4 is published to GitHub and byte-verified in the AI stylist folder. Private Memory source cb2c35697e41e4183a51081ed9c686c77e666373 deployed successfully as appgdep_6acc2e8a5e708191a1bb8dc04b973415. All 16 website checks and artifact validation pass; existing private access and MCP tools are retained.
+
+
+## Concurrent receipt maintenance evidence, 11 October 2026
+
+The local PostgreSQL rehearsal now runs eight cleanup transactions across four workers with a two-receipt batch limit. Exactly seven expired synthetic receipts are removed; every result respects the batch limit. Recent receipts, the live-media count and all minimal retired IDs remain unchanged. Anonymous callers, null limits and limits over 1,000 are denied; repeated cleanup returns zero. The full local protection rehearsal passes. No production cleanup scheduler has been installed.
+
+
+Exact next action: publish the concurrency evidence, refresh the private Memory snapshot, then audit remaining local Task 2b gaps against the agreed phase checks. Hosted activation, real Auth and Phase 1 acceptance remain gated. Do not mark Task 2b or the goal complete from these local checks.

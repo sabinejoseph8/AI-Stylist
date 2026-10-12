@@ -27,3 +27,8 @@ Seven days provides a bounded window for delayed retries while limiting detailed
 - Update the privacy design and launch checklist. Actual hosted scheduling/deployment remains subject to Phase 1 and existing security approvals.
 
 The protected cleanup function accepts a batch size from 1 to 1,000, uses locked batches with skip-locked handling, and is executable only by the service role. It never touches live image rows or Storage objects. The minimal retired-ID table has no direct customer or service-role table access. No scheduler or hosted migration has been activated.
+
+
+## Concurrent receipt maintenance evidence, 11 October 2026
+
+The local PostgreSQL rehearsal now runs eight cleanup transactions across four workers with a two-receipt batch limit. Exactly seven expired synthetic receipts are removed; every result respects the batch limit. Recent receipts, the live-media count and all minimal retired IDs remain unchanged. Anonymous callers, null limits and limits over 1,000 are denied; repeated cleanup returns zero. The full local protection rehearsal passes. No production cleanup scheduler has been installed.

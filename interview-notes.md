@@ -739,3 +739,6 @@ I seeded a real local photo and its saved references before applying newer migra
 ## Limiting technical deletion records
 
 I chose to keep detailed photo-deletion receipts for seven days so a lost response can be checked without keeping technical details indefinitely. After that, I retain only an image ID linked to the account to prevent accidental reuse, and remove it when the account is deleted. My local database checks cover the time boundary, access restrictions and repeated cleanup. Hosted scheduling still needs verification before launch.
+
+
+I also checked overlapping cleanup workers. They removed only expired technical receipts, respected each batch limit and left recent records, live photos and retired IDs intact. This helped me separate a verified local database rule from the hosted scheduling and monitoring still needed before launch.

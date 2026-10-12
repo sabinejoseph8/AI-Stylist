@@ -22,6 +22,6 @@ The actual local Storage rehearsal additionally executes this TypeScript handler
 - Verify account-bound delivery on the actual hosted environment, including copied URLs and caches.
 - Serialize or otherwise validate deletion-versus-delivery behavior in the real request lifecycle. The second metadata read detects the tested transition; it cannot retract bytes already delivered or prove a distributed atomic delivery/deletion transaction.
 - Enforce the actual deployment's resource/admission limits and browser image-queue behavior.
-- Settle deletion-receipt retention before hosted activation.
+- Activate and monitor the approved seven-day receipt cleanup before hosted use. The policy and migration 014 are approved and pass local cutoff and concurrent-batch checks; hosted scheduling is still gated.
 
 The app retains Supabase + Render hosting and all existing Phase 1/spending gates. This implements the existing private-image requirement locally; it does not change consent or authorize a hosted migration.
