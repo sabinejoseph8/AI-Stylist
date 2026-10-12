@@ -92,3 +92,16 @@ describe('explicit dormant account composition',()=>{
  });
 
 });
+
+describe('optional cross-device account composition',()=>{
+ it('completes a reset on the receiving browser without the original PKCE cookie',async()=>{
+  const f=setup(),discard=vi.fn(async()=>true),resetPassword=vi.fn(async()=>true),verifyToken=vi.fn(async()=>({ownerId:'11111111-1111-4111-8111-111111111111',expiresAt:Date.now()+60000,resetPassword,discard}));
+  const app=createAccountComposition(origin,'https://example.supabase.co',f.security,{...f.ports,tokenRecovery:{verifyToken}}),routes=app.routes();expect(routes.size).toBe(12);
+  const landing=await routes.get('/account/recovery')!.handle(new Request(origin+'/account/recovery?token_hash=proof'),signal()),html=await landing.text(),confirmation=html.match(/confirmation:'([A-Za-z0-9_-]{43})'/)![1]!;
+  expect(verifyToken).not.toHaveBeenCalled();
+  const confirmed=await routes.get('/api/account/recovery-confirm')!.handle(new Request(origin+'/api/account/recovery-confirm',{method:'POST',headers:{origin,'content-type':'application/json',cookie:landing.headers.getSetCookie()[0]!.split(';')[0]!},body:JSON.stringify({confirmation})}),signal());
+  expect(await confirmed.json()).toEqual({status:'resetRequired'});const cookie=confirmed.headers.getSetCookie().find(x=>x.startsWith('__Host-stylist_reset='))!.split(';')[0]!;
+  const result=await routes.get('/api/account/reset')!.handle(new Request(origin+'/api/account/reset',{method:'POST',headers:{origin,cookie,'content-type':'application/json'},body:JSON.stringify({password:'new-synthetic-password',confirmation:'new-synthetic-password'})}),signal());
+  expect(await result.json()).toEqual({status:'resetComplete'});expect(resetPassword).toHaveBeenCalledTimes(1);expect(discard).toHaveBeenCalledTimes(1);expect(f.security.cookies.issue).not.toHaveBeenCalled();expect(await app.close()).toBe(true);await f.app.close();
+ });
+});

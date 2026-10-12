@@ -26,7 +26,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active. All 533 foundation tests across 74 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
+Task 2c local account preparation is active. All 538 foundation tests across 75 files, type checking and build pass. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, customer recovery/linking policy, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
 
 ## Completed evidence
 
@@ -1712,7 +1712,7 @@ All 496 foundation tests across 68 files, type checking and build pass. No live 
 
 Upgraded the existing late-adoption disconnect test to use the guarded account factory over actual local HTTP. Added server-shutdown coverage: cancellation delivers unconfirmed with no account cookie, late simulated adoption is discarded once after settling, and new requests receive unavailable. Generated identities are signed; provider/current-session/storage fixtures remain synthetic.
 
-All 533 foundation tests across 74 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
+All 538 foundation tests across 75 files, type checking and build pass. The initial new test expected unavailable HTTP 400, but the existing JSON cancellation boundary correctly returns unconfirmed HTTP 409; corrected the assertion without changing runtime behavior. No hosted route or paid work was activated. Exact next action: reconcile current summaries and private Memory, then audit remaining authorized local implementation against the full account acceptance checklist.
 
 ## Current summaries and private Memory reconciled, 12 October 2026
 
@@ -1834,7 +1834,7 @@ Exact next action: inspect the existing AI Stylist Supabase project and current 
 
 ## Cross-device transport and hosted preflight, 12 October 2026
 
-The bounded recovery provider transport now supports token-hash verification with a fixed recovery purpose and fixed Supabase destination. Malformed/canceled proofs are refused before fetch. All 533 foundation tests across 74 files, type checking and build pass. This is transport preparation, not a completed cross-device flow. The receiving-browser confirmation, reset-only lifecycle composition, email configuration and real-device acceptance remain to implement.
+The bounded recovery provider transport now supports token-hash verification with a fixed recovery purpose and fixed Supabase destination. Malformed/canceled proofs are refused before fetch. All 538 foundation tests across 75 files, type checking and build pass. This is transport preparation, not a completed cross-device flow. The receiving-browser confirmation, reset-only lifecycle composition, email configuration and real-device acceptance remain to implement.
 
 Read-only hosted inventory confirms the existing AI Stylist project has only the prototype budget table in the inspected app schemas and no tracked customer migrations. Required managed Auth columns match the prepared checks. No customer schema migration, email or provider operation has been activated yet. See docs/cross-device-recovery.md for the selected direction, primary sources and remaining checks. Hosted Tasks 2b/2c are now explicitly authorized before Phase 1 finishes; prior local-only and pending-question statements are historical. Spending limits remain unchanged.
 
@@ -1848,7 +1848,7 @@ Evidence: 525 foundation tests across 73 files pass; type checking and build pas
 
 ## Bounded cross-device recovery ownership, 12 October 2026
 
-Token-hash verification now enters the same bounded recovery owner as PKCE recovery. It preserves four underlying operations, five-minute reset-only grants, one-use password submission, cancellation, late-result cleanup and holds after uncertain cleanup. The server-only token owner accepts no original-browser verifier. It is not an HTTP endpoint; receiving-browser confirmation must authenticate its binding before invoking it. Three focused synthetic checks cover reset-only permission, malformed proof and cancellation with a late capability. All 533 foundation tests across 74 files, type checking and build pass.
+Token-hash verification now enters the same bounded recovery owner as PKCE recovery. It preserves four underlying operations, five-minute reset-only grants, one-use password submission, cancellation, late-result cleanup and holds after uncertain cleanup. The server-only token owner accepts no original-browser verifier. It is not an HTTP endpoint; receiving-browser confirmation must authenticate its binding before invoking it. Three focused synthetic checks cover reset-only permission, malformed proof and cancellation with a late capability. All 538 foundation tests across 75 files, type checking and build pass.
 
 Next: implement the receiving-browser landing/confirmation binding and compose delivery cleanup, then review/apply the approved hosted migration chain. Hosted accounts, email configuration and physical-device acceptance remain open; no paid calls or hosted changes occurred.
 
@@ -1857,3 +1857,11 @@ Next: implement the receiving-browser landing/confirmation binding and compose d
 Prepared a server-only confirmation binding for cross-device recovery. Email landing creates an opaque Secure/HttpOnly/SameSite cookie and separate confirmation nonce without verifying provider proof. Explicit same-origin confirmation claims that binding before asynchronous verification. Foreign origins, another browser, duplicate cookies, expired proof, malformed landings and replays are refused. Shutdown cancels active verification. Five focused synthetic checks and the complete 533-test foundation suite across 74 files, type checking and build pass.
 
 This module is not yet mounted or rendered. Next: add the no-store/no-referrer landing page and bounded confirmation HTTP delivery with reset-cookie cleanup, then integrate with the explicit account host. Apply the approved customer migrations with post-application privilege checks. Real email configuration, hosted acceptance and physical-device tests remain open. No paid call or hosted schema change occurred. Private Memory still shows the earlier 522-test checkpoint and needs a consolidated refresh.
+
+## Cross-device confirmation HTTP composition, 12 October 2026
+
+The prepared account composition now optionally includes the email landing page and bounded confirmation POST. The page uses no-store, no-referrer and a script-hash CSP, removes proof from the visible URL, makes no provider call on opening and requires an explicit confirmation click. Verified permission is installed only as a reset cookie; failed delivery or installation retains scoped cleanup. No normal account cookie is issued. The existing Node adapter accepts the exact landing path when explicitly registered. The composition remains dormant with no environment activation.
+
+Evidence: 538 foundation tests across 75 files, type checking and build pass. A synthetic composed journey opens the link without original-device PKCE material, confirms it, changes the password once and cleans reset permission. Four HTTP checks verify page protection, failed-delivery cleanup, malformed input and failed cookie installation. No actual email, hosted route or customer migration is activated.
+
+Exact next action: browser-verify the rendered confirmation journey and refresh the private Memory site, then review/apply the authorized hosted customer migration chain and configure the exact HTTPS recovery origin/email endpoint. Proxy URL redaction, durable abuse controls, hosted provider behavior and physical-device acceptance remain required. Task 2c and Phase 2 remain incomplete.

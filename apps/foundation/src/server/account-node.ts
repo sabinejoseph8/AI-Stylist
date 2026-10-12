@@ -10,7 +10,7 @@ export function createAccountNodeListener(origin:string,routes:ReadonlyMap<strin
  const base=new URL(origin);
  if(base.protocol!=='https:'||base.origin!==origin||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>10000)throw Error('Account server unavailable');
  const selected=new Map(routes);
- for(const [path,route] of selected)if((!/^\/api\/account\/[a-z-]+$/.test(path)&&!/^\/auth\/callback\/(google|apple|recovery)$/.test(path))||typeof route?.handle!=='function')throw Error('Account server unavailable');
+ for(const [path,route] of selected)if((path!=='/account/recovery'&&!/^\/api\/account\/[a-z-]+$/.test(path)&&!/^\/auth\/callback\/(google|apple|recovery)$/.test(path))||typeof route?.handle!=='function')throw Error('Account server unavailable');
  let pending=0;
  return async(req:IncomingMessage,res:ServerResponse)=>{
   if(pending>=4){res.writeHead(429,{'cache-control':'no-store'});res.end();return;}

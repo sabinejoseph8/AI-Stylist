@@ -1,3 +1,5 @@
+import {createRecoveryConfirmation} from './recovery-confirmation.ts';
+import {createRecoveryConfirmationHttp} from './recovery-confirmation-http.ts';
 import {createRecoveryReadinessHttp} from './recovery-readiness-http.ts';
 import type {createAccountSecurity} from './account-security.ts';
 import {createAccountSessions} from './account-session.ts';
@@ -5,7 +7,7 @@ import {createPasswordAccounts,type PasswordAccountPort} from './password-accoun
 import {createAccountExchange,type AccountExchangePort} from './account-exchange.ts';
 import {createAccountRefresh,type AccountRefreshPort} from './account-refresh.ts';
 import {createAccountSignOut,type AccountRevocationPort} from './account-signout.ts';
-import {createAccountRecovery,type RecoveryPort} from './account-recovery.ts';
+import {createAccountRecovery,createTokenRecoveryOwner,type RecoveryPort} from './account-recovery.ts';
 import {createRecoveryBrowser} from './recovery-browser.ts';
 import {createRecoveryRequest,type RecoveryRequestPort} from './recovery-request.ts';
 import {createOAuthStart} from './oauth-start.ts';
@@ -24,10 +26,14 @@ import type {AccountNodeRoute} from './account-node.ts';
 export function createAccountComposition(origin:string,projectUrl:string,security:ReturnType<typeof createAccountSecurity>,ports:Readonly<{
  password:PasswordAccountPort;exchange:AccountExchangePort;refresh:AccountRefreshPort;
  signOut:AccountRevocationPort;recovery:RecoveryPort;recoveryRequest:RecoveryRequestPort;
+ tokenRecovery?:Parameters<typeof createTokenRecoveryOwner>[0];
 }>){
  const sessions=createAccountSessions(security,origin);
  const browser=createRecoveryBrowser(origin);
  const recovery=createAccountRecovery(security,ports.recovery);
+ const tokenRecovery=ports.tokenRecovery?createTokenRecoveryOwner(ports.tokenRecovery):undefined;
+ const confirmation=tokenRecovery?createRecoveryConfirmation(origin,tokenRecovery):undefined;
+ const confirmationHttp=confirmation?createRecoveryConfirmationHttp(origin,confirmation,browser):undefined;
  const exchange=createAccountExchange(security,origin,ports.exchange,8000,sessions);
  const oauth=createOAuthCallbackHttp(origin,exchange,security.callbacks);
  const reset=createRecoveryCallbackHttp(origin,recovery,browser,security.callbacks);
@@ -47,6 +53,10 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
  const active=new Set<AbortController>();
  const routes=new Map<string,AccountNodeRoute>();
  const prepared=new Map(registry.routes());
+ if(confirmationHttp){
+  prepared.set('/account/recovery',{handle:async(request,signal)=>confirmationHttp.landing(request,signal)});
+  prepared.set('/api/account/recovery-confirm',{handle:confirmationHttp.confirm,discardResponse:confirmationHttp.discardResponse});
+ }
  prepared.set('/api/account/reset-ready',{handle:createRecoveryReadinessHttp(origin,browser)});
  for(const [path,route] of prepared)routes.set(path,Object.freeze({
   discardResponse:route.discardResponse,
@@ -60,10 +70,10 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
  }));
  return Object.freeze({
   routes:():ReadonlyMap<string,AccountNodeRoute>=>new Map(routes),
-  cleanupHeld:()=>sessions.cleanupHeld()||recovery.cleanupHeld()||browser.cleanupHeld(),
+  cleanupHeld:()=>sessions.cleanupHeld()||recovery.cleanupHeld()||browser.cleanupHeld()||!!tokenRecovery?.cleanupHeld(),
   /** Future host must schedule this maintenance explicitly; no timer starts here. */
   expireRecovery:()=>browser.expire(),
   /** Result confirms browser reset-grant cleanup only, never remote provider termination. */
-  close(){if(closure)return closure;closed=true;for(const controller of active)controller.abort();closure=browser.close();return closure;},
+  close(){if(closure)return closure;closed=true;confirmation?.close();for(const controller of active)controller.abort();closure=browser.close();return closure;},
  });
 }
