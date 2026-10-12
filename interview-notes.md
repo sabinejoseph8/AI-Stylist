@@ -1233,3 +1233,7 @@ I tested the assembled account host with a generated signed identity. The app ch
 ## Testing the complete account lifecycle against a database
 
 I extended the isolated database rehearsal to use the assembled account host through actual local HTTP. Signed login stored encrypted session ownership, refresh advanced its generation, and scoped sign-out removed the session and refused the old cookie. I used synthetic provider responses and removed the disposable database afterward. This gave stronger integration evidence while keeping real customer acceptance separate. All 560 foundation tests also passed.
+
+## Delivering connected account and reset pages
+
+I separated the connected account build from the sample preview and added restricted delivery for its pages and assets. Only the public project origin is inserted into HTML. I tested the real connected reset page over local HTTPS in WebKit, including scanner-safe confirmation, one reset, cleared fields and refusal after reuse. All 565 foundation tests passed. Real hosted email and phone acceptance remain open.
