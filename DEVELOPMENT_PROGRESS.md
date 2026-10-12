@@ -667,3 +667,10 @@ Exact next action remains the isolated SQL rerun, including newest timestamp gua
 The approval mechanism accepted the pending isolated PostgreSQL run after goal resumption. `python3 apps/foundation/scripts/check-data-protections.py` passed, including the latest source timestamp guards, owner isolation, atomic mixed-look history and the revised media RPC/Storage adapter rehearsal covering six lost-acknowledgment paths and legacy JPEG deletion. Storage HTTP and customer authentication remain simulated; hosted acceptance and decoder OS limits remain open. No hosted migration or paid provider call occurred.
 
 Next: publish the verified local commits and copy the completed source/documents to the AI stylist folder, then refresh the private Memory site. Task 2b remains local-only and incomplete.
+
+
+## Publication and full foundation verification, 11 October 2026
+
+The complete foundation suite now passes: 188 tests across all 15 files, including the previously restricted loopback HTTP checks. The isolated PostgreSQL suite also passes. GitHub source through f2214a8 was pushed successfully. Copied and byte-verified 303 committed files through c657681 to the AI stylist folder, preserving its AGENTS.md. Sites deployment appgdep_6acc27c1058c819194a7c5ccb2271445 succeeded at the existing private URL, preserving owner-only access and MCP tools. The website snapshot is c657681 and therefore displays the preceding 171-test checkpoint; the newer full-suite result must be included in the next refresh.
+
+Next: finish publishing this evidence checkpoint and copying changed files, then implement and verify local decoder OS/container resource controls. Hosted activation, Phase 1 gates and paid-trial authorization remain unchanged.

@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2b local preparation is active. Latest evidence: 171 foundation tests across 14 files pass (excluding the loopback-binding test), with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Hosted changes and paid tests remain unauthorized.
+Task 2b local preparation is active. Latest evidence: 188 foundation tests across all 15 files pass, with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Hosted changes and paid tests remain unauthorized.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -26,7 +26,7 @@ Autonomous execution is authorized by Sabine on 10 October 2026. Routine technic
 - **Critical dependencies:** Voice/avatar integration, notes during speech, checking before recommendation audio, real retailer/affiliate data, customer-data isolation, provider retention, and session recovery. See R01 through R11 in tech-spec.md.
 - **Spoken test:** Generated reply/avatar audio and mouth movement are accepted on desktop and physical iPhone. The phone explicit interruption and connection closure passed. The prototype supports two buffered exchanges per bounded room. Spoken interrupt-and-end is accepted on iPhone; precise lip-sync timing and conversational resume remain pending. Connected live-provider notes and customer look release remain unverified.
 - **Recent changes:** Prepared server-owned look authorization and immutable internally checked synthetic candidates. Candidate checks use the authoritative notebook; new input, note edits and shutdown revoke both display and queued speech. Missing confirmations, conflicts, excessive prices and stale results are held. Exclusions now come from a separate server-injected simulated source. Real saved-profile validation, product discovery and media gating are not accepted.
-- **Publishing:** Earlier source and the protected Render Free preview were published successfully. The verified Task 2b commits through f2214a8 are published to GitHub. The output-folder copy and private Memory site refresh are underway. Credentials and private ledgers remain excluded from publication.
+- **Publishing:** Earlier source and the protected Render Free preview were published successfully. The verified Task 2b commits through f2214a8 are published to GitHub. Committed files were copied and byte-verified in the AI stylist folder; the private Memory site refresh succeeded with the c657681 document snapshot. Credentials and private ledgers remain excluded from publication.
 
 ## Task 2b media composition preparation, 11 October 2026
 

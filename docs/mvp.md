@@ -5,7 +5,7 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 11 October 2026
 
-Task 2a is accepted. Task 2b local persistence preparation is active under the approved sequencing exception: 171 foundation tests across 14 files, type checking and build pass, excluding the loopback-binding test. The last recorded prototype run passed 1,273 checks. The newest SQL timestamp guards and revised adapter-chain recovery rehearsal passed the isolated PostgreSQL suite. New migrations remain unapplied remotely; hosted identity, Storage and signed URL behavior are unverified.
+Task 2a is accepted. Task 2b local persistence preparation is active under the approved sequencing exception: 188 foundation tests across all 15 files, type checking and build pass. The last recorded prototype run passed 1,273 checks. The newest SQL timestamp guards and revised adapter-chain recovery rehearsal passed the isolated PostgreSQL suite. New migrations remain unapplied remotely; hosted identity, Storage and signed URL behavior are unverified.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
