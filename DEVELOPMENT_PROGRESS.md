@@ -2,7 +2,7 @@
 
 ## Current implementation and publication handoff
 
-The approved recovery amendment is installed and verified, preserving all nine previous records without reserving rooms. Local recovery implementation passes 1,295 tests and a synthetic mobile WebKit rehearsal. Next is protected Render recovery deployment and user-started iPhone acceptance. The historical checkpoints below do not override this current status.
+The approved recovery amendment is installed and verified, preserving all nine previous records without reserving rooms. Local recovery implementation passes 1,295 tests and a synthetic mobile WebKit rehearsal. Protected Render recovery deployment succeeded; user-started iPhone acceptance is next. The historical checkpoints below do not override this current status.
 
 ## Earlier account implementation checkpoint
 
@@ -2470,3 +2470,13 @@ Applied the reviewed prototype recovery migration to the existing AI Stylist Sup
 The SQL editor reported success. Row security remains enabled; anonymous and customer writes remain denied and the existing server role remains allowed. The earlier isolated 25 PostgreSQL checks cover the new claim and compare-and-swap rules. Preparing the protected Render service with explicit --recovery startup; ordinary spoken/scripted modes cannot consume this allowance. The test must be started by Sabine after complete advance instructions. Physical interruption/resume acceptance and Phase 1 completion remain open.
 
 Exact next action: inspect the current Render settings, deploy the reviewed recovery mode with the existing private gate and Free plan, verify its non-starting status/allowance routes, then give the complete iPhone instructions. Do not start or reserve automatically.
+
+
+## Protected recovery deployment, 12 October 2026
+
+Render successfully deployed commit e5e78feb8cb9041b7d186b725fa0c1c654d07e4f as deployment dep-db6jmadg1s2s739jmlv0 on the existing Free service. Startup is explicitly --preview --recovery. The recovery page returns HTTP 401 without credentials, confirming the private gate remains active. The in-app browser could not open the protected page; authenticated hosted status and physical playback remain unverified. No provider start or reservation was requested.
+
+Next action requiring Sabine: open https://ai-stylist-private-preview.onrender.com/recovery.html in iPhone Safari using the existing preview password. Read the complete advance instructions before Start. The new trial has one initial room and at most one replacement, no retries, $4/ten reserved minutes, with shorter actual room deadlines. Report whether the page loads before starting if access fails. Complete the three-turn interruption sequence, then End and report results. Phase 1 remains incomplete.
+
+
+Private Memory publication succeeded for source 534176d6a93d94ee49433b9c304f3cc269cb98fb, deployment appgdep_6acd3bc91f3c8191a3a1a6ae6c961ed7, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_ecc326b4eba081919529b54ec237de43. Owner-private publication and MCP preserved; all 16 site checks, build and artifact validation pass. The live trial remains unstarted. Exact next action is Sabine's iPhone recovery check using the complete chat instructions, followed by private ledger cleanup verification and recording actual results.

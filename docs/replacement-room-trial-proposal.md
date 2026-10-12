@@ -1,10 +1,10 @@
 # Replacement-room interruption trial proposal
 
-Status: Proposed, not authorized or enabled. 12 October 2026.
+Status: Approved by Sabine and deployed as a user-started private recovery experiment. 12 October 2026.
 
 ## Purpose
 
-Test the actual iPhone playback and provider lifecycle after an interruption. The local recovery helpers are prepared and tested; the live prototype still ends on interruption. This experiment does not finish Phase 1 or establish production readiness.
+Test the actual iPhone playback and provider lifecycle after an interruption. The local recovery helpers are prepared and tested; the dedicated recovery preview now replaces the room after verified cleanup. Physical acceptance remains pending. This experiment does not finish Phase 1 or establish production readiness.
 
 ## Requested allowance
 
@@ -23,7 +23,7 @@ The prior $25 experiment allocation has no remaining reserve. This request adds 
 
 ## Complete manual instructions to give before the test
 
-These are proposed instructions, not controls available on the current live page. Supply the final deployed URL and exact control labels only after implementation and verification.
+The deployed test is https://ai-stylist-private-preview.onrender.com/recovery.html. Use the existing preview password. Select Start microphone after the initial avatar connects and again after replacement; input is sent automatically after a pause.
 
 1. Open the protected test on the iPhone in Safari. Keep this chat silent and the test visible. Use a quiet room. Read the full instructions first.
 2. Start the private test and allow microphone access if requested. Wait for the avatar and the page's ready indication.
@@ -40,4 +40,4 @@ Record sanitized state transitions, distinct room/inference correlation, verifie
 
 ## Next action
 
-Sabine must authorize the additional $4 reservation and two-room experiment before a live allowance is changed or any provider call starts. Local implementation may remain disabled. All other activation gates and later-phase dependencies remain in force.
+The additional $4 was explicitly approved and the exact hosted allowance verified with all nine historical records unchanged. Deployment succeeded. Sabine now performs the user-started iPhone test after reading the complete instructions. Do not start automatically, retry, or add rooms. All other activation gates and later-phase dependencies remain in force.
