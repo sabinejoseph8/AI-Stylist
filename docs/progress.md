@@ -1,7 +1,7 @@
 # AI Stylist: Phased development plan and progress
 
 Status: Draft plan v0.8 for Sabine's review  
-Updated: 11 October 2026
+Updated: 12 October 2026
 
 Product: [Approved product specification v1.0](../Project%20Memory/product-spec.md)  
 Design: [Approved design specification v1.0](../Project%20Memory/design.md)  
@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active. All 424 foundation tests across 52 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Recovery now has a separate expiring, one-use reset capability and simulated confirmation UI; discarding permission aborts an in-flight reset and disposed permission cannot be reused. Password and reset HTTP factories share bounded same-origin JSON protections; recovery-request acknowledgment keeps visible replies generic. These factories are not registered as routes. Generated tokens and simulated adapters provide local evidence only. Sabine completed both the eight-step account preview and seven-step reset review; all steps worked and were readable. The encrypted refresh store, rotation coordinator and verified-session lifecycle pass isolated PostgreSQL composition with synthetic provider results. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
+Task 2c local account preparation is active. All 432 foundation tests across 54 files, type checking and build pass. Email/password, registration and callback orchestration now share verified-session checks, bounded admission and uncertainty holds after failed cleanup. Registration confirmation produces no account cookie. The disconnected sign-out coordinator clears browser cookies and reports remote success only after explicit provider confirmation. Recovery now has a separate expiring, one-use reset capability and simulated confirmation UI; discarding permission aborts an in-flight reset and disposed permission cannot be reused. Password and reset HTTP factories share bounded same-origin JSON protections; recovery-request acknowledgment keeps visible replies generic. These factories are not registered as routes. Generated tokens and simulated adapters provide local evidence only. Sabine completed both the eight-step account preview and seven-step reset review; all steps worked and were readable. The encrypted refresh store, rotation coordinator and verified-session lifecycle pass isolated PostgreSQL composition with synthetic provider results. Actual provider transport, recovery, refresh/sign-out lifecycle, phone/screen-reader and hosted acceptance remain open. No real accounts, emails, paid calls or hosted changes occurred.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1877,7 +1877,7 @@ Exact next action: prepare a bounded explicit scan that uses metadata discovery 
 
 Prepared createRefreshScan to process one metadata page sequentially through scoped reconciliation. It reports visited/confirmed/stale/unconfirmed counts and the last fully processed session cursor. Cancellation does not advance past unresolved work. A maximum eight-second deadline propagates abort; one underlying scan at a time retains its slot until actual completion, including ignored cancellation. No route, scheduler, provider revocation initiation, automatic rotation retry or ownership reset is installed.
 
-All 424 foundation tests across 52 files, type checking and build pass. Four new simulated scenarios cover mixed outcomes, stale scope/cursor progress, cancellation during reconciliation and unresolved discovery admission. Existing SQL evidence remains separate; this scan has not yet been composed with actual PostgreSQL. No hosted configuration or paid/provider call occurred.
+All 432 foundation tests across 54 files, type checking and build pass. Four new simulated scenarios cover mixed outcomes, stale scope/cursor progress, cancellation during reconciliation and unresolved discovery admission. Existing SQL evidence remains separate; this scan has not yet been composed with actual PostgreSQL. No hosted configuration or paid/provider call occurred.
 
 Semantics: endOfSweep only means the returned metadata page was shorter than the requested limit, not that all cleanup succeeded. Unconfirmed records remain stored and need a later full sweep from a null cursor; keyset pagination is not a transactional snapshot, so new earlier keys are picked up by a later full sweep. A canceled in-flight operation may have committed removal; scoped reconciliation and independent proof must resolve that uncertainty on an explicit subsequent invocation.
 
@@ -1917,7 +1917,7 @@ Operational ordering and remaining gaps are in docs/refresh-key-operations.md. S
 
 Prepared migration 20 and a disconnected bounded store method for per-key counts: total, ready, rotating, held and expired. All ownership rows are included regardless of session state or expiry. Only the service role can call the SQL function. No account IDs, ciphertext, nonces, tags or credentials are returned. Strict shape/count validation rejects errors and malformed data as unconfirmed rather than zero.
 
-All 424 foundation tests across 52 files, type checking and build pass. Isolated PostgreSQL checks verify ordinary-role denial, exact counts, empty-key usage, invalid identifiers, rotating usage during key transition and a held expired record. The full database composition passes with fixture keys and synthetic provider responses. No hosted migration or production key was used. This is point-in-time primary-database evidence only: concurrent writers and backup key dependencies prevent treating zero as automatic retirement permission.
+All 432 foundation tests across 54 files, type checking and build pass. Isolated PostgreSQL checks verify ordinary-role denial, exact counts, empty-key usage, invalid identifiers, rotating usage during key transition and a held expired record. The full database composition passes with fixture keys and synthetic provider responses. No hosted migration or production key was used. This is point-in-time primary-database evidence only: concurrent writers and backup key dependencies prevent treating zero as automatic retirement permission.
 
 Exact next action: consolidate private Memory with the 424-test checkpoint, then audit remaining local account preparation against the activation checklist. Task 2c and phase gates remain open.
 

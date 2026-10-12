@@ -1,5 +1,7 @@
 # Project memory website
 
+Private Memory publication verified: 432 foundation tests, initial password/database composition and lost-save restart fix. All 16 website checks and artifact validation passed. Owner-only access and MCP preserved. Source 66fbc8d57a29d5d98f54539869f19632c92e8169; deployment appgdep_6acc6073b8e88191bf3a1c658e13f8bd; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_88f9fe0a7ebc81918bfb2020f781cd89. Task 2c and hosted/provider acceptance remain open. Exact next action: prepare concrete password HTTP operations with simulated fetch and confirmation normalization; no live route or credentials.
+
 Private Memory now includes the 421-test checkpoint, accepted account/reset reviews and primary Auth presence/database reconciliation evidence. All 16 site checks and artifact validation pass. Owner-only access was verified and preserved; deployment succeeded with MCP enabled. Source dac55da7fc932bb0e28956ba5f76dff820dfe2eb; deployment appgdep_6acc5cf643ec8191846df5bdf1bcdeab; version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_3d341d3d34908191b456945c1b61fca8. No account route, hosted migration or paid provider call was activated. Task 2c and phase gates remain open.
 
 Published: 11 October 2026
