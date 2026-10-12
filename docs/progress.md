@@ -2700,3 +2700,12 @@ Sabine explicitly approved the additional $4 experiment: at most two rooms and t
 Prepared local ledger support for a distinct recoveryTrial amendment after nine closed historical attempts. Both $2/five-minute room units reserve atomically, neither can be reused, and the replacement can be claimed only after the initial reservation is closed. Existing spoken/scripted routes cannot spend this amendment. Hosted amendment application remains explicitly refused by SupabaseBudget until its separate SQL migration is prepared and verified. No real allowance, reservation, room or deployment has changed.
 
 Next: finish the hosted compare-and-swap ledger migration and isolated SQL tests, then build the disabled replacement lifecycle and verify cleanup/history/deadlines before enabling a user-started trial. Approval does not authorize automatic start, retries, a third room or stronger acceptance claims.
+
+
+## Recovery ledger SQL preparation verified, 12 October 2026
+
+Prepared supabase/prototype-recovery-trial.sql for the explicitly approved two-room $4 experiment. It applies once only after nine closed prior attempts and the exact earlier repeat amendment. The compare-and-swap function preserves all nine records, requires atomic two-unit reservation, disallows a third room or allowance mutation, accepts one claim per unit and requires initial room assignment and closure before replacement claim. Public/anonymous/customer roles remain denied. Local claim logic now also requires initial room assignment. The existing hosted amendment method remains blocked; this migration has not been applied remotely.
+
+Validation: 25 isolated PostgreSQL checks pass in a disposable network-disabled pinned container, including history preservation, duplicate amendment refusal, role denials, stale writes, partial pair, duplicate IDs, altered amount, premature claim, third room, unclaimed assignment and reopen/reset refusal. Container removed. These are synthetic ledger records, not the private hosted test history.
+
+Next: finish disabled replacement lifecycle and browser controls, review and test, then apply the approved migration to the confirmed project with full before/after history comparison. Do not reserve or start automatically; the final test begins only when Sabine has the complete instructions and presses Start. No hosted SQL, paid call or deployment occurred.

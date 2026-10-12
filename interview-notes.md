@@ -1350,3 +1350,6 @@ I fixed a cleanup callback edge case: if invalidating old playback requested cle
 
 
 I approved a tightly capped follow-up experiment to test interruption recovery in a replacement room. I chose to reserve both rooms before starting, keep prior attempts unchanged and prohibit retries. This makes the cost boundary explicit while the live cleanup and context behavior still need testing.
+
+
+I tested the recovery experiment's spending rules in an isolated database before changing the hosted project. The checks show that prior attempts stay unchanged, both new rooms must be reserved together, and the replacement cannot be claimed before the initial room is recorded and closed. These database checks do not substitute for real playback acceptance.

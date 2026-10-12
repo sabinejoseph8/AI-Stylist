@@ -116,7 +116,7 @@ export class ExperimentBudget {
       const index = ledger.runs.findIndex(r => r.id === id);
       const run = ledger.runs[index];
       if (!sameFields(ledger.recoveryTrial, RECOVERY_TRIAL) || ledger.runs.length !== 11 || index < 9 || !run || run.kind !== 'recovery' || run.closed || run.started
-        || (index === 10 && !ledger.runs[9]!.closed)) throw new Error('Recovery room unavailable.');
+        || (index === 10 && (!ledger.runs[9]!.closed || !ledger.runs[9]!.room))) throw new Error('Recovery room unavailable.');
       run.started = true;
     });
   }

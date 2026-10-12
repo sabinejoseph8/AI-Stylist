@@ -2995,3 +2995,12 @@ Local renderer teardown, recovery coordination and callback reentry checks are p
 ## Approved replacement experiment reservation pattern
 
 On 12 October 2026 Sabine approved an additional $4 for one two-room interruption-and-resume experiment, up to ten reserved avatar minutes. Experiment allocation is $29, separate from recurring hosting. Local ledger preparation reserves both $2/five-minute units atomically and permits each room claim once. Replacement claim requires initial closure; no old route may spend this dedicated allowance. Hosted SQL, disabled lifecycle, actual cleanup and device acceptance remain pending. No real reservation or allowance mutation has been applied.
+
+
+## Recovery ledger SQL preparation verified, 12 October 2026
+
+Prepared supabase/prototype-recovery-trial.sql for the explicitly approved two-room $4 experiment. It applies once only after nine closed prior attempts and the exact earlier repeat amendment. The compare-and-swap function preserves all nine records, requires atomic two-unit reservation, disallows a third room or allowance mutation, accepts one claim per unit and requires initial room assignment and closure before replacement claim. Public/anonymous/customer roles remain denied. Local claim logic now also requires initial room assignment. The existing hosted amendment method remains blocked; this migration has not been applied remotely.
+
+Validation: 25 isolated PostgreSQL checks pass in a disposable network-disabled pinned container, including history preservation, duplicate amendment refusal, role denials, stale writes, partial pair, duplicate IDs, altered amount, premature claim, third room, unclaimed assignment and reopen/reset refusal. Container removed. These are synthetic ledger records, not the private hosted test history.
+
+Next: finish disabled replacement lifecycle and browser controls, review and test, then apply the approved migration to the confirmed project with full before/after history comparison. Do not reserve or start automatically; the final test begins only when Sabine has the complete instructions and presses Start. No hosted SQL, paid call or deployment occurred.
