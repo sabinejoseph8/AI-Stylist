@@ -1301,3 +1301,7 @@ I closed and reopened a real WebKit browser profile and confirmed that its saved
 ## Making account server startup explicit
 
 I connected configuration, maintenance, account delivery and shutdown into one explicitly started runtime. I kept preparation separate from activation and verified that failed startup and shutdown clean up resources. I fixed a signal-only shutdown case that could otherwise report a successful later start. The real local runtime serves the account page and shuts down cleanly with synthetic maintenance; hosted activation remains pending.
+
+## Establishing trusted account transport
+
+I added a transport boundary that accepts real TLS and refuses to trust an HTTPS header supplied by itself. I prepared a separate HTTPS startup command and tested it with generated certificates. I kept Render proxy verification separate because managed TLS alone does not prove which incoming headers can be trusted. Account and recovery browser checks continue to pass behind the new guard.

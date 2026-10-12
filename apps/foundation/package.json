@@ -11,7 +11,8 @@
     "dev:server": "node src/server/main.ts",
     "test:phase-2": "vitest run",
     "typecheck": "tsc --noEmit",
-    "build": "vite build"
+    "build": "vite build",
+    "start:account:https": "node src/server/account-https-main.ts"
   },
   "dependencies": {
     "jose": "6.2.12",

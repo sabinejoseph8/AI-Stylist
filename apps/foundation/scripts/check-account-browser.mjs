@@ -12,6 +12,7 @@ import {generateKeyPair,exportJWK,SignJWT,decodeJwt} from 'jose';
 import {build} from 'vite';
 import {prepareAccountApplication} from '../src/server/account-application.ts';
 import {createAccountNetwork} from '../src/server/account-network.ts';
+import {createAccountTransport} from '../src/server/account-transport.ts';
 const container=process.argv[2];assert.match(container??'',/^stylist-refresh-[a-f0-9]{10}$/);
 const owner='11111111-1111-4111-8111-111111111111',session='55555555-5555-4555-8555-555555555555',recoverySession='66666666-6666-4666-8666-666666666666';
 const origin='https://127.0.0.1:4327',project='https://fixture.supabase.co',root=fileURLToPath(new URL('..',import.meta.url));
@@ -44,7 +45,7 @@ try{
  const output=join(temporary,'site');await build({configFile:false,root,build:{outDir:output,emptyOutDir:true,rollupOptions:{input:join(root,'account.html')}},logLevel:'error'});
  const options={appOrigin:origin,projectUrl:project,serviceKey:'synthetic-browser-server-key',fetch:provider,refreshKeyring:new Map([['fixture',randomBytes(32)]]),activeRefreshKeyId:'fixture'};
  application=await prepareAccountApplication(options,output);
- network=createAccountNetwork(application,listener=>createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},listener));assert.equal(await network.start(4327,'127.0.0.1'),true);
+ network=createAccountNetwork(application,listener=>createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},createAccountTransport(origin,listener)));assert.equal(await network.start(4327,'127.0.0.1'),true);
  const require=createRequire(import.meta.url),{webkit}=require(process.env.PLAYWRIGHT_MODULE||'playwright');browser=await webkit.launch({headless:true,...(process.env.WEBKIT_EXECUTABLE?{executablePath:process.env.WEBKIT_EXECUTABLE}:{})});
  const profile=join(temporary,'browser-profile'),launchOptions={headless:true,ignoreHTTPSErrors:true,...(process.env.WEBKIT_EXECUTABLE?{executablePath:process.env.WEBKIT_EXECUTABLE}:{})};
  let context=primaryContext=await webkit.launchPersistentContext(profile,launchOptions),page=await context.newPage();const errors=[];page.on('pageerror',error=>errors.push(error.message));
@@ -64,7 +65,7 @@ try{
  await sql(`update stylist_private.refresh_ownership set state='ready',lease_id=null where session_id='${session}';`);
  // Replace the server application with the same private keyring and durable database.
  assert.equal(await network.close(),true);application=await prepareAccountApplication(options,output);
- network=createAccountNetwork(application,listener=>createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},listener));assert.equal(await network.start(4327,'127.0.0.1'),true);
+ network=createAccountNetwork(application,listener=>createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},createAccountTransport(origin,listener)));assert.equal(await network.start(4327,'127.0.0.1'),true);
  const expiredAccess=await token(session,false,true);assert.equal(await application.authorizeResource(resourceRequest(expiredAccess),new AbortController().signal),null);
  await context.addCookies([{...cookie,value:expiredAccess}]);
  await page.reload();await page.getByRole('button',{name:'Sign out',exact:true}).waitFor();const rotated=await rpc('stylist_inspect_refresh',{p_owner:owner,p_session:session});assert.equal(rotated.generation,2);assert.equal(rotated.expires_at_ms,stored.expires_at_ms);const renewed=(await context.cookies()).find(c=>c.name==='__Host-stylist_access');assert.ok(Math.abs(renewed.expires-cookie.expires)<=1);
