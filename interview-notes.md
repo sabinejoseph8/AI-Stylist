@@ -1305,3 +1305,7 @@ I connected configuration, maintenance, account delivery and shutdown into one e
 ## Establishing trusted account transport
 
 I added a transport boundary that accepts real TLS and refuses to trust an HTTPS header supplied by itself. I prepared a separate HTTPS startup command and tested it with generated certificates. I kept Render proxy verification separate because managed TLS alone does not prove which incoming headers can be trusted. Account and recovery browser checks continue to pass behind the new guard.
+
+## Checking deployment assumptions
+
+I checked Render's own documentation before enabling accounts. I separated documented TLS termination from the unproven header trust and URL logging details, then prepared focused support questions without customer data. I kept real account activation gated while continuing independent preparation.
