@@ -27,7 +27,11 @@ function AccountPanelSession({provider=sampleAccountProvider,connected=false}:Ac
  const [email,setEmail]=useState(''),[password,setPassword]=useState('');
  const statusRef=useRef<HTMLParagraphElement>(null),previous=useRef(state);
  useEffect(()=>{if(previous.current!==state&&state.status!=='pending')statusRef.current?.focus();previous.current=state;},[state]);
- useEffect(()=>()=>flow.cancel(),[flow]);
+ useEffect(()=>{
+  let mounted=true;
+  if(connected&&provider.restore){const work=flow.restore();setState(flow.snapshot());void work.then(()=>{if(mounted)setState(flow.snapshot());});}
+  return ()=>{mounted=false;flow.cancel();};
+ },[flow,connected,provider]);
  async function submit(request:AccountRequest){const work=flow.submit(request);setPassword('');setState(flow.snapshot());await work;setState(flow.snapshot());}
  function change(next:typeof mode){setResetPreview(false);flow.cancel();setState(flow.snapshot());setPassword('');setMode(next);}
  const pending=state.status==='pending';

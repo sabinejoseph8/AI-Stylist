@@ -68,3 +68,22 @@ it('retains admission for canceled non-cooperative calls and resumes when they s
 it('accepts status-only HTTP presentation without inventing a client account identity',async()=>{
  const flow=createAccountFlow(provider({status:'signedIn'}));await flow.submit(request);expect(flow.snapshot().status).toBe('signedIn');expect(flow.snapshot().userId).toBeNull();expect(JSON.stringify(flow.snapshot())).not.toContain('private-fixture');
 });
+
+it('restores status without customer details and refuses unexpected restoration replies',async()=>{
+ const flow=createAccountFlow({...provider({status:'signedIn'}),restore:async()=> 'signedIn'});
+ await flow.restore();expect(flow.snapshot()).toEqual({status:'signedIn',message:'You are signed in.',userId:null});
+ const failed=createAccountFlow({...provider({status:'signedIn'}),restore:async()=>{throw Error('secret');}});
+ await failed.restore();expect(failed.snapshot().status).toBe('signedOut');expect(failed.snapshot().message).not.toContain('secret');
+});
+it('cancellation, newer sign-in and sign-out supersede a delayed restoration',async()=>{
+ for(const action of ['cancel','submit','signOut']){
+  let release!:(value:'signedIn')=>void;let observed!:AbortSignal;
+  const flow=createAccountFlow({...provider({status:'confirmationRequired'}),restore:signal=>{observed=signal;return new Promise(resolve=>{release=resolve;});}});
+  const work=flow.restore();await Promise.resolve();
+  if(action==='cancel')flow.cancel();else if(action==='signOut')await flow.signOut();else await flow.submit({...request,method:'signUp'});
+  release('signedIn');await work;expect(observed.aborted).toBe(true);expect(flow.snapshot().status).toBe(action==='submit'?'confirmationRequired':'signedOut');
+ }
+});
+it('preview providers without restoration make no restoration request',async()=>{
+ const flow=createAccountFlow(provider({status:'signedIn'}));await flow.restore();expect(flow.snapshot().status).toBe('signedOut');
+});

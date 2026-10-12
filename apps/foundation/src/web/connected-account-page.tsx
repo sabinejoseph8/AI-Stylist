@@ -1,3 +1,4 @@
+import {createAccountRestore} from './account-restore.ts';
 import React,{useMemo} from 'react';
 import {resolveAccountPage} from './account-page.ts';
 import {AccountPanel} from './account-panel.tsx';
@@ -9,7 +10,7 @@ export interface ConnectedAccountPageProps {origin:string;href:string;projectUrl
 /** Separate connected entry. URL routing supplies presentation only, never account/reset authority. */
 export function ConnectedAccountPage({origin,href,projectUrl,send,navigate}:ConnectedAccountPageProps){
  const page=resolveAccountPage(origin,href);
- const provider=useMemo(()=>createAccountHttp(origin,send,15000,createOAuthHandoff(origin,projectUrl,send,navigate)),[origin,projectUrl,send,navigate]);
+ const provider=useMemo(()=>({...createAccountHttp(origin,send,15000,createOAuthHandoff(origin,projectUrl,send,navigate)),restore:createAccountRestore(origin,send)}),[origin,projectUrl,send,navigate]);
  const load=useMemo(()=>createRecoveryConfiguration(origin,send),[origin,send]);
  return <><a className="skip" href="#main">Skip to content</a><header><a className="wordmark" href="/account">AI Stylist<span>Your personal fashion journal</span></a></header><main id="main" tabIndex={-1}>
  <h1>{page.page==='reset'?'Reset your password':'Your account'}</h1>

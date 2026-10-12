@@ -7,6 +7,7 @@ export type AccountReply={status:'signedIn';userId?:string}|{status:'confirmatio
 export interface AccountProvider{
  submit(request:AccountRequest,signal:AbortSignal):Promise<AccountReply>;
  signOut(signal:AbortSignal):Promise<void>;
+ restore?(signal:AbortSignal):Promise<'signedIn'|'signedOut'>;
 }
 export type AccountSnapshot=Readonly<{status:'signedOut'|'pending'|'signedIn'|'confirmationRequired'|'recoveryRequested'|'redirecting'|'error';message:string;userId:string|null}>;
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/i;
@@ -43,6 +44,17 @@ export function createAccountFlow(provider:AccountProvider,deadlineMs=15000){
  return Object.freeze({
   snapshot:()=>state,
   cancel(){invalidate();set('signedOut','Sign-in canceled. Choose a method to try again.');},
+  async restore(){
+   if(!provider.restore)return;
+   invalidate();const version=generation;set('pending','Checking your saved sign-in.');
+   try{
+    const result=await operation(signal=>provider.restore!(signal));
+    if(version!==generation)return;
+    if(result==='signedIn')set('signedIn','You are signed in.');
+    else if(result==='signedOut')set('signedOut','Sign in to use your stylist.');
+    else throw Error();
+   }catch{if(version===generation)set('signedOut','Saved sign-in could not be confirmed. Please sign in.');}
+  },
   async submit(value:AccountRequest){
    invalidate();const version=generation;let request:AccountRequest;
    try{request=input(value);}catch{set('error','Check your account details and try again.');return;}

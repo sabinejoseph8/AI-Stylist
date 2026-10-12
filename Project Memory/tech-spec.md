@@ -2857,3 +2857,11 @@ Prepared a browser restoration helper: check status, attempt refresh once only a
 Validation: 606 foundation tests, TypeScript checking and production build pass with loopback permission. The first sandbox-only run could not run network checks; the permitted run is the evidence. New tests cover status-only output, origin/input refusal, revoked access, cancellation, bounded refresh and independent confirmation. These are simulated service tests, not real customer acceptance.
 
 Next action: integrate restoration into the connected account flow with cancellation and sign-out race protection, then extend the isolated HTTPS/browser/database rehearsal. Keep the seven-day absolute deadline unchanged. Existing hosted activation, SMTP/social credentials, Phase 1 and spending gates remain open. No new customer or paid provider calls were made.
+
+## Connected session restoration evidence, 12 October 2026
+
+The connected account screen now restores status on opening through the bounded status/one-refresh/status helper. Its flow cancels restoration on unmount, cancellation, newer sign-in or sign-out, and ignores late results. Sample account previews do not restore sessions. It never uses browser storage for credentials.
+
+Validation: 609 tests across 90 files, TypeScript checking and build pass. Actual HTTPS/WebKit/isolated PostgreSQL rehearsal confirms fresh reload without rotation, application replacement, browser-driven expired-access generation-two refresh with the identical absolute deadline, resource expiry/hold refusal, scoped sign-out revocation and separate-browser recovery. Auth and maintenance HTTP responses are synthetic. No customer account, email, hosted configuration or paid call changed. Logs: /private/tmp/ai-stylist-connected-restore-tests.log and /private/tmp/ai-stylist-connected-restore-postgres.log.
+
+Next action: check persistence across a completely closed and reopened browser context and refuse restoration at the absolute seven-day boundary; consolidate the private Memory publication. Hosted accounts, real provider/email/social credentials, physical-phone/accessibility and phase exit remain open. Do not mark Tasks 2b or 2c complete.

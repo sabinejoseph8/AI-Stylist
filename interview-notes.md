@@ -1289,3 +1289,7 @@ I extended the combined database/browser rehearsal to verify the actual resource
 ## Preparing safe session restoration
 
 I chose a fixed seven-day sign-in window. I added a status check that reveals no customer details and requires the saved session to remain valid. I prepared one refresh attempt followed by another status check, so an uncertain refresh cannot silently become a successful sign-in. Browser integration and hosted acceptance are still pending.
+
+## Restoring sign-in after reload
+
+I connected the saved-session check to the account screen. I verified reload without unnecessary refresh, then replaced the application and refreshed an expired access token without extending the original seven-day deadline. I protected cancellation and sign-out from late responses. These checks use an isolated database and synthetic Auth responses, so real hosted acceptance remains a separate gate.
