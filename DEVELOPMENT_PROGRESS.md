@@ -847,3 +847,6 @@ Prepared a disconnected fixed-project JWKS resolver using jose and injected fetc
 All 240 foundation tests across 21 files, type checking and build pass. Generated ES256 keys verify cryptographically through simulated HTTP responses. Rotation, unknown-key request storms, private keys, excessive response bodies, unsupported algorithms, ignored cancellation and stalled bodies are checked. No live JWKS request, actual signing configuration inspection or hosted account activation occurred. Cookie/origin and OAuth/recovery callback boundaries remain next.
 
 Exact next action: commit/push/copy this signing-key checkpoint and refresh private Memory, which still reflects 79b060d. Then implement a disconnected same-origin server request identity boundary with strict cookie parsing and generated token tests, followed by callback/recovery protections. Preserve local-only Task 2c and spending limits.
+
+
+Signing-key checkpoint b4f79a8 is pushed and copied. Private Memory source 6702373344f96025752389a1c412226c25f3096a deployed successfully as appgdep_6acc376ab93c8191b10c7a26cdb0cefb. All 16 website checks pass; owner-only access and MCP are retained. This refresh includes both the SQL identity and signing-key checkpoints. No customer app deployment occurred.

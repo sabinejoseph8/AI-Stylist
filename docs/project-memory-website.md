@@ -65,3 +65,6 @@ Account-controller checkpoint 27aad35 is published and copied. Private Memory so
 
 
 Identity checkpoint 79b060d is published and copied. Private Memory source 5ee28c00f9cade43bf2a533af0d4e93f5355f94f deployed successfully as appgdep_6acc3509582081919814c6cd47d046f6; all 16 website checks pass and MCP is retained. The next implementation remains the protected local current-session lookup and SQL-backed verifier checks.
+
+
+Signing-key checkpoint b4f79a8 is pushed and copied. Private Memory source 6702373344f96025752389a1c412226c25f3096a deployed successfully as appgdep_6acc376ab93c8191b10c7a26cdb0cefb. All 16 website checks pass; owner-only access and MCP are retained. This refresh includes both the SQL identity and signing-key checkpoints. No customer app deployment occurred.
