@@ -1127,3 +1127,7 @@ I verified recovery-request cancellation over a real local HTTP disconnect. The 
 ## Browser social sign-in preparation, 12 October 2026
 
 I found that the browser transport still refused social sign-in even though the server paths were prepared. I added an explicit handoff adapter that validates the destination and callback before navigation, and refuses late canceled responses. The preview remains simulated. All 504 tests, type checking and build pass; real Google/Apple setup is still pending.
+
+## Browser account transport completion, 12 October 2026
+
+I verified the social handoff against the server initiation response and added the missing reset HTTP adapter. Reset uses the server's cookie authority, sends once, and does not sign the customer in. The preview still uses simulated behavior. All 507 tests, type checking and build pass; real provider acceptance remains open.

@@ -1,10 +1,10 @@
 import type {AccountProvider,AccountRequest,AccountReply} from './account-flow.ts';
 /** Injected transport only. Not selected by the preview and never authorizes a server operation. */
-export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=15000,social?:(provider:'google'|'apple',signal:AbortSignal)=>Promise<AccountReply>):AccountProvider{
+export function createAccountStatusTransport(origin:string,send:typeof fetch,deadlineMs=15000){
  const base=new URL(origin);if(base.protocol!=='https:'||base.origin!==origin||typeof send!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>15000)throw Error('Account unavailable');
  let pending=0;
  async function call(path:string,input:unknown,external:AbortSignal):Promise<{status:string;http:number}>{
-  if(external.aborted||pending>=4)throw Error('Account unavailable');pending++;
+  if(!['/api/account/password','/api/account/recover','/api/account/sign-out','/api/account/reset'].includes(path)||external.aborted||pending>=4)throw Error('Account unavailable');pending++;
   const controller=new AbortController();let body:ReadableStream<Uint8Array>|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined,timer:ReturnType<typeof setTimeout>|undefined;let abort!:()=>void;
   const canceled=new Promise<never>((_,reject)=>{abort=()=>{controller.abort();if(reader)void reader.cancel().catch(()=>{});reject(Error('Account unavailable'));};external.addEventListener('abort',abort,{once:true});timer=setTimeout(abort,deadlineMs);});
   const work=(async()=>{
@@ -23,6 +23,11 @@ export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=150
   })();
   try{const result=await Promise.race([work,canceled]);if(controller.signal.aborted)throw Error('Account unavailable');return result;}finally{if(timer)clearTimeout(timer);external.removeEventListener('abort',abort);}
  }
+ return call;
+}
+/** Explicit browser provider, not selected by the preview. */
+export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=15000,social?:(provider:'google'|'apple',signal:AbortSignal)=>Promise<AccountReply>):AccountProvider{
+ const call=createAccountStatusTransport(origin,send,deadlineMs);
  return Object.freeze({
   async submit(input:AccountRequest,signal:AbortSignal):Promise<AccountReply>{
    if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Account unavailable');

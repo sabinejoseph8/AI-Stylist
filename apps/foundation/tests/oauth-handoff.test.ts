@@ -23,3 +23,19 @@ it('cancellation refuses a late handoff without navigation',async()=>{
  const pending=social('google',controller.signal);const rejected=expect(pending).rejects.toThrow('Account unavailable');controller.abort();await rejected;
  release(Response.json({status:'handoff',url:createOAuthStart(project,createAccountCallbacks(origin)).begin('google').url}));await new Promise(resolve=>setTimeout(resolve,0));expect(navigate).not.toHaveBeenCalled();
 });
+
+it('composes browser handoff with the prepared server initiation response',async()=>{
+ const {createOAuthStartHttp}=await import('../src/server/oauth-start-http.ts');
+ const callbacks=createAccountCallbacks(origin),server=createOAuthStartHttp(origin,createOAuthStart(project,callbacks));
+ const navigate=vi.fn();let flowCookie='';
+ const send:typeof fetch=async(url,input)=>{
+  const headers=new Headers(input?.headers);headers.set('origin',origin);
+  const response=await server.handle(new Request(String(url),{...input,headers}),input?.signal??signal());
+  flowCookie=response.headers.get('set-cookie')??'';return response;
+ };
+ const social=createOAuthHandoff(origin,project,send,navigate);
+ expect(await social('apple',signal())).toEqual({status:'redirecting'});
+ const url=new URL(navigate.mock.calls[0]![0]),callback=url.searchParams.get('redirect_to')!;
+ const result=callbacks.fromRequest(new Request(callback+'&code=synthetic',{headers:{cookie:flowCookie.split(';')[0]!}}),'apple');
+ expect(result?.status).toBe('exchangeRequired');expect(callbacks.fromRequest(new Request(callback+'&code=synthetic',{headers:{cookie:flowCookie.split(';')[0]!}}),'apple')).toBeNull();
+});
