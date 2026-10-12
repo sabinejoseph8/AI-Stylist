@@ -1,6 +1,7 @@
+import {loadAccountBuild} from '../src/server/account-build.ts';
 import {createAccountWebsite} from '../src/server/account-website.ts';
 import {createRequire} from 'node:module';
-import {mkdtempSync,readFileSync,rmSync,readdirSync} from 'node:fs';
+import {mkdtempSync,readFileSync,rmSync} from 'node:fs';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
 import {execFileSync} from 'node:child_process';
@@ -22,8 +23,8 @@ try{
  const binding=createRecoveryConfirmation(origin,{confirm:async()=>{verifications++;return {status:'resetRequired',expiresAt:Date.now()+60000,reset:async(password)=>{assert.equal(password,'Made-up-password-123!');resets++;return {status:'resetComplete'};},discard:async()=>{cleanups++;return true;}};}});
  recoveryBrowser=createRecoveryBrowser(origin);const http=createRecoveryConfirmationHttp(origin,binding,recoveryBrowser);
  const listener=createAccountNodeListener(origin,new Map([['/account/recovery',{handle:async(request,signal)=>http.landing(request,signal)}],['/api/account/recovery-confirm',{handle:http.confirm,discardResponse:http.discardResponse}],['/api/account/reset-ready',{handle:createRecoveryReadinessHttp(origin,recoveryBrowser)}],['/api/account/reset',{handle:createRecoveryHttp(origin,recoveryBrowser)}]]));
- const assets=new Map(readdirSync(join(output,'assets')).map(name=>['/assets/'+name,readFileSync(join(output,'assets',name))]));
- const website=createAccountWebsite(origin,'https://fixture.supabase.co',{handle:listener},readFileSync(join(output,'account.html'),'utf8'),assets);
+ const accountBuild=await loadAccountBuild(output);
+ const website=createAccountWebsite(origin,'https://fixture.supabase.co',{handle:listener},accountBuild.html,accountBuild.assets);
  server=createServer({key:readFileSync(join(temporary,'key.pem')),cert:readFileSync(join(temporary,'cert.pem'))},website);
  await new Promise((resolve,reject)=>{server.once('error',reject);server.listen(4326,'127.0.0.1',resolve);});
  browser=await webkit.launch({headless:true,...(process.env.WEBKIT_EXECUTABLE?{executablePath:process.env.WEBKIT_EXECUTABLE}:{})});
