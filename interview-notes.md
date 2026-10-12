@@ -714,3 +714,8 @@ I found a stale test count in the project-memory website even after the source d
 ### Verifying recovery before activation
 
 I kept the new persistence features disabled while I verified their database behavior. When execution became available, the isolated PostgreSQL rehearsal passed the source-date checks and recovery from six lost acknowledgments, including deletion of an older JPEG. I kept simulated Storage and identity evidence separate from hosted acceptance, so passing local checks did not imply that customer uploads were ready.
+
+
+### Testing the image decoder beyond its JavaScript heap
+
+I treated native image decoding as a resource risk because a JavaScript heap limit does not cap the image library. I verified the actual sanitizer in isolated Linux containers, including an intentional native-memory overload that the kernel contained, CPU throttling and stopping a hung worker. I kept those local results separate from Render acceptance and left customer uploads disabled until the hosted controls can be verified.

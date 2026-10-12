@@ -1082,3 +1082,8 @@ D08/D11/D15/D17 remain partial. Owner-bound media composition, sanitized upload 
 ## SQL adapter-chain verification, 11 October 2026
 
 The isolated PostgreSQL suite passed after execution became available, including latest source timestamp guards, owner-only mixed-look history and media lifecycle recovery through prepared RPC/Storage adapters. Six lost-acknowledgment paths and legacy JPEG deletion pass. Storage HTTP and customer authentication remain simulated. This supersedes earlier pending-rerun checkpoints; hosted Storage, signed URLs and decoder OS resource limits remain unverified. Task 2b and Phase 1 remain incomplete.
+
+
+## Local decoder containment verified, 11 October 2026
+
+Six isolated Linux resource scenarios pass through the actual sanitizer and Sharp 0.35.5: kernel limits/read-only non-root runtime, PNG/JPEG/WebP through 16 MP, corrupt/dimension refusal, hung-child kill/reap, measured CPU throttling and native-buffer OOM containment. Each temporary container has no network, 384 MiB memory/no swap, half a CPU and 64-process cap and is removed after its scenario. The app uses no Docker runtime or new hosted service. See docs/image-decoder-resource-rehearsal.md for the command and limits of evidence. Actual Render containment, hosted identity, Storage and signed URLs remain gates; Task 2b remains local-only and incomplete. No spending, customer media or hosted changes occurred.

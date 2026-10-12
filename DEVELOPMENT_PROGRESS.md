@@ -674,3 +674,10 @@ Next: publish the verified local commits and copy the completed source/documents
 The complete foundation suite now passes: 188 tests across all 15 files, including the previously restricted loopback HTTP checks. The isolated PostgreSQL suite also passes. GitHub source through f2214a8 was pushed successfully. Copied and byte-verified 303 committed files through c657681 to the AI stylist folder, preserving its AGENTS.md. Sites deployment appgdep_6acc27c1058c819194a7c5ccb2271445 succeeded at the existing private URL, preserving owner-only access and MCP tools. The website snapshot is c657681 and therefore displays the preceding 171-test checkpoint; the newer full-suite result must be included in the next refresh.
 
 Next: finish publishing this evidence checkpoint and copying changed files, then implement and verify local decoder OS/container resource controls. Hosted activation, Phase 1 gates and paid-trial authorization remain unchanged.
+
+
+## Local decoder containment verified, 11 October 2026
+
+Six isolated Linux resource scenarios pass through the actual sanitizer and Sharp 0.35.5: kernel limits/read-only non-root runtime, PNG/JPEG/WebP through 16 MP, corrupt/dimension refusal, hung-child kill/reap, measured CPU throttling and native-buffer OOM containment. Each temporary container has no network, 384 MiB memory/no swap, half a CPU and 64-process cap and is removed after its scenario. The app uses no Docker runtime or new hosted service. See docs/image-decoder-resource-rehearsal.md for the command and limits of evidence. Actual Render containment, hosted identity, Storage and signed URLs remain gates; Task 2b remains local-only and incomplete. No spending, customer media or hosted changes occurred.
+
+Exact next action: publish/copy the verified resource harness and updated memory, refresh the private Memory website, then audit remaining authorized local Task 2b checks without activating hosted features.

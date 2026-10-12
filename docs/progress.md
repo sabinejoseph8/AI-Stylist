@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2b local preparation is active. Latest evidence: 188 foundation tests across all 15 files pass, with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Hosted changes and paid tests remain unauthorized.
+Task 2b local preparation is active. Latest evidence: 188 foundation tests across all 15 files pass, with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Six isolated Linux decoder resource scenarios also pass; actual hosted limits remain unverified. Hosted changes and paid tests remain unauthorized.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -32,7 +32,7 @@ Autonomous execution is authorized by Sabine on 10 October 2026. Routine technic
 
 The prepared media port binds one verified owner and separates customer-authenticated deletion claims from service-only staging, operation reads, commits and finalization. Simulated integration checks now exercise sanitized saves through the prepared RPC/Storage boundaries and recover uncertain deletions only from exact acknowledgments or confirmed absence. Storage uses one deadline for headers and body, cancels safely, rejects partial reads and false mutation acknowledgments, and keeps legacy single-file keys readable/removable. No route constructs these adapters; actual customer authentication remains to be built.
 
-Evidence: 171 tests across 14 foundation files, type checking and build pass, excluding the existing test that requires a denied loopback bind. The revised SQL-backed recovery rehearsal and latest SQL timestamp guards passed the isolated PostgreSQL suite after execution became available. Hosted Storage, signed URLs and production resource limits remain unverified. Task 2b remains local-only and incomplete. No new paid call, remote migration or deployment occurred.
+Evidence: 171 tests across 14 foundation files, type checking and build pass, excluding the existing test that requires a denied loopback bind. The revised SQL-backed recovery rehearsal and latest SQL timestamp guards passed the isolated PostgreSQL suite after execution became available. Six local decoder resource scenarios now verify cgroup memory/CPU/process limits, valid/invalid images, hung-child termination, throttling and native-memory OOM containment. Hosted Storage, signed URLs and production resource limits remain unverified. Task 2b remains local-only and incomplete. No new paid call, remote migration or deployment occurred.
 
 Next: complete the output-folder copy and Memory site publication, then verify decoder resource limits within local Task 2b preparation. Continue independent preparation while preserving the Phase 1 exit gate.
 
