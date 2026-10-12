@@ -1179,3 +1179,7 @@ I chose password recovery that works when a customer opens the email on another 
 ## Reusing recovery safeguards across devices
 
 I kept the same verified, reset-only permission and cleanup rules when adding email-token recovery on another device. An ordinary sign-in token cannot become password-reset authority. The local checks pass, while receiving-browser confirmation and real email acceptance remain unfinished.
+
+## Password recovery across devices, 12 October 2026
+
+I chose to let customers open a password-reset email on a different device. I reused the same bounded, one-use reset permission for both recovery paths so the new path does not gain normal account access. Synthetic tests now cover cancellation and cleanup even when verification finishes late. The receiving-browser confirmation and real email/device checks are still pending.

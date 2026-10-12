@@ -1,7 +1,7 @@
 import {describe,it,expect,vi,afterEach} from 'vitest';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
 import {createAccountSecurity} from '../src/server/account-security.ts';
-import {createAccountRecovery,type VerifiedRecovery} from '../src/server/account-recovery.ts';
+import {createAccountRecovery,createTokenRecoveryOwner,type VerifiedRecovery} from '../src/server/account-recovery.ts';
 const origin='https://stylist.example',project='https://example.supabase.co';
 const owner='11111111-1111-4111-8111-111111111111',sessionId='22222222-2222-4222-8222-222222222222';
 const signal=()=>new AbortController().signal;
@@ -66,4 +66,29 @@ describe('scoped disconnected recovery',()=>{
   expect(await service.complete(f.begin('recovery').request,signal())).toEqual({status:'unavailable'});expect(value.discard).toHaveBeenCalledTimes(1);
  });
 
+});
+
+describe('cross-device bounded recovery ownership',()=>{
+ it('accepts verified reset permission without requesting-browser PKCE material',async()=>{
+  const value=lease(),verifyToken=vi.fn(async()=>value),owner=createTokenRecoveryOwner({verifyToken});
+  const grant=await owner.confirm('email-proof',signal());expect(grant.status).toBe('resetRequired');
+  expect(verifyToken).toHaveBeenCalledWith('email-proof',expect.any(AbortSignal));
+  if(grant.status!=='resetRequired')throw Error();
+  expect(Object.keys(grant).sort()).toEqual(['discard','expiresAt','reset','status']);
+  expect(await grant.reset('new-made-up-password',signal())).toEqual({status:'resetComplete'});
+  expect(await grant.reset('again',signal())).toEqual({status:'unconfirmed'});
+ });
+ it('refuses malformed proof before provider verification',async()=>{
+  const verifyToken=vi.fn(),owner=createTokenRecoveryOwner({verifyToken});
+  expect(await owner.confirm('bad proof',signal())).toEqual({status:'unavailable'});expect(verifyToken).not.toHaveBeenCalled();
+ });
+ it('cleans a late capability after receiving-browser cancellation',async()=>{
+  const value=lease();let resolve!:(v:VerifiedRecovery)=>void,started!:()=>void,cleaned!:()=>void;
+  const began=new Promise<void>(r=>started=r),done=new Promise<void>(r=>cleaned=r);
+  value.discard=vi.fn(async()=>{cleaned();return true;});
+  const owner=createTokenRecoveryOwner({verifyToken:()=>{started();return new Promise(r=>resolve=r);}}),controller=new AbortController();
+  const work=owner.confirm('email-proof',controller.signal);await began;controller.abort();
+  expect(await work).toEqual({status:'unavailable'});resolve(value);await done;
+  expect(value.resetPassword).not.toHaveBeenCalled();expect(value.discard).toHaveBeenCalledTimes(1);
+ });
 });

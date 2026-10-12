@@ -18,8 +18,8 @@ export type RecoveryGrant=Readonly<{
  discard():Promise<boolean>;
 }>;
 /** Disconnected process-local recovery owner. No normal account cookie is ever issued. */
-export function createAccountRecovery(security:ReturnType<typeof createAccountSecurity>,port:RecoveryPort,deadlineMs=8000){
- if(typeof port?.exchange!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Recovery unavailable');
+function createRecoveryOwner<Input>(exchange:(input:Input,signal:AbortSignal)=>ReturnType<RecoveryPort['exchange']>,deadlineMs=8000){
+ if(typeof exchange!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Recovery unavailable');
  let held=false,pending=0;
  const grants=new Map<VerifiedRecovery,number>(),cleanups=new WeakMap<VerifiedRecovery,Promise<boolean>>();
  async function discard(value:VerifiedRecovery){
@@ -36,18 +36,17 @@ export function createAccountRecovery(security:ReturnType<typeof createAccountSe
  }
  return Object.freeze({
   cleanupHeld:()=>held,
-  async complete(request:Request,external:AbortSignal):Promise<RecoveryGrant|Readonly<{status:'unavailable'|'busy'|'canceled'}>>{
-   if(held||external.aborted||request.signal.aborted)return {status:'unavailable'};
+  busy:()=>pending>=4||grants.size>=128,
+  async complete(input:Input,external:AbortSignal):Promise<RecoveryGrant|Readonly<{status:'unavailable'|'busy'|'canceled'}>>{
+   if(held||external.aborted)return {status:'unavailable'};
    for(const [grant,expires] of grants)if(expires<=Date.now())void discard(grant);
    if(pending>=4||grants.size>=128)return {status:'busy'};
-   const callback=security.callbacks.fromRequest(request,'recovery');if(!callback)return {status:'unavailable'};
-   if(callback.status==='canceled')return {status:'canceled'};
-   const controller=new AbortController();const stop=()=>controller.abort();external.addEventListener('abort',stop,{once:true});request.signal.addEventListener('abort',stop,{once:true});
+   const controller=new AbortController();const stop=()=>controller.abort();external.addEventListener('abort',stop,{once:true});
    try{const result=await bounded<RecoveryGrant|Readonly<{status:'unavailable'}>>(async signal=>{
     let value:VerifiedRecovery|undefined;
     try{
      if(signal.aborted)return {status:'unavailable' as const};
-     const reply=await port.exchange({code:callback.code,verifier:callback.verifier},signal);
+     const reply=await exchange(input,signal);
      if(reply&&'status' in reply&&reply.status==='notCreated'&&Object.keys(reply).length===1)return {status:'unavailable' as const};
      value=reply as VerifiedRecovery;
      if(!value||typeof value.discard!=='function'){held=true;throw Error();}
@@ -67,7 +66,31 @@ export function createAccountRecovery(security:ReturnType<typeof createAccountSe
        },resetScope.signal,{status:'unconfirmed' as const});}finally{signal.removeEventListener('abort',stopReset);}
       }});
     }catch{if(value&&typeof value.discard==='function')await discard(value);else held=true;return {status:'unavailable' as const};}
-   },controller.signal,{status:'unavailable' as const});if(controller.signal.aborted&&result.status==='resetRequired'){await result.discard();return {status:'unavailable'};}return result;}finally{external.removeEventListener('abort',stop);request.signal.removeEventListener('abort',stop);}
+   },controller.signal,{status:'unavailable' as const});if(controller.signal.aborted&&result.status==='resetRequired'){await result.discard();return {status:'unavailable'};}return result;}finally{external.removeEventListener('abort',stop);}
   },
  });
+}
+
+/** Existing browser-bound PKCE flow uses the same bounded capability owner. */
+export function createAccountRecovery(security:ReturnType<typeof createAccountSecurity>,port:RecoveryPort,deadlineMs=8000){
+ if(typeof port?.exchange!=='function')throw Error('Recovery unavailable');
+ const owner=createRecoveryOwner((input:Readonly<{code:string;verifier:string}>,signal)=>port.exchange(input,signal),deadlineMs);
+ return Object.freeze({cleanupHeld:owner.cleanupHeld,async complete(request:Request,external:AbortSignal){
+  if(owner.cleanupHeld()||external.aborted||request.signal.aborted)return {status:'unavailable' as const};
+  if(owner.busy())return {status:'busy' as const};
+  // Preserve an unconsumed callback when underlying work has reached admission capacity.
+  const callback=security.callbacks.fromRequest(request,'recovery');
+  if(!callback)return {status:'unavailable' as const};
+  if(callback.status==='canceled')return {status:'canceled' as const};
+  return owner.complete({code:callback.code,verifier:callback.verifier},AbortSignal.any([external,request.signal]));
+ }});
+}
+/** Server-only. The receiving-browser confirmation handler must authenticate its own binding before calling this owner. */
+export function createTokenRecoveryOwner(port:{verifyToken(tokenHash:string,signal:AbortSignal):ReturnType<RecoveryPort['exchange']>},deadlineMs=8000){
+ if(typeof port?.verifyToken!=='function')throw Error('Recovery unavailable');
+ const owner=createRecoveryOwner((tokenHash:string,signal)=>port.verifyToken(tokenHash,signal),deadlineMs);
+ return Object.freeze({cleanupHeld:owner.cleanupHeld,async confirm(tokenHash:unknown,signal:AbortSignal){
+  if(typeof tokenHash!=='string'||!/^[-_A-Za-z0-9]{1,256}$/.test(tokenHash))return {status:'unavailable' as const};
+  return owner.complete(tokenHash,signal);
+ }});
 }
