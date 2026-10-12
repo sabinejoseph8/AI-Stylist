@@ -11,14 +11,16 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 | Accounts before styling | Sample UI and coordinator keep customer styling locked | Approved route activation with verified identity on all customer routes |
 | Password/registration | Bounded HTTP adapter, signed identity, initial encrypted ownership and isolated PostgreSQL composition; confirmation gives no cookie | Real project configuration, registration/email policy and delivery acceptance |
 | Google/Apple | Fixed authorization links, browser-bound one-use PKCE, HTTP exchange, signed identity and encrypted ownership with database restart protection | Actual credentials, callback allowlists, linking defaults and device/provider checks |
-| Recovery | Signed recent recovery-purpose verification, bounded HTTP request/exchange/update, one-use browser reset and actual primary-session cleanup composition with synthetic provider replies | Callback delivery and late-cleanup verification now pass locally; real email/reset acceptance, customer restart/cross-device decision and HTTPS browser checks |
+| Recovery | Signed recent recovery-purpose verification, bounded HTTP request/exchange/update, one-use browser reset and actual primary-session cleanup composition with synthetic provider replies | Real email/reset acceptance, customer restart/cross-device decision and HTTPS browser checks |
 | Refresh/cleanup | Actual isolated SQL ownership/fencing/restart tests, metadata reconciliation and key usage inventory | Hosted Auth schema/configuration, real concurrency/disconnect checks and operational recovery policy |
 | Sign-out | Stored revocation port, HTTP cookie clearing and actual primary absence composition; accepted-only logout stays unconfirmed | Actual provider/session policy and device/concurrent sign-out acceptance |
 | Accessibility | Original eight-step account and seven-step reset reviews accepted | Physical iPhone, screen reader, zoom and complete accessibility acceptance |
 | Identity linking | Owner derives from signed user ID; no app email-based merging | Provider-default audit and business decision on customer linking behavior |
-| Phase exit | 482 foundation tests across 64 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
+| Phase exit | 491 foundation tests across 67 files, type checking/build and isolated database rehearsal pass | Remaining manual/provider gates and phase-wide code review |
 
 All provider operations in these tests are synthetic. Actual isolated PostgreSQL evidence is not hosted Supabase acceptance. No account route, real sign-in, email or password change has been activated.
+
+The dormant account factory now has Request/Response integration against isolated PostgreSQL for password, Google/Apple initiation/callbacks, recovery request/callback/reset, refresh and sign-out. Generated identities are signed and database authority is actual local SQL; all provider responses remain synthetic. Response-discard cleanup, shared admission, reset shutdown and uncertain cleanup have local checks. Full factory Node/browser/hosted acceptance and deployment abuse protection remain open.
 
 ## Next authorized local work
 
@@ -362,7 +364,7 @@ Five new composed loopback HTTP tests use generated ES256 identities and actual 
 
 The recovery disconnect test exposed an unnecessary unresolved-cleanup hold: cancellation prevented initial identity verification, leaving cleanup unable to correlate primary absence. Fixed by verifying identity with the independent bounded cleanup signal before revocation, solely for cleanup correlation. Failed verification still attempts logout and remains unconfirmed. This does not restore reset authority or issue cookies.
 
-All 482 foundation tests across 64 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
+All 491 foundation tests across 67 files, type checking and build pass. Provider/current-session responses in these loopback cases are simulated. Earlier isolated database evidence remains separate and must be rerun after this cleanup change before claiming the new path is database-verified. No route, hosted setting, email or real sign-in was activated.
 
 Exact next action: extend the isolated recovery database rehearsal with the canceled/late result case and rerun it, then update private Memory from the 468-test checkpoint. Task 2c and hosted/device gates remain open.
 

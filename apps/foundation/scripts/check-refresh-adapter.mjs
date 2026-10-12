@@ -136,8 +136,8 @@ console.log('Refresh coordinator/session PostgreSQL composition passed: verified
 providerToken=await token();
 assert.equal(await store.adopt('coordinator-fixture',scope,signal()),'confirmed');
 const port=createStoredRefreshPort(security,store,rotation,origin);
-const accounts=createAccountRefresh(security,origin,port);
-const http=createRefreshHttp(origin,accounts);
+const refreshFactory=accountFactory({refresh:port});
+const http=refreshFactory.routes().get('/api/account/refresh');
 function refreshRequest(body='{}'){
  return new Request(origin+'/api/account/refresh',{method:'POST',headers:{origin,host:'stylist.example',cookie:'__Host-stylist_access='+providerToken,'content-type':'application/json'},body});
 }
@@ -146,7 +146,8 @@ assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
 const delivered=await http.handle(refreshRequest(),signal());assert.equal(delivered.status,200);assert.deepEqual(await delivered.json(),{status:'signedIn'});assert.match(delivered.headers.get('set-cookie'),/__Host-stylist_access=/);
 assert.equal((await store.inspect(owner,session,signal())).scope.generation,2);
 assert.equal(await http.discardResponse(delivered),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
-console.log('Stored refresh port/HTTP PostgreSQL composition passed: verified cookie-derived scope, generation adoption, identity JSON refusal and failed-delivery cleanup. HTTP uses Request/Response factories, not a deployed server.');
+assert.equal(await refreshFactory.close(),true);
+console.log('Account factory refresh HTTP/PostgreSQL composition passed: verified cookie-derived scope, generation adoption, identity JSON refusal and failed-delivery cleanup. HTTP uses Request/Response factories, not a deployed server.');
 
 // All provider requests stop at this injected fixture fetch; no provider network is used.
 let providerMode='normal',providerRequests=0,logoutRequests=0;
@@ -315,7 +316,8 @@ const presence=createAuthSessionPresence(rpc);
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'unconfirmed'});
 assert.deepEqual(await presence.confirm('33333333-3333-4333-8333-333333333333',session,signal()),{status:'unconfirmed'});
 const signOutPort=createStoredSignOut(security,store,presence,origin,(jwt,abort)=>initialHttp.revoke(jwt,'local',abort));
-const signOutHttp=createSignOutHttp(origin,createAccountSignOut(security,origin,signOutPort));
+const signOutFactory=accountFactory({signOut:signOutPort});
+const signOutHttp=signOutFactory.routes().get('/api/account/sign-out').handle;
 const signOutToken=await token();
 const signOutRequest=()=>new Request(origin+'/api/account/sign-out',{method:'POST',headers:{origin,'content-type':'application/json',cookie:'__Host-stylist_access='+signOutToken},body:'{}'});
 // HTTP acceptance does not prove primary session removal.
@@ -327,7 +329,8 @@ deleteInitialSession=true;
 const confirmedSignOut=await signOutHttp(signOutRequest(),signal());assert.equal(confirmedSignOut.status,200);assert.equal((await confirmedSignOut.json()).status,'signedOut');assert.match(confirmedSignOut.headers.get('set-cookie'),/Max-Age=0/);
 assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(initialLogouts,4);
 assert.equal(await security.authorize(new Request(origin+'/',{headers:{cookie:'__Host-stylist_access='+signOutToken}}),signal()),null);
-console.log('Stored sign-out HTTP/PostgreSQL composition passed: accepted-only reply remains unconfirmed, browser cookies clear, primary deletion confirms cleanup, and the old signed token is denied.');
+assert.equal(await signOutFactory.close(),true);
+console.log('Account factory sign-out HTTP/PostgreSQL composition passed: accepted-only reply remains unconfirmed, browser cookies clear, primary deletion confirms cleanup, and the old signed token is denied.');
 assert.deepEqual(await presence.confirm(owner,session,signal()),{status:'revoked',ownerId:owner,sessionId:session});
 assert.equal(await createRefreshReconciliation(scanStore,presence).reconcile({...scope,leaseId:null},signal()),'confirmed');
 console.log('Primary Auth session presence composition passed: present/mismatched owners remain unconfirmed; actual session deletion permits scoped reconciliation. Hosted activation remains unverified.');

@@ -1091,3 +1091,7 @@ I tested the actual account factory against a disposable database using generate
 ## Sign-in factory database checks, 12 October 2026
 
 I extended the disposable database rehearsal to password and Google/Apple sign-in through the actual account factory. I checked that account confirmation does not grant access, callback replay is refused, and undelivered sign-in responses release stored ownership. Provider replies remained synthetic. The full database rehearsal and all 491 foundation tests pass, with type checking and build.
+
+## Refresh and sign-out factory verification, 12 October 2026
+
+I completed the factory-level database checks for refresh and sign-out. Refresh cannot accept a browser-supplied identity, and logout is not reported as confirmed until the primary session is absent. The full disposable database rehearsal and all 491 foundation tests pass, with type checking and build. Hosted acceptance and customer recovery decisions remain open.
