@@ -24,7 +24,7 @@ Sabine approved recovery on a different device and a fixed seven days from sign-
 
 1. Preserve the approved hosted Tasks 2b/2c sequencing exception. Later phases retain their dependencies; installed migrations do not complete customer acceptance.
 2. Continue using the verified AI Stylist Supabase project and installed migration receipt. Keep secret credentials in private server configuration.
-3. Inspect actual signing keys, Auth session schema and current-session lookup permissions. Rehearsed synthetic Auth schemas do not prove the hosted schema.
+3. Read-only hosted inspection confirms the current P-256 signing-key type, required Auth column types and service-only session lookup grants. Verify actual JWKS retrieval and real signed-token/current-session behavior; metadata alone is not provider acceptance.
 4. Verify exact application origin and callback allowlists. Reject wildcard or caller-selected redirects. Validate cookie behavior over HTTPS on the target browser.
 5. Configure email/password confirmation, recovery sender and approved templates. Verify sender/DNS, recovery delivery, bounce behavior, abuse limits and non-enumerating public replies with synthetic accounts.
 6. Obtain Google and Apple credentials through the account owner. Record credential owner, expiry and renewal procedure without recording secret values. Verify both successful and canceled callbacks.
@@ -228,3 +228,10 @@ Next required actions: Sabine's linking-policy choice and authorization for the 
 ## Current account decisions and external dependency, 12 October 2026
 
 Sabine approved Supabase automatic linking for matching verified Google/Apple emails; manual linking and app-driven merging remain disabled. Seven-day absolute app sessions and cross-device recovery are approved. Sabine confirmed sending the prepared Render support inquiry; its response remains pending. Earlier pending-policy and unsent statements above are historical. No provider has been enabled and no hosted account acceptance gate is complete. Next: review Render's contract, verify ingress/logging with synthetic checks, then establish exact hosted origin, production sender and provider credentials for real account/isolation acceptance. No extra spending is authorized.
+
+
+## Hosted Auth metadata verified and sender dependency, 12 October 2026
+
+Read-only SQL Editor checks returned all seven expected managed Auth columns with matching UUID, timestamptz and boolean types. Both stylist_auth_session_active and stylist_auth_session_presence exist as security-definer functions with empty search paths, service-role execution allowed, and anonymous/authenticated execution denied. Sanitized receipt: docs/hosted-auth-metadata-review.json. No customer rows were read, no session lookup was invoked, and no database setting or data changed. This closes the narrow schema/privilege inspection prerequisite only; live signed-token/current-session/provider acceptance remains open.
+
+Sabine confirmed she does not own a sender domain. Asked for the desired app/domain name before checking options and presenting purchase costs. No domain, sender service, credentials or charge was created. Render's response, exact hosted origin, production sender and social-provider credentials remain dependencies. Next: use Sabine's naming choice to research available domain options and costs; review Render's reply when supplied; preserve all phase/security/spending limits.

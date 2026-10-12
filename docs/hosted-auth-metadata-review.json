@@ -1,0 +1,36 @@
+{
+  "date": "2026-10-12",
+  "project": "AI Stylist",
+  "evidence": "Read-only SQL Editor result inspected through browser UI; metadata only",
+  "columns": {
+    "sessions.id": "uuid",
+    "sessions.user_id": "uuid",
+    "sessions.not_after": "timestamp with time zone",
+    "users.id": "uuid",
+    "users.deleted_at": "timestamp with time zone",
+    "users.is_anonymous": "boolean",
+    "users.banned_until": "timestamp with time zone"
+  },
+  "functions": {
+    "stylist_auth_session_active": {
+      "security_definer": true,
+      "service_role_execute": true,
+      "anon_execute": false,
+      "authenticated_execute": false,
+      "search_path": ""
+    },
+    "stylist_auth_session_presence": {
+      "security_definer": true,
+      "service_role_execute": true,
+      "anon_execute": false,
+      "authenticated_execute": false,
+      "search_path": ""
+    }
+  },
+  "limits": [
+    "No customer rows read",
+    "No Auth session function invoked",
+    "No hosted mutation",
+    "Does not prove real token/session/provider acceptance"
+  ]
+}
