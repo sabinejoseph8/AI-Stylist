@@ -709,3 +709,8 @@ I connected the image lifecycle to separate database and object-storage interfac
 
 
 I found a stale test count in the project-memory website even after the source documents had been updated. I changed the overview to import the plan's current evidence summary during each refresh. A rendering check verifies the displayed text follows that source and stays escaped. This makes the overview easier to trust while keeping hosted acceptance and pending verification explicit.
+
+
+### Verifying recovery before activation
+
+I kept the new persistence features disabled while I verified their database behavior. When execution became available, the isolated PostgreSQL rehearsal passed the source-date checks and recovery from six lost acknowledgments, including deletion of an older JPEG. I kept simulated Storage and identity evidence separate from hosted acceptance, so passing local checks did not imply that customer uploads were ready.

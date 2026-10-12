@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2b local preparation is active. Latest evidence: 171 foundation tests across 14 files pass (excluding the loopback-binding test), with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The revised SQL-backed rehearsal and newest SQL timestamp guards still need execution when the approval limit clears. Hosted changes and paid tests remain unauthorized.
+Task 2b local preparation is active. Latest evidence: 171 foundation tests across 14 files pass (excluding the loopback-binding test), with type checking and build passing. The prepared owner-bound media port connects service RPCs, a separately identified customer RPC context and simulated Storage requests. The isolated PostgreSQL suite now passes, including the revised adapter-chain media recovery rehearsal and newest source timestamp guards. Hosted changes and paid tests remain unauthorized.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -26,15 +26,15 @@ Autonomous execution is authorized by Sabine on 10 October 2026. Routine technic
 - **Critical dependencies:** Voice/avatar integration, notes during speech, checking before recommendation audio, real retailer/affiliate data, customer-data isolation, provider retention, and session recovery. See R01 through R11 in tech-spec.md.
 - **Spoken test:** Generated reply/avatar audio and mouth movement are accepted on desktop and physical iPhone. The phone explicit interruption and connection closure passed. The prototype supports two buffered exchanges per bounded room. Spoken interrupt-and-end is accepted on iPhone; precise lip-sync timing and conversational resume remain pending. Connected live-provider notes and customer look release remain unverified.
 - **Recent changes:** Prepared server-owned look authorization and immutable internally checked synthetic candidates. Candidate checks use the authoritative notebook; new input, note edits and shutdown revoke both display and queued speech. Missing confirmations, conflicts, excessive prices and stale results are held. Exclusions now come from a separate server-injected simulated source. Real saved-profile validation, product discovery and media gating are not accepted.
-- **Publishing:** Earlier source and the protected Render Free preview were published successfully. The latest Task 2b commits, output-folder copies and private Memory site refresh are still local, pending the execution approval limit. Credentials and private ledgers remain excluded from publication.
+- **Publishing:** Earlier source and the protected Render Free preview were published successfully. The verified Task 2b commits through f2214a8 are published to GitHub. The output-folder copy and private Memory site refresh are underway. Credentials and private ledgers remain excluded from publication.
 
 ## Task 2b media composition preparation, 11 October 2026
 
 The prepared media port binds one verified owner and separates customer-authenticated deletion claims from service-only staging, operation reads, commits and finalization. Simulated integration checks now exercise sanitized saves through the prepared RPC/Storage boundaries and recover uncertain deletions only from exact acknowledgments or confirmed absence. Storage uses one deadline for headers and body, cancels safely, rejects partial reads and false mutation acknowledgments, and keeps legacy single-file keys readable/removable. No route constructs these adapters; actual customer authentication remains to be built.
 
-Evidence: 171 tests across 14 foundation files, type checking and build pass, excluding the existing test that requires a denied loopback bind. The revised SQL-backed recovery rehearsal is typechecked but awaits Docker approval, as do the latest SQL timestamp guards. Hosted Storage, signed URLs and production resource limits remain unverified. Task 2b remains local-only and incomplete. No new paid call, remote migration or deployment occurred.
+Evidence: 171 tests across 14 foundation files, type checking and build pass, excluding the existing test that requires a denied loopback bind. The revised SQL-backed recovery rehearsal and latest SQL timestamp guards passed the isolated PostgreSQL suite after execution became available. Hosted Storage, signed URLs and production resource limits remain unverified. Task 2b remains local-only and incomplete. No new paid call, remote migration or deployment occurred.
 
-Next: after the execution limit clears, run the isolated SQL suite with the new adapter-chain rehearsal, fix failures, copy completed work and publish pending source/site updates. Continue independent preparation while preserving the Phase 1 exit gate.
+Next: complete the output-folder copy and Memory site publication, then verify decoder resource limits within local Task 2b preparation. Continue independent preparation while preserving the Phase 1 exit gate.
 
 ## Project memory review, 9 October 2026
 

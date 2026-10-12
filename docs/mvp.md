@@ -5,7 +5,7 @@ Status: Working memory from approved requirements and actual findings. Phase 1 f
 
 ## Current memory checkpoint, 11 October 2026
 
-Task 2a is accepted. Task 2b local persistence preparation is active under the approved sequencing exception: 171 foundation tests across 14 files, type checking and build pass, excluding the loopback-binding test. The last recorded prototype run passed 1,273 checks. The newest SQL timestamp guards and revised adapter-chain recovery rehearsal await Docker execution. New migrations remain unapplied remotely; hosted identity, Storage and signed URL behavior are unverified.
+Task 2a is accepted. Task 2b local persistence preparation is active under the approved sequencing exception: 171 foundation tests across 14 files, type checking and build pass, excluding the loopback-binding test. The last recorded prototype run passed 1,273 checks. The newest SQL timestamp guards and revised adapter-chain recovery rehearsal passed the isolated PostgreSQL suite. New migrations remain unapplied remotely; hosted identity, Storage and signed URL behavior are unverified.
 
 The server now internally checks immutable synthetic candidates against its own notebook and revokes visual/speech permission on input, correction or termination. This does not implement the independent saved-profile agent or validate real product suitability. D21/D22 and Task 1c remain partial; D26 has discovery preparation only, with R1 dependencies open. Phase 1 remains incomplete.
 
@@ -648,3 +648,8 @@ Exact next action: rerun the isolated PostgreSQL suite after approval is availab
 ## Local media persistence risk checkpoint, 11 October 2026
 
 Task 2b now prepares an owner-bound media composition with separate customer-authenticated deletion claims and service-only persistence calls. Simulated checks cover sanitized uploads, full-byte checksum recovery, false deletion acknowledgments and deadline/cancellation failures. The updated SQL-backed adapter-chain rehearsal is typechecked but awaits execution, alongside the newest timestamp guards. Hosted identity verification, actual Storage behavior, signed URL protection, decoder OS limits and receipt retention remain acceptance gates. This changes no launch/privacy/spending decision and does not complete Task 2b or Phase 1.
+
+
+## SQL adapter-chain verification, 11 October 2026
+
+The isolated PostgreSQL suite passed after execution became available, including latest source timestamp guards, owner-only mixed-look history and media lifecycle recovery through prepared RPC/Storage adapters. Six lost-acknowledgment paths and legacy JPEG deletion pass. Storage HTTP and customer authentication remain simulated. This supersedes earlier pending-rerun checkpoints; hosted Storage, signed URLs and decoder OS resource limits remain unverified. Task 2b and Phase 1 remain incomplete.

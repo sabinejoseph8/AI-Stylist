@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The latest 171 foundation tests pass; revised SQL adapter-chain recovery and timestamp guards await an execution-limit reset.
+1. Task 2b local-only persistence/access preparation is active under Sabine's exception. The latest 171 foundation tests pass; revised SQL adapter-chain recovery and timestamp guards also pass isolated PostgreSQL verification.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1077,3 +1077,8 @@ Exact next action: rerun the isolated PostgreSQL suite after approval is availab
 ## Task 2b local media adapter checkpoint, 11 October 2026
 
 D08/D11/D15/D17 remain partial. Owner-bound media composition, sanitized upload mapping, checksum reconciliation, exact Storage acknowledgments and deletion-receipt recovery are prepared with simulated requests. Customer-authenticated deletion claims stay separate from the service credential; actual authentication/Storage acceptance is open. 171 foundation tests (excluding the denied loopback test), type checking and build pass. The revised SQL adapter-chain rehearsal and timestamp guards await an isolated Docker rerun when the execution limit clears. No hosted migration, paid call or activation is authorized by these checks.
+
+
+## SQL adapter-chain verification, 11 October 2026
+
+The isolated PostgreSQL suite passed after execution became available, including latest source timestamp guards, owner-only mixed-look history and media lifecycle recovery through prepared RPC/Storage adapters. Six lost-acknowledgment paths and legacy JPEG deletion pass. Storage HTTP and customer authentication remain simulated. This supersedes earlier pending-rerun checkpoints; hosted Storage, signed URLs and decoder OS resource limits remain unverified. Task 2b and Phase 1 remain incomplete.
