@@ -918,3 +918,6 @@ I connected refresh encryption to a prepared server-only storage adapter. Plaint
 
 
 I connected the real encryption and storage adapter to isolated PostgreSQL. I tested lost write acknowledgments without allowing a blind retry, competing claims with one winner, encrypted rotation, a database restart and a wrong key that leaves the record blocked. I also fixed a test-harness startup race by waiting for TCP readiness. The composed rehearsal and all 380 foundation tests, type checking and build pass. Real providers and hosted services remain untouched.
+
+
+I restricted the prepared refresh storage transport to six explicit operations and added caller cancellation with bounded capacity. If a request ignores cancellation, I keep its slot occupied until it actually settles, preventing hidden work from accumulating. I fixed a test assertion timing issue and confirmed all 383 foundation tests, type checking and build pass. This evidence uses simulated HTTP, so I keep it separate from live provider acceptance.

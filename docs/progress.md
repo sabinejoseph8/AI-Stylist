@@ -1718,3 +1718,12 @@ Actual encrypted fixture state survives adoption and next-generation rotation. C
 Both the SQL rehearsal and encrypted-adapter composition pass, plus all 380 foundation tests across 42 files, type checking and build. The rehearsal's readiness probe initially raced PostgreSQL's temporary initialization server; switching both probes to TCP readiness fixed that harness issue before the final clean run. Disposable container/volume cleanup is checked separately. No real credentials, hosted changes or paid calls occurred.
 
 Exact next action: prepare a trusted refresh-provider composition that uses encrypted durable ownership and the shared account adoption lifecycle; test provider failure, uncertain rotation/adoption and cleanup with synthetic providers before considering any actual transport. Both local manual reviews remain accepted; Task 2c and hosted/provider acceptance remain incomplete. Consolidate private Memory at the next checkpoint.
+
+
+## Guarded refresh HTTP transport, 11 October 2026
+
+Prepared a disconnected refresh-specific transport allowing only the six ownership RPC operations. The shared Supabase transport now accepts caller cancellation and limits admission to four underlying operations. A request that ignores cancellation retains its slot until its fetch and response cleanup settle; failed cleanup conservatively retains capacity. Destination, size, deadline and generic-error protections remain in place.
+
+All 383 foundation tests across 43 files, type checking and build pass. New scenarios cover the operation allowlist, encrypted adoption through simulated HTTP, and cancellation with unresolved fetch admission. An initial test attached its rejection assertion too late; attaching it before cancellation fixed the unhandled rejection. Loopback tests ran with the required local-network permission. No actual Supabase request, real provider, hosted change or paid call occurred.
+
+Both account and reset-screen manual reviews are accepted. Task 2c remains incomplete. Exact next action: compose the durable encrypted refresh store with a synthetic refresh provider and shared account adoption lifecycle, exercising uncertain rotation and cleanup before live activation. Private Memory still needs a consolidated publication after its 368-test checkpoint.
