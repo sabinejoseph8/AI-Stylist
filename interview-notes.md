@@ -1183,3 +1183,5 @@ I kept the same verified, reset-only permission and cleanup rules when adding em
 ## Password recovery across devices, 12 October 2026
 
 I chose to let customers open a password-reset email on a different device. I reused the same bounded, one-use reset permission for both recovery paths so the new path does not gain normal account access. Synthetic tests now cover cancellation and cleanup even when verification finishes late. The receiving-browser confirmation and real email/device checks are still pending.
+
+I separated opening a reset email from confirming the reset. Opening the link creates only a browser-bound confirmation, so an email scanner cannot trigger verification merely by visiting it. The confirmation can be used once, expires after five minutes and is canceled during shutdown. These are synthetic server checks; the real email and device journey is still pending.
