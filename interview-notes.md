@@ -939,3 +939,6 @@ I checked the provider documentation against our account design. I identified de
 
 
 I prepared a provider bridge with explicit refresh input and current-session cleanup. It rejects malformed replies, preserves uncertainty and keeps unresolved requests within bounded capacity. All 398 foundation tests, type checking and build pass. Real provider transport remains disconnected, so these simulated checks do not establish remote revocation.
+
+
+I prepared fixed-project refresh and session-local logout HTTP operations. Simulated responses prove destination restrictions, bounded reading, no automatic retry and conservative cleanup reporting. All 402 foundation tests, type checking and build pass. I kept the exact provider success response and real revocation as activation checks, rather than treating a simulated 204 as live evidence.
