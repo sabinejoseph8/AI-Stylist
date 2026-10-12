@@ -870,3 +870,8 @@ I found that the local controller required a user ID while the prepared HTTP rep
 ## Preparing the browser account connection safely
 
 I prepared a disabled browser transport using fixed same-origin paths and cookies, with strict response limits and generic errors. I tested redirected responses, stalled bodies and canceled fetches without connecting a real provider. The preview still uses sample behavior, and browser account state never grants server access. All 341 foundation tests pass, with type checking and build. Real cookie behavior and session adoption remain open.
+
+
+## Testing sign-in and sign-out across the prepared components
+
+I tested the browser controller and transport with the actual prepared HTTP and session components, using a simulated cookie jar and provider authority. I verified that registration/recovery cannot create account access and that confirmed revocation denies the original token. I also tested failed revocation: local cookies clear, but the outcome stays unconfirmed because the old remote session can remain valid. All 346 foundation checks pass, with type checking and build. Actual browser and provider acceptance remain open.

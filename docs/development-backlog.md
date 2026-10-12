@@ -6,7 +6,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Task 2c local account preparation is active under Sabine's approved exception. All 341 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
+1. Task 2c local account preparation is active under Sabine's approved exception. All 346 foundation tests pass. Task 2b local preparation and SQL/Storage evidence remain available; hosted acceptance is open.
 2. Phase 1 voice/avatar recovery and live-note acceptance remain open, with Tavus clarification, privacy decisions and a newly authorized paid-test amount required for remaining live checks.
 3. D02 catalog contract and D03 clearly labeled synthetic catalog are implemented for development. Real product sources, imagery rights and affiliate approval remain open; Rakuten registration is postponed until the customer website is live.
 4. Complete Task 2b only after applicable actual SQL/Storage/access checks. Later feature groups retain their Phase 1 dependencies; local preparation does not authorize hosted changes or new paid calls.
@@ -1174,7 +1174,7 @@ Sabine completed every step of the eight-step account preview and reported that 
 
 Extracted a common server-only session lifecycle and added disconnected email/password and registration ports. Password and OAuth callback methods share a four-operation admission limit and the same uncertainty hold after ambiguous creation or failed cleanup. Registration confirmation returns no account cookie. Email whitespace is trimmed; passwords are passed unchanged and never stored by these interfaces. Exact input keys and string methods are required, preventing object coercion into a supported action. HTTP origin/CSRF, rate/body limits, real provider policy and refresh adoption remain requirements before wiring any route.
 
-All 341 foundation tests across 37 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
+All 346 foundation tests across 39 files, type checking and build pass. Six added tests cover signed session/cookie preparation, confirmation isolation, malformed input, cross-method holds, late cancellation cleanup and shared outstanding admission without consuming busy callback transactions. Existing callback tests pass after the refactor. No routes, providers, real accounts, emails, hosted settings or paid calls were activated. Next: scoped local recovery and sign-out contracts. Task 2c and Phase 2 remain open.
 
 
 ## Local sign-out coordinator, 11 October 2026
@@ -1302,3 +1302,14 @@ The parser requires exact status-only JSON, a matching response destination when
 All 341 foundation tests across 37 files, type checking and build pass. Eight new tests cover fixed request shape/cookie transport, confirmation/recovery separation, invalid/social/pre-canceled input, response limits and unexpected fields, sign-out confirmation, ignored cancellation/admission, stalled bodies and redirected/foreign destinations. Every fetch is simulated. No provider call, credential, sign-in, email, route or hosted change occurred. Real browser/server cookie and Origin behavior, provider session adoption, rate controls and manual acceptance remain open.
 
 Exact next action: compose the disabled browser transport/controller with the actual local password/recovery HTTP factories using simulated fetch, then prepare sign-out HTTP response handling and publish a consolidated Memory refresh. Task 2c remains incomplete.
+
+
+## Simulated browser-to-account HTTP composition, 11 October 2026
+
+Prepared disconnected sign-out HTTP response handling on the shared bounded JSON boundary. Only an empty input object is accepted; caller-selected owner/scope fields are refused before revocation. Confirmed remote sign-out returns 200; unconfirmed returns 409. Both deliver the coordinator's cookie-clearing headers separately from status-only JSON. No route is registered.
+
+Added composed tests using the actual browser transport/controller, password/recovery/sign-out HTTP factories, generated signed identity and simulated provider/current-session authority. A test-only cookie jar and Origin header emulate browser handling; they do not prove actual browser cookies or CORS behavior. Sign-in produces verified cookie access while the controller invents no user ID. Confirmed sign-out clears cookies and the simulated revoked original token no longer authorizes a profile request. Registration and generic recovery produce no account access. Failed remote revocation clears local cookies and closes controller access, but explicitly reports unconfirmed; the simulated original token remains current, demonstrating why local clearing alone is insufficient. No real email or provider is involved.
+
+All 346 foundation tests across 39 files, type checking and build pass. Five added checks cover sign-out header/status behavior, input rejection and the three full browser/controller/server scenarios. Actual browser cookie acceptance, real provider revocation, refresh-state adoption/persistence, rate/abuse controls, phone/accessibility and phase gates remain open. No credentials, actual account, hosted endpoint or paid activity was enabled.
+
+Exact next action: refresh private Memory with the 346-test checkpoint, then audit remaining local Task 2c lifecycle requirements and prepare refresh/session ownership without connecting real providers. Task 2c remains incomplete.
