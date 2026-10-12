@@ -95,3 +95,10 @@ Private progress refresh: source 64c11ab097cfc66146dd6e7f8533bea9a1c11d47, deplo
 
 
 Verified private publication: source 7bc7d55b602c23ca17e6791d1352140b3216fd95, deployment appgdep_6acc4d8337588191960f5476c57ef265, status succeeded, MCP available. All 16 site checks pass. Imported plan reflects 368 foundation tests through bdd242a and pending newer reset review. Owner-only sharing remains.
+
+
+## Private Memory publication, 11 October 2026
+
+Consolidated the accepted account/reset reviews, 387-test foundation checkpoint and isolated refresh database composition into the private Memory site. All 16 site checks and artifact validation pass. Owner-only access was verified before publication; native deployment succeeded with MCP enabled. Source b44a934783ad7653e2af5a008cc8d3d558c9a059, deployment appgdep_6acc53f23efc8191935d8aa0687d8c5c, version appgprj_6acbce5b11a88191beb15ff1046a9d3c~appgver_79327d8fb64c8191b3364f2fc3cc0851. URL: https://ai-stylist-project-memory.idealgnat256.chatgpt.site . Task 2c and phase exit gates remain open.
+
+Exact next action: prepare the trusted account-refresh port deriving scope from verified request identity and inspected durable generation, then exercise the existing account-refresh HTTP coordinator with the encrypted store and synthetic provider. No actual provider activation, hosted account change or paid call is authorized by this publication.
