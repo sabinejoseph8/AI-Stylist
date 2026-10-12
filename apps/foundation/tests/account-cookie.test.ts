@@ -22,3 +22,14 @@ describe('prepared verified account cookies',()=>{
   expect(await cookies.issue('aaa.bbb.ccc',c.signal)).toBeNull();
  });
 });
+
+it('issues persistent cookies bounded by the trusted absolute expiry',async()=>{
+ vi.useFakeTimers();try{
+ const now=Date.UTC(2026,9,12);vi.setSystemTime(now);
+ const cookies=createAccountCookies({verify:async()=>({ownerId:'owner',isCurrent:async()=>true})});
+ const expiry=now+604800000;
+ expect(await cookies.issue('aaa.bbb.ccc',signal(),expiry)).toContain('Max-Age=604800; Expires=Mon, 19 Oct 2026 00:00:00 GMT');
+ vi.setSystemTime(now+3600000);expect(await cookies.issue('aaa.bbb.ccc',signal(),expiry)).toContain('Max-Age=601200;');
+ for(const invalid of [now,Date.now()+604801000,NaN,Infinity])expect(await cookies.issue('aaa.bbb.ccc',signal(),invalid)).toBeNull();
+ }finally{vi.useRealTimers();}
+});

@@ -3,6 +3,8 @@ type Security=ReturnType<typeof createAccountSecurity>;
 /** Trusted server adapter owns any refresh material and cleanup bookkeeping. Never a browser/provider JSON object. */
 export interface PendingAccountSession {
  accessToken:string;
+ /** Trusted server absolute lifetime; never derived from browser request data. */
+ expiresAt?:number;
  /** Optional explicit server-state adoption. True only after ownership is committed; discard must remove staged and adopted state. */
  adopt?(signal:AbortSignal):Promise<boolean>;
  /** Idempotently revoke the newly created session and remove any adapter-held refresh material. */
@@ -56,7 +58,7 @@ export function createAccountSessions(security:Security,appOrigin:string,deadlin
      if(claimed.has(session))return {status:'unavailable'};
      claimed.add(session);
      if(controller.signal.aborted||cleanups.has(session)||typeof session.accessToken!=='string')throw Error();
-     const cookie=await security.cookies.issue(session.accessToken,controller.signal);
+     const cookie=await security.cookies.issue(session.accessToken,controller.signal,session.expiresAt);
      if(!cookie||controller.signal.aborted)throw Error();
      const identity=await security.authorize(new Request(appOrigin+'/api/account',{headers:{cookie:cookie.split(';')[0]!}}),controller.signal);
      if(!identity||controller.signal.aborted||(options.expectedOwner!==undefined&&identity.ownerId!==options.expectedOwner)||(options.expectedSessionId!==undefined&&identity.sessionId!==options.expectedSessionId))throw Error();

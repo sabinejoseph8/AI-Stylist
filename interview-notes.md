@@ -1265,3 +1265,7 @@ I found that the standalone reset page was missing the shared account form style
 ## Choosing a fixed sign-in lifetime
 
 I chose seven days from sign-in for customer sessions. Refreshing should not silently extend that deadline. I added a regression-tested guard that prevents refresh ownership from extending the original expiry. Persistent cookies and safe refresh after access-token expiry still need integration before I can claim the complete behavior works.
+
+## Preserving the sign-in deadline in the browser
+
+I connected the trusted server session deadline to secure persistent cookie issuance. The cookie uses only the remaining time and refuses deadlines beyond seven days. The full 590-test suite passes, but safe refresh after access-token expiry and restart acceptance still need integration before the seven-day sign-in feature is complete.

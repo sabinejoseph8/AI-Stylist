@@ -10,7 +10,7 @@ export function createInitialSessionStager(store:ReturnType<typeof createRefresh
   const expiresAt=expiryPolicy();if(!Number.isSafeInteger(expiresAt)||expiresAt<=Date.now())throw Error('Session staging unavailable');
   const scope=Object.freeze({ownerId:identity.ownerId,sessionId:identity.sessionId,generation:1,expiresAt});
   let secret:string|null=input.refreshSecret,adoption:Promise<boolean>|undefined,cleanup:Promise<boolean>|undefined,disposed=false,owned=false,attempted=false;
-  return Object.freeze({accessToken:input.accessToken,
+  return Object.freeze({accessToken:input.accessToken,expiresAt,
    adopt(s:AbortSignal){
     if(disposed||s.aborted)return Promise.resolve(false);
     if(!adoption)adoption=(async()=>{

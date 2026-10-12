@@ -54,7 +54,7 @@ export function createRefreshRotation(store:ReturnType<typeof createRefreshStore
     }catch{return false;}
    })();return discarding;
   };
-  return Object.freeze({accessToken:rotated.accessToken,
+  return Object.freeze({accessToken:rotated.accessToken,expiresAt:Math.min(claim.scope.expiresAt,rotated.expiresAt),
    adopt(adoptSignal:AbortSignal){
     if(disposed||adoptSignal.aborted)return Promise.resolve(false);
     if(!adoption){const value=secret;secret=null;adoption=(async()=>typeof value==='string'&&await store.finish(value,claim.scope,claim.leaseId,Math.min(claim.scope.expiresAt,rotated.expiresAt),adoptSignal)==='confirmed')();}
