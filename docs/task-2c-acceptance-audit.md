@@ -39,7 +39,7 @@ Sabine approved local account interfaces and simulated tests while Phase 1 remai
 
 ## Activation preparation
 
-See docs/task-2c-activation-checklist.md for evidence and approval boundaries. The seven-step newer reset-screen review is pending; the original eight-step review remains accepted. Further local preparation must address adoption, storage and actual local HTTP composition rather than treating generated-token tests as hosted readiness.
+See docs/task-2c-activation-checklist.md for evidence and approval boundaries. Sabine accepted all seven newer reset-screen review steps as working/readable; the original eight-step review also remains accepted. Further local preparation must address adoption, storage and actual local HTTP composition rather than treating generated-token tests as hosted readiness.
 
 Local Node loopback delivery checks now cover separate cookie headers, Host/Origin rejection and late response cleanup after client disconnect. They use simulated operation handlers and are not yet the generated-token full account composition or browser/TLS acceptance.
 
@@ -50,3 +50,6 @@ Explicit optional server adoption now runs after signed-identity verification an
 Explicit adoption cancellation is now tested through generated-token password ownership and actual loopback HTTP disconnect. Late simulated storage is removed once after it settles. Durable storage/restart and real provider acceptance remain open.
 
 A disconnected server-only encrypted refresh envelope is prepared and tested with generated keys. Context binds owner/session/generation/expiry. Durable storage, atomic generation enforcement, key provisioning/retirement and real provider adoption remain open.
+
+
+Local migration 17 and the isolated PostgreSQL refresh-ownership rehearsal pass, including an actual database/container restart, one concurrent winner and service-only reconciliation. Ciphertext is placeholder fixture data; codec/RPC integration and real hosted Auth remain open. Sabine accepted all seven newer reset UI steps.

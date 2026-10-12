@@ -10,7 +10,7 @@ The account preview uses sample adapters. Prepared password, recovery, sign-out 
 
 | Work | Required evidence |
 | --- | --- |
-| Reset screen review | Sabine completes the seven-step review; retain exact result separately from the earlier eight-step account review |
+| Reset screen review | Accepted: Sabine confirmed all seven steps worked/readable. Retain this result separately from the earlier eight-step account review |
 | Session adoption | Define the trusted adapter's ownership transfer, failed response delivery and cleanup contract before attaching a real provider; prove cancellation and partial adoption with simulated storage |
 | Refresh persistence | Choose a server-held representation bound to signed owner/session. Never put refresh material in browser JSON, logs, project memory or public Git. Prove rotation fencing, rollback/uncertainty holds and restart handling locally before hosted use |
 | Account route composition | Install only into an isolated test server with explicit simulated adapters first; verify actual HTTP origin, cookie and response-disconnect behavior. Current Request/Response tests are not that evidence |
@@ -43,3 +43,6 @@ Routine local engineering continues independently. This checklist is not a reque
 
 
 Refresh encryption preparation now has an AES-256-GCM codec tested with fixture data. Activation also requires approved private key provisioning, a bounded rotation/retirement procedure, durable service-only storage, generation fencing and reconciliation. Never commit a production encryption key or refresh envelope containing real account data.
+
+
+Migration 17 now rehearses service-only ownership and generation/lease fencing with synthetic PostgreSQL records, including a real restart. It is local preparation only. Codec/RPC/application integration and actual hosted Auth remain unverified.

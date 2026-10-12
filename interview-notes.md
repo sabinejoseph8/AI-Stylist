@@ -909,3 +909,6 @@ I verified the late-adoption cleanup through an actual local HTTP disconnect, al
 
 
 I prepared encrypted server-held refresh state before adding durable storage. The encryption context ties each record to its customer, session, rotation version and expiry, so moving ciphertext to another scope fails. I tested tampering, expiry and explicit key rotation using generated keys and fixture strings. All 374 foundation tests, type checking and build pass. Production keys, durable fencing and real provider activation remain separate work.
+
+
+I accepted the completed seven-step reset-screen review and kept that evidence distinct from real recovery. I then rehearsed durable refresh ownership in an isolated PostgreSQL database: competing claims produce one winner, unresolved rotations stay blocked across an actual restart, and stale versions or leases cannot finish another operation. The rehearsal caught a PostgreSQL regex limit, which I fixed. The SQL rehearsal and all 374 foundation tests, type checking and build pass. No live database or real credential was changed.
