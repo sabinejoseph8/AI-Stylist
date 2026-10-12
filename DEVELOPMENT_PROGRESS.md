@@ -10,7 +10,7 @@ Read the v1.8 PRD and prioritized backlog in the AI stylist folder, the latest a
 
 ## Current checkpoint
 
-Task 2c local account preparation is active under Sabine’s 11 October sequencing approval. Latest evidence: 223 foundation tests across 18 files, type checking and build pass. The account UI controller covers simulated email/password, registration confirmation, recovery, Google/Apple, cancellation, stale replies and sign-out. No live Auth, hosted change, provider call or customer access is enabled. Task 2b hosted acceptance and Phase 1 gates remain open.
+Task 2c local account preparation is active. All 231 foundation tests across 19 files, type checking and build pass. The prepared cryptographic identity gate verifies generated ES256/RS256 signatures, required Supabase claims and simulated current-session authority, including revocation and bounded unresolved checks. Account UI state, actual Auth/SQL sessions, JWKS transport, cookies and callbacks are not yet connected. Task 2b hosted acceptance and Phase 1 gates remain open; no paid calls or real sign-ins occurred.
 
 ## Completed evidence
 
@@ -812,3 +812,11 @@ Exact next action: publish/copy this controller checkpoint and refresh Memory. N
 
 
 Account-controller checkpoint 27aad35 is published and copied. Private Memory source f0094284ab004626c1d7e0e55ff15686172d3cd6 deployed successfully as appgdep_6acc33bbcd3881919f084176bec986ca, with MCP retained. All 16 website checks and artifact validation pass. Next: server verified-identity/session contract and simulated checks; real sign-in remains gated.
+
+
+## Cryptographic identity gate preparation
+
+Prepared a disconnected jose 6.2.12 verifier with exact Supabase issuer/audience, asymmetric-only signing, required user/session claims and an injected current-session authority. It refuses expiry, malformed/anonymous/forged tokens and revoked/uncertain sessions. Downstream current-session checks are available without exposing tokens. Eight-second deadlines and four underlying operations bound unresolved work; timed-out underlying checks keep admission until they settle. All 231 foundation tests across 19 files, type checking and build pass. Generated keys and simulated session status are the only identities used. See docs/server-identity-preparation.md for source references and remaining real Auth/JWKS/cookie/callback requirements.
+
+
+Exact next action: publish/copy this identity checkpoint and refresh Memory. Next prepare the protected local auth.sessions owner/session lookup and SQL-backed verifier rehearsal; then bounded fixed-project JWKS transport and the request/cookie/callback boundary. Verify actual Supabase schema before hosted activation, and preserve no-real-sign-in/no-hosted-change limits.

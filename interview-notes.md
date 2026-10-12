@@ -758,3 +758,6 @@ I tested what happens when the database succeeds but its reply is lost. The app 
 ## Preparing account access
 
 I prepared the account flow locally so customers can sign in with email/password, Google or Apple without an upfront style questionnaire. I kept registration confirmation separate from signed-in access and made recovery messages generic. I tested cancellation, stale replies and failed sign-out so the interface cannot silently restore an old account. The tests use simulated providers; actual authentication and server access remain to be built.
+
+
+I separated a valid sign-in token from a currently active session. The prepared server verifier checks actual cryptographic signatures and asks a separate authority whether the session remains active. I also limited stalled checks so repeated timeouts cannot create unlimited background work. These checks use generated keys and simulated session status, so live sign-out and Supabase integration remain open.

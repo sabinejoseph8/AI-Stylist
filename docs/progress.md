@@ -9,7 +9,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Task 2c local account preparation is active under Sabine’s 11 October sequencing approval. Latest evidence: 223 foundation tests across 18 files, type checking and build pass. The account UI controller covers simulated email/password, registration confirmation, recovery, Google/Apple, cancellation, stale replies and sign-out. No live Auth, hosted change, provider call or customer access is enabled. Task 2b hosted acceptance and Phase 1 gates remain open.
+Task 2c local account preparation is active. All 231 foundation tests across 19 files, type checking and build pass. The prepared cryptographic identity gate verifies generated ES256/RS256 signatures, required Supabase claims and simulated current-session authority, including revocation and bounded unresolved checks. Account UI state, actual Auth/SQL sessions, JWKS transport, cookies and callbacks are not yet connected. Task 2b hosted acceptance and Phase 1 gates remain open; no paid calls or real sign-ins occurred.
 
 Project memory website: [https://ai-stylist-project-memory.idealgnat256.chatgpt.site](https://ai-stylist-project-memory.idealgnat256.chatgpt.site) (private; ChatGPT sign-in required). Shared website task updates require evidence; keep docs/progress.md in sync.
 
@@ -1417,3 +1417,8 @@ Sabine explicitly approved local Task 2c account preparation while Phase 1 remai
 Added a disconnected UI controller with injected provider operations, generation fencing, cancellation and a bounded deadline. It covers email/password, confirmation-required registration, generic recovery acknowledgment, Google/Apple pending/canceled states and immediate local sign-out. Failed remote sign-out is explicitly unconfirmed. Snapshots contain no passwords, email addresses, session tokens or raw provider errors. Canceled-before-dispatch operations never invoke the provider; late replies cannot restore local identity. Browser state is not server authorization.
 
 All 223 foundation tests across 18 files, type checking and build pass. These eight new controller checks use synthetic responses; email delivery, actual OAuth, server tokens, cookies, callback/recovery validation and remote revocation are not implemented. The controller is not yet displayed in the foundation UI. Task 2c remains in progress and local-only.
+
+
+## Cryptographic identity gate preparation
+
+Prepared a disconnected jose 6.2.12 verifier with exact Supabase issuer/audience, asymmetric-only signing, required user/session claims and an injected current-session authority. It refuses expiry, malformed/anonymous/forged tokens and revoked/uncertain sessions. Downstream current-session checks are available without exposing tokens. Eight-second deadlines and four underlying operations bound unresolved work; timed-out underlying checks keep admission until they settle. All 231 foundation tests across 19 files, type checking and build pass. Generated keys and simulated session status are the only identities used. See docs/server-identity-preparation.md for source references and remaining real Auth/JWKS/cookie/callback requirements.
