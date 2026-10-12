@@ -26,7 +26,7 @@ async function harness(host:ReturnType<typeof createSupabaseAccountHost>){
 }
 it('constructs without work, defaults to approved lifetime, and rejects malformed policies',async()=>{
  const {options,host,fetcher}=setup();expect(fetcher).not.toHaveBeenCalled();expect(host.health().status).toBe('inactive');
- expect(Object.keys(host).sort()).toEqual(['close','handle','health','maintain','start']);
+ expect(Object.keys(host).sort()).toEqual(['authorizeResource','close','handle','health','maintain','start']);
  expect(()=>createSupabaseAccountHost({...options,initialExpiry:null!})).toThrow('expiry');expect(()=>createSupabaseAccountHost({...options,rotatedExpiry:null!})).toThrow('expiry');await host.close();expect(fetcher).not.toHaveBeenCalled();
 });
 it('gates actual HTTP and composes admitted recovery with fixed server-only transport',async()=>{

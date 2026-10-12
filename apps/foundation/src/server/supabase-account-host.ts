@@ -1,3 +1,4 @@
+import {createAccountResourceIdentity} from './account-resource-identity.ts';
 import {createAuthKeys} from './auth-keys.ts';
 import {createAuthSessionAuthority} from './auth-session.ts';
 import {createIdentityVerifier} from './verified-identity.ts';
@@ -55,5 +56,5 @@ export function createSupabaseAccountHost(options:SupabaseAccountHostOptions){
   tokenRecovery:createRecoveryTokenProvider({...recoveryOperations,verifyRecoveryToken:recoveryHttp.verifyRecoveryToken},verifier,presence),
   recoveryRequest:{request:recoveryHttp.request},
  });
- return createAccountHost(options.appOrigin,accounts,rpc);
+ return Object.freeze({...createAccountHost(options.appOrigin,accounts,rpc),authorizeResource:createAccountResourceIdentity(security.authorize,store)});
 }

@@ -1277,3 +1277,7 @@ I added a separate identity check for the refresh endpoint so a signed expired a
 ## Verifying the session deadline survives server replacement
 
 I made seven days the account host default and verified that the original deadline is captured once. In the combined browser/database rehearsal, I replaced the server and refreshed a signed expired access token. The stored deadline and cookie expiry stayed unchanged, and sign-out still removed the session. Auth responses were synthetic, so real provider and complete browser restoration acceptance remain open.
+
+## Enforcing the stored session deadline for customer data
+
+I prepared a resource-access guard that requires a current signed identity and ready server-held session ownership before customer data can be used. It checks the stored deadline again during reuse and refuses held, missing or expired records. The 598-test suite passes; real route integration and hosted isolation acceptance remain open.
