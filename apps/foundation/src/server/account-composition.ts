@@ -30,12 +30,13 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
  const exchange=createAccountExchange(security,origin,ports.exchange,8000,sessions);
  const oauth=createOAuthCallbackHttp(origin,exchange,security.callbacks);
  const reset=createRecoveryCallbackHttp(origin,recovery,browser,security.callbacks);
+ const recover=createRecoveryRequest(origin,security,ports.recoveryRequest);
  const registry=createAccountRouteRegistry({
   password:createPasswordHttp(origin,createPasswordAccounts(security,origin,ports.password,8000,sessions)),
   oauth:createOAuthStartHttp(origin,createOAuthStart(projectUrl,security.callbacks)),
   refresh:createRefreshHttp(origin,createAccountRefresh(security,origin,ports.refresh,8000,sessions)),
   signOut:{handle:createSignOutHttp(origin,createAccountSignOut(security,origin,ports.signOut))},
-  recover:{handle:createRecoveryRequest(origin,security,ports.recoveryRequest)},
+  recover:{handle:recover,discardResponse:recover.discardResponse},
   reset:{handle:createRecoveryHttp(origin,browser)},
   googleCallback:{handle:(request,signal)=>oauth.handle(request,'google',signal),discardResponse:oauth.discardResponse},
   appleCallback:{handle:(request,signal)=>oauth.handle(request,'apple',signal),discardResponse:oauth.discardResponse},

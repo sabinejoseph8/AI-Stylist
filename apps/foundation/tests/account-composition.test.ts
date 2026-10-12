@@ -81,4 +81,14 @@ describe('explicit dormant account composition',()=>{
   expect(ports.exchange.exchange).toHaveBeenCalledTimes(1);await app.close();
  });
 
+ it('discards an undelivered recovery request transaction through the factory',async()=>{
+  const {app,ports,security}=setup();const route=app.routes().get('/api/account/recover')!;
+  const response=await route.handle(new Request(origin+'/api/account/recover',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({email:'sample@example.test'})}),signal());
+  expect(response.status).toBe(202);const input=(ports.recoveryRequest.request.mock.calls as unknown as unknown[][])[0]![0] as unknown as {redirectTo:string};
+  const cookie=response.headers.get('set-cookie')!.split(';')[0]!;
+  await route.discardResponse!(response);await route.discardResponse!(response);
+  expect(security.callbacks.fromRequest(new Request(input.redirectTo+'&code=synthetic',{headers:{cookie}}),'recovery')).toBeNull();
+  expect(ports.recovery.exchange).not.toHaveBeenCalled();await app.close();
+ });
+
 });

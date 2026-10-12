@@ -1115,3 +1115,7 @@ I verified that the account factory cleans a late session save when the browser 
 ## Complete callback lifecycle verification, 12 October 2026
 
 I moved social and recovery callback HTTP checks through the actual account factory. Late results after browser disconnect or server shutdown are cleaned without granting access. Recovery still cannot issue a normal account cookie. All 499 tests, type checking and build pass using generated signed identities and simulated providers. Hosted acceptance remains open.
+
+## Undelivered recovery request fix, 12 October 2026
+
+I found that an undelivered recovery-request response could leave its browser transaction pending until expiry. I added idempotent transport cleanup that removes the transaction immediately. It does not claim to recall an email. All 500 tests, type checking and build pass with simulated providers.
