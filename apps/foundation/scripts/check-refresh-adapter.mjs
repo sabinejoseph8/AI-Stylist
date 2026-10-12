@@ -13,6 +13,11 @@ import {createRefreshProvider} from '../src/server/refresh-provider.ts';
 import {createRefreshProviderHttp} from '../src/server/refresh-provider-http.ts';
 import {createRefreshReconciliation} from '../src/server/refresh-reconciliation.ts';
 import {createAuthSessionPresence} from '../src/server/auth-session-presence.ts';
+import {createInitialSessionStager} from '../src/server/initial-session.ts';
+import {createPasswordProvider} from '../src/server/password-provider.ts';
+import {createPasswordAccounts} from '../src/server/password-account.ts';
+import {createIdentityVerifier} from '../src/server/verified-identity.ts';
+import {createAuthSessionAuthority} from '../src/server/auth-session.ts';
 import {createRefreshScan} from '../src/server/refresh-scan.ts';
 import {createAccountSecurity} from '../src/server/account-security.ts';
 import {generateKeyPair,exportJWK,SignJWT} from 'jose';
@@ -251,6 +256,25 @@ const unavailableRecord=await store.inspect(owner,session,signal());assert.equal
 await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`update stylist_private.refresh_ownership set state='held',expires_at_ms=1 where session_id='${session}';`);
 assert.deepEqual(await store.keyUsage('fixture',signal()),{status:'found',keyId:'fixture',total:1,ready:0,rotating:0,held:1,expired:1});
 console.log('Encrypted key transition PostgreSQL rehearsal passed: overlap reads, new-key write, actual restart, retirement read, and premature retirement retaining blocked ownership. No provider calls.');
+
+// Actual initial password composition; provider replies remain synthetic.
+await execute(['exec','-i',container,'psql','-U','postgres','-Atq','-v','ON_ERROR_STOP=1'],`delete from stylist_private.refresh_ownership where session_id='${session}';`);
+const initialVerifier=createIdentityVerifier(project,async()=>pair.publicKey,createAuthSessionAuthority(rpc));
+let initialRevoked=true;
+const initialStager=createInitialSessionStager(store,initialVerifier,()=>scope.expiresAt,async()=>initialRevoked);
+const initialProvider=createPasswordProvider({password:async()=>({access_token:await token(),refresh_token:'initial-password-fixture',token_type:'bearer'}),revoke:async()=>initialRevoked},initialStager);
+const passwordInput={method:'signIn',email:'sample@example.test',password:'made-up'};
+const initialAccounts=createPasswordAccounts(security,origin,initialProvider);
+const initialReady=await initialAccounts.submit(passwordInput,signal());assert.equal(initialReady.status,'ready');assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
+assert.equal(await initialReady.discard(),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+loseNext='stylist_adopt_refresh';initialRevoked=false;
+const uncertainAccounts=createPasswordAccounts(security,origin,initialProvider);
+assert.equal((await uncertainAccounts.submit(passwordInput,signal())).status,'unavailable');assert.equal(uncertainAccounts.cleanupHeld(),true);
+const uncertainInitial=await store.inspect(owner,session,signal());assert.equal(uncertainInitial.status,'found');assert.notEqual(uncertainInitial.state,'ready');
+await execute(['restart',container]);
+for(let attempt=0;;attempt++){try{await execute(['exec',container,'pg_isready','-h','127.0.0.1','-U','postgres']);break;}catch{if(attempt>=50)throw Error('Restart unavailable');await new Promise(r=>setTimeout(r,100));}}
+assert.notEqual((await createRefreshStore(rpc,codec).claim(owner,session,1,signal())).status,'claimed');
+console.log('Initial password PostgreSQL composition passed: generated identity, first adoption, cleanup, and lost acknowledgment/refused revocation restart protection.');
 
 // Real primary-database presence authority, including cascade after actual session deletion.
 const presence=createAuthSessionPresence(rpc);

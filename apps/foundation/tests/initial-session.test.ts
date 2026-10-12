@@ -26,3 +26,9 @@ it('refuses invalid identity before storage and preserves refused revocation',as
  await expect(createInitialSessionStager(store,{verify:async()=>null} as ReturnType<typeof createIdentityVerifier>,()=>Date.now()+60000,async()=>true).stage(input,signal())).rejects.toThrow('Session staging unavailable');
  const staged=await createInitialSessionStager(store,verifier,()=>Date.now()+60000,async()=>false).stage(input,signal());expect(await staged.discard(signal())).toBe(false);expect(store.adopt).not.toHaveBeenCalled();
 });
+it('quarantines an unacknowledged adoption without granting deletion authority',async()=>{
+ const scope={ownerId:owner,sessionId:session,generation:1,expiresAt:Date.now()+60000};let state='absent';const hold=vi.fn(async()=> 'confirmed'),remove=vi.fn();
+ const store={inspect:async()=>state==='absent'?{status:'absent'}:{status:'found',scope,state:'ready',leaseId:null},adopt:async()=>{state='ready';return 'unconfirmed';},claim:async()=>({status:'claimed',scope,leaseId:lease,clearSecret:()=>{}}),hold,remove} as unknown as ReturnType<typeof createRefreshStore>;
+ const staged=await createInitialSessionStager(store,verifier,()=>scope.expiresAt,async()=>false).stage(input,signal());
+ expect(await staged.adopt?.(signal())).toBe(false);expect(await staged.discard(signal())).toBe(false);expect(hold).toHaveBeenCalledTimes(1);expect(remove).not.toHaveBeenCalled();
+});

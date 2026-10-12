@@ -9,7 +9,7 @@ export function createInitialSessionStager(store:ReturnType<typeof createRefresh
   if(!identity?.sessionId||signal.aborted)throw Error('Session staging unavailable');
   const expiresAt=expiryPolicy();if(!Number.isSafeInteger(expiresAt)||expiresAt<=Date.now())throw Error('Session staging unavailable');
   const scope=Object.freeze({ownerId:identity.ownerId,sessionId:identity.sessionId,generation:1,expiresAt});
-  let secret:string|null=input.refreshSecret,adoption:Promise<boolean>|undefined,cleanup:Promise<boolean>|undefined,disposed=false,owned=false;
+  let secret:string|null=input.refreshSecret,adoption:Promise<boolean>|undefined,cleanup:Promise<boolean>|undefined,disposed=false,owned=false,attempted=false;
   return Object.freeze({accessToken:input.accessToken,
    adopt(s:AbortSignal){
     if(disposed||s.aborted)return Promise.resolve(false);
@@ -18,7 +18,7 @@ export function createInitialSessionStager(store:ReturnType<typeof createRefresh
      const before=await store.inspect(scope.ownerId,scope.sessionId,s);
      if(before.status!=='absent'||s.aborted)return false;
      const value=secret;secret=null;if(value===null)return false;
-     owned=await store.adopt(value,scope,s)==='confirmed';return owned;
+     attempted=true;owned=await store.adopt(value,scope,s)==='confirmed';return owned;
     })().catch(()=>false);
     return adoption;
    },
@@ -27,7 +27,7 @@ export function createInitialSessionStager(store:ReturnType<typeof createRefresh
     cleanup=(async()=>{
      if(adoption)await adoption;secret=null;if(s.aborted)return false;
      let lease:string|undefined;
-     if(owned){try{
+     if(attempted){try{
       const current=await store.inspect(scope.ownerId,scope.sessionId,s);
       if(current.status==='found'&&current.scope.generation===1&&current.state==='ready'){
        const claim=await store.claim(scope.ownerId,scope.sessionId,1,s);

@@ -1488,3 +1488,12 @@ Prepared createInitialSessionStager for the normalized password bridge. It deriv
 All 431 foundation tests across 54 files, type checking and build pass after correcting missing parameter type declarations. Three synthetic tests cover single adoption/cleanup, ambiguous or pre-existing ownership, invalid identity and refused revocation. Actual PostgreSQL/password composition is still pending; this is not hosted acceptance. No account route, production key, real sign-in, email or paid call was activated.
 
 Exact next action: compose initial ownership and the normalized password bridge with the existing isolated PostgreSQL harness, generated signed identity and synthetic provider operations. Test lost adoption acknowledgment and restart quarantine before preparing the concrete password HTTP transport. Consolidate private Memory after this composition checkpoint.
+
+
+## Initial password database composition and lost-save fix, 12 October 2026
+
+Composed the normalized password bridge, initial session stager, generated ES256 identity, actual session SQL authority and encrypted ownership in isolated PostgreSQL. Successful initial adoption and confirmed cleanup pass. The new lost-adoption-acknowledgment/refused-revocation scenario reproduced a ready-record gap. Fixed it by attempting quarantine after any started adoption, even if its acknowledgment was lost. Deletion authority still requires confirmed ownership and matching lease; unknown ownership remains unresolved. A focused regression and actual database restart confirm the quarantined row cannot be claimed by a replacement store.
+
+All 432 foundation tests across 54 files, type checking/build and the full isolated SQL composition pass. Provider replies and revocation remain synthetic. This proves the confirmed-quarantine path, not simultaneous database/provider outages. No real sign-in, email, production key or hosted change occurred. Task 2c remains open.
+
+Exact next action: consolidate private Memory with this checkpoint, then prepare concrete password HTTP operations and registration-response normalization with simulated fetch. Keep startup routes disabled and preserve all activation/financial gates.

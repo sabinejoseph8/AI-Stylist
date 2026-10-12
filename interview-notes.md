@@ -994,3 +994,8 @@ I prepared the password-provider connection without enabling real sign-ins. I se
 ## Saving an initial sign-in safely
 
 I connected initial sign-in preparation to encrypted session ownership. I required verified identity before saving and prevented uncertain save acknowledgments from becoming permission to delete another session record. I tested the local lifecycle and kept real activation separate from these simulated checks.
+
+
+## Fixing an uncertain initial-save restart bug
+
+I tested a sign-in save whose database acknowledgment was lost while sign-out also failed. The record could remain ready after a restart, so I changed cleanup to quarantine any attempted save before sign-out. I kept uncertain ownership from authorizing deletion and verified the fix against a real isolated database restart.
