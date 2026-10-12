@@ -774,3 +774,6 @@ I kept the account prototype local while preparing its trust boundary. I used ge
 ### Separating browser requests from trusted identity
 
 I added a local request boundary that accepts one account cookie and verifies its signed identity and current session. I tested foreign sites, conflicting cookies and forged owner headers before connecting customer routes. A generated signed token worked until the simulated session was revoked. I kept actual sign-in and browser cookie acceptance open because these local checks do not prove provider behavior.
+
+
+I prepared cookie creation only after identity and current-session checks succeed. I used secure browser-only cookie attributes and a matching clear operation. I kept remote sign-out and actual browser acceptance separate from simulated cookie tests so I would not mistake a passing unit test for a finished account system.

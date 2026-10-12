@@ -859,3 +859,12 @@ Prepared a disconnected cookie-only identity gate for a configured HTTPS applica
 All 245 foundation tests across 22 files pass, with type checking and build. The request suite includes a real generated ES256 signature, simulated session revocation and malformed/cross-origin request rejection. This proves local composition only; no browser cookie, actual Auth sign-in, OAuth or password recovery is accepted yet. No route, customer feature or hosted configuration is enabled.
 
 Exact next action: publish/copy this request boundary checkpoint; private Memory currently reflects b4f79a8. Then prepare verified cookie issuance and clearing, followed by one-time OAuth/recovery callback state and safe return-path validation, using local generated-key and simulated tests only. Keep all hosted, credentials and spending restrictions.
+
+
+## Verified account cookie preparation
+
+Added a disconnected cookie issuer that first verifies the token and rechecks its current session. It produces a host-only __Host-stylist_access session cookie with Path=/, Secure, HttpOnly and SameSite=Strict. It sets no Domain or persistent Max-Age. Clearing uses the identical scope with Max-Age=0; remote sign-out is a separate requirement. Token size is capped at 3800 characters to leave room within common cookie limits; malformed tokens, revoked identity, canceled checks and errors produce no cookie. Request routes must enforce the prepared origin/CSRF boundary before invoking issuance. OAuth/recovery needs a separate short-lived callback contract; the strict account cookie is not that contract.
+
+All 249 foundation tests across 23 files, type checking and build pass. These cookie checks use simulated verifier results. No actual browser cookie, credentials, provider connection or hosted feature was activated.
+
+Exact next action: publish/copy the verified cookie checkpoint, then implement a bounded one-time callback state contract, PKCE preparation and safe internal return paths with simulated tests. Private Memory currently reflects b4f79a8 (240 tests); refresh after the next account-boundary checkpoint. No human action is required for this local work.
