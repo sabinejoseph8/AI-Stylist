@@ -2441,3 +2441,9 @@ Replaced direct recovery-owner assembly in the isolated PostgreSQL rehearsal wit
 The full isolated ownership rehearsal passes; disposable containers and volumes were verified absent. All 491 foundation tests across 67 files, type checking and build pass. This verifies the factory recovery path, not every factory route or real hosted Auth.
 
 Exact next action: update and publish the private Memory site to this checkpoint, then extend the factory rehearsal to password/OAuth/refresh/sign-out routes. All hosted, sequencing, customer-policy and spending gates remain unchanged.
+
+## Password and OAuth factory database checks, 12 October 2026
+
+The isolated PostgreSQL rehearsal now uses the actual dormant factory for password confirmation/sign-in and Google/Apple initiation/callback delivery. It verifies confirmation without cookies, signed account-cookie delivery, encrypted generation-one ownership, one-use callback refusal, allowlisted return paths and response-discard cleanup removing stored ownership. Existing lost-acknowledgment/restart cases remain separately exercised through their direct owners. Provider responses remain synthetic.
+
+The full isolated rehearsal passes and disposable resources were verified removed. All 491 foundation tests, type checking and build pass. No hosted account route or paid request was enabled. Exact next action: move the remaining refresh and sign-out database compositions through the factory, then reconcile acceptance gaps before any activation. The private Memory publication remains the earlier 491-test recovery checkpoint.

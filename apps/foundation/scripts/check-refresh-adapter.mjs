@@ -290,11 +290,16 @@ const initialHttp=createPasswordProviderHttp(project,'synthetic-password-http-ke
 const initialStager=createInitialSessionStager(store,initialVerifier,()=>scope.expiresAt,(jwt,abort)=>initialHttp.revoke(jwt,'local',abort));
 const initialProvider=createPasswordProvider(initialHttp,initialStager);
 const passwordInput={method:'signIn',email:'sample@example.test',password:'made-up'};
-const initialAccounts=createPasswordAccounts(security,origin,initialProvider);
-const confirmation=await initialAccounts.submit({...passwordInput,method:'signUp'},signal());assert.deepEqual(confirmation,{status:'confirmationRequired'});assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(initialLogouts,0);
-
-const initialReady=await initialAccounts.submit(passwordInput,signal());assert.equal(initialReady.status,'ready');assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
-assert.equal(await initialReady.discard(),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+function accountFactory(overrides){
+ const refuse=async()=>{throw Error('Unexpected provider operation');};
+ return createAccountComposition(origin,project,security,{password:{password:refuse},exchange:{exchange:refuse},refresh:{refresh:refuse},signOut:{revoke:refuse},recovery:{exchange:refuse},recoveryRequest:{request:refuse},...overrides});
+}
+const passwordFactory=accountFactory({password:initialProvider});
+const passwordRoute=passwordFactory.routes().get('/api/account/password');
+const passwordRequest=input=>new Request(origin+'/api/account/password',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify(input)});
+const confirmation=await passwordRoute.handle(passwordRequest({...passwordInput,method:'signUp'}),signal());assert.equal(confirmation.status,200);assert.deepEqual(await confirmation.json(),{status:'confirmationRequired'});assert.equal(confirmation.headers.get('set-cookie'),null);assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(initialLogouts,0);
+const initialReady=await passwordRoute.handle(passwordRequest(passwordInput),signal());assert.equal(initialReady.status,200);assert.deepEqual(await initialReady.json(),{status:'signedIn'});assert.match(initialReady.headers.get('set-cookie'),/__Host-stylist_access=/);assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
+assert.equal(await passwordRoute.discardResponse(initialReady),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(await passwordFactory.close(),true);
 loseNext='stylist_adopt_refresh';initialRevoked=false;
 const uncertainAccounts=createPasswordAccounts(security,origin,initialProvider);
 assert.equal((await uncertainAccounts.submit(passwordInput,signal())).status,'unavailable');assert.equal(uncertainAccounts.cleanupHeld(),true);
@@ -345,11 +350,15 @@ function oauthRequest(provider){
  url.searchParams.set('code','synthetic-oauth-code');return new Request(url,{headers:{cookie:start.setCookies[0].split(';')[0]}});
 }
 for(const provider of ['google','apple']){
- const exchange=createAccountExchange(security,origin,oauthProvider),request=oauthRequest(provider);
- const ready=await exchange.complete(request,provider,signal());assert.equal(ready.status,'ready');assert.equal(ready.returnPath,'/saved-looks');
+ const app=accountFactory({exchange:oauthProvider}),routes=app.routes();
+ const started=await routes.get('/api/account/oauth').handle(new Request(origin+'/api/account/oauth',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({provider,returnPath:'/saved-looks'})}),signal());
+ assert.equal(started.status,200);const handoff=await started.json();assert.equal(handoff.status,'handoff');
+ const url=new URL(new URL(handoff.url).searchParams.get('redirect_to'));url.searchParams.set('code','synthetic-oauth-code');
+ const request=new Request(url,{headers:{cookie:started.headers.get('set-cookie').split(';')[0]}}),route=routes.get('/auth/callback/'+provider);
+ const ready=await route.handle(request,signal());assert.equal(ready.status,303);assert.equal(ready.headers.get('location'),'/saved-looks');assert.match(ready.headers.get('set-cookie'),/__Host-stylist_access=/);
  assert.equal((await store.inspect(owner,session,signal())).scope.generation,1);
- assert.equal((await exchange.complete(request,provider,signal())).status,'unavailable');
- assert.equal(await ready.discard(),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');
+ const replay=await route.handle(request,signal());assert.equal(replay.headers.get('location'),'/account?status=unavailable');
+ assert.equal(await route.discardResponse(ready),true);assert.equal((await store.inspect(owner,session,signal())).status,'absent');assert.equal(await app.close(),true);
 }
 assert.equal(oauthCalls,2);
 loseNext='stylist_adopt_refresh';oauthRevoked=false;

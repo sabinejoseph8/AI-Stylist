@@ -1087,3 +1087,7 @@ I verified that closing the prepared account service disables a delivered reset 
 ## Account factory database verification, 12 October 2026
 
 I tested the actual account factory against a disposable database using generated signed identities. Recovery permissions stayed separate from normal account access, could be used only once, and required confirmed cleanup. I kept provider replies synthetic and removed the test database afterward. All 491 foundation tests, type checking and build pass; hosted acceptance is still pending.
+
+## Sign-in factory database checks, 12 October 2026
+
+I extended the disposable database rehearsal to password and Google/Apple sign-in through the actual account factory. I checked that account confirmation does not grant access, callback replay is refused, and undelivered sign-in responses release stored ownership. Provider replies remained synthetic. The full database rehearsal and all 491 foundation tests pass, with type checking and build.

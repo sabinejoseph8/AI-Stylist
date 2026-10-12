@@ -1677,3 +1677,9 @@ Exact next action: update and publish the private Memory site to this checkpoint
 The private Memory website now publishes the 491-test account factory/database checkpoint from source 90fe94e71fc2efbe4481119516784275fce19dec. All 16 site checks and artifact validation pass. Native deployment appgdep_6acc6e4b8d388191a6e58423b9825003 succeeded with MCP enabled. Owner-only access was rechecked: one allowed user, no groups. Site source snapshots are retained in tools/project-memory-site. Task 2c and the phase gates remain open.
 
 Exact next action: extend the isolated factory rehearsal to password/OAuth/refresh/sign-out routes while preserving all hosted and spending limits.
+
+## Password and OAuth factory database checks, 12 October 2026
+
+The isolated PostgreSQL rehearsal now uses the actual dormant factory for password confirmation/sign-in and Google/Apple initiation/callback delivery. It verifies confirmation without cookies, signed account-cookie delivery, encrypted generation-one ownership, one-use callback refusal, allowlisted return paths and response-discard cleanup removing stored ownership. Existing lost-acknowledgment/restart cases remain separately exercised through their direct owners. Provider responses remain synthetic.
+
+The full isolated rehearsal passes and disposable resources were verified removed. All 491 foundation tests, type checking and build pass. No hosted account route or paid request was enabled. Exact next action: move the remaining refresh and sign-out database compositions through the factory, then reconcile acceptance gaps before any activation. The private Memory publication remains the earlier 491-test recovery checkpoint.
