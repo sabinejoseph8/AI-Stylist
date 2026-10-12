@@ -77,3 +77,6 @@ Account usability/composition checkpoint 0c46182 is pushed and copied. Private M
 
 
 Account exchange checkpoint ef17952 and reconciled summaries 353b5e1 are pushed and copied. Private Memory source 08ddbfd888edb17575ef22658ea5cad4cfbb5fbb deployed successfully as appgdep_6acc3e3ad5d481918c1fce4b5db66104. All 16 website checks pass; owner-only access and MCP remain. The live imported plan shows 277 foundation tests. No customer account or app deployment occurred. Next: shared verified-session orchestration for email/password and registration, with simulated cancellation/cleanup checks.
+
+
+Private Memory refresh succeeded for the accepted account preview, shared session orchestration and sign-out checkpoint ae8c5aa. Source cde1ab2810e5c9de88270988e27c431640907c4b deployed as appgdep_6acc4094d00481919af53df5f7519d2d. All 16 website checks pass, with owner-only access and MCP preserved. The imported plan shows 287 foundation tests. No customer account or app deployment occurred. Exact next action: prepare a separate provider-verified recovery capability that permits password reset only, with expiry, one-time use, cancellation cleanup and simulated tests. Preserve real-provider, recovery UX, refresh, spending and hosted approval gates.
