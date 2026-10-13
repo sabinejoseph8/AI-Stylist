@@ -247,3 +247,7 @@ Collapsing either the notebook or its camera disclosure stops the local camera w
 ## Local sample Wardrobe, 13 October 2026
 
 Save to sample wardrobe is an explicit action on a confirmed Owned photo, disabled for Inspiration. Wardrobe cards show the actual normalized photo, garment description, selection checkbox, enlarge, description Save/Cancel and a removal confirmation. Up to four selected items appear together inside the sample notebook. Save, session selection and deletion are distinct actions. Explain that explicit sample copies outlive End/Clear but disappear on refresh, and that no permanent wardrobe or look copy exists. This approved local rehearsal does not change production storage policy. Sabine accepted all eight local-computer flow steps as working and readable on 13 October 2026.
+
+### Wardrobe keyboard focus
+
+Return focus to the originating button after description Save/Cancel or Keep item. After removal, focus a neighboring item's selection or the Wardrobe heading if empty. Never focus controls in a hidden panel. Give each card and selection a garment-specific accessible name. Native enlargement retains its Escape/return-focus behavior. Verified with synthetic browser items; comprehensive accessibility acceptance remains pending.

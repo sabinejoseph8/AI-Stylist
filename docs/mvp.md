@@ -1,3 +1,11 @@
+## Local Wardrobe keyboard focus repaired, 13 October 2026
+
+Reviewed the existing authorized local Task 4c flow while external integrations remain blocked. Closing the description editor or removal confirmation could leave focus on a removed control. Save/Cancel now return focus to the originating Edit button, Keep returns to Remove, and confirmed deletion focuses the next or previous item's selection, or the Wardrobe heading when empty. Focus restoration runs after the DOM commit and refuses hidden/disconnected targets. Item cards and selection controls have distinct accessible names.
+
+All 797 foundation tests across 104 files, type checking and build pass. A separate synthetic browser fixture verified editor entry, Save/Cancel focus, Keep focus, next-item and empty-list removal focus, and native modal Escape returning to Enlarge. Synthetic pixels stayed local; the test tab was closed. This evidence is agent browser rehearsal, not a comprehensive accessibility or physical-phone acceptance. Sabine's accepted eight-step Wardrobe review remains valid and no repeat is requested. No hosted/persistent storage, recognition, provider, spending or phase completion changed. Allocation remains $51 and held records are unchanged.
+
+Next action: publish/copy this repair, then review concrete transcription/engineering, Render, account or retailer evidence when supplied. No further independent authorized implementation is identified within existing gates.
+
 ## Local sample Wardrobe review accepted, 13 October 2026
 
 Sabine confirmed all eight local Wardrobe review steps worked and were readable. Accepted scope: empty state; Inspiration save disabled; explicit Owned save and duplicate refusal; actual photo enlargement; description Cancel/Save; multiple sample selections in the notebook; independent session-reference description; End/Clear removing selections while retaining explicit sample copies; removal cancellation/confirmation; and refresh removing sample memory. Earlier accepted notebook/photo/camera checks remain valid and need no repetition.

@@ -1,0 +1,13 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Wardrobe keyboard rehearsal</title></head><body><div id="root"></div><script type="module">
+import React from 'react';
+import {createRoot} from 'react-dom/client';
+import {LocalWardrobe} from '../../src/media/local-wardrobe.ts';
+import {WardrobePanel} from '../../src/web/wardrobe-panel.tsx';
+import '../../src/web/tokens.css';
+import '../../src/web/style.css';
+const model=new LocalWardrobe({createURL:blob=>URL.createObjectURL(blob),revokeURL:url=>URL.revokeObjectURL(url)});
+// Synthetic pixels only. This test entry is outside the production build inputs.
+const bytes=Uint8Array.from(atob('UklGRiIAAABXRUJQVlA4IBYAAAAwAQCdASoBAAEADsD+JaQAA3AAAAAA'),c=>c.charCodeAt(0));
+for(const [id,description] of [[1,'Sample jacket'],[2,'Sample skirt']])model.save({photo:{id,url:'fixture'},description,ownership:'owned',blob:new Blob([bytes],{type:'image/webp'})});
+createRoot(document.getElementById('root')).render(React.createElement('main',null,React.createElement('h1',null,'Synthetic keyboard rehearsal'),React.createElement(WardrobePanel,{model,visible:true})));
+</script></body></html>

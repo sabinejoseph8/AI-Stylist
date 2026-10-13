@@ -1,3 +1,7 @@
+## Keeping keyboard users oriented in Wardrobe
+
+After the sample Wardrobe review passed, I checked what happened to keyboard focus when a control disappeared. I repaired Save, Cancel, Keep and deletion so customers have a clear next place to continue. I labeled each selection with its garment and tested both a remaining item and an empty list. A synthetic browser rehearsal verified those paths and Escape from enlargement; all 797 foundation tests, type checking and build pass. I kept this narrow evidence separate from full accessibility acceptance and preserved the earlier human review.
+
 ## Making saving a garment an explicit choice
 
 I approved a local sample Wardrobe while the live integrations were waiting on support. I separated a temporary session photo from an explicitly saved owned item, and gave the saved copy its own image lifetime. Ending a sample consultation clears the selection without deleting saved sample pieces. I added selection of several owned items, editable descriptions, enlargement and removal confirmation. I kept inspiration separate from ownership, made sample memory limits visible in the technical notes, and tested cleanup and copy independence. All 797 foundation tests pass. I completed the eight-step local review and confirmed saving, ownership restrictions, enlargement, editing, multiple selections, independent copies, removal and refresh cleanup all worked and were readable. The sample clears on refresh and does not claim permanent account storage.

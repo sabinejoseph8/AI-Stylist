@@ -18,3 +18,7 @@ Full hosted isolation, durable saving, saved-look copies/reference accounting, p
 ## Acceptance receipt
 
 All eight steps accepted by Sabine. This is the complete local sample flow review, not hosted or full Task 4c acceptance. No repeat is requested. The unchanged implementation retains its 797-test/type-check/build evidence.
+
+## Focus follow-up evidence
+
+The subsequent keyboard-focus repair passes all 797 foundation tests/type checking/build and an agent-operated synthetic browser rehearsal. Verified: opening Edit focuses its input; Cancel and Save restore Edit focus; Keep restores Remove focus; deleting the first of two items focuses the surviving selection; deleting the final item focuses the Wardrobe heading; Escape closes enlargement and restores its originating button. Distinct card/selection labels identify each garment. This is narrow browser evidence and does not replace a comprehensive accessibility audit. The accepted eight-step human review needs no repeat.
