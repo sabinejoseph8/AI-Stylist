@@ -2631,3 +2631,6 @@ Private Memory publication succeeded from e673cdf5a0a1313e8545f7bbbc9edb042119de
 
 
 Private Memory synchronization succeeded for the 1,331-test exact-request accounting checkpoint: source d42b34f4ddfda1374a5ae715a2a971b342527325, deployment appgdep_6acd962720e08191ace7df8c38957c4b. Owner-private publication and MCP preserved. All 16 site tests and artifact validation pass. GitHub code checkpoint 6522d74 is published; 535 committed files copied and byte-verified. Next action remains authoritative counting transport preparation, with live calls disabled and no new spend authorized.
+
+
+Private Memory synchronization succeeded for counted startup: source 7d6149b7f5e6a8a72b3c8efc5e623206e98de37b, deployment appgdep_6acd983deec88191b24282496c0920c7. Owner-private access and MCP preserved; 16 website checks and artifact validation pass. GitHub checkpoint 1b4710e published and 537 committed files copied and byte-verified. Next: concrete disabled notes-only entry point preparation; live startup, provider finalization, financial approval and physical-phone notebook acceptance remain open. No new paid calls or spending change.
