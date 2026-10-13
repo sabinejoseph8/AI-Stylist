@@ -1476,3 +1476,8 @@ I connected the notebook owner to its reserved execution capability after consen
 ## Checking the complete private notebook connection locally
 
 I added a separate private notebook route with authenticated access, consent before reservation and mode-matched readiness. My local two-turn check verifies the budget correction, touch confirmation and shutdown while keeping the reservation consumed. I also checked that the browser cannot send late consent after its session ends or start capture automatically. All 1,515 automated prototype tests pass. The implementation is not attached to the normal application and has made no paid provider call.
+
+
+## Explaining the microphone experiment before it starts
+
+I added a private test page with the complete instructions, retention boundary and separate connection and microphone actions. Start remains unavailable until the protected server confirms an approved, unconsumed trial. I verified the disabled page in the browser and tested private access, bounded availability and asset reads without reserving funds. All 1,526 automated prototype tests pass. I corrected a test that expected an unopened edit dialog's contents, and kept active microphone behavior and live-provider acceptance open.
