@@ -1,3 +1,7 @@
+## Validating the notebook in the main app
+
+I completed all eight review steps for the local styling notebook. I checked progressive sample notes, explicit confirmation, budget editing, navigation, selected sample preferences and clearing temporary state. An incomplete budget stays unconfirmed after I save it, and a scripted correction replaces it with a complete budget. I kept this local usability acceptance separate from real speech and saved-account integration, which still need verification.
+
 ## Keeping private failures out of the interface
 
 I found a startup path that copied exception text into the test page and API. I replaced it with fixed wording and tested private failures from the budget, provider configuration and generation stages, including a message getter that throws. An actual local HTTP check confirmed the private text never reached the response and cleanup still ran. I preserved the more specific fixed guidance for uncertain room creation and cleanup holds. All 1,674 prototype tests passed with type checking and build.
