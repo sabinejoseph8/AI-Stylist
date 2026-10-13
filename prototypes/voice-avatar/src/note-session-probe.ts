@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {applyNotebookCommand} from './notebook-command.ts';
 import {NotebookState} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
@@ -11,6 +13,7 @@ export type ProbeCapture={start:(accept:(pcm:ArrayBuffer)=>boolean,stopped:(reas
  * No real capture source, provider socket or extraction model is constructed here.
  */
 export class NoteSessionProbe {
+ private liveEnabled=false;
  private notebook:NotebookState;
  private capture:ProbeCapture;
  private controller=new AbortController();
@@ -32,8 +35,10 @@ export class NoteSessionProbe {
  private providerCommitted=false;
  private settledTurn:string|null=null;
  private turnReady:(turnId:string)=>void;
- constructor(options:{simulation?:boolean;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void;inputStarted?:()=>void;turnReady?:(turnId:string)=>void}){
-   if(options.simulation!==true)throw Error('Live note session is disabled.');
+ constructor(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;notebook:NotebookState;wire:TranscriptionWire;capture:ProbeCapture;extract:(input:ExtractionInput,signal:AbortSignal)=>Promise<unknown>;changed:(receipt:number|null)=>void;invalidated?:()=>void;inputStarted?:()=>void;turnReady?:(turnId:string)=>void}){
+   if(!validNoteExecution(options))throw Error('Live note session is disabled.');
+ const execution=noteExecutionOptions(options);
+   this.liveEnabled=isPrivateNotesTrialExecution(execution.privateTrial);
    this.notebook=options.notebook;this.capture=options.capture;this.changed=options.changed;this.invalidated=options.invalidated??(()=>{});this.inputStarted=options.inputStarted??(()=>{});this.session=this.notebook.snapshot().session;this.turnReady=options.turnReady??(()=>{});
    this.notes=new PartialNoteCoordinator({notebook:options.notebook,extract:options.extract,settled:turnId=>{this.settledTurn=turnId;this.releaseTurn();},invalidated:()=>{if(!this.ended){try{options.invalidated?.();}catch{this.shutdown('display-held');}}},changed:receipt=>{
      if(this.ended)return;
@@ -41,7 +46,7 @@ export class NoteSessionProbe {
      try{this.changed(receipt);}catch{this.shutdown('display-held');}
    }});
    this.unsubscribe=this.notebook.subscribe(()=>{if(this.notebook.snapshot().session!==this.session)this.shutdown('session-cleared');});
-   this.transcription=new PreparedLiveTranscription({simulation:true,wire:options.wire,signal:this.controller.signal,
+   this.transcription=new PreparedLiveTranscription({...execution,wire:options.wire,signal:this.controller.signal,
      emit:event=>{if(!this.ended&&!this.notes.accept(event))throw Error('Note input held.');},
      stopped:reason=>this.shutdown(reason)});
  }
@@ -110,5 +115,5 @@ export class NoteSessionProbe {
  end(){this.shutdown('ended');}
  disconnected(){this.shutdown('disconnected');}
  readyForLook(){return !this.ended&&!this.acquiring&&!this.capturing&&this.turnId===null&&this.committedTurn===null&&this.transcription?.snapshot().ready===true&&!this.notes.snapshot().extracting&&!this.notes.snapshot().queued;}
- snapshot(){return{ended:this.ended,reason:this.reason,capturing:this.capturing,acquiring:this.acquiring,transcription:this.transcription?.snapshot()??null,notes:this.notes.snapshot(),liveEnabled:false as const};}
+ snapshot(){return{ended:this.ended,reason:this.reason,capturing:this.capturing,acquiring:this.acquiring,transcription:this.transcription?.snapshot()??null,notes:this.notes.snapshot(),liveEnabled:this.liveEnabled};}
 }

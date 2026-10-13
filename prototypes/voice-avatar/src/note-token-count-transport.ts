@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {NOTE_EXTRACTION_MODEL} from './openai-note-extractor.ts';
 export const NOTE_TOKEN_COUNT_ENDPOINT='https://api.openai.com/v1/responses/input_tokens';
 const MAX_BYTES=32768; // Bounds request and streamed response; owner supplies deadline.
@@ -7,8 +9,9 @@ export type SimulatedExtractionFetch=(url:string,init:RequestInit)=>Promise<Resp
  * pinned-model acceptance is not proved by these simulated checks.
  * Disabled server transport preparation. There is no default fetch, credential
  * loader, auth header, retry, live flag, route or environment access. */
-export function createPreparedNoteTokenCounter(options:{simulation?:boolean;fetch:SimulatedExtractionFetch}){
- if(options.simulation!==true)throw Error('Live extraction transport is disabled.');
+export function createPreparedNoteTokenCounter(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;fetch:SimulatedExtractionFetch}){
+ if(!validNoteExecution(options))throw Error('Live extraction transport is disabled.');
+ const execution=noteExecutionOptions(options);
  return async(encoded:string,signal:AbortSignal):Promise<number>=>{
    let reader:ReadableStreamDefaultReader<Uint8Array>|null=null;
    let rejectAbort:((reason:Error)=>void)|null=null;

@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {buildOpenAINoteRequest} from './openai-note-extractor.ts';
 import {prepareNoteDispatchBudget} from './note-dispatch-budget.ts';
 import type {ExtractionInput} from './partial-note-coordinator.ts';
@@ -5,11 +7,12 @@ import type {ExtractionInput} from './partial-note-coordinator.ts';
  * request for its pinned model, including instructions and structured schema.
  * Identical serialized bytes go to counting and dispatch; neither receives a
  * mutable request object. No default counter, fetch, credentials or live route. */
-export function prepareBudgetedNoteDispatch(options:{simulation?:boolean;
+export function prepareBudgetedNoteDispatch(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;
  count:(request:string,signal:AbortSignal)=>Promise<number>;
  dispatch:(request:string,signal:AbortSignal)=>Promise<unknown>}){
- if(options.simulation!==true)throw Error('Live budgeted extraction is disabled.');
- const budget=prepareNoteDispatchBudget({simulation:true});
+ if(!validNoteExecution(options))throw Error('Live budgeted extraction is disabled.');
+ const execution=noteExecutionOptions(options);
+ const budget=prepareNoteDispatchBudget({...execution});
  const active=new Set<AbortController>();let ended=false,countRequests=0;
  const stop=()=>{ended=true;budget.hold();for(const controller of active)controller.abort();};
  return Object.freeze({

@@ -1,8 +1,11 @@
+import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 /** Server-owned trial accounting. No network, keys, persistence or live enablement.
  * Counts come from a trusted token counter for the exact dispatched request.
  * Reservations are consumed even if dispatch fails; no reset/refund is exposed. */
-export function prepareNoteDispatchBudget(options:{simulation?:boolean}){
- if(options.simulation!==true)throw Error('Live dispatch budget is disabled.');
+export function prepareNoteDispatchBudget(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution}){
+ if(!validNoteExecution(options))throw Error('Live dispatch budget is disabled.');
+ const execution=noteExecutionOptions(options);
  let attempts=0,inputTokens=0,outputTokens=0,held=false;
  return Object.freeze({
   reserve(countedInputTokens:number,maxOutputTokens:number){
@@ -13,6 +16,6 @@ export function prepareNoteDispatchBudget(options:{simulation?:boolean}){
    attempts++;inputTokens+=countedInputTokens;outputTokens+=maxOutputTokens;
   },
   hold(){held=true;},
-  snapshot(){return Object.freeze({attempts,inputTokens,outputTokens,held,liveEnabled:false as const});}
+  snapshot(){return Object.freeze({attempts,inputTokens,outputTokens,held,liveEnabled:isPrivateNotesTrialExecution(execution.privateTrial)});}
  });
 }

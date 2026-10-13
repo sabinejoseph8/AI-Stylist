@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import type {TranscriptionWire} from './live-transcription.ts';
 /** An injected, simulated socket only. This module never constructs a socket or
  * loads credentials, and does not enable the live transcription protocol. */
@@ -5,8 +7,9 @@ export type SimulatedTranscriptionSocket=EventTarget&{
  readonly readyState:number;readonly bufferedAmount:number;
  send:(data:string)=>void;close:()=>void;
 };
-export function prepareTranscriptionSocketWire(options:{simulation?:boolean;socket:SimulatedTranscriptionSocket;signal:AbortSignal;receive:(event:unknown)=>void;stopped:(reason:string)=>void}){
- if(options.simulation!==true)throw Error('Live transcription socket is disabled.');
+export function prepareTranscriptionSocketWire(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;socket:SimulatedTranscriptionSocket;signal:AbortSignal;receive:(event:unknown)=>void;stopped:(reason:string)=>void}){
+ if(!validNoteExecution(options))throw Error('Live transcription socket is disabled.');
+ const execution=noteExecutionOptions(options);
  if(options.socket.readyState!==1)throw Error('Transcription socket unavailable.');
  let ended=false,cleanupFailed=false,events=0;
  const listeners:Array<[string,EventListener]>=[];

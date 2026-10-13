@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {FIELDS} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
 import type {NoteSessionProbe} from './note-session-probe.ts';
@@ -12,19 +14,25 @@ const exact=(v:Record<string,unknown>,keys:string[])=>Object.keys(v).length===ke
  * No endpoint, credentials, socket, reconnect, distributed lease or paid call.
  */
 export class NoteConnectionScope {
+ private liveEnabled=false;
  private lease:Lease|null=null;
  private used=new Set<string>();
  private closed=false;
  private held=false;
  private create:()=>Probe;
  private id:()=>string;
- constructor(options:{simulation?:boolean;create:()=>Probe;id?:()=>string}){
-   if(options.simulation!==true)throw Error('Live note connections are disabled.');
+ constructor(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;create:()=>Probe;id?:()=>string}){
+   if(!validNoteExecution(options))throw Error('Live note connections are disabled.');
+ const execution=noteExecutionOptions(options);
+   this.liveEnabled=isPrivateNotesTrialExecution(execution.privateTrial);
    this.create=options.create;this.id=options.id??(()=>globalThis.crypto.randomUUID());
  }
  private reap(){
    const lease=this.lease;if(!lease||!lease.probe.snapshot().ended)return;
    const snapshot=lease.probe.snapshot();
+   // An ended private trial never frees its process-local lease: transport
+   // closure cannot establish remote finalization. Durable reservation also holds.
+   if(this.liveEnabled){this.held=true;return;}
    if(snapshot.reason==='cleanup-unverified'||snapshot.reason==='capture-cleanup-held'||snapshot.transcription?.cleanupFailed){this.held=true;return;}
    // Simulations have no remote resources. This is not remote cleanup evidence.
    this.lease=null;
@@ -82,5 +90,5 @@ export class NoteConnectionScope {
  }
  private stop(lease:Lease){try{lease.probe.end();this.reap();}catch{this.held=true;}}
  close(){if(this.closed)return;this.closed=true;if(this.lease)this.stop(this.lease);}
- snapshot(){this.reap();return{active:Boolean(this.lease),held:this.held,closed:this.closed,sessionsCreated:this.used.size,liveEnabled:false as const};}
+ snapshot(){this.reap();return{active:Boolean(this.lease),held:this.held,closed:this.closed,sessionsCreated:this.used.size,liveEnabled:this.liveEnabled};}
 }

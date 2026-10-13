@@ -1461,3 +1461,8 @@ I connected the protected notebook owner to a single disposable provider compone
 ## Waiting for explicit consent before reserving a trial
 
 I added a versioned consent handshake before the prepared notebook connection can reserve a test or create provider transports. Missing, declined or outdated consent and early audio close the connection without consuming an allowance. I verified the valid two-turn flow and rejection cases using local WebSockets. All 1,474 automated prototype tests pass; live microphone testing remains a separate unapproved experiment.
+
+
+## Keeping simulated evidence separate from private execution
+
+I added an explicit internal execution mode tied to a reserved experiment, rather than letting real protocol work report itself as simulated. I require counted extraction for that mode and keep ended connections held while remote cleanup is uncertain. The checks use synthetic providers and do not authorize a real trial. All 1,486 automated prototype tests pass; the normal server and browser still cannot start this live test.

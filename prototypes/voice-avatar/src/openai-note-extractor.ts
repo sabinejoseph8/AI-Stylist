@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {prepareNoteExtraction,decodeNoteExtraction} from './note-extraction-contract.ts';
 import type {ExtractionInput,NotePatch} from './partial-note-coordinator.ts';
 export const NOTE_EXTRACTION_MODEL='gpt-4.1-mini-2025-04-14';
@@ -27,8 +29,9 @@ export function decodeOpenAINoteResponse(result:unknown,input:ExtractionInput):N
 }
 /** Simulation is mandatory. The injected request must be a simulated transport.
  * The coordinator owns the 1.5 second deadline; no retries or model fallback. */
-export function createPreparedOpenAINoteExtractor(options:{simulation?:boolean;request:(body:ReturnType<typeof buildOpenAINoteRequest>,signal:AbortSignal)=>Promise<unknown>}){
- if(options.simulation!==true)throw Error('Live extraction is disabled.');
+export function createPreparedOpenAINoteExtractor(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;request:(body:ReturnType<typeof buildOpenAINoteRequest>,signal:AbortSignal)=>Promise<unknown>}){
+ if(!validNoteExecution(options))throw Error('Live extraction is disabled.');
+ const execution=noteExecutionOptions(options);
  return async(input:ExtractionInput,signal:AbortSignal):Promise<NotePatch[]>=>{
    if(signal.aborted)throw Error('Extraction canceled.');
    const body=buildOpenAINoteRequest(input);

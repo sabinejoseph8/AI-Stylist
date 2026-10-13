@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
 import type {SimulatedTranscriptionSocket} from './transcription-socket-wire.ts';
 type Session=ReturnType<typeof createPreparedNoteProviderSession>;
@@ -7,12 +9,13 @@ type Opened={socket:SimulatedTranscriptionSocket;detachInitialEvents:()=>void};
  * from its first packet, including events received before its promise resolves.
  * No URL, credentials, route or actual connection constructor is supplied. */
 export function prepareNoteStartup(options:{
- simulation?:boolean;signal:AbortSignal;
+ simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;signal:AbortSignal;
  open:(signal:AbortSignal,initialEvent:(value:unknown)=>void)=>Promise<Opened>;
- session:Omit<SessionOptions,'simulation'|'socket'|'signal'|'ready'|'stopped'>;
+ session:Omit<SessionOptions,'simulation'|'privateTrial'|'socket'|'signal'|'ready'|'stopped'>;
  ready?:()=>void;stopped?:()=>void;
 }){
- if(options.simulation!==true)throw Error('Live notebook startup is disabled.');
+ if(!validNoteExecution(options))throw Error('Live notebook startup is disabled.');
+ const execution=noteExecutionOptions(options);
  const controller=new AbortController();
  let settleOpening!:()=>void;
  const openingSettled=new Promise<void>(resolve=>{settleOpening=resolve;});
@@ -39,7 +42,7 @@ export function prepareNoteStartup(options:{
    addEventListener:raw.addEventListener.bind(raw),removeEventListener:raw.removeEventListener.bind(raw),dispatchEvent:raw.dispatchEvent.bind(raw),
   };
   try{
-   session=createPreparedNoteProviderSession({...options.session,simulation:true,socket,signal:controller.signal,
+   session=createPreparedNoteProviderSession({...options.session,...execution,socket,signal:controller.signal,
     ready:()=>{if(state==='ended')return;detach();if(cleanupFailed){stop('cleanup-unverified');return;}state='ready';clearTimeout(timer);try{options.ready?.();}catch{stop('consumer-held');}},
     stopped:()=>stop('provider-stopped'),
    });
@@ -77,6 +80,6 @@ export function prepareNoteStartup(options:{
   end:()=>stop('ended'),
   openingSettled,
   active:():Session|null=>state==='ready'&&session&&!session.status().ended?session:null,
-  status:()=>Object.freeze({state,reason,created,cleanupFailed:cleanupFailed||Boolean(session?.status().cleanupFailed),remoteCleanupVerified:false as const,liveEnabled:false as const}),
+  status:()=>Object.freeze({state,reason,created,cleanupFailed:cleanupFailed||Boolean(session?.status().cleanupFailed),remoteCleanupVerified:false as const,liveEnabled:isPrivateNotesTrialExecution(execution.privateTrial)}),
  };
 }

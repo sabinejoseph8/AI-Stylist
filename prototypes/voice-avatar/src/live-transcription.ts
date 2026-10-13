@@ -1,3 +1,5 @@
+import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 
 export const LIVE_TRANSCRIPTION_ENABLED=false;
 export const TRANSCRIPTION_MODEL='gpt-live-transcribe';
@@ -11,6 +13,7 @@ const object=(v:unknown):v is Record<string,any>=>Boolean(v)&&typeof v==='object
  * live owner must enforce authentication, allowance and verified socket cleanup.
  */
 export class PreparedLiveTranscription {
+ private liveEnabled=false;
  private wire:TranscriptionWire;
  private emit:(event:PartialTranscript)=>void;
  private stopped:(reason:string)=>void;
@@ -29,8 +32,10 @@ export class PreparedLiveTranscription {
  private turnBytes=0;
  private abort:()=>void;
  private signal:AbortSignal;
- constructor(options:{simulation?:boolean;wire:TranscriptionWire;signal:AbortSignal;emit:(event:PartialTranscript)=>void;stopped:(reason:string)=>void}){
-   if(options.simulation!==true)throw Error('Live transcription is disabled.');
+ constructor(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;wire:TranscriptionWire;signal:AbortSignal;emit:(event:PartialTranscript)=>void;stopped:(reason:string)=>void}){
+   if(!validNoteExecution(options))throw Error('Live transcription is disabled.');
+ const execution=noteExecutionOptions(options);
+   this.liveEnabled=isPrivateNotesTrialExecution(execution.privateTrial);
    this.wire=options.wire;this.emit=options.emit;this.stopped=options.stopped;this.signal=options.signal;
    this.abort=()=>this.stop('canceled');
    this.timer=setTimeout(()=>this.stop('configuration-timeout'),5000);
@@ -103,5 +108,5 @@ export class PreparedLiveTranscription {
  }
  disconnected(){this.stop('disconnected');}
  end(){this.stop('ended');}
- snapshot(){return{ready:this.ready,ended:this.ended,audioBytes:this.bytes,turnCount:this.used.size,cleanupRequested:this.cleanupRequested,cleanupFailed:this.cleanupFailed,remoteCleanupVerified:false as const,liveEnabled:false as const};}
+ snapshot(){return{ready:this.ready,ended:this.ended,audioBytes:this.bytes,turnCount:this.used.size,cleanupRequested:this.cleanupRequested,cleanupFailed:this.cleanupFailed,remoteCleanupVerified:false as const,liveEnabled:this.liveEnabled};}
 }

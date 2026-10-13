@@ -1,11 +1,14 @@
+import {validNoteExecution,noteExecutionOptions} from './note-execution.ts';
+import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import type {buildOpenAINoteRequest} from './openai-note-extractor.ts';
 export const NOTE_EXTRACTION_ENDPOINT='https://api.openai.com/v1/responses';
 const MAX_BYTES=32768;
 export type SimulatedExtractionFetch=(url:string,init:RequestInit)=>Promise<Response>;
 /** Disabled server transport preparation. There is no default fetch, credential
  * loader, auth header, retry, live flag, route or environment access. */
-export function createPreparedNoteExtractionTransport(options:{simulation?:boolean;fetch:SimulatedExtractionFetch}){
- if(options.simulation!==true)throw Error('Live extraction transport is disabled.');
+export function createPreparedNoteExtractionTransport(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;fetch:SimulatedExtractionFetch}){
+ if(!validNoteExecution(options))throw Error('Live extraction transport is disabled.');
+ const execution=noteExecutionOptions(options);
  return async(body:ReturnType<typeof buildOpenAINoteRequest>,signal:AbortSignal):Promise<unknown>=>{
    let reader:ReadableStreamDefaultReader<Uint8Array>|null=null;
    let rejectAbort:((reason:Error)=>void)|null=null;
