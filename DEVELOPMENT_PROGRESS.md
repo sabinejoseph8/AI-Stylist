@@ -1,3 +1,9 @@
+## Echo verification and authorized-work audit publication
+
+The selected stock Echo PAL passed a fresh bounded read-only GET and the existing policy guard. Fixed-boolean receipt and current-blockers.md are published as 36df398; the matching Memory snapshot is 0b910e8. Nine committed files were copied to the approved AI stylist folder. Owner-private Memory source e7bcea66fd152e23efebbd129dc3a988ad016535 deployed successfully as appgdep_6acdf5f7f97081918272f5d61a91fd35, with MCP retained; all 16 website checks, build and artifact validation passed. No provider conversation, reservation or setting changed. No code tests were rerun for this read-only/documentation checkpoint.
+
+This turn made evidence progress, so it is not a no-progress blocker recurrence. The remaining authorized groups now depend on the pending camera manual result, supported transcription startup and any separately approved diagnostic, Render ingress/logging clarification, sender/social credentials and actual account/source acceptance. Phases 3 through 8 remain gated. Exact next action: receive Sabine's seven-step camera result; if no external state changes, revalidate these same blockers without manufacturing new feature work or repeated publication. Full goal completion remains unproven, and no paid retry is authorized.
+
 ## Live Echo policy recheck, 13 October 2026
 
 A bounded read-only GET of the selected stock Tavus PAL passed the existing verifyEchoPal guard: Audio Echo mode, microphone disabled, empty/non-dynamic greeting, and no TTS, LLM or STT layer. Only fixed booleans were retained in docs/echo-policy-verification.json; the provider response, credentials and account fields were not logged or saved. Source startup already checks this policy before creating a room. This closes the narrow selected-configuration inspection gap for this checkpoint, not provider-wide privacy, continuous conversation, physical quality or full Task 1b acceptance.
