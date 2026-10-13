@@ -1,5 +1,11 @@
 # AI Stylist: Phased development plan and progress
 
+## Aggregate notebook dispatch budget preparation, 12 October 2026
+
+Added a disabled server-owned dispatch budget: at most 64 attempted extraction requests, one million trusted counted input tokens in aggregate and 2,048 reserved output tokens per request. Failed attempts remain consumed; invalid counts, overflow or cleanup uncertainty permanently hold this instance. No reset/refund, network, credential loader, live switch or durable authorization is included. All 17 focused tests and prototype type checking pass. The earlier full prototype suite was not rerun for this isolated module. The module still needs composition with an authoritative exact-request token counter and the protected owner before it can enforce live spending; caller estimates are not sufficient. Existing allocation remains $41; the proposed $2 experiment is unapproved.
+
+Next exact action: compose counted exact extraction requests with this budget before injected dispatch, testing counter failure, cancellation and concurrent requests. Then synchronize private Memory and verify the full affected suite. No paid activation is permitted yet.
+
 ## Next notebook integration checkpoint, 12 October 2026
 
 Reviewed current disabled transcription/extraction preparation and the received support disposition. Prepared a concrete one-start, two-turn, 85-second notes-only proposal in docs/combined-notes-live-trial-plan.md with a proposed $2 reservation, not approved or enabled. Published pricing was retrieved; request/byte limits alone do not prove a dollar bound. Next local action is aggregate provider-counted input/output dispatch enforcement before any real transport activation. No provider call, credential access, remote mutation or spending change occurred. Existing allocation stays $41. The dedicated startup and remote-finalization uncertainties are explicit rather than treated as solved. This proposal is not customer-launch approval.

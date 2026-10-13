@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Bounding live-notebook costs, 12 October 2026
+
+I found that limiting request size alone does not bound total extraction spending. I added a disabled aggregate budget that counts attempted requests and reserves input and maximum output tokens, keeping failed attempts counted. Seventeen focused checks pass. The next step is connecting a trusted token counter before dispatch; this preparation alone does not enforce real billing or authorize another paid trial.
+
 ## Testing the failure paths, 12 October 2026
 
 After my successful iPhone recovery test, I expanded the simulated browser checks to cover a failed request, blocked playback and invalid avatar audio separately. Each check confirms that the page ends safely without an automatic retry or exposing private error details. This gives me clearer evidence about failure handling without spending more on provider calls. It does not establish why the earlier physical-device follow-up failed.

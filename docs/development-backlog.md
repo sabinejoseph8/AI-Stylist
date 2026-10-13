@@ -1,5 +1,11 @@
 # AI Stylist development backlog
 
+## Aggregate notebook dispatch budget preparation, 12 October 2026
+
+Added a disabled server-owned dispatch budget: at most 64 attempted extraction requests, one million trusted counted input tokens in aggregate and 2,048 reserved output tokens per request. Failed attempts remain consumed; invalid counts, overflow or cleanup uncertainty permanently hold this instance. No reset/refund, network, credential loader, live switch or durable authorization is included. All 17 focused tests and prototype type checking pass. The earlier full prototype suite was not rerun for this isolated module. The module still needs composition with an authoritative exact-request token counter and the protected owner before it can enforce live spending; caller estimates are not sufficient. Existing allocation remains $41; the proposed $2 experiment is unapproved.
+
+Next exact action: compose counted exact extraction requests with this budget before injected dispatch, testing counter failure, cancellation and concurrent requests. Then synchronize private Memory and verify the full affected suite. No paid activation is permitted yet.
+
 ## Recovery failure-path coverage, 12 October 2026
 
 Expanded the synthetic narrow-screen WebKit follow-up rehearsal to exercise request rejection, browser playback rejection and invalid avatar audio delivery separately after a confirmed first reply. All three pass: fixed stage-specific messages, detached audio/video, an end request, no retry/replacement, and no private exception body in the page. This is synthetic browser evidence, not additional human/provider acceptance. Production code and the $41 allocation are unchanged. The full 1,304-test result remains the earlier source baseline; only the changed browser rehearsal and diff whitespace check were rerun here.
