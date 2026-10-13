@@ -1,3 +1,9 @@
+## Private Memory connection checkpoint, 12 October 2026
+
+The owner-private Memory website now publishes the protected owner/browser/network preparation with 1,515 prototype tests. Source e808cfe1bed04a04082bbb88c6c822af867979f4 deployed successfully as appgdep_6acdab7805dc8191a0c8ba944fe8c830 with MCP retained. All 16 site checks, build and artifact validation pass. No provider activation, hosted customer database, secret or allowance changed.
+
+Exact next action: prepare the real private-trial page and server-only activation composition, then review the complete path before requesting the proposed additional $2/security authorization. Keep normal startup disabled. Existing allocation remains $41 and Phase 1 remains open.
+
 ## Private notebook network and browser owners, 12 October 2026
 
 Prepared an explicitly attached /api/private-notes-trial WebSocket route, separate from the simulation route. Trusted activation configuration is validated before listener attachment. Exact Host/Origin, Basic access, path, single-connection admission, payload/command bounds and versioned affirmative consent precede owner creation and reservation. Provider construction uses the reserved capability and a matching capture; readiness reports private mode. Process-local admission owns routing only and cannot authorize providers. End, disconnect, deadline and errors cancel the owner and preserve held state; no retry or replacement is exposed.
