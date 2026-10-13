@@ -1,3 +1,11 @@
+## Hidden camera preview cleanup fixed locally, 13 October 2026
+
+A post-acceptance source audit found that collapsing the notebook or its camera disclosure hid the preview without stopping the camera. The main notebook now passes its expansion visibility to the media panel. Camera disclosure collapse immediately stops ownership, and a layout effect enforces active session, visible Stylist/notebook and expanded camera controls before playback. The camera owner refuses hidden acquisition, cancels pending permission/playback when hidden and never starts automatically when shown again. Confirmed photos are not cleared by this visibility change.
+
+Six added tests cover active-track release, hidden-start refusal, late permission, late playback success/failure after reopening and retired device callbacks. All 777 foundation tests across 102 files, type checking and build pass. No actual device or provider was started by the agent. Sabine's accepted ten-step local photo/camera review remains valid for its recorded scope; a separate complete four-step collapse/device-indicator regression is pending. This is a local privacy repair, not full Phase 4, hosted media or target-phone acceptance. Allocation stays $51 and all five notes/startup records remain held.
+
+Next: publish this tested repair and matching project memory, then record the focused manual result and fix any reported defect. Preserve the external transcription/account/source dependencies and existing activation gates. Do not request a repeat of the accepted ten-step review or a new paid test.
+
 ## Main-app local photo/camera review accepted, 13 October 2026
 
 Sabine confirmed all ten local photo/camera review steps worked and were readable. Accepted scope: actual photo preview before confirmation; explicit garment description and Owned/Inspiration choice; selected/confirmed enlargement and collapsed thumbnail; keeping the old reference until replacement confirmation; selecting among two photos; camera-only capture and confirmation; Stop/restart preserving the confirmed still when the live view changes; stopping the device on navigation while retaining the reference; Clear removing photos/thumbnail; and End/new sample/refresh not restoring session images.

@@ -1,3 +1,7 @@
+## Closing a hidden-camera gap
+
+After the local photo review passed, I found that collapsing the notebook could hide the camera preview while the device stayed on. I tied camera ownership to the visible controls, stopped it when either section collapsed, and required an explicit Start after reopening. Confirmed photos stay intact. I tested delayed permissions, retired playback and device callbacks; all 777 foundation tests pass. The new focused device-indicator check remains separate from the earlier accepted review.
+
 ## Validating the clothing-reference journey
 
 I completed the ten-step local photo and camera review and confirmed every step worked and was readable. I checked that the app shows the actual photo, asks me to describe the garment and choose Owned or Inspiration, and keeps the confirmed reference until I explicitly replace it. I verified camera capture, Stop/restart, automatic shutdown when navigating away, and removal of session photos through Clear and End. I kept this local usability result separate from future recognition, hosted storage and permanent wardrobe saving.

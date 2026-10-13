@@ -6,11 +6,15 @@ export class NotebookCamera {
   private epoch=0;
   private stream:MediaStream|null=null;
   private pending=false;
+  private visible=true;
   private detach:(()=>void)[]=[];
   get busy(){return this.pending||this.stream!==null;}
   private acquire:(constraints:MediaStreamConstraints)=>Promise<MediaStream>;
   constructor(acquire:(constraints:MediaStreamConstraints)=>Promise<MediaStream>){this.acquire=acquire;}
+  /** Hiding the preview cancels ownership. Showing it never starts a device. */
+  setVisible(visible:boolean){this.visible=visible;if(!visible)this.stop();}
   async start():Promise<MediaStream|null>{
+    if(!this.visible)return null;
     if(this.stream||this.pending)throw Error('Camera is already starting or active.');
     const epoch=++this.epoch;this.pending=true;
     try{
@@ -22,7 +26,7 @@ export class NotebookCamera {
   }
   /** Bind video playback and device callbacks to the stream that acquired them. */
   async preview(options:{attached:(stream:MediaStream)=>Promise<void>;ready:()=>void;failed:()=>void;disconnected:()=>void}):Promise<void>{
-    if(this.busy)return;
+    if(this.busy||!this.visible)return;
     const epoch=this.epoch+1;
     try{
       const stream=await this.start();if(!stream||epoch!==this.epoch)return;

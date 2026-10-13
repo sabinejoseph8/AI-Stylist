@@ -1,3 +1,11 @@
+## Hidden camera preview cleanup fixed locally, 13 October 2026
+
+A post-acceptance source audit found that collapsing the notebook or its camera disclosure hid the preview without stopping the camera. The main notebook now passes its expansion visibility to the media panel. Camera disclosure collapse immediately stops ownership, and a layout effect enforces active session, visible Stylist/notebook and expanded camera controls before playback. The camera owner refuses hidden acquisition, cancels pending permission/playback when hidden and never starts automatically when shown again. Confirmed photos are not cleared by this visibility change.
+
+Six added tests cover active-track release, hidden-start refusal, late permission, late playback success/failure after reopening and retired device callbacks. All 777 foundation tests across 102 files, type checking and build pass. No actual device or provider was started by the agent. Sabine's accepted ten-step local photo/camera review remains valid for its recorded scope; a separate complete four-step collapse/device-indicator regression is pending. This is a local privacy repair, not full Phase 4, hosted media or target-phone acceptance. Allocation stays $51 and all five notes/startup records remain held.
+
+Next: publish this tested repair and matching project memory, then record the focused manual result and fix any reported defect. Preserve the external transcription/account/source dependencies and existing activation gates. Do not request a repeat of the accepted ten-step review or a new paid test.
+
 ## Main-app local photo/camera review accepted, 13 October 2026
 
 Sabine confirmed all ten local photo/camera review steps worked and were readable. Accepted scope: actual photo preview before confirmation; explicit garment description and Owned/Inspiration choice; selected/confirmed enlargement and collapsed thumbnail; keeping the old reference until replacement confirmation; selecting among two photos; camera-only capture and confirmation; Stop/restart preserving the confirmed still when the live view changes; stopping the device on navigation while retaining the reference; Clear removing photos/thumbnail; and End/new sample/refresh not restoring session images.
@@ -429,7 +437,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 ## Current priorities
 
-1. Local Tasks 3a through 3c preparation is authorized before earlier phases finish. Sabine accepted all eight main-app sample notebook steps. The subsequent per-field proposal reconciliation repair passes all 771 foundation tests across 102 files, type checking and build; agent browser verification preserves both the pending November date and the corrected budget. The approved 30-minute idle/five-minute disconnect notes policy is implemented locally; full live/hosted Phase 3 acceptance remains open.
+1. Local Tasks 3a through 3c preparation is authorized before earlier phases finish. Sabine accepted all eight main-app sample notebook steps. The subsequent per-field proposal reconciliation repair passes all 777 foundation tests across 102 files, type checking and build; agent browser verification preserves both the pending November date and the corrected budget. The approved 30-minute idle/five-minute disconnect notes policy is implemented locally; full live/hosted Phase 3 acceptance remains open.
 2. Task 1c transcription startup remains rejected, including the minimal request without optional language/delay fields. All three notes starts and both server-only diagnostics remain held. Allocation is $51, not actual charges; no retry or new paid test is authorized. The assigned human OpenAI specialist retracts earlier unsupported assurances and confirms no working startup, engineering review or eligibility determination yet. Await concrete supported evidence.
 3. Hosted Tasks 2b/2c are authorized and partial. All 21 customer migrations are installed. Real customer/foreign-user isolation, hosted Storage and account/provider acceptance remain open. Customer routes remain disabled. Seven-day absolute sessions, automatic verified-email linking and cross-device recovery are approved. Render ingress/logging clarification and actual sender/social credentials remain dependencies; domain purchase is deferred until public launch.
 4. Bounded physical-iPhone interruption and replacement-room recovery are accepted and both rooms were verified ended. Continuous streaming, representative measurements, privacy and remaining Phase 1 gates remain open. D02/D03 synthetic catalog work and X01 comparison are complete discovery items; real source, imagery rights and affiliate approvals remain open. Rakuten registration is deferred until an eligible customer website exists.
@@ -437,6 +445,8 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 
 
 Local Phase 4 exception: Tasks 4a/4b browser-memory preparation is approved and implemented; the ten-step local manual photo/camera review is accepted. No recognition, hosted/persistent wardrobe, paid test or customer deployment is authorized.
+
+The hidden-camera preview repair passes 777 foundation tests; its focused four-step device-indicator check is pending separately from the accepted ten-step review.
 ## Items
 
 ### D01: Validate real-time avatar/voice prototype

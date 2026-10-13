@@ -239,3 +239,7 @@ Inside the notebook, Style around this item shows an actual selected image befor
 ## Local photo/camera usability accepted, 13 October 2026
 
 Sabine confirmed all ten main-app photo/camera review steps worked and were readable, including confirmation, enlargement, collapsed thumbnail, replacement, multiple photos, stable captured stills, device shutdown on navigation and Clear/End removal. Record this as local-computer usability acceptance, not hosted media, AI recognition, physical-phone or comprehensive accessibility acceptance. No visual-token change was requested.
+
+## Visible-camera ownership, 13 October 2026
+
+Collapsing either the notebook or its camera disclosure stops the local camera while keeping confirmed photos. Reopening reveals stopped controls and never automatically restarts the device. This closes a hidden-preview privacy gap without changing layout tokens or the accepted ten-step photo workflow. A focused four-step device-indicator check is pending; tests cover the owner lifecycle.

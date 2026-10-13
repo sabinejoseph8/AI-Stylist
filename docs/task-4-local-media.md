@@ -41,3 +41,14 @@ PNG header dimensions: [W3C PNG specification](https://www.w3.org/TR/png-3/#11IH
 ## Human review result
 
 Sabine reported All ten steps worked and were readable on 13 October 2026. This supersedes the earlier pending multi-file/camera review and the automated file-picker limitation for that accepted local scope. Earlier limitations remain historical evidence. Actual hosted integration, target-phone behavior, recognition, voice capture, persistence and full phase acceptance remain open.
+
+## Focused camera-collapse regression
+
+A post-acceptance audit fixed a hidden-preview gap. Both notebook and camera-section collapse now stop camera ownership; reopening never auto-starts it. All 777 foundation tests, type checking and build pass. The original ten-step review stays accepted. This separate four-step human regression is pending; read every step before starting:
+
+1. Refresh the local app, expand My Styling Notes and Show an item with my camera, then Start local camera.
+2. Collapse Show an item with my camera and confirm the camera indicator turns off. Reopen it; the camera stays off and Capture a still is disabled.
+3. Start camera again, then collapse the entire notebook. Confirm the device indicator turns off.
+4. Reopen both sections and confirm the camera stays off until Start is clicked, then End sample session.
+
+No photo upload, microphone or paid call is needed. The agent did not start a real device. This check does not grant target-phone/hosted acceptance or change saved references.
