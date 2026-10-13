@@ -1,3 +1,9 @@
+## Approved notes-policy publication receipt
+
+Approved local implementation a2e3d5c and matching documentation snapshot 5c3ba6b are published to GitHub; eighteen committed files were copied to the approved AI stylist folder. All 714 foundation tests across 98 files, type checking/build and all 16 private Memory checks pass. Owner-private source 2c9d09f0126527009181c90773a3c7b6d2c3d911 deployed successfully as appgdep_6ace693e4a748191adf3b8c8d20881c5 with MCP retained. Browser inspection confirmed policy text, normal draft typing/Save and immediate End clearing; exact durations use controlled-clock tests, not human elapsed-time acceptance. Customer Render deployment remains unchanged.
+
+This goal turn made concrete progress after the retention decision. That decision is resolved and must not be requested again. The goal is active; full phase completion remains unproven. Exact next action: review a concrete supported OpenAI transcription procedure, Render ingress/logging evidence or the required account configuration when supplied, then implement the affected authorized integration. No further independent implementation is identified within the current gates at this checkpoint. Do not repeat the same paid diagnostic or accepted eight-step review. Allocation remains $51 and all five notes/startup records remain held. No background provider job or email monitor is running. Existing unstaged AGENTS.md edits are untouched.
+
 ## Approved unsaved-notes retention implemented locally, 13 October 2026
 
 Sabine approved clearing unsaved styling notes after 30 minutes without customer input, with a one-minute warning, and after five minutes disconnected. End/Clear removes the session copies immediately; explicitly saved preferences remain separate. This is a customer notes-policy decision with local implementation authority only, not hosted activation, provider deletion, account-retention or new spending authority.
