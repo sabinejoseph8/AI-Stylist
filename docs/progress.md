@@ -2777,3 +2777,6 @@ Render deployment dep-db6ocsl9fdbs73dmr5f0 succeeded from 28efe75bd9865aeb63bf8b
 ## Approved second recovery repeat
 
 Sabine approved one additional $4 recovery test, at most two rooms and ten reserved avatar minutes, increasing the experiment allocation to $37. No retries or plan upgrades. Prepared recoverySecondRepeat with baseAttempts 13 and a separate one-time migration. All 1,300 prototype tests, type checking, build and 29 isolated SQL checks pass. Hosted deep comparison confirms all thirteen prior records and metadata unchanged, with only the exact amendment added. The previous initial room is verified provider-ended; unused historical replacements cannot be reused. No new pair reserved or provider call started. Next: deploy reviewed code, verify protected preview, and give complete advance instructions. Recovery acceptance and Phase 1 remain open.
+
+
+Second recovery repeat deployment dep-db6oguff3r2c73bt1tu0 succeeded from 39cf4fba004054b68fae1e643728032ae57df8a7. Protected recovery mode and existing Free service are preserved. No new pair or provider room started. Exact next action: Sabine performs one test using complete advance instructions, keeping Safari visible until End. No retries are authorized.
