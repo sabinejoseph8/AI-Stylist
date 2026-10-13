@@ -2,7 +2,9 @@
 
 ## Current implementation and publication handoff
 
-The repeat recovery test ended after a page refresh. Its initial room is closed and provider-ended; the unused replacement has no room. Recovery acceptance remains unproven. The approved experiment allocation is $33, with no further repeat authorized. A local improvement now adds a best-effort browser leave warning and a sticky reminder with expandable test steps. All 1,299 prototype tests, type checking, build and the synthetic mobile WebKit recovery rehearsal pass. Render deployment dep-db6ocsl9fdbs73dmr5f0 is Live from 28efe75bd9865aeb63bf8bb7b7f8c948982cbe25. Exact next action: synchronize the private Memory website, then obtain a new financial authorization before any further paid test.
+## Approved second recovery repeat
+
+Sabine approved one additional $4 recovery test, at most two rooms and ten reserved avatar minutes, increasing the experiment allocation to $37. No retries or plan upgrades. Prepared recoverySecondRepeat with baseAttempts 13 and a separate one-time migration. All 1,300 prototype tests, type checking, build and 29 isolated SQL checks pass. Hosted deep comparison confirms all thirteen prior records and metadata unchanged, with only the exact amendment added. The previous initial room is verified provider-ended; unused historical replacements cannot be reused. No new pair reserved or provider call started. Next: deploy reviewed code, verify protected preview, and give complete advance instructions. Recovery acceptance and Phase 1 remain open.
 
 ## Earlier account implementation checkpoint
 
@@ -2531,3 +2533,8 @@ Sabine reports refreshing after Start. Read-only ledger/provider verification co
 ## Navigation reminders published
 
 Render deployment dep-db6ocsl9fdbs73dmr5f0 succeeded from 28efe75bd9865aeb63bf8bb7b7f8c948982cbe25. Unauthenticated recovery GET returns 401. No test started. The private Memory website was synchronized and published successfully with MCP preserved: source 4310b15faaec6a05164b90688719b4994315511d, deployment appgdep_6acd86efae6c8191bb6359410db83193. All 16 site checks and artifact validation pass. The $33 experiment allocation is unchanged; the refreshed repeat initial room is closed and its replacement never started. Recovery acceptance remains open. Another paid test requires financial authorization.
+
+
+## Approved second recovery repeat
+
+Sabine approved one additional $4 recovery test, at most two rooms and ten reserved avatar minutes, increasing the experiment allocation to $37. No retries or plan upgrades. Prepared recoverySecondRepeat with baseAttempts 13 and a separate one-time migration. All 1,300 prototype tests, type checking, build and 29 isolated SQL checks pass. Hosted deep comparison confirms all thirteen prior records and metadata unchanged, with only the exact amendment added. The previous initial room is verified provider-ended; unused historical replacements cannot be reused. No new pair reserved or provider call started. Next: deploy reviewed code, verify protected preview, and give complete advance instructions. Recovery acceptance and Phase 1 remain open.

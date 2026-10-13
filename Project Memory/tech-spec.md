@@ -3060,3 +3060,8 @@ Applied prototype-recovery-repeat.sql to the confirmed existing project after a 
 
 
 Repeat deployment dep-db6kbtff3r2c73cn907g succeeded for source 6610c4ea9ffbf1bfaf8a4e6fb8ad562189775e83, retaining explicit protected recovery mode and Free service. No new provider room or reservation started. Sabine can now perform exactly one repeat using the complete advance instructions, keeping Safari visible until End. Actual iPhone recovery acceptance remains pending. Private Memory website still reflects the earlier initial-trial deployment; synchronize this repeat outcome on the next site update.
+
+
+## Approved second recovery repeat
+
+Sabine approved one additional $4 recovery test, at most two rooms and ten reserved avatar minutes, increasing the experiment allocation to $37. No retries or plan upgrades. Prepared recoverySecondRepeat with baseAttempts 13 and a separate one-time migration. All 1,300 prototype tests, type checking, build and 29 isolated SQL checks pass. Hosted deep comparison confirms all thirteen prior records and metadata unchanged, with only the exact amendment added. The previous initial room is verified provider-ended; unused historical replacements cannot be reused. No new pair reserved or provider call started. Next: deploy reviewed code, verify protected preview, and give complete advance instructions. Recovery acceptance and Phase 1 remain open.

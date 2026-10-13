@@ -1985,3 +1985,8 @@ Applied the reviewed prototype recovery migration to the existing AI Stylist Sup
 The SQL editor reported success. Row security remains enabled; anonymous and customer writes remain denied and the existing server role remains allowed. The earlier isolated 25 PostgreSQL checks cover the new claim and compare-and-swap rules. Preparing the protected Render service with explicit --recovery startup; ordinary spoken/scripted modes cannot consume this allowance. The test must be started by Sabine after complete advance instructions. Physical interruption/resume acceptance and Phase 1 completion remain open.
 
 Exact next action: inspect the current Render settings, deploy the reviewed recovery mode with the existing private gate and Free plan, verify its non-starting status/allowance routes, then give the complete iPhone instructions. Do not start or reserve automatically.
+
+
+## Approved second recovery repeat
+
+Sabine approved one additional $4 recovery test, at most two rooms and ten reserved avatar minutes, increasing the experiment allocation to $37. No retries or plan upgrades. Prepared recoverySecondRepeat with baseAttempts 13 and a separate one-time migration. All 1,300 prototype tests, type checking, build and 29 isolated SQL checks pass. Hosted deep comparison confirms all thirteen prior records and metadata unchanged, with only the exact amendment added. The previous initial room is verified provider-ended; unused historical replacements cannot be reused. No new pair reserved or provider call started. Next: deploy reviewed code, verify protected preview, and give complete advance instructions. Recovery acceptance and Phase 1 remain open.
