@@ -1,3 +1,7 @@
+## OpenAI follow-up resent at Sabine's request, 13 October 2026
+
+Sabine explicitly asked to resend the prepared support request. Submitted it in the existing OpenAI Help conversation and verified the new user message in the thread. The request repeats the sanitized startup command and questions about delay support, session-type conversion and dedicated transcription initialization. No credentials, account details, recordings or raw errors were included. This verifies submission only, not human escalation or a solution. Goal status remains blocked; no new provider test, financial authorization, code or deployment occurred. Exact next action: review the support response for a concrete correction before proposing any further diagnostic. Allocation stays $49 and existing holds are unchanged.
+
 ## Resumed dependency audit 3 and blocked handoff, 13 October 2026
 
 The same dependency blocker persisted for three consecutive goal turns after the last implementation/publication progress. The preceding turn was no progress, not a verified live-job wait. Current source status and action queue show no new supported transcription initialization, approved further experiment, hosting clarification, required account credentials or retailer access. No independent authorized actionable task remains identified within the agreed phase gates. The goal is being marked blocked, not complete. No phase or backlog completion is claimed.
