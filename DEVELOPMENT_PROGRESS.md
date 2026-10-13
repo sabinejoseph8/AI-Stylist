@@ -1,3 +1,11 @@
+## Private notes trial preparation page, 12 October 2026
+
+Added notes-trial.html with a notebook layout, complete advance review instructions, privacy/retention boundary and an unchecked local-rehearsal acknowledgment. Live connection and microphone remain disabled. The local flow uses scripted budget turns, supports revision-bound touch edits and rendering receipts, clears notes on End/visibility loss and prevents another start on the same page load. Reloading permits another local fixture only; it cannot authorize a paid trial.
+
+All 1,456 prototype tests across 101 files, type checking and build pass. Browser UI verification confirmed disabled initial start, acknowledgment gating, $500 to $350 correction, explicit item-price scope, Confirmed budget, End clearing notes and disabled repeat start. A narrow browser screenshot review prompted comfortable page gutters and full-width phone controls. This is no-media local rehearsal evidence, not live-provider, physical-phone microphone or p95 acceptance. No hosted storage, credentials, spending or provider calls changed.
+
+Exact next action: review the concrete live activation composition against the prepared page and separate durable allowance, without weakening simulation guards or silently enabling providers. Prepare an explicit server-only live boundary and tests before requesting the proposed $2 trial/security activation authorization. Existing allocation stays $41; Phase 1 remains open. Private Memory currently publishes the preceding 1,454-test checkpoint and needs this increment at the next synchronization.
+
 ## Private Memory synchronization, 12 October 2026
 
 The owner-private Memory website now publishes the 1,454-test notebook protocol checkpoint. Site source 2bfa4c5d7d4f58d7a6e65860a3d2d6f7cad0535d deployed successfully as appgdep_6acda32c9e548191a959aa8343922adb with MCP retained. All 16 site checks, build and artifact validation pass. Product/design acceptance and Phase 1 gates are unchanged. No provider or hosted customer database changed.

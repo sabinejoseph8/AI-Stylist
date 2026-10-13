@@ -1446,3 +1446,8 @@ My phone test failed after I confirmed the first reply and gave a sleeve prefere
 ## Rehearsing the notebook connection before spending
 
 I connected the prepared private notebook owner to a local browser-controller rehearsal. I checked two completed turns, a budget correction, touch confirmation and shutdown while keeping the test reservation consumed. All 1,454 automated prototype checks passed. I kept these simulated results separate from microphone and live-provider acceptance, and left the proposed additional $2 unapproved.
+
+
+## Making the notebook trial understandable before starting
+
+I added a separate preparation page with the complete instructions and privacy boundary visible before the local rehearsal. I checked that acknowledgment is required, a $500 budget changes to $350, touch editing confirms the value, and End clears the notebook. The local rehearsal uses no microphone or paid service. I kept the 1,456 automated results and browser checks separate from future live speech acceptance.

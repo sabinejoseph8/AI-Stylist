@@ -13,7 +13,7 @@ import {encodeNoteUpdate} from './note-update-wire.ts';
 import type {NoteUpdate} from './note-update-wire.ts';
 /** Entirely local fixture for reviewing prepared client/session contracts.
  * No WebSocket, microphone, fetch, provider, persistence or authentication claim. */
-export function createNotebookRehearsal(options:{simulation?:boolean;page:EventTarget;visibility:EventTarget&{readonly hidden:boolean};changed:(notes:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void;status:(status:ReturnType<PreparedBrowserNoteSession['status']>)=>void}){
+export function createNotebookRehearsal(options:{simulation?:boolean;scenario?:'color'|'budget';page:EventTarget;visibility:EventTarget&{readonly hidden:boolean};changed:(notes:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void;status:(status:ReturnType<PreparedBrowserNoteSession['status']>)=>void}){
  if(options.simulation!==true)throw Error('Live notebook rehearsal is disabled.');
  const notebook=new NotebookState(),remote=new PreparedRemoteNoteCapture({simulation:true}),events=new EventTarget(),owner={};
  let probe!:NoteSessionProbe,id='',wireSequence=0,frame:((pcm:ArrayBuffer)=>boolean)|null=null,closed=false,turn=0;
@@ -27,8 +27,9 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
  const scope=new NoteConnectionScope({simulation:true,create:()=>{
    const prepared=createPreparedNoteProviderSession({simulation:true,notebook,capture:remote,socket:provider,signal:new AbortController().signal,
      fetch:async(_url,init)=>{
-       const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text),value=String(input.currentFragment).match(/emerald green|blue/i)?.[0];
-       return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:value?[{field:'color',value,evidence:value}]:[]})}]}]});
+       const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text),value=options.scenario==='budget'?String(input.currentFragment).match(/USD (?:500|350) maximum \(items only\)/)?.[0]:String(input.currentFragment).match(/emerald green|blue/i)?.[0];
+       const field=options.scenario==='budget'?'budget':'color';
+       return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:value?[{field,value,evidence:value}]:[]})}]}]});
      },changed:publish,invalidated:()=>publish(null),turnReady:turnId=>emit({version:1,type:'turn-ready',sessionId:id,turnId}),stopped:()=>stop()});
    probe=prepared.probe;return probe;
  }});
@@ -54,7 +55,7 @@ export function createNotebookRehearsal(options:{simulation?:boolean;page:EventT
      if(!session.commit()){stop();return;}
      later(()=>{
        providerEvent({type:'input_audio_buffer.committed',event_id:`commit_${current}`,item_id:`item_${current}`});
-       const text=current===1?'I prefer Emerald green':'Actually, I prefer Blue';
+       const text=options.scenario==='budget'?(current===1?'USD 500 maximum (items only)':'Actually, USD 350 maximum (items only)'):(current===1?'I prefer Emerald green':'Actually, I prefer Blue');
        providerEvent({type:'conversation.item.input_audio_transcription.delta',event_id:`partial_${current}`,item_id:`item_${current}`,content_index:0,delta:text});
        later(()=>providerEvent({type:'conversation.item.input_audio_transcription.completed',event_id:`final_${current}`,item_id:`item_${current}`,content_index:0,transcript:text}),650);
      },100);

@@ -3,3 +3,12 @@
 .full-test-guide{background:#fffcf7;border:1px solid #146356;border-radius:8px;padding:8px 20px;margin:24px 0}.full-test-guide>summary{color:#146356;font-weight:600;cursor:pointer;min-height:44px;padding:10px 0}.review-instructions{color:#242321;font-size:16px;line-height:1.6}.review-instructions h3{font-size:23px;margin-top:24px}.review-instructions ol{padding-left:28px}.review-instructions li{margin:16px 0}.review-instructions>p{font-size:16px}.full-test-guide[open]{padding-bottom:20px}
 
 .demo-catalog-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:1rem;text-align:left}.demo-catalog-grid article{padding:1rem;background:#fffcf7;border:1px solid #ded7ca;border-radius:12px}.demo-catalog-grid img{display:block;max-width:100%;height:auto;margin:auto}.demo-catalog-grid h3{font-size:1.1rem}
+
+/* Private notes preparation: preserve comfortable gutters on phone screens. */
+.notes-trial-page { max-width: 780px; margin: 0 auto; padding: 24px clamp(18px, 5vw, 40px); }
+.notes-trial-page .camera-panel { padding: 22px; margin-block: 24px; border: 1px solid var(--line, #ded8cc); border-radius: 18px; background: #fffdf9; }
+.notes-trial-page li { margin-bottom: 12px; }
+.notes-trial-page button { margin: 8px 8px 0 0; min-height: 44px; }
+.notes-trial-page label { display: block; margin-block: 18px; }
+.notes-trial-page footer { margin-top: 28px; }
+@media (max-width: 480px) { .notes-trial-page .camera-panel { padding: 18px; } .notes-trial-page button { width: 100%; } }
