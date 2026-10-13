@@ -2,15 +2,17 @@
 
 Status: preparation only, 12 October 2026. Financial/security activation has not been approved. No hosted initialization, deployment or actual provider call has occurred in this preparation.
 
-## Remaining local gate
+## Completed local review
 
-Complete the synthetic active rendered-page rehearsal and review the complete startup, persistence, consent, cleanup and page path. Fix findings and record evidence before asking Sabine to approve activation. The disabled page review and controller/runtime fixtures do not replace an active rendered-page check or a physical microphone test.
+The synthetic active rendered-page rehearsal passed at desktop and 390 by 844 phone widths: progressive notes before Send, both completed budget turns, $500-to-$350 correction, mandatory budget scope, Confirmed status, two-turn limit and End clearing notes. The review fixed obstructive instructions/controls using collapse-after-start guidance and sticky compact controls. Fixture messages identify synthetic behavior.
+
+All 1,544 tests, type checking and build pass. A native Node child process with no credentials refuses startup without the dedicated activation flags. Production artifact checks exclude the scripted fixture and verify unchanged normal startup and the failing-by-default approval template. The prior 50 isolated database checks/four SQL-backed owner scenarios remain valid. This focused self-review does not close the formal Phase 1 review, actual microphone/provider acceptance, representative p95 or customer-launch gates.
 
 ## Proposed authorization
 
-One private notes-only experiment, an additional $2 reservation raising the experiment allocation from $41 to $43 only if approved. At most one connection, two speech turns and 85 seconds including setup. No avatar, camera, photo, automatic retry, model fallback, replacement or plan upgrade. Keep all seventeen historical avatar reservation records unchanged.
+One reserved private notes-only session, an additional $2 reservation raising the experiment allocation from $41 to $43 only if approved. At most one connection, two speech turns and 85 seconds including setup. No avatar, camera, photo, automatic retry, model fallback, replacement or plan upgrade. Keep all seventeen historical avatar reservation records unchanged.
 
-The modeled cost worksheet is in combined-notes-live-trial-plan.md. A reservation is not a hard provider billing guarantee. Selected-model startup compatibility and final provider usage are not live verified. Browser/transport closure does not establish remote deletion, zero retention or billing finalization. Failed or uncertain attempts remain consumed. Customer launch and representative p95 acceptance stay separate.
+The modeled cost worksheet is in combined-notes-live-trial-plan.md. A reservation is not a hard provider billing guarantee. Selected-model startup compatibility and final provider usage are not live verified. Browser/transport closure does not establish remote deletion, zero retention or billing finalization. Written reservations remain consumed; uncertain reserve acknowledgments hold without retry or refund. Requests rejected before reservation create no provider work. Customer launch and representative p95 acceptance stay separate.
 
 ## Operator sequence, only after explicit authorization
 

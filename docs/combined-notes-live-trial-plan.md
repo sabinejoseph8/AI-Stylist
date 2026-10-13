@@ -95,3 +95,8 @@ The separate protected owner now composes with the existing simulation WebSocket
 ## Runtime composition checkpoint, 12 October 2026
 
 The dedicated private mode, consent-gated WebSocket, bounded HTTP/page availability, asset loader, provider bundle, durable RPC owner and explicit startup entry point are now composed. Normal startup remains unchanged. All 1,541 prototype tests, type checking/build, 50 isolated SQL checks and four database-backed owner scenarios pass. This remains local/synthetic evidence. The operator initialization template fails until a reviewed ID is explicitly supplied after human authorization. Finish the active rendered-page rehearsal and activation review before requesting the proposed $2; do not use earlier preparation steps as proof of current live compatibility or remote finalization. See docs/private-notes-trial-activation-review.md for the proposed operator sequence.
+
+
+## Local activation review complete, 12 October 2026
+
+The active scripted page and focused activation-path self-review are complete. All 1,544 tests, type checking/build and production fixture-isolation checks pass. Desktop and phone-width controls, progressive scripted notes, correction, confirmation and End were verified. The guide/controls were made more usable on phones. This is synthetic evidence and does not verify actual model startup, voice quality, p95, remote final billing or deletion. The remaining pre-trial decision is Sabine's separate $2 financial/private activation authorization; existing allocation stays $41 until approval. The full operator sequence and review evidence are in private-notes-trial-activation-review.md.

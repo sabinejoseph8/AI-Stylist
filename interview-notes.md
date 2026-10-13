@@ -1486,3 +1486,8 @@ I added a private test page with the complete instructions, retention boundary a
 ## Preserving the experiment across server restarts
 
 I composed the private notebook server with durable reservations and separate database/provider credentials. My local rehearsal verifies that a lost database acknowledgment leaves the reservation consumed and that even a restarted server refuses another attempt. I kept startup behind explicit approval settings and made the initialization template fail by default. All 1,541 prototype tests, 50 isolated database checks and four database-backed owner scenarios pass. These tests use synthetic data; I have not enabled a paid trial or changed hosted data.
+
+
+## Making live notes observable on a phone
+
+I reviewed the active page using scripted input at desktop and phone widths. I saw that the instructions and large controls obscured the notebook, so I kept the full instructions visible before starting and made active controls compact and sticky afterward. The two-turn budget correction, explicit scope confirmation and End cleanup passed. All 1,544 automated prototype tests pass. I kept the fixture out of the production build and left the real microphone experiment pending a separate spending and privacy decision.

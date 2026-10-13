@@ -12,3 +12,9 @@
 .notes-trial-page label { display: block; margin-block: 18px; }
 .notes-trial-page footer { margin-top: 28px; }
 @media (max-width: 480px) { .notes-trial-page .camera-panel { padding: 18px; } .notes-trial-page button { width: 100%; } }
+
+.notes-trial-page.is-active .trial-session { position: sticky; top: 8px; z-index: 2; padding: 12px; box-shadow: 0 4px 18px rgba(25,25,25,.08); }
+.notes-trial-page.is-active .trial-session p { margin: 0 0 10px; }
+.notes-trial-page.is-active .trial-actions { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 8px; }
+.notes-trial-page.is-active .trial-actions button { width: auto; margin: 0; }
+.notes-trial-page.is-active .trial-actions button:last-child { grid-column: 1 / -1; }
