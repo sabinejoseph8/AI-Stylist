@@ -1,3 +1,7 @@
+## Preventing an old camera preview from stopping a new one
+
+I found a second camera lifecycle race: a delayed playback failure could stop a preview I had already restarted. I bound playback and device events to their original stream, removed old listeners on Stop and tested late permission results. I also made cleanup attempt every track even if one device release fails. I fixed a timing mistake in the regression test so it actually exercised pending playback. All 1,653 prototype tests passed. Physical camera checks remain separate from this automated evidence.
+
 ## Keeping the latest clothing photo selected
 
 I found a race in the camera prototype: two quick captures could finish encoding in a different order from the clicks, allowing the older frame to win. I moved ownership to the moment of capture and tested reversed completion, clearing and failed encoding. I also bounded portrait images and made image failures visible. The full prototype suite passed with 1,644 tests. I kept physical-camera verification separate from the automated result and left the discovery milestone open.

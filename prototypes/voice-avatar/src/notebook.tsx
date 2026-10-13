@@ -58,7 +58,7 @@ function App(){
   const stopCamera=(message='Camera is off. Your confirmed photo remains in the notebook.')=>{clearTimeout(cameraTimer.current);camera.current.stop();if(video.current)video.current.srcObject=null;setCameraOn(false);setCameraPending(false);setCameraMessage(message);};
   useEffect(()=>{
     const hide=()=>{if(document.hidden){lookRelease.end();setLookPermit(null);stopSimulation();stopCamera('Camera stopped when you left this page.');}};
-    const exit=()=>{lookRelease.end();uploadEpoch.current++;stopSimulation();camera.current.stop();clearTimeout(cameraTimer.current);urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);presentSnapshot();presentation.disconnect();setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
+    const exit=()=>{lookRelease.end();uploadEpoch.current++;stopSimulation();stopCamera();urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();state.clear();speech.reset();setRenderReceipt(null);presentSnapshot();presentation.disconnect();setPhoto(null);setPendingPhoto(null);setEnlarged(false);};
     document.addEventListener('visibilitychange',hide);window.addEventListener('pagehide',exit);
     return()=>{exit();document.removeEventListener('visibilitychange',hide);window.removeEventListener('pagehide',exit);};
   },[]);
@@ -101,14 +101,19 @@ function App(){
   function confirmPhoto(){if(!pendingPhoto?.label.trim())return;if(photo)revoke(photo.url);state.setReference({label:pendingPhoto.label,kind:pendingPhoto.kind});setPhoto({...pendingPhoto,label:pendingPhoto.label.trim()});setPendingPhoto(null);update('Your confirmed item is visible in the notebook. It has not been saved to a wardrobe.');}
   function removePhoto(){uploadEpoch.current++;if(photo)revoke(photo.url);setPhoto(null);state.setReference(null);update('Reference removed. Any previous look approval was cleared.');}
   async function startCamera(){
-    if(cameraPending||cameraOn)return;setCameraPending(true);setCameraMessage('Waiting for camera permission. Microphone stays off.');
-    // Bound the permission request as well as the active preview.
+    if(camera.current.busy)return;setCameraPending(true);setCameraMessage('Waiting for camera permission. Microphone stays off.');
     cameraTimer.current=setTimeout(()=>stopCamera('Two-minute camera check finished.'),120000);
-    try{const stream=await camera.current.start();if(!stream)return;if(document.hidden){stopCamera();return;}setCameraPending(false);setCameraOn(true);
-      stream.getVideoTracks().forEach(track=>track.addEventListener('ended',()=>stopCamera('Camera disconnected. Upload a photo instead.'),{once:true}));
-      if(video.current){video.current.srcObject=stream;await video.current.play();}setCameraMessage('Camera is on locally. Capture a still, then confirm the item.');
-    }catch{stopCamera('Camera is unavailable or permission was denied. Upload a photo instead.');}
+    await camera.current.preview({
+      attached:async stream=>{
+        if(document.hidden){stopCamera();return;}
+        const element=video.current;if(!element)throw Error('Preview unavailable.');
+        setCameraPending(false);setCameraOn(true);element.srcObject=stream;await element.play();
+      },
+      ready:()=>setCameraMessage('Camera is on locally. Capture a still, then confirm the item.'),
+      failed:()=>stopCamera('Camera is unavailable or permission was denied. Upload a photo instead.'),
+      disconnected:()=>stopCamera('Camera disconnected. Upload a photo instead.')});
   }
+
   function captureStill(){
     const v=video.current;if(!v||!cameraOn)return;
     // Claim ownership before asynchronous encoding, so the latest click wins.

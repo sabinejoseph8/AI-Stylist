@@ -1,3 +1,11 @@
+## Camera preview callback ownership fixed, 13 October 2026
+
+Task 1c local review confirmed that video.play could reject after Stop and a new camera start, letting the old catch stop the new preview. Device-ended callbacks were also not detached. NotebookCamera now owns preview attachment, playback completion/failure and device events with the acquisition epoch and exact stream. Retired callbacks cannot change current state. Stop detaches listeners and invalidates pending acquisition/playback; duplicate preview requests are refused before acquiring another stream. Late or invalid streams release all tracks even if one release throws. Page exit uses the same preview cleanup path.
+
+Nine new focused checks cover delayed success/rejection after restart, retired/current device events, late permission, duplicate acquisition, current failures, already-ended devices and cleanup with one faulty track. All 1,653 prototype tests across 118 files, type checking and build pass. The first full run exposed a test setup error: playback had not actually started before its synthetic promise was rejected. The test now waits for explicit attachment and the full rerun passed without unhandled errors. No physical camera, provider call, paid test, hosted change or Render deployment occurred. Allocation remains $49; all four notes/startup records remain held.
+
+Manual acceptance remains open: on the local notebook, start and stop camera, restart it and confirm the new preview remains active. Stop and deny/revoke permission, confirm readable fallback, then clear or leave the page and check the device indicator. Confirmed stills must remain after camera Stop and disappear on session Clear. Do not tick Task 1c from these synthetic lifecycle checks.
+
 ## Camera fix publication and next action
 
 The latest-still race fix is published as a184987 and the Memory snapshot as 6353997. Eleven changed committed files were copied to the approved AI stylist folder. Owner-private Memory source 585d5e9d9d31bb757ee5227951a2f4adc6f3840d deployed successfully as appgdep_6acdf2e4de9081919c88113182e4f445, with MCP retained; all 16 site tests, build and artifact validation passed. Prototype evidence: 1,644 tests across 118 files, type checking/build pass. No paid session or device stream is running.
