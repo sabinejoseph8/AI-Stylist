@@ -1,3 +1,9 @@
+## Follow-up availability configuration correction, 13 October 2026
+
+Sabine's screenshot reports live testing unavailable before Start. Read-only Render inspection found the persisted approval ID was still notes_private_20261013_01 while the store was approved. The earlier statements that the new ID had been saved were incorrect. The separate notes_private_20261013_02 allowance remained unreserved at the last live RPC check. Corrected only the approval ID, saved it, reloaded Render and verified the persisted value is notes_private_20261013_02. Existing secrets, financial limits and consumed history are preserved. The existing Free service successfully deployed the reviewed aeeea4d application as dep-db6t2laj9qps73aep7u0 with the corrected setting. Health returned 200 afterward; a live read confirms the new allowance remains unreserved (0.8-second RPC response). No provider connection or microphone was started.
+
+Exact next action: Sabine reloads the protected Safari page before any Start and confirms the availability message. Authenticated browser availability still needs verification. Do not describe unauthenticated health checks or direct RPC reads as proof that the authenticated page is available. No new allowance or retry is needed while the follow-up remains unreserved. Existing 1,568 application tests and 77 isolated SQL checks remain the prior evidence; this setting/document correction changes no application code.
+
 ## Approved follow-up Memory receipt, 13 October 2026
 
 Owner-private Memory now publishes the approved $45 allocation, separate verified unused follow-up and live deployment. Source 352531ef50b7648ea9eaba9416c26312b214e842 succeeded as appgdep_6acdce9f7fb4819193fc37db5f169aab with MCP retained. All 16 site checks/build/validation passed. Current application evidence remains 1,568 tests/typecheck/build plus 77 isolated SQL checks/four owner scenarios. No agent-started microphone/provider connection occurred.

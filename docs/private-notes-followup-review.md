@@ -24,3 +24,7 @@ Sabine approved one additional $2 allowance, total experiment allocation $45. On
 Rollback stops the selected mode and preserves every approval record. The new rollback SQL refuses any initialized record. Returning to the original store keeps its consumed state; it does not regain a trial.
 
 References reviewed: https://developers.openai.com/api/docs/guides/realtime-transcription and https://developers.openai.com/api/docs/guides/voice-websockets. The model query is still a candidate combination of documented Realtime connection and selected transcription-model guidance, not an accepted live contract.
+
+## Availability correction
+
+A persisted Render selector still referenced the old approval, despite the previous save report. Corrected and verified the new ID after reloading Render. Exact-source deployment and authenticated Safari availability must be checked before Start. No follow-up reservation was consumed by these checks.

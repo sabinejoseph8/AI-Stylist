@@ -1507,3 +1507,7 @@ I composed the private notebook server with durable reservations and separate da
 ## Making live notes observable on a phone
 
 I reviewed the active page using scripted input at desktop and phone widths. I saw that the instructions and large controls obscured the notebook, so I kept the full instructions visible before starting and made active controls compact and sticky afterward. The two-turn budget correction, explicit scope confirmation and End cleanup passed. All 1,544 automated prototype tests pass. I kept the fixture out of the production build and left the real microphone experiment pending a separate spending and privacy decision.
+
+## Verifying the saved trial configuration
+
+When the private notes page showed that testing was unavailable, I checked the saved hosting settings. The approval selector still pointed to the earlier trial. I corrected it and verified the saved value after reloading the dashboard. This taught me to check the persisted configuration instead of assuming a successful save used the intended value. I kept the previous trial history and the unused follow-up allowance intact.
