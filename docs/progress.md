@@ -1,3 +1,9 @@
+## Notebook handoff fix deployed, 13 October 2026
+
+The reviewed authentication compatibility fix is Live in Render deployment dep-db6s6g59fdbs73e5r600 at source c2931a4e06994ba48ad3ff640a58d1c6d7d29923. Logs confirm the dedicated notebook command/listening state. No agent-started trial or new allowance was created. Physical Safari compatibility remains to be verified by Sabine after reload; the original failure's exact HTTP rejection is not proven by the screenshot.
+
+Exact next action: Sabine reloads notes-live.html to receive the protected page cookie, confirms one approved private trial available, then receives the complete script before starting. Preserve the same immutable one-start $2 allowance; never reset it or retry after a written reservation.
+
 ## Private notebook connection handoff fix, 13 October 2026
 
 Sabine confirmed authenticated Safari availability, then shared a screenshot showing the connection ended immediately after Start private notes test. A live read of the separate allowance confirms reservation remains null. No durable start was consumed; do not reset or amend the allowance or allocate another paid test. The screenshot does not identify the exact browser/network rejection cause.
