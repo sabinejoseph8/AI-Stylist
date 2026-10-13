@@ -1,3 +1,7 @@
+## Fixing the private notebook connection handoff
+
+My phone reached the protected notebook page, but the connection ended when I pressed Start. I checked the durable allowance first and confirmed the test had not consumed its one start. I found that the live connection depended on the browser repeating the password header, so I added a short-lived protected cookie handoff. I verified it with simulated services, including access denial and expiry checks. The exact Safari failure cause and physical retest remain unconfirmed. This let me preserve the original allowance instead of resetting test history or approving another paid attempt.
+
 ## Preparing a bounded live notebook experiment
 
 I approved a separate $2 notebook microphone experiment after the synthetic page and access controls were reviewed. I limited it to one session, two turns and 85 seconds, using the existing protected hosting. This lets me test whether notes appear while I speak without paying for an avatar in the same experiment. I kept previous test history intact and separated connection closure from claims about remote deletion or final billing. The hosted allowance is prepared; I have not yet completed the live notebook test.

@@ -44,3 +44,21 @@ it('preserves a committed reservation with lost acknowledgment and constructs no
  const f=fixture(true),s=await start(f);const ws=new WebSocket(`ws://127.0.0.1:${s.port}/api/private-notes-trial`,{headers});ws.on('error',()=>{});const closed=new Promise<void>(r=>ws.on('close',()=>r()));ws.on('open',()=>ws.send(JSON.stringify({version:1,type:'consent',noticeVersion:'notes-private-trial-v1',accepted:true})));await closed;expect(f.ledger().reservation.state).toBe('reserved');expect(f.connect).not.toHaveBeenCalled();const restarted=await start(f);expect(JSON.parse(await availability(restarted.port)).enabled).toBe(false);const attempted=new WebSocket(`ws://127.0.0.1:${restarted.port}/api/private-notes-trial`,{headers});attempted.on('error',()=>{});const refused=new Promise<void>(r=>attempted.on('close',()=>r()));attempted.on('open',()=>attempted.send(JSON.stringify({version:1,type:'consent',noticeVersion:'notes-private-trial-v1',accepted:true})));await refused;expect(f.request.mock.calls.filter(([url])=>url.endsWith('_change'))).toHaveLength(1);expect(f.connect).not.toHaveBeenCalled();
 });
 it('does not reserve against the wrong approval record',async()=>{const f=fixture();f.setLedger({...f.ledger(),approval:{...f.ledger().approval,id:'other'}});const s=await start(f);expect(JSON.parse(await availability(s.port)).enabled).toBe(false);expect(f.request.mock.calls.filter(([url])=>url.endsWith('_change'))).toHaveLength(0);expect(f.connect).not.toHaveBeenCalled();});
+
+it('admits a cookie-authenticated browser socket without Basic only after protected HTML and explicit consent',async()=>{
+ const f=fixture(),s=await start(f);
+ const cookie=await new Promise<string>((resolve,reject)=>{
+  const req=httpRequest({host:'127.0.0.1',port:s.port,path:'/notes-live.html',headers},res=>{res.resume();res.on('end',()=>{expect(res.statusCode).toBe(200);resolve(res.headers['set-cookie']![0]!.split(';')[0]!);});});req.on('error',reject);req.end();
+ });
+ expect(f.ledger().reservation).toBeNull();expect(f.connect).not.toHaveBeenCalled();
+ const ws=new WebSocket(`ws://127.0.0.1:${s.port}/api/private-notes-trial`,{headers:{Host:'fixture.onrender.com',Origin:preview.origin,Cookie:cookie}});ws.on('error',()=>{});
+ const received:string[]=[];ws.on('message',data=>received.push(data.toString()));
+ try{
+  await new Promise<void>((resolve,reject)=>{ws.once('open',resolve);ws.once('error',reject);});
+  expect(f.ledger().reservation).toBeNull();expect(f.connect).not.toHaveBeenCalled();
+  ws.send(JSON.stringify({version:1,type:'consent',noticeVersion:'notes-private-trial-v1',accepted:true}));
+  await vi.waitFor(()=>expect(received.some(v=>JSON.parse(v).type==='ready')).toBe(true));
+  expect(f.ledger().reservation.state).toBe('reserved');expect(f.connect).toHaveBeenCalledOnce();
+ }finally{ws.terminate();}
+ await vi.waitFor(()=>expect(f.ledger().reservation.state).toBe('held'));
+});

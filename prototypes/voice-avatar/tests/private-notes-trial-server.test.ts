@@ -23,3 +23,15 @@ it('bounds stalled store and asset reads without reserving or exposing errors',a
  const [availability,asset]=await Promise.all([f.get('/api/private-notes-trial-availability'),f.get('/notes-live.html')]);expect(JSON.parse(availability.body).enabled).toBe(false);expect(asset.status).toBe(404);expect(assetSignal?.aborted).toBe(true);expect(f.readLedger.mock.calls[0]?.[0].aborted).toBe(true);expect(f.reserve).not.toHaveBeenCalled();expect(f.createTransports).not.toHaveBeenCalled();
 },7000);
 it('rejects oversized assets and holds all routes after disposal',async()=>{const f=await fixture();f.getAsset.mockResolvedValueOnce(new Uint8Array(4_000_001));expect((await f.get('/assets/fixture.js')).status).toBe(404);f.owner.dispose();expect((await f.get('/notes-live.html')).status).toBe(503);expect((await f.get('/api/private-notes-trial-availability')).status).toBe(503);expect(f.readLedger).not.toHaveBeenCalled();});
+
+it('issues browser access only on protected HTML, not health, metadata or assets',async()=>{
+ const f=await fixture(),page=await f.get('/notes-live.html');const cookie=page.headers['set-cookie']![0]!.split(';')[0]!;
+ expect(page.headers['set-cookie']![0]).toContain('HttpOnly; Secure; SameSite=Strict; Path=/');
+ expect((await f.get('/api/private-notes-trial-availability',{Authorization:'',Cookie:cookie})).status).toBe(200);
+ expect((await f.get('/api/private-notes-trial-availability',{Authorization:'',Cookie:cookie,Origin:'https://other.example'})).status).toBe(403);
+ expect((await f.get('/notes-live.html',{Authorization:'',Cookie:cookie,Host:'other.example'})).status).toBe(403);
+ expect((await f.get('/notes-live.html',{Authorization:'',Cookie:cookie})).headers['set-cookie']).toBeUndefined();
+ for(const path of ['/healthz','/api/private-notes-trial-availability','/assets/fixture.js'])expect((await f.get(path)).headers['set-cookie']).toBeUndefined();
+ expect((await f.get('/notes-live.html',{Authorization:'',Cookie:cookie+'; '+cookie})).status).toBe(401);
+ expect(f.reserve).not.toHaveBeenCalled();expect(f.createTransports).not.toHaveBeenCalled();
+});

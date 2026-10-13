@@ -1,3 +1,13 @@
+## Private notebook connection handoff fix, 13 October 2026
+
+Sabine confirmed authenticated Safari availability, then shared a screenshot showing the connection ended immediately after Start private notes test. A live read of the separate allowance confirms reservation remains null. No durable start was consumed; do not reset or amend the allowance or allocate another paid test. The screenshot does not identify the exact browser/network rejection cause.
+
+Inspection found the HTTP page and WebSocket each required a Basic Authorization header. Added a process-local five-minute opaque cookie bridge issued only by a successfully Basic-authenticated HTML response. It is HttpOnly, Secure, SameSite=Strict and __Host-prefixed; no token/password enters JavaScript, URLs or logs. HTTP/upgrade Host checks, exact WebSocket Origin, explicit consent, immutable allowance and provider-after-reservation ordering remain enforced. Conflicting invalid Basic, forged/duplicate/oversized cookies, expiry and process replacement are rejected. No new account credential or customer auth is introduced.
+
+All 1,550 prototype tests across 113 files, type checking and build pass. A new real-loopback test gets the protected HTML cookie, opens a WebSocket without Basic, confirms no reservation/provider before consent, then reaches Ready using simulated providers and ends held. It establishes the compatibility path, not the specific cause or physical Safari success. Focused review checked cookie issuance/expiry, same-origin boundaries, downstream owner authorization and no allowance mutation. The initial test-file write used an incorrect prefixed path and changed no test files; corrected it before the successful focused/full runs.
+
+Exact next action: publish and deploy this reviewed fix on the existing approved Free preview, verify health and read-only unreserved allowance, then ask Sabine to reload the page. The already approved one-start $2 allowance remains available; do not start a connection for her. Provide the complete advance instructions again before she starts. No retries after a written reservation, new spending, avatar call or phase completion is authorized.
+
 ## Goal blocked after third dependency audit, 13 October 2026
 
 The same human-action blocker has persisted for three consecutive goal turns after the final documentation alignment. The second turn revalidated the unchanged worktree/handoff without new actionable evidence; the third confirms the same remaining phase/customer acceptance gates. No independent authorized implementation task is ready. Mark the goal blocked, not complete. Do not repeatedly restart or consume the reserved microphone experiment while awaiting Sabine.

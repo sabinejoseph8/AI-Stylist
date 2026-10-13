@@ -2,6 +2,7 @@ import type {Server,IncomingMessage} from 'node:http';
 import type {Duplex} from 'node:stream';
 import {WebSocketServer,WebSocket} from 'ws';
 import {PreviewGate,validatePreview} from './preview-gate.ts';
+import {PrivatePreviewAccess} from './private-preview-access.ts';
 import {preparePrivateNotesTrialOwner,validatePrivateNotesTrialActivation} from './private-notes-trial-owner.ts';
 import {NoteConnectionScope} from './note-connection-scope.ts';
 import type {NoteConnectionProbe} from './note-connection-scope.ts';
@@ -16,8 +17,10 @@ type Active=Extract<Awaited<ReturnType<ReturnType<typeof preparePrivateNotesTria
  * configuration must reflect human approval. Client consent cannot supply it.
  * Credentials/transports stay injected and are constructed only after reservation.
  * No initializer, retry, replacement, refund or remote-finalization claim. */
-export function attachPrivateNotesTrialNetwork(server:Server,options:{activation:NonNullable<OwnerOptions['activation']>;preview:OwnerOptions['preview'];allowance:OwnerOptions['allowance'];createTransports:(reservationId:string,execution:Parameters<OwnerOptions['createTransports']>[1],capture:PreparedRemoteNoteCapture)=>ReturnType<OwnerOptions['createTransports']>}){
+export function attachPrivateNotesTrialNetwork(server:Server,options:{activation:NonNullable<OwnerOptions['activation']>;preview:OwnerOptions['preview'];accessGate?:PrivatePreviewAccess;allowance:OwnerOptions['allowance'];createTransports:(reservationId:string,execution:Parameters<OwnerOptions['createTransports']>[1],capture:PreparedRemoteNoteCapture)=>ReturnType<OwnerOptions['createTransports']>}){
  const activation=validatePrivateNotesTrialActivation(options.activation),target=validatePreview(options.preview),gate=new PreviewGate(options.preview);
+ if(options.accessGate&&(!(options.accessGate instanceof PrivatePreviewAccess)||!options.accessGate.matches(options.preview)))throw Error('Private preview access requires review.');
+ const authorized=new WeakMap<IncomingMessage,string>();
  const sockets=new WebSocketServer({noServer:true,maxPayload:1024,perMessageDeflate:false});
  let closed=false,createProbe:(()=>NoteConnectionProbe)|null=null;
  const scope=new NoteConnectionScope({privateTrialAdmission:true,create:()=>{if(!createProbe)throw Error('Notebook admission unavailable.');return createProbe();}});
@@ -26,7 +29,7 @@ export function attachPrivateNotesTrialNetwork(server:Server,options:{activation
   socket.on('error',()=>socket.destroy());
   if(closed){reject(socket,503);return;}
   if(req.method!=='GET'||req.url!=='/api/private-notes-trial'||req.headers.host!==target.host||req.headers.origin!==target.origin||req.headers['sec-websocket-protocol']){reject(socket,403);return;}
-  const access=gate.check(req.headers.authorization);if(access!==200){reject(socket,access);return;}
+  const result=options.accessGate?.resolve(req.headers.authorization,req.headers.cookie)??{status:gate.check(req.headers.authorization),authorization:req.headers.authorization};if(result.status!==200||!result.authorization){reject(socket,result.status);return;}authorized.set(req,result.authorization);
   if(sockets.clients.size||scope.snapshot().active||scope.snapshot().held){reject(socket,409);return;}
   sockets.handleUpgrade(req,socket,head,ws=>sockets.emit('connection',ws,req));
  };
@@ -47,7 +50,7 @@ export function attachPrivateNotesTrialNetwork(server:Server,options:{activation
     const owner=preparePrivateNotesTrialOwner({activation,preview:options.preview,allowance:options.allowance,createTransports:(reservationId,execution)=>{
      const capture=new PreparedRemoteNoteCapture(execution);return{...options.createTransports(reservationId,execution,capture),capture};
     },publish,turnReady:turnId=>send({version:1,type:'turn-ready',sessionId:id,turnId}),stopped:()=>{finished=true;finish();}});
-    void owner.start({method:req.method??'',path:'/api/private-notes-trial-preparation',host:req.headers.host??'',origin:req.headers.origin??'',authorization:req.headers.authorization,consent:true,signal:abort.signal}).then(async result=>{
+    void owner.start({method:req.method??'',path:'/api/private-notes-trial-preparation',host:req.headers.host??'',origin:req.headers.origin??'',authorization:authorized.get(req),consent:true,signal:abort.signal}).then(async result=>{
      if(result.status!==200){finished=true;finish();return;}active=result;if(ended){await active.end();return;}
      publish(active.snapshot(),null);if(!send({version:1,type:'ready',sessionId:id,simulation:false,liveEnabled:true}))return;
      ready=true;if(pending){const update=pending as NoteUpdate;pending=null;sequence++;send({...update,sessionId:id,sequence});}
