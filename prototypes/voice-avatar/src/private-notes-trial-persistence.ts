@@ -5,8 +5,10 @@ const MAX_BYTES=16384;
 /** Separate private-trial contract preparation. A record is not human approval.
  * Explicit server preparation with injected requests; no credentials,
  * default fetch, environment loading, initialization, retry or legacy fallback. */
-export function preparePrivateNotesTrialPersistence(options:{simulation?:boolean;privateTrialAdmission?:boolean;url:string;fetch:SimulatedFetch}):PrivateNotesTrialPersistence{
+export function preparePrivateNotesTrialPersistence(options:{simulation?:boolean;privateTrialAdmission?:boolean;approvedTrialId?:string;url:string;fetch:SimulatedFetch}):PrivateNotesTrialPersistence{
  if((options.simulation===true)===(options.privateTrialAdmission===true))throw Error('Live notebook persistence is disabled.');
+ const approvedTrialId=options.approvedTrialId;
+ if(approvedTrialId!==undefined&&(typeof approvedTrialId!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(approvedTrialId)))throw Error('Notebook persistence configuration requires review.');
  let origin:string;
  try{
   const target=new URL(options.url);
@@ -22,8 +24,8 @@ export function preparePrivateNotesTrialPersistence(options:{simulation?:boolean
   const abort=()=>{rejectAbort?.(unavailable());if(reader)void reader.cancel().catch(()=>{});};
   controller.signal.addEventListener('abort',abort,{once:true});const cancel=()=>controller.abort();externalSignal?.addEventListener('abort',cancel,{once:true});const timer=setTimeout(()=>controller.abort(),8000);
   try{
-   const encoded=JSON.stringify(body);if(new TextEncoder().encode(encoded).byteLength>MAX_BYTES)throw unavailable();
-   const endpoint=origin+'/rest/v1/rpc/'+name;
+   const encoded=JSON.stringify(approvedTrialId===undefined?body:{approved_id:approvedTrialId,...body});if(new TextEncoder().encode(encoded).byteLength>MAX_BYTES)throw unavailable();
+   const endpoint=origin+'/rest/v1/rpc/'+name+(approvedTrialId===undefined?'':'_approved');
    const pending=options.fetch(endpoint,{method:'POST',body:encoded,headers:{'Content-Type':'application/json',Accept:'application/json'},signal:controller.signal,redirect:'error',credentials:'omit',cache:'no-store'});
    void pending.then(response=>{if(controller.signal.aborted)void response.body?.cancel().catch(()=>{});},()=>{});
    const response=await Promise.race([pending,aborted]);
@@ -37,10 +39,11 @@ export function preparePrivateNotesTrialPersistence(options:{simulation?:boolean
   finally{clearTimeout(timer);externalSignal?.removeEventListener('abort',cancel);controller.signal.removeEventListener('abort',abort);rejectAbort=null;if(reader){void reader.cancel().catch(()=>{});try{reader.releaseLock();}catch{/* Never retain content from an unfinished read. */}}}
  }
  return{
-  read:async signal=>{try{return validatePrivateNotesTrialLedger(await rpc('stylist_private_notes_trial_read',{},signal));}catch{throw Error('Notebook persistence unavailable.');}},
+  read:async signal=>{try{const ledger=validatePrivateNotesTrialLedger(await rpc('stylist_private_notes_trial_read',{},signal));if(approvedTrialId!==undefined&&ledger.approval.id!==approvedTrialId)throw Error();return ledger;}catch{throw Error('Notebook persistence unavailable.');}},
   compareAndSwap:async(expected:PrivateNotesTrialLedger,replacement:PrivateNotesTrialLedger)=>{
    try{
     const previous=validatePrivateNotesTrialLedger(expected),next=validatePrivateNotesTrialTransition(previous,replacement);
+    if(approvedTrialId!==undefined&&next.approval.id!==approvedTrialId)throw Error();
     const result=await rpc('stylist_private_notes_trial_change',{expected:previous,replacement:next});
     if(typeof result!=='boolean')throw Error();return result;
    }catch{throw Error('Notebook persistence unavailable.');}

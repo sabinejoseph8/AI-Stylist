@@ -14,13 +14,14 @@ function fixture(loseAck=false){
  let ledger:any={version:1,purpose:'notes-only-private-trial',approval:{id:'fixture_approval',cents:200,maxSeconds:85,maxTurns:2,maxExtractions:64,maxInputTokens:1000000,maxOutputTokens:2048},reservation:null};
  const raw=new Raw(),loadSecrets=vi.fn(()=>({supabaseKey:'sb_secret_fixture_only_not_a_real_key_12345678',openAIKey:'fixture_openai_key_not_real_1234'}));
  const request=vi.fn(async(url:string,init:RequestInit)=>{
-  if(url.startsWith(supabaseUrl)){if(url.endsWith('_read'))return Response.json(structuredClone(ledger));const body=JSON.parse(init.body as string);if(!isDeepStrictEqual(body.expected,ledger))return Response.json(false);ledger=structuredClone(body.replacement);if(loseAck&&ledger.reservation.state==='reserved')throw Error('private lost acknowledgment');return Response.json(true);}
+  if(url.startsWith(supabaseUrl)){if(url.endsWith('_read')||url.endsWith('_read_approved'))return Response.json(structuredClone(ledger));const body=JSON.parse(init.body as string);if(!isDeepStrictEqual(body.expected,ledger))return Response.json(false);ledger=structuredClone(body.replacement);if(loseAck&&ledger.reservation.state==='reserved')throw Error('private lost acknowledgment');return Response.json(true);}
   if(url.endsWith('/input_tokens'))return Response.json({object:'response.input_tokens',input_tokens:100});
   const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text);return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:[{field:'color',value:input.currentFragment,evidence:input.currentFragment}]})}]}]});
  });
  const connect=vi.fn(()=>{queueMicrotask(()=>{raw.readyState=1;raw.emit('open');raw.message({type:'session.created',session:{id:'fixture_provider'}});});return raw as never;});
- const options={activation:{approvalId:'fixture_approval',financialApproved:true,securityApproved:true},preview,supabaseUrl,loadSecrets,request,connect,getAsset:async()=>new TextEncoder().encode('<html>Private test</html>')};
- return{options,request,loadSecrets,connect,raw,ledger:()=>ledger,setLedger:(value:unknown)=>{ledger=value;}};
+ const diagnostic=vi.fn();
+ const options={approvedTrialStore:false,diagnostic,activation:{approvalId:'fixture_approval',financialApproved:true,securityApproved:true},preview,supabaseUrl,loadSecrets,request,connect,getAsset:async()=>new TextEncoder().encode('<html>Private test</html>')};
+ return{options,diagnostic,request,loadSecrets,connect,raw,ledger:()=>ledger,setLedger:(value:unknown)=>{ledger=value;}};
 }
 async function start(f:ReturnType<typeof fixture>){const runtime=preparePrivateNotesTrialRuntime(f.options);await new Promise<void>(r=>runtime.server.listen(0,'127.0.0.1',r));const addr=runtime.server.address();if(!addr||typeof addr==='string')throw Error('address');cleanups.push(async()=>{runtime.dispose();runtime.server.closeAllConnections();await new Promise<void>(r=>runtime.server.close(()=>r()));});return{runtime,port:addr.port};}
 const headers={Host:'fixture.onrender.com',Origin:preview.origin,Authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64')};
@@ -33,7 +34,7 @@ it('composes reservation, capability, counted provider work, browser capture and
   expect(url).toBe('wss://fixture.onrender.com/api/private-notes-trial');ws=new WebSocket(`ws://127.0.0.1:${s.port}/api/private-notes-trial`,{headers});const socket=Object.assign(new EventTarget(),{send:(value:string|ArrayBuffer)=>ws!.send(value),close:()=>ws!.close()});Object.defineProperties(socket,{readyState:{get:()=>ws!.readyState},bufferedAmount:{get:()=>ws!.bufferedAmount}});ws.on('open',()=>socket.dispatchEvent(new Event('open')));ws.on('message',data=>socket.dispatchEvent(new MessageEvent('message',{data:data.toString()})));ws.on('close',()=>socket.dispatchEvent(new Event('close')));ws.on('error',()=>socket.dispatchEvent(new Event('error')));return socket as never;
  }});
  try{
-  await vi.waitFor(()=>expect(browser.session.status().state).toBe('ready'));expect(f.ledger().reservation.state).toBe('reserved');expect(f.connect).toHaveBeenCalledOnce();expect(capture.start).not.toHaveBeenCalled();
+  await vi.waitFor(()=>expect(browser.session.status().state).toBe('ready'));expect(f.ledger().reservation.state).toBe('reserved');expect(f.connect).toHaveBeenCalledOnce();expect(capture.start).not.toHaveBeenCalled();expect(f.diagnostic.mock.calls.map(([code])=>code)).toEqual(expect.arrayContaining(['owner-reserved','owner-authorized','owner-transports-ready','provider-connecting','provider-open','startup-created','startup-configuring','startup-ready','owner-ready']));
   expect(await browser.session.startTurn('t1')).toBe(true);await vi.waitFor(()=>expect(browser.session.snapshot().connection.audioActive).toBe(true));for(let i=0;i<5;i++)expect(pcm(new ArrayBuffer(960))).toBe(true);
   f.raw.message({type:'conversation.item.input_audio_transcription.delta',event_id:'delta1',item_id:'item1',content_index:0,delta:'green'});await vi.waitFor(()=>expect(browser.session.snapshot().connection.notes?.notes.color.value).toBe('green'));
   const provider=f.request.mock.calls.filter(([url])=>url.startsWith('https://api.openai.com'));expect(provider).toHaveLength(2);expect(provider[0]![1].body).toBe(provider[1]![1].body);for(const [,init]of provider){expect(init.headers).toEqual({'Content-Type':'application/json',Authorization:'Bearer fixture_openai_key_not_real_1234'});expect(JSON.stringify(init.headers)).not.toContain('sb_secret');}
@@ -62,3 +63,5 @@ it('admits a cookie-authenticated browser socket without Basic only after protec
  }finally{ws.terminate();}
  await vi.waitFor(()=>expect(f.ledger().reservation.state).toBe('held'));
 });
+
+it('selects a new approved record only through explicit trusted store configuration',async()=>{const f=fixture();f.options.approvedTrialStore=true;const s=await start(f);expect(JSON.parse(await availability(s.port)).enabled).toBe(true);const [url,init]=f.request.mock.calls[0]!;expect(url).toBe(supabaseUrl+'/rest/v1/rpc/stylist_private_notes_trial_read_approved');expect(JSON.parse(init.body as string)).toEqual({approved_id:'fixture_approval'});expect(f.ledger().reservation).toBeNull();expect(f.connect).not.toHaveBeenCalled();});

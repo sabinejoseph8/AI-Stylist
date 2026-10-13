@@ -21,3 +21,20 @@ for(const [payload,binary] of [[Buffer.from('not json'),false],[Buffer.alloc(163
 it('provider errors are sanitized and do not leak their contents',async()=>{const {raw,owner}=setup();const pending=owner.open(new AbortController().signal,()=>{});raw.emit('error',Error('private provider details'));await expect(pending).rejects.toThrow('Notebook transcription connection unavailable.');});
 
 it('reports failed termination to the cleanup owner',async()=>{const {raw,owner}=setup();const pending=owner.open(new AbortController().signal,()=>{});raw.readyState=1;raw.emit('open');const {socket}=await pending;raw.terminate.mockImplementation(()=>{throw Error('private detail');});expect(()=>socket.close()).toThrow('Notebook transcription connection unavailable.');expect(socket.readyState).toBe(3);});
+
+it('reports only fixed handshake status and terminates without reading response content',async()=>{
+ const raw=new Fake(),diagnostic=vi.fn(),destroy=vi.fn();const owner=prepareServerNoteSocketOpener({apiKey:'synthetic_key_never_real',connect:()=>raw as never,diagnostic});const pending=owner.open(new AbortController().signal,()=>{});
+ raw.emit('unexpected-response',{authorization:'private sentinel'},{statusCode:401,body:'private sentinel',destroy});await expect(pending).rejects.toThrow('unavailable');
+ expect(diagnostic.mock.calls.map(([v])=>v)).toEqual(['provider-connecting','provider-handshake-401']);expect(destroy).toHaveBeenCalledOnce();expect(raw.terminate).toHaveBeenCalledOnce();expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');
+});
+it('reports redacted initial provider error category without logging its payload',async()=>{
+ const raw=new Fake(),diagnostic=vi.fn(),initial=vi.fn();const owner=prepareServerNoteSocketOpener({apiKey:'synthetic_key_never_real',connect:()=>raw as never,diagnostic});const pending=owner.open(new AbortController().signal,initial);raw.readyState=1;raw.emit('open');await pending;
+ raw.emit('message',Buffer.from(JSON.stringify({type:'error',error:{type:'invalid_request_error',message:'private sentinel'}})),false);
+ expect(diagnostic.mock.calls.map(([v])=>v)).toEqual(['provider-connecting','provider-open','provider-error-invalid-request','provider-first-unexpected']);expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');owner.end();
+});
+
+it('classifies an actual local HTTP handshake rejection without retaining its body',async()=>{
+ const {createServer}=await import('node:http');const {default:WebSocket}=await import('ws');const server=createServer((_req,res)=>{res.writeHead(401,{'Content-Type':'application/json'});res.end('{"private":"sentinel"}');});await new Promise<void>(resolve=>server.listen(0,'127.0.0.1',resolve));const address=server.address();if(!address||typeof address==='string')throw Error('address');
+ const diagnostic=vi.fn(),owner=prepareServerNoteSocketOpener({apiKey:'synthetic_key_never_real',diagnostic,connect:(_url,options)=>new WebSocket(`ws://127.0.0.1:${address.port}`,options)});
+ try{await expect(owner.open(new AbortController().signal,()=>{})).rejects.toThrow('unavailable');expect(diagnostic.mock.calls.map(([code])=>code)).toEqual(['provider-connecting','provider-handshake-401']);expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');}finally{owner.end();server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()));}
+});

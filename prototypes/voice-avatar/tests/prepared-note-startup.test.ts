@@ -6,12 +6,12 @@ const created={type:'session.created',session:{id:'synthetic'}};
 const ack={type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}};
 function fixture(){
  const abort=new AbortController(),socket=Object.assign(new EventTarget(),{readyState:1,bufferedAmount:0,send:vi.fn(),close:vi.fn()});
- const detachInitialEvents=vi.fn(),capture={start:vi.fn(async()=>true),stop:vi.fn()},ready=vi.fn(),stopped=vi.fn();
+ const detachInitialEvents=vi.fn(),capture={start:vi.fn(async()=>true),stop:vi.fn()},ready=vi.fn(),stopped=vi.fn(),diagnostic=vi.fn();
  let resolve!:(value:{socket:typeof socket;detachInitialEvents:()=>void})=>void,receive!:(value:unknown)=>void,signal!:AbortSignal;
  const open=vi.fn((s:AbortSignal,r:(v:unknown)=>void)=>{signal=s;receive=r;return new Promise<{socket:typeof socket;detachInitialEvents:()=>void}>(r=>{resolve=r;});});
- const options={simulation:true,signal:abort.signal,open,session:{notebook:new NotebookState(),capture,fetch:vi.fn(async()=>{throw Error('No extraction expected');}),changed:vi.fn()},ready,stopped};
+ const options={diagnostic,simulation:true,signal:abort.signal,open,session:{notebook:new NotebookState(),capture,fetch:vi.fn(async()=>{throw Error('No extraction expected');}),changed:vi.fn()},ready,stopped};
  const startup=prepareNoteStartup(options);
- return{startup,options,abort,socket,capture,ready,stopped,detachInitialEvents,open,openingSignal:()=>signal,receive:(v:unknown)=>receive(v),opened:async()=>{resolve({socket,detachInitialEvents});await Promise.resolve();},ack:(value:unknown=ack)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
+ return{startup,options,diagnostic,abort,socket,capture,ready,stopped,detachInitialEvents,open,openingSignal:()=>signal,receive:(v:unknown)=>receive(v),opened:async()=>{resolve({socket,detachInitialEvents});await Promise.resolve();},ack:(value:unknown=ack)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
 }
 afterEach(()=>{vi.useRealTimers();});
 describe('disabled provider startup sequencing',()=>{
@@ -43,3 +43,5 @@ describe('disabled provider startup sequencing',()=>{
  it('does not expose an ended provider during deferred stopped notification',async()=>{const s=fixture();await s.opened();s.receive(created);s.ack();s.socket.dispatchEvent(new Event('error'));expect(s.startup.active()).toBeNull();await Promise.resolve();expect(s.startup.status().state).toBe('ended');expect(s.socket.close).toHaveBeenCalledTimes(1);});
 
 });
+
+it('reports fixed creation/configuration stages and distinguishes configuration hold',async()=>{const s=fixture();await s.opened();s.receive(created);s.ack({...ack,session:{type:'transcription'}});await Promise.resolve();expect(s.diagnostic.mock.calls.map(([code])=>code)).toEqual(['startup-created','startup-configuring','startup-configuration-held']);expect(s.ready).not.toHaveBeenCalled();});

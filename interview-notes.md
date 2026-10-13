@@ -1,3 +1,7 @@
+## Making failed startup diagnosable
+
+My next notebook attempt reached its allowance reservation but ended before Ready. I kept that consumed record instead of resetting it. I added fixed startup-stage diagnostics so the next authorized experiment can distinguish a connection rejection, configuration failure or timeout without recording voice, notes or keys. I also prepared separate approval records for future experiments, each limited to one start. The exact provider failure is still unconfirmed, and this preparation does not authorize another paid attempt.
+
 ## Fixing the private notebook connection handoff
 
 My phone reached the protected notebook page, but the connection ended when I pressed Start. I checked the durable allowance first and confirmed the test had not consumed its one start. I found that the live connection depended on the browser repeating the password header, so I added a short-lived protected cookie handoff. I verified it with simulated services, including access denial and expiry checks. The exact Safari failure cause and physical retest remain unconfirmed. This let me preserve the original allowance instead of resetting test history or approving another paid attempt.

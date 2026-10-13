@@ -1,3 +1,4 @@
+import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
 import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {prepareServerNoteHttpAdapter} from './server-note-http-adapter.ts';
@@ -8,7 +9,7 @@ type HttpOptions=Parameters<typeof prepareServerNoteHttpAdapter>[0];
 type SocketOptions=Parameters<typeof prepareServerNoteSocketOpener>[0];
 /** Dormant explicit-mode composition. No secret loader, default transports, route
  * or initializer. Ledger data is not human financial/security authorization. */
-export function preparePrivateNotesTrialTransports(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;approvalId:string;reservationId:string;ledger:unknown;apiKey:string;request:HttpOptions['request'];connect:NonNullable<SocketOptions['connect']>;capture:PreparedRemoteNoteCapture}){
+export function preparePrivateNotesTrialTransports(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;approvalId:string;reservationId:string;ledger:unknown;apiKey:string;request:HttpOptions['request'];connect:NonNullable<SocketOptions['connect']>;capture:PreparedRemoteNoteCapture;diagnostic?:NoteStartupDiagnostic}){
  const unavailable=()=>Error('Private notebook transports unavailable.');
  if(!validNoteExecution(options))throw unavailable();
  const execution=noteExecutionOptions(options);
@@ -27,7 +28,7 @@ export function preparePrivateNotesTrialTransports(options:{simulation?:boolean;
  };
  try{
   http=prepareServerNoteHttpAdapter({apiKey:options.apiKey,request:options.request});
-  socket=prepareServerNoteSocketOpener({apiKey:options.apiKey,connect:options.connect});
+  socket=prepareServerNoteSocketOpener({apiKey:options.apiKey,connect:options.connect,diagnostic:options.diagnostic});
  }catch{try{dispose();}catch{}throw unavailable();}
  return Object.freeze({
   open:(...args:Parameters<typeof socket.open>)=>{if(disposed)return Promise.reject(unavailable());return socket!.open(...args);},

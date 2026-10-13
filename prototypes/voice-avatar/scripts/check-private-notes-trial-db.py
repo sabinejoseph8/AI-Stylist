@@ -58,6 +58,42 @@ try:
  composition=run(['node',str(Path(__file__).with_name('check-private-notes-owner-db.ts')),'--local-docker',name])
  if composition.returncode:raise RuntimeError('SQL-backed owner check failed: '+composition.stderr[-1200:])
  print(composition.stdout.strip())
+ # Separately approved rows never replace the original singleton or one another.
+ original=json.loads(sql('set role service_role;select public.stylist_private_notes_trial_read();'))
+ sql((migration.parent/'private-notes-approved-trials-preparation.sql').read_text())
+ next_initializer=(migration.parent/'private-notes-approved-trial-approval.sql').read_text()
+ sql(next_initializer,False)
+ sql(next_initializer.replace('approved_id text := NULL',"approved_id text := '"+original['approval']['id']+"'"),False)
+ next_base=copy.deepcopy(base);next_base['approval']['id']='synthetic_followup'
+ sql(next_initializer.replace('approved_id text := NULL',"approved_id text := 'synthetic_followup'"))
+ sql(next_initializer.replace('approved_id text := NULL',"approved_id text := 'synthetic_followup'"),False)
+ for role in ['anon','authenticated']:
+  sql("set role "+role+";select public.stylist_private_notes_trial_read_approved('synthetic_followup');",False)
+  sql("set role "+role+";select public.stylist_private_notes_trial_change_approved('synthetic_followup',null,null);",False)
+ for role in ['anon','authenticated','service_role']:
+  sql('set role '+role+';select * from stylist_notes_trial_private.approved_trials;',False)
+ if json.loads(sql("set role service_role;select public.stylist_private_notes_trial_read_approved('synthetic_followup');"))!=next_base:raise RuntimeError('Approved record mismatch')
+ next_open={**next_base,'reservation':{'id':'new_run','state':'reserved'}}
+ def next_change(before,after,success=True):return sql("set role service_role;select public.stylist_private_notes_trial_change_approved('synthetic_followup',"+literal(before)+','+literal(after)+');',success)
+ next_change(next_base,next_open);next_change(next_base,next_open,False)
+ next_held={**next_open,'reservation':{'id':'new_run','state':'held'}}
+ next_change(next_open,next_held);next_change(next_held,next_base,False)
+ sql("set role service_role;select public.stylist_private_notes_trial_read_approved('missing');",False)
+ if json.loads(sql("set role service_role;select public.stylist_private_notes_trial_read_approved('synthetic_followup');"))!=next_held:raise RuntimeError('Consumed approved record not preserved')
+ sql(next_initializer.replace('approved_id text := NULL',"approved_id text := 'synthetic_concurrent'"))
+ concurrent_base=copy.deepcopy(base);concurrent_base['approval']['id']='synthetic_concurrent'
+ def approved_compete(run_id):
+  replacement={**concurrent_base,'reservation':{'id':run_id,'state':'reserved'}}
+  return run(['docker','exec','-i',name,'psql','-U','postgres','-v','ON_ERROR_STOP=1','-Atq'],input="set role service_role;select public.stylist_private_notes_trial_change_approved('synthetic_concurrent',"+literal(concurrent_base)+','+literal(replacement)+');').returncode
+ with concurrent.futures.ThreadPoolExecutor(max_workers=2) as pool:approved_outcomes=list(pool.map(approved_compete,['candidate_one','candidate_two']))
+ if sum(x==0 for x in approved_outcomes)!=1:raise RuntimeError('Multiple approved CAS winners')
+ checks+=1
+ if json.loads(sql('set role service_role;select public.stylist_private_notes_trial_read();'))!=original:raise RuntimeError('Original allowance changed')
+ if sql("select relrowsecurity from pg_class where oid='stylist_notes_trial_private.approved_trials'::regclass;")!='t':raise RuntimeError('Missing approved-record RLS')
+ next_rollback=(migration.parent/'private-notes-approved-trials-rollback.sql').read_text()
+ sql(next_rollback,False)
+ sql('delete from stylist_notes_trial_private.approved_trials;') # disposable local fixtures only
+ sql(next_rollback)
  rollback=migration.with_name('private-notes-trial-preparation-rollback.sql').read_text();sql(rollback,False)
  if sql('select value from public.avatar_sentinel;')!='17':raise RuntimeError('Avatar sentinel changed.')
  sql('delete from stylist_notes_trial_private.allowance;');sql(rollback)

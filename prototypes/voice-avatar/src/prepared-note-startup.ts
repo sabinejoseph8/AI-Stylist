@@ -1,3 +1,5 @@
+import {boundedNoteStartupDiagnostic} from './note-startup-diagnostics.ts';
+import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
 import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {createPreparedNoteProviderSession} from './prepared-note-provider-session.ts';
@@ -12,10 +14,11 @@ export function prepareNoteStartup(options:{
  simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;signal:AbortSignal;
  open:(signal:AbortSignal,initialEvent:(value:unknown)=>void)=>Promise<Opened>;
  session:Omit<SessionOptions,'simulation'|'privateTrial'|'socket'|'signal'|'ready'|'stopped'>;
- ready?:()=>void;stopped?:()=>void;
+ ready?:()=>void;stopped?:()=>void;diagnostic?:NoteStartupDiagnostic;
 }){
  if(!validNoteExecution(options))throw Error('Live notebook startup is disabled.');
  const execution=noteExecutionOptions(options);
+ const diagnostic=boundedNoteStartupDiagnostic(options.diagnostic);
  const controller=new AbortController();
  let settleOpening!:()=>void;
  const openingSettled=new Promise<void>(resolve=>{settleOpening=resolve;});
@@ -26,6 +29,8 @@ export function prepareNoteStartup(options:{
  const close=()=>{if(!opened||closed)return;closed=true;try{opened.socket.close();}catch{cleanupFailed=true;}};
  const stop=(why:string)=>{
   if(state==='ended')return;
+  const previous=state;
+  diagnostic(why==='opening-held'?'startup-opening-held':why==='startup-timeout'?'startup-timeout':why==='startup-event-held'?'startup-event-held':why==='canceled'?'startup-canceled':why==='ended'?'startup-ended':previous==='configuring'?'startup-configuration-held':'startup-held');
   state='ended';reason=why;clearTimeout(timer);options.signal.removeEventListener('abort',abort);
   controller.abort();detach();if(session)session.end();else close();
   try{options.stopped?.();}catch{/* State and cancellation already settled. */}
@@ -34,7 +39,7 @@ export function prepareNoteStartup(options:{
  const timer=setTimeout(()=>stop('startup-timeout'),5000);
  const handOver=()=>{
   if(!opened||!created||state==='ended'||handingOver)return;
-  handingOver=true;state='configuring';
+  handingOver=true;state='configuring';diagnostic('startup-configuring');
   const raw=opened.socket;
   const socket:SimulatedTranscriptionSocket={
    get readyState(){return raw.readyState;},get bufferedAmount(){return raw.bufferedAmount;},
@@ -43,7 +48,7 @@ export function prepareNoteStartup(options:{
   };
   try{
    session=createPreparedNoteProviderSession({...options.session,...execution,socket,signal:controller.signal,
-    ready:()=>{if(state==='ended')return;detach();if(cleanupFailed){stop('cleanup-unverified');return;}state='ready';clearTimeout(timer);try{options.ready?.();}catch{stop('consumer-held');}},
+    ready:()=>{if(state==='ended')return;detach();if(cleanupFailed){stop('cleanup-unverified');return;}state='ready';diagnostic('startup-ready');clearTimeout(timer);try{options.ready?.();}catch{stop('consumer-held');}},
     stopped:()=>stop('provider-stopped'),
    });
    if(controller.signal.aborted)session.end();
@@ -61,7 +66,7 @@ export function prepareNoteStartup(options:{
    if(created||event.type!=='session.created'||!event.session||typeof event.session!=='object'||Array.isArray(event.session))throw Error();
    const sessionId=(event.session as Record<string,unknown>).id;
    if(typeof sessionId!=='string'||! /^[a-zA-Z0-9_-]{1,80}$/.test(sessionId))throw Error();
-   created=true;handOver();
+   created=true;diagnostic('startup-created');handOver();
   }catch{stop('startup-event-held');}
  };
  options.signal.addEventListener('abort',abort,{once:true});

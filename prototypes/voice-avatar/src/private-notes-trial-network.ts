@@ -1,3 +1,4 @@
+import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 import type {Server,IncomingMessage} from 'node:http';
 import type {Duplex} from 'node:stream';
 import {WebSocketServer,WebSocket} from 'ws';
@@ -17,7 +18,7 @@ type Active=Extract<Awaited<ReturnType<ReturnType<typeof preparePrivateNotesTria
  * configuration must reflect human approval. Client consent cannot supply it.
  * Credentials/transports stay injected and are constructed only after reservation.
  * No initializer, retry, replacement, refund or remote-finalization claim. */
-export function attachPrivateNotesTrialNetwork(server:Server,options:{activation:NonNullable<OwnerOptions['activation']>;preview:OwnerOptions['preview'];accessGate?:PrivatePreviewAccess;allowance:OwnerOptions['allowance'];createTransports:(reservationId:string,execution:Parameters<OwnerOptions['createTransports']>[1],capture:PreparedRemoteNoteCapture)=>ReturnType<OwnerOptions['createTransports']>}){
+export function attachPrivateNotesTrialNetwork(server:Server,options:{activation:NonNullable<OwnerOptions['activation']>;preview:OwnerOptions['preview'];accessGate?:PrivatePreviewAccess;diagnostic?:NoteStartupDiagnostic;allowance:OwnerOptions['allowance'];createTransports:(reservationId:string,execution:Parameters<OwnerOptions['createTransports']>[1],capture:PreparedRemoteNoteCapture)=>ReturnType<OwnerOptions['createTransports']>}){
  const activation=validatePrivateNotesTrialActivation(options.activation),target=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  if(options.accessGate&&(!(options.accessGate instanceof PrivatePreviewAccess)||!options.accessGate.matches(options.preview)))throw Error('Private preview access requires review.');
  const authorized=new WeakMap<IncomingMessage,string>();
@@ -47,7 +48,7 @@ export function attachPrivateNotesTrialNetwork(server:Server,options:{activation
   const initialize=()=>{
    createProbe=()=>{
     const stop=()=>{abort.abort();if(active)void active.end();};
-    const owner=preparePrivateNotesTrialOwner({activation,preview:options.preview,allowance:options.allowance,createTransports:(reservationId,execution)=>{
+    const owner=preparePrivateNotesTrialOwner({activation,diagnostic:options.diagnostic,preview:options.preview,allowance:options.allowance,createTransports:(reservationId,execution)=>{
      const capture=new PreparedRemoteNoteCapture(execution);return{...options.createTransports(reservationId,execution,capture),capture};
     },publish,turnReady:turnId=>send({version:1,type:'turn-ready',sessionId:id,turnId}),stopped:()=>{finished=true;finish();}});
     void owner.start({method:req.method??'',path:'/api/private-notes-trial-preparation',host:req.headers.host??'',origin:req.headers.origin??'',authorization:authorized.get(req),consent:true,signal:abort.signal}).then(async result=>{
