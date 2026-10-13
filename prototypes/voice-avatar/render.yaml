@@ -30,3 +30,5 @@ services:
         sync: false
       - key: PRIVATE_NOTES_TRIAL_APPROVAL_ID
         sync: false
+      - key: PRIVATE_NOTES_TRIAL_STORE
+        sync: false

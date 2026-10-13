@@ -1,3 +1,17 @@
+## Hosted follow-up allowance verified, 13 October 2026
+
+In the existing approved project, verified approved_trials was absent and the original singleton remained held. Applied the reviewed append-only migration successfully. Live metadata verifies RLS, denied direct access for anonymous/authenticated/service roles, denied anonymous/customer RPC execution and permitted service-only RPCs. The table was empty before initialization.
+
+Applied the reviewed approval template once with notes_private_20261013_02. Live service-only RPC reads verify its exact $2/two-turn/85-second terms and null reservation, original notes_private_20261013_01 still held, and seventeen avatar records retained. No trial/provider session was created. Render saved the explicit approved store and new ID while retaining existing private credentials and approval flags. Source deployment/readiness checks are next. Existing application evidence remains 1,568 tests/typecheck/build plus 77 isolated SQL checks/four database-backed owner scenarios; configuration/document changes do not claim a new application test run.
+
+Exact next action: deploy reviewed source on the existing Free service, verify health/auth denial and metadata without opening a socket, then provide all advance instructions before Sabine starts. Experiment allocation $45, one follow-up start, no retries/upgrades/avatar. Actual provider startup remains unverified.
+
+## Approved notebook follow-up, 13 October 2026
+
+Sabine explicitly approved one separate $2/private follow-up through the pending question. Experiment allocation is now $45. New approval ID: notes_private_20261013_02. Scope: one user-started connection, two turns and 85 seconds including setup, existing protected Supabase/Render service, no retry/avatar/upgrade/model fallback, same OpenAI voice/text retention boundary. Preserve notes_private_20261013_01 in held state and all seventeen avatar records. No additional provider connection is authorized beyond this one start; no test has started from this record.
+
+Exact next action: verify whether approved_trials exists, apply the reviewed append-only migration if absent, verify access protections, initialize only the new reviewed row, compare exact terms/unreserved state and preserved original history, then explicitly select the approved store/new ID in Render. Verify protected readiness without opening a socket; give the entire script before Sabine starts.
+
 ## Private Memory startup-diagnostics receipt, 13 October 2026
 
 Owner-private Memory publication succeeded for source 5ba9ff437e0934a3adc2e0f77d4e22f94b02a9f3 as deployment appgdep_6acdcc0fa0fc8191a53e355ef4458392, with MCP retained. All 16 site checks/build/validation passed. The reviewed follow-up proposal and code remain disabled; no additional allowance or paid test is authorized. Exact next action: receive Sabine's explicit decision on the separately proposed $2 follow-up and private activation, then follow docs/private-notes-followup-review.md only if approved. Existing allocation remains $43 and the original trial remains held.

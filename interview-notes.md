@@ -1,3 +1,7 @@
+## Preserving experiment history for a follow-up
+
+I approved one additional $2 notebook experiment after the startup diagnostics were ready. I created a separate approval record and verified the original failed attempt stayed held. This keeps the experiment history honest and prevents a refresh or restart from restoring spent test allowances. The new allowance is prepared but the live follow-up result is still pending.
+
 ## Making failed startup diagnosable
 
 My next notebook attempt reached its allowance reservation but ended before Ready. I kept that consumed record instead of resetting it. I added fixed startup-stage diagnostics so the next authorized experiment can distinguish a connection rejection, configuration failure or timeout without recording voice, notes or keys. I also prepared separate approval records for future experiments, each limited to one start. The exact provider failure is still unconfirmed, and this preparation does not authorize another paid attempt.

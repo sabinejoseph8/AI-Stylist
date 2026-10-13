@@ -1,6 +1,6 @@
 # Private notebook follow-up review
 
-Status: prepared, not financially or privately activated, 13 October 2026.
+Status: one $2 follow-up and protected activation explicitly approved by Sabine on 13 October 2026. Experiment allocation is $45; approval ID notes_private_20261013_02. Setup/readiness verification is in progress; no follow-up test has started.
 
 ## Evidence and limits
 
@@ -10,7 +10,7 @@ Current preparation passes 1,568 tests, type checking/build, 77 isolated SQL che
 
 ## Concrete proposed experiment
 
-One additional $2 allowance, total experiment allocation $45 only if Sabine approves. One user-started protected notebook connection, at most two turns and 85 seconds including setup. It may fail before Ready. No retries, avatar, camera, plan upgrade or model fallback. Voice/text reach OpenAI only if the user proceeds through the existing consent and microphone controls. Retention terms apply, and connection closure is not deletion or billing-finalization proof.
+Sabine approved one additional $2 allowance, total experiment allocation $45. One user-started protected notebook connection, at most two turns and 85 seconds including setup. It may fail before Ready. No retries, avatar, camera, plan upgrade or model fallback. Voice/text reach OpenAI only if the user proceeds through the existing consent and microphone controls. Retention terms apply, and connection closure is not deletion or billing-finalization proof.
 
 ## Prepared activation sequence, after approval only
 

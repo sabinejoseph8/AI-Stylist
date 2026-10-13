@@ -1,3 +1,9 @@
+## Approved notebook follow-up, 13 October 2026
+
+Sabine explicitly approved one separate $2/private follow-up through the pending question. Experiment allocation is now $45. New approval ID: notes_private_20261013_02. Scope: one user-started connection, two turns and 85 seconds including setup, existing protected Supabase/Render service, no retry/avatar/upgrade/model fallback, same OpenAI voice/text retention boundary. Preserve notes_private_20261013_01 in held state and all seventeen avatar records. No additional provider connection is authorized beyond this one start; no test has started from this record.
+
+Exact next action: verify whether approved_trials exists, apply the reviewed append-only migration if absent, verify access protections, initialize only the new reviewed row, compare exact terms/unreserved state and preserved original history, then explicitly select the approved store/new ID in Render. Verify protected readiness without opening a socket; give the entire script before Sabine starts.
+
 ## Notebook startup failure and follow-up preparation, 13 October 2026
 
 After the cookie handoff deployment, Sabine again confirmed Safari availability and pressed Start private notes test. Her screenshot shows ended/cleared state before Ready. A live service-only read now verifies the original notes_private_20261013_01 reservation is held, unlike the first pre-reservation failure. Preserve this record permanently and do not retry, refund or reset it. This establishes that the owner reserved the start, not which subsequent startup step failed. No completed speech turn or live note extraction is accepted.
