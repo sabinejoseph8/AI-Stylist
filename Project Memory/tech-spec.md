@@ -1,3 +1,11 @@
+## Server-only startup diagnostic result, 13 October 2026
+
+Sabine approved one additional $2 server-only diagnostic, raising the experiment allocation from $47 to $49. One new durable allowance was initialized and consumed. The single run reached provider-open and session.created, then received invalid_request_error with allowlisted code invalid_parameter. The configuration was rejected; no allowlisted parameter name or matching error event correlation was returned. This does not identify a correction or validate conversion from a conversation session into transcription.
+
+The runner requested connection cleanup and recorded the reservation as held. Transport cleanup is not proof of remote deletion or final billing. No microphone, camera, audio, avatar, extraction, response generation, retry, upgrade or Render deployment occurred. All three previous notes records remain held. No further diagnostic or microphone attempt is approved. Local evidence remains 1,635 tests, type checking, build and 77 isolated PostgreSQL checks with the existing and diagnostic owner scenarios.
+
+Next: reconcile the observed invalid_parameter category with the documented startup contract using offline review. A further provider call requires a separate financial decision. Raw error messages remain excluded by the approved diagnostic boundary.
+
 ## Server-only startup diagnostic prepared and verified locally, 13 October 2026
 
 The previous goal turn made concrete progress by diagnosing the configuration-stage rejection, adding fixed field diagnostics and publishing the current evidence. This turn implements the next bounded diagnostic without any live provider call. A separate explicit CLI, protocol runner and durable owner require new startup-only approval, bind its identity, reserve/re-read before connection, send exactly one correlated transcription update, close within ten provider seconds and preserve a held start. No microphone, capture, extraction, response generation, automatic retry, initializer or normal-startup attachment exists. The output contains only fixed categories and allowlisted error details, so an unknown rejection may remain unresolved.

@@ -1,3 +1,7 @@
+## Diagnosing a provider rejection without more phone testing
+
+I approved one bounded server-only experiment so I could isolate startup from microphone behavior. The connection opened, but the provider reported an invalid parameter when configuring transcription. I kept the result precise: it narrowed the failure category but did not identify the field. I preserved the earlier test history, stopped after the single approved attempt and kept raw errors and credentials out of published notes. This avoided asking a customer to repeat a voice test without a supported fix.
+
 ## Preserving experiment history for a follow-up
 
 I approved one additional $2 notebook experiment after the startup diagnostics were ready. I created a separate approval record and verified the original failed attempt stayed held. This keeps the experiment history honest and prevents a refresh or restart from restoring spent test allowances. The new allowance is prepared but the live follow-up result is still pending.

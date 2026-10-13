@@ -1,6 +1,14 @@
+## Server-only startup diagnostic result, 13 October 2026
+
+Sabine approved one additional $2 server-only diagnostic, raising the experiment allocation from $47 to $49. One new durable allowance was initialized and consumed. The single run reached provider-open and session.created, then received invalid_request_error with allowlisted code invalid_parameter. The configuration was rejected; no allowlisted parameter name or matching error event correlation was returned. This does not identify a correction or validate conversion from a conversation session into transcription.
+
+The runner requested connection cleanup and recorded the reservation as held. Transport cleanup is not proof of remote deletion or final billing. No microphone, camera, audio, avatar, extraction, response generation, retry, upgrade or Render deployment occurred. All three previous notes records remain held. No further diagnostic or microphone attempt is approved. Local evidence remains 1,635 tests, type checking, build and 77 isolated PostgreSQL checks with the existing and diagnostic owner scenarios.
+
+Next: reconcile the observed invalid_parameter category with the documented startup contract using offline review. A further provider call requires a separate financial decision. Raw error messages remain excluded by the approved diagnostic boundary.
+
 # Proposed server-only startup diagnosis
 
-Status: implemented and tested locally; not authorized or activated for live use. All three notes starts are held. Current experiment allocation is $47.
+Status: implemented and tested locally. Sabine explicitly approved one $2 server-only diagnostic on 13 October 2026, raising the experiment allocation to $49. The single diagnostic ran and recorded a held outcome. All three earlier notes starts remain held.
 
 ## Purpose
 
@@ -25,7 +33,7 @@ Local evidence: 1,635 prototype tests across 117 files, type checking and build;
 
 ## Proposed single live diagnostic
 
-Proposed allowance: $2, bringing the experiment allocation from $47 to $49 only if Sabine approves. Proposed approval ID: notes_startup_diag_20261013_01. This is a proposal, not a stored approval or permission.
+Approved allowance: $2, bringing the experiment allocation from $47 to $49. Approved identity: notes_startup_diag_20261013_01. Sabine approved one server-only run with the exact limits below. No retry is authorized.
 
 One agent-operated connection from this computer using existing server credentials with OpenAI and the existing Supabase allowance store. No iPhone, customer audio, microphone, camera, avatar, extraction, response.create, retry, plan upgrade or Render deployment. The provider portion is capped at ten seconds; preparation and recording the held outcome may take longer because each store operation is bounded separately. The $2 is a conservative allowance, not a claim that the no-audio session is free or a hard provider billing stop.
 
@@ -39,4 +47,4 @@ Only fixed diagnostic categories, allowlisted code/parameter names and outcome/c
 4. Inspect fixed stages/result and read the durable outcome. If a reservation or its acknowledgment is uncertain, hold without retry/refund. Expected final state is held even when configuration is accepted; no remote-cleanup claim is made.
 5. Implement a correction only if the observed evidence supports it, run local tests and review any additional human validation separately. This diagnostic does not accept the live notebook feature.
 
-No approval initializer, hosted change or provider request has been performed for this proposal.
+At approval recording, no initializer or provider request has been performed. Record the observed result after the single run.

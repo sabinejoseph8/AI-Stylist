@@ -1,3 +1,21 @@
+## Publication and exact next action
+
+Implementation aab9fab is published to GitHub. Private Memory deployment appgdep_6acdee378674819191e017598709d891 succeeded with MCP retained; a follow-up summary alignment is being published. Live SQL verified four held records, including the single startup diagnostic and all three preserved notes records. Fixed result: configuration-rejected, invalid_parameter, no allowlisted parameter, errorCorrelated=false, outcomeRecorded=true. No retries remain approved. The current Render source is unchanged.
+
+Next action: read the current official transcription initialization contract and compare it with the one configuration sent, without provider calls. Distinguish evidence from the contradictory AI-assisted support inference. If a supported correction cannot be established, prepare a narrow redacted follow-up for human review rather than spending on another guess. Phase gates remain open. No action is currently required from Sabine for this offline review.
+
+## Server-only startup diagnostic result, 13 October 2026
+
+Sabine approved one additional $2 server-only diagnostic, raising the experiment allocation from $47 to $49. One new durable allowance was initialized and consumed. The single run reached provider-open and session.created, then received invalid_request_error with allowlisted code invalid_parameter. The configuration was rejected; no allowlisted parameter name or matching error event correlation was returned. This does not identify a correction or validate conversion from a conversation session into transcription.
+
+The runner requested connection cleanup and recorded the reservation as held. Transport cleanup is not proof of remote deletion or final billing. No microphone, camera, audio, avatar, extraction, response generation, retry, upgrade or Render deployment occurred. All three previous notes records remain held. No further diagnostic or microphone attempt is approved. Local evidence remains 1,635 tests, type checking, build and 77 isolated PostgreSQL checks with the existing and diagnostic owner scenarios.
+
+Next: reconcile the observed invalid_parameter category with the documented startup contract using offline review. A further provider call requires a separate financial decision. Raw error messages remain excluded by the approved diagnostic boundary.
+
+# Approved server-only diagnostic, 13 October 2026
+
+Sabine approved one $2 server-only startup diagnostic, allocation $47 to $49, ID notes_startup_diag_20261013_01. One permanent reservation, one connection capped at ten provider seconds, no audio, microphone, avatar, extraction, retries, deployment or upgrade. Previous records remain intact. Implementation published as aab9fab after replacing a synthetic fixture that triggered GitHub secret detection; no bypass was used. Full 1,635 tests, type checking and build passed again. Reservation and run are the next actions.
+
 ## Server-only startup diagnostic prepared and verified locally, 13 October 2026
 
 The previous goal turn made concrete progress by diagnosing the configuration-stage rejection, adding fixed field diagnostics and publishing the current evidence. This turn implements the next bounded diagnostic without any live provider call. A separate explicit CLI, protocol runner and durable owner require new startup-only approval, bind its identity, reserve/re-read before connection, send exactly one correlated transcription update, close within ten provider seconds and preserve a held start. No microphone, capture, extraction, response generation, automatic retry, initializer or normal-startup attachment exists. The output contains only fixed categories and allowlisted error details, so an unknown rejection may remain unresolved.
