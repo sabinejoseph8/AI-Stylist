@@ -1,3 +1,9 @@
+## Local Wardrobe publication receipt and human review
+
+Checkpoint ca5d633 is pushed to GitHub and all 20 changed committed files copied to the approved AI stylist folder. Private Memory source e1a10eab6a5c153a767a6aba643dd8d88a1c7d2c deployed successfully as appgdep_6ace93658ae08191bf7c83d4680e696d, with MCP preserved. All 16 Memory checks, build and artifact validation pass. Foundation evidence is 797 passing tests across 104 files, type checking and build; no actual photo/device/provider was started by the agent for this increment. The browser empty-state/navigation check passed and a screenshot was saved outside Git.
+
+Exact next human action: complete all eight local Wardrobe review steps in docs/task-4c-local-wardrobe.md, then report one result. No microphone, camera, paid service, sign-in or server upload is needed. Earlier accepted notebook/camera reviews remain accepted. On a reported failure, fix it and rerun relevant checks; on success, record only the local sample acceptance. Hosted persistence, saved-look accounting and full Phase 4 remain open. No further independent authorized task is identified before this review or a support/account/source dependency change. Allocation remains $51 and held records remain untouched. Existing AGENTS.md edits remain unstaged.
+
 ## Local Task 4c sample Wardrobe prepared, 13 October 2026
 
 Sabine approved local Task 4c preparation by saying proceed to the proposed browser-memory Wardrobe exception. Implemented explicit saving of a confirmed Owned session reference to an independent sample photo URL, browse/enlarge, description Save/Cancel, confirmed removal and selection of up to four items for the sample notebook. Inspiration cannot be saved as owned. Duplicate saves of the same source photo are refused. Sample limits are 24 items and 32 MB; these are local rehearsal bounds, not a production retention or account-quota decision.
