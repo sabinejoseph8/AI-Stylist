@@ -1,6 +1,6 @@
 # OpenAI startup contract follow-up
 
-Status: prepared, not sent. No further call, deployment or spending is authorized. Current experiment allocation is $49 and all four notes/startup reservations are held.
+Status: explicitly authorized by Sabine and submitted in the existing OpenAI Help support conversation on 13 October 2026. The submitted message is visibly present in the thread. An AI-assisted response was received; it repeats the proposed conversion and does not identify the rejected parameter. No further call, deployment or spending is authorized. Current experiment allocation is $49 and all four notes/startup reservations are held.
 
 ## Sanitized message for support
 
@@ -45,3 +45,9 @@ Reviewed on 13 October 2026:
 - [Official transcription cookbook](https://developers.openai.com/cookbook/examples/speech_transcription_methods): older intent URL and transcription_session.update naming. Historical evidence, not proof of current GA compatibility.
 
 The delay conflict is a candidate explanation, not an identified root cause. The diagnostic did not identify which parameter was rejected. Do not change the model, remove timing requirements, adopt the legacy protocol, retry a held record or claim a working fix from documentation alone.
+
+## Response review, 13 October 2026
+
+AI-assisted support says the transcription guide takes precedence over the conflicting delay description and repeats the conversation-model bootstrap followed by a transcription update. It characterizes the older intent query as legacy. It does not supply a demonstrated successful trace or the rejected parameter, and suggests another diagnostic retaining that parameter. This is an attributed support position, not independently verified provider compatibility or authorization for another call. The exact parameter remains unknown; no root cause or working correction is established.
+
+No further support message, test, allowance or deployment was performed from this response. All consumed records and the $49 allocation remain unchanged. The next provider experiment, if proposed, must have a concrete diagnostic improvement and separately reviewed financial scope. Repeating the identical fixed-error run is not justified by this reply.

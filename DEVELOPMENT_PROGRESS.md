@@ -1,3 +1,11 @@
+## Startup support follow-up submitted and reviewed, 13 October 2026
+
+Sabine authorized the prepared sanitized question. Its submission and an AI-assisted reply are visibly verified. Support repeats that the low-delay guide and conversion proposal apply, but does not identify the rejected parameter or provide independent successful initialization evidence. The live notebook remains unverified. No new call, retry, allowance, deployment or model change occurred. The $49 allocation and all four held notes/startup records are unchanged. See docs/openai-startup-diagnostic-followup.md for the attributed review and unresolved contract.
+
+## Startup follow-up submitted, 13 October 2026
+
+Sabine authorized sending the prepared protocol follow-up. Submitted the public configuration, fixed invalid_parameter result and three documentation/initialization questions in the existing OpenAI Help conversation. Visible thread confirmation proves submission; it does not prove human technical routing or a resolved contract. No account details, credentials, raw errors, recordings or customer content were included. No provider test or spending occurred. The response is pending; inspect it before changing the integration. This goal turn made progress through the authorized external submission.
+
 ## Contract review publication receipt
 
 The current official-doc conflict review and prepared support questions are published in GitHub commits 1c6e210 and 9a78ab6. Eight changed committed files were copied to the approved AI stylist folder. Private Memory source af0afde49a400aa73d0a5526a0fc856da19e5333 deployed successfully as appgdep_6acdeff1baa48191a2641da264470686, with MCP retained. All 16 website checks, build and artifact validation passed. No application code changed, so prior 1,635 prototype and 623 foundation results remain recorded evidence, not new runs.

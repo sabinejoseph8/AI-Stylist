@@ -1,3 +1,7 @@
+## Startup support follow-up submitted and reviewed, 13 October 2026
+
+Sabine authorized the prepared sanitized question. Its submission and an AI-assisted reply are visibly verified. Support repeats that the low-delay guide and conversion proposal apply, but does not identify the rejected parameter or provide independent successful initialization evidence. The live notebook remains unverified. No new call, retry, allowance, deployment or model change occurred. The $49 allocation and all four held notes/startup records are unchanged. See docs/openai-startup-diagnostic-followup.md for the attributed review and unresolved contract.
+
 ## Startup contract review, 13 October 2026
 
 Offline review found conflicting official guidance for the low-delay field: the transcription guide shows it with gpt-live-transcribe, but the client-event schema restricts it to gpt-realtime-whisper. This is a candidate explanation only. The diagnostic's invalid_parameter result does not identify the field; session-type conversion remains unverified. See docs/openai-startup-diagnostic-followup.md for the prepared, unsent questions and exact configuration. No code, paid call, allowance or deployment changed in this review. Allocation remains $49, all four notes/startup reservations held. Model substitution and legacy intent/event migration are not approved fixes. Existing acceptance gates remain open.
