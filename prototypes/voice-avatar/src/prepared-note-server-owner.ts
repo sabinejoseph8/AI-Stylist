@@ -26,8 +26,8 @@ type Hooks = {clarificationChanged?: (record:PreferenceClarification|null)=>void
 type Request = {method: string; path: string; host: string; origin: string; authorization?: string; signal: AbortSignal};
 export function createPreparedNoteServerOwner(options: {
  simulation?: boolean; cleanupRequirement?: 'simulation-local'|'remote-verified'; preview: PreviewConfig; allowance: Allowance; preferences?: SimulatedPreferenceAuthority;
- createTransports?: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'capture'>;
- createStartupTransports?: (capture?: ProbeCapture) => {open:Parameters<typeof prepareNoteStartup>[0]['open'];fetch:SessionOptions['fetch'];capture:ProbeCapture};
+ createTransports?: (capture?: ProbeCapture) => Pick<SessionOptions, 'socket' | 'fetch' | 'countFetch' | 'capture'>;
+ createStartupTransports?: (capture?: ProbeCapture) => {open:Parameters<typeof prepareNoteStartup>[0]['open'];fetch:SessionOptions['fetch'];countFetch?:SessionOptions['countFetch'];capture:ProbeCapture};
  changed: SessionOptions['changed'];
 }) {
  if (options.simulation !== true || options.allowance.purpose !== 'notes-only-simulation') throw Error('Live notebook server owner is disabled.');
@@ -106,7 +106,7 @@ export function createPreparedNoteServerOwner(options: {
     if(createStartupTransports){
      const transports=createStartupTransports(hooks.capture);
      let settled!:(ready:boolean)=>void;const readiness=new Promise<boolean>(resolve=>{settled=resolve;});
-     startup=prepareNoteStartup({simulation:true,signal:controller.signal,open:transports.open,session:{...sessionOptions,fetch:transports.fetch,capture:transports.capture},ready:()=>settled(true),stopped:()=>queueMicrotask(()=>{stop();settled(false);})});
+     startup=prepareNoteStartup({simulation:true,signal:controller.signal,open:transports.open,session:{...sessionOptions,fetch:transports.fetch,countFetch:transports.countFetch,capture:transports.capture},ready:()=>settled(true),stopped:()=>queueMicrotask(()=>{stop();settled(false);})});
      if(!await readiness){await finish();return{status:499 as const};}
      session=startup.active()??undefined;
      if(!session){await finish();return{status:499 as const};}

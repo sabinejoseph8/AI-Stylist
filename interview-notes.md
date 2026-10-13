@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Keeping progressive corrections working, 12 October 2026
+
+I connected counted extraction to the protected notebook session and tested authentication, tentative notes, exit and cleanup uncertainty. Integration review showed that canceling an outdated extraction must not end the whole trial: new words and corrections naturally replace earlier work. I separated operation cancellation from session shutdown while keeping attempted counts and reserved generation tokens consumed. The full 1,356-test suite passes. Actual live provider and phone acceptance remain separate.
+
 ## Counting the full extraction input, 12 October 2026
 
 I prepared the official provider token-counting adapter so instructions and the structured-output schema can be included before generation. Simulation checks reject uncertain counts and cancel late response bodies. I also capped counting calls separately after spotting that overlapping unfinished counts could bypass a limit applied only to generation. The full 1,350-test suite passes. Actual model compatibility and counting charges still need a reviewed live check; no extra spending is authorized.

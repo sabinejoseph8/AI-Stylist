@@ -32,7 +32,7 @@ describe('disabled exact-request dispatch composition',()=>{
   let finish!:(n:number)=>void;const dispatch=vi.fn();const controller=new AbortController();
   const b=prepareBudgetedNoteDispatch({simulation:true,count:()=>new Promise<number>(r=>{finish=r;}),dispatch});
   const pending=b.request(input,controller.signal);const result=expect(pending).rejects.toThrow();controller.abort();await result;finish(1);await Promise.resolve();
-  expect(dispatch).not.toHaveBeenCalled();expect(b.snapshot().held).toBe(true);
+  expect(dispatch).not.toHaveBeenCalled();expect(b.snapshot().held).toBe(false);
  });
  it('bounds an uncooperative counter with the local deadline',async()=>{
   vi.useFakeTimers();const dispatch=vi.fn();const b=prepareBudgetedNoteDispatch({simulation:true,count:()=>new Promise(()=>{}),dispatch});
@@ -55,6 +55,13 @@ describe('disabled exact-request dispatch composition',()=>{
   const results=await Promise.allSettled(pending);
   expect(results.every(r=>r.status==='rejected')).toBe(true);expect(count).toHaveBeenCalledTimes(64);expect(dispatch).not.toHaveBeenCalled();
   expect(b.snapshot()).toMatchObject({countRequests:64,attempts:0,held:true});
+ });
+ it('superseding a canceled count permits the next revision without refunds',async()=>{
+  let call=0;const controller=new AbortController();const dispatch=vi.fn(async()=>null);
+  const b=prepareBudgetedNoteDispatch({simulation:true,count:async()=>{if(++call===1)return new Promise<number>(()=>{});return 10;},dispatch});
+  const first=expect(b.request(input,controller.signal)).rejects.toThrow();controller.abort();await first;
+  await b.request({...input,text:'blue'},signal());expect(dispatch).toHaveBeenCalledTimes(1);
+  expect(b.snapshot()).toMatchObject({countRequests:2,attempts:1,inputTokens:10,held:false});
  });
  it('pre-canceled input makes no counter or dispatch call',async()=>{
   const count=vi.fn(),dispatch=vi.fn(),controller=new AbortController();controller.abort();const b=prepareBudgetedNoteDispatch({simulation:true,count,dispatch});

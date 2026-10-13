@@ -1,6 +1,9 @@
 import {NoteSessionProbe} from './note-session-probe.ts';
 import type {ProbeCapture} from './note-session-probe.ts';
 import {NotebookState} from './notebook-state.ts';
+import {prepareBudgetedNoteDispatch} from './budgeted-note-dispatch.ts';
+import {createPreparedNoteTokenCounter} from './note-token-count-transport.ts';
+import {decodeOpenAINoteResponse} from './openai-note-extractor.ts';
 import {createPreparedOpenAINoteExtractor} from './openai-note-extractor.ts';
 import {createPreparedNoteExtractionTransport} from './note-extraction-transport.ts';
 import type {SimulatedExtractionFetch} from './note-extraction-transport.ts';
@@ -8,18 +11,22 @@ import {prepareTranscriptionSocketWire} from './transcription-socket-wire.ts';
 import type {SimulatedTranscriptionSocket} from './transcription-socket-wire.ts';
 /** Consolidated disabled provider preparation. Both transports must be injected
  * simulations. No socket creation, credentials, route or live activation. */
-export function createPreparedNoteProviderSession(options:{simulation?:boolean;socket:SimulatedTranscriptionSocket;fetch:SimulatedExtractionFetch;signal:AbortSignal;notebook:NotebookState;capture:ProbeCapture;changed:(receipt:number|null)=>void;invalidated?:()=>void;inputStarted?:()=>void;turnReady?:(turnId:string)=>void;stopped?:()=>void;ready?:()=>void}){
+export function createPreparedNoteProviderSession(options:{simulation?:boolean;socket:SimulatedTranscriptionSocket;fetch:SimulatedExtractionFetch;countFetch?:SimulatedExtractionFetch;signal:AbortSignal;notebook:NotebookState;capture:ProbeCapture;changed:(receipt:number|null)=>void;invalidated?:()=>void;inputStarted?:()=>void;turnReady?:(turnId:string)=>void;stopped?:()=>void;ready?:()=>void}){
  if(options.simulation!==true)throw Error('Live provider note session is disabled.');
  const controller=new AbortController();let ended=false,ready=false;
+ let budgeted:ReturnType<typeof prepareBudgetedNoteDispatch>|undefined;
  let probe:NoteSessionProbe|undefined,binding:ReturnType<typeof prepareTranscriptionSocketWire>|undefined;
  const stop=()=>{
   if(ended)return;ended=true;options.signal.removeEventListener('abort',stop);
-  controller.abort();probe?.end();binding?.stop();
+  controller.abort();budgeted?.end();probe?.end();binding?.stop();
   // A probe may call us while its own shutdown is still on the stack.
   // Notify after that stack settles so the lease sees final cleanup failures.
   queueMicrotask(()=>{try{options.stopped?.();}catch{/* Owners are already stopped. */}});
  };
- const extract=createPreparedOpenAINoteExtractor({simulation:true,request:createPreparedNoteExtractionTransport({simulation:true,fetch:options.fetch})});
+ const transport=createPreparedNoteExtractionTransport({simulation:true,fetch:options.fetch});
+ if(options.countFetch)budgeted=prepareBudgetedNoteDispatch({simulation:true,count:createPreparedNoteTokenCounter({simulation:true,fetch:options.countFetch}),dispatch:(serialized,signal)=>transport(JSON.parse(serialized),signal)});
+ const budgetOwner=budgeted;
+ const extract=budgetOwner?async(input:Parameters<typeof budgetOwner.request>[0],signal:AbortSignal)=>decodeOpenAINoteResponse(await budgetOwner.request(input,signal),input):createPreparedOpenAINoteExtractor({simulation:true,request:transport});
  try{
   binding=prepareTranscriptionSocketWire({simulation:true,socket:options.socket,signal:controller.signal,receive:event=>{probe?.receive(event);if(!ended&&!ready&&probe?.snapshot().transcription?.ready){ready=true;options.ready?.();}},stopped:stop});
   options.signal.addEventListener('abort',stop,{once:true});

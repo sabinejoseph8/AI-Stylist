@@ -287,3 +287,39 @@ describe('remote cleanup required boundary preparation',()=>{
  it('retires a canceled late reservation when no provider was ever created',async()=>{const s=required();let resolve!:(value:string)=>void;s.allowance.reserve.mockImplementation(()=>new Promise(r=>{resolve=r;}));const abort=new AbortController(),pending=s.owner.start(request({signal:abort.signal}));abort.abort();resolve('late-without-provider');expect(await pending).toEqual({status:499});expect(s.createTransports).not.toHaveBeenCalled();expect(s.allowance.closeVerified).toHaveBeenCalledExactlyOnceWith('late-without-provider');expect(s.owner.status().state).toBe('idle');});
  it.each(['provider-disconnect','deadline','request-abort'])('retains the hold after %s without retry',async kind=>{vi.useFakeTimers();const s=required(),abort=new AbortController();const active=await s.owner.start(request({signal:abort.signal}));if(active.status!==200)throw Error('start');if(kind==='provider-disconnect')s.socket.dispatchEvent(new Event('close'));else if(kind==='request-abort')abort.abort();else await vi.advanceTimersByTimeAsync(85000);await active.end();expect(s.owner.status().state).toBe('held');expect(s.allowance.closeVerified).not.toHaveBeenCalled();expect(s.allowance.reserve).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);});
 });
+
+describe('protected owner with counted extraction preparation',()=>{
+ const configured={type:'session.updated',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL},turn_detection:null}}}};
+ const partial={type:'conversation.item.input_audio_transcription.delta',event_id:'counted-e1',item_id:'counted-i1',content_index:0,delta:'green'};
+ function countedSetup(mode:'success'|'invalid'|'pending'='success'){
+  const s=setup(),order:string[]=[],countSignals:AbortSignal[]=[];let resolve!:(r:Response)=>void;
+  const countFetch=vi.fn(async(_url:string,init:RequestInit)=>{order.push('count');countSignals.push(init.signal as AbortSignal);if(mode==='pending')return new Promise<Response>(r=>{resolve=r;});return Response.json({object:'response.input_tokens',input_tokens:mode==='invalid'?'bad':88});});
+  s.fetch.mockImplementation(async()=>{order.push('generate');return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:'t1',patches:[{field:'color',value:'green',evidence:'green'}]})}]}]});});
+  s.createTransports.mockImplementation(()=>({socket:s.socket,capture:s.capture,fetch:s.fetch,countFetch}));
+  return{...s,countFetch,order,countSignals,resolve:(r:Response)=>resolve(r)};
+ }
+ it('counts before generation and publishes tentative notes behind the private owner',async()=>{
+  vi.useFakeTimers();const s=countedSetup();const active=await s.owner.start(request());if(active.status!==200)throw Error('start');
+  active.probe.receive(configured);await active.probe.beginTurn('t1');active.probe.receive(partial);await vi.advanceTimersByTimeAsync(100);
+  expect(s.order).toEqual(['count','generate']);expect(active.snapshot().notes.color).toMatchObject({value:'green',status:'tentative'});
+  await active.end();expect(s.capture.end).toHaveBeenCalledTimes(1);expect(s.socket.close).toHaveBeenCalledTimes(1);expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);
+ });
+ it('never counts for an unauthenticated start',async()=>{
+  const s=countedSetup();expect(await s.owner.start(request({authorization:undefined}))).toEqual({status:401});expect(s.countFetch).not.toHaveBeenCalled();expect(s.fetch).not.toHaveBeenCalled();expect(s.allowance.reserve).not.toHaveBeenCalled();
+ });
+ it('invalid count stops the session without generation',async()=>{
+  vi.useFakeTimers();const s=countedSetup('invalid');const active=await s.owner.start(request());if(active.status!==200)throw Error('start');
+  active.probe.receive(configured);await active.probe.beginTurn('t1');active.probe.receive(partial);await vi.advanceTimersByTimeAsync(100);await active.end();
+  expect(s.fetch).not.toHaveBeenCalled();expect(active.snapshot().notes.color.status).toBe('missing');expect(s.socket.close).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);
+ });
+ it('exit aborts pending counting and ignores late responses',async()=>{
+  vi.useFakeTimers();const s=countedSetup('pending'),abort=new AbortController();const active=await s.owner.start(request({signal:abort.signal}));if(active.status!==200)throw Error('start');
+  active.probe.receive(configured);await active.probe.beginTurn('t1');active.probe.receive(partial);await vi.advanceTimersByTimeAsync(100);
+  abort.abort();await active.end();expect(s.countSignals[0]?.aborted).toBe(true);s.resolve(Response.json({object:'response.input_tokens',input_tokens:88}));await vi.advanceTimersByTimeAsync(0);
+  expect(s.fetch).not.toHaveBeenCalled();expect(active.snapshot().notes.color.status).toBe('missing');expect(s.allowance.closeVerified).toHaveBeenCalledTimes(1);expect(vi.getTimerCount()).toBe(0);
+ });
+ it('retains the remote-verification hold with counted preparation',async()=>{
+  const s=countedSetup();const owner=createPreparedNoteServerOwner({...s,cleanupRequirement:'remote-verified'});const active=await owner.start(request());if(active.status!==200)throw Error('start');await active.end();
+  expect(owner.status().state).toBe('held');expect(s.allowance.closeVerified).not.toHaveBeenCalled();expect(await owner.start(request())).toEqual({status:409});
+ });
+});

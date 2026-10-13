@@ -22,12 +22,12 @@ export function prepareBudgetedNoteDispatch(options:{simulation?:boolean;
    const stopped=new Promise<never>((_,reject)=>{rejectStop=reject;});
    void stopped.catch(()=>{});
    const abort=()=>rejectStop(Error('Budgeted extraction unavailable.'));
-   const cancel=()=>stop();
+   const cancel=()=>controller.abort();
    controller.signal.addEventListener('abort',abort,{once:true});
    signal.addEventListener('abort',cancel,{once:true});
    const deadline=setTimeout(stop,5000);
    try{
-    if(signal.aborted){stop();throw Error();}
+    if(signal.aborted){controller.abort();throw Error();}
     const body=buildOpenAINoteRequest(input),serialized=JSON.stringify(body);
     const count=await Promise.race([options.count(serialized,controller.signal),stopped]);
     if(ended||controller.signal.aborted)throw Error();
@@ -36,7 +36,7 @@ export function prepareBudgetedNoteDispatch(options:{simulation?:boolean;
     const result=await Promise.race([options.dispatch(serialized,controller.signal),stopped]);
     if(ended||controller.signal.aborted)throw Error();
     return result;
-   }catch{stop();throw Error('Budgeted extraction unavailable.');}
+   }catch{if(!controller.signal.aborted)stop();throw Error('Budgeted extraction unavailable.');}
    finally{clearTimeout(deadline);signal.removeEventListener('abort',cancel);controller.signal.removeEventListener('abort',abort);active.delete(controller);}
   },
   end:stop,
