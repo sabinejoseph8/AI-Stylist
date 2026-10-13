@@ -1,6 +1,6 @@
 ## Closing a hidden-camera gap
 
-After the local photo review passed, I found that collapsing the notebook could hide the camera preview while the device stayed on. I tied camera ownership to the visible controls, stopped it when either section collapsed, and required an explicit Start after reopening. Confirmed photos stay intact. I tested delayed permissions, retired playback and device callbacks; all 777 foundation tests pass. The new focused device-indicator check remains separate from the earlier accepted review.
+After the local photo review passed, I found that collapsing the notebook could hide the camera preview while the device stayed on. I tied camera ownership to the visible controls, stopped it when either section collapsed, and required an explicit Start after reopening. Confirmed photos stay intact. I tested delayed permissions, retired playback and device callbacks; all 777 foundation tests pass. I completed the focused four-step device-indicator review: both collapse actions stopped the camera and reopening kept it off until I clicked Start. The earlier ten-step review stays accepted.
 
 ## Validating the clothing-reference journey
 

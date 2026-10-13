@@ -1,3 +1,9 @@
+## Camera-collapse review accepted, 13 October 2026
+
+Sabine confirmed all four focused local-computer review steps worked: collapsing the camera section and the whole notebook stopped the device indicator, and reopening kept the camera off until explicit Start. The earlier ten-step photo/camera and eight-step notebook reviews remain accepted and need no repetition. The existing 777 passing foundation tests, type checking and build apply to the unchanged implementation; no application tests were rerun for this documentation receipt.
+
+This closes the focused local regression only. Full Tasks 4a/4b, hosted media, physical-phone and comprehensive accessibility acceptance remain open. The plan remains at five of 41 full tasks complete. Allocation stays $51, all five notes/startup records remain held, and no paid test or customer deployment is authorized. Next action: review a concrete supported transcription startup, Render ingress/logging clarification, required account configuration or retailer permission when supplied; existing phase gates remain in force.
+
 ## Camera-collapse acceptance dependency audit 3 and blocked handoff
 
 The same unavoidable manual/external dependency condition has persisted for three consecutive goal turns. The preceding turn was no implementation progress, not a verified live-process wait. Rechecked current worktree and blocker queue: the focused four-step device-indicator result remains absent, as do a supported transcription startup, Render ingress/logging evidence, required account configuration and real source permissions. No independent authorized implementation remains identified within the preserved phase gates. The goal is being marked blocked, not complete; audit bookkeeping is not development progress.

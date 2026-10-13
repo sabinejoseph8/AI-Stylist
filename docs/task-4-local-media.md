@@ -44,7 +44,7 @@ Sabine reported All ten steps worked and were readable on 13 October 2026. This 
 
 ## Focused camera-collapse regression
 
-A post-acceptance audit fixed a hidden-preview gap. Both notebook and camera-section collapse now stop camera ownership; reopening never auto-starts it. All 777 foundation tests, type checking and build pass. The original ten-step review stays accepted. This separate four-step human regression is pending; read every step before starting:
+A post-acceptance audit fixed a hidden-preview gap. Both notebook and camera-section collapse now stop camera ownership; reopening never auto-starts it. All 777 foundation tests, type checking and build pass. The original ten-step review stays accepted. Sabine confirmed all four steps worked on 13 October 2026. This focused local-computer regression is accepted; the reviewed steps are retained below:
 
 1. Refresh the local app, expand My Styling Notes and Show an item with my camera, then Start local camera.
 2. Collapse Show an item with my camera and confirm the camera indicator turns off. Reopen it; the camera stays off and Capture a still is disabled.

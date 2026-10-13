@@ -242,4 +242,4 @@ Sabine confirmed all ten main-app photo/camera review steps worked and were read
 
 ## Visible-camera ownership, 13 October 2026
 
-Collapsing either the notebook or its camera disclosure stops the local camera while keeping confirmed photos. Reopening reveals stopped controls and never automatically restarts the device. This closes a hidden-preview privacy gap without changing layout tokens or the accepted ten-step photo workflow. A focused four-step device-indicator check is pending; tests cover the owner lifecycle.
+Collapsing either the notebook or its camera disclosure stops the local camera while keeping confirmed photos. Reopening reveals stopped controls and never automatically restarts the device. This closes a hidden-preview privacy gap without changing layout tokens or the accepted ten-step photo workflow. Sabine accepted the focused four-step local-computer device-indicator check on 13 October 2026; tests cover the owner lifecycle.
