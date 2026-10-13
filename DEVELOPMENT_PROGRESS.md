@@ -1,3 +1,9 @@
+## Contract review publication receipt
+
+The current official-doc conflict review and prepared support questions are published in GitHub commits 1c6e210 and 9a78ab6. Eight changed committed files were copied to the approved AI stylist folder. Private Memory source af0afde49a400aa73d0a5526a0fc856da19e5333 deployed successfully as appgdep_6acdeff1baa48191a2641da264470686, with MCP retained. All 16 website checks, build and artifact validation passed. No application code changed, so prior 1,635 prototype and 623 foundation results remain recorded evidence, not new runs.
+
+Sending the prepared new OpenAI question is awaiting Sabine's decision. The next technical action is to reconcile the confirmed startup contract from that reply before implementing a correction. No additional provider attempt is approved. Account activation remains constrained by unresolved Render ingress/query-log guarantees, exact customer origin, sender/provider credentials and real acceptance. Later phases retain their dependencies. This turn made progress by identifying a specific documentation conflict and correcting authoritative current priorities; it is not a repeated blocked audit.
+
 ## Offline startup contract review, 13 October 2026
 
 Previous goal turn made progress: one approved diagnostic ran, authoritative held state was verified and results were published. This turn fetched current official transcription, client-event and WebSocket pages and the older official cookbook. The guide shows low delay with gpt-live-transcribe; the client-events reference limits delay to gpt-realtime-whisper, including its transcription configuration. This is a documented conflict, not proof that delay caused invalid_parameter. The generic bootstrap still lacks independently established conversion evidence.
