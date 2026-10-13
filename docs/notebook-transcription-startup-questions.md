@@ -38,3 +38,13 @@ Next: Prepare a disabled connection-plan contract for the support-proposed trans
 ## Follow-up disposition
 
 The same support thread received a narrow follow-up on the original startup and cleanup questions. The AI support bot states it cannot route to human API technical support. It explicitly describes the proposed selected-model URL as an inference from the generic pattern plus the transcription guide, without a published selected-model URL example. Its cleanup guidance distinguishes clean transport close from per-item completed transcripts and provides no stronger remote-finalization guarantee. No additional follow-up was sent. Startup and remote-cleanup activation gates remain unverified.
+
+## Follow-up draft after observed initial rejection, 13 October 2026
+
+Status: prepared, not sent. Awaiting authorization for this new evidence-specific message.
+
+Our server connects to `wss://api.openai.com/v1/realtime?model=gpt-live-transcribe` using a server Bearer header. The WebSocket opens, but the first JSON event is `error` with `error.type: invalid_request_error`, before any `session.created`. Our client waits for session.created before sending session.update, so no configuration or audio has been sent. It then closes without retrying.
+
+What exact GA URL, query parameters and headers initialize a dedicated gpt-live-transcribe transcription session? Should the initial connection select a transcription intent instead of using the model query? Please provide an explicit selected-model example and the initial event type, or clarify any account eligibility required. The earlier support answer described the model-query URL as an inference from generic Realtime documentation. We need to resolve this observed pre-configuration rejection before another paid test.
+
+No keys, account identifiers, request/session IDs, recordings or conversation content are included.

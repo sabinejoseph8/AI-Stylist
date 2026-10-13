@@ -1511,3 +1511,7 @@ I reviewed the active page using scripted input at desktop and phone widths. I s
 ## Verifying the saved trial configuration
 
 When the private notes page showed that testing was unavailable, I checked the saved hosting settings. The approval selector still pointed to the earlier trial. I corrected it and verified the saved value after reloading the dashboard. This taught me to check the persisted configuration instead of assuming a successful save used the intended value. I kept the previous trial history and the unused follow-up allowance intact.
+
+## Locating a failure before speech capture
+
+I used the prototype's content-free startup stages to narrow a failed notes test to the provider connection. The connection opened, then received an invalid-request error before the session was created. This separated the failure from microphone capture and note extraction. I kept the consumed trial history and spending limits intact, and prepared a focused support question instead of repeating an unverified paid experiment. The exact cause and correction remain open.
