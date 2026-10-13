@@ -1,3 +1,11 @@
+## Follow-up closed before Ready, 13 October 2026
+
+Sabine confirmed the corrected Safari page reported one trial available. After receiving the entire seven-step script, she pressed Start and supplied a new screenshot showing connection ended, temporary notes cleared and browser connection closed, before any reported spoken turn. No live notes acceptance is established. Do not retry or reset either trial. The exact failure stage still requires log inspection. A successful read-only RPC check confirms the follow-up ID matches, a reservation was written, and its state is held. The start remains consumed permanently.
+
+Browser log inspection was not executed: automatic approval review reported model capacity exhaustion, not an unsafe-action determination. The separate durable-state check succeeded on the one retry explicitly permitted after review timeout. Browser access was attempted again and review timed out before execution. This is an approval-service execution blocker, not a determination that inspection is unsafe. No code, credentials, allowance or provider session was changed in this investigation.
+
+Exact next action: inspect the existing Render fixed startup-stage logs for the user-started attempt when approval review is available. Diagnose the observed stage before proposing any correction or further financial test. Preserve the $45 allocation and all history. No additional start is authorized.
+
 ## Follow-up availability configuration correction, 13 October 2026
 
 Sabine's screenshot reports live testing unavailable before Start. Read-only Render inspection found the persisted approval ID was still notes_private_20261013_01 while the store was approved. The earlier statements that the new ID had been saved were incorrect. The separate notes_private_20261013_02 allowance remained unreserved at the last live RPC check. Corrected only the approval ID, saved it, reloaded Render and verified the persisted value is notes_private_20261013_02. Existing secrets, financial limits and consumed history are preserved. The existing Free service successfully deployed the reviewed aeeea4d application as dep-db6t2laj9qps73aep7u0 with the corrected setting. Health returned 200 afterward; a live read confirms the new allowance remains unreserved (0.8-second RPC response). No provider connection or microphone was started.

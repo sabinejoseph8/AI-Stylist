@@ -28,3 +28,7 @@ References reviewed: https://developers.openai.com/api/docs/guides/realtime-tran
 ## Availability correction
 
 A persisted Render selector still referenced the old approval, despite the previous save report. Corrected and verified the new ID after reloading Render. Exact-source deployment and authenticated Safari availability must be checked before Start. No follow-up reservation was consumed by these checks.
+
+## User-started follow-up outcome
+
+Sabine confirmed availability, then supplied an ended/cleared screenshot immediately after Start. Read-only RPC inspection confirms notes_private_20261013_02 is held. No spoken turn or live notes acceptance is established. Preserve this consumed record; no repeat is authorized. Fixed startup-log inspection is pending because browser approval review could not complete.
