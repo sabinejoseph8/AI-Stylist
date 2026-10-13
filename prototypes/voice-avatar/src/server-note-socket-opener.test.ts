@@ -30,7 +30,7 @@ it('reports only fixed handshake status and terminates without reading response 
 it('reports redacted initial provider error category without logging its payload',async()=>{
  const raw=new Fake(),diagnostic=vi.fn(),initial=vi.fn();const owner=prepareServerNoteSocketOpener({apiKey:'synthetic_key_never_real',connect:()=>raw as never,diagnostic});const pending=owner.open(new AbortController().signal,initial);raw.readyState=1;raw.emit('open');await pending;
  raw.emit('message',Buffer.from(JSON.stringify({type:'error',error:{type:'invalid_request_error',message:'private sentinel'}})),false);
- expect(diagnostic.mock.calls.map(([v])=>v)).toEqual(['provider-connecting','provider-open','provider-error-invalid-request','provider-first-unexpected']);expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');owner.end();
+ expect(diagnostic.mock.calls.map(([v])=>v)).toEqual(['provider-connecting','provider-open','provider-error-invalid-request','provider-param-missing','provider-first-unexpected']);expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');owner.end();
 });
 
 it('classifies an actual local HTTP handshake rejection without retaining its body',async()=>{

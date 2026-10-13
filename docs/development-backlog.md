@@ -1,3 +1,9 @@
+## Parameter availability diagnostics prepared locally, 13 October 2026
+
+Review of Sabine's two OpenAI support replies confirmed they repeat the proposed startup and still do not identify the rejected field. Existing code already retained known parameter names. It could not distinguish an omitted/null parameter from an unrecognized or malformed one. The fixed-code classifier now reports those four categories without retaining arbitrary parameter values, raw messages, credentials, IDs or content. Known exact parameter-name categories remain unchanged; startup cleanup, single-use/no-retry behavior and financial holds are preserved.
+
+Fourteen added simulated cases cover missing/null/unrecognized/malformed values, prototype-property strings and startup cleanup propagation. All 1,688 prototype tests across 118 files, type checking and build pass. The initial run found one integration expectation missing the new category; it was updated and the full rerun passed. This is a local diagnostic improvement, not an identified root cause, live transcription acceptance or completed task group. No live connection, credential issuance, microphone, hosted setting, Render deployment or new spending occurred. Allocation remains $49; all consumed records stay held.
+
 ## Startup error presentation sanitized, 13 October 2026
 
 Local Task 1b privacy review removed arbitrary exception-message copying from ScriptedService.start into its page/API snapshot. Ordinary startup failures now use fixed wording stating that no automatic retry occurred. Exceptions are not inspected or coerced. Existing room-creation uncertainty, failed cleanup and usage-record holds retain their specific fixed guidance, block new starts and preserve consumed reservations.

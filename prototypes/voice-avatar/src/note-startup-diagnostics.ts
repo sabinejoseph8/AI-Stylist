@@ -8,6 +8,7 @@ export const NOTE_STARTUP_CODES=[
  'provider-error-authentication','provider-error-permission','provider-error-rate-limit','provider-error-invalid-request','provider-error-server','provider-error-other',
  'provider-code-invalid-value','provider-code-invalid-parameter','provider-code-unknown-parameter','provider-code-unsupported-parameter','provider-code-model-not-found',
  'provider-param-session-type','provider-param-session-model','provider-param-audio-input','provider-param-transcription-model','provider-param-transcription-languages','provider-param-transcription-delay','provider-param-turn-detection',
+ 'provider-param-missing','provider-param-null','provider-param-unrecognized','provider-param-malformed',
  'startup-created','startup-configuring','startup-ready','startup-opening-held','startup-timeout','startup-event-held','startup-configuration-held','startup-canceled','startup-ended','startup-held',
 ] as const;
 export type NoteStartupCode=typeof NOTE_STARTUP_CODES[number];
@@ -29,5 +30,8 @@ export function providerErrorDetails(value:unknown):NoteStartupCode[]{
  const {code,param}=error as {code?:unknown;param?:unknown};
  const codes:Record<string,NoteStartupCode>={'invalid_value':'provider-code-invalid-value','invalid_parameter':'provider-code-invalid-parameter','unknown_parameter':'provider-code-unknown-parameter','unsupported_parameter':'provider-code-unsupported-parameter','model_not_found':'provider-code-model-not-found'};
  const params:Record<string,NoteStartupCode>={'session.type':'provider-param-session-type','session.model':'provider-param-session-model','session.audio.input':'provider-param-audio-input','session.audio.input.transcription.model':'provider-param-transcription-model','session.audio.input.transcription.languages':'provider-param-transcription-languages','session.audio.input.transcription.delay':'provider-param-transcription-delay','session.audio.input.turn_detection':'provider-param-turn-detection'};
- return[typeof code==='string'&&Object.hasOwn(codes,code)?codes[code]:undefined,typeof param==='string'&&Object.hasOwn(params,param)?params[param]:undefined].filter((item):item is NoteStartupCode=>item!==undefined);
+ // Preserve only the shape of an unavailable name. Unknown strings and values
+ // never leave this function, including their length, spelling or contents.
+ const parameter:NoteStartupCode=!Object.hasOwn(error,'param')?'provider-param-missing':param===null?'provider-param-null':typeof param!=='string'?'provider-param-malformed':Object.hasOwn(params,param)?params[param]:'provider-param-unrecognized';
+ return[typeof code==='string'&&Object.hasOwn(codes,code)?codes[code]:undefined,parameter].filter((item):item is NoteStartupCode=>item!==undefined);
 }

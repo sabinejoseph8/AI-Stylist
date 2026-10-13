@@ -1555,3 +1555,7 @@ The revised connection reached session creation, but its transcription settings 
 ## Preparing a check that does not need another phone test
 
 After the notebook connection failed during setup, I prepared a server-only diagnostic. It has no microphone controls and sends one configuration message, then closes. I required a new reserved allowance, preserved every previous attempt and tested cancellation, uncertain writes and fresh-process replay refusal against an isolated database. A missing approval-ID check surfaced in the tests and was fixed. The diagnostic is prepared locally, but its live run still needs a separate spending decision and cannot by itself prove the notebook works for customers.
+
+## Learning from an inconclusive integration diagnostic
+
+I received two support replies that repeated a startup recommendation without explaining why our actual request was rejected. I reviewed the diagnostic and found it already captured known parameter names, but a missing name and an unrecognized name looked the same. I improved it to report fixed availability categories while keeping private error text out of logs. I validated the change with simulated failures and the full regression suite. This improves the next experiment without claiming the integration is fixed or spending more on an unchanged test.

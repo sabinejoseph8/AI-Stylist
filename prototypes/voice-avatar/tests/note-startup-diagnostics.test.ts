@@ -6,6 +6,24 @@ it.each([['authentication_error','provider-error-authentication'],['permission_e
 it('rejects missing and malformed error types as an opaque category',()=>{for(const v of [null,[],{},'private detail',{error:'private detail'},{error:{type:{secret:true}}}])expect(providerErrorDiagnostic(v)).toBe('provider-error-other');});
 
 it.each([['session.type','provider-param-session-type'],['session.model','provider-param-session-model'],['session.audio.input','provider-param-audio-input'],['session.audio.input.transcription.model','provider-param-transcription-model'],['session.audio.input.transcription.languages','provider-param-transcription-languages'],['session.audio.input.transcription.delay','provider-param-transcription-delay'],['session.audio.input.turn_detection','provider-param-turn-detection']])('classifies only exact known parameter %s',(param,expected)=>{expect(providerErrorDetails({error:{param,message:'private sentinel'}})).toEqual([expected]);});
-it.each([['invalid_value','provider-code-invalid-value'],['invalid_parameter','provider-code-invalid-parameter'],['unknown_parameter','provider-code-unknown-parameter'],['unsupported_parameter','provider-code-unsupported-parameter'],['model_not_found','provider-code-model-not-found']])('classifies only exact known error code %s',(code,expected)=>{expect(providerErrorDetails({error:{code,message:'private sentinel'}})).toEqual([expected]);});
-it('never emits unknown, prototype-property or malformed diagnostic values',()=>{for(const value of [null,[],{},'private sentinel',{error:[]},{error:{code:'constructor',param:'__proto__'}},{error:{code:'invalid_value private sentinel',param:'session.type private sentinel'}},{error:{code:{secret:true},param:['session.type']}}])expect(providerErrorDetails(value)).toEqual([]);});
+it.each([['invalid_value','provider-code-invalid-value'],['invalid_parameter','provider-code-invalid-parameter'],['unknown_parameter','provider-code-unknown-parameter'],['unsupported_parameter','provider-code-unsupported-parameter'],['model_not_found','provider-code-model-not-found']])('classifies only exact known error code %s',(code,expected)=>{expect(providerErrorDetails({error:{code,message:'private sentinel'}})).toEqual([expected,'provider-param-missing']);});
+it('never emits unknown, prototype-property or malformed diagnostic values',()=>{for(const value of [null,[],{},'private sentinel',{error:[]}])expect(providerErrorDetails(value)).toEqual([]);});
 it('reports both recognized fields through the same bounded fixed-code sink',()=>{const sink=vi.fn(),report=boundedNoteStartupDiagnostic(sink);for(let i=0;i<100;i++)for(const code of providerErrorDetails({error:{code:'invalid_value',param:'session.type',message:'private sentinel',request_id:'private sentinel'}}))report(code);expect(sink).toHaveBeenCalledTimes(64);expect(JSON.stringify(sink.mock.calls)).not.toContain('sentinel');});
+
+it.each([
+ [{},'provider-param-missing'],
+ [{param:null},'provider-param-null'],
+ [{param:undefined},'provider-param-malformed'],
+ [{param:42},'provider-param-malformed'],
+ [{param:['session.type']},'provider-param-malformed'],
+ [{param:{private:'sentinel'}},'provider-param-malformed'],
+ [{param:'session.type private sentinel'},'provider-param-unrecognized'],
+ [{param:'__proto__'},'provider-param-unrecognized'],
+ [{param:'constructor'},'provider-param-unrecognized'],
+ [{param:''},'provider-param-unrecognized'],
+])('reports only the fixed parameter availability category %s',(error,expected)=>{
+ const details=providerErrorDetails({error:{...error,code:'private sentinel',message:'private sentinel'}});
+ expect(details).toEqual([expected]);expect(JSON.stringify(details)).not.toContain('sentinel');
+ const sink=vi.fn();const report=boundedNoteStartupDiagnostic(sink);for(const detail of details)report(detail);
+ expect(sink).toHaveBeenCalledWith(expected);
+});
