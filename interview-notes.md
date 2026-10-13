@@ -1,3 +1,7 @@
+## Making saving a garment an explicit choice
+
+I approved a local sample Wardrobe while the live integrations were waiting on support. I separated a temporary session photo from an explicitly saved owned item, and gave the saved copy its own image lifetime. Ending a sample consultation clears the selection without deleting saved sample pieces. I added selection of several owned items, editable descriptions, enlargement and removal confirmation. I kept inspiration separate from ownership, made sample memory limits visible in the technical notes, and tested cleanup and copy independence. All 797 foundation tests pass; the complete human review is still pending. The sample clears on refresh and does not claim permanent account storage.
+
 ## Closing a hidden-camera gap
 
 After the local photo review passed, I found that collapsing the notebook could hide the camera preview while the device stayed on. I tied camera ownership to the visible controls, stopped it when either section collapsed, and required an explicit Start after reopening. Confirmed photos stay intact. I tested delayed permissions, retired playback and device callbacks; all 777 foundation tests pass. I completed the focused four-step device-indicator review: both collapse actions stopped the camera and reopening kept it off until I clicked Start. The earlier ten-step review stays accepted.

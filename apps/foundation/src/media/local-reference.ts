@@ -14,13 +14,14 @@ export class LocalReferenceStore {
  private serial=0;
  private reset=0;
  private urls=new Set<string>();
+ private blobs=new Map<string,Blob>();
  private listeners=new Set<()=>void>();
  private readonly ports:LocalPhotoPorts;
  constructor(ports:LocalPhotoPorts){this.ports=ports;}
  subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
  snapshot():PhotoSnapshot{return Object.freeze({photos:Object.freeze([...this.photos]),selected:this.selected,reference:this.reference,loading:this.loading,message:this.message,reset:this.reset});}
  private notify(){for(const listener of [...this.listeners])try{listener();}catch{}}
- private release(url:string){if(!this.urls.has(url))return;this.urls.delete(url);try{this.ports.revokeURL(url);}catch{}}
+ private release(url:string){if(!this.urls.has(url))return;this.urls.delete(url);this.blobs.delete(url);try{this.ports.revokeURL(url);}catch{}}
  private prune(){const kept=new Set(this.photos.map(photo=>photo.url));if(this.reference)kept.add(this.reference.photo.url);for(const url of [...this.urls])if(!kept.has(url))this.release(url);}
  async choose(files:readonly Blob[]){
   const generation=++this.generation;
@@ -34,7 +35,7 @@ export class LocalReferenceStore {
     const normalized=await Promise.race([this.ports.normalize(file),new Promise<never>((_resolve,reject)=>{timer=setTimeout(()=>reject(Error('Photo unavailable')),8000);})]).finally(()=>{if(timer!==undefined)clearTimeout(timer);});
     if(generation!==this.generation)return false;
     if(!(normalized instanceof Blob)||normalized.type!=='image/webp'||normalized.size<1||normalized.size>8*1024*1024)throw Error('Photo unavailable');
-    const url=this.ports.createURL(normalized);this.urls.add(url);prepared.push(Object.freeze({id:++this.serial,url}));
+    const url=this.ports.createURL(normalized);this.urls.add(url);this.blobs.set(url,normalized);prepared.push(Object.freeze({id:++this.serial,url}));
    }
    if(generation!==this.generation)return false;
    this.photos=prepared;this.selected=prepared[0].id;this.loading=false;
@@ -50,7 +51,8 @@ export class LocalReferenceStore {
   if(this.loading||!photo||typeof description!=='string'||!description.trim()||description.length>160||!['owned','inspiration'].includes(ownership??''))return false;
   this.reference=Object.freeze({photo,description:description.trim(),ownership:ownership!});this.message='Reference confirmed for this session only. It has not been saved to Wardrobe.';this.prune();this.notify();return true;
  }
+ exportOwned(){const reference=this.reference;if(!reference||reference.ownership!=='owned')return null;const blob=this.blobs.get(reference.photo.url);return blob?Object.freeze({photo:reference.photo,description:reference.description,ownership:'owned' as const,blob}):null;}
  remove(id:number){++this.generation;this.loading=false;this.photos=this.photos.filter(photo=>photo.id!==id);if(this.reference?.photo.id===id)this.reference=null;if(this.selected===id)this.selected=this.photos[0]?.id??null;this.prune();this.message='Photo removed from this session.';this.notify();}
  cancelPending(){++this.generation;this.loading=false;this.prune();this.notify();}
- clear(){++this.generation;this.loading=false;this.photos=[];this.selected=null;this.reference=null;this.reset++;for(const url of [...this.urls])this.release(url);this.message='Session photos cleared. Nothing was saved to Wardrobe.';this.notify();}
+ clear(){++this.generation;this.loading=false;this.photos=[];this.selected=null;this.reference=null;this.reset++;for(const url of [...this.urls])this.release(url);this.message='Session photos cleared. Separately saved sample wardrobe copies are unchanged.';this.notify();}
 }

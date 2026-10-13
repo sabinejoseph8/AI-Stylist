@@ -243,3 +243,7 @@ Sabine confirmed all ten main-app photo/camera review steps worked and were read
 ## Visible-camera ownership, 13 October 2026
 
 Collapsing either the notebook or its camera disclosure stops the local camera while keeping confirmed photos. Reopening reveals stopped controls and never automatically restarts the device. This closes a hidden-preview privacy gap without changing layout tokens or the accepted ten-step photo workflow. Sabine accepted the focused four-step local-computer device-indicator check on 13 October 2026; tests cover the owner lifecycle.
+
+## Local sample Wardrobe, 13 October 2026
+
+Save to sample wardrobe is an explicit action on a confirmed Owned photo, disabled for Inspiration. Wardrobe cards show the actual normalized photo, garment description, selection checkbox, enlarge, description Save/Cancel and a removal confirmation. Up to four selected items appear together inside the sample notebook. Save, session selection and deletion are distinct actions. Explain that explicit sample copies outlive End/Clear but disappear on refresh, and that no permanent wardrobe or look copy exists. This approved local rehearsal does not change production storage policy. Human flow review is pending.

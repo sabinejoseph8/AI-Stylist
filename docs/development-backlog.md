@@ -1,3 +1,11 @@
+## Local Task 4c sample Wardrobe prepared, 13 October 2026
+
+Sabine approved local Task 4c preparation by saying proceed to the proposed browser-memory Wardrobe exception. Implemented explicit saving of a confirmed Owned session reference to an independent sample photo URL, browse/enlarge, description Save/Cancel, confirmed removal and selection of up to four items for the sample notebook. Inspiration cannot be saved as owned. Duplicate saves of the same source photo are refused. Sample limits are 24 items and 32 MB; these are local rehearsal bounds, not a production retention or account-quota decision.
+
+Clear/End removes session selection and temporary references while explicitly saved sample copies remain. Removing a wardrobe copy clears its selection without removing a separate session reference. Refresh/page exit clears sample wardrobe memory and releases its URLs. No AI, upload, database persistence, sign-in, saved-look copies, paid call or customer deployment is connected. All 797 foundation tests across 104 files, type checking and build pass. The agent verified the empty Wardrobe screen; the complete local human flow is pending. Full Task 4c and Phase 4 remain open; five of 41 full tasks remain complete. Allocation stays $51 and all five notes/startup reservations remain held.
+
+Exact next action: publish/copy this tested preparation and complete the local Task 4c review in docs/task-4c-local-wardrobe.md. Earlier accepted notebook/photo/camera checks need no repetition. Existing support/account/source dependencies and the gates on later tasks remain unchanged.
+
 ## Camera-collapse review accepted, 13 October 2026
 
 Sabine confirmed all four focused local-computer review steps worked: collapsing the camera section and the whole notebook stopped the device indicator, and reopening kept the camera off until explicit Start. The earlier ten-step photo/camera and eight-step notebook reviews remain accepted and need no repetition. The existing 777 passing foundation tests, type checking and build apply to the unchanged implementation; no application tests were rerun for this documentation receipt.
@@ -450,7 +458,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 5. Preserve the approved exceptions and remaining phase gates. Do not repeat accepted manual reviews, treat sample evidence as live acceptance, manufacture new features or reuse consumed allowances. Continue independent work only when a concrete authorized item is actionable; review external dependency changes when supplied.
 
 
-Local Phase 4 exception: Tasks 4a/4b browser-memory preparation is approved and implemented; the ten-step local manual photo/camera review is accepted. No recognition, hosted/persistent wardrobe, paid test or customer deployment is authorized.
+Local Phase 4 exception: Tasks 4a/4b browser-memory preparation is approved and its local reviews accepted. Local Task 4c sample Wardrobe preparation is approved and implemented; its human review is pending. No recognition, hosted/persistent wardrobe, paid test or customer deployment is authorized.
 
 The hidden-camera preview repair passes 777 foundation tests; Sabine accepted its focused four-step device-indicator check as well as the earlier ten-step review.
 ## Items

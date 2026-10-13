@@ -1,3 +1,11 @@
+## Local Task 4c sample Wardrobe prepared, 13 October 2026
+
+Sabine approved local Task 4c preparation by saying proceed to the proposed browser-memory Wardrobe exception. Implemented explicit saving of a confirmed Owned session reference to an independent sample photo URL, browse/enlarge, description Save/Cancel, confirmed removal and selection of up to four items for the sample notebook. Inspiration cannot be saved as owned. Duplicate saves of the same source photo are refused. Sample limits are 24 items and 32 MB; these are local rehearsal bounds, not a production retention or account-quota decision.
+
+Clear/End removes session selection and temporary references while explicitly saved sample copies remain. Removing a wardrobe copy clears its selection without removing a separate session reference. Refresh/page exit clears sample wardrobe memory and releases its URLs. No AI, upload, database persistence, sign-in, saved-look copies, paid call or customer deployment is connected. All 797 foundation tests across 104 files, type checking and build pass. The agent verified the empty Wardrobe screen; the complete local human flow is pending. Full Task 4c and Phase 4 remain open; five of 41 full tasks remain complete. Allocation stays $51 and all five notes/startup reservations remain held.
+
+Exact next action: publish/copy this tested preparation and complete the local Task 4c review in docs/task-4c-local-wardrobe.md. Earlier accepted notebook/photo/camera checks need no repetition. Existing support/account/source dependencies and the gates on later tasks remain unchanged.
+
 ## Camera-collapse review accepted, 13 October 2026
 
 Sabine confirmed all four focused local-computer review steps worked: collapsing the camera section and the whole notebook stopped the device indicator, and reopening kept the camera off until explicit Start. The earlier ten-step photo/camera and eight-step notebook reviews remain accepted and need no repetition. The existing 777 passing foundation tests, type checking and build apply to the unchanged implementation; no application tests were rerun for this documentation receipt.
@@ -500,7 +508,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current status, 13 October 2026: local Phase 3 notebook preparation is authorized and its eight-step sample review is accepted. The per-field proposal repair passes 777 foundation tests across 102 files, type checking/build and browser rehearsal. The 30-minute idle/five-minute disconnect notes policy is approved and implemented locally; full Phase 3 remains open. Local Tasks 4a/4b preparation is now approved and prepared; the ten-step local photo/camera review and the subsequent focused four-step camera-collapse review are accepted. Bounded iPhone interruption/recovery is accepted; continuous speech and remaining Phase 1/2 gates remain open. OpenAI's assigned human specialist confirms the transcription startup remains unresolved. Allocation is $51, all five notes/startup records stay held, and no further paid test is authorized.
+Current status, 13 October 2026: local Phase 3 notebook preparation is authorized and its eight-step sample review is accepted. The per-field proposal repair passes 777 foundation tests across 102 files, type checking/build and browser rehearsal. The 30-minute idle/five-minute disconnect notes policy is approved and implemented locally; full Phase 3 remains open. Local Tasks 4a/4b preparation is now approved and prepared; the ten-step local photo/camera review and the subsequent focused four-step camera-collapse review are accepted. Local Task 4c sample Wardrobe preparation is now approved and implemented with 797 passing foundation tests; its local human review is pending. Bounded iPhone interruption/recovery is accepted; continuous speech and remaining Phase 1/2 gates remain open. OpenAI's assigned human specialist confirms the transcription startup remains unresolved. Allocation is $51, all five notes/startup records stay held, and no further paid test is authorized.
 
 Task 1c's dedicated notebook remains live-unverified. Three notes starts and two server-only diagnostics are permanently held. The latest separately approved $2 minimal diagnostic raised the allocation to $51 and rejected configuration even without optional language/delay fields. OpenAI returned invalid_parameter with a parameter string outside the approved exact-name list. Its text was discarded and the rejected field remains unknown. No further call is authorized.
 
@@ -724,7 +732,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** Actual customer clothing remains visible and reusable under explicit save controls.  
 **Dependencies:** Phase 3; approved media processing/retention limits and camera contract.  
 **Product coverage:** PS-04; A04/A05/A14/A20.  
-**Status:** Local Tasks 4a/4b preparation authorized on 13 October 2026, with 777 passing foundation tests and ten-step local manual review accepted. The focused four-step camera-collapse regression is accepted. Recognition, hosted storage, permanent wardrobe saving, voice capture and full phase acceptance remain open.
+**Status:** Local Tasks 4a/4b preparation and their ten-step/focused four-step reviews are accepted. Local Task 4c sample Wardrobe preparation is approved and implemented, with 797 passing foundation tests; its human review is pending. Recognition, hosted storage, permanent wardrobe saving, voice capture and full phase acceptance remain open.
 
 ### Task groups
 
