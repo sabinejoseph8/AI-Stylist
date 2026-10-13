@@ -17,12 +17,14 @@ export function encodeNoteUpdate(sessionId:string,sequence:number,snapshot:Retur
 /** Browser-side state preparation. No socket, microphone, persistence or HTML output.
  * The UI must acknowledge only after committing the exact current update. */
 export class NoteUpdateClient {
+ private expectedPrivateTrial:boolean;
+ constructor(options:{privateTrial?:boolean}={}){this.expectedPrivateTrial=options.privateTrial===true;}
  private sessionId:string|null=null;
  private current:NoteUpdate|null=null;
  private ended=false;
  private acknowledged=0;
  ready(value:unknown):boolean{
-   if(this.ended||this.sessionId||!object(value)||!exact(value,['version','type','sessionId','simulation','liveEnabled'])||value.version!==1||value.type!=='ready'||!identity(value.sessionId)||value.simulation!==true||value.liveEnabled!==false)return false;
+   if(this.ended||this.sessionId||!object(value)||!exact(value,['version','type','sessionId','simulation','liveEnabled'])||value.version!==1||value.type!=='ready'||!identity(value.sessionId)||value.simulation!==!this.expectedPrivateTrial||value.liveEnabled!==this.expectedPrivateTrial)return false;
    this.sessionId=value.sessionId;return true;
  }
  accept(value:unknown):boolean{

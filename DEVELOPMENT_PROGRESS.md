@@ -1,3 +1,13 @@
+## Protected owner and browser execution binding, 12 October 2026
+
+The protected owner now supports an explicitly configured private execution factory in addition to its existing simulation. It checks consent/access before reserving, then obtains and validates a process-local capability matching both the reserved ID and trusted approval ID before constructing transports. Mixed/incomplete activation configuration is rejected. Cancellation settles even when the authorization factory ignores its signal; late capabilities cannot construct providers. Every uncertain outcome stays held without retry. The provider bundle also requires its capture mode to match its capability.
+
+Browser controllers now explicitly select simulation or private-trial mode, reject readiness for the wrong mode and report the selected state accurately. Neither mode constructs a default socket or microphone. The existing preparation page still selects simulation; no normal startup, live route, credential loader, hosted allowance or actual trial has been enabled. Trusted activation configuration is not accepted from client messages and must reflect separately recorded human authorization.
+
+All 1,498 prototype tests across 104 files, type checking and build pass. Twelve new checks verify owner ordering, matching/forged capabilities, cancellation, browser readiness matching, default/mixed-mode refusal and provider/capture binding. These are synthetic protocol/controller results, not live-provider or physical-device evidence.
+
+Exact next action: prepare the private-trial WebSocket attachment and browser connection owner around this capability-bound owner, with consent before reservation, truthful readiness and a matching capture. Keep normal startup and the live page disabled until the complete path is reviewed and the proposed additional $2/security authorization is granted. Existing allocation remains $41 and Phase 1 stays open. Private Memory publishes the preceding 1,486-test checkpoint pending this increment.
+
 ## Private Memory synchronization, 12 October 2026
 
 The owner-private Memory site now publishes the consent and internal-mode checkpoint with 1,486 prototype tests. Source 622eb8cdaa6b4fac749e6b3be404afba5e107609 deployed successfully as appgdep_6acda86392708191b91f497b213b461b with MCP retained. All 16 site checks, build and artifact validation pass. This changes no live provider, hosted customer database or spending authorization.

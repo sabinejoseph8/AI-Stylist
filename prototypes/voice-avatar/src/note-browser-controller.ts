@@ -8,11 +8,12 @@ import type {Field} from './notebook-state.ts';
 export type NoteEditVersion={sessionId:string;notebookSession:number;revision:number};
 export type SimulatedBrowserSocket={send:(message:string|ArrayBuffer)=>void;close:()=>void;bufferedAmount:number};
 const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
-/** Disabled browser transport preparation. The caller injects a simulated socket
+/** Explicit browser transport preparation. The caller injects a matching socket
  * and forwards its events. This never constructs WebSocket or acquires media.
  * UI receipts must follow the exact committed display, never just receipt arrival. */
 export class NoteBrowserController {
- private client=new NoteUpdateClient();
+ private client:NoteUpdateClient;
+ private privateTrial=false;
  private clarification=new SimulatedClarificationClient({simulation:true});
  private clarificationChanged:(record:PreferenceClarification|null)=>void;
  private socket:SimulatedBrowserSocket;
@@ -30,8 +31,9 @@ export class NoteBrowserController {
  private deadline:ReturnType<typeof setTimeout>|null=null;
  private overall:ReturnType<typeof setTimeout>;
  private providerDeadline:ReturnType<typeof setTimeout>|null=null;
- constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;changed:(update:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void}){
-   if(options.simulation!==true)throw Error('Live notebook browser connection is disabled.');
+ constructor(options:{simulation?:boolean;privateTrial?:boolean;socket:SimulatedBrowserSocket;changed:(update:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void}){
+   if((options.simulation===true)===(options.privateTrial===true))throw Error('Live notebook browser connection is disabled.');
+   this.privateTrial=options.privateTrial===true;this.client=new NoteUpdateClient({privateTrial:this.privateTrial});
    this.socket=options.socket;this.changed=options.changed;this.clarificationChanged=options.clarificationChanged??(()=>{});
    this.overall=setTimeout(()=>this.stop(),85000);this.wait();
  }
@@ -104,5 +106,5 @@ export class NoteBrowserController {
    try{this.socket.close();}catch{/* Local data remains cleared; no remote cleanup claim. */}
    try{this.changed(null);}catch{/* No stale content retained in controller. */}
  }
- snapshot(){return{ended:this.ended,ready:this.sessionId!==null,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),clarification:this.clarification.snapshot(),liveEnabled:false as const};}
+ snapshot(){return{ended:this.ended,ready:this.sessionId!==null,audioActive:this.capturing,awaitingProvider:this.awaitingTurn!==null,pending:this.pending!==null,notes:this.client.snapshot(),clarification:this.clarification.snapshot(),liveEnabled:this.privateTrial};}
 }

@@ -1466,3 +1466,8 @@ I added a versioned consent handshake before the prepared notebook connection ca
 ## Keeping simulated evidence separate from private execution
 
 I added an explicit internal execution mode tied to a reserved experiment, rather than letting real protocol work report itself as simulated. I require counted extraction for that mode and keep ended connections held while remote cleanup is uncertain. The checks use synthetic providers and do not authorize a real trial. All 1,486 automated prototype tests pass; the normal server and browser still cannot start this live test.
+
+
+## Verifying authorization before constructing providers
+
+I connected the notebook owner to its reserved execution capability after consent and access checks. I verified that a mismatched capability or canceled authorization cannot construct a provider, and that the browser rejects readiness for the wrong mode. All 1,498 automated prototype tests pass. I kept the preparation page simulated and made no paid calls or hosted changes.

@@ -4,12 +4,13 @@ import type {NoteEditVersion,SimulatedBrowserSocket} from './note-browser-contro
 import type {NoteUpdate} from './note-update-wire.ts';
 import type {Field} from './notebook-state.ts';
 export type BrowserNoteCapture={start:(accept:(pcm:ArrayBuffer)=>boolean,stopped:(reason:string)=>void)=>Promise<boolean>;stop:()=>void};
-/** Bounded simulated orchestration preparation. No default microphone/socket,
+/** Bounded browser orchestration under an explicitly selected mode. No default microphone/socket,
  * browser listeners, credentials or provider. startTurn must be a user action.
  * Permission is requested in that action; pre-ack frames are discarded locally,
  * never queued or sent. Later turns require matched provider-ready signaling. */
 export class PreparedBrowserNoteSession {
  private controller:NoteBrowserController;
+ private privateTrial=false;
  private capture:BrowserNoteCapture;
  private changed:(notes:NoteUpdate|null)=>void;
  private generation=0;
@@ -19,10 +20,11 @@ export class PreparedBrowserNoteSession {
  private ended=false;
  private cleanupFailed=false;
  private endReason: 'stopped'|'connection'|'hidden'|'capture'|'display'|null=null;
- constructor(options:{simulation?:boolean;socket:SimulatedBrowserSocket;capture:BrowserNoteCapture;changed:(notes:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void}){
-   if(options.simulation!==true)throw Error('Live browser note session is disabled.');
+ constructor(options:{simulation?:boolean;privateTrial?:boolean;socket:SimulatedBrowserSocket;capture:BrowserNoteCapture;changed:(notes:NoteUpdate|null)=>void;clarificationChanged?:(record:PreferenceClarification|null)=>void}){
+   if((options.simulation===true)===(options.privateTrial===true))throw Error('Live browser note session is disabled.');
+   this.privateTrial=options.privateTrial===true;
    this.capture=options.capture;this.changed=options.changed;
-   this.controller=new NoteBrowserController({simulation:true,socket:options.socket,clarificationChanged:options.clarificationChanged,changed:notes=>{
+   this.controller=new NoteBrowserController({simulation:options.simulation,privateTrial:this.privateTrial,socket:options.socket,clarificationChanged:options.clarificationChanged,changed:notes=>{
      if(this.controller.snapshot().ended){this.stop('connection');return;}
      try{this.changed(notes);}catch{this.stop('display');}
    }});
@@ -67,13 +69,13 @@ export class PreparedBrowserNoteSession {
      const messages={stopped:'The check ended. Temporary notes were cleared.',connection:'The connection ended. Temporary notes were cleared.',hidden:'The page was hidden. The check ended and temporary notes were cleared.',capture:'The device check could not continue. Temporary notes were cleared.',display:'The notebook could not update safely. The check ended and temporary notes were cleared.'};
      return{state:'ended',message:messages[this.endReason??'stopped']} as const;
    }
-   if(this.acquiring)return{state:'requesting-device',message:'Waiting for microphone permission in this simulated check.'} as const;
+   if(this.acquiring)return{state:'requesting-device',message:this.privateTrial?'Waiting for microphone permission.':'Waiting for microphone permission in this simulated check.'} as const;
    if(this.capturing&&!connection.audioActive)return{state:'waiting-turn',message:'Waiting for the connection to accept this turn. Audio is not being sent.'} as const;
-   if(this.capturing)return{state:'capturing',message:'The simulated capture is active.'} as const;
+   if(this.capturing)return{state:'capturing',message:this.privateTrial?'Microphone capture is active for the private notes trial.':'The simulated capture is active.'} as const;
    if(connection.awaitingProvider)return{state:'processing',message:'Capture has stopped. Waiting for the transcript and notes to finish.'} as const;
    if(connection.pending)return{state:'waiting-command',message:'Waiting for the notebook connection.'} as const;
-   if(!connection.ready)return{state:'connecting',message:'Waiting for the simulated notebook connection.'} as const;
-   return{state:'ready',message:'Ready for a simulated turn. Live microphone access is disabled.'} as const;
+   if(!connection.ready)return{state:'connecting',message:this.privateTrial?'Waiting for the private notebook connection.':'Waiting for the simulated notebook connection.'} as const;
+   return{state:'ready',message:this.privateTrial?'Ready for a private notes turn. Microphone starts only when you choose Start turn.':'Ready for a simulated turn. Live microphone access is disabled.'} as const;
  }
- snapshot(){return{status:this.status(),ended:this.ended,acquiring:this.acquiring,capturing:this.capturing,turnStarted:this.begun,cleanupFailed:this.cleanupFailed,connection:this.controller.snapshot(),liveEnabled:false as const};}
+ snapshot(){return{status:this.status(),ended:this.ended,acquiring:this.acquiring,capturing:this.capturing,turnStarted:this.begun,cleanupFailed:this.cleanupFailed,connection:this.controller.snapshot(),liveEnabled:this.privateTrial};}
 }

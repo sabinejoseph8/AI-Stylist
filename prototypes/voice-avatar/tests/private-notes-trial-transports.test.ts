@@ -26,3 +26,13 @@ it('composes the reservation-bound bundle with the protected owner and retains i
  const result=await owner.start({method:'GET',path:'/api/private-notes-trial-preparation',host:'fixture.onrender.com',origin:preview.origin,authorization:'Basic '+Buffer.from('stylist:'+preview.password).toString('base64'),consent:true,signal:new AbortController().signal});
  try{expect(result.status).toBe(200);if(result.status!==200)throw Error('not ready');await result.end();expect(raw.terminate).toHaveBeenCalledOnce();expect(f.capture.snapshot().ended).toBe(true);expect(owner.status().state).toBe('held');expect((stored as typeof ledger).reservation.state).toBe('held');await expect(new PrivateNotesTrialLedgerOwner({read:async()=>stored,compareAndSwap:async()=>{throw Error('must not write');}}).reserve()).rejects.toThrow();}finally{if(result.status===200)await result.end();}
 });
+
+it('accepts a matching private capability and refuses a capture prepared for the other mode',async()=>{
+ const {createPrivateNotesTrialExecution}=await import('../src/note-execution.ts');const f=fixture();const cap=createPrivateNotesTrialExecution({financialApproved:true,securityApproved:true,ledger});
+ expect(()=>preparePrivateNotesTrialTransports({...f,simulation:false,privateTrial:cap})).toThrow();
+ const capture=new PreparedRemoteNoteCapture({privateTrial:cap});const t=preparePrivateNotesTrialTransports({...f,simulation:false,privateTrial:cap,capture});expect(f.request).not.toHaveBeenCalled();expect(f.connect).not.toHaveBeenCalled();t.dispose();expect(capture.snapshot()).toMatchObject({ended:true,liveEnabled:true});
+});
+it('refuses a capability bound to another reserved experiment',async()=>{
+ const {createPrivateNotesTrialExecution}=await import('../src/note-execution.ts');const f=fixture();const cap=createPrivateNotesTrialExecution({financialApproved:true,securityApproved:true,ledger:{...ledger,reservation:{id:'other',state:'reserved'}}});
+ expect(()=>preparePrivateNotesTrialTransports({...f,simulation:false,privateTrial:cap,capture:new PreparedRemoteNoteCapture({privateTrial:cap})})).toThrow();expect(f.request).not.toHaveBeenCalled();expect(f.connect).not.toHaveBeenCalled();
+});
