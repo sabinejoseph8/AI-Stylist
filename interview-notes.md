@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Checking the complete counted connection, 12 October 2026
+
+I tested counted extraction through the protected startup connection using a real local WebSocket and a simulated browser controller. Notes arrive only after counting; leaving during a count cancels it, and an uncertain cleanup prevents a replacement owner. One assertion needed to wait for browser closure rather than only server closure. All 1,359 prototype tests pass. This is integration evidence with synthetic providers, not a live phone or paid-provider acceptance claim.
+
 ## Keeping progressive corrections working, 12 October 2026
 
 I connected counted extraction to the protected notebook session and tested authentication, tentative notes, exit and cleanup uncertainty. Integration review showed that canceling an outdated extraction must not end the whole trial: new words and corrections naturally replace earlier work. I separated operation cancellation from session shutdown while keeping attempted counts and reserved generation tokens consumed. The full 1,356-test suite passes. Actual live provider and phone acceptance remain separate.

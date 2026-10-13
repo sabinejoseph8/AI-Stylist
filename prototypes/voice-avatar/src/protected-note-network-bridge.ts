@@ -15,8 +15,8 @@ export function attachProtectedSimulatedNoteBridge(server: Server, options: {
  preferences?: OwnerOptions['preferences'];
  /** Server-only simulation observer. Never exposed as a browser command. */
  sessionReady?: (session:Started)=>void;
- createTransports?: () => {socket: SimulatedTranscriptionSocket; fetch: SimulatedExtractionFetch};
- createStartupTransports?: () => {open:ReturnType<NonNullable<OwnerOptions['createStartupTransports']>>['open'];fetch:SimulatedExtractionFetch};
+ createTransports?: () => {socket: SimulatedTranscriptionSocket; fetch: SimulatedExtractionFetch; countFetch?:SimulatedExtractionFetch};
+ createStartupTransports?: () => {open:ReturnType<NonNullable<OwnerOptions['createStartupTransports']>>['open'];fetch:SimulatedExtractionFetch;countFetch?:SimulatedExtractionFetch};
 }) {
  if (options.simulation !== true) throw Error('Live protected notebook bridge is disabled.');
  const createTransports=options.createTransports,createStartupTransports=options.createStartupTransports;

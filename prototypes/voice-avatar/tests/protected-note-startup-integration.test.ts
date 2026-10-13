@@ -23,7 +23,7 @@ function extractionResponse(init:RequestInit){
  const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text);
  return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:[{field:'color',value:input.currentFragment,evidence:input.currentFragment}]})}]}]});
 }
-async function setup(persistence=store(),extraction=false,dormant=false){
+async function setup(persistence=store(),extraction=false,dormant=false,counting:'none'|'valid'|'invalid'|'pending'='none'){
  const allowance=new PreparedNoteAllowance({simulation:true,persistence});
  const socket=Object.assign(new EventTarget(),{readyState:dormant?0:1,bufferedAmount:0,send:vi.fn(),close:vi.fn()}),detachInitialEvents=vi.fn();
  let release!:(value:{socket:typeof socket;detachInitialEvents:()=>void})=>void,initial!:(value:unknown)=>void;
@@ -31,7 +31,9 @@ async function setup(persistence=store(),extraction=false,dormant=false){
  const construct=vi.fn(()=>({socket,start:vi.fn(()=>{socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify({type:'session.created',session:{id:'dormant'}})}));})}));
  const open=dormant?vi.fn(prepareNoteOpener({simulation:true,construct})):manualOpen;
  const fetch=vi.fn(async(_url:string,init:RequestInit)=>{if(!extraction)throw Error('No extraction expected.');return extractionResponse(init);});
- const createStartupTransports=vi.fn(()=>({open,fetch}));
+ let countRelease!:(value:Response)=>void,countSignal:AbortSignal|undefined;
+ const countFetch=vi.fn(async(_url:string,init:RequestInit)=>{countSignal=init.signal as AbortSignal;if(counting==='pending')return new Promise<Response>(r=>{countRelease=r;});return Response.json({object:'response.input_tokens',input_tokens:counting==='invalid'?'bad':123});});
+ const createStartupTransports=vi.fn(()=>({open,fetch,...(counting==='none'?{}:{countFetch})}));
  let active:Parameters<NonNullable<Parameters<typeof attachProtectedSimulatedNoteBridge>[1]['sessionReady']>>[0]|undefined;
  const server=createServer((_req,res)=>res.end()),bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,cleanupRequirement:'remote-verified',preview,allowance,createStartupTransports,sessionReady:session=>{active=session;}});
  await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));const address=server.address();if(!address||typeof address==='string')throw Error('No local address');const url=`ws://127.0.0.1:${address.port}/api/notebook-simulation`;
@@ -45,7 +47,7 @@ async function setup(persistence=store(),extraction=false,dormant=false){
   return{ws,page,session,capture,frame:()=>pcm!(new ArrayBuffer(960))};
  }
  cleanups.push(async()=>{for(const binding of bindings)binding.dispose();for(const ws of clients)ws.terminate();if(manualOpen.mock.calls.length)release({socket,detachInitialEvents});bridge.dispose();server.closeAllConnections();await new Promise<void>(r=>server.close(()=>r()));});
- return{bridge,connect,persistence,createStartupTransports,construct,open,socket,fetch,active:()=>{if(!active)throw Error("Session not ready");return active;},message:(event:unknown)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(event)})),opened:()=>{if(dormant){socket.readyState=1;socket.dispatchEvent(new Event('open'));}else release({socket,detachInitialEvents});},created:()=>initial({type:'session.created',session:{id:'synthetic'}}),ack:(value:unknown=config)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
+ return{countFetch,countSignal:()=>countSignal,releaseCount:(r:Response)=>countRelease(r),bridge,connect,persistence,createStartupTransports,construct,open,socket,fetch,active:()=>{if(!active)throw Error("Session not ready");return active;},message:(event:unknown)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(event)})),opened:()=>{if(dormant){socket.readyState=1;socket.dispatchEvent(new Event('open'));}else release({socket,detachInitialEvents});},created:()=>initial({type:'session.created',session:{id:'synthetic'}}),ack:(value:unknown=config)=>socket.dispatchEvent(new MessageEvent('message',{data:JSON.stringify(value)}))};
 }
 describe('startup through protected loopback browser and separate allowance',()=>{
  it('keeps browser capture unavailable until creation and configuration, then retains the hold on end',async()=>{
@@ -186,5 +188,39 @@ describe('dormant opener through protected browser ownership',()=>{
   const fresh=await setup(s.persistence,false,true);fresh.connect();await vi.waitFor(()=>expect(fresh.bridge.snapshot().held).toBe(true));
   expect(fresh.createStartupTransports).not.toHaveBeenCalled();expect(fresh.construct).not.toHaveBeenCalled();
   expect(s.persistence.compareAndSwap).toHaveBeenCalledTimes(1);expect(s.persistence.snapshot().runs).toHaveLength(1);expect(s.persistence.snapshot().runs[0]!.closed).toBe(false);
+ });
+});
+
+
+describe('counted startup through actual local WebSocket and browser controller',()=>{
+ async function ready(s:Awaited<ReturnType<typeof setup>>){
+  const client=s.connect();await vi.waitFor(()=>expect(s.open).toHaveBeenCalledTimes(1));s.opened();await Promise.resolve();s.created();s.ack();
+  await vi.waitFor(()=>expect(client.session.status().state).toBe('ready'));expect(await client.session.startTurn('t1')).toBe(true);
+  await vi.waitFor(()=>expect(client.session.snapshot().connection.audioActive).toBe(true));
+  for(let i=0;i<5;i++)expect(client.frame()).toBe(true);
+  s.message({type:'conversation.item.input_audio_transcription.delta',event_id:'counted-delta',item_id:'counted-item',content_index:0,delta:'green'});
+  return client;
+ }
+ it('counts the same request before extraction and delivers progressive tentative notes',async()=>{
+  const s=await setup(store(),true,false,'valid'),client=await ready(s);
+  await vi.waitFor(()=>expect(client.session.snapshot().connection.notes?.notes.color).toMatchObject({value:'green',status:'tentative'}));
+  expect(s.countFetch).toHaveBeenCalledTimes(1);expect(s.fetch).toHaveBeenCalledTimes(1);
+  expect(s.countFetch.mock.calls[0]![1].body).toBe(s.fetch.mock.calls[0]![1].body);
+  client.session.stop();await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));
+  expect(client.session.snapshot().connection.notes).toBeNull();expect(s.persistence.snapshot().runs[0]!.closed).toBe(false);
+ });
+ it('page exit aborts pending counting and preserves a fresh-owner hold',async()=>{
+  const s=await setup(store(),true,false,'pending'),client=await ready(s);
+  await vi.waitFor(()=>expect(s.countFetch).toHaveBeenCalledTimes(1));client.page.dispatchEvent(new Event('pagehide'));
+  await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));expect(s.countSignal()?.aborted).toBe(true);
+  s.releaseCount(Response.json({object:'response.input_tokens',input_tokens:123}));await new Promise(r=>setTimeout(r,10));
+  expect(s.fetch).not.toHaveBeenCalled();expect(client.session.snapshot().connection.notes).toBeNull();expect(client.session.snapshot().capturing).toBe(false);
+  const fresh=await setup(s.persistence,true,false,'valid');fresh.connect();await vi.waitFor(()=>expect(fresh.bridge.snapshot().held).toBe(true));
+  expect(fresh.open).not.toHaveBeenCalled();expect(fresh.countFetch).not.toHaveBeenCalled();expect(s.persistence.snapshot().runs).toHaveLength(1);
+ });
+ it('invalid counting ends the browser connection before generation',async()=>{
+  const s=await setup(store(),true,false,'invalid'),client=await ready(s);
+  await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));expect(s.countFetch).toHaveBeenCalledTimes(1);expect(s.fetch).not.toHaveBeenCalled();
+  await vi.waitFor(()=>expect(client.session.snapshot().connection.notes).toBeNull());expect(client.session.snapshot().capturing).toBe(false);expect(s.socket.close).toHaveBeenCalledTimes(1);
  });
 });

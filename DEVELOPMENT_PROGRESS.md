@@ -1,5 +1,11 @@
 # AI Stylist development progress
 
+## Counted startup browser-connection rehearsal, 12 October 2026
+
+Extended the protected bridge to carry the explicitly injected counter through startup. Three actual local HTTP/WebSocket browser-controller scenarios pass with synthetic provider events: full-request counting before generation and tentative note delivery, page exit during counting with late-response rejection and fresh-owner refusal, and invalid counting with capture/browser cleanup before generation. The first invalid-count assertion observed the browser before the asynchronous close arrived; waiting for the actual browser state corrected the test. No production cleanup fix was needed. These are browser-controller/network integration checks, not a physical Safari or rendered WebKit review.
+
+All 1,359 prototype tests across 92 files, type checking and build pass. Unresolved remote cleanup still retains the dedicated reservation; a fresh owner cannot construct providers or count tokens. No provider calls, credentials, actual microphone, remote allowance, hosted account or voice-preview change occurred. The $2 notes-only proposal remains unapproved and the allocation stays $41. Next exact action: prepare the concrete disabled notes-only trial entry point using the counted startup owner, with separate activation authorization and durable reservation boundaries; preserve legacy simulation fixtures. Publish this checkpoint to private Memory and copy committed work to the AI stylist folder.
+
 ## Protected counted-extraction composition, 12 October 2026
 
 Connected optional explicitly injected counting preparation to the protected notebook provider/session owner, including startup transport propagation. Synthetic owner checks prove authentication precedes allowance/provider work, counting precedes generation, tentative notes publish, invalid counting ends capture without generation, exit aborts pending counting and ignores late responses, and remote-verification mode preserves the unresolved reservation hold. Legacy uncounted fixtures remain simulation-only; no live path is enabled.
