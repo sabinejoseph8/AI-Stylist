@@ -1,3 +1,9 @@
+## Wardrobe keyboard-focus publication receipt
+
+Repair checkpoint 7e4850f is pushed to GitHub and all twelve changed committed files copied to the approved AI stylist folder. Private Memory source 5b0a5b82518a880ffe189049362a2dd10b377f32 deployed successfully as appgdep_6ace9f42038c8191a853d38a82e0c68d with MCP preserved. All 797 foundation tests, type checking/build and all 16 Memory checks/build/artifact validation pass. The separate synthetic browser rehearsal verified editor/removal focus and modal Escape, and its test tab was closed. Earlier accepted human reviews need no repetition.
+
+Exact next action: review concrete supported transcription/engineering follow-up, Render ingress/logging evidence, account configuration/isolation prerequisites or retailer permission when supplied. No further independent authorized implementation is identified within preserved gates. Full hosted wardrobe, phase review and comprehensive accessibility/physical-phone acceptance remain open. Allocation stays $51, held records remain unchanged and existing AGENTS.md edits are untouched. No actual camera, microphone, paid service or customer deployment was started.
+
 ## Local Wardrobe keyboard focus repaired, 13 October 2026
 
 Reviewed the existing authorized local Task 4c flow while external integrations remain blocked. Closing the description editor or removal confirmation could leave focus on a removed control. Save/Cancel now return focus to the originating Edit button, Keep returns to Remove, and confirmed deletion focuses the next or previous item's selection, or the Wardrobe heading when empty. Focus restoration runs after the DOM commit and refuses hidden/disconnected targets. Item cards and selection controls have distinct accessible names.
