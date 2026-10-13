@@ -1,3 +1,9 @@
+## Tavus response-bound publication and next privacy repair
+
+The bounded HTTP helper is published as 36e23bf and the Memory snapshot as 5ce9f88. Ten changed committed files were copied to the approved AI stylist folder. Owner-private Memory source 74c0eb1125a509173ccd81da10c4550cd48de16c deployed successfully as appgdep_6acdfacf8430819191acac1804daf015 with MCP retained; all 16 site checks, build and artifact validation passed. All 1,668 prototype tests across 118 files, type checking and build passed for the code change. No provider request, paid test, deployment to Render or device access occurred.
+
+Direct remaining-path inspection found ScriptedService.start copies arbitrary Error.message into its public snapshot. Exact next action: replace that startup failure presentation with fixed safe wording, test injected private errors from reservation/configuration/generation and preserve the distinct uncertainty/cleanup hold messages, no-retry controls and historical reservations. Review scoped route delivery as needed. This is local Task 1b privacy repair, not a model or architecture change, and requires no live API call. The goal remains active; real transcription, host/account/source and phase acceptance remain open. Allocation stays $49.
+
 ## Bounded Tavus responses, 13 October 2026
 
 Local Task 1b review replaced unbounded response.json() in the Tavus HTTP helper with a 65,536-byte streaming JSON-object reader and one eight-second deadline spanning headers and body. Oversized declared or chunked bodies, invalid UTF-8, malformed/non-object JSON and stalled reads fail with fixed sanitized errors. Late responses are canceled, and cancellation cannot indefinitely block completion. Existing fixed destinations, request methods and redirect refusal remain. Successful End responses still accept an empty body; provider-ended verification remains separate and is not inferred from body disposal.
