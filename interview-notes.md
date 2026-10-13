@@ -1523,3 +1523,7 @@ Support revised its startup advice after I supplied the failure stages. I prepar
 ## Separating connection creation from configuration acceptance
 
 The revised connection reached session creation, but its transcription settings were rejected. I recorded that as progress in diagnosis, not a working notes feature. I added exact allowlists for known rejected settings and error codes so future diagnostics can be more useful without exposing raw messages or customer information. I preserved the consumed trials and asked support to clarify whether its proposed session conversion is supported before considering another experiment.
+
+## Preparing a check that does not need another phone test
+
+After the notebook connection failed during setup, I prepared a server-only diagnostic. It has no microphone controls and sends one configuration message, then closes. I required a new reserved allowance, preserved every previous attempt and tested cancellation, uncertain writes and fresh-process replay refusal against an isolated database. A missing approval-ID check surfaced in the tests and was fixed. The diagnostic is prepared locally, but its live run still needs a separate spending decision and cannot by itself prove the notebook works for customers.

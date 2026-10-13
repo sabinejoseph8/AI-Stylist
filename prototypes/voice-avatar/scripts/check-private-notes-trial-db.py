@@ -90,6 +90,9 @@ try:
  checks+=1
  if json.loads(sql('set role service_role;select public.stylist_private_notes_trial_read();'))!=original:raise RuntimeError('Original allowance changed')
  if sql("select relrowsecurity from pg_class where oid='stylist_notes_trial_private.approved_trials'::regclass;")!='t':raise RuntimeError('Missing approved-record RLS')
+ startup_composition=run(['node',str(Path(__file__).with_name('check-notes-startup-diagnostic-db.ts')),'--local-docker',name])
+ if startup_composition.returncode:raise RuntimeError('Startup diagnostic SQL composition failed: '+startup_composition.stderr[-1200:])
+ print(startup_composition.stdout.strip())
  next_rollback=(migration.parent/'private-notes-approved-trials-rollback.sql').read_text()
  sql(next_rollback,False)
  sql('delete from stylist_notes_trial_private.approved_trials;') # disposable local fixtures only
