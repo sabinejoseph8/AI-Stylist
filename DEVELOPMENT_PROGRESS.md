@@ -1,3 +1,9 @@
+## Private Memory runtime checkpoint, 12 October 2026
+
+The owner-private Memory site now publishes the gated page/runtime checkpoint with 1,541 prototype tests, 50 isolated SQL checks and four database-backed owner scenarios. Source 1dadf67301f0dbf5aec64d615eab7474f1d76f89 deployed successfully as appgdep_6acdb2511e248191b5e6c4709acdab01 with MCP retained. All 16 site checks, build and artifact validation pass. The later microphone-readiness wording also passed its two focused page checks and build. No actual provider, hosted database, credentials or spending changed.
+
+Exact next action: complete the synthetic active rendered-page rehearsal and full activation-path review, fixing findings before asking Sabine for the proposed additional $2 and private security authorization. Existing experiment allocation remains $41. The dedicated startup and approval template remain disabled by default; Phase 1 remains open.
+
 ## Composed private notebook runtime and disabled startup, 12 October 2026
 
 Composed the dedicated server with fixed Supabase RPC persistence, the durable single-start owner, capability authorization and counted provider transports. Trusted financial/security configuration and protected origin validation precede injected credential loading. Supabase headers remain separate from OpenAI headers. Availability reads do not reserve; wrong approval IDs are rejected before compare-and-swap. Disposal aborts in-flight work and drops retained credential references; an uncertain outcome may stay reserved and is never refunded. No automatic initializer, retry or replacement exists.
