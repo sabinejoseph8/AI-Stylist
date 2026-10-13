@@ -1,3 +1,16 @@
+## Startup redaction publication and next startup evidence check
+
+Startup privacy repair 95c4177 and Memory snapshot e1cabac are published to GitHub. Ten committed changed files were copied to the approved AI stylist folder. Owner-private Memory source 759bca0ad304c85c8f072676dafd386c0ed73554 deployed successfully as appgdep_6acdfcb17e608191bb0afeaab6b52c19 with MCP retained. Site build, all 16 checks and artifact validation passed. Prototype evidence is 1,674 passing tests across 118 files plus type checking and build. No Render deployment, provider request, new reservation or financial change occurred. Sabine's accepted local camera review remains closed; do not request it again.
+
+Official documentation research identifies a possible preconfiguration route, not a verified correction. The client-secrets endpoint accepts a transcription session configuration, applies it to connections using its returned token, and returns the effective configuration. A token can create multiple sessions before expiry; its TTL does not end an already-created session. The WebSocket guide demonstrates ephemeral-token authentication but its example selects a conversation model. These sources do not establish the exact end-to-end server WebSocket handshake for the selected gpt-live-transcribe configuration. No token was created, key exposed or integration changed.
+
+Sources checked 13 October 2026:
+- https://developers.openai.com/api/reference/resources/realtime/subresources/client_secrets/methods/create
+- https://developers.openai.com/api/docs/guides/realtime-transcription
+- https://developers.openai.com/api/docs/guides/voice-websockets?api=realtime
+
+Exact next action: determine whether official documentation specifies the WebSocket URL and authentication for a preconfigured transcription client secret, including whether the model query overrides its session type. Keep this as source research until that contract is established. Any credential issuance or real connection requires a separately approved concrete experiment with permanent reservation and existing limits. Do not substitute models or treat token expiry/transport closure as remote finalization. All four consumed records stay held; allocation remains $49. Other dependencies remain in docs/current-blockers.md. The goal remains active and incomplete.
+
 ## Startup error presentation sanitized, 13 October 2026
 
 Local Task 1b privacy review removed arbitrary exception-message copying from ScriptedService.start into its page/API snapshot. Ordinary startup failures now use fixed wording stating that no automatic retry occurred. Exceptions are not inspected or coerced. Existing room-creation uncertainty, failed cleanup and usage-record holds retain their specific fixed guidance, block new starts and preserve consumed reservations.
