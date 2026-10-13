@@ -1,3 +1,13 @@
+## Private Memory deployment receipt, 13 October 2026
+
+Owner-private Memory now publishes the approved $43 allocation, installed unreserved notebook allowance and deployed preview handoff. Source 1c4c74ffad212d8068b15a527cb4701b8b428d0f succeeded as appgdep_6acdbf2ecea88191b1bd5fb8c67658a3 with MCP retained. All 16 site checks, build and artifact validation pass. No microphone/WebSocket provider test was started. Exact next action remains Sabine opening the protected notes-live.html page in Safari and confirming its available status before the complete advance script and microphone start.
+
+## Private notebook deployment verified, 13 October 2026
+
+Render deployment dep-db6rs63l550s739sfseg succeeded Live at source ed30133e5b4d5e1b708b2b1fefdbc0a00eee11e1 on the existing Free service. Logs confirm the dedicated command and listening state. Health returned 200; unauthenticated page and availability returned 401 with the expected Basic challenge. No WebSocket or microphone was started. Live service-only Supabase reads confirm exact approved notebook terms and null reservation, plus seventeen original avatar records in the runs field. An initial diagnostic counted nonexistent attempts/reservations fields as zero; corrected the read to the authoritative runs field and verified seventeen without mutations.
+
+The in-app browser refused navigation at the Basic challenge. Authenticated rendered availability needs Sabine to open the page in Safari using her existing preview login. Do not ask her to start until the page reports one approved private trial available. Username is stylist; the existing password is unchanged and not printed or transferred. Provide the complete seven-step script in chat before microphone start. Phase 1 remains open.
+
 ## Approved notebook hosted setup, 13 October 2026
 
 Verified the separate trial schema/table were absent in the approved Supabase project, applied the reviewed preparation SQL successfully, verified RLS and anonymous/customer denial plus service RPC permissions, and initialized the approved one-time allowance. No trial reservation or provider call was created. Approval ID notes_private_20261013_01 binds $2, two turns and 85 seconds; the existing avatar ledger is outside these SQL statements.
