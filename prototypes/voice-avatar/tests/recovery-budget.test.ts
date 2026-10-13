@@ -49,3 +49,13 @@ it('permits one second repeat preserving all thirteen records and refuses older 
  await expect(b.reserveRecoveryPair()).rejects.toThrow();await expect(b.approveRecoverySecondRepeat()).rejects.toThrow();await expect(b.reserve('spoken')).rejects.toThrow();
  const ledger=await b.read();const changed=structuredClone(ledger);changed.recoverySecondRepeat={...changed.recoverySecondRepeat!,cents:401 as 400};expect(()=>validateLedger(changed)).toThrow();const partial=structuredClone(ledger);partial.runs.pop();expect(()=>validateLedger(partial)).toThrow();
 });
+
+it('permits one third repeat preserving all thirteen records and refuses older unused units',async()=>{
+ const b=await fixture();await b.approveRecoveryTrial();const old=await b.reserveRecoveryPair();await b.claimRecoveryRoom(old[0]);await b.setRoom(old[0],'initial');await b.closeVerified(old[0]);
+ await b.approveRecoveryRepeat();const repeat=await b.reserveRecoveryPair();await expect(b.approveRecoverySecondRepeat()).rejects.toThrow();await b.claimRecoveryRoom(repeat[0]);await b.setRoom(repeat[0],'repeat');await b.closeVerified(repeat[0]);const before=await b.read();
+ await b.approveRecoverySecondRepeat();const second=await b.reserveRecoveryPair();await b.claimRecoveryRoom(second[0]);await b.setRoom(second[0],'second-ended');await b.closeVerified(second[0]);const previous=await b.read();await b.approveRecoveryThirdRepeat();const pair=await b.reserveRecoveryPair();expect((await b.read()).runs.slice(0,15)).toEqual(previous.runs);
+ await expect(b.claimRecoveryRoom(old[1])).rejects.toThrow();await expect(b.claimRecoveryRoom(repeat[1])).rejects.toThrow();await expect(b.claimRecoveryRoom(pair[1])).rejects.toThrow();
+ await b.claimRecoveryRoom(pair[0]);await b.setRoom(pair[0],'second');await b.closeVerified(pair[0]);await b.claimRecoveryRoom(pair[1]);await b.setRoom(pair[1],'replacement');await b.closeVerified(pair[1]);
+ await expect(b.reserveRecoveryPair()).rejects.toThrow();await expect(b.approveRecoveryThirdRepeat()).rejects.toThrow();await expect(b.reserve('spoken')).rejects.toThrow();
+ const ledger=await b.read();const changed=structuredClone(ledger);changed.recoveryThirdRepeat={...changed.recoveryThirdRepeat!,cents:401 as 400};expect(()=>validateLedger(changed)).toThrow();const partial=structuredClone(ledger);partial.runs.pop();expect(()=>validateLedger(partial)).toThrow();
+});

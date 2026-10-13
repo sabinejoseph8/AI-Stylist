@@ -5,6 +5,7 @@ export type Reservation = { id: string; cents: number; seconds: number; closed: 
 export const RECOVERY_TRIAL = { approvedOn: '2026-10-12', baseAttempts: 9, extraAttempts: 2, cents: 400, seconds: 600, purpose: 'replacement-room-resume', totalBudgetCents: 2900 } as const;
 export const RECOVERY_REPEAT = { approvedOn: '2026-10-12', baseAttempts: 11, extraAttempts: 2, cents: 400, seconds: 600, purpose: 'replacement-room-repeat', totalBudgetCents: 3300 } as const;
 export const RECOVERY_SECOND_REPEAT = { approvedOn: '2026-10-12', baseAttempts: 13, extraAttempts: 2, cents: 400, seconds: 600, purpose: 'replacement-room-second-repeat', totalBudgetCents: 3700 } as const;
+export const RECOVERY_THIRD_REPEAT = { approvedOn: '2026-10-12', baseAttempts: 15, extraAttempts: 2, cents: 400, seconds: 600, purpose: 'replacement-room-third-repeat', totalBudgetCents: 4100 } as const;
 type Extension = { approvedOn: '2026-10-09'; baseAttempts: 4; extraAttempts: 1; cents: 200; seconds: 300 };
 type PhoneTrial = { approvedOn: '2026-10-09'; baseAttempts: 6; extraAttempts: 1; cents: 200; seconds: 300; source: 'reserve'; purpose: 'iphone-playback-interrupt'; totalBudgetCents: 2500 };
 const PHONE_TRIAL: PhoneTrial = { approvedOn: '2026-10-09', baseAttempts: 6, extraAttempts: 1, cents: 200, seconds: 300, source: 'reserve', purpose: 'iphone-playback-interrupt', totalBudgetCents: 2500 };
@@ -20,17 +21,18 @@ function sameFields(value: unknown, expected: object): boolean {
   return Object.keys(record).length === Object.keys(expected).length && Object.entries(expected).every(([key, field]) => record[key] === field);
 }
 function validTransfer(value: unknown): value is ReserveTransfer { return sameFields(value, RESERVE_TRANSFER); }
-export type Ledger = { version: 1; runs: Reservation[]; spokenExtension?: Extension; reserveTransfer?: ReserveTransfer; phoneTrial?: PhoneTrial; automaticTrial?: AutomaticTrial; repeatTrial?: RepeatTrial; recoveryTrial?: typeof RECOVERY_TRIAL; recoveryRepeat?: typeof RECOVERY_REPEAT; recoverySecondRepeat?: typeof RECOVERY_SECOND_REPEAT };
+export type Ledger = { version: 1; runs: Reservation[]; spokenExtension?: Extension; reserveTransfer?: ReserveTransfer; phoneTrial?: PhoneTrial; automaticTrial?: AutomaticTrial; repeatTrial?: RepeatTrial; recoveryTrial?: typeof RECOVERY_TRIAL; recoveryRepeat?: typeof RECOVERY_REPEAT; recoverySecondRepeat?: typeof RECOVERY_SECOND_REPEAT; recoveryThirdRepeat?: typeof RECOVERY_THIRD_REPEAT };
 function validExtension(value: unknown): value is Extension {
   return sameFields(value, { approvedOn: '2026-10-09', baseAttempts: 4, extraAttempts: 1, cents: 200, seconds: 300 });
 }
 export function validateLedger(value: unknown): Ledger {
     const parsed = value as Ledger;
     if (!parsed || typeof parsed !== 'object') throw new Error('Usage ledger requires review.');
-    if (parsed.version !== 1 || !Array.isArray(parsed.runs) || parsed.runs.length > (sameFields(parsed.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) ? 15 : sameFields(parsed.recoveryRepeat, RECOVERY_REPEAT) ? 13 : sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) ? 11 : (validExtension(parsed.spokenExtension) ? (validTransfer(parsed.reserveTransfer) ? (sameFields(parsed.phoneTrial, PHONE_TRIAL) ? (sameFields(parsed.automaticTrial, AUTOMATIC_TRIAL) ? (sameFields(parsed.repeatTrial, REPEAT_TRIAL) ? 9 : 8) : 7) : 6) : 5) : 4))
-      || (parsed.recoveryTrial !== undefined && (!sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) || !sameFields(parsed.repeatTrial, REPEAT_TRIAL) || !(parsed.recoverySecondRepeat ? [13,15] : parsed.recoveryRepeat ? [11,13] : [9,11]).includes(parsed.runs.length)))
-      || (parsed.recoveryRepeat !== undefined && (!sameFields(parsed.recoveryRepeat, RECOVERY_REPEAT) || !sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) || !(parsed.recoverySecondRepeat ? [13,15] : [11,13]).includes(parsed.runs.length) || !repeatPredecessorSafe(parsed)))
-      || (parsed.recoverySecondRepeat !== undefined && (!sameFields(parsed.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) || !sameFields(parsed.recoveryRepeat, RECOVERY_REPEAT) || ![13,15].includes(parsed.runs.length) || !secondRepeatPredecessorSafe(parsed)))
+    if (parsed.version !== 1 || !Array.isArray(parsed.runs) || parsed.runs.length > (sameFields(parsed.recoveryThirdRepeat, RECOVERY_THIRD_REPEAT) ? 17 : sameFields(parsed.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) ? 15 : sameFields(parsed.recoveryRepeat, RECOVERY_REPEAT) ? 13 : sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) ? 11 : (validExtension(parsed.spokenExtension) ? (validTransfer(parsed.reserveTransfer) ? (sameFields(parsed.phoneTrial, PHONE_TRIAL) ? (sameFields(parsed.automaticTrial, AUTOMATIC_TRIAL) ? (sameFields(parsed.repeatTrial, REPEAT_TRIAL) ? 9 : 8) : 7) : 6) : 5) : 4))
+      || (parsed.recoveryTrial !== undefined && (!sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) || !sameFields(parsed.repeatTrial, REPEAT_TRIAL) || !(parsed.recoveryThirdRepeat ? [15,17] : parsed.recoverySecondRepeat ? [13,15] : parsed.recoveryRepeat ? [11,13] : [9,11]).includes(parsed.runs.length)))
+      || (parsed.recoveryRepeat !== undefined && (!sameFields(parsed.recoveryRepeat, RECOVERY_REPEAT) || !sameFields(parsed.recoveryTrial, RECOVERY_TRIAL) || !(parsed.recoveryThirdRepeat ? [15,17] : parsed.recoverySecondRepeat ? [13,15] : [11,13]).includes(parsed.runs.length) || !repeatPredecessorSafe(parsed)))
+      || (parsed.recoverySecondRepeat !== undefined && (!sameFields(parsed.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) || !sameFields(parsed.recoveryRepeat, RECOVERY_REPEAT) || !(parsed.recoveryThirdRepeat ? [15,17] : [13,15]).includes(parsed.runs.length) || !secondRepeatPredecessorSafe(parsed)))
+      || (parsed.recoveryThirdRepeat !== undefined && (!sameFields(parsed.recoveryThirdRepeat, RECOVERY_THIRD_REPEAT) || !sameFields(parsed.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) || ![15,17].includes(parsed.runs.length) || !thirdRepeatPredecessorSafe(parsed)))
       || (parsed.spokenExtension !== undefined && !validExtension(parsed.spokenExtension))
       || (parsed.reserveTransfer !== undefined && (!validTransfer(parsed.reserveTransfer) || !validExtension(parsed.spokenExtension)))
       || (parsed.phoneTrial !== undefined && (!sameFields(parsed.phoneTrial, PHONE_TRIAL) || !validTransfer(parsed.reserveTransfer)))
@@ -57,7 +59,11 @@ export function repeatPredecessorSafe(ledger: Ledger): boolean {
 export function secondRepeatPredecessorSafe(ledger: Ledger): boolean {
   return repeatPredecessorSafe(ledger) && ledger.runs.length >= 13 && ledger.runs[11]?.closed === true && ledger.runs[11]?.started === true && Boolean(ledger.runs[11]?.room) && ledger.runs[12]?.kind === 'recovery' && ledger.runs[12]?.started === false && ledger.runs[12]?.closed === false && ledger.runs[12]?.room === undefined;
 }
+export function thirdRepeatPredecessorSafe(ledger: Ledger): boolean {
+ return secondRepeatPredecessorSafe(ledger) && ledger.runs.length >= 15 && ledger.runs[13]?.closed === true && ledger.runs[13]?.started === true && Boolean(ledger.runs[13]?.room) && ledger.runs[14]?.kind === 'recovery' && ledger.runs[14]?.started === false && ledger.runs[14]?.closed === false && ledger.runs[14]?.room === undefined;
+}
 export function recoveryAvailable(ledger: Ledger): boolean {
+  if (ledger.recoveryThirdRepeat) return sameFields(ledger.recoveryThirdRepeat, RECOVERY_THIRD_REPEAT) && ledger.runs.length === 15 && thirdRepeatPredecessorSafe(ledger);
   if (ledger.recoverySecondRepeat) return sameFields(ledger.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) && ledger.runs.length === 13 && secondRepeatPredecessorSafe(ledger);
   return ledger.recoveryRepeat ? sameFields(ledger.recoveryRepeat, RECOVERY_REPEAT) && ledger.runs.length === 11 && repeatPredecessorSafe(ledger)
     : sameFields(ledger.recoveryTrial, RECOVERY_TRIAL) && ledger.runs.length === 9 && ledger.runs.every(r => r.closed);
@@ -133,6 +139,12 @@ export class ExperimentBudget {
       ledger.recoverySecondRepeat = { ...RECOVERY_SECOND_REPEAT };
     });
   }
+  async approveRecoveryThirdRepeat() {
+    await this.change(ledger => {
+      if (ledger.recoveryThirdRepeat || !sameFields(ledger.recoverySecondRepeat, RECOVERY_SECOND_REPEAT) || ledger.runs.length !== 15 || !thirdRepeatPredecessorSafe(ledger)) throw new Error('Third recovery repeat approval cannot be applied.');
+      ledger.recoveryThirdRepeat = { ...RECOVERY_THIRD_REPEAT };
+    });
+  }
   async reserveRecoveryPair(): Promise<readonly [string, string]> {
     const ids = [randomUUID(), randomUUID()] as const;
     await this.change(ledger => {
@@ -143,7 +155,7 @@ export class ExperimentBudget {
   }
   async claimRecoveryRoom(id: string) {
     await this.change(ledger => {
-      const base = ledger.recoverySecondRepeat ? 13 : ledger.recoveryRepeat ? 11 : 9;
+      const base = ledger.recoveryThirdRepeat ? 15 : ledger.recoverySecondRepeat ? 13 : ledger.recoveryRepeat ? 11 : 9;
       const index = ledger.runs.findIndex(r => r.id === id);
       const run = ledger.runs[index];
       if (!sameFields(ledger.recoveryTrial, RECOVERY_TRIAL) || ledger.runs.length !== base + 2 || index < base || !run || run.kind !== 'recovery' || run.closed || run.started

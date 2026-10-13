@@ -9,6 +9,9 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
+Current status: one additional $4 test is approved, raising the allocation to $41. Exact hosted allowance verified with fifteen earlier records preserved. No new test started. Code deployment and user-started acceptance are next. Earlier failure cause remains unknown; recovery acceptance is open.
+
+
 Current outcome: the second repeat failed after a confirmed first reply and the sleeve follow-up. Provider closure is verified; replacement never started. Root cause remains unknown, recovery acceptance is open, and no retry is authorized. Local stage-specific error reporting passes 1,303 tests and simulated WebKit recovery. Deployment and Memory synchronization are next.
 
 
@@ -2796,3 +2799,8 @@ Sabine confirms she selected I heard the whole reply before saying “I prefer l
 
 
 Diagnostic message deployment dep-db6omh8u01pc73avg5rg is Live from d988e5e78da7791149c198d71d67860d04196503. This improves future failure localization, not proof of the earlier cause or a recovery fix. No additional test or spending authorized.
+
+
+## Approved $41 recovery checkpoint
+
+Sabine approved one additional $4 test with at most two rooms and ten reserved avatar minutes, raising the experiment allocation to $41. No automatic retry or plan upgrade. The exact recoveryThirdRepeat amendment is installed; full before/after comparison preserves all fifteen historical records and earlier metadata. Latest initial room is provider-ended, replacement never started. No new pair reserved. All 1,304 tests, type checking, build and 32 isolated SQL checks pass. Synthetic WebKit normal recovery and confirmed-follow-up request failure both pass, including cleanup, no retry/replacement on failure and no private provider body exposure. Corrected an overly strict test fixture that required interruption on ordinary error-end; production cleanup code was unchanged. Earlier physical-device root cause remains unknown. Next: deploy tested allowance code, synchronize private Memory, and give complete advance instructions before Sabine starts the single test.
