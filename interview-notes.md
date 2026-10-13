@@ -1,3 +1,7 @@
+## Keeping unrelated notes flowing during corrections
+
+I found that correcting one preference could cancel an unrelated note still arriving from the sample conversation. I separated input revisions from individual field revisions. A budget correction now protects the budget while the date can still arrive. I also checked that delayed input cannot undo a confirmed detail or restore cleared notes. All 696 foundation tests pass, and the browser rehearsal keeps both November and the corrected budget. Real speech integration remains a separate dependency.
+
 ## Validating the notebook in the main app
 
 I completed all eight review steps for the local styling notebook. I checked progressive sample notes, explicit confirmation, budget editing, navigation, selected sample preferences and clearing temporary state. An incomplete budget stays unconfirmed after I save it, and a scripted correction replaces it with a complete budget. I kept this local usability acceptance separate from real speech and saved-account integration, which still need verification.

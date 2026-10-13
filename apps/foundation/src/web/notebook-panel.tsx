@@ -9,6 +9,7 @@ export function NotebookPanel(){
  const [snapshot,setSnapshot]=useState(()=>controller.session.snapshot(PREVIEW_OWNER)!);
  const [expanded,setExpanded]=useState(false),[draft,setDraft]=useState<EditDraft|null>(null),[value,setValue]=useState(''),[message,setMessage]=useState('Sample notebook ready. No account, microphone or AI service is connected.');
  const [caption,setCaption]=useState(''),[selected,setSelected]=useState<Field[]>([]),[saved,setSaved]=useState<Partial<Record<Field,string>>>({});
+ const sampleSequence=useRef(0);
  const sampleTimer=useRef<ReturnType<typeof setTimeout>|null>(null),originButton=useRef<HTMLButtonElement|null>(null),editInput=useRef<HTMLInputElement|null>(null);
  const cancelSample=()=>{if(sampleTimer.current!==null)clearTimeout(sampleTimer.current);sampleTimer.current=null;};
  useEffect(()=>{
@@ -27,11 +28,13 @@ export function NotebookPanel(){
  const closeEdit=()=>{setDraft(null);setValue('');queueMicrotask(()=>originButton.current?.focus());};
  const startEdit=(field:Field,button:HTMLButtonElement)=>{const next=controller.beginEdit(field);if(next){originButton.current=button;setDraft(next);setValue(next.value);}};
  const playSample=()=>{
-  cancelSample();setCaption('Sample: I’m going to an outdoor wedding.');controller.propose(controller.session.ticket(PREVIEW_OWNER)!,'occasion','Outdoor wedding');
-  // Each sample fragment owns the current version. A later edit or clear
-  // invalidates this ticket, so the scheduled continuation cannot overwrite it.
-  const ticket=controller.session.ticket(PREVIEW_OWNER);if(!ticket)return;
-  sampleTimer.current=setTimeout(()=>{sampleTimer.current=null;const result=controller.propose(ticket,'season','November; season not specified');if(result==='applied'){setCaption('Sample: I’m going to an outdoor wedding in November.');setMessage('Sample month added. No season was inferred. Confirm the details you want to use.');}},1200);
+  cancelSample();
+  const turn=controller.proposals.begin('sample_turn_'+(++sampleSequence.current));if(!turn)return;
+  const first=controller.proposals.accept(turn,0,[{field:'occasion',value:'Outdoor wedding'}]);
+  if(first.applied.includes('occasion'))setCaption('Sample: I’m going to an outdoor wedding.');
+  // Capture each field's baseline before input starts. An unrelated touch edit
+  // does not cancel this date; newer edits to the date itself stay protected.
+  sampleTimer.current=setTimeout(()=>{sampleTimer.current=null;const result=controller.proposals.accept(turn,1,[{field:'season',value:'November; season not specified'}],true);if(result.applied.includes('season')){setCaption('Sample: I’m going to an outdoor wedding in November.');setMessage('Sample month added. No season was inferred. Confirm the details you want to use.');}},1200);
   setMessage('A scripted sample is arriving in two parts. You can edit or clear while it runs.');
  };
  const summary=FIELDS.filter(([id])=>snapshot.notes[id].value).map(([id])=>snapshot.notes[id].value).join(' · ')||'7 details to discover';

@@ -1,3 +1,11 @@
+## Local progressive proposal reconciliation, 13 October 2026
+
+Within the approved local Tasks 3a through 3c exception, the main-app sample now routes structured partial proposals through an item/revision reconciler. Each field captures its baseline before input begins. An explicit correction or confirmation protects that field from delayed proposals, while unrelated fields may still update. New input retires old unfinished input; replayed/out-of-order results, forged handles and post-Clear/End/disconnect/expiry events are refused. Input identifiers are bounded and proposal values are not retained by the reconciler. Proposals remain tentative and never save a profile automatically. This internal sample contract does not parse speech or implement an OpenAI protocol.
+
+Corrected the touch controller to sequence from each field's current version, allowing edits after multiple partial updates. Added 24 focused cases; all 696 foundation tests across 97 files, type checking and build pass. The initial non-escalated loopback test run was stopped after sandbox failures; the complete permitted rerun passed. A TypeScript readonly-array narrowing issue was corrected before the passing run. Agent browser verification observed November arriving after a scripted budget correction, with the corrected USD 350 budget retained, followed by Clear removing notes. Sabine's earlier eight-step local review remains accepted; this narrow regression is agent-verified, not a new human/live-speech acceptance.
+
+No provider connection, microphone, hosted customer activation, Render deployment or new spending occurred. Allocation stays $51 and all five notes/startup records stay held. Full Phase 3 and earlier gates remain open. Next: publish the verified local repair and matching memory, then review concrete support/account dependencies when supplied. No repeat of the accepted eight-step review is requested.
+
 ## Main-app sample notebook accepted, 13 October 2026
 
 Sabine confirmed that all eight local main-app notebook review steps worked and were readable. Accepted scope: collapsed progressive sample notes with November and no inferred season; seven readable fields and occasion confirmation; budget Cancel/Save, ambiguous amount marked To confirm after Save, and scripted budget correction; navigation preserving notes/expansion; explicitly selected sample budget returning after End/new sample; Clear preventing delayed sample updates; and refresh removing all sample memory while the real stylist remains unavailable.
@@ -475,7 +483,7 @@ Autonomous execution is authorized by Sabine on 10 October 2026. Routine technic
 - **Recent changes:** Prepared server-owned look authorization and immutable internally checked synthetic candidates. Candidate checks use the authoritative notebook; new input, note edits and shutdown revoke both display and queued speech. Missing confirmations, conflicts, excessive prices and stale results are held. Exclusions now come from a separate server-injected simulated source. Real saved-profile validation, product discovery and media gating are not accepted.
 - **Publishing:** Reviewed source and documents are committed to GitHub and copied to the approved AI stylist folder. The owner-private Memory site publishes the 1,706-test minimal-startup rejection checkpoint and observed invalid_parameter result. Render remains at the earlier revised-startup notebook deployment; the server-only diagnostic ran locally and was not deployed. Credentials and private ledgers remain excluded.
 
-Local Tasks 3a through 3c are now explicitly authorized before earlier phase acceptance. A sample-only main-app notebook is prepared; manual review remains pending. No live account, transcription or persistence activation is inferred.
+Local Tasks 3a through 3c are now explicitly authorized before earlier phase acceptance. A sample-only main-app notebook is prepared and its eight-step local review is accepted. No live account, transcription or persistence activation is inferred.
 
 ## Task 2b media composition preparation, 11 October 2026
 
@@ -640,7 +648,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** A notebook that visibly captures, confirms and corrects preferences during speech.  
 **Dependencies:** Phase 2; verified partial-transcription contract from Phase 1.  
 **Product coverage:** PS-02/03; A01–A03, A08/A09 foundations and A19.  
-**Status:** Local Tasks 3a through 3c preparation in progress under Sabine’s 13 October exception. The main-app sample notebook and 672-test foundation suite pass; manual review and live/hosted acceptance remain open. Phase dependencies still govern customer activation and phase completion.
+**Status:** Local Tasks 3a through 3c preparation in progress under Sabine’s 13 October exception. The eight-step main-app sample review is accepted and the 696-test foundation suite passes; live/hosted acceptance remains open. Phase dependencies still govern customer activation and phase completion.
 
 ### Task groups
 

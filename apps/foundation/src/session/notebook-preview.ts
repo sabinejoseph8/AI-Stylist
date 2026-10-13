@@ -1,3 +1,4 @@
+import {NotebookProposalStream} from './proposal-stream.ts';
 import {StylingSession} from './styling-session.ts';
 import type {SessionTicket} from './styling-session.ts';
 import type {Field} from '../../../../packages/style-contracts/src/index.ts';
@@ -13,19 +14,19 @@ export function previewValue(field:Field,value:string){
  return {value:trimmed,status:field==='budget'&&!clearBudget?'tentative' as const:'confirmed' as const};
 }
 export class NotebookPreviewController {
- private sequence=0;
  private operation=0;
  readonly session:StylingSession;
- constructor(session:StylingSession){this.session=session;}
+ readonly proposals:NotebookProposalStream;
+ constructor(session:StylingSession){this.session=session;this.proposals=new NotebookProposalStream(session,PREVIEW_OWNER);}
  beginEdit(field:Field):EditDraft|null{const snap=this.session.snapshot(PREVIEW_OWNER);return snap?.state==='active'?Object.freeze({field,epoch:snap.epoch,baseRevision:snap.notes[field].revision,value:snap.notes[field].value}):null;}
  save(draft:EditDraft,value:string){
   const normalized=previewValue(draft.field,value);
-  return this.session.update(PREVIEW_OWNER,{id:'touch_'+(++this.operation),epoch:draft.epoch,field:draft.field,baseRevision:draft.baseRevision,sequence:++this.sequence,...normalized,origin:'touch'});
+  return this.session.update(PREVIEW_OWNER,{id:'touch_'+(++this.operation),epoch:draft.epoch,field:draft.field,baseRevision:draft.baseRevision,sequence:(this.session.snapshot(PREVIEW_OWNER)?.notes[draft.field].sequence??-1)+1,...normalized,origin:'touch'});
  }
  propose(ticket:SessionTicket,field:Field,value:string,confirmed=false,origin:'text'|'speech'='text'){
   if(!this.session.isCurrent(PREVIEW_OWNER,ticket))return 'stale';
   const snap=this.session.snapshot(PREVIEW_OWNER)!;
-  return this.session.update(PREVIEW_OWNER,{id:'sample_'+(++this.operation),epoch:ticket.epoch,field,baseRevision:snap.notes[field].revision,sequence:++this.sequence,value,status:confirmed?previewValue(field,value).status:'tentative',origin});
+  return this.session.update(PREVIEW_OWNER,{id:'sample_'+(++this.operation),epoch:ticket.epoch,field,baseRevision:snap.notes[field].revision,sequence:snap.notes[field].sequence+1,value,status:confirmed?previewValue(field,value).status:'tentative',origin});
  }
  confirm(field:Field){const draft=this.beginEdit(field);return draft?this.save(draft,draft.value):'unavailable';}
  clear(){return this.session.clear(PREVIEW_OWNER);}

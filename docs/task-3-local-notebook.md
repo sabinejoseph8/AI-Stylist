@@ -32,3 +32,7 @@ Real partial transcription and extraction; verified customer session ownership; 
 ## Human review result
 
 Sabine confirmed all eight steps worked and were readable on 13 October 2026. This includes the ambiguous-budget status after pressing Save. No repeat review is pending. Full integration and phase acceptance remain open as listed above.
+
+## Focused delayed-proposal regression
+
+Agent browser review and automated tests verify that a budget correction made between the first and second sample fragment preserves that budget while November still arrives. Updated validation is 696 tests across 97 files, type checking and build. For a manual replay, read these steps first: (1) Refresh the local main app. (2) Click Play sample conversation and immediately Preview spoken budget correction. (3) After the second fragment, expand the notebook and confirm both November with no inferred season and the confirmed USD 350 budget remain. (4) Clear session notes and confirm both disappear. No microphone is used. This supplemental check has agent evidence only; the previously accepted eight-step review is not reopened.
