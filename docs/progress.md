@@ -1,3 +1,9 @@
+## Startup diagnostic deployment verified, 13 October 2026
+
+Render deployment dep-db6smr0u01pc73bf9ls0 succeeded Live at reviewed source b04a98e1c07347253893ba0c195507b85e3b893e, using the existing dedicated command and Free service. The original legacy store selection remains in place; no follow-up schema, initializer, approval ID or store setting was activated. Health and unauthorized page/metadata checks passed; a live read confirms the original allowance is still held. No provider connection or microphone was started by the agent.
+
+The concrete follow-up is reviewable in docs/private-notes-followup-review.md and its default-failing SQL templates. Existing allocation remains $43. Exact next action: obtain Sabine's separate decision for one additional $2/private follow-up experiment, total $45 only if approved, with one start/two turns/85 seconds and no retry, avatar or upgrade. It may fail before Ready; the new fixed diagnostics are designed to identify the stage. If approved, preserve the old held singleton, initialize only a new immutable approval row, explicitly select it, verify metadata and give all instructions before Sabine operates the test. Phase 1 and the application goal remain incomplete.
+
 ## Notebook startup failure and follow-up preparation, 13 October 2026
 
 After the cookie handoff deployment, Sabine again confirmed Safari availability and pressed Start private notes test. Her screenshot shows ended/cleared state before Ready. A live service-only read now verifies the original notes_private_20261013_01 reservation is held, unlike the first pre-reservation failure. Preserve this record permanently and do not retry, refund or reset it. This establishes that the owner reserved the start, not which subsequent startup step failed. No completed speech turn or live note extraction is accepted.
