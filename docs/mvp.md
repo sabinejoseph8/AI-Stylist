@@ -1,3 +1,9 @@
+## Account provider maintenance prepared, 13 October 2026
+
+The resumed goal is active. The latest camera acceptance was progress; its earlier blocker no longer applies. A fresh Task 2c audit found that Apple/email maintenance was listed but had no concrete renewal/rollback runbook. Prepared docs/account-provider-maintenance.md with a private owner/expiry inventory, Apple web OAuth client-secret renewal distinct from signing-key rotation, safe rollback, SMTP setup/rotation and actual verification scenarios. No credentials, reminders, sender purchases, domain changes, real emails or hosted provider activation occurred.
+
+Corrected stale current Task 2c audit text that still treated the approved seven-day policy and automatic linking as unanswered. This is source-backed documentation preparation, not real account acceptance. Existing 623 foundation and 1,653 prototype test results remain prior evidence; no application tests were rerun. Next: publish this preparation and verify the private Memory update, then continue only concrete work within the current gates. Supported transcription startup, Render ingress/logging, sender/social credentials and actual account/source acceptance remain dependencies. Allocation stays $49.
+
 ## Local notebook camera accepted by Sabine, 13 October 2026
 
 Sabine answered All steps worked to the complete seven-step local-computer review. Accepted scope: refresh/open notebook; camera-only permission and preview; Stop and restart retaining the new preview; capture and explicit item confirmation; changing the live view and stopping without replacing the confirmed still; and Clear removing the still with the device indicator off. This is human acceptance of the repaired local camera flow, not a new iPhone/network/provider test or complete accessibility review.

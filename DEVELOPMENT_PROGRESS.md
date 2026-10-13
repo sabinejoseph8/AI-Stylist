@@ -1,3 +1,9 @@
+## Account provider maintenance prepared, 13 October 2026
+
+The resumed goal is active. The latest camera acceptance was progress; its earlier blocker no longer applies. A fresh Task 2c audit found that Apple/email maintenance was listed but had no concrete renewal/rollback runbook. Prepared docs/account-provider-maintenance.md with a private owner/expiry inventory, Apple web OAuth client-secret renewal distinct from signing-key rotation, safe rollback, SMTP setup/rotation and actual verification scenarios. No credentials, reminders, sender purchases, domain changes, real emails or hosted provider activation occurred.
+
+Corrected stale current Task 2c audit text that still treated the approved seven-day policy and automatic linking as unanswered. This is source-backed documentation preparation, not real account acceptance. Existing 623 foundation and 1,653 prototype test results remain prior evidence; no application tests were rerun. Next: publish this preparation and verify the private Memory update, then continue only concrete work within the current gates. Supported transcription startup, Render ingress/logging, sender/social credentials and actual account/source acceptance remain dependencies. Allocation stays $49.
+
 ## Camera acceptance publication, 13 October 2026
 
 Sabine's All steps worked response closes the seven-step local-computer camera manual check. GitHub commits 6e0d0de and 8128364 publish the acceptance and matching site snapshot; files were copied to the approved AI stylist folder. Private Memory source 9ffa30c0886240e53e9da8a5264a00861ece1c00 deployed successfully as appgdep_6acdf75da30c81918aaa070b66b93a50 with MCP retained; all 16 site checks, build and artifact validation passed. The Task 1c prototype evidence document now distinguishes this accepted local flow from untested physical-phone notebook/denial/timeout/accessibility scope. No application code or paid call changed.

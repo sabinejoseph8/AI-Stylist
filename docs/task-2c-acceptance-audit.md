@@ -24,7 +24,7 @@ Auth HTTP and media-receipt maintenance responses in the combined rehearsal are 
 ## Next authorized work
 
 1. Continue independent account/deployment preparation within approved Tasks 2b/2c.
-2. Implement the customer session policy after Sabine answers the pending duration question. Do not assume a duration or promise persistence beyond the implemented contract.
+2. Preserve the approved fixed seven-day absolute session policy and its recorded local checks; verify it with real providers before activation.
 3. Configure and verify real email, exact HTTPS origin, social providers and customer isolation only within existing authorization and credential boundaries.
 4. Preserve accepted manual reviews and all remaining Phase 1, spending, device, accessibility and phase-review gates.
 
@@ -32,8 +32,8 @@ Auth HTTP and media-receipt maintenance responses in the combined rehearsal are 
 
 - Sabine accepted both local account/reset reviews. Physical-device and screen-reader acceptance remain open.
 - Hosted Tasks 2b/2c are approved before Phase 1 completion; Phase 1 remains incomplete.
-- The sign-in duration question is pending: 7 days, 24 hours or 30 days from sign-in. No answer has been recorded.
-- Production email sender, social provider credentials, callback allowlists and linking behavior remain unresolved.
+- Sabine approved seven days from sign-in. This is implemented locally; real provider acceptance remains open.
+- Production email sender, social provider credentials, exact callback deployment and real linking security acceptance remain unresolved. Verified-email automatic linking is approved; manual linking and app-driven merging remain disabled. Renewal/maintenance preparation is in docs/account-provider-maintenance.md.
 - Cross-device recovery is approved and locally rehearsed in a separate browser context; actual email/device acceptance remains open.
 - No spending allowance or additional provider attempt is created by this audit.
 
