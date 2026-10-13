@@ -1,3 +1,4 @@
+import type {NotesRetentionPolicy} from './notes-retention-policy.ts';
 import {FIELDS} from '../../../../packages/style-contracts/src/index.ts';
 import type {Field} from '../../../../packages/style-contracts/src/index.ts';
 
@@ -5,15 +6,15 @@ export type NoteOrigin='speech'|'text'|'touch'|'saved-profile';
 export type StylingNote=Readonly<{value:string;status:'missing'|'tentative'|'confirmed';origin:NoteOrigin|null;scope:'session'|'saved-profile';revision:number;sequence:number}>;
 export type SessionSnapshot=Readonly<{epoch:number;revision:number;state:'active'|'disconnected'|'ended';reason:'ended'|'expired'|null;warning:boolean;notes:Readonly<Record<Field,StylingNote>>}>;
 export type SessionTicket=Readonly<{epoch:number;revision:number;signal:AbortSignal}>;
-export type SessionUpdate=Readonly<{id:string;epoch:number;field:Field;baseRevision:number;sequence:number;value:string;status:'tentative'|'confirmed';origin:'speech'|'text'|'touch'}>;
+export type SessionUpdate=Readonly<{id:string;epoch:number;field:Field;baseRevision:number;sequence:number;value:string;status:'tentative'|'confirmed';origin:'speech'|'text'|'touch';activity?:'customer'|'derived'}>;
 export type UpdateResult='applied'|'duplicate'|'stale'|'invalid'|'unavailable'|'limit';
 const empty=():Record<Field,StylingNote>=>Object.fromEntries(FIELDS.map(([id])=>[id,Object.freeze({value:'',status:'missing',origin:null,scope:'session',revision:0,sequence:-1})])) as Record<Field,StylingNote>;
 const validInteger=(v:unknown)=>Number.isSafeInteger(v)&&Number(v)>=0;
 const validId=(v:unknown):v is string=>typeof v==='string'&&/^[A-Za-z0-9_-]{1,80}$/.test(v);
 
 /** Local Phase 3 preparation only. One authoritative owner, no network,
- * persistence, timers, credentials, extraction or production retention default.
- * The caller must explicitly supply preview lifetimes. This is not identity
+ * persistence, timers, credentials or extraction.
+ * The caller must explicitly supply retention settings. This is not identity
  * verification; a future hosted owner must bind its verified customer itself. */
 export class StylingSession {
  private notes=empty();
@@ -29,8 +30,8 @@ export class StylingSession {
  private listeners=new Set<()=>void>();
  private readonly owner:string;
  private readonly clock:()=>number;
- private readonly policy:Readonly<{idleMs:number;disconnectMs:number;warningMs:number}>;
- constructor(options:{simulation:true;owner:string;clock:()=>number;policy:{idleMs:number;disconnectMs:number;warningMs:number};saved?:Partial<Record<Field,string>>}){
+ private readonly policy:NotesRetentionPolicy;
+ constructor(options:{simulation:true;owner:string;clock:()=>number;policy:NotesRetentionPolicy;saved?:Partial<Record<Field,string>>}){
   if(options?.simulation!==true||!validId(options.owner)||typeof options.clock!=='function'||!options.policy||!validInteger(options.policy.idleMs)||options.policy.idleMs===0||!validInteger(options.policy.disconnectMs)||options.policy.disconnectMs===0||!validInteger(options.policy.warningMs)||options.policy.warningMs>=options.policy.idleMs)throw Error('Local session configuration is invalid.');
   this.owner=options.owner;this.clock=options.clock;this.policy=Object.freeze({...options.policy});
   const now=this.clock();if(!validInteger(now))throw Error('Local session clock is invalid.');this.observedTime=now;this.lastActivity=now;
@@ -60,11 +61,17 @@ export class StylingSession {
   this.available(owner);if(owner!==this.owner)return null;
   return Object.freeze({epoch:this.epoch,revision:this.revision,state:this.state,reason:this.reason,warning:this.state!=='ended'&&this.observedTime-this.lastActivity>=this.policy.idleMs-this.policy.warningMs,notes:Object.freeze({...this.notes})});
  }
+ /** Call at admitted customer input, never for polling or delayed extraction.
+  * A local tick/read enforces expiry; no provider or hosted owner is active. */
+ customerInput(owner:string){
+  if(!this.available(owner))return false;
+  this.lastActivity=this.observedTime;this.notify();return true;
+ }
  ticket(owner:string):SessionTicket|null{return this.available(owner)?Object.freeze({epoch:this.epoch,revision:this.revision,signal:this.lifetime.signal}):null;}
  isCurrent(owner:string,ticket:SessionTicket){return this.available(owner)&&ticket.signal===this.lifetime.signal&&!ticket.signal.aborted&&ticket.epoch===this.epoch&&ticket.revision===this.revision;}
  update(owner:string,event:SessionUpdate):UpdateResult{
   if(!this.available(owner))return 'unavailable';
-  if(!event||!validId(event.id)||!FIELDS.some(([id])=>id===event.field)||!validInteger(event.epoch)||!validInteger(event.baseRevision)||!validInteger(event.sequence)||typeof event.value!=='string'||event.value.length>160||!event.value.trim()||!['tentative','confirmed'].includes(event.status)||!['speech','text','touch'].includes(event.origin))return 'invalid';
+  if(!event||!validId(event.id)||!FIELDS.some(([id])=>id===event.field)||!validInteger(event.epoch)||!validInteger(event.baseRevision)||!validInteger(event.sequence)||typeof event.value!=='string'||event.value.length>160||!event.value.trim()||!['tentative','confirmed'].includes(event.status)||!['speech','text','touch'].includes(event.origin)||(event.activity!==undefined&&!['customer','derived'].includes(event.activity)))return 'invalid';
   if(event.epoch!==this.epoch)return 'stale';
   if(this.operations.has(event.id))return 'duplicate';
   const note=this.notes[event.field];
@@ -72,7 +79,10 @@ export class StylingSession {
   if(this.operations.size>=256)return 'limit';
   this.operations.add(event.id);
   this.notes[event.field]=Object.freeze({value:event.value.trim(),status:event.status,origin:event.origin,scope:'session',revision:note.revision+1,sequence:event.sequence});
-  this.lastActivity=this.observedTime;this.revision++;this.notify();return 'applied';
+  // Explicit local edits count as customer input by default. Structured
+  // extraction callers must mark their delayed result as derived.
+  if(event.activity!=='derived')this.lastActivity=this.observedTime;
+  this.revision++;this.notify();return 'applied';
  }
  /** Cancel is represented by never submitting an update. Clear is explicit and
   * invalidates every prior epoch, including an otherwise unused operation ID. */

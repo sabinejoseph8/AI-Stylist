@@ -8,7 +8,7 @@ The state model is local-only, requires simulation mode and explicit caller rete
 
 The controller/UI uses scripted sample fragments and explicit field text editing, not AI extraction or microphone capture. Confirmed sample preferences can be explicitly selected and kept in the current preview's memory. They are not a saved Supabase profile. Refresh or closing the page removes this memory. Navigation within the app preserves the active notebook.
 
-Validation: all 672 foundation tests across 96 files, type checking and build pass. Browser checks observed progressive summary, seven fields, Save/Cancel/focus return, profile selection plus new sample, navigation preservation and cancellation during the sample timer. Initial issues with TypeScript settings and duplicate missing labels were corrected. Automated expiry checks use an injected clock; no real 30-minute idle or physical-phone accessibility claim is made.
+Current validation: all 714 foundation tests across 98 files, type checking and build pass. Browser checks observed progressive summary, seven fields, Save/Cancel/focus return, profile selection plus new sample, navigation preservation and cancellation during the sample timer. Initial issues with TypeScript settings and duplicate missing labels were corrected. Automated expiry checks use an injected clock; no real 30-minute idle or physical-phone accessibility claim is made.
 
 ## Read every step before starting
 
@@ -27,7 +27,7 @@ Reply with whether every step worked and was readable, or which step failed. The
 
 ## Remaining integration
 
-Real partial transcription and extraction; verified customer session ownership; approved production expiry/reconnect policy; real profile persistence; representative input-to-notebook/correction timing; broader phone/assistive-technology checks; recommendation invalidation integration; formal phase review. No new paid test, hosted setting or deployment is authorized by this local exception.
+Real partial transcription and extraction; verified customer session ownership; hosted enforcement of the approved notes-expiry policy; real profile persistence; representative input-to-notebook/correction timing; broader phone/assistive-technology checks; recommendation invalidation integration; formal phase review. No new paid test, hosted setting or deployment is authorized by this local exception.
 
 ## Human review result
 
@@ -36,3 +36,7 @@ Sabine confirmed all eight steps worked and were readable on 13 October 2026. Th
 ## Focused delayed-proposal regression
 
 Agent browser review and automated tests verify that a budget correction made between the first and second sample fragment preserves that budget while November still arrives. Updated validation is 696 tests across 97 files, type checking and build. For a manual replay, read these steps first: (1) Refresh the local main app. (2) Click Play sample conversation and immediately Preview spoken budget correction. (3) After the second fragment, expand the notebook and confirm both November with no inferred season and the confirmed USD 350 budget remain. (4) Clear session notes and confirm both disappear. No microphone is used. This supplemental check has agent evidence only; the previously accepted eight-step review is not reopened.
+
+## Approved retention-policy verification
+
+The 30-minute idle, one-minute warning and five-minute disconnect notes policy is approved and implemented locally. Controlled-clock tests cover exact deadlines; no elapsed-time human check is claimed. To manually check the local preview, read these steps first: (1) Refresh and play the sample. (2) Leave it visible without typing or editing; at 29 minutes expect the warning, and at 30 minutes expect cleared notes and an expiry message. (3) In a fresh sample, type an edit before expiry and confirm the warning resets. (4) Confirm End clears notes immediately and an explicitly saved sample preference returns only on Start new sample. Browser page-close behavior may end this preview immediately; the five-minute disconnected-state boundary is tested in the session model, not accepted as hosted recovery. Do not start a provider trial for these checks.

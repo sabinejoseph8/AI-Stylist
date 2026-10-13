@@ -1,11 +1,12 @@
+import {APPROVED_NOTES_RETENTION} from './notes-retention-policy.ts';
 import {NotebookProposalStream} from './proposal-stream.ts';
 import {StylingSession} from './styling-session.ts';
 import type {SessionTicket} from './styling-session.ts';
 import type {Field} from '../../../../packages/style-contracts/src/index.ts';
 export const PREVIEW_OWNER='local_sample_owner';
-export const PREVIEW_POLICY=Object.freeze({idleMs:30*60*1000,disconnectMs:5*60*1000,warningMs:60*1000});
+export const PREVIEW_POLICY=APPROVED_NOTES_RETENTION;
 export type EditDraft=Readonly<{field:Field;epoch:number;baseRevision:number;value:string}>;
-/** Explicit local rehearsal values, not a production retention decision. */
+/** Approved notes policy, exercised only in the local sample runtime. */
 export function createNotebookPreview(clock:()=>number=Date.now,saved?:Partial<Record<Field,string>>){return new StylingSession({simulation:true,owner:PREVIEW_OWNER,clock,policy:PREVIEW_POLICY,saved});}
 export function previewValue(field:Field,value:string){
  const trimmed=value.trim();

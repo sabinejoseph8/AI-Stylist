@@ -18,20 +18,27 @@ export class NotebookProposalStream {
  private operation=0;
  private current:ProposalTurn|null=null;
  private processing=false;
+ private admitting=false;
  private readonly session:StylingSession;
  private readonly owner:string;
  constructor(session:StylingSession,owner:string){this.session=session;this.owner=owner;}
  begin(itemId:string):ProposalTurn|null{
+  if(this.admitting)return null;
+  this.admitting=true;
+  try {
   const ticket=this.session.ticket(this.owner),snapshot=this.session.snapshot(this.owner);
   if(!ticket||!snapshot)return null;
   if(ticket.epoch!==this.epoch){this.turns.clear();this.epoch=ticket.epoch;}
   if(typeof itemId!=='string'||! /^[A-Za-z0-9_-]{1,80}$/.test(itemId)||this.turns.has(itemId)||this.turns.size>=64)return null;
   // A newer input item supersedes older unfinished extraction work.
   for(const turn of this.turns.values())turn.closed=true;
+  this.current=null;
+  if(!this.session.customerInput(this.owner)||ticket.signal.aborted)return null;
   const handle=Object.freeze({itemId,epoch:ticket.epoch,signal:ticket.signal});
   this.current=handle;
   this.turns.set(itemId,{handle,inputRevision:-1,closed:false,expected:Object.fromEntries(FIELDS.map(([field])=>[field,snapshot.notes[field].revision])) as Record<Field,number>});
   return handle;
+  } finally {this.admitting=false;}
  }
  accept(handle:ProposalTurn,inputRevision:number,proposals:readonly Proposal[],final=false):ProposalResult{
   const snapshot=this.session.snapshot(this.owner);
@@ -54,7 +61,7 @@ export class NotebookProposalStream {
    if(!current||current.state!=='active'||handle.signal.aborted||current.epoch!==handle.epoch||this.current!==handle){skipped.push(proposal.field);continue;}
    const note=current.notes[proposal.field];
    if(note.revision!==turn.expected[proposal.field]){skipped.push(proposal.field);continue;}
-   const outcome=this.session.update(this.owner,{id:'proposal_'+(++this.operation),epoch:handle.epoch,field:proposal.field,baseRevision:note.revision,sequence:note.sequence+1,value:proposal.value,status:'tentative',origin:'text'});
+   const outcome=this.session.update(this.owner,{id:'proposal_'+(++this.operation),epoch:handle.epoch,field:proposal.field,baseRevision:note.revision,sequence:note.sequence+1,value:proposal.value,status:'tentative',origin:'text',activity:'derived'});
    if(outcome==='applied'){turn.expected[proposal.field]=note.revision+1;applied.push(proposal.field);}
    else if(outcome==='limit')return result('limit',applied,[...skipped,proposal.field]);
    else skipped.push(proposal.field);

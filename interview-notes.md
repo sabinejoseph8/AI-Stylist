@@ -1,3 +1,7 @@
+## Making the notes-retention policy explicit
+
+I chose to clear unsaved styling notes after 30 minutes without customer input, with a one-minute warning, or after five minutes disconnected. Ending or clearing a session removes its notes immediately while explicitly saved preferences remain separate. I caught a subtle issue: delayed analysis could otherwise reset the idle clock. I separated customer activity from derived updates and included active draft typing, so background results cannot extend retention. The local implementation passes 714 foundation tests; hosted enforcement still needs verification.
+
 ## Keeping unrelated notes flowing during corrections
 
 I found that correcting one preference could cancel an unrelated note still arriving from the sample conversation. I separated input revisions from individual field revisions. A budget correction now protects the budget while the date can still arrive. I also checked that delayed input cannot undo a confirmed detail or restore cleared notes. All 696 foundation tests pass, and the browser rehearsal keeps both November and the corrected budget. Real speech integration remains a separate dependency.

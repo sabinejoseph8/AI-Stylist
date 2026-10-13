@@ -227,3 +227,7 @@ Reviewed principles, every visual token, component anatomy, screen, required sta
 Sabine completed the 18-step notebook prototype guide and reported that all steps worked. Record the local simulated notebook manual review as passed, including the review of editable/missing/uncertain notes, collapsed summary and photo reference, fixture-check feedback, clearing and keyboard/readability controls. This does not change the approved v1.0 design baseline or establish a full accessibility audit, physical iPhone acceptance, real speech updates or production readiness. No design change was requested in this review.
 
 - 10 October 2026, project memory review: Reconciled completed local notebook and phone experiment evidence with the remaining integrated/device/accessibility checks. Approved design v1.0 is unchanged.
+
+## Approved notes-expiry messaging, 13 October 2026
+
+Explain the approved 30-minute customer-idle and five-minute disconnect notes limits in the local preview. Show a restrained one-minute idle warning without moving focus; expiry clears session notes and drafts with a clear ended-state message. Explicitly saved preferences remain separate. This does not change visual tokens or authorize customer deployment. Exact timing is covered by controlled-clock tests; physical elapsed-time acceptance remains open.

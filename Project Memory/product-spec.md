@@ -138,6 +138,8 @@ Disclose clearly, close to affiliate shopping links, that the app may earn a com
 
 Keep notebook notes, feedback, and session revision history within the current session; saving a look does not retain them. Obtain consent and an explicit action before saving reusable profile preferences, wardrobe items, or looks beyond the session. Provide correction, session clearing, export, deletion, and understandable retention choices.
 
+Approved on 13 October 2026 for unsaved styling notes: clear after 30 minutes without customer input, warn one minute beforehand, and clear after five minutes disconnected. End/Clear removes session copies immediately. Explicitly saved preferences are unaffected. Local implementation is authorized; hosted activation and provider retention remain separate gates.
+
 Protect each customer's profile and images from other customers. Do not infer sensitive attributes from style preferences. Do not retain raw audio, full transcripts, or live camera streams by default. Validation records contain only necessary decision reasons and references, without raw photos, transcripts, or audio.
 
 Provide readable text, sufficient contrast, visible focus, screen-reader support, keyboard and switch access, captions, reduced motion, and touch targets of at least 44 by 44 CSS pixels. Changes must not unexpectedly move focus or repeatedly interrupt speech. Notebook decoration and color are never the only way to understand a value or status.
