@@ -13,3 +13,7 @@ The minimal example therefore also fails on this connection. We cannot recover t
 Please route to API engineering if available. Can you confirm the supported dedicated-transcription startup before any session-type conversion, and explain which fields of this minimal command may produce invalid_parameter? If public documentation cannot establish that contract or account eligibility, please say so rather than treating the already-rejected generic bootstrap as verified.
 
 No credentials, account identifiers, request/session IDs, recordings, customer content or raw errors are included.
+
+## Support escalation reported, 13 October 2026
+
+Sabine supplied OpenAI's notification: escalated to a support specialist, with a response expected in the coming days. Record this as a reported escalation, not a technical resolution or a confirmed response date. Await the specialist's answer before interpreting startup compatibility or requesting another paid attempt. No further provider call or spending is authorized.
