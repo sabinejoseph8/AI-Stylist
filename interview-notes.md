@@ -1,3 +1,7 @@
+## Preparing the protected notes-only test owner
+
+I prepared a separate owner for the proposed notebook experiment. I put private access and consent before reservation or provider construction, enforced two begin attempts and a short overall deadline, and retained touch-edit and rendering callbacks. I kept every end path conservative: clear temporary notes, stop media and retain the consumed reservation. The implementation remains dormant and its automated evidence uses synthetic providers; it does not authorize a paid trial or establish customer readiness.
+
 ## Verifying the separate database request boundary
 
 I prepared a fixed RPC adapter for the proposed notebook trial and verified it against the isolated database. I bounded response sizes and wait time, rejected incorrect endpoints and malformed records, and kept retries and approval initialization out of this adapter. I confirmed that a lost write response still leaves the start consumed when the owner restarts. The checks use synthetic requests and do not activate the hosted experiment.

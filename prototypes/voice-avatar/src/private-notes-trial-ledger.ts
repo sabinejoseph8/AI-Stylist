@@ -39,7 +39,7 @@ export class PrivateNotesTrialLedgerOwner{
   try{const before=validatePrivateNotesTrialLedger(await this.persistence.read()),after=structuredClone(before);update(after);validatePrivateNotesTrialTransition(before,after);if(await this.persistence.compareAndSwap(before,after)!==true)throw unavailable();}
   catch{this.held=true;throw unavailable();}
  }
- async reserve(){const reservationId=randomUUID();await this.change(v=>{if(v.reservation!==null)throw unavailable();v.reservation={id:reservationId,state:'reserved'};});return reservationId;}
+ async reserve():Promise<string>{const reservationId=randomUUID();await this.change(v=>{if(v.reservation!==null)throw unavailable();v.reservation={id:reservationId,state:'reserved'};});return reservationId;}
  async recordOutcome(reservationId:string,state:'transport-closed'|'held'){await this.change(v=>{if(!v.reservation||v.reservation.id!==reservationId)throw unavailable();v.reservation.state=state;});}
  status(){return Object.freeze({held:this.held,activationEnabled:false as const,remoteCleanupVerified:false as const});}
 }
