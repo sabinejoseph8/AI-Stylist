@@ -1,3 +1,11 @@
+## Camera lifecycle publication and manual handoff
+
+The repaired preview ownership is published as b3846d4 and the Memory snapshot as ccb9714. Eleven changed committed files were copied to the approved AI stylist folder. Private Memory source 30afe185ed9a4ac4f9e17b3157cfc187d877e6d2 deployed successfully as appgdep_6acdf46e60688191b7fef6018abaed44 with MCP retained. All 16 site tests, build and artifact validation passed. The existing local notebook returned HTTP 200 and its served module contains the repaired preview method, confirming it serves this source. Opening the tab through Codex was queued, not verified as visible.
+
+Sabine received one card with the complete seven-step local camera acceptance check: refresh/open notebook, camera permission, Stop/restart, still capture/confirmation, changed live view plus Stop retaining the still, and Clear removing it with indicator off. Await her actual result before claiming physical-camera acceptance. No device was activated by the agent. Prototype tests remain 1,653/118 plus typecheck/build. No additional paid attempt is approved.
+
+Exact next action: process Sabine's camera-check response. Independently audit the remaining authorized acceptance gates; do not invent later-phase authorization or repeat publication as implementation. The unresolved provider startup contract, Render ingress/query-log guarantees, sender/social credentials and actual account/source acceptance remain open. This turn made concrete local implementation progress and has no completed-phase claim.
+
 ## Camera preview callback ownership fixed, 13 October 2026
 
 Task 1c local review confirmed that video.play could reject after Stop and a new camera start, letting the old catch stop the new preview. Device-ended callbacks were also not detached. NotebookCamera now owns preview attachment, playback completion/failure and device events with the acquisition epoch and exact stream. Retired callbacks cannot change current state. Stop detaches listeners and invalidates pending acquisition/playback; duplicate preview requests are refused before acquiring another stream. Late or invalid streams release all tracks even if one release throws. Page exit uses the same preview cleanup path.
