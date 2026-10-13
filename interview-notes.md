@@ -1,3 +1,7 @@
+## Verifying reservation locking locally
+
+I prepared separate database storage for the proposed notebook trial and tested it in an isolated PostgreSQL container. I checked that simultaneous starts have only one winner, closed transport cannot refund a start, unauthorized callers cannot read or change the ledger, and rollback cannot erase initialized history. I made invalid transitions explicitly false to avoid ambiguity from SQL null values. I kept the hosted database and actual spending approvals unchanged.
+
 ## Separating notebook test reservations
 
 I prepared a separate reservation contract for the proposed notes-only experiment. I made every start consume its allowance permanently, including when local transport closure is observed, because that does not prove remote finalization. I tested concurrency, restart and uncertain write responses using local fixtures. I kept this preparation separate from actual financial approval and from the existing avatar test records.
