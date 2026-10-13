@@ -10,7 +10,7 @@ type Transports={open:Parameters<typeof prepareNoteStartup>[0]['open'];fetch:Ses
 /** Protected dormant notes-only preparation, not a live route or spending grant.
  * No app startup import, default provider, key loader, persistence initializer,
  * avatar, recommendations, retry or reservation release. */
-export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;preview:PreviewConfig;allowance:Pick<PrivateNotesTrialLedgerOwner,'reserve'|'recordOutcome'>;createTransports:()=>Transports;publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void;turnReady?:(turnId:string)=>void;stopped?:()=>void}){
+export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;preview:PreviewConfig;allowance:Pick<PrivateNotesTrialLedgerOwner,'reserve'|'recordOutcome'>;createTransports:(reservationId:string)=>Transports;publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void;turnReady?:(turnId:string)=>void;stopped?:()=>void}){
  if(options.simulation!==true)throw Error('Private notes trial activation is disabled.');
  const target=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let state:'idle'|'starting'|'active'|'closing'|'held'='idle';
@@ -40,7 +40,7 @@ export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;previ
    catch{clearTimeout(timer);request.signal.removeEventListener('abort',stop);controller.abort();state='held';return{status:503 as const};}
    if(ending||request.signal.aborted){await finish();return{status:499 as const};}
    try{
-    transports=options.createTransports();if(typeof transports.countFetch!=='function'||typeof transports.dispose!=='function')throw Error();
+    transports=options.createTransports(reservation);if(typeof transports.countFetch!=='function'||typeof transports.dispose!=='function')throw Error();
     let settleReady!:(value:boolean)=>void;const ready=new Promise<boolean>(r=>settleReady=r);
     startup=prepareNoteStartup({simulation:true,signal:controller.signal,open:transports.open,session:{notebook,capture:transports.capture,fetch:transports.fetch,countFetch:transports.countFetch,changed:receipt=>options.publish(notebook.snapshot(),receipt),invalidated:()=>options.publish(notebook.snapshot(),null),turnReady:options.turnReady},ready:()=>settleReady(true),stopped:()=>{queueMicrotask(()=>{stop();settleReady(false);});}});
     if(!await ready||ending||!startup.active()){await finish();return{status:499 as const};}

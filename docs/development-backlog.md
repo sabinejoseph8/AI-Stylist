@@ -1,3 +1,11 @@
+## Reservation-bound provider transport composition, 12 October 2026
+
+Prepared the server provider transports as one dormant unit. Construction requires explicit simulation, injected HTTP/socket implementations and a matching reserved private-trial ledger approval/reservation. The protected owner now passes the actual reserved ID to its factory, including through the browser bridge. Disposal ends capture, cancels the socket and aborts HTTP requests; each cleanup is attempted even if another fails. Disposed adapters cannot send again. No default credential loader, network attachment, initializer or live activation was added. Ledger data alone is not human authorization.
+
+All ten new composition checks and all 1,466 prototype tests across 102 files, type checking and build pass. Synthetic composition with the protected owner verifies configuration readiness, terminal capture cleanup, one socket termination, retained held outcome and fresh-owner refusal. Tests also cover mismatched/consumed reservations, default refusal, fixed authenticated endpoints, pending HTTP cancellation and late response rejection. No real provider call, hosted change or spending occurred.
+
+Exact next action: prepare the explicit live execution boundary and consent handshake, preserving default-disabled startup and accurate live versus simulated status. The local rehearsal cannot be presented as a live trial. Review all activation prerequisites before requesting the proposed additional $2 and security-sensitive trial authorization. Existing allocation remains $41; Phase 1 remains open. Private Memory remains at the 1,454-test checkpoint pending synchronization of the preparation page and this increment.
+
 ## Private notes trial preparation page, 12 October 2026
 
 Added notes-trial.html with a notebook layout, complete advance review instructions, privacy/retention boundary and an unchecked local-rehearsal acknowledgment. Live connection and microphone remain disabled. The local flow uses scripted budget turns, supports revision-bound touch edits and rendering receipts, clears notes on End/visibility loss and prevents another start on the same page load. Reloading permits another local fixture only; it cannot authorize a paid trial.

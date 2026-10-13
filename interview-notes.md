@@ -1451,3 +1451,8 @@ I connected the prepared private notebook owner to a local browser-controller re
 ## Making the notebook trial understandable before starting
 
 I added a separate preparation page with the complete instructions and privacy boundary visible before the local rehearsal. I checked that acknowledgment is required, a $500 budget changes to $350, touch editing confirms the value, and End clears the notebook. The local rehearsal uses no microphone or paid service. I kept the 1,456 automated results and browser checks separate from future live speech acceptance.
+
+
+## Binding provider work to its reserved experiment
+
+I connected the protected notebook owner to a single disposable provider component. It checks the exact reserved experiment before construction, cancels pending work when stopped, and refuses reuse. My synthetic test verifies that the reservation stays consumed after shutdown. All 1,466 automated prototype tests pass. This preparation does not start a paid call or establish live speech acceptance.
