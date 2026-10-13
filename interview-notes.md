@@ -1,3 +1,7 @@
+## Verifying the separate database request boundary
+
+I prepared a fixed RPC adapter for the proposed notebook trial and verified it against the isolated database. I bounded response sizes and wait time, rejected incorrect endpoints and malformed records, and kept retries and approval initialization out of this adapter. I confirmed that a lost write response still leaves the start consumed when the owner restarts. The checks use synthetic requests and do not activate the hosted experiment.
+
 ## Testing uncertainty through the real local database
 
 I connected the proposed notebook reservation owner to the isolated local database. I simulated a successful write whose acknowledgment was lost and confirmed the owner refused to retry. I also forced two owners to compete from the same snapshot and checked that only one succeeded. Fresh Node processes could not reuse the consumed allowance in any scenario. This strengthens the local persistence evidence while keeping hosted activation and spending separate.

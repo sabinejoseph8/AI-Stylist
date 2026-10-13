@@ -2,6 +2,7 @@
 import assert from 'node:assert/strict';
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
+import {preparePrivateNotesTrialPersistence} from '../src/private-notes-trial-persistence.ts';
 import {PrivateNotesTrialLedgerOwner} from '../src/private-notes-trial-ledger.ts';
 import type {PrivateNotesTrialLedger} from '../src/private-notes-trial-ledger.ts';
 const [flag,container,mode,...extra]=process.argv.slice(2);
@@ -19,11 +20,19 @@ const literal=(v:unknown)=>"'"+JSON.stringify(v).replaceAll("'","''")+"'::jsonb"
 const base:PrivateNotesTrialLedger={version:1,purpose:'notes-only-private-trial',approval:{id:'synthetic_owner_not_approval',cents:200,maxSeconds:85,maxTurns:2,maxExtractions:64,maxInputTokens:1000000,maxOutputTokens:2048},reservation:null};
 const reset=()=>sql('delete from stylist_notes_trial_private.allowance;insert into stylist_notes_trial_private.allowance(ledger)values('+literal(base)+');');
 const read=async():Promise<PrivateNotesTrialLedger>=>JSON.parse(await sql('set role service_role;select public.stylist_private_notes_trial_read();'));
-function persistence(lostResponse=false,barrier?:()=>Promise<void>){let reads=0,writes=0;return{
- read:async()=>{reads++;const value=await read();await barrier?.();return value;},
- compareAndSwap:async(before:PrivateNotesTrialLedger,after:PrivateNotesTrialLedger)=>{writes++;const result=await sql('set role service_role;select public.stylist_private_notes_trial_change('+literal(before)+','+literal(after)+');');assert.equal(result,'t');if(lostResponse)throw Error('Synthetic lost response.');return true;},
- counts:()=>({reads,writes})
-};}
+function persistence(lostResponse=false,barrier?:()=>Promise<void>){let reads=0,writes=0;
+ const transport=preparePrivateNotesTrialPersistence({simulation:true,url:'https://fixture.supabase.co',fetch:async(url,init)=>{
+  assert.equal(init.redirect,'error');assert.equal(init.credentials,'omit');
+  if(url==='https://fixture.supabase.co/rest/v1/rpc/stylist_private_notes_trial_read'){
+   reads++;const value=await read();await barrier?.();return Response.json(value);
+  }
+  assert.equal(url,'https://fixture.supabase.co/rest/v1/rpc/stylist_private_notes_trial_change');writes++;
+  const {expected,replacement}=JSON.parse(init.body as string);
+  const result=await sql('set role service_role;select public.stylist_private_notes_trial_change('+literal(expected)+','+literal(replacement)+');');assert.equal(result,'t');
+  if(lostResponse)throw Error('Synthetic lost response.');return Response.json(true);
+ }});
+ return {...transport,counts:()=>({reads,writes})};
+}
 async function freshHold(){await command(process.execPath,[fileURLToPath(import.meta.url),'--local-docker',container,'--hold']);}
 if(mode==='--hold'){
  const p=persistence();await assert.rejects(new PrivateNotesTrialLedgerOwner(p).reserve());assert.deepEqual(p.counts(),{reads:1,writes:0});

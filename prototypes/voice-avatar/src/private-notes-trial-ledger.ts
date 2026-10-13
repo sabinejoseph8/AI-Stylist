@@ -3,7 +3,7 @@ import {isDeepStrictEqual} from 'node:util';
 const PURPOSE='notes-only-private-trial' as const;
 type Reservation={id:string;state:'reserved'|'transport-closed'|'held'};
 export type PrivateNotesTrialLedger={version:1;purpose:typeof PURPOSE;approval:{id:string;cents:200;maxSeconds:85;maxTurns:2;maxExtractions:64;maxInputTokens:1000000;maxOutputTokens:2048};reservation:Reservation|null};
-type Persistence={read:()=>Promise<unknown>;compareAndSwap:(before:PrivateNotesTrialLedger,after:PrivateNotesTrialLedger)=>Promise<boolean>};
+export type PrivateNotesTrialPersistence={read:()=>Promise<unknown>;compareAndSwap:(before:PrivateNotesTrialLedger,after:PrivateNotesTrialLedger)=>Promise<boolean>};
 const unavailable=()=>Error('Private notebook allowance requires review.');
 const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v);
 const exact=(v:Record<string,unknown>,keys:string[])=>Object.keys(v).sort().join(',')===keys.sort().join(',');
@@ -32,8 +32,8 @@ export function validatePrivateNotesTrialTransition(before:unknown,after:unknown
  * No closeVerified/refund/retry method exists. */
 export class PrivateNotesTrialLedgerOwner{
  private held=false;
- private readonly persistence:Persistence;
- constructor(persistence:Persistence){this.persistence=persistence;}
+ private readonly persistence:PrivateNotesTrialPersistence;
+ constructor(persistence:PrivateNotesTrialPersistence){this.persistence=persistence;}
  private async change(update:(value:PrivateNotesTrialLedger)=>void){
   if(this.held)throw unavailable();
   try{const before=validatePrivateNotesTrialLedger(await this.persistence.read()),after=structuredClone(before);update(after);validatePrivateNotesTrialTransition(before,after);if(await this.persistence.compareAndSwap(before,after)!==true)throw unavailable();}
