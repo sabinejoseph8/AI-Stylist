@@ -55,7 +55,7 @@ This is a proposal, not spending authorization. The accepted recovery trial used
 | --- | --- |
 | New financial reservation | $2, raising the combined experimental allocation from $41 to $43 only if Sabine approves |
 | Starts | One user-started connection; no automatic retry, reconnection or replacement |
-| Duration | At most 85 seconds after configuration readiness; opening/configuration deadlines also apply |
+| Duration | At most 85 seconds from protected request acquisition, including configuration; opening/configuration deadlines also apply |
 | Turns | At most two explicitly committed speech turns |
 | Transcription | Existing selected gpt-live-transcribe; no silent model fallback |
 | Extraction | Existing pinned gpt-4.1-mini-2025-04-14; at most 64 requests, at most 2,048 output tokens each |
@@ -78,10 +78,15 @@ Official pages retrieved on 12 October 2026 list live transcription at $0.017 pe
 4. Keep the private route disabled until explicit financial and security-sensitive activation authorization, tests, protected hosted access and exact deployment are ready. No plan upgrade or account-budget change is included.
 5. Deliver the complete existing manual script in chat before the user starts. A passing first trial proves basic integration only, not the representative two-second p95 target.
 
-Exact next local implementation action: prepare a separate locked database persistence transition for the new private-trial contract and verify local concurrency/restart behavior, without initializing an approval or changing hosted storage. Aggregate counted dispatch and dormant HTTP/socket adapters are now prepared and composed under synthetic tests. The existing simulation-purpose ledger is not live authorization. No live network or credentials are needed for the next local change.
+Exact next local implementation action: complete and review the disabled private-trial activation boundary, privacy notice and browser page. The separate SQL, fixed RPC adapter, protected owner and browser-protocol rehearsal are prepared. Local isolated SQL tests establish locking and fresh-process refusal for synthetic data; hosted storage is still unapplied. No approval initializer, live route, credentials or provider call is enabled. The existing simulation-purpose ledger is not live authorization.
 
 ## Adapter composition checkpoint, 12 October 2026
 
 The dormant server HTTP and socket adapters now compose with prepared startup and counted extraction in synthetic integration tests. First-packet creation precedes configuration, count and generation receive the identical serialized request and authenticated headers, partial notes appear tentatively, exit cancels pending counting and late completion is ignored. Failed local socket termination remains visible as cleanup uncertainty. This does not verify a real provider connection or change any activation gate. The protected owner currently applies its 85-second deadline from request acquisition, which is more restrictive than the proposed post-readiness maximum. Do not promise a full 85 seconds of ready microphone time.
 
-The private-trial ledger contract is prepared locally. Its approval fields remain a proposal until explicit human authorization and a reviewed initialization. It allows one start forever; recording transport closure never frees that start. Real database locking and hosted access protection remain to be verified separately.
+The private-trial ledger contract is prepared locally. Its approval fields remain a proposal until explicit human authorization and a reviewed initialization. It allows one start forever; recording transport closure never frees that start. Local database locking has been verified with isolated PostgreSQL tests. Hosted access protection and explicit allowance initialization remain unapplied and must be verified separately.
+
+
+## Browser protocol checkpoint, 12 October 2026
+
+The separate protected owner now composes with the existing simulation WebSocket and browser controller. All 1,454 tests, type checking and build pass. Two completed synthetic turns verify a budget correction, rendering receipts, touch confirmation and shutdown with a retained reservation. Fixture consent must never be reused as live consent. The adapter remains unattached to normal startup; a real page must require an affirmative privacy acknowledgment and user gesture before microphone acquisition. No live trial, financial approval or hosted change is established by these results.
