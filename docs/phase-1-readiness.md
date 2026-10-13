@@ -1,6 +1,6 @@
 # Phase 1 readiness and remaining evidence
 
-Updated: 10 October 2026
+Updated: 13 October 2026
 
 Phase 1 remains incomplete. This page separates current evidence from launch claims and identifies the dependencies for the next live experiment. Read DEVELOPMENT_PROGRESS.md for the exact implementation handoff.
 
@@ -8,7 +8,7 @@ Phase 1 remains incomplete. This page separates current evidence from launch cla
 
 | Phase check | Evidence available | Still required |
 | --- | --- | --- |
-| P1-01: interruption and cancellation | Private desktop/iPhone reply and interrupt-and-end accepted; synthetic streaming/recovery checks pass. | Supported Tavus queue-clear acknowledgment and a representative live resume test. Stopping the call is not conversational resume. |
+| P1-01: interruption and cancellation | Private desktop/iPhone reply, spoken interruption and bounded replacement-room resume accepted; both rooms verified ended. | Representative continuous conversation and timing. Tavus stopped-speaking is not a downstream buffer-flush guarantee; the accepted bounded flow replaces the room. |
 | P1-02: notes before turn end | Combined simulated socket, strict extraction, browser bridge and seven-field scenarios pass; visible local rehearsal checked. | Actual partial speech through the selected provider and notes appearing during continuous speech. |
 | P1-03: correction precedence | Touch edits, late extraction, revision checks and a spoken budget correction are covered by simulated tests. | Real recognition and extraction of the correction on the target phone. |
 | P1-04: validation before display/speech | Fixture gate rejects unknown, stale and over-budget results. A combined correction invalidates the old passed ticket, visual permit and per-frame speech authorization. | Integrated real recommendation and speech release path; independent preference validation with approved product data. |
@@ -19,9 +19,9 @@ Phase 1 remains incomplete. This page separates current evidence from launch cla
 
 ## Dependencies for live evidence
 
-1. **Financial authorization:** all nine approved attempts are consumed and closed; the reserve is zero. Prepare a specific bounded experiment and obtain a new allowance before any provider request. Historical approvals cannot be reused.
-2. **Tavus technical reply:** the existing support questions about clearing old audio and safely resuming are pending. Sabine needs to share that reply when it arrives. Do not resend without a reason and authorization.
-3. **Safe live integration:** preparation currently injects simulated transports. No live application route, credential access, hosted deployment or authentication proof is implied. Any activation needs the existing owner, origin, spend, timeout and cleanup boundaries preserved.
+1. **Financial authorization:** the existing $41 experiment allocation is exhausted for further avatar attempts, with seventeen historical records preserved. A separate $2 notes-only trial and private activation decision is pending; no new allowance is authorized yet.
+2. **Tavus technical reply:** received. Interrupted output must be canceled; fresh output uses a new inference ID. No downstream flush or exact playback-position proof is provided. The conservative replacement-room flow passed its bounded iPhone check; continuous streaming remains unverified.
+3. **Safe live integration:** the dedicated notebook page, runtime, protected route, durable single-start owner and operator guide are reviewed locally with injected services. Normal startup remains unchanged, and actual notebook schema initialization, credentials, deployment and provider calls remain disabled pending approval. See docs/private-notes-trial-activation-review.md.
 4. **Source and privacy resolution:** no retailer feed/imagery license is approved, and customer provider terms, retention and recovery remain open. Desk research does not authorize media use or a shopping launch.
 
 ## Remaining review
@@ -32,7 +32,7 @@ Task 1e still needs actual feasibility findings, performance measurements and ag
 
 Continue deterministic failure checks and implementation that does not depend on these live decisions. Keep fixtures explicitly synthetic, preserve all approved financial limits, and update the backlog and persistent progress after each increment. No new business requirement or acceptance target is introduced by this page.
 
-Latest deterministic evidence: 1,264 tests across 81 files, type checking and build pass. These checks and the local timing display do not establish live provider timing, remote deletion or production multi-customer isolation.
+Latest recorded deterministic evidence: 1,544 prototype tests across 112 files, type checking and build pass. The separate private-trial harness passed 50 isolated SQL checks and four SQL-backed owner scenarios. The active scripted page passed desktop and 390 by 844 phone-viewport review. Historical increments below retain their original evidence counts. These checks and the local timing display do not establish live provider timing, remote deletion or production multi-customer isolation.
 
 ## Disabled notebook server owner
 

@@ -1,3 +1,9 @@
+## Current-summary reconciliation, 13 October 2026
+
+Reconciled the current plan summary and Phase 1 readiness matrix with the already recorded successful bounded iPhone replacement-room recovery and latest 1,544-test notebook preparation. Removed superseded pending-recovery and old budget claims from the current summary. Historical dated evidence remains intact. Clarified that the received Render reply leaves trust/logging questions unresolved, and that the existing MVP file, foundation harness and private Memory site are established.
+
+No implementation or approval changed; application tests were not rerun for this documentation-only correction. All 16 Memory-site checks, build and artifact validation passed. Owner-private publication succeeded for source 5e3b293a5232c900fdd1cacb3903ee0b3237111c as deployment appgdep_6acdbc147a8c8191b1abcbeed26db997 with MCP retained. Phase 1 and hosted account acceptance remain open. The pending $2 private notebook activation question is unanswered; live notes remain disabled. Exact next action: receive that decision, then follow the reviewed operator guide if approved, while preserving all existing financial and security gates.
+
 ## Private Memory activation-review checkpoint, 12 October 2026
 
 The owner-private Memory site now publishes the active rendered-page rehearsal and focused activation-path self-review with 1,544 prototype tests. Source 232f19ebd49d4bbc564888874048c7b57184f9d7 deployed successfully as appgdep_6acdba7d7cd481918cea57ff7d551ed2 with MCP retained. All 16 site checks, build and artifact validation pass. GitHub and the approved AI Stylist folder contain the reviewed page/runtime/operator guide. No actual microphone, provider call, hosted initialization, Render deployment or spending authorization occurred.
