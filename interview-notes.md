@@ -1563,3 +1563,7 @@ I received two support replies that repeated a startup recommendation without ex
 ## Preparing a smaller diagnostic without changing the product
 
 I prepared a separate offline experiment using the provider's minimal transcription configuration. I kept the app's language and latency requirements intact and blocked existing live approvals from selecting this new profile. I tested the exact command, cleanup and diagnostic categories with simulated events. I documented what a successful result could establish and what it could not, so a future spending decision would fund a specific investigation rather than another identical retry.
+
+## What the minimal provider test established
+
+I approved one bounded server-only experiment after the offline preparation passed. The minimal request failed even with the optional language and delay fields omitted. The improved diagnostic established that a parameter name was present but outside our approved list, without exposing arbitrary provider text. I preserved every consumed reservation and verified cleanup recording. I kept the conclusion narrow: this ruled out simply removing those optional fields as a working correction for that run, but did not identify the rejected setting. I did not ask for another identical test or claim that transcription was working.

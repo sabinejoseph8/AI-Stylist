@@ -2,14 +2,16 @@ import {PrivateNotesTrialLedgerOwner,validatePrivateNotesTrialLedger} from './pr
 import type {PrivateNotesTrialPersistence} from './private-notes-trial-ledger.ts';
 import {createPrivateNotesTrialExecution} from './note-execution.ts';
 import type {PrivateNotesTrialExecution} from './note-execution.ts';
-import {prepareNotesStartupDiagnostic} from './notes-startup-diagnostic.ts';
+import {prepareNotesStartupDiagnostic,createMinimalStartupExecution} from './notes-startup-diagnostic.ts';
 import type {StartupDiagnosticOpen} from './notes-startup-diagnostic.ts';
 import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 /** Trusted server preparation only. A stored row or a client flag is not approval.
  * The live operator must separately authorize a new startup-only experiment. */
-export function prepareReservedNotesStartupDiagnostic(options:{authorization:{approvalId:string;financialApproved:boolean;securityApproved:boolean;scope:'startup-only'};store:PrivateNotesTrialPersistence;makeOpener:(permit:PrivateNotesTrialExecution)=>{open:StartupDiagnosticOpen;end:()=>void};diagnostic?:NoteStartupDiagnostic}){
+export function prepareReservedNotesStartupDiagnostic(options:{authorization:{approvalId:string;financialApproved:boolean;securityApproved:boolean;scope:'startup-only';profile?:'minimal'};store:PrivateNotesTrialPersistence;makeOpener:(permit:PrivateNotesTrialExecution)=>{open:StartupDiagnosticOpen;end:()=>void};diagnostic?:NoteStartupDiagnostic}){
  const supplied=options.authorization,unavailable=()=>Error('Startup diagnostic requires separate authorization.');
  if(!supplied||supplied.financialApproved!==true||supplied.securityApproved!==true||supplied.scope!=='startup-only'||typeof supplied.approvalId!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(supplied.approvalId)||typeof options.store?.read!=='function'||typeof options.store?.compareAndSwap!=='function'||typeof options.makeOpener!=='function')throw unavailable();
+ if(supplied.profile!==undefined&&supplied.profile!=='minimal')throw unavailable();
+ if(supplied.profile==='minimal'&&!/^notes_startup_diag_minimal_[A-Za-z0-9_-]{1,50}$/.test(supplied.approvalId))throw unavailable();
  const a=Object.freeze({...supplied});
  let used=false;
  return{run:async(signal:AbortSignal)=>{
@@ -31,7 +33,7 @@ export function prepareReservedNotesStartupDiagnostic(options:{authorization:{ap
    const reserved=await read();if(reserved.reservation?.id!==reservation||reserved.reservation.state!=='reserved'||signal.aborted)throw unavailable();
    const permit=createPrivateNotesTrialExecution({financialApproved:true,securityApproved:true,ledger:reserved});
    opener=options.makeOpener(permit);if(signal.aborted)throw unavailable();
-   result=await prepareNotesStartupDiagnostic({privateTrial:permit,open:opener.open,signal,diagnostic:options.diagnostic}).run();
+   result=await prepareNotesStartupDiagnostic({privateTrial:permit,minimalExecution:a.profile==='minimal'?createMinimalStartupExecution(permit):undefined,open:opener.open,signal,diagnostic:options.diagnostic}).run();
   }catch{/* Never expose raw store/provider errors or retry an uncertain write. */}
   finally{
    try{opener?.end();}catch{}

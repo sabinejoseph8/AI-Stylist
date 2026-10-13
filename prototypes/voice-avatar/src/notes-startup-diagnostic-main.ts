@@ -9,8 +9,10 @@ import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 const reviewedConfigurations=new WeakSet<object>();
 export function startupDiagnosticConfiguration(args:string[],env:Record<string,string|undefined>){
  const id=env.NOTES_STARTUP_DIAGNOSTIC_APPROVAL_ID;
- if(!Array.isArray(args)||args.length!==1||args[0]!=='--run-approved-notes-startup-diagnostic'||env.NOTES_STARTUP_DIAGNOSTIC_FINANCIAL_APPROVED!=='true'||env.NOTES_STARTUP_DIAGNOSTIC_SECURITY_APPROVED!=='true'||env.NOTES_STARTUP_DIAGNOSTIC_SCOPE!=='startup-only'||typeof id!=='string'||!/^notes_startup_diag_[A-Za-z0-9_-]{1,60}$/.test(id))throw Error('Startup diagnostic requires separate review.');
- const config=Object.freeze({approvalId:id,supabaseUrl:env.SUPABASE_URL??''});reviewedConfigurations.add(config);return config;
+ if(!Array.isArray(args)||args.length!==1||!['--run-approved-notes-startup-diagnostic','--run-approved-minimal-notes-startup-diagnostic'].includes(args[0]!)||env.NOTES_STARTUP_DIAGNOSTIC_FINANCIAL_APPROVED!=='true'||env.NOTES_STARTUP_DIAGNOSTIC_SECURITY_APPROVED!=='true'||env.NOTES_STARTUP_DIAGNOSTIC_SCOPE!=='startup-only'||typeof id!=='string'||!/^notes_startup_diag_[A-Za-z0-9_-]{1,60}$/.test(id))throw Error('Startup diagnostic requires separate review.');
+ const minimal=args[0]==='--run-approved-minimal-notes-startup-diagnostic';
+ if(minimal?(env.NOTES_STARTUP_DIAGNOSTIC_PROFILE!=='minimal'||!/^notes_startup_diag_minimal_[A-Za-z0-9_-]{1,50}$/.test(id)):(env.NOTES_STARTUP_DIAGNOSTIC_PROFILE!==undefined||id.startsWith('notes_startup_diag_minimal_')))throw Error('Startup diagnostic requires separate review.');
+ const config=Object.freeze({approvalId:id,supabaseUrl:env.SUPABASE_URL??'',profile:minimal?'minimal' as const:undefined});reviewedConfigurations.add(config);return config;
 }
 /** No default transport, key loader, environment access, listen or initializer. */
 export function prepareStartupDiagnosticRuntime(config:ReturnType<typeof startupDiagnosticConfiguration>,options:{loadSecrets:()=>{supabaseKey:string;openAIKey:string};request:typeof fetch;connect:NonNullable<Parameters<typeof prepareServerNoteSocketOpener>[0]['connect']>;diagnostic?:NoteStartupDiagnostic}){
@@ -24,7 +26,7 @@ export function prepareStartupDiagnosticRuntime(config:ReturnType<typeof startup
  }});
  try{const secrets=options.loadSecrets();if(!secrets||typeof secrets.supabaseKey!=='string'||typeof secrets.openAIKey!=='string'||! /^[A-Za-z0-9_+/.=-]{32,2048}$/.test(secrets.supabaseKey)||! /^[A-Za-z0-9_-]{16,512}$/.test(secrets.openAIKey))throw Error();key=secrets.supabaseKey;openAIKey=secrets.openAIKey;}catch{throw Error('Diagnostic credentials unavailable.');}
  let active:ReturnType<typeof prepareServerNoteSocketOpener>|undefined;
- const runner=prepareReservedNotesStartupDiagnostic({authorization:{approvalId:safe.approvalId,financialApproved:true,securityApproved:true,scope:'startup-only'},store,diagnostic:report,makeOpener:()=>{
+ const runner=prepareReservedNotesStartupDiagnostic({authorization:{approvalId:safe.approvalId,financialApproved:true,securityApproved:true,scope:'startup-only',profile:safe.profile},store,diagnostic:report,makeOpener:()=>{
   if(ended||openAIKey===null)throw Error('Diagnostic ended.');active=prepareServerNoteSocketOpener({apiKey:openAIKey,connect:options.connect,diagnostic:report});openAIKey=null;return active;
  }});
  return{run:async(signal:AbortSignal)=>{try{return await runner.run(AbortSignal.any([signal,lifetime.signal]));}finally{ended=true;lifetime.abort();try{active?.end();}catch{}key=null;openAIKey=null;}},end:()=>{ended=true;openAIKey=null;lifetime.abort();try{active?.end();}catch{}}};

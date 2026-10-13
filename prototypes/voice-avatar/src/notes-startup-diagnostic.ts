@@ -1,4 +1,4 @@
-import {validNoteExecution} from './note-execution.ts';
+import {validNoteExecution,isPrivateNotesTrialExecution} from './note-execution.ts';
 import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {boundedNoteStartupDiagnostic,providerErrorDiagnostic,providerErrorDetails} from './note-startup-diagnostics.ts';
 import type {NoteStartupCode,NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
@@ -6,17 +6,25 @@ import {prepareTranscriptionSocketWire} from './transcription-socket-wire.ts';
 import type {SimulatedTranscriptionSocket} from './transcription-socket-wire.ts';
 import {TRANSCRIPTION_MODEL} from './live-transcription.ts';
 export const STARTUP_DIAGNOSTIC_EVENT_ID='notes_startup_diagnostic_v1';
+const minimalPermits=new WeakMap<object,PrivateNotesTrialExecution>();
+export type MinimalStartupExecution=Readonly<{profile:'minimal'}>;
+/** Trusted startup-only owner calls this after its separate minimal approval and reservation. */
+export function createMinimalStartupExecution(permit:PrivateNotesTrialExecution):MinimalStartupExecution{
+ if(!isPrivateNotesTrialExecution(permit))throw Error('Minimal startup diagnostic requires authorization.');
+ const grant=Object.freeze({profile:'minimal' as const});minimalPermits.set(grant,permit);return grant;
+}
 type Opened={socket:SimulatedTranscriptionSocket;detachInitialEvents:()=>void};
 export type StartupDiagnosticOpen=(signal:AbortSignal,initialEvent:(value:unknown)=>void)=>Promise<Opened>;
 export type StartupDiagnosticOutcome='configuration-accepted'|'initial-rejected'|'configuration-rejected'|'incompatible-ack'|'invalid-event'|'opening-failed'|'timed-out'|'canceled';
 /** One startup only. No microphone, capture, HTTP extraction or response API.
  * No default socket, key loader, environment access, listener or activation. */
-export function prepareNotesStartupDiagnostic(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;simulationProfile?:'minimal';open:StartupDiagnosticOpen;signal:AbortSignal;diagnostic?:NoteStartupDiagnostic}){
+export function prepareNotesStartupDiagnostic(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;simulationProfile?:'minimal';minimalExecution?:MinimalStartupExecution;open:StartupDiagnosticOpen;signal:AbortSignal;diagnostic?:NoteStartupDiagnostic}){
  if(!validNoteExecution(options)||typeof options.open!=='function')throw Error('Startup diagnostic is disabled.');
  // The alternate payload is offline preparation only. Existing live permits,
  // operator flags and reserved trials must not silently select a new experiment.
  if(options.simulationProfile!==undefined&&(options.simulation!==true||options.simulationProfile!=='minimal'))throw Error('Minimal startup diagnostic is simulation only.');
- const minimal=options.simulationProfile==='minimal';
+ if(options.minimalExecution!==undefined&&(options.simulation===true||!options.privateTrial||minimalPermits.get(options.minimalExecution)!==options.privateTrial))throw Error('Minimal startup diagnostic requires authorization.');
+ const minimal=options.simulationProfile==='minimal'||options.minimalExecution!==undefined;
  const report=boundedNoteStartupDiagnostic(options.diagnostic);
  let used=false;
  return{run:()=>{

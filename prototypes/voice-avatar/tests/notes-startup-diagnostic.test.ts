@@ -73,3 +73,11 @@ it.each(['realtime','wrong-model'])('minimal simulation refuses an incompatible 
  const value=structuredClone(ack);if(kind==='realtime')value.session.type='realtime';else value.session.audio.input.transcription.model='different';s.message(value);
  expect((await p).outcome).toBe('incompatible-ack');expect(s.socket.close).toHaveBeenCalledOnce();expect(s.socket.send).toHaveBeenCalledOnce();
 });
+
+it('refuses a forged minimal grant before opening any connection',()=>{
+ const s=fixture();expect(()=>prepareNotesStartupDiagnostic({simulation:true,minimalExecution:{profile:'minimal'},open:s.open,signal:s.controller.signal})).toThrow('authorization');expect(s.open).not.toHaveBeenCalled();
+});
+it('does not mint a minimal grant from a forged private execution',async()=>{
+ const {createMinimalStartupExecution}=await import('../src/notes-startup-diagnostic.ts');
+ expect(()=>createMinimalStartupExecution({approvalId:'synthetic',reservationId:'synthetic'} as never)).toThrow('authorization');
+});
