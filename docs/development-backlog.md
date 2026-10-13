@@ -2191,3 +2191,8 @@ Applied prototype-recovery-repeat.sql to the confirmed existing project after a 
 
 
 Repeat deployment dep-db6kbtff3r2c73cn907g succeeded for source 6610c4ea9ffbf1bfaf8a4e6fb8ad562189775e83, retaining explicit protected recovery mode and Free service. No new provider room or reservation started. Sabine can now perform exactly one repeat using the complete advance instructions, keeping Safari visible until End. Actual iPhone recovery acceptance remains pending. Private Memory website still reflects the earlier initial-trial deployment; synchronize this repeat outcome on the next site update.
+
+
+## Navigation reminders published
+
+Render deployment dep-db6ocsl9fdbs73dmr5f0 succeeded from 28efe75bd9865aeb63bf8bb7b7f8c948982cbe25. Unauthenticated recovery GET returns 401. No test started. The private Memory website was synchronized and published successfully with MCP preserved: source 4310b15faaec6a05164b90688719b4994315511d, deployment appgdep_6acd86efae6c8191bb6359410db83193. All 16 site checks and artifact validation pass. The $33 experiment allocation is unchanged; the refreshed repeat initial room is closed and its replacement never started. Recovery acceptance remains open. Another paid test requires financial authorization.
