@@ -1,3 +1,7 @@
+## Preparing account operations before launch
+
+I turned Apple sign-in renewal and email maintenance from broad to-do items into an operational runbook. It separates the expiring Apple client secret from its signing key, assigns private ownership and expiry records, and defines verification and safe rollback. I kept actual credential creation and paid sender/domain setup behind the owner's handoff. I also corrected old account summaries so they reflect my approved seven-day session and verified-email linking decisions.
+
 ## Confirming the repaired camera experience
 
 After fixing the capture and preview races, I reviewed the complete camera flow on my computer. Every step worked: I could stop and restart the preview, confirm a clothing still, keep it while the live view changed, and clear it with the device indicator off. I recorded this as acceptance of the local camera experience while keeping live transcription and the broader discovery milestone open. This helped me distinguish a working interaction from unfinished integration.
