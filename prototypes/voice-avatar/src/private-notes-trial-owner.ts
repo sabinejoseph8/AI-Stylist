@@ -10,7 +10,7 @@ type Transports={open:Parameters<typeof prepareNoteStartup>[0]['open'];fetch:Ses
 /** Protected dormant notes-only preparation, not a live route or spending grant.
  * No app startup import, default provider, key loader, persistence initializer,
  * avatar, recommendations, retry or reservation release. */
-export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;preview:PreviewConfig;allowance:Pick<PrivateNotesTrialLedgerOwner,'reserve'|'recordOutcome'>;createTransports:()=>Transports;publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void;turnReady?:(turnId:string)=>void}){
+export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;preview:PreviewConfig;allowance:Pick<PrivateNotesTrialLedgerOwner,'reserve'|'recordOutcome'>;createTransports:()=>Transports;publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void;turnReady?:(turnId:string)=>void;stopped?:()=>void}){
  if(options.simulation!==true)throw Error('Private notes trial activation is disabled.');
  const target=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let state:'idle'|'starting'|'active'|'closing'|'held'='idle';
@@ -32,7 +32,7 @@ export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;previ
      notebook.clear();try{options.publish(notebook.snapshot(),null);}catch{/* Cleared session stays closed. */}
      if(reservation)try{await options.allowance.recordOutcome(reservation,'held');}catch{/* Never retry an uncertain write. */}
      state='held';
-    })().then(settle,()=>{state='held';settle();});return finishPromise;
+    })().then(()=>{settle();try{options.stopped?.();}catch{}},()=>{state='held';settle();try{options.stopped?.();}catch{}});return finishPromise;
    };
    const stop=()=>{ending=true;controller.abort();if(reservation)void finish();};
    const timer=setTimeout(stop,85000);request.signal.addEventListener('abort',stop,{once:true});
@@ -46,7 +46,7 @@ export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;previ
     if(!await ready||ending||!startup.active()){await finish();return{status:499 as const};}
    }catch{await finish();return{status:503 as const};}
    state='active';const probe=startup.active()!.probe;
-   return{status:200 as const,snapshot:()=>notebook.snapshot(),
+   return{status:200 as const,snapshot:()=>notebook.snapshot(),probeSnapshot:()=>probe.snapshot(),
     beginTurn:async(id:string)=>{if(ending)return false;if(turns>=2){await finish();return false;}turns++;return probe.beginTurn(id);},
     commitTurn:()=>ending?false:probe.commit(),
     audio:(frame:ArrayBuffer)=>ending?false:probe.audio(frame),

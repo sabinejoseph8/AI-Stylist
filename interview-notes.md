@@ -1441,3 +1441,8 @@ I saw that leaving or refreshing the phone preview could consume a reserved test
 ## Learning from a real-device failure
 
 My phone test failed after I confirmed the first reply and gave a sleeve preference. I verified that the provider room had ended and the replacement never started. The screen's generic error could not explain the failure, so I added fixed messages that identify the failing stage without retaining speech or exposing provider error bodies. The simulated follow-up and recovery tests pass, but I kept physical-device acceptance open and did not spend on an automatic retry.
+
+
+## Rehearsing the notebook connection before spending
+
+I connected the prepared private notebook owner to a local browser-controller rehearsal. I checked two completed turns, a budget correction, touch confirmation and shutdown while keeping the test reservation consumed. All 1,454 automated prototype checks passed. I kept these simulated results separate from microphone and live-provider acceptance, and left the proposed additional $2 unapproved.

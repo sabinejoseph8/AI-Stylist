@@ -2108,3 +2108,12 @@ Sabine approved one additional $4 recovery test, at most two rooms and ten reser
 ## Approved $41 recovery checkpoint
 
 Sabine approved one additional $4 test with at most two rooms and ten reserved avatar minutes, raising the experiment allocation to $41. No automatic retry or plan upgrade. The exact recoveryThirdRepeat amendment is installed; full before/after comparison preserves all fifteen historical records and earlier metadata. Latest initial room is provider-ended, replacement never started. No new pair reserved. All 1,304 tests, type checking, build and 32 isolated SQL checks pass. Synthetic WebKit normal recovery and confirmed-follow-up request failure both pass, including cleanup, no retry/replacement on failure and no private provider body exposure. Corrected an overly strict test fixture that required interruption on ordinary error-end; production cleanup code was unchanged. Earlier physical-device root cause remains unknown. Next: deploy tested allowance code, synchronize private Memory, and give complete advance instructions before Sabine starts the single test.
+
+
+## Private notebook browser protocol rehearsal, 12 October 2026
+
+Connected the dormant private-trial owner to the existing simulation WebSocket protocol with explicit simulation and fixture-consent gates. Readiness waits for owner startup; shutdown clears transient notes and retains the consumed reservation. The bridge is not attached to normal server startup and contains no credential loader or live activation. Fixture consent is not customer consent.
+
+All 1,454 prototype tests across 100 files pass. Two new loopback checks cover activation refusal and two completed synthetic browser-controller turns: budget changes from $500 to $350, rendering receipts, touch confirmation, shutdown and fresh-owner refusal. This is synthetic controller/WebSocket evidence, not a rendered-screen, microphone, live-provider or timing acceptance test. Existing 46 SQL checks and four database-owner scenarios were not rerun for this bridge increment.
+
+Next exact action: review and complete the disabled private-trial activation boundary and advance instructions, then obtain the separate financial/security authorization before any hosted initialization or paid call. Existing allocation remains $41; the proposed additional $2 is unapproved. Phase 1 remains open. Private Memory still publishes the earlier 1,401-test/database-owner checkpoint and needs synchronization.

@@ -1,3 +1,11 @@
+## Private notebook browser protocol rehearsal, 12 October 2026
+
+Connected the dormant private-trial owner to the existing simulation WebSocket protocol with explicit simulation and fixture-consent gates. Readiness waits for owner startup; shutdown clears transient notes and retains the consumed reservation. The bridge is not attached to normal server startup and contains no credential loader or live activation. Fixture consent is not customer consent.
+
+All 1,454 prototype tests across 100 files pass. Two new loopback checks cover activation refusal and two completed synthetic browser-controller turns: budget changes from $500 to $350, rendering receipts, touch confirmation, shutdown and fresh-owner refusal. This is synthetic controller/WebSocket evidence, not a rendered-screen, microphone, live-provider or timing acceptance test. Existing 46 SQL checks and four database-owner scenarios were not rerun for this bridge increment.
+
+Next exact action: review and complete the disabled private-trial activation boundary and advance instructions, then obtain the separate financial/security authorization before any hosted initialization or paid call. Existing allocation remains $41; the proposed additional $2 is unapproved. Phase 1 remains open. Private Memory still publishes the earlier 1,401-test/database-owner checkpoint and needs synchronization.
+
 ## Protected private notes trial owner preparation, 12 October 2026
 
 Prepared a separate dormant notes-only owner with exact private preview access and an explicit consent requirement before reservation/provider construction. It requires injected counted startup transports and disposal, has no credentials, default route, normal startup attachment, recommendations or live activation. It reserves one attempt through the separate contract, limits begin attempts to two and applies an 85-second deadline from request acquisition. Turn completion, revision-based touch edits and rendering receipts are preserved. Exit clears transient notes, stops startup/capture, disposes transports and records held without refund or retry; local transport termination is not treated as remote finalization.
