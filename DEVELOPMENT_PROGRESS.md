@@ -2571,3 +2571,9 @@ Memory failure-outcome synchronization succeeded: source 79ef187bb01902f1f92103a
 ## Approved $41 recovery checkpoint
 
 Sabine approved one additional $4 test with at most two rooms and ten reserved avatar minutes, raising the experiment allocation to $41. No automatic retry or plan upgrade. The exact recoveryThirdRepeat amendment is installed; full before/after comparison preserves all fifteen historical records and earlier metadata. Latest initial room is provider-ended, replacement never started. No new pair reserved. All 1,304 tests, type checking, build and 32 isolated SQL checks pass. Synthetic WebKit normal recovery and confirmed-follow-up request failure both pass, including cleanup, no retry/replacement on failure and no private provider body exposure. Corrected an overly strict test fixture that required interruption on ordinary error-end; production cleanup code was unchanged. Earlier physical-device root cause remains unknown. Next: deploy tested allowance code, synchronize private Memory, and give complete advance instructions before Sabine starts the single test.
+
+
+Third repeat deployment dep-db6org2j9qps739u1d70 succeeded from 3faa427b25f924801c21f3163ed319663d5f6890, preserving Free service and protected recovery mode. No new reservation or provider room started. Next action: Sabine performs exactly one test using complete advance instructions. No retries or plan upgrades.
+
+
+Private Memory publication succeeded from e673cdf5a0a1313e8545f7bbbc9edb042119de25, deployment appgdep_6acd8e3bbf3c8191a5c4f811cdfa983f. Owner-private access and MCP preserved; 16 site checks and artifact validation pass. Awaiting Sabine’s one approved $4 test; no new pair or provider room started. Exact next action: receive the physical iPhone result, verify closure, and diagnose any fixed-stage error without automatic retries.
