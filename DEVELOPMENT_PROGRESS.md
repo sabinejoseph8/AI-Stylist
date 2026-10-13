@@ -1,3 +1,9 @@
+## Private Memory synchronization, 12 October 2026
+
+The owner-private Memory site now publishes the consent and internal-mode checkpoint with 1,486 prototype tests. Source 622eb8cdaa6b4fac749e6b3be404afba5e107609 deployed successfully as appgdep_6acda86392708191b91f497b213b461b with MCP retained. All 16 site checks, build and artifact validation pass. This changes no live provider, hosted customer database or spending authorization.
+
+Exact next action: integrate a reserved execution capability into the protected owner after consent/access/reservation, then require browser readiness to match the selected mode. Complete and review the full disabled activation path before requesting the proposed additional $2/security authorization. Existing allocation remains $41 and Phase 1 remains open.
+
 ## Explicit internal private-trial execution mode, 12 October 2026
 
 Separated protocol simulation from an explicit private-trial capability. The process-local opaque capability is minted only with affirmative trusted financial/security configuration and a validated reserved private-trial record; copied or fabricated objects and mixed modes are rejected. Those configuration inputs must represent separately recorded human authorization and must never come from client JSON. No application route or normal startup mints a capability. Capability construction itself starts no network work and is not evidence of human approval or a provider call.
