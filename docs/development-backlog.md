@@ -1,3 +1,9 @@
+## Local notebook camera accepted by Sabine, 13 October 2026
+
+Sabine answered All steps worked to the complete seven-step local-computer review. Accepted scope: refresh/open notebook; camera-only permission and preview; Stop and restart retaining the new preview; capture and explicit item confirmation; changing the live view and stopping without replacing the confirmed still; and Clear removing the still with the device indicator off. This is human acceptance of the repaired local camera flow, not a new iPhone/network/provider test or complete accessibility review.
+
+The camera manual check is no longer pending. Task 1c and Phase 1 remain open: the live transcription startup still rejects configuration, and live extraction, representative timing and complete media/recommendation gating remain unaccepted. No new provider call, spending, hosted change or code was required to record the result. Prior automated evidence remains 1,653 prototype tests across 118 files, type checking/build and the separately recorded isolated database evidence; those were not rerun for this acceptance-only update. The $49 allocation and four held notes/startup reservations are unchanged.
+
 ## Camera preview callback ownership fixed, 13 October 2026
 
 Task 1c local review confirmed that video.play could reject after Stop and a new camera start, letting the old catch stop the new preview. Device-ended callbacks were also not detached. NotebookCamera now owns preview attachment, playback completion/failure and device events with the acquisition epoch and exact stream. Retired callbacks cannot change current state. Stop detaches listeners and invalidates pending acquisition/playback; duplicate preview requests are refused before acquiring another stream. Late or invalid streams release all tracks even if one release throws. Page exit uses the same preview cleanup path.

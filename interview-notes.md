@@ -1,3 +1,7 @@
+## Confirming the repaired camera experience
+
+After fixing the capture and preview races, I reviewed the complete camera flow on my computer. Every step worked: I could stop and restart the preview, confirm a clothing still, keep it while the live view changed, and clear it with the device indicator off. I recorded this as acceptance of the local camera experience while keeping live transcription and the broader discovery milestone open. This helped me distinguish a working interaction from unfinished integration.
+
 ## Preventing an old camera preview from stopping a new one
 
 I found a second camera lifecycle race: a delayed playback failure could stop a preview I had already restarted. I bound playback and device events to their original stream, removed old listeners on Stop and tested late permission results. I also made cleanup attempt every track even if one device release fails. I fixed a timing mistake in the regression test so it actually exercised pending playback. All 1,653 prototype tests passed. Physical camera checks remain separate from this automated evidence.

@@ -1,3 +1,9 @@
+## Local notebook camera accepted by Sabine, 13 October 2026
+
+Sabine answered All steps worked to the complete seven-step local-computer review. Accepted scope: refresh/open notebook; camera-only permission and preview; Stop and restart retaining the new preview; capture and explicit item confirmation; changing the live view and stopping without replacing the confirmed still; and Clear removing the still with the device indicator off. This is human acceptance of the repaired local camera flow, not a new iPhone/network/provider test or complete accessibility review.
+
+The camera manual check is no longer pending. Task 1c and Phase 1 remain open: the live transcription startup still rejects configuration, and live extraction, representative timing and complete media/recommendation gating remain unaccepted. No new provider call, spending, hosted change or code was required to record the result. Prior automated evidence remains 1,653 prototype tests across 118 files, type checking/build and the separately recorded isolated database evidence; those were not rerun for this acceptance-only update. The $49 allocation and four held notes/startup reservations are unchanged.
+
 ## Live Echo policy recheck, 13 October 2026
 
 A bounded read-only GET of the selected stock Tavus PAL passed the existing verifyEchoPal guard: Audio Echo mode, microphone disabled, empty/non-dynamic greeting, and no TTS, LLM or STT layer. Only fixed booleans were retained in docs/echo-policy-verification.json; the provider response, credentials and account fields were not logged or saved. Source startup already checks this policy before creating a room. This closes the narrow selected-configuration inspection gap for this checkpoint, not provider-wide privacy, continuous conversation, physical quality or full Task 1b acceptance.
