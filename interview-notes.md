@@ -1,3 +1,7 @@
+## Saving the look without saving its conversation
+
+I approved a local Saved looks rehearsal while the live integrations were unresolved. I separated a saved arrangement, component list and dated sample estimate from notes, transcripts, feedback and history. I made saving explicit and reopening honest: the sample is available to review, but it cannot become a current recommendation without fresh checks. I used labelled color-block illustrations instead of suggesting that fictional products or prices were real. I tested missing prices, owned-item exclusion, duplicate saves and independent profile/Wardrobe state. All 838 foundation tests, type checking and build pass; the complete local human review remains pending.
+
 ## Keeping keyboard users oriented in Wardrobe
 
 After the sample Wardrobe review passed, I checked what happened to keyboard focus when a control disappeared. I repaired Save, Cancel, Keep and deletion so customers have a clear next place to continue. I labeled each selection with its garment and tested both a remaining item and an empty list. A synthetic browser rehearsal verified those paths and Escape from enlargement; all 797 foundation tests, type checking and build pass. I kept this narrow evidence separate from full accessibility acceptance and preserved the earlier human review.

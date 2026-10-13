@@ -251,3 +251,7 @@ Save to sample wardrobe is an explicit action on a confirmed Owned photo, disabl
 ### Wardrobe keyboard focus
 
 Return focus to the originating button after description Save/Cancel or Keep item. After removal, focus a neighboring item's selection or the Wardrobe heading if empty. Never focus controls in a hidden panel. Give each card and selection a garment-specific accessible name. Native enlargement retains its Escape/return-focus behavior. Verified with synthetic browser items; comprehensive accessibility acceptance remains pending.
+
+## Local sample Saved looks, 13 October 2026
+
+Show one explicitly labelled illustrated sample at a time in a separate Stylist rehearsal. Color blocks and garment labels show arrangement without implying real products or photo matches. State illustrative USD price/date, exclude owned pieces, and show missing required prices as incomplete. Save only on an explicit button. Saved looks have distinct Reopen/Remove actions and a removal confirmation; returning from review/removal preserves sensible keyboard focus. Reopened samples remain unverified and cannot become current recommendations without fresh checks. Browser-memory copies outlive End/Clear but disappear on refresh. No notes, profile/Wardrobe data or actual product links are saved. Human review pending; production tokens and product requirements are unchanged.

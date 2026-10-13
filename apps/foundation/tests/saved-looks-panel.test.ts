@@ -1,0 +1,8 @@
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {expect,it} from 'vitest';
+import {LocalSavedLooks,SAMPLE_LOOKS} from '../src/looks/local-saved-looks.ts';
+import {SavedLooksPanel,SampleLookPreview} from '../src/web/saved-looks-panel.tsx';
+it('shows honest empty state without shopping or media sources',()=>{const html=renderToStaticMarkup(React.createElement(SavedLooksPanel,{model:new LocalSavedLooks(),visible:true}));expect(html).toContain('No saved sample looks yet');expect(html).toContain('Browser memory only');expect(html).not.toMatch(/<img|<audio|<video|href=|src=/);});
+it('shows one separate illustrated sample and explicit save action',()=>{const html=renderToStaticMarkup(React.createElement(SampleLookPreview,{model:new LocalSavedLooks()}));expect(html).toContain('Save sample look');expect(html).toContain('Illustrated sample only');expect(html).toContain('Emerald structure');expect(html).toContain('$205.00');expect(html).toContain('No shopping links');expect(html.match(/aria-label="Saved sample arrangement"/g)).toHaveLength(1);});
+it('reopened sample retains layout and marks recommendation unavailable',()=>{const model=new LocalSavedLooks();model.save(SAMPLE_LOOKS[1]);model.reopen('sample_blue');const html=renderToStaticMarkup(React.createElement(SavedLooksPanel,{model,visible:true}));expect(html).toContain('Not a current recommendation');expect(html).toContain('No old notebook values were restored');expect(html).toContain('Incomplete, required price missing');expect(html).toContain('2026-10-13');expect(html).toContain('disabled');expect(html).not.toMatch(/<img|href=|src=/);});
