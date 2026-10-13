@@ -1519,3 +1519,7 @@ I used the prototype's content-free startup stages to narrow a failed notes test
 ## Preparing a revised connection proposal
 
 Support revised its startup advice after I supplied the failure stages. I prepared the new connection proposal locally and kept the microphone blocked until the provider confirms the selected transcription configuration. I added checks that an incompatible session closes and that an initial error sends no audio or configuration. The tests pass, but I keep this separate from proof that the provider supports the proposed conversion. Both earlier trial records and the spending limit remain intact.
+
+## Separating connection creation from configuration acceptance
+
+The revised connection reached session creation, but its transcription settings were rejected. I recorded that as progress in diagnosis, not a working notes feature. I added exact allowlists for known rejected settings and error codes so future diagnostics can be more useful without exposing raw messages or customer information. I preserved the consumed trials and asked support to clarify whether its proposed session conversion is supported before considering another experiment.

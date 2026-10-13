@@ -1,5 +1,5 @@
 import WebSocket from 'ws';
-import {boundedNoteStartupDiagnostic,providerErrorDiagnostic} from './note-startup-diagnostics.ts';
+import {boundedNoteStartupDiagnostic,providerErrorDiagnostic,providerErrorDetails} from './note-startup-diagnostics.ts';
 import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 import type {SimulatedTranscriptionSocket} from './transcription-socket-wire.ts';
 import {TRANSCRIPTION_CONNECTION_PLAN} from './transcription-connection-plan.ts';
@@ -46,7 +46,7 @@ export function prepareServerNoteSocketOpener(options:{apiKey:string;connect?:Co
      if(bytes.byteLength>16384)throw unavailable();
      const encoded=new TextDecoder('utf-8',{fatal:true}).decode(bytes);
      const parsed:unknown=JSON.parse(encoded);const type=parsed&&typeof parsed==='object'?(parsed as {type?:unknown}).type:undefined;
-     if(type==='error')diagnostic(providerErrorDiagnostic(parsed));
+     if(type==='error'){diagnostic(providerErrorDiagnostic(parsed));for(const code of providerErrorDetails(parsed))diagnostic(code);}
      if(first){first=false;if(!initial)throw unavailable();diagnostic(type==='session.created'?'provider-first-created':'provider-first-unexpected');initial(parsed);}
      else events.dispatchEvent(new MessageEvent('message',{data:encoded}));
     }catch{diagnostic('provider-invalid-packet');stop();}

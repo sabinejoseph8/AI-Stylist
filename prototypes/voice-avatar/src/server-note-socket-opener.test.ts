@@ -38,3 +38,10 @@ it('classifies an actual local HTTP handshake rejection without retaining its bo
  const diagnostic=vi.fn(),owner=prepareServerNoteSocketOpener({apiKey:'synthetic_key_never_real',diagnostic,connect:(_url,options)=>new WebSocket(`ws://127.0.0.1:${address.port}`,options)});
  try{await expect(owner.open(new AbortController().signal,()=>{})).rejects.toThrow('unavailable');expect(diagnostic.mock.calls.map(([code])=>code)).toEqual(['provider-connecting','provider-handshake-401']);expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');}finally{owner.end();server.closeAllConnections();await new Promise<void>(resolve=>server.close(()=>resolve()));}
 });
+
+it('emits exact allowlisted error details while excluding the raw payload',async()=>{
+ const raw=new Fake(),diagnostic=vi.fn(),owner=prepareServerNoteSocketOpener({apiKey:'synthetic_key_never_real',connect:()=>raw as never,diagnostic});
+ const pending=owner.open(new AbortController().signal,()=>{});raw.readyState=1;raw.emit('open');await pending;
+ raw.emit('message',Buffer.from(JSON.stringify({type:'error',error:{type:'invalid_request_error',code:'invalid_value',param:'session.type',message:'private sentinel',event_id:'private sentinel'}})),false);
+ expect(diagnostic.mock.calls.map(([code])=>code)).toEqual(['provider-connecting','provider-open','provider-error-invalid-request','provider-code-invalid-value','provider-param-session-type','provider-first-unexpected']);expect(JSON.stringify(diagnostic.mock.calls)).not.toContain('sentinel');owner.end();
+});
