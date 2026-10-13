@@ -17,3 +17,9 @@ No credentials, account identifiers, request/session IDs, recordings, customer c
 ## Support escalation reported, 13 October 2026
 
 Sabine supplied OpenAI's notification: escalated to a support specialist, with a response expected in the coming days. Record this as a reported escalation, not a technical resolution or a confirmed response date. Await the specialist's answer before interpreting startup compatibility or requesting another paid attempt. No further provider call or spending is authorized.
+
+## Human support clarification, 13 October 2026
+
+Sabine supplied a response from the assigned OpenAI support specialist. Human ownership of the case is now confirmed by that supplied reply. Support acknowledges that the minimal startup failed after session.created and the transcription session.update, and retracts earlier claims that the proposed startup was verified or that conflicting documentation could be dismissed as outdated. The cause, supported dedicated-transcription startup, session-type conversion and applicable transcription fields remain unresolved. API engineering review, account eligibility and a working procedure are not confirmed. The rejected parameter text and triggering-event correlation were not retained and cannot be recovered; support requests no repeat attempt.
+
+This changes the support status, not implementation acceptance. No further paid diagnostic is authorized. The experiment allocation remains $51 and all five notes/startup reservations remain held. Next provider action: wait for a concrete supported procedure or investigation result. The separate local main-app notebook eight-step review remains pending; its sample-data preparation may proceed within the approved exception. No task or phase is closed by this reply.

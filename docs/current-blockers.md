@@ -19,7 +19,7 @@ Checked 13 October 2026 against docs/progress.md, docs/development-backlog.md, D
 ## Current action queue
 
 1. Local camera review is accepted. Continue with the remaining supported-transcription and account dependencies below; no repeat camera check is requested.
-2. Resolve the transcription startup with supported evidence. The latest AI-assisted support reply repeats the proposed conversion but does not identify the rejected parameter. All five notes/startup reservations stay held. No automatic retry, refund or new paid connection is authorized.
+2. Await a supported transcription startup or concrete investigation result from the assigned specialist. The assigned human specialist acknowledges the failed minimal sequence and retracts earlier unsupported assurances. Engineering review, account eligibility and a working startup remain unconfirmed; no repeat attempt is requested. All five notes/startup reservations stay held. No automatic retry, refund or new paid connection is authorized.
 3. Review Render's outstanding ingress/logging clarification when supplied. Do not change approved hosting or weaken account protection to bypass the missing evidence.
 4. Set up real account sender/social configuration only through the approved secure handoff once the exact working customer origin and required credentials exist. No domain purchase, credential creation or extra hosting charge is authorized here.
 5. Recheck the plan when a dependency changes. Do not manufacture unrelated features, repeat publication, or rerun already-green mocks as substitutes for missing real acceptance.
