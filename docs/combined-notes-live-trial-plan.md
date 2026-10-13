@@ -1,3 +1,9 @@
+## Current revised-startup trial, 13 October 2026
+
+Sabine approved one additional $2 experiment, allocation $47, ID notes_private_20261013_03. The new immutable row is installed and verified unreserved; both previous notes trials stay held. The reviewed local proposal opens through gpt-realtime-2.1, then requires an exact gpt-live-transcribe transcription acknowledgment before audio. Simulated evidence: 1,570 passing checks/typecheck/build. Actual conversion and notes remain unverified. Deployment/readiness verification is in progress. No new provider test has started.
+
+The complete seven-step script below remains the user procedure. Read it before Start; one start/two turns/85 seconds including setup, no retry/avatar/upgrades, same retention boundary. Prior dated entries preserve historical evidence only.
+
 # Combined notebook private trial
 
 Updated: 13 October 2026

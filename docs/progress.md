@@ -1,3 +1,9 @@
+## Revised-startup deployment verified, 13 October 2026
+
+The existing Free Render service deployed ae8a5dfa64b3b3d9321eac3d290f92810a2e71e1 successfully as dep-db6u9ejl550s73a4vhqg. After saving the trial selector, a reload initially showed the earlier _02 value; corrected the revealed nonsecret field and reloaded again to verify persisted notes_private_20261013_03. Approved storage is unchanged. Health returned 200 and unauthorized page/availability returned 401. Live RPC verification established the new exact terms/unreserved state and both earlier held records. No agent-started provider connection or microphone occurred. These checks do not prove authenticated Safari availability or provider conversion.
+
+Exact next action requires Sabine: reload the protected notes-live.html page on iPhone and report whether one approved private trial is available before Start. Provide the complete seven-step script in chat before she operates the one approved session. Allocation $47, two turns/85 seconds, no retry/avatar/upgrade. The startup remains live-unverified; inspect fixed stages if it fails. Phase 1 remains open.
+
 ## Revised-startup allowance installed and verified, 13 October 2026
 
 Verified notes_private_20261013_03 was absent and both earlier notes records were held. Applied the reviewed append-only initializer once for the approved new ID. Live service-only RPC reads verify exact $2/two-turn/85-second extraction/token limits and null reservation; both earlier records remain held. No provider session or microphone was started. Render trial selection and exact-source deployment remain in progress. Full prototype evidence is 1,570 passing tests/typecheck/build; SQL logic is unchanged from the earlier 77 isolated checks and four owner scenarios.
