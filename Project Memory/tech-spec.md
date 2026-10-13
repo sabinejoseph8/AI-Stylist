@@ -1,3 +1,11 @@
+## Current private notebook trial status, 13 October 2026
+
+Sabine approved one additional $2 private notes-only trial and its protected Supabase/Render activation. The experiment allocation is $43. The separate server-only allowance is installed, verified and unreserved, with one start, two turns and at most 85 seconds including setup; all seventeen avatar-history records remain intact. No retries, avatar calls, model fallback or plan upgrades are authorized.
+
+Render deployment dep-db6rs63l550s739sfseg is Live at source ed30133e5b4d5e1b708b2b1fefdbc0a00eee11e1 using the dedicated notebook entry. Health and unauthenticated rejection passed. The full 1,544-test prototype suite, type checking and build passed before deployment. The existing private preview username/password remain unchanged. No live notebook socket, microphone or model trial has started.
+
+Next action requires Sabine: open notes-live.html in Safari with the existing private login and confirm the page reports one approved private trial available. The in-app browser blocked the Basic challenge, so authenticated rendered readiness is not yet accepted. Deliver the complete advance script before microphone start. Actual selected-model compatibility, speech quality, timing, remote final usage/deletion and all remaining phase gates stay unverified. Historical preparation entries below retain the evidence and authorization state at their dates.
+
 ## Protected private notes trial owner preparation, 12 October 2026
 
 Prepared a separate dormant notes-only owner with exact private preview access and an explicit consent requirement before reservation/provider construction. It requires injected counted startup transports and disposal, has no credentials, default route, normal startup attachment, recommendations or live activation. It reserves one attempt through the separate contract, limits begin attempts to two and applies an 85-second deadline from request acquisition. Turn completion, revision-based touch edits and rendering receipts are preserved. Exit clears transient notes, stops startup/capture, disposes transports and records held without refund or retry; local transport termination is not treated as remote finalization.

@@ -1,7 +1,17 @@
-# Proposed combined notebook live trial
+# Combined notebook private trial
 
-Updated: 12 October 2026
-Status: Preparation only. No live route, deployment, credential access, spending allowance or trial is enabled by this document.
+Updated: 13 October 2026
+Status: one $2 trial and protected activation approved. The dedicated preview is deployed and the separate allowance remains unreserved. Authenticated Safari readiness and the actual microphone test are pending.
+
+## Current private notebook trial status, 13 October 2026
+
+Sabine approved one additional $2 private notes-only trial and its protected Supabase/Render activation. The experiment allocation is $43. The separate server-only allowance is installed, verified and unreserved, with one start, two turns and at most 85 seconds including setup; all seventeen avatar-history records remain intact. No retries, avatar calls, model fallback or plan upgrades are authorized.
+
+Render deployment dep-db6rs63l550s739sfseg is Live at source ed30133e5b4d5e1b708b2b1fefdbc0a00eee11e1 using the dedicated notebook entry. Health and unauthenticated rejection passed. The full 1,544-test prototype suite, type checking and build passed before deployment. The existing private preview username/password remain unchanged. No live notebook socket, microphone or model trial has started.
+
+Next action requires Sabine: open notes-live.html in Safari with the existing private login and confirm the page reports one approved private trial available. The in-app browser blocked the Basic challenge, so authenticated rendered readiness is not yet accepted. Deliver the complete advance script before microphone start. Actual selected-model compatibility, speech quality, timing, remote final usage/deletion and all remaining phase gates stay unverified. Historical preparation entries below retain the evidence and authorization state at their dates.
+
+
 
 ## Purpose and boundary
 
@@ -23,16 +33,15 @@ Use synthetic styling preferences spoken by Sabine. Do not use personal wardrobe
 
 ## Complete manual instructions to present before starting
 
-These are the intended steps for a future implemented test page. The controls described here do not exist as enabled live controls yet. Give Sabine the entire script in chat before the trial; do not guide her one instruction at a time while the short trial is running.
+Give Sabine this complete script in chat before she starts. First confirm that the protected page reports one approved private trial available. If unavailable, do not start or retry. Read every step before starting; keep the page visible in a quiet room, with other voice calls closed. Leaving or refreshing ends the trial and keeps its reservation.
 
-1. Read the test notice. Use a quiet room and keep the page visible. Do not start another voice call alongside the experiment.
-2. Choose the future Start private notes test control. Allow microphone access when the browser asks. Wait for Ready before speaking. Do not enable the camera.
-3. Start the first turn, wait for the microphone-active status, and say: "I am going to an outdoor wedding in November. I prefer emerald green and a structured dress. My budget is five hundred dollars." Continue speaking naturally for a few seconds, for example: "I have not decided which shoes to wear." Observe whether notes appear while you are still speaking.
-4. End/send the first turn using the page's explicit control. Wait for Ready. Expect the occasion, date, color, style, budget and look type to be tentative; missing or uncertain details must stay explicit. Do not accept an inferred season, currency, budget scope or owned shoes.
-5. Start the second turn, wait for the microphone-active status, and say: "Actually, my maximum is three hundred fifty US dollars for the new items only." End/send the turn. Wait for Ready and check that the budget reflects the correction, with no return to five hundred dollars.
-6. Use the touch control to confirm or correct the budget. Confirmed styling preferences must remain visible without saving a profile. No real look or shopping link is expected from this notes-only test.
-7. Choose End. Confirm the connection ended and temporary notes cleared. Check the phone/browser microphone indicator is off. If cleanup is held, close the tab and report that result; do not start a replacement trial.
-8. Report after the test: whether notes appeared before you finished speaking, whether the corrected budget stayed correct, whether touch confirmation worked, and whether End cleared notes and stopped the microphone. If any step fails, report the exact visible message without starting another paid attempt.
+1. Read the notice, check the acknowledgment and choose **Start private notes test**. Wait for **Ready**. This connects the test; it does not start the microphone.
+2. Choose **Start turn** and allow microphone access. Wait until microphone capture is active. Say: “I am going to an outdoor wedding in November. I prefer emerald green and a structured dress. My budget is five hundred dollars.” Continue: “I have not decided which shoes to wear.” Observe whether notes appear before you finish speaking.
+3. Choose **Send turn**. Wait for **Ready** and review the tentative notes. Missing and uncertain details must stay explicit. Do not accept an inferred season, currency, budget scope or owned shoes.
+4. Choose **Start turn** again. Wait for microphone capture to be active. Say: “Actually, my maximum is three hundred fifty US dollars for the new items only.” Choose **Send turn** and wait for **Ready**. Check that the corrected budget does not return to $500.
+5. Choose **Edit** beside Budget. Enter **350**, explicitly confirm item-price scope and choose **Save note**. The budget should show **Confirmed**. This does not save a profile.
+6. Choose **End test**. Check that notes clear, the browser connection closes and the phone microphone indicator turns off. If closure is not confirmed, close the tab and report it. Do not retry.
+7. After the test, report whether notes appeared while you spoke, the budget correction stayed correct, touch confirmation worked, and End cleared notes and stopped the microphone. If something fails or the 85-second limit ends the test, report the visible message without another attempt.
 
 ## Evidence and acceptance
 
@@ -40,12 +49,12 @@ Record observed versus expected outcomes separately from automated fixtures. One
 
 ## Actions required later
 
-Before implementation is activated, a concrete cost reservation needs Sabine's financial authorization. Before customer media launch, provider privacy, retention and recovery terms still need resolution. Tavus technical clarification has been received and the bounded replacement-room test accepted; neither is a missing prerequisite for this notes-only trial. None of those requirements is waived by this plan.
+The specific one-session allowance and protected activation were approved on 13 October 2026; any additional attempt needs new authorization. Before customer media launch, provider privacy, retention and recovery terms still need resolution. Tavus technical clarification has been received and the bounded replacement-room test accepted; neither is a missing prerequisite for this notes-only trial. None of those requirements is waived by this plan.
 
 
 ## Connection and cleanup review after support reply
 
-The inspection-only candidate uses the support-proposed model query; startup is not live-verified. The separate simulated close-evidence helper can observe local transport closure only and cannot authorize allowance release. Do not equate a clean socket close with final usage, remote session deletion or zero retention. The existing support thread has been asked for the unresolved dedicated-session procedure and authoritative startup confirmation. This plan remains blocked for live activation until those evidence requirements, reviewed security/storage setup and a new financial allowance are satisfied. No GPT-Live terminal events are substituted into Realtime transcription.
+The inspection-only candidate uses the support-proposed model query; startup is not live-verified. The separate simulated close-evidence helper can observe local transport closure only and cannot authorize allowance release. Do not equate a clean socket close with final usage, remote session deletion or zero retention. The existing support thread has been asked for the unresolved dedicated-session procedure and authoritative startup confirmation. Startup remains live-unverified. Sabine approved the bounded experiment and its acknowledged retention/closure limits on 13 October 2026 after the local activation review; this approval does not establish provider compatibility or waive customer-launch evidence. No GPT-Live terminal events are substituted into Realtime transcription.
 
 ## Concrete first notes-only experiment proposal, 12 October 2026
 

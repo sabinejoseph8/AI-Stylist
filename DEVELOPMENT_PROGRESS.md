@@ -1,3 +1,7 @@
+## Notebook documentation alignment, 13 October 2026
+
+Reconciled the MVP/technical current summaries and combined trial guide with the approved, deployed notebook experiment. Corrected the advance script to match the actual separate connection, Start turn microphone gesture, active-capture status and exact touch budget confirmation. Historical proposals/evidence remain dated and do not override the current approval. This documentation-only change starts no test and adds no authorization. Exact next action: Sabine confirms authenticated Safari availability; then provide the complete script before microphone start.
+
 ## Private Memory deployment receipt, 13 October 2026
 
 Owner-private Memory now publishes the approved $43 allocation, installed unreserved notebook allowance and deployed preview handoff. Source 1c4c74ffad212d8068b15a527cb4701b8b428d0f succeeded as appgdep_6acdbf2ecea88191b1bd5fb8c67658a3 with MCP retained. All 16 site checks, build and artifact validation pass. No microphone/WebSocket provider test was started. Exact next action remains Sabine opening the protected notes-live.html page in Safari and confirming its available status before the complete advance script and microphone start.
