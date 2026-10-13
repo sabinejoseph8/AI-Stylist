@@ -4,7 +4,7 @@ import {validatePrivateNotesTrialLedger} from './private-notes-trial-contract.ts
 import type {PrivateNotesTrialLedger} from './private-notes-trial-contract.ts';
 export {validatePrivateNotesTrialLedger} from './private-notes-trial-contract.ts';
 export type {PrivateNotesTrialLedger} from './private-notes-trial-contract.ts';
-export type PrivateNotesTrialPersistence={read:()=>Promise<unknown>;compareAndSwap:(before:PrivateNotesTrialLedger,after:PrivateNotesTrialLedger)=>Promise<boolean>};
+export type PrivateNotesTrialPersistence={read:(signal?:AbortSignal)=>Promise<unknown>;compareAndSwap:(before:PrivateNotesTrialLedger,after:PrivateNotesTrialLedger)=>Promise<boolean>};
 const unavailable=()=>Error('Private notebook allowance requires review.');
 export function validatePrivateNotesTrialTransition(before:unknown,after:unknown){
  const a=validatePrivateNotesTrialLedger(before),b=validatePrivateNotesTrialLedger(after);

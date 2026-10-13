@@ -1,0 +1,11 @@
+import {afterEach,it,expect} from 'vitest';
+import {mkdtemp,mkdir,writeFile,symlink,rm} from 'node:fs/promises';
+import {tmpdir} from 'node:os';
+import {join} from 'node:path';
+import {loadPrivateNotesTrialAssets} from '../src/private-notes-trial-assets.ts';
+const roots:string[]=[];afterEach(async()=>{for(const root of roots.splice(0))await rm(root,{recursive:true,force:true});});
+async function fixture(){const root=await mkdtemp(join(tmpdir(),'notes-assets-'));roots.push(root);await mkdir(join(root,'assets'));await writeFile(join(root,'notes-live.html'),'<html>Private test</html>');await writeFile(join(root,'assets','page.js'),'export {};');return root;}
+it('loads only named build assets and returns detached bytes without later filesystem reads',async()=>{const root=await fixture();await writeFile(join(root,'private.env'),'DO_NOT_SERVE');const assets=await loadPrivateNotesTrialAssets(root);expect(assets.paths()).toEqual(['/notes-live.html','/assets/page.js']);const signal=new AbortController().signal;const first=(await assets.getAsset('/notes-live.html',signal))!;first.fill(0);await rm(root,{recursive:true,force:true});expect(new TextDecoder().decode((await assets.getAsset('/notes-live.html',signal))!)).toBe('<html>Private test</html>');expect(await assets.getAsset('/private.env',signal)).toBeNull();expect(await assets.getAsset('/../private.env',signal)).toBeNull();});
+it('rejects a symbolic-link asset escaping the build',async()=>{const root=await fixture();const other=await fixture();await symlink(join(other,'assets','page.js'),join(root,'assets','linked.js'));await expect(loadPrivateNotesTrialAssets(root)).rejects.toThrow('build unavailable');});
+it('rejects oversized files and relative build paths',async()=>{const root=await fixture();await writeFile(join(root,'assets','big.js'),new Uint8Array(4_000_001));await expect(loadPrivateNotesTrialAssets(root)).rejects.toThrow();await expect(loadPrivateNotesTrialAssets('dist')).rejects.toThrow();});
+it('does not serve assets through an already canceled request',async()=>{const assets=await loadPrivateNotesTrialAssets(await fixture()),controller=new AbortController();controller.abort();await expect(assets.getAsset('/notes-live.html',controller.signal)).rejects.toThrow();});

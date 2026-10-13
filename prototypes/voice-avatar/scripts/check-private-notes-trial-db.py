@@ -25,6 +25,9 @@ try:
  sql('create role anon;create role authenticated;create role service_role;create table public.avatar_sentinel(value integer);insert into public.avatar_sentinel values(17);')
  migration=Path(__file__).resolve().parents[1]/'supabase/private-notes-trial-preparation.sql';sql(migration.read_text())
  sql('set role service_role;select public.stylist_private_notes_trial_read();',False)
+ initializer=(migration.parent/'private-notes-trial-approval.sql').read_text();sql(initializer,False)
+ if sql('select count(*) from stylist_notes_trial_private.allowance;')!='0':raise RuntimeError('Default initializer must not create approval.')
+ approved_fixture=initializer.replace('approved_id text := NULL',"approved_id text := 'synthetic_not_approval'")
  base={'version':1,'purpose':'notes-only-private-trial','approval':{'id':'synthetic_not_approval','cents':200,'maxSeconds':85,'maxTurns':2,'maxExtractions':64,'maxInputTokens':1000000,'maxOutputTokens':2048},'reservation':None}
  opened={**base,'reservation':{'id':'one','state':'reserved'}};closed={**base,'reservation':{'id':'one','state':'transport-closed'}};held={**base,'reservation':{'id':'one','state':'held'}}
  cases=[(base,opened,True),(opened,closed,True),(opened,held,True),(base,base,False),(opened,base,False),(closed,opened,False),(closed,held,False),(base,closed,False)]
@@ -35,7 +38,8 @@ try:
   result=sql('select stylist_notes_trial_private.valid_transition('+literal(a)+','+literal(b)+');')
   if result!=('t' if expected else 'f'):raise RuntimeError('Transition parity failure.')
  for bad in [None,{**base,'extra':'content'},{**opened,'reservation':{'id':'one','state':None}}]:sql('insert into stylist_notes_trial_private.allowance(ledger)values('+literal(bad)+');',False)
- sql('insert into stylist_notes_trial_private.allowance(ledger)values('+literal(base)+');')
+ sql(approved_fixture);sql(approved_fixture,False)
+ if json.loads(sql('set role service_role;select public.stylist_private_notes_trial_read();'))!=base:raise RuntimeError('Initializer must preserve exact fixture and refuse replay.')
  for role in ['anon','authenticated']:
   sql('set role '+role+';select public.stylist_private_notes_trial_read();',False)
   sql('set role '+role+';select public.stylist_private_notes_trial_change('+literal(base)+','+literal(opened)+');',False)

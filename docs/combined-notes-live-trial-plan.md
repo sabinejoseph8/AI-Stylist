@@ -90,3 +90,8 @@ The private-trial ledger contract is prepared locally. Its approval fields remai
 ## Browser protocol checkpoint, 12 October 2026
 
 The separate protected owner now composes with the existing simulation WebSocket and browser controller. All 1,454 tests, type checking and build pass. Two completed synthetic turns verify a budget correction, rendering receipts, touch confirmation and shutdown with a retained reservation. Fixture consent must never be reused as live consent. The adapter remains unattached to normal startup; a real page must require an affirmative privacy acknowledgment and user gesture before microphone acquisition. No live trial, financial approval or hosted change is established by these results.
+
+
+## Runtime composition checkpoint, 12 October 2026
+
+The dedicated private mode, consent-gated WebSocket, bounded HTTP/page availability, asset loader, provider bundle, durable RPC owner and explicit startup entry point are now composed. Normal startup remains unchanged. All 1,541 prototype tests, type checking/build, 50 isolated SQL checks and four database-backed owner scenarios pass. This remains local/synthetic evidence. The operator initialization template fails until a reviewed ID is explicitly supplied after human authorization. Finish the active rendered-page rehearsal and activation review before requesting the proposed $2; do not use earlier preparation steps as proof of current live compatibility or remote finalization. See docs/private-notes-trial-activation-review.md for the proposed operator sequence.

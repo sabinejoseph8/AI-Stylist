@@ -1481,3 +1481,8 @@ I added a separate private notebook route with authenticated access, consent bef
 ## Explaining the microphone experiment before it starts
 
 I added a private test page with the complete instructions, retention boundary and separate connection and microphone actions. Start remains unavailable until the protected server confirms an approved, unconsumed trial. I verified the disabled page in the browser and tested private access, bounded availability and asset reads without reserving funds. All 1,526 automated prototype tests pass. I corrected a test that expected an unopened edit dialog's contents, and kept active microphone behavior and live-provider acceptance open.
+
+
+## Preserving the experiment across server restarts
+
+I composed the private notebook server with durable reservations and separate database/provider credentials. My local rehearsal verifies that a lost database acknowledgment leaves the reservation consumed and that even a restarted server refuses another attempt. I kept startup behind explicit approval settings and made the initialization template fail by default. All 1,541 prototype tests, 50 isolated database checks and four database-backed owner scenarios pass. These tests use synthetic data; I have not enabled a paid trial or changed hosted data.
