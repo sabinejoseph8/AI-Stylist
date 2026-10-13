@@ -1,3 +1,9 @@
+## Follow-up deployment verified, 13 October 2026
+
+Render deployment dep-db6srlc9v7es73f8k650 succeeded Live at source aeeea4df96abd310449b1c15d2dee70dfbb02ef8, using the existing Free service and dedicated notebook entry. The operator explicitly selected approved storage and notes_private_20261013_02 after the separate human approval. Health returned 200; unauthenticated page/availability returned 401. Live RPC reads confirm the follow-up remains unreserved and the original singleton remains held. No provider socket or microphone was started by verification.
+
+Exact next action requires Sabine: reload notes-live.html in Safari and confirm one approved private trial available. Then provide the complete seven-step instructions in chat before she starts. The new diagnostics are available in fixed server-stage codes if startup fails. One new start/two turns/85 seconds, allocation $45, no retries, refunds, avatar or upgrades. Actual startup and live notes acceptance remain unverified.
+
 ## Hosted follow-up allowance verified, 13 October 2026
 
 In the existing approved project, verified approved_trials was absent and the original singleton remained held. Applied the reviewed append-only migration successfully. Live metadata verifies RLS, denied direct access for anonymous/authenticated/service roles, denied anonymous/customer RPC execution and permitted service-only RPCs. The table was empty before initialization.
