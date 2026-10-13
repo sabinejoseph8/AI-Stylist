@@ -1,3 +1,9 @@
+## Startup log access still blocked, 13 October 2026
+
+On Sabine's continue request, retried browser inventory to reach the existing Render logs. Automatic approval review reported selected model at capacity and did not execute the action. No browser access, provider test, allowance mutation or remote publication occurred. The previously verified follow-up reservation remains held; no retry is authorized.
+
+Exact next action: obtain the fixed content-free Private notebook stage log lines from the user-started attempt. Sabine can provide a screenshot from the existing Render deployment logs, excluding Environment settings and keys, or browser inspection can resume when approval review is available. Diagnose the observed stage before changing provider startup. Local commits 924ec47 and this checkpoint still require GitHub publication, approved-folder copy and private Memory synchronization when external execution is available. No implementation changed and no new tests were run.
+
 ## Follow-up closed before Ready, 13 October 2026
 
 Sabine confirmed the corrected Safari page reported one trial available. After receiving the entire seven-step script, she pressed Start and supplied a new screenshot showing connection ended, temporary notes cleared and browser connection closed, before any reported spoken turn. No live notes acceptance is established. Do not retry or reset either trial. The exact failure stage still requires log inspection. A successful read-only RPC check confirms the follow-up ID matches, a reservation was written, and its state is held. The start remains consumed permanently.
