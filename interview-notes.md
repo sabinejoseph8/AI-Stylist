@@ -1,3 +1,7 @@
+## Moving clothing references into the main app
+
+While provider integration was blocked, I approved local photo and camera preparation. I kept selecting a photo separate from confirming a reference, so loading a replacement cannot silently change the garment I am styling around. I required a description and an explicit Owned or Inspiration choice rather than guessing from the image. Photos are normalized locally and kept only in browser memory; camera capture requests no microphone. I reused the camera lifecycle safeguards and added tests for delayed images, URL cleanup and Clear/End. The foundation passes 771 tests. The real photo and camera review remains pending; no AI recognition or permanent wardrobe saving is implied.
+
 ## Making the notes-retention policy explicit
 
 I chose to clear unsaved styling notes after 30 minutes without customer input, with a one-minute warning, or after five minutes disconnected. Ending or clearing a session removes its notes immediately while explicitly saved preferences remain separate. I caught a subtle issue: delayed analysis could otherwise reset the idle clock. I separated customer activity from derived updates and included active draft typing, so background results cannot extend retention. The local implementation passes 714 foundation tests; hosted enforcement still needs verification.

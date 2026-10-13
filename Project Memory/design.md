@@ -231,3 +231,7 @@ Sabine completed the 18-step notebook prototype guide and reported that all step
 ## Approved notes-expiry messaging, 13 October 2026
 
 Explain the approved 30-minute customer-idle and five-minute disconnect notes limits in the local preview. Show a restrained one-minute idle warning without moving focus; expiry clears session notes and drafts with a clear ended-state message. Explicitly saved preferences remain separate. This does not change visual tokens or authorize customer deployment. Exact timing is covered by controlled-clock tests; physical elapsed-time acceptance remains open.
+
+## Local main-app clothing-reference preparation, 13 October 2026
+
+Inside the notebook, Style around this item shows an actual selected image before any recognition. The customer describes the intended garment and explicitly chooses Owned or Inspiration. A separate confirmed reference remains stable until replacement is confirmed; its actual thumbnail is visible while collapsed. Preview and confirmation are distinct, with clear session-only wording. Native dialog enlargement preserves image proportions. Camera-only controls show Start, Capture and Stop; capture does not confirm or save. This is approved local preparation with manual review pending, not a change to the visual tokens or hosted Wardrobe activation.
