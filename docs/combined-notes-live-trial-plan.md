@@ -1,6 +1,6 @@
 # Proposed combined notebook live trial
 
-Updated: 10 October 2026
+Updated: 12 October 2026
 Status: Preparation only. No live route, deployment, credential access, spending allowance or trial is enabled by this document.
 
 ## Purpose and boundary
@@ -13,7 +13,7 @@ Use synthetic styling preferences spoken by Sabine. Do not use personal wardrobe
 
 - Add a separately disabled live owner/entry point only after confirming the current transcription and pinned extraction contracts. Current transports require injected simulations and are not an activation switch.
 - Keep credentials exclusively on the server. Authenticate the private page and socket, enforce exact Host/Origin, and preserve connection ownership and the single-session lease.
-- Add a dedicated durable allowance reservation for this experiment. Never reuse, reset, refund or edit the nine closed historical reservations. Reject activation without an explicitly approved allowance. Estimate the selected models' cost and define a bounded reservation before requesting financial authorization.
+- Add a dedicated durable allowance reservation for this experiment. Never reuse, reset, refund or edit the seventeen historical avatar reservations. Reject activation without an explicitly approved allowance. Estimate the selected models' cost and define a bounded reservation before requesting financial authorization.
 - Keep one trial, at most two turns and the existing short overall session deadline. Enforce bounded audio, events, requests, deadlines and cancellation. No automatic retry or fallback model.
 - Display a clear notes-only privacy notice and connection state before any microphone access. Request the microphone only after the user's gesture; camera remains off.
 - Keep transcript and preference content in volatile session state. Timing evidence contains only bounded identifiers, durations and outcome codes. Exclude note/transcript content from logs, analytics and saved look records.
@@ -78,4 +78,8 @@ Official pages retrieved on 12 October 2026 list live transcription at $0.017 pe
 4. Keep the private route disabled until explicit financial and security-sensitive activation authorization, tests, protected hosted access and exact deployment are ready. No plan upgrade or account-budget change is included.
 5. Deliver the complete existing manual script in chat before the user starts. A passing first trial proves basic integration only, not the representative two-second p95 target.
 
-Exact next local implementation action: add a disabled aggregate extraction dispatch budget that counts attempted requests and provider-counted input tokens before sending, reserves maximum output tokens, rejects uncertainty and cannot be reset within a trial. No live network or credentials are needed for that change.
+Exact next local implementation action: prepare the separate live-purpose ledger contract and local persistence transition tests, without initializing an approval or changing hosted storage. Aggregate counted dispatch and dormant HTTP/socket adapters are now prepared and composed under synthetic tests. The existing simulation-purpose ledger is not live authorization. No live network or credentials are needed for the next local change.
+
+## Adapter composition checkpoint, 12 October 2026
+
+The dormant server HTTP and socket adapters now compose with prepared startup and counted extraction in synthetic integration tests. First-packet creation precedes configuration, count and generation receive the identical serialized request and authenticated headers, partial notes appear tentatively, exit cancels pending counting and late completion is ignored. Failed local socket termination remains visible as cleanup uncertainty. This does not verify a real provider connection or change any activation gate. The protected owner currently applies its 85-second deadline from request acquisition, which is more restrictive than the proposed post-readiness maximum. Do not promise a full 85 seconds of ready microphone time.

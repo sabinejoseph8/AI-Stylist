@@ -1,3 +1,7 @@
+## Verifying the prepared connection as one flow
+
+I connected the prepared server adapters in synthetic integration tests. I checked that partial speech can reach tentative notebook notes only after token counting, and that exiting cancels pending extraction and clears temporary notes. I also checked that a failed socket termination stays visible instead of being reported as verified cleanup. These tests prepare the real experiment; they do not establish live recognition quality, provider finalization or customer readiness.
+
 ## Preparing transcription connection startup
 
 I prepared a single-use server socket opener so I can observe the provider's first packet before handing the connection to the notebook. I kept it disconnected from normal startup and tested it with synthetic sockets. I also made a failed local termination visible to the cleanup owner, which helps preserve a reservation when cleanup is uncertain. I am keeping actual provider compatibility and final usage completion separate from these local checks.
