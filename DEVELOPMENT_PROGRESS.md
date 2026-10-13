@@ -1,3 +1,9 @@
+## Private Memory publication verified, 12 October 2026
+
+The private Memory site now includes the disabled notes-only entry checkpoint and its 1,368-test evidence. Source 43105b7274005ff1141c94d1cd0099a9863b0745 was published successfully as deployment appgdep_6acd99bd93648191bfd3ef92d36a0e72. Owner-private publication and MCP capability are preserved. All 16 site checks and artifact validation passed. No prototype source changed and no paid provider call or allowance change occurred. The earlier pending-sync statements below are historical.
+
+Next exact implementation action: prepare the dormant provider transport adapter behind explicit activation, without default key access or network activity. The proposed $2 notes-only experiment remains unapproved, existing allocation remains $41, and Phase 1 remains open. No action is needed from Sabine for this local preparation.
+
 # AI Stylist development progress
 
 ## Disabled notes-only entry composition, 12 October 2026
@@ -59,7 +65,7 @@ Sabine confirmed every step of the bounded iPhone interruption-and-resume test w
 
 Earlier dated checkpoints below are historical; this acceptance supersedes their pending recovery status.
 
-## Current implementation and publication handoff
+## Historical implementation and publication handoff
 
 Current status: one additional $4 test is approved, raising the allocation to $41. Exact hosted allowance verified with fifteen earlier records preserved. No new test started. Code deployment and user-started acceptance are next. Earlier failure cause remains unknown; recovery acceptance is open.
 
