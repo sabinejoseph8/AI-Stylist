@@ -51,6 +51,9 @@ try:
  if sum(x==0 for x in outcomes)!=1:raise RuntimeError('Multiple CAS winners.')
  checks+=1
  if sql("select relrowsecurity from pg_class where oid='stylist_notes_trial_private.allowance'::regclass;")!='t':raise RuntimeError('Missing RLS.')
+ composition=run(['node',str(Path(__file__).with_name('check-private-notes-owner-db.ts')),'--local-docker',name])
+ if composition.returncode:raise RuntimeError('SQL-backed owner check failed: '+composition.stderr[-1200:])
+ print(composition.stdout.strip())
  rollback=migration.with_name('private-notes-trial-preparation-rollback.sql').read_text();sql(rollback,False)
  if sql('select value from public.avatar_sentinel;')!='17':raise RuntimeError('Avatar sentinel changed.')
  sql('delete from stylist_notes_trial_private.allowance;');sql(rollback)

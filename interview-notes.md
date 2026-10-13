@@ -1,3 +1,7 @@
+## Testing uncertainty through the real local database
+
+I connected the proposed notebook reservation owner to the isolated local database. I simulated a successful write whose acknowledgment was lost and confirmed the owner refused to retry. I also forced two owners to compete from the same snapshot and checked that only one succeeded. Fresh Node processes could not reuse the consumed allowance in any scenario. This strengthens the local persistence evidence while keeping hosted activation and spending separate.
+
 ## Verifying reservation locking locally
 
 I prepared separate database storage for the proposed notebook trial and tested it in an isolated PostgreSQL container. I checked that simultaneous starts have only one winner, closed transport cannot refund a start, unauthorized callers cannot read or change the ledger, and rollback cannot erase initialized history. I made invalid transitions explicitly false to avoid ambiguity from SQL null values. I kept the hosted database and actual spending approvals unchanged.

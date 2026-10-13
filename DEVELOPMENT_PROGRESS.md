@@ -1,3 +1,13 @@
+## Private Memory adapter and ledger publication verified, 12 October 2026
+
+Private Memory successfully published source 52e4ee6d6a4b653fc5dec8e0af69670e5d91bed5 as deployment appgdep_6acd9dc1cb4481919bb22c749cd0434a, preserving owner-private access and MCP. All 16 site checks and artifact validation passed. The site now includes the dormant adapters, 1,401-test prototype checkpoint, separate ledger/database preparation, 46 isolated SQL checks and four SQL-backed owner scenarios. Earlier pending synchronization statements are historical. Next exact local action remains the bounded fixed-RPC adapter and activation review; no spending or hosted provider configuration changed.
+
+## SQL-backed private-trial owner verification, 12 October 2026
+
+Composed PrivateNotesTrialLedgerOwner with the separately prepared locked PostgreSQL functions in a network-isolated local container. Four scenarios pass: consumed usage after transport-closed outcome; committed reserve with a lost acknowledgment and no retry; two owners reading the same snapshot with one CAS winner; and rejected unknown outcome retaining the reservation. Each scenario also launches a fresh Node process that refuses another start before any write. The local harness verifies pinned image, no network/ports/mounts and temporary database storage before fixture changes.
+
+All 46 isolated PostgreSQL checks and four SQL-backed TypeScript scenarios pass; local container cleanup and type checking pass. Prototype production source did not change; the earlier 1,401-test/build checkpoint remains the latest full-suite evidence. No hosted database, approval, secret or provider changed. Next exact action: prepare the bounded fixed-RPC persistence adapter for this separate private-trial contract, then review the concrete activation owner and obtain the required live-trial financial/security authorization before hosted changes. Existing allocation remains $41; proposed additional $2 remains unapproved. Synchronize these checkpoints to private Memory and retain all earlier acceptance gates.
+
 ## Separate private-trial database preparation, 12 October 2026
 
 Prepared unapplied SQL in a distinct stylist_notes_trial_private schema, with no approval initializer. A singleton ledger is protected by row security and direct-table revocations. Service-only invoker RPC wrappers delegate to narrowly scoped private definer functions. The change function locks the row, requires an exact prior snapshot and validates the immutable approval/one-start transition. Explicit false results for invalid/null transitions prevent SQL three-valued logic from weakening validation. Transport-closed remains consumed; no refund or replacement is allowed. Rollback refuses every initialized ledger.
