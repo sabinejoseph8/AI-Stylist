@@ -2,6 +2,7 @@ import {afterEach,describe,expect,it,vi} from 'vitest';
 import {createServer} from 'node:http';
 import {isDeepStrictEqual} from 'node:util';
 import {WebSocket} from 'ws';
+import {attachPreparedNotesOnlyTrial} from '../src/notes-trial-entry.ts';
 import {attachProtectedSimulatedNoteBridge} from '../src/protected-note-network-bridge.ts';
 import {PreparedNoteAllowance} from '../src/prepared-note-allowance.ts';
 import type {PreparedNoteLedger} from '../src/prepared-note-allowance.ts';
@@ -23,7 +24,7 @@ function extractionResponse(init:RequestInit){
  const input=JSON.parse(JSON.parse(init.body as string).input[0].content[0].text);
  return Response.json({model:NOTE_EXTRACTION_MODEL,status:'completed',output:[{type:'message',role:'assistant',status:'completed',content:[{type:'output_text',text:JSON.stringify({version:1,turnId:input.turnId,patches:[{field:'color',value:input.currentFragment,evidence:input.currentFragment}]})}]}]});
 }
-async function setup(persistence=store(),extraction=false,dormant=false,counting:'none'|'valid'|'invalid'|'pending'='none'){
+async function setup(persistence=store(),extraction=false,dormant=false,counting:'none'|'valid'|'invalid'|'pending'='none',trial=false){
  const allowance=new PreparedNoteAllowance({simulation:true,persistence});
  const socket=Object.assign(new EventTarget(),{readyState:dormant?0:1,bufferedAmount:0,send:vi.fn(),close:vi.fn()}),detachInitialEvents=vi.fn();
  let release!:(value:{socket:typeof socket;detachInitialEvents:()=>void})=>void,initial!:(value:unknown)=>void;
@@ -35,7 +36,7 @@ async function setup(persistence=store(),extraction=false,dormant=false,counting
  const countFetch=vi.fn(async(_url:string,init:RequestInit)=>{countSignal=init.signal as AbortSignal;if(counting==='pending')return new Promise<Response>(r=>{countRelease=r;});return Response.json({object:'response.input_tokens',input_tokens:counting==='invalid'?'bad':123});});
  const createStartupTransports=vi.fn(()=>({open,fetch,...(counting==='none'?{}:{countFetch})}));
  let active:Parameters<NonNullable<Parameters<typeof attachProtectedSimulatedNoteBridge>[1]['sessionReady']>>[0]|undefined;
- const server=createServer((_req,res)=>res.end()),bridge=attachProtectedSimulatedNoteBridge(server,{simulation:true,cleanupRequirement:'remote-verified',preview,allowance,createStartupTransports,sessionReady:session=>{active=session;}});
+ const server=createServer((_req,res)=>res.end()),bridge=trial?attachPreparedNotesOnlyTrial(server,{simulation:true,preview,allowance,createStartupTransports:()=>({open,fetch,countFetch})}):attachProtectedSimulatedNoteBridge(server,{simulation:true,cleanupRequirement:'remote-verified',preview,allowance,createStartupTransports,sessionReady:session=>{active=session;}});
  await new Promise<void>(r=>server.listen(0,'127.0.0.1',r));const address=server.address();if(!address||typeof address==='string')throw Error('No local address');const url=`ws://127.0.0.1:${address.port}/api/notebook-simulation`;
  const clients:WebSocket[]=[],bindings:ReturnType<typeof bindSimulatedNoteLifecycle>[]=[];
  function connect(){
@@ -223,4 +224,24 @@ describe('counted startup through actual local WebSocket and browser controller'
   await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));expect(s.countFetch).toHaveBeenCalledTimes(1);expect(s.fetch).not.toHaveBeenCalled();
   await vi.waitFor(()=>expect(client.session.snapshot().connection.notes).toBeNull());expect(client.session.snapshot().capturing).toBe(false);expect(s.socket.close).toHaveBeenCalledTimes(1);
  });
+});
+
+
+it('the concrete notes-only entry enforces two turns before any third capture reaches the provider',async()=>{
+ const s=await setup(store(),true,false,'valid',true),client=s.connect();await vi.waitFor(()=>expect(s.open).toHaveBeenCalledTimes(1));s.opened();await Promise.resolve();s.created();s.ack();
+ await vi.waitFor(()=>expect(client.session.status().state).toBe('ready'));
+ for(let n=1;n<=2;n++){
+  expect(await client.session.startTurn('trial-'+n)).toBe(true);await vi.waitFor(()=>expect(client.session.snapshot().connection.audioActive).toBe(true));
+  for(let i=0;i<5;i++)expect(client.frame()).toBe(true);
+  await vi.waitFor(()=>expect(s.socket.send.mock.calls.filter(([v])=>JSON.parse(v).type==='input_audio_buffer.append')).toHaveLength(n*5));
+  expect(client.session.commit()).toBe(true);await vi.waitFor(()=>expect(client.session.snapshot().connection.pending).toBe(false));
+  s.message({type:'input_audio_buffer.committed',event_id:'tc-'+n,item_id:'ti-'+n});
+  s.message({type:'conversation.item.input_audio_transcription.completed',event_id:'tf-'+n,item_id:'ti-'+n,content_index:0,transcript:'green'});
+  await vi.waitFor(()=>expect(client.session.status().state).toBe('ready'));
+ }
+ const appends=s.socket.send.mock.calls.filter(([v])=>JSON.parse(v).type==='input_audio_buffer.append').length;
+ await client.session.startTurn('forbidden-third');await vi.waitFor(()=>expect(s.bridge.snapshot().held).toBe(true));
+ await vi.waitFor(()=>expect(client.session.snapshot().connection.notes).toBeNull());
+ expect(s.socket.send.mock.calls.filter(([v])=>JSON.parse(v).type==='input_audio_buffer.append')).toHaveLength(appends);
+ expect(client.session.snapshot().capturing).toBe(false);expect(s.countFetch).toHaveBeenCalledTimes(2);expect(s.persistence.snapshot().runs[0]!.closed).toBe(false);
 });

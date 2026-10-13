@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Defining the small notebook experiment, 12 October 2026
+
+I prepared a dormant notes-only entry with a separate allowance and a two-turn server limit. Local connection checks complete two counted turns and refuse a third before sending more provider audio. It cannot start from normal application startup or reuse the avatar allowance. All 1,368 prototype checks pass. This is still simulation preparation; a live experiment needs its own reviewed activation and financial approval.
+
 ## Checking the complete counted connection, 12 October 2026
 
 I tested counted extraction through the protected startup connection using a real local WebSocket and a simulated browser controller. Notes arrive only after counting; leaving during a count cancels it, and an uncertain cleanup prevents a replacement owner. One assertion needed to wait for browser closure rather than only server closure. All 1,359 prototype tests pass. This is integration evidence with synthetic providers, not a live phone or paid-provider acceptance claim.

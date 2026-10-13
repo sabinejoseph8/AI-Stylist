@@ -11,7 +11,7 @@ type Started = Extract<Awaited<ReturnType<ReturnType<typeof createPreparedNoteSe
  * Private upgrade checks precede allowance work. A pending allowance never emits
  * Ready, creates a provider, or releases its slot before cancellation settles. */
 export function attachProtectedSimulatedNoteBridge(server: Server, options: {
- simulation?: boolean; cleanupRequirement?: OwnerOptions['cleanupRequirement']; preview: OwnerOptions['preview']; allowance: OwnerOptions['allowance'];
+ simulation?: boolean; maxTurns?:number; cleanupRequirement?: OwnerOptions['cleanupRequirement']; preview: OwnerOptions['preview']; allowance: OwnerOptions['allowance'];
  preferences?: OwnerOptions['preferences'];
  /** Server-only simulation observer. Never exposed as a browser command. */
  sessionReady?: (session:Started)=>void;
@@ -19,6 +19,8 @@ export function attachProtectedSimulatedNoteBridge(server: Server, options: {
  createStartupTransports?: () => {open:ReturnType<NonNullable<OwnerOptions['createStartupTransports']>>['open'];fetch:SimulatedExtractionFetch;countFetch?:SimulatedExtractionFetch};
 }) {
  if (options.simulation !== true) throw Error('Live protected notebook bridge is disabled.');
+ const maxTurns=options.maxTurns??16;
+ if(!Number.isSafeInteger(maxTurns)||maxTurns<1||maxTurns>16)throw Error('Invalid notebook turn limit.');
  const createTransports=options.createTransports,createStartupTransports=options.createStartupTransports;
  const owner = createPreparedNoteServerOwner({simulation: true, cleanupRequirement: options.cleanupRequirement, preview: options.preview, allowance: options.allowance, preferences: options.preferences, changed: () => {}, createTransports: createTransports?capture => {
   if (!capture) throw Error('Simulated capture required.');
@@ -29,7 +31,7 @@ export function attachProtectedSimulatedNoteBridge(server: Server, options: {
  }:undefined});
  const bridge = attachSimulatedNoteBridge(server, {simulation: true, preview: options.preview, deferReady: true, create: (publish, capture, turnReady, ended, ready, req, clarify) => {
   const abort = new AbortController();
-  let active: Started | undefined, stopping = false, finished = false;
+  let active: Started | undefined, stopping = false, finished = false,turns=0;
   const stop = () => {stopping = true; abort.abort(); if (active) void active.end();};
   const settled = () => {finished = true; ended();};
   const pendingSnapshot = {ended: false, reason: null, capturing: false, acquiring: true, transcription: null, notes: {accepted: 0, rejected: 0, applied: 0, failures: 0, extracting: false, queued: false, timing: new NoteTiming().report()}, liveEnabled: false as const};
@@ -46,7 +48,12 @@ export function attachProtectedSimulatedNoteBridge(server: Server, options: {
    audio: frame => !stopping && Boolean(active?.probe.audio(frame)),
    edit: (...args) => !stopping && Boolean(active?.probe.edit(...args)),
    confirm: (...args) => !stopping && Boolean(active?.probe.confirm(...args)),
-   beginTurn: async id => !stopping && Boolean(await active?.probe.beginTurn(id)),
+   beginTurn: async id => {
+    if(stopping)return false;
+    if(turns>=maxTurns){stop();return false;}
+    // Reserve before acquisition; simultaneous begin requests cannot exceed it.
+    turns++;return Boolean(await active?.probe.beginTurn(id));
+   },
    commit: () => !stopping && Boolean(active?.probe.commit()),
    acknowledgeRendered: receipt => !stopping && Boolean(active?.probe.acknowledgeRendered(receipt)),
    receive: event => !stopping && Boolean(active?.probe.receive(event)),

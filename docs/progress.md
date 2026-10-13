@@ -1,5 +1,13 @@
 # AI Stylist: Phased development plan and progress
 
+## Disabled notes-only entry composition, 12 October 2026
+
+Added attachPreparedNotesOnlyTrial as a concrete dormant simulation entry, not imported by server.ts or the CLI. It requires a separate notes-only allowance, startup transports with counting, the protected private boundary and remote-verified cleanup mode. It uses the existing simulation endpoint; it is not an enabled live or customer route. Boot attaches no provider or reservation. Normal construction and avatar-purpose allowances are rejected before attachment.
+
+The protected bridge now validates a configurable turn limit and reserves begin attempts before acquisition. The trial fixes it at two. Actual local WebSocket/controller integration completes two counted turns, rejects a third before more provider audio and retains the unresolved durable hold. Five invalid-limit checks reject before attachment. All 1,368 tests across 93 files, type checking and build pass. No paid call, credential, actual microphone, remote ledger or hosted configuration change occurred. Current allocation remains $41; the proposed $2 notes trial is unapproved.
+
+Next exact action: prepare a dormant real provider transport adapter behind an explicit activation boundary, with no automatic constructor or key access, so the eventual reviewed experiment can validate the still-unverified dedicated startup contract. Retain the current simulated route and all remote cleanup holds; financial and security-sensitive activation still require Sabine. Private Memory currently publishes the preceding 1,359-test counted-startup checkpoint; synchronize this increment at the next publication checkpoint.
+
 ## Counted startup browser-connection rehearsal, 12 October 2026
 
 Extended the protected bridge to carry the explicitly injected counter through startup. Three actual local HTTP/WebSocket browser-controller scenarios pass with synthetic provider events: full-request counting before generation and tentative note delivery, page exit during counting with late-response rejection and fresh-owner refusal, and invalid counting with capture/browser cleanup before generation. The first invalid-count assertion observed the browser before the asynchronous close arrived; waiting for the actual browser state corrected the test. No production cleanup fix was needed. These are browser-controller/network integration checks, not a physical Safari or rendered WebKit review.
