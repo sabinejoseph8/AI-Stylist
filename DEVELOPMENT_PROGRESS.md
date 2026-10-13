@@ -1,3 +1,9 @@
+## Private Memory activation-review checkpoint, 12 October 2026
+
+The owner-private Memory site now publishes the active rendered-page rehearsal and focused activation-path self-review with 1,544 prototype tests. Source 232f19ebd49d4bbc564888874048c7b57184f9d7 deployed successfully as appgdep_6acdba7d7cd481918cea57ff7d551ed2 with MCP retained. All 16 site checks, build and artifact validation pass. GitHub and the approved AI Stylist folder contain the reviewed page/runtime/operator guide. No actual microphone, provider call, hosted initialization, Render deployment or spending authorization occurred.
+
+Exact next action: await Sabine's explicit decision on one proposed $2 private notes experiment and its protected Supabase/Render activation. This would raise the experiment allocation from $41 to $43 only if approved. No retries, avatar calls or plan upgrades. After approval, follow docs/private-notes-trial-activation-review.md and provide the complete advance script before Sabine starts the test. Until then keep all live activation disabled; Phase 1 and the full application goal remain open.
+
 ## Active page rehearsal and activation-path review, 12 October 2026
 
 Completed scripted rendered-page checks at desktop width and 390 by 844 phone width. Notes appeared before Send, $500 changed to $350, explicit item-price scope was required before Save, the corrected budget became Confirmed, the third turn stayed unavailable and End cleared notes. The fixture uses generated silence and local events; it is excluded from production build inputs and the dedicated HTTP allowlist. No microphone, WebSocket provider or human approval is supplied by this fixture.
