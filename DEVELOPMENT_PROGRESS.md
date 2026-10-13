@@ -1,3 +1,9 @@
+## Separate private notes reservation contract, 12 October 2026
+
+Prepared a distinct notes-only-private-trial ledger contract and local owner, without initializing an approval or attaching hosted storage. It fixes the proposed one-start, $2, 85-second, two-turn and counted-extraction limits. The immutable approval record is data, not evidence of human authorization. Only one reservation can be appended; outcomes record held or transport-closed without releasing usage or claiming remote finalization. Resets, approval amendments, replay, other-purpose records and unknown fields are rejected. A committed write with a lost response permanently holds the owner without retry. There is no closeVerified/refund method and no normal startup attachment.
+
+All 12 focused ledger checks and all 1,401 prototype tests across 97 files, type checking and build pass. Concurrent independent owners have one CAS winner in the simulated persistence test; real database locking is not established by that fixture. Existing allocation remains $41, and the proposed $2 live experiment is unapproved. No hosted mutation, key access or provider call occurred. Next exact local action: prepare a separate locked persistence transition for this ledger and run isolated database concurrency/restart tests; do not initialize the approval, change Supabase or connect it to live startup. Private Memory remains at the earlier 1,368-test checkpoint pending synchronization.
+
 ## Dormant adapter composition rehearsal, 12 October 2026
 
 Three synthetic integration checks compose the server socket opener and authenticated HTTP adapter with startup, counted dispatch and notebook extraction. They verify first-packet startup, exact-request count before generation, tentative notes, pending-count cancellation and late-result rejection, and visible failed socket termination. No production code changed in this increment. All 1,389 prototype tests across 96 files, type checking and build pass.

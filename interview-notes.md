@@ -1,3 +1,7 @@
+## Separating notebook test reservations
+
+I prepared a separate reservation contract for the proposed notes-only experiment. I made every start consume its allowance permanently, including when local transport closure is observed, because that does not prove remote finalization. I tested concurrency, restart and uncertain write responses using local fixtures. I kept this preparation separate from actual financial approval and from the existing avatar test records.
+
 ## Verifying the prepared connection as one flow
 
 I connected the prepared server adapters in synthetic integration tests. I checked that partial speech can reach tentative notebook notes only after token counting, and that exiting cancels pending extraction and clears temporary notes. I also checked that a failed socket termination stays visible instead of being reported as verified cleanup. These tests prepare the real experiment; they do not establish live recognition quality, provider finalization or customer readiness.
