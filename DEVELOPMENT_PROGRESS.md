@@ -1,3 +1,9 @@
+## Camera fix publication and next action
+
+The latest-still race fix is published as a184987 and the Memory snapshot as 6353997. Eleven changed committed files were copied to the approved AI stylist folder. Owner-private Memory source 585d5e9d9d31bb757ee5227951a2f4adc6f3840d deployed successfully as appgdep_6acdf2e4de9081919c88113182e4f445, with MCP retained; all 16 site tests, build and artifact validation passed. Prototype evidence: 1,644 tests across 118 files, type checking/build pass. No paid session or device stream is running.
+
+Exact next implementation action: review the local notebook camera's asynchronous video.play and device-ended callbacks against stop/restart ownership. An old play rejection may currently call stopCamera after a newer stream starts. Bind those callbacks to the active preview before considering camera discovery checks complete. This is authorized local Task 1c repair, with no provider call or physical-device activation needed. Keep all phase acceptance gates and the $49 spending boundary.
+
 ## Latest local still selection race fixed, 13 October 2026
 
 Task 1c review found that successive Capture a still clicks shared one ownership revision until asynchronous JPEG encoding finished. If the earlier encoder completed first, it could invalidate the later selection. Each capture now claims a new revision before encoding; older callbacks cannot publish after another capture, upload, removal or session clearing. The isolated encoder also refuses absent drawing context, invalid/oversized dimensions, empty/non-JPEG/oversized output and synchronous failures with readable feedback. Output is bounded to 1,280 pixels on its longest edge. Confirmed references still change only through explicit confirmation; camera Stop retains them.
