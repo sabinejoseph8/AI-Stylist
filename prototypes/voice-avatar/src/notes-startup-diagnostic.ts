@@ -11,8 +11,12 @@ export type StartupDiagnosticOpen=(signal:AbortSignal,initialEvent:(value:unknow
 export type StartupDiagnosticOutcome='configuration-accepted'|'initial-rejected'|'configuration-rejected'|'incompatible-ack'|'invalid-event'|'opening-failed'|'timed-out'|'canceled';
 /** One startup only. No microphone, capture, HTTP extraction or response API.
  * No default socket, key loader, environment access, listener or activation. */
-export function prepareNotesStartupDiagnostic(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;open:StartupDiagnosticOpen;signal:AbortSignal;diagnostic?:NoteStartupDiagnostic}){
+export function prepareNotesStartupDiagnostic(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;simulationProfile?:'minimal';open:StartupDiagnosticOpen;signal:AbortSignal;diagnostic?:NoteStartupDiagnostic}){
  if(!validNoteExecution(options)||typeof options.open!=='function')throw Error('Startup diagnostic is disabled.');
+ // The alternate payload is offline preparation only. Existing live permits,
+ // operator flags and reserved trials must not silently select a new experiment.
+ if(options.simulationProfile!==undefined&&(options.simulation!==true||options.simulationProfile!=='minimal'))throw Error('Minimal startup diagnostic is simulation only.');
+ const minimal=options.simulationProfile==='minimal';
  const report=boundedNoteStartupDiagnostic(options.diagnostic);
  let used=false;
  return{run:()=>{
@@ -40,7 +44,7 @@ export function prepareNotesStartupDiagnostic(options:{simulation?:boolean;priva
      if(event.type!=='session.created'||!event.session||typeof event.session.id!=='string'||!/^[A-Za-z0-9_-]{1,80}$/.test(event.session.id)){stop('invalid-event');return;}
      created=true;
      // The only permitted client command. There is deliberately no audio API.
-     if(!bridge?.wire.send({event_id:STARTUP_DIAGNOSTIC_EVENT_ID,type:'session.update',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:{model:TRANSCRIPTION_MODEL,languages:['en'],delay:'low'},turn_detection:null}}}}))stop('opening-failed');
+     if(!bridge?.wire.send({event_id:STARTUP_DIAGNOSTIC_EVENT_ID,type:'session.update',session:{type:'transcription',audio:{input:{format:{type:'audio/pcm',rate:24000},transcription:minimal?{model:TRANSCRIPTION_MODEL}:{model:TRANSCRIPTION_MODEL,languages:['en'],delay:'low'},turn_detection:null}}}}))stop('opening-failed');
      return;
     }
     if(event.type!=='session.updated'){stop('invalid-event');return;}

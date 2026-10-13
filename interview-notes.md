@@ -1559,3 +1559,7 @@ After the notebook connection failed during setup, I prepared a server-only diag
 ## Learning from an inconclusive integration diagnostic
 
 I received two support replies that repeated a startup recommendation without explaining why our actual request was rejected. I reviewed the diagnostic and found it already captured known parameter names, but a missing name and an unrecognized name looked the same. I improved it to report fixed availability categories while keeping private error text out of logs. I validated the change with simulated failures and the full regression suite. This improves the next experiment without claiming the integration is fixed or spending more on an unchanged test.
+
+## Preparing a smaller diagnostic without changing the product
+
+I prepared a separate offline experiment using the provider's minimal transcription configuration. I kept the app's language and latency requirements intact and blocked existing live approvals from selecting this new profile. I tested the exact command, cleanup and diagnostic categories with simulated events. I documented what a successful result could establish and what it could not, so a future spending decision would fund a specific investigation rather than another identical retry.
