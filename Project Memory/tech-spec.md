@@ -1,3 +1,7 @@
+## Startup contract review, 13 October 2026
+
+Offline review found conflicting official guidance for the low-delay field: the transcription guide shows it with gpt-live-transcribe, but the client-event schema restricts it to gpt-realtime-whisper. This is a candidate explanation only. The diagnostic's invalid_parameter result does not identify the field; session-type conversion remains unverified. See docs/openai-startup-diagnostic-followup.md for the prepared, unsent questions and exact configuration. No code, paid call, allowance or deployment changed in this review. Allocation remains $49, all four notes/startup reservations held. Model substitution and legacy intent/event migration are not approved fixes. Existing acceptance gates remain open.
+
 ## Server-only startup diagnostic result, 13 October 2026
 
 Sabine approved one additional $2 server-only diagnostic, raising the experiment allocation from $47 to $49. One new durable allowance was initialized and consumed. The single run reached provider-open and session.created, then received invalid_request_error with allowlisted code invalid_parameter. The configuration was rejected; no allowlisted parameter name or matching error event correlation was returned. This does not identify a correction or validate conversion from a conversation session into transcription.
