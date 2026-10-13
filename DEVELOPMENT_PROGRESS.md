@@ -1,3 +1,9 @@
+## Startup follow-up submitted, 13 October 2026
+
+Sabine explicitly authorized sending the evidence-specific question to OpenAI. Opened the existing Help messenger, reviewed the earlier thread and sent the prepared sanitized URL/header/event-sequence question in a new support conversation. Verified the complete message appears as You said, then support requested a contact email before continuing. The message reached the messenger, but the support contact step is unfinished. No technical reply, human engineering escalation or email delivery is established. No keys, account details, media or customer content were sent. No provider test or extra allowance was started.
+
+Exact next action requires Sabine: enter her chosen reply email in the open support messenger and select Continue. Then review the received support answer against official documentation and the observed pre-configuration rejection; retain uncertainty where it provides only an inference. Preserve both consumed notes starts and the $45 experiment allocation. Implement a supported correction with local tests before any separately approved paid validation.
+
 ## Provider rejected initial connection before configuration, 13 October 2026
 
 Sabine supplied the fixed Render stages for the failed follow-up: owner-reserved, owner-authorized, owner-transports-ready, provider-connecting, provider-open, provider-error-invalid-request, provider-first-unexpected, startup-event-held. This confirms an opened provider WebSocket followed by an invalid-request error as its first packet. There is no session.created/startup-created/startup-configuring stage. Code inspection confirms configuration is sent only after a valid creation envelope, so this failure precedes session.update and microphone audio. The precise rejected field/reason is not retained by the fixed diagnostic categories. Do not infer an API-key, language, delay, microphone, budget or customer-speech failure from these logs.

@@ -41,7 +41,7 @@ The same support thread received a narrow follow-up on the original startup and 
 
 ## Follow-up draft after observed initial rejection, 13 October 2026
 
-Status: prepared, not sent. Awaiting authorization for this new evidence-specific message.
+Status: explicitly authorized by Sabine and submitted through the OpenAI Help support messenger on 13 October 2026. Verified the full message appears as You said. The next support step requests a contact email before continuing. Contact completion, a technical reply, human escalation and email delivery are not established.
 
 Our server connects to `wss://api.openai.com/v1/realtime?model=gpt-live-transcribe` using a server Bearer header. The WebSocket opens, but the first JSON event is `error` with `error.type: invalid_request_error`, before any `session.created`. Our client waits for session.created before sending session.update, so no configuration or audio has been sent. It then closes without retrying.
 
