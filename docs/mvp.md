@@ -1,3 +1,11 @@
+## Dormant server HTTP authentication adapter, 12 October 2026
+
+Prepared a server-only adapter for the fixed Responses generation and input-token-count endpoints. It has no default fetch, environment/key loader, route, retry or startup attachment. Construction makes no request. It reconstructs secret-bearing request options, excludes caller headers/cookies, forces redirect rejection, bounds serialized body bytes, propagates cancellation during the request, sanitizes request errors and permanently rejects reuse after end. Existing counted dispatch remains responsible for deadlines and response-body/schema validation; this adapter alone is not a spending or remote-cleanup guarantee.
+
+Nine synthetic focused checks pass. All 1,377 prototype tests across 94 files, type checking and build pass. No credential was read and no actual provider call or allowance change occurred. Existing allocation stays $41; the proposed $2 notes-only experiment remains unapproved. Next exact action: prepare the dormant transcription socket opener with first-packet observation, then compose both adapters behind a reviewed activation owner and separate durable notes allowance. Private Memory currently publishes the preceding 1,368-test checkpoint; synchronize this increment at the next publication checkpoint.
+
+Official references retrieved: https://developers.openai.com/api/reference/overview and https://developers.openai.com/api/reference/resources/responses/subresources/input_tokens/methods/count . Bearer authentication is documented; selected-model/payload acceptance and counting billing remain live-unverified.
+
 # AI Stylist MVP scope and discovery findings
 
 ## Disabled notes-only entry composition, 12 October 2026

@@ -1,3 +1,7 @@
+## Preparing server authentication without activating spending
+
+I prepared a separate server HTTP adapter so the notebook can eventually count and extract notes with the same protected provider boundary. I kept it disconnected from normal startup and used synthetic credentials in tests. I made the adapter accept only the two required destinations, remove caller-supplied credentials and stop reuse after shutdown. This gives me testable connection preparation while preserving the approval needed for the real experiment. It does not prove actual provider compatibility or final billing.
+
 # My AI Stylist project story
 
 ## Defining the small notebook experiment, 12 October 2026
