@@ -1,5 +1,9 @@
 # AI Stylist: Phased development plan and progress
 
+## Next notebook integration checkpoint, 12 October 2026
+
+Reviewed current disabled transcription/extraction preparation and the received support disposition. Prepared a concrete one-start, two-turn, 85-second notes-only proposal in docs/combined-notes-live-trial-plan.md with a proposed $2 reservation, not approved or enabled. Published pricing was retrieved; request/byte limits alone do not prove a dollar bound. Next local action is aggregate provider-counted input/output dispatch enforcement before any real transport activation. No provider call, credential access, remote mutation or spending change occurred. Existing allocation stays $41. The dedicated startup and remote-finalization uncertainties are explicit rather than treated as solved. This proposal is not customer-launch approval.
+
 ## Recovery failure-path coverage, 12 October 2026
 
 Expanded the synthetic narrow-screen WebKit follow-up rehearsal to exercise request rejection, browser playback rejection and invalid avatar audio delivery separately after a confirmed first reply. All three pass: fixed stage-specific messages, detached audio/video, an end request, no retry/replacement, and no private exception body in the page. This is synthetic browser evidence, not additional human/provider acceptance. Production code and the $41 allocation are unchanged. The full 1,304-test result remains the earlier source baseline; only the changed browser rehearsal and diff whitespace check were rerun here.

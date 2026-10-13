@@ -5,7 +5,7 @@ Status: Preparation only. No live route, deployment, credential access, spending
 
 ## Purpose and boundary
 
-Prove actual partial speech can become tentative notebook notes before turn end, and a later budget correction takes precedence. This is a notes-only private experiment. It does not require an avatar, camera, retailer feed or recommendation speech. Tavus conversational recovery remains a separate blocked experiment.
+Prove actual partial speech can become tentative notebook notes before turn end, and a later budget correction takes precedence. This is a notes-only private experiment. It does not require an avatar, camera, retailer feed or recommendation speech. Bounded Tavus replacement-room recovery was accepted on iPhone on 12 October 2026; continuous avatar conversation remains separate.
 
 Use synthetic styling preferences spoken by Sabine. Do not use personal wardrobe photos, account details or sensitive information. No app-side transcript/audio recording or note persistence is proposed. Provider retention terms still apply; disabling response storage does not establish zero retention.
 
@@ -40,9 +40,42 @@ Record observed versus expected outcomes separately from automated fixtures. One
 
 ## Actions required later
 
-Before implementation is activated, a concrete cost reservation needs Sabine's financial authorization. Before customer media launch, provider privacy, retention and recovery terms still need resolution. Before avatar conversational-resume testing, Sabine needs to share Tavus's technical reply. None of those requirements is waived by this plan.
+Before implementation is activated, a concrete cost reservation needs Sabine's financial authorization. Before customer media launch, provider privacy, retention and recovery terms still need resolution. Tavus technical clarification has been received and the bounded replacement-room test accepted; neither is a missing prerequisite for this notes-only trial. None of those requirements is waived by this plan.
 
 
 ## Connection and cleanup review after support reply
 
 The inspection-only candidate uses the support-proposed model query; startup is not live-verified. The separate simulated close-evidence helper can observe local transport closure only and cannot authorize allowance release. Do not equate a clean socket close with final usage, remote session deletion or zero retention. The existing support thread has been asked for the unresolved dedicated-session procedure and authoritative startup confirmation. This plan remains blocked for live activation until those evidence requirements, reviewed security/storage setup and a new financial allowance are satisfied. No GPT-Live terminal events are substituted into Realtime transcription.
+
+## Concrete first notes-only experiment proposal, 12 October 2026
+
+This is a proposal, not spending authorization. The accepted recovery trial used the latest avatar allowance; its reservations cannot fund this experiment.
+
+| Boundary | Proposed first trial |
+| --- | --- |
+| New financial reservation | $2, raising the combined experimental allocation from $41 to $43 only if Sabine approves |
+| Starts | One user-started connection; no automatic retry, reconnection or replacement |
+| Duration | At most 85 seconds after configuration readiness; opening/configuration deadlines also apply |
+| Turns | At most two explicitly committed speech turns |
+| Transcription | Existing selected gpt-live-transcribe; no silent model fallback |
+| Extraction | Existing pinned gpt-4.1-mini-2025-04-14; at most 64 requests, at most 2,048 output tokens each |
+| Media | Microphone only; no avatar, camera or supplied photo |
+| Persistence | Dedicated notes-only durable reservation; volatile notes and speech content; metadata-only timing |
+| Completion evidence | All committed item IDs completed, plus observed transport closure; not remote deletion, final billing or provider cleanup proof |
+| Uncertainty | Retain the reservation and block another start; never reinterpret transport closure as stronger evidence |
+
+### Cost worksheet and enforcement gap
+
+Official pages retrieved on 12 October 2026 list live transcription at $0.017 per minute, and GPT-4.1 mini at $0.40 per million input tokens and $1.60 per million output tokens. Sources: [transcription model](https://developers.openai.com/api/docs/models/gpt-live-transcribe), [extraction model](https://developers.openai.com/api/docs/models/gpt-4.1-mini), [pricing](https://developers.openai.com/api/docs/pricing).
+
+85 seconds of submitted audio is approximately $0.0241 at the published transcription rate. At 64 requests and 2,048 output tokens each, the output portion is approximately $0.2098. Input charges remain additional. Character and byte limits do not establish an exact input-token count or a hard dollar cap. Before activation, enforce an aggregate input-token ceiling of 1,000,000 using a compatible token counter or an authoritative provider count before dispatch. That proposed ceiling contributes $0.40, making the calculated modeled subtotal about $0.634, below the $2 conservative reservation. Failed/in-flight requests remain counted. Taxes, exchange effects, changed pricing, provider overrun or remote finalization are not guaranteed by this worksheet; it is not a billing stop mechanism.
+
+### Decisions and work before activation
+
+1. Prepare a real but disabled server transport and entry point with no default launch path. Add aggregate request/token enforcement and tests before supplying credentials or making a provider call.
+2. Use a separate reviewed notes-only ledger; do not rename the simulated ledger purpose into live authorization or change the avatar ledger. Verify concurrency, restart and uncertain cleanup holds.
+3. Present Sabine the concrete $2 reservation and the experimental evidence boundary: the selected-model startup is not live-verified, and provider finalization is not proved by clean transport closure. Approval must cover the private experiment under those limits; it does not relax customer-launch privacy or recovery requirements.
+4. Keep the private route disabled until explicit financial and security-sensitive activation authorization, tests, protected hosted access and exact deployment are ready. No plan upgrade or account-budget change is included.
+5. Deliver the complete existing manual script in chat before the user starts. A passing first trial proves basic integration only, not the representative two-second p95 target.
+
+Exact next local implementation action: add a disabled aggregate extraction dispatch budget that counts attempted requests and provider-counted input tokens before sending, reserves maximum output tokens, rejects uncertainty and cannot be reset within a trial. No live network or credentials are needed for that change.
