@@ -13,7 +13,8 @@ Checked 13 October 2026 against docs/progress.md, docs/development-backlog.md, D
 | 2b hosted data | Twenty-one migrations installed; local signed-identity/database/Storage and lifecycle rehearsals | Real authenticated customer/foreign-user and hosted Storage acceptance. Prepared handlers are not customer activation. |
 | 2c accounts | Local password, recovery, Google/Apple interfaces and synthetic lifecycle; seven-day and linking policies approved | Exact customer HTTPS origin and Render ingress/query-log guarantees remain unresolved. Apple/email renewal and rollback runbook is prepared in account-provider-maintenance.md; actual sender/social credentials, maintenance execution and account/security/device checks remain. Domain purchase is deferred until public launch. |
 | 2d review | Foundation preparation and recorded test evidence | Cannot close before 2b/2c acceptance and applicable phase review. |
-| Phases 3 through 8 | Earlier discovery helpers and prepared schema do not equal complete features | Their phase dependencies remain in force. Approved exceptions cover 2a and hosted 2b/2c only. No later-phase activation or launch authorization is inferred. |
+| Phase 3 local exception | Sabine approved local Tasks 3a through 3c preparation on 13 October; main-app sample notebook prepared with 672 passing foundation tests | Await local visual acceptance. Real partial speech, representative timing, persistence/identity integration, production retention and Phase 3 review remain open. No paid call or hosted activation is authorized. |
+| Phases 4 through 8 | Earlier discovery helpers and prepared schema do not equal complete features | Their phase dependencies remain in force. Approved exceptions cover 2a, hosted 2b/2c and local 3a through 3c preparation. No later-phase activation or launch authorization is inferred. |
 
 ## Current action queue
 

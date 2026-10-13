@@ -1567,3 +1567,7 @@ I prepared a separate offline experiment using the provider's minimal transcript
 ## What the minimal provider test established
 
 I approved one bounded server-only experiment after the offline preparation passed. The minimal request failed even with the optional language and delay fields omitted. The improved diagnostic established that a parameter name was present but outside our approved list, without exposing arbitrary provider text. I preserved every consumed reservation and verified cleanup recording. I kept the conclusion narrow: this ruled out simply removing those optional fields as a working correction for that run, but did not identify the rejected setting. I did not ask for another identical test or claim that transcription was working.
+
+## Progressing independently of a provider blocker
+
+While the transcription issue was escalated to a specialist, I approved moving the notebook into the main app using local sample conversations. I separated that preparation from accepting the live integration. I added revision-based session state, cancellation and stale-edit protection, then connected a collapsed notebook with progressive sample updates and explicit confirmations. I kept uncertain budgets unconfirmed and made saving selected sample preferences a separate action. Browser checks exposed the need to preserve an active notebook across app navigation, which I corrected. This work improved the app without another paid call or silently changing customer retention decisions.
