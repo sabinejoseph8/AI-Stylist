@@ -1,3 +1,7 @@
+## Preparing a bounded live notebook experiment
+
+I approved a separate $2 notebook microphone experiment after the synthetic page and access controls were reviewed. I limited it to one session, two turns and 85 seconds, using the existing protected hosting. This lets me test whether notes appear while I speak without paying for an avatar in the same experiment. I kept previous test history intact and separated connection closure from claims about remote deletion or final billing. The hosted allowance is prepared; I have not yet completed the live notebook test.
+
 ## Preparing the protected notes-only test owner
 
 I prepared a separate owner for the proposed notebook experiment. I put private access and consent before reservation or provider construction, enforced two begin attempts and a short overall deadline, and retained touch-edit and rendering callbacks. I kept every end path conservative: clear temporary notes, stop media and retain the consumed reservation. The implementation remains dormant and its automated evidence uses synthetic providers; it does not authorize a paid trial or establish customer readiness.

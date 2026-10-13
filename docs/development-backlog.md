@@ -1,3 +1,9 @@
+## Approved private notebook experiment, 13 October 2026
+
+Sabine explicitly approved one $2 private notebook microphone test through the pending approval question. The experiment allocation is now $43. Authorization covers the existing protected Render preview and a separate Supabase allowance, one session, two turns and at most 85 seconds including setup. No retry, avatar call or plan upgrade is included. OpenAI voice/text retention and the limits of transport-closure evidence were included in the approved question. Approval ID: notes_private_20261013_01. Browser consent remains a separate step before reservation.
+
+Exact next action: verify the separate schema is absent before installation, apply and verify its protections, initialize the one-time reviewed allowance, preserve all seventeen historical avatar records, then deploy the dedicated reviewed entry on the existing Free service. Verify metadata without opening a test socket. Give Sabine the complete advance script before she starts the microphone. No test has been started by this approval record.
+
 ## Active page rehearsal and activation-path review, 12 October 2026
 
 Completed scripted rendered-page checks at desktop width and 390 by 844 phone width. Notes appeared before Send, $500 changed to $350, explicit item-price scope was required before Save, the corrected budget became Confirmed, the third turn stayed unavailable and End cleared notes. The fixture uses generated silence and local events; it is excluded from production build inputs and the dedicated HTTP allowlist. No microphone, WebSocket provider or human approval is supplied by this fixture.

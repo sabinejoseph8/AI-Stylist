@@ -1,3 +1,15 @@
+## Approved notebook hosted setup, 13 October 2026
+
+Verified the separate trial schema/table were absent in the approved Supabase project, applied the reviewed preparation SQL successfully, verified RLS and anonymous/customer denial plus service RPC permissions, and initialized the approved one-time allowance. No trial reservation or provider call was created. Approval ID notes_private_20261013_01 binds $2, two turns and 85 seconds; the existing avatar ledger is outside these SQL statements.
+
+The first test invocation used the repository root, which has no package script. The corrected prototype invocation encountered sandbox loopback restrictions and was stopped. The authorized unrestricted local rerun passed the full prototype suite, type checking and build. No provider calls were used. Render startup/environment configuration and exact-source deployment remain next; do not ask Sabine to start until protected availability and an unreserved allowance are verified.
+
+## Approved private notebook experiment, 13 October 2026
+
+Sabine explicitly approved one $2 private notebook microphone test through the pending approval question. The experiment allocation is now $43. Authorization covers the existing protected Render preview and a separate Supabase allowance, one session, two turns and at most 85 seconds including setup. No retry, avatar call or plan upgrade is included. OpenAI voice/text retention and the limits of transport-closure evidence were included in the approved question. Approval ID: notes_private_20261013_01. Browser consent remains a separate step before reservation.
+
+Exact next action: verify the separate schema is absent before installation, apply and verify its protections, initialize the one-time reviewed allowance, preserve all seventeen historical avatar records, then deploy the dedicated reviewed entry on the existing Free service. Verify metadata without opening a test socket. Give Sabine the complete advance script before she starts the microphone. No test has been started by this approval record.
+
 ## Current-summary reconciliation, 13 October 2026
 
 Reconciled the current plan summary and Phase 1 readiness matrix with the already recorded successful bounded iPhone replacement-room recovery and latest 1,544-test notebook preparation. Removed superseded pending-recovery and old budget claims from the current summary. Historical dated evidence remains intact. Clarified that the received Render reply leaves trust/logging questions unresolved, and that the existing MVP file, foundation harness and private Memory site are established.

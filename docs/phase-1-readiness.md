@@ -19,9 +19,9 @@ Phase 1 remains incomplete. This page separates current evidence from launch cla
 
 ## Dependencies for live evidence
 
-1. **Financial authorization:** the existing $41 experiment allocation is exhausted for further avatar attempts, with seventeen historical records preserved. A separate $2 notes-only trial and private activation decision is pending; no new allowance is authorized yet.
+1. **Financial authorization:** the existing $41 experiment allocation is exhausted for further avatar attempts, with seventeen historical records preserved. A separate $2 notes-only trial and private activation were approved on 13 October 2026, bringing the allocation to $43. The installed single-start notebook allowance is unreserved; no retries or avatar calls are included.
 2. **Tavus technical reply:** received. Interrupted output must be canceled; fresh output uses a new inference ID. No downstream flush or exact playback-position proof is provided. The conservative replacement-room flow passed its bounded iPhone check; continuous streaming remains unverified.
-3. **Safe live integration:** the dedicated notebook page, runtime, protected route, durable single-start owner and operator guide are reviewed locally with injected services. Normal startup remains unchanged, and actual notebook schema initialization, credentials, deployment and provider calls remain disabled pending approval. See docs/private-notes-trial-activation-review.md.
+3. **Safe live integration:** the dedicated notebook page, runtime, protected route, durable single-start owner and operator guide are reviewed locally with injected services. Normal startup remains unchanged, and the separate hosted schema/allowance are installed after approval and dedicated deployment is in progress. No notebook provider trial has started. See docs/private-notes-trial-activation-review.md.
 4. **Source and privacy resolution:** no retailer feed/imagery license is approved, and customer provider terms, retention and recovery remain open. Desk research does not authorize media use or a shopping launch.
 
 ## Remaining review

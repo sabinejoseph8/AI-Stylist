@@ -1,6 +1,6 @@
 # Private notebook activation review
 
-Status: preparation only, 12 October 2026. Financial/security activation has not been approved. No hosted initialization, deployment or actual provider call has occurred in this preparation.
+Status: one $2 private test and protected activation explicitly approved by Sabine on 13 October 2026, using approval ID notes_private_20261013_01. Experiment allocation is $43. Hosted initialization and deployment are now authorized under the operator sequence below; no test has yet been started.
 
 ## Completed local review
 

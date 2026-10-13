@@ -1,4 +1,5 @@
-# Private Task 1b preview only. No deployment or paid plan is implied by this file.
+# Approved one-session private notebook trial, 13 October 2026.
+# Keep approval settings operator-supplied; no allowance is initialized by deployment.
 services:
   - type: web
     name: ai-stylist-private-preview
@@ -7,7 +8,7 @@ services:
     plan: free
     region: oregon
     buildCommand: npm ci && npm run build
-    startCommand: node src/server.ts --preview --recovery
+    startCommand: node src/private-notes-trial-main.ts --activate-private-notes-trial
     healthCheckPath: /healthz
     autoDeployTrigger: off
     envVars:
@@ -22,4 +23,10 @@ services:
       - key: OPENAI_API_KEY
         sync: false
       - key: TAVUS_API_KEY
+        sync: false
+      - key: PRIVATE_NOTES_TRIAL_FINANCIAL_APPROVED
+        sync: false
+      - key: PRIVATE_NOTES_TRIAL_SECURITY_APPROVED
+        sync: false
+      - key: PRIVATE_NOTES_TRIAL_APPROVAL_ID
         sync: false
