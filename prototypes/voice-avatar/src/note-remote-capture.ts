@@ -2,8 +2,8 @@ import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} fr
 import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {decodeNoteAudio} from './note-audio-frame.ts';
 import type {ProbeCapture} from './note-session-probe.ts';
-/** Injected simulated browser audio source. No microphone, socket, logging,
- * persistence or retries. A NoteSessionProbe owns acquisition and cancellation. */
+/** Injected browser audio source under an explicit execution mode. No microphone,
+ * socket, logging, persistence or retries. The session owns cancellation. */
 export class PreparedRemoteNoteCapture implements ProbeCapture {
  private liveEnabled=false;
  private accept:((pcm:ArrayBuffer)=>boolean)|null=null;

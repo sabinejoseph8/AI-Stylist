@@ -8,10 +8,9 @@ export type TranscriptionWire={bufferedAmount:number;send:(event:object)=>boolea
 type Turn={id:string;item:string|null;text:string;sequence:number;final:boolean};
 const id=(v:unknown):v is string=>typeof v==='string'&&/^[a-zA-Z0-9_-]{1,80}$/.test(v);
 const object=(v:unknown):v is Record<string,any>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
-/** Protocol preparation for the server boundary and explicit local rehearsal. No socket, key loading, route or live enable
- * switch is provided. A caller must inject a simulated wire explicitly. A later
- * live owner must enforce authentication, allowance and verified socket cleanup.
- */
+/** Protocol state for explicit simulation or a reserved private-trial capability.
+ * No socket, credential loader or route is supplied. The activation owner must
+ * enforce authentication, consent, allowance and the cleanup evidence boundary. */
 export class PreparedLiveTranscription {
  private liveEnabled=false;
  private wire:TranscriptionWire;

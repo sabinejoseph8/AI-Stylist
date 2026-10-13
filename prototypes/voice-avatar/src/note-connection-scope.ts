@@ -8,7 +8,7 @@ type Probe=NoteConnectionProbe;
 type Lease={owner:object;id:string;probe:Probe;sequence:number;commands:number};
 const object=(v:unknown):v is Record<string,unknown>=>Boolean(v)&&typeof v==='object'&&!Array.isArray(v);
 const exact=(v:Record<string,unknown>,keys:string[])=>Object.keys(v).length===keys.length&&keys.every(k=>Object.hasOwn(v,k));
-/** Simulated, process-local connection ownership preparation only.
+/** Process-local connection ownership under an explicit execution mode.
  * owner is an opaque server connection object, NEVER an identity from JSON.
  * A real endpoint must authenticate the upgrade and supply that exact object.
  * No endpoint, credentials, socket, reconnect, distributed lease or paid call.

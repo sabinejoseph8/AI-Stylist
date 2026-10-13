@@ -5,7 +5,7 @@ import type {SimulatedTranscriptionSocket} from './transcription-socket-wire.ts'
 type Session=ReturnType<typeof createPreparedNoteProviderSession>;
 type SessionOptions=Parameters<typeof createPreparedNoteProviderSession>[0];
 type Opened={socket:SimulatedTranscriptionSocket;detachInitialEvents:()=>void};
-/** Disabled startup orchestration. The injected opener observes initial events
+/** Explicitly selected startup orchestration. The injected opener observes initial events
  * from its first packet, including events received before its promise resolves.
  * No URL, credentials, route or actual connection constructor is supplied. */
 export function prepareNoteStartup(options:{
