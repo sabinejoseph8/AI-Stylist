@@ -12,8 +12,10 @@ import type {NotebookState} from './notebook-state.ts';
 import type {NoteConnectionProbe} from './note-connection-scope.ts';
 /** Explicit test harness attachment only. Not called by the application server or
  * CLI. Factory must construct simulated providers. No provider socket or key. */
-export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;deferReady?:boolean;create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture,turnReady:(turnId:string)=>void,ended:()=>void,ready:()=>void,request:IncomingMessage,clarify:(record:PreferenceClarification|null)=>void)=>NoteConnectionProbe}){
+export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boolean;preview:PreviewConfig;deferReady?:boolean;consent?:{noticeVersion:string};create:(publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void,capture:PreparedRemoteNoteCapture,turnReady:(turnId:string)=>void,ended:()=>void,ready:()=>void,request:IncomingMessage,clarify:(record:PreferenceClarification|null)=>void)=>NoteConnectionProbe}){
  if(options.simulation!==true)throw Error('Live notebook bridge is disabled.');
+ const consentNotice=options.consent?.noticeVersion;
+ if(options.consent&&consentNotice!=='notes-private-trial-v1')throw Error('Notebook consent configuration unavailable.');
  const address=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let incoming:IncomingMessage|null=null;
  let publisher:((snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void)|null=null;
@@ -36,8 +38,10 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
  sockets.on('connection',(ws,req)=>{
    const owner={};let id:string|null=null,ended=false,inflight=0,count=0,updateSequence=0,clarificationSequence=0,ready=false;
    let pending:NoteUpdate|null=null,latestNotes:NoteUpdate|null=null;
+   let consented=consentNotice===undefined,initialized=false;
+   let consentTimer:ReturnType<typeof setTimeout>|undefined;
    let pendingClarification:PreferenceClarification|null|undefined;
-   const finish=()=>{if(ended)return;ended=true;clearTimeout(deadline);pending=null;pendingClarification=undefined;latestNotes=null;scope.disconnect(owner,id??'');ws.terminate();};
+   const finish=()=>{if(ended)return;ended=true;clearTimeout(deadline);clearTimeout(consentTimer);pending=null;pendingClarification=undefined;latestNotes=null;scope.disconnect(owner,id??'');ws.terminate();};
    const deadline=setTimeout(finish,85000);
    ws.on('close',finish);ws.on('error',finish);
    const send=(message:unknown)=>{
@@ -69,13 +73,26 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
      if(pending){const initial=pending as NoteUpdate;pending=null;updateSequence++;latestNotes={...initial,sessionId:id,sequence:updateSequence};send(latestNotes);if(pendingClarification!==undefined){const record=pendingClarification;pendingClarification=undefined;clarify(record);}}
    };
    configurationReady=()=>{providerReady=true;completeReady();};
+   const initialize=()=>{
+     if(ended||initialized)return;initialized=true;
    publisher=publish;clarifier=clarify;termination=finish;incoming=req;id=scope.open(owner);incoming=null;publisher=null;clarifier=null;readiness=null;termination=null;configurationReady=null;
    if(ended){scope.disconnect(owner,id??'');return;}
    if(!id){finish();return;}
    completeReady();
+   };
+   if(consentNotice!==undefined)consentTimer=setTimeout(finish,5000);
 
    ws.on('message',(data,binary)=>{
      if(ended)return;
+     if(!consented){
+       if(binary){finish();return;}
+       try{
+         const value=JSON.parse(data.toString());
+         if(!value||typeof value!=='object'||Array.isArray(value)||Object.keys(value).length!==4||!['version','type','noticeVersion','accepted'].every(k=>Object.hasOwn(value,k))||value.version!==1||value.type!=='consent'||value.noticeVersion!==consentNotice||value.accepted!==true)throw Error();
+         consented=true;clearTimeout(consentTimer);initialize();
+       }catch{finish();}
+       return;
+     }
      if(!ready){finish();return;}
      if(binary){
        const bytes=Array.isArray(data)?Buffer.concat(data):Buffer.isBuffer(data)?data:Buffer.from(data);
@@ -96,6 +113,7 @@ export function attachSimulatedNoteBridge(server:Server,options:{simulation?:boo
        if(ending)finish();
      },()=>{inflight--;finish();});
    });
+   if(consented)initialize();
  });
  server.on('upgrade',upgrade);
  const dispose=()=>{if(closed)return;closed=true;server.off('upgrade',upgrade);scope.close();for(const ws of sockets.clients)ws.terminate();sockets.close();};

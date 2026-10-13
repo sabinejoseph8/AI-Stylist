@@ -8,10 +8,10 @@ type Active=Extract<Awaited<ReturnType<ReturnType<typeof preparePrivateNotesTria
 /** Local simulation attachment only. Uses the existing simulation URL and maps
  * its already checked request into the private-trial owner. Fixture consent is
  * not customer consent or live activation. Not imported by server.ts/CLI. */
-export function attachPreparedPrivateNotesTrialBridge(server:Server,options:{simulation?:boolean;fixtureConsent?:boolean;preview:Options['preview'];allowance:Options['allowance'];createTransports:(capture:Parameters<Parameters<typeof attachSimulatedNoteBridge>[1]['create']>[1],reservationId:string)=>ReturnType<Options['createTransports']>}){
- if(options.simulation!==true||options.fixtureConsent!==true)throw Error('Private notes trial bridge is disabled.');
+export function attachPreparedPrivateNotesTrialBridge(server:Server,options:{simulation?:boolean;fixtureConsent?:boolean;requireConsent?:boolean;preview:Options['preview'];allowance:Options['allowance'];createTransports:(capture:Parameters<Parameters<typeof attachSimulatedNoteBridge>[1]['create']>[1],reservationId:string)=>ReturnType<Options['createTransports']>}){
+ if(options.simulation!==true||(options.fixtureConsent===true)===(options.requireConsent===true))throw Error('Private notes trial bridge is disabled.');
  let owner:ReturnType<typeof preparePrivateNotesTrialOwner>|undefined;
- const bridge=attachSimulatedNoteBridge(server,{simulation:true,preview:options.preview,deferReady:true,create:(publish,capture,turnReady,ended,ready,req)=>{
+ const bridge=attachSimulatedNoteBridge(server,{simulation:true,preview:options.preview,deferReady:true,consent:options.requireConsent?{noticeVersion:'notes-private-trial-v1'}:undefined,create:(publish,capture,turnReady,ended,ready,req)=>{
   const abort=new AbortController();let active:Active|undefined,stopping=false,finished=false;
   const settled=()=>{if(finished)return;finished=true;ended();};
   const stop=()=>{stopping=true;abort.abort();if(active)void active.end();};

@@ -1,3 +1,11 @@
+## Per-connection notebook consent handshake, 12 October 2026
+
+The prepared private notebook bridge can now require a versioned affirmative consent envelope on the authenticated WebSocket before it creates the session owner, reserves an allowance or constructs provider transports. The notice version is captured at attachment. Binary audio, missing fields, unknown fields, declined/outdated consent and other commands are rejected before reservation. Unanswered consent expires after five seconds. The fixture bypass and handshake modes are mutually exclusive. This remains a simulated bridge on the existing rehearsal route; no live mode, microphone page, credential loader or normal startup attachment is enabled.
+
+All 1,474 prototype checks across 102 files, type checking and build pass for the handshake implementation. The existing two-turn loopback now sends valid consent before configuration and verifies budget correction, touch confirmation and consumed shutdown. Eight additional loopback checks cover rejected envelopes, early audio, timeout and conflicting modes. These results establish the prepared boundary, not customer consent, live speech quality or hosted acceptance.
+
+Exact next action: prepare the distinct private-trial execution mode and propagate truthful execution status through the protocol and browser, then review the complete protected activation path. Preserve all default-disabled behavior. The proposed additional $2/security activation still needs explicit authorization; allocation remains $41 and Phase 1 stays open. Private Memory currently publishes the preceding 1,466-test checkpoint pending synchronization of this increment.
+
 ## Reservation-bound provider transport composition, 12 October 2026
 
 Prepared the server provider transports as one dormant unit. Construction requires explicit simulation, injected HTTP/socket implementations and a matching reserved private-trial ledger approval/reservation. The protected owner now passes the actual reserved ID to its factory, including through the browser bridge. Disposal ends capture, cancels the socket and aborts HTTP requests; each cleanup is attempted even if another fails. Disposed adapters cannot send again. No default credential loader, network attachment, initializer or live activation was added. Ledger data alone is not human authorization.

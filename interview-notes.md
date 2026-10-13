@@ -1456,3 +1456,8 @@ I added a separate preparation page with the complete instructions and privacy b
 ## Binding provider work to its reserved experiment
 
 I connected the protected notebook owner to a single disposable provider component. It checks the exact reserved experiment before construction, cancels pending work when stopped, and refuses reuse. My synthetic test verifies that the reservation stays consumed after shutdown. All 1,466 automated prototype tests pass. This preparation does not start a paid call or establish live speech acceptance.
+
+
+## Waiting for explicit consent before reserving a trial
+
+I added a versioned consent handshake before the prepared notebook connection can reserve a test or create provider transports. Missing, declined or outdated consent and early audio close the connection without consuming an allowance. I verified the valid two-turn flow and rejection cases using local WebSockets. All 1,474 automated prototype tests pass; live microphone testing remains a separate unapproved experiment.

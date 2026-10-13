@@ -1,3 +1,11 @@
+## Per-connection notebook consent handshake, 12 October 2026
+
+The prepared private notebook bridge can now require a versioned affirmative consent envelope on the authenticated WebSocket before it creates the session owner, reserves an allowance or constructs provider transports. The notice version is captured at attachment. Binary audio, missing fields, unknown fields, declined/outdated consent and other commands are rejected before reservation. Unanswered consent expires after five seconds. The fixture bypass and handshake modes are mutually exclusive. This remains a simulated bridge on the existing rehearsal route; no live mode, microphone page, credential loader or normal startup attachment is enabled.
+
+All 1,474 prototype checks across 102 files, type checking and build pass for the handshake implementation. The existing two-turn loopback now sends valid consent before configuration and verifies budget correction, touch confirmation and consumed shutdown. Eight additional loopback checks cover rejected envelopes, early audio, timeout and conflicting modes. These results establish the prepared boundary, not customer consent, live speech quality or hosted acceptance.
+
+Exact next action: prepare the distinct private-trial execution mode and propagate truthful execution status through the protocol and browser, then review the complete protected activation path. Preserve all default-disabled behavior. The proposed additional $2/security activation still needs explicit authorization; allocation remains $41 and Phase 1 stays open. Private Memory currently publishes the preceding 1,466-test checkpoint pending synchronization of this increment.
+
 ## Private Memory publication, 12 October 2026
 
 The owner-private Memory site now publishes the 1,466-test checkpoint, including the local preparation page and reservation-bound transport composition. Source 78926679e960fd092a26ac66e0ecaaee6e46f6b8 deployed successfully as appgdep_6acda5d0d1cc819186f46b95a34565ca with MCP retained. All 16 site checks, build and artifact validation pass. No paid experiment, hosted customer database or approval changed.
