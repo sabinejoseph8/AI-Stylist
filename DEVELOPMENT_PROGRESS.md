@@ -1,3 +1,9 @@
+## Live Echo policy recheck, 13 October 2026
+
+A bounded read-only GET of the selected stock Tavus PAL passed the existing verifyEchoPal guard: Audio Echo mode, microphone disabled, empty/non-dynamic greeting, and no TTS, LLM or STT layer. Only fixed booleans were retained in docs/echo-policy-verification.json; the provider response, credentials and account fields were not logged or saved. Source startup already checks this policy before creating a room. This closes the narrow selected-configuration inspection gap for this checkpoint, not provider-wide privacy, continuous conversation, physical quality or full Task 1b acceptance.
+
+No room, audio, test reservation, configuration mutation or paid experiment was created. Allocation remains $49 and previous holds remain intact. Existing 1,653 prototype test results are recorded evidence, not a new suite run. Camera manual acceptance is still pending. See docs/current-blockers.md for the current remaining dependency audit.
+
 ## Camera lifecycle publication and manual handoff
 
 The repaired preview ownership is published as b3846d4 and the Memory snapshot as ccb9714. Eleven changed committed files were copied to the approved AI stylist folder. Private Memory source 30afe185ed9a4ac4f9e17b3157cfc187d877e6d2 deployed successfully as appgdep_6acdf46e60688191b7fef6018abaed44 with MCP retained. All 16 site tests, build and artifact validation passed. The existing local notebook returned HTTP 200 and its served module contains the repaired preview method, confirming it serves this source. Opening the tab through Codex was queued, not verified as visible.

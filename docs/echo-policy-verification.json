@@ -1,0 +1,15 @@
+{
+  "checked": "2026-10-13",
+  "method": "GET",
+  "scope": "selected-stock-echo-pal",
+  "echo": true,
+  "microphoneDisabled": true,
+  "emptyGreeting": true,
+  "dynamicGreetingDisabled": true,
+  "noTtsLayer": true,
+  "noLlmLayer": true,
+  "noSttLayer": true,
+  "conversationStarted": false,
+  "configurationChanged": false,
+  "source": "https://docs.tavus.io/api-reference/pals/get-pal"
+}

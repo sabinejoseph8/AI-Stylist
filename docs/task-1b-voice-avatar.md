@@ -1,3 +1,9 @@
+## Live Echo policy recheck, 13 October 2026
+
+A bounded read-only GET of the selected stock Tavus PAL passed the existing verifyEchoPal guard: Audio Echo mode, microphone disabled, empty/non-dynamic greeting, and no TTS, LLM or STT layer. Only fixed booleans were retained in docs/echo-policy-verification.json; the provider response, credentials and account fields were not logged or saved. Source startup already checks this policy before creating a room. This closes the narrow selected-configuration inspection gap for this checkpoint, not provider-wide privacy, continuous conversation, physical quality or full Task 1b acceptance.
+
+No room, audio, test reservation, configuration mutation or paid experiment was created. Allocation remains $49 and previous holds remain intact. Existing 1,653 prototype test results are recorded evidence, not a new suite run. Camera manual acceptance is still pending. See docs/current-blockers.md for the current remaining dependency audit.
+
 # Task 1b: Voice and avatar evidence
 
 ## Current recovery acceptance, 12 October 2026

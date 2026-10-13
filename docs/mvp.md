@@ -1,3 +1,9 @@
+## Live Echo policy recheck, 13 October 2026
+
+A bounded read-only GET of the selected stock Tavus PAL passed the existing verifyEchoPal guard: Audio Echo mode, microphone disabled, empty/non-dynamic greeting, and no TTS, LLM or STT layer. Only fixed booleans were retained in docs/echo-policy-verification.json; the provider response, credentials and account fields were not logged or saved. Source startup already checks this policy before creating a room. This closes the narrow selected-configuration inspection gap for this checkpoint, not provider-wide privacy, continuous conversation, physical quality or full Task 1b acceptance.
+
+No room, audio, test reservation, configuration mutation or paid experiment was created. Allocation remains $49 and previous holds remain intact. Existing 1,653 prototype test results are recorded evidence, not a new suite run. Camera manual acceptance is still pending. See docs/current-blockers.md for the current remaining dependency audit.
+
 ## Camera preview callback ownership fixed, 13 October 2026
 
 Task 1c local review confirmed that video.play could reject after Stop and a new camera start, letting the old catch stop the new preview. Device-ended callbacks were also not detached. NotebookCamera now owns preview attachment, playback completion/failure and device events with the acquisition epoch and exact stream. Retired callbacks cannot change current state. Stop detaches listeners and invalidates pending acquisition/playback; duplicate preview requests are refused before acquiring another stream. Late or invalid streams release all tracks even if one release throws. Page exit uses the same preview cleanup path.
