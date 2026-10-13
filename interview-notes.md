@@ -1,3 +1,7 @@
+## Separating a saved look from a shopping intention
+
+I approved a local shopping-list rehearsal and kept adding a piece separate from saving its look. I excluded owned items and pieces with unknown prices, prevented duplicate additions, and made an unavailable item turn the subtotal incomplete. Restoring a sample item's availability still requires a fresh sample recheck. I tested stale additions, independent saved records and removal, and kept real retailer actions disabled. All 858 foundation tests, type checking and build pass. The complete local human review is pending; no real shopping or account storage is connected.
+
 ## Saving the look without saving its conversation
 
 I approved a local Saved looks rehearsal while the live integrations were unresolved. I separated a saved arrangement, component list and dated sample estimate from notes, transcripts, feedback and history. I made saving explicit and reopening honest: the sample is available to review, but it cannot become a current recommendation without fresh checks. I used labelled color-block illustrations instead of suggesting that fictional products or prices were real. I tested missing prices, owned-item exclusion, duplicate saves and independent profile/Wardrobe state. All 838 foundation tests, type checking and build pass. I completed the eight-step local review and confirmed the illustrations, saving, reopening, incomplete estimates, independent records, removal and refresh cleanup worked and were readable.
