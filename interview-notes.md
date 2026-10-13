@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Testing the failure paths, 12 October 2026
+
+After my successful iPhone recovery test, I expanded the simulated browser checks to cover a failed request, blocked playback and invalid avatar audio separately. Each check confirms that the page ends safely without an automatic retry or exposing private error details. This gives me clearer evidence about failure handling without spending more on provider calls. It does not establish why the earlier physical-device follow-up failed.
+
 ## My bounded iPhone recovery result, 12 October 2026
 
 I completed the interruption-and-resume test on my iPhone and confirmed all steps worked as expected. The stylist stopped when interrupted, returned in a replacement room, retained the confirmed styling preferences and handled my color correction. Both provider rooms were independently verified ended after the check. I chose replacement rooms because the provider cannot guarantee that already buffered audio is flushed. This validates the bounded experiment, while continuous conversation, timing and the remaining launch checks still need evidence. The earlier failed follow-up's cause remains unknown; a subsequent successful test alone does not prove its root cause was fixed. I kept the approved $41 allocation and did not authorize automatic retries.

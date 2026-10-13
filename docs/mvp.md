@@ -1,5 +1,12 @@
 # AI Stylist MVP scope and discovery findings
 
+## Recovery failure-path coverage, 12 October 2026
+
+Expanded the synthetic narrow-screen WebKit follow-up rehearsal to exercise request rejection, browser playback rejection and invalid avatar audio delivery separately after a confirmed first reply. All three pass: fixed stage-specific messages, detached audio/video, an end request, no retry/replacement, and no private exception body in the page. This is synthetic browser evidence, not additional human/provider acceptance. Production code and the $41 allocation are unchanged. The full 1,304-test result remains the earlier source baseline; only the changed browser rehearsal and diff whitespace check were rerun here.
+
+Next implementation action: review the disabled live-notebook activation chain against the support-confirmed transcription contract and identify any remaining local integration gap. Live provider activation, further paid experiments, real account/provider acceptance and Phase 1 completion remain gated. The accepted recovery result is published on private Memory (source bb6b74dfa4acd10147ed5d129103658a6a4e627f, deployment appgdep_6acd93c49b908191a9d47564c5ba726f, MCP preserved). This later synthetic coverage awaits the next Memory synchronization.
+
+
 ## Current recovery acceptance, 12 October 2026
 
 Sabine confirmed every step of the bounded iPhone interruption-and-resume test worked as expected. The latest two reserved rooms were both started, recorded closed, and independently verified ended through Tavus. This accepts the tested interruption, replacement playback, retained confirmed preferences, blue correction and final shutdown. It does not establish continuous streaming, precise timing or production readiness. The $41 experiment allocation remains unchanged; no further paid test or retry is authorized. Task 1b and Phase 1 remain open for their remaining gates.
