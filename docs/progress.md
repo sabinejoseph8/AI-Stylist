@@ -2793,3 +2793,6 @@ Sabine reported the automatic-turn failure screen after saying “I prefer long 
 ## Follow-up failure diagnosis checkpoint
 
 Sabine confirms she selected I heard the whole reply before saying “I prefer long sleeves.” Do not attribute the failure to a missed confirmation. Root cause remains unknown: the deployed generic catch covered request failure, browser playback and avatar audio delivery. Local fixed-label stage reporting now distinguishes these paths without exposing exception bodies or conversation content. All 1,303 prototype tests, corrected type checking, build and synthetic WebKit follow-up/replacement rehearsal pass. These simulations do not explain the physical-device failure. The latest initial room is verified ended and the replacement never started. No retry is authorized. Exact next action: deploy the non-content error-reporting improvement and synchronize the failure outcome to private Memory. No new paid test or allowance change.
+
+
+Diagnostic message deployment dep-db6omh8u01pc73avg5rg is Live from d988e5e78da7791149c198d71d67860d04196503. This improves future failure localization, not proof of the earlier cause or a recovery fix. No additional test or spending authorized.
