@@ -67,8 +67,10 @@ export class ScriptedService {
         if (Date.now() - this.createdAt > 85_000) { this.automaticStop = 'The test time limit was reached.'; void this.stop(); }
         else if (Date.now() - this.seenAt > 6_000) { this.automaticStop = 'The test page stopped checking in.'; void this.stop(); }
       }, 500);
-    } catch (error) {
-      this.message = error instanceof Error ? error.message : 'The scripted test could not start.';
+    } catch {
+      // Exceptions may contain provider content, credentials or local paths.
+      // Cleanup may replace this with one of its fixed, actionable hold messages.
+      this.message = 'The private test could not start. No automatic retry was made.';
       await this.cleanup(true);
     } finally { this.busy = false; }
   }

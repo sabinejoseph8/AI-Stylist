@@ -1,6 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { ScriptedService } from '../src/scripted-service.ts';
 import { generateScript, tavus } from '../src/scripted-providers.ts';
+import { once } from 'node:events';
+import type { AddressInfo } from 'node:net';
+import { createPrototypeServer } from '../src/server.ts';
 import type { ExperimentBudget } from '../src/experiment-budget.ts';
 
 vi.mock('../src/scripted-providers.ts', async importOriginal => {
@@ -81,6 +84,36 @@ describe('scripted provider lifecycle, mocked transports only', () => {
     expect(service.snapshot()).toMatchObject({state:'ended',remainingSeconds:0});
     expect(service.snapshot().message).toContain('time limit was reached');
     expect(budget.closeVerified).toHaveBeenCalledOnce(); vi.useRealTimers();
+  });
+
+  it.each(['reservation','configuration','generation'] as const)('redacts private %s failures while preserving cleanup',async stage=>{
+    const failure=Error('private_sentinel account@example.test /private/operator/file');
+    if(stage==='reservation')budget.reserve.mockRejectedValue(failure);
+    else if(stage==='configuration')vi.mocked(tavus).mockRejectedValueOnce(failure);
+    else vi.mocked(generateScript).mockRejectedValue(failure);
+    await service.start();
+    expect(service.snapshot()).toMatchObject({state:'failed',hasRoom:false,message:'The private test could not start. No automatic retry was made.'});
+    expect(JSON.stringify(service.snapshot())).not.toMatch(/private_sentinel|account@|operator\/file/);
+    expect(budget.reserve).toHaveBeenCalledOnce();expect(budget.setRoom).not.toHaveBeenCalled();
+    expect(budget.closeVerified).toHaveBeenCalledTimes(stage==='reservation'?0:1);
+    expect(vi.mocked(tavus).mock.calls.some(([,path])=>path==='/v2/conversations')).toBe(false);
+  });
+  it('does not read a throwing exception message getter before cleanup',async()=>{
+    const failure=Error(),read=vi.fn(()=>{throw Error('getter_sentinel');});Object.defineProperty(failure,'message',{get:read});
+    vi.mocked(generateScript).mockRejectedValue(failure);await service.start();expect(read).not.toHaveBeenCalled();expect(service.snapshot().state).toBe('failed');expect(budget.closeVerified).toHaveBeenCalledOnce();
+  });
+  it('does not coerce a non-Error rejection into public text',async()=>{
+    const stringify=vi.fn(()=>{throw Error('coercion_sentinel');});vi.mocked(generateScript).mockRejectedValue({toString:stringify});await service.start();expect(stringify).not.toHaveBeenCalled();expect(service.snapshot().state).toBe('failed');expect(budget.closeVerified).toHaveBeenCalledOnce();
+  });
+  it('keeps private startup text out of actual HTTP start and status responses',async()=>{
+    vi.mocked(generateScript).mockRejectedValue(Error('private_http_sentinel'));
+    const server=createPrototypeServer({scripted:service});server.listen(0,'127.0.0.1');await once(server,'listening');const origin=`http://127.0.0.1:${(server.address() as AddressInfo).port}`;
+    try{
+      const setup=await fetch(origin+'/api/status');const cookie=setup.headers.get('set-cookie')!.split(';')[0]!;await setup.arrayBuffer();
+      const started=await fetch(origin+'/api/scripted/start',{method:'POST',headers:{Origin:origin,Cookie:cookie}});expect(started.status).toBe(200);const start=await started.json();expect(start.state).toBe('failed');expect(JSON.stringify(start)).not.toContain('private_http_sentinel');
+      const status=await fetch(origin+'/api/scripted/status',{headers:{Cookie:cookie}});expect(status.status).toBe(200);expect((await status.json()).message).toBe('The private test could not start. No automatic retry was made.');
+      expect(budget.closeVerified).toHaveBeenCalledOnce();expect(vi.mocked(tavus).mock.calls.some(([,path])=>path==='/v2/conversations')).toBe(false);
+    }finally{server.close();await once(server,'close');}
   });
 
 });

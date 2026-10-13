@@ -1,3 +1,7 @@
+## Keeping private failures out of the interface
+
+I found a startup path that copied exception text into the test page and API. I replaced it with fixed wording and tested private failures from the budget, provider configuration and generation stages, including a message getter that throws. An actual local HTTP check confirmed the private text never reached the response and cleanup still ran. I preserved the more specific fixed guidance for uncertain room creation and cleanup holds. All 1,674 prototype tests passed with type checking and build.
+
 ## Bounding provider responses
 
 I found that the Tavus helper parsed response bodies without a size limit. I added a bounded streaming reader and one deadline covering both headers and body, then tested oversized, malformed, stalled and late responses. I preserved the empty End acknowledgment behavior and kept provider termination verification separate. All 1,668 prototype tests passed with type checking and build. No paid experiment was needed for this repair.

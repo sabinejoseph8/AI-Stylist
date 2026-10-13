@@ -1,3 +1,9 @@
+## Startup error presentation sanitized, 13 October 2026
+
+Local Task 1b privacy review removed arbitrary exception-message copying from ScriptedService.start into its page/API snapshot. Ordinary startup failures now use fixed wording stating that no automatic retry occurred. Exceptions are not inspected or coerced. Existing room-creation uncertainty, failed cleanup and usage-record holds retain their specific fixed guidance, block new starts and preserve consumed reservations.
+
+Six new checks inject private reservation/configuration/generation errors, a throwing message getter and a non-Error rejection. An actual loopback HTTP start/status check proves private text is absent from delivered responses while cleanup runs. All 1,674 prototype tests across 118 files, type checking and build pass; existing uncertainty and no-retry tests also pass. No real provider request, device use, paid test, hosted setting or Render deployment occurred. This is a local privacy repair, not completion of Task 1b, live transcription or a phase. Allocation stays $49.
+
 ## Bounded Tavus responses, 13 October 2026
 
 Local Task 1b review replaced unbounded response.json() in the Tavus HTTP helper with a 65,536-byte streaming JSON-object reader and one eight-second deadline spanning headers and body. Oversized declared or chunked bodies, invalid UTF-8, malformed/non-object JSON and stalled reads fail with fixed sanitized errors. Late responses are canceled, and cancellation cannot indefinitely block completion. Existing fixed destinations, request methods and redirect refusal remain. Successful End responses still accept an empty body; provider-ended verification remains separate and is not inferred from body disposal.
