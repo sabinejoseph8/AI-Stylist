@@ -172,7 +172,7 @@ All 1,550 prototype tests across 113 files, type checking and build pass. A new 
 
 Exact next action: publish and deploy this reviewed fix on the existing approved Free preview, verify health and read-only unreserved allowance, then ask Sabine to reload the page. The already approved one-start $2 allowance remains available; do not start a connection for her. Provide the complete advance instructions again before she starts. No retries after a written reservation, new spending, avatar call or phase completion is authorized.
 
-## Current private notebook trial status, 13 October 2026
+## Historical initial private notebook trial checkpoint, 13 October 2026
 
 Sabine approved one additional $2 private notes-only trial and its protected Supabase/Render activation. The experiment allocation is $43. The separate server-only allowance is installed, verified and unreserved, with one start, two turns and at most 85 seconds including setup; all seventeen avatar-history records remain intact. No retries, avatar calls, model fallback or plan upgrades are authorized.
 

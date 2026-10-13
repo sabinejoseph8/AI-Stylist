@@ -1,3 +1,9 @@
+## Current-summary reconciliation, 13 October 2026
+
+The previous goal turn made concrete implementation progress. A fresh dependency audit found stale active-summary text despite newer dated receipts: the backlog priorities still showed 623 tests/$49/four held records, the progress Summary omitted the accepted Phase 3 sample review, and the blocker footer still requested it. Corrected current summaries to 696 foundation tests, $51, five held records, accepted local review and unresolved human-support investigation; labeled the initial $43 trial checkpoint historical. Historical evidence is preserved. No code, new test, paid call or task completion is implied by this documentation correction.
+
+After publication, the exact next action remains reviewing a concrete supported transcription procedure, Render ingress/logging evidence or the required account configuration when supplied. The approved local notebook review needs no repetition. Full integration and later phase gates remain open; no independent new implementation item is identified within those gates at this checkpoint.
+
 ## Progressive proposal repair publication receipt
 
 Local repair e6907b6 and Memory snapshot bc9aabb are published to GitHub. Thirteen committed files were copied to the approved AI stylist folder. All 696 foundation tests across 97 files, type checking/build and all 16 Memory-site checks pass. Owner-private source 5f2de30961967c43fbbeb137e4650551714fb136 deployed successfully as appgdep_6ace66053b8881918bcb0341f4df492f with MCP retained. Agent browser evidence is a local-only sample correction/date regression; prior human acceptance is preserved and no full phase is marked complete. Existing unstaged AGENTS.md edits are untouched.
