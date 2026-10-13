@@ -1,5 +1,13 @@
 # AI Stylist development backlog
 
+## Current recovery acceptance, 12 October 2026
+
+Sabine confirmed every step of the bounded iPhone interruption-and-resume test worked as expected. The latest two reserved rooms were both started, recorded closed, and independently verified ended through Tavus. This accepts the tested interruption, replacement playback, retained confirmed preferences, blue correction and final shutdown. It does not establish continuous streaming, precise timing or production readiness. The $41 experiment allocation remains unchanged; no further paid test or retry is authorized. Task 1b and Phase 1 remain open for their remaining gates.
+
+- [x] Bounded physical-iPhone replacement-room recovery: user acceptance received and both provider rooms verified ended.
+
+Earlier dated checkpoints below are historical; this acceptance supersedes their pending recovery status.
+
 Updated: 12 October 2026
 
 Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. This is the working status ledger for autonomous implementation. Later explicit Sabine decisions and the approved product/design specifications refine the older baseline: use look, one look at a time, USA/USD, real product links for launch and affiliate revenue. Demo fixtures never satisfy real shopping acceptance. docs/progress.md retains phased exit gates. No incomplete dependency is marked complete merely because an independent discovery component is ready.

@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## My bounded iPhone recovery result, 12 October 2026
+
+I completed the interruption-and-resume test on my iPhone and confirmed all steps worked as expected. The stylist stopped when interrupted, returned in a replacement room, retained the confirmed styling preferences and handled my color correction. Both provider rooms were independently verified ended after the check. I chose replacement rooms because the provider cannot guarantee that already buffered audio is flushed. This validates the bounded experiment, while continuous conversation, timing and the remaining launch checks still need evidence. The earlier failed follow-up's cause remains unknown; a subsequent successful test alone does not prove its root cause was fixed. I kept the approved $41 allocation and did not authorize automatic retries.
+
 ## Who I am building for and why
 
 I am building an AI personal stylist for women and men in the United States. I want customers to explain what they need in a natural conversation, use clothing they already own, and refine one look at a time. A visible notebook helps them see and correct what the stylist has understood.

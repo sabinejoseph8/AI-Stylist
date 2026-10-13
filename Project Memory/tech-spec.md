@@ -1,5 +1,13 @@
 # AI Stylist: Technical decisions, system patterns and architecture
 
+## Current recovery acceptance, 12 October 2026
+
+Sabine confirmed every step of the bounded iPhone interruption-and-resume test worked as expected. The latest two reserved rooms were both started, recorded closed, and independently verified ended through Tavus. This accepts the tested interruption, replacement playback, retained confirmed preferences, blue correction and final shutdown. It does not establish continuous streaming, precise timing or production readiness. The $41 experiment allocation remains unchanged; no further paid test or retry is authorized. Task 1b and Phase 1 remain open for their remaining gates.
+
+- [x] Bounded physical-iPhone replacement-room recovery: user acceptance received and both provider rooms verified ended.
+
+Earlier dated checkpoints below are historical; this acceptance supersedes their pending recovery status.
+
 Status: Draft for Sabine's review, v0.11  
 Created: 9 October 2026  
 Approval: Phone website delivery, email/password plus Google and Apple sign-in, one simultaneous consultation for first launch, and Supabase for accounts, saved preferences, wardrobe photos and saved looks approved by Sabine on 9 October 2026; ElevenLabs excluded by Sabine on 9 October 2026; initial $25 experiment spending limit approved by Sabine on 9 October 2026; Supabase + Render approved for MVP hosting by Sabine on 9 October 2026; React + TypeScript website and Node.js + TypeScript service approved on 9 October 2026; volatile unsaved notes accepted for the private prototype only; remaining architecture and operational choices are pending  
