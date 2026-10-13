@@ -1,3 +1,9 @@
+## Main-app local photo/camera review accepted, 13 October 2026
+
+Sabine confirmed all ten local photo/camera review steps worked and were readable. Accepted scope: actual photo preview before confirmation; explicit garment description and Owned/Inspiration choice; selected/confirmed enlargement and collapsed thumbnail; keeping the old reference until replacement confirmation; selecting among two photos; camera-only capture and confirmation; Stop/restart preserving the confirmed still when the live view changes; stopping the device on navigation while retaining the reference; Clear removing photos/thumbnail; and End/new sample/refresh not restoring session images.
+
+This closes the specific local-computer manual review. It does not accept AI recognition, voice capture, server uploads, hosted media isolation, permanent wardrobe saving, physical-phone behavior, comprehensive accessibility or full Tasks 4a/4b/Phase 4. The previously recorded 771 foundation tests across 102 files, type checking/build remain automated evidence; application tests were not rerun for this acceptance-only update. No paid call, hosted customer change or deployment occurred. Allocation stays $51 and all five notes/startup records remain held. Next: publish the acceptance record and review concrete remaining integration dependencies when supplied. No repeat of this ten-step local review is needed.
+
 ## Approved local photo and camera preparation, 13 October 2026
 
 Sabine explicitly approved preparing local Tasks 4a and 4b before Phase 3 integration finishes. This exception covers browser-memory photo selection, preview/enlargement, editable garment descriptions, owned/inspiration confirmation, replacement/removal and touch camera still selection in the main app. It does not authorize recognition, uploads, permanent wardrobe saving, paid calls, customer deployment, Task 4c/4d or later phase completion.
@@ -480,7 +486,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current status, 13 October 2026: local Phase 3 notebook preparation is authorized and its eight-step sample review is accepted. The per-field proposal repair passes 771 foundation tests across 102 files, type checking/build and browser rehearsal. The 30-minute idle/five-minute disconnect notes policy is approved and implemented locally; full Phase 3 remains open. Local Tasks 4a/4b preparation is now approved and prepared; the ten-step photo/camera review is pending. Bounded iPhone interruption/recovery is accepted; continuous speech and remaining Phase 1/2 gates remain open. OpenAI's assigned human specialist confirms the transcription startup remains unresolved. Allocation is $51, all five notes/startup records stay held, and no further paid test is authorized.
+Current status, 13 October 2026: local Phase 3 notebook preparation is authorized and its eight-step sample review is accepted. The per-field proposal repair passes 771 foundation tests across 102 files, type checking/build and browser rehearsal. The 30-minute idle/five-minute disconnect notes policy is approved and implemented locally; full Phase 3 remains open. Local Tasks 4a/4b preparation is now approved and prepared; the ten-step local photo/camera review is accepted. Bounded iPhone interruption/recovery is accepted; continuous speech and remaining Phase 1/2 gates remain open. OpenAI's assigned human specialist confirms the transcription startup remains unresolved. Allocation is $51, all five notes/startup records stay held, and no further paid test is authorized.
 
 Task 1c's dedicated notebook remains live-unverified. Three notes starts and two server-only diagnostics are permanently held. The latest separately approved $2 minimal diagnostic raised the allocation to $51 and rejected configuration even without optional language/delay fields. OpenAI returned invalid_parameter with a parameter string outside the approved exact-name list. Its text was discarded and the rejected field remains unknown. No further call is authorized.
 
@@ -704,7 +710,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** Actual customer clothing remains visible and reusable under explicit save controls.  
 **Dependencies:** Phase 3; approved media processing/retention limits and camera contract.  
 **Product coverage:** PS-04; A04/A05/A14/A20.  
-**Status:** Local Tasks 4a/4b preparation authorized on 13 October 2026, with 771 passing foundation tests and ten-step manual review pending. Recognition, hosted storage, permanent wardrobe saving, voice capture and full phase acceptance remain open.
+**Status:** Local Tasks 4a/4b preparation authorized on 13 October 2026, with 771 passing foundation tests and ten-step local manual review accepted. Recognition, hosted storage, permanent wardrobe saving, voice capture and full phase acceptance remain open.
 
 ### Task groups
 

@@ -1,3 +1,9 @@
+## Main-app local photo/camera review accepted, 13 October 2026
+
+Sabine confirmed all ten local photo/camera review steps worked and were readable. Accepted scope: actual photo preview before confirmation; explicit garment description and Owned/Inspiration choice; selected/confirmed enlargement and collapsed thumbnail; keeping the old reference until replacement confirmation; selecting among two photos; camera-only capture and confirmation; Stop/restart preserving the confirmed still when the live view changes; stopping the device on navigation while retaining the reference; Clear removing photos/thumbnail; and End/new sample/refresh not restoring session images.
+
+This closes the specific local-computer manual review. It does not accept AI recognition, voice capture, server uploads, hosted media isolation, permanent wardrobe saving, physical-phone behavior, comprehensive accessibility or full Tasks 4a/4b/Phase 4. The previously recorded 771 foundation tests across 102 files, type checking/build remain automated evidence; application tests were not rerun for this acceptance-only update. No paid call, hosted customer change or deployment occurred. Allocation stays $51 and all five notes/startup records remain held. Next: publish the acceptance record and review concrete remaining integration dependencies when supplied. No repeat of this ten-step local review is needed.
+
 ## Approved local photo and camera preparation, 13 October 2026
 
 Sabine explicitly approved preparing local Tasks 4a and 4b before Phase 3 integration finishes. This exception covers browser-memory photo selection, preview/enlargement, editable garment descriptions, owned/inspiration confirmation, replacement/removal and touch camera still selection in the main app. It does not authorize recognition, uploads, permanent wardrobe saving, paid calls, customer deployment, Task 4c/4d or later phase completion.
@@ -430,7 +436,7 @@ Imported from prioritized backlog v1.8. Original DOCX/XLSX files are preserved. 
 5. Preserve the approved exceptions and remaining phase gates. Do not repeat accepted manual reviews, treat sample evidence as live acceptance, manufacture new features or reuse consumed allowances. Continue independent work only when a concrete authorized item is actionable; review external dependency changes when supplied.
 
 
-Local Phase 4 exception: Tasks 4a/4b browser-memory preparation is approved and implemented; the ten-step manual photo/camera review is pending. No recognition, hosted/persistent wardrobe, paid test or customer deployment is authorized.
+Local Phase 4 exception: Tasks 4a/4b browser-memory preparation is approved and implemented; the ten-step local manual photo/camera review is accepted. No recognition, hosted/persistent wardrobe, paid test or customer deployment is authorized.
 ## Items
 
 ### D01: Validate real-time avatar/voice prototype

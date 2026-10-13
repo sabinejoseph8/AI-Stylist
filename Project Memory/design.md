@@ -235,3 +235,7 @@ Explain the approved 30-minute customer-idle and five-minute disconnect notes li
 ## Local main-app clothing-reference preparation, 13 October 2026
 
 Inside the notebook, Style around this item shows an actual selected image before any recognition. The customer describes the intended garment and explicitly chooses Owned or Inspiration. A separate confirmed reference remains stable until replacement is confirmed; its actual thumbnail is visible while collapsed. Preview and confirmation are distinct, with clear session-only wording. Native dialog enlargement preserves image proportions. Camera-only controls show Start, Capture and Stop; capture does not confirm or save. This is approved local preparation with manual review pending, not a change to the visual tokens or hosted Wardrobe activation.
+
+## Local photo/camera usability accepted, 13 October 2026
+
+Sabine confirmed all ten main-app photo/camera review steps worked and were readable, including confirmation, enlargement, collapsed thumbnail, replacement, multiple photos, stable captured stills, device shutdown on navigation and Clear/End removal. Record this as local-computer usability acceptance, not hosted media, AI recognition, physical-phone or comprehensive accessibility acceptance. No visual-token change was requested.

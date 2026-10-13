@@ -1,6 +1,6 @@
 # Local main-app clothing photos and camera
 
-Status: local Tasks 4a/4b preparation explicitly approved by Sabine on 13 October 2026. Full phase dependencies remain open. No customer deployment or paid calls are authorized.
+Status: local Tasks 4a/4b preparation explicitly approved and all ten local manual review steps accepted by Sabine on 13 October 2026. Full phase dependencies remain open. No customer deployment or paid calls are authorized.
 
 ## Prepared scope
 
@@ -15,7 +15,7 @@ Status: local Tasks 4a/4b preparation explicitly approved by Sabine on 13 Octobe
 
 All 771 foundation tests across 102 files, type checking and build pass. Tests exercise local state, cleanup, input limits, bounded processing, late results, normalization and inherited camera/still ownership. Decoder/encoder timeout tests verify late bitmap release and zeroing the temporary canvas dimensions; native browser decoding itself is not a process isolation guarantee. The agent observed a labeled test image, explicit confirmation requirements and enlargement in the browser. A later automated file chooser stalled beyond the session lifetime; expiry was visible and media cleared, but this does not accept the multi-file flow or physical camera. The agent started neither a real device nor a paid service.
 
-The following complete human review is pending. Recognition, hosted ownership/Storage, server upload isolation, permanent wardrobe saving, voice capture, physical target phones and complete accessibility/phase review remain open. Browser header checks and rasterization are not a replacement for the future server isolation boundary.
+Sabine accepted the following complete local-computer human review. No repeat is pending. Recognition, hosted ownership/Storage, server upload isolation, permanent wardrobe saving, voice capture, physical target phones and complete accessibility/phase review remain open. Browser header checks and rasterization are not a replacement for the future server isolation boundary.
 
 ## Read all ten steps before starting
 
@@ -37,3 +37,7 @@ Report whether all steps worked and were readable, or identify the failed/unclea
 ## Format references
 
 PNG header dimensions: [W3C PNG specification](https://www.w3.org/TR/png-3/#11IHDR). WebP RIFF layout and dimension fields: [Google WebP container specification](https://developers.google.com/speed/webp/docs/riff_container). These references support the header checks, not a claim that local decode is a complete production security boundary.
+
+## Human review result
+
+Sabine reported All ten steps worked and were readable on 13 October 2026. This supersedes the earlier pending multi-file/camera review and the automated file-picker limitation for that accepted local scope. Earlier limitations remain historical evidence. Actual hosted integration, target-phone behavior, recognition, voice capture, persistence and full phase acceptance remain open.

@@ -1,3 +1,7 @@
+## Validating the clothing-reference journey
+
+I completed the ten-step local photo and camera review and confirmed every step worked and was readable. I checked that the app shows the actual photo, asks me to describe the garment and choose Owned or Inspiration, and keeps the confirmed reference until I explicitly replace it. I verified camera capture, Stop/restart, automatic shutdown when navigating away, and removal of session photos through Clear and End. I kept this local usability result separate from future recognition, hosted storage and permanent wardrobe saving.
+
 ## Moving clothing references into the main app
 
 While provider integration was blocked, I approved local photo and camera preparation. I kept selecting a photo separate from confirming a reference, so loading a replacement cannot silently change the garment I am styling around. I required a description and an explicit Owned or Inspiration choice rather than guessing from the image. Photos are normalized locally and kept only in browser memory; camera capture requests no microphone. I reused the camera lifecycle safeguards and added tests for delayed images, URL cleanup and Clear/End. The foundation passes 771 tests. The real photo and camera review remains pending; no AI recognition or permanent wardrobe saving is implied.
