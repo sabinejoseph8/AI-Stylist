@@ -1471,3 +1471,8 @@ I added an explicit internal execution mode tied to a reserved experiment, rathe
 ## Verifying authorization before constructing providers
 
 I connected the notebook owner to its reserved execution capability after consent and access checks. I verified that a mismatched capability or canceled authorization cannot construct a provider, and that the browser rejects readiness for the wrong mode. All 1,498 automated prototype tests pass. I kept the preparation page simulated and made no paid calls or hosted changes.
+
+
+## Checking the complete private notebook connection locally
+
+I added a separate private notebook route with authenticated access, consent before reservation and mode-matched readiness. My local two-turn check verifies the budget correction, touch confirmation and shutdown while keeping the reservation consumed. I also checked that the browser cannot send late consent after its session ends or start capture automatically. All 1,515 automated prototype tests pass. The implementation is not attached to the normal application and has made no paid provider call.

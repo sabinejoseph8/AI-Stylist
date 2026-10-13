@@ -2,10 +2,10 @@ import type {PreparedBrowserNoteSession} from './note-browser-session.ts';
 
 type Events=Pick<EventTarget,'addEventListener'|'removeEventListener'>;
 type Session=Pick<PreparedBrowserNoteSession,'receive'|'hidden'|'disconnected'|'stop'|'status'|'snapshot'>;
-/** Explicit simulated binding only. It creates no socket, device or provider.
+/** Explicit mode-matched binding. It creates no socket, device or provider.
  * The owner must dispose before replacing a session; no reconnect or replay. */
-export function bindSimulatedNoteLifecycle(options:{simulation?:boolean;session:Session;socket:Events;page:Events;visibility:Events&{readonly hidden:boolean};status:(status:ReturnType<Session['status']>)=>void}){
- if(options.simulation!==true)throw Error('Live notebook lifecycle is disabled.');
+export function bindNoteBrowserLifecycle(options:{simulation?:boolean;privateTrial?:boolean;session:Session;socket:Events;page:Events;visibility:Events&{readonly hidden:boolean};status:(status:ReturnType<Session['status']>)=>void}){
+ if((options.simulation===true)===(options.privateTrial===true)||options.session.snapshot().liveEnabled!==(options.privateTrial===true))throw Error('Live notebook lifecycle is disabled.');
  const {session,socket,page,visibility,status}=options;
  let disposed=false,last='';
  const listeners:Array<[Events,string,EventListener]>=[];
@@ -44,3 +44,6 @@ export function bindSimulatedNoteLifecycle(options:{simulation?:boolean;session:
  }
  return{refresh,dispose:()=>{if(disposed)return;session.stop();refresh();detach();}};
 }
+
+// Preserve the existing rehearsal API. Its default remains disabled.
+export const bindSimulatedNoteLifecycle=bindNoteBrowserLifecycle;

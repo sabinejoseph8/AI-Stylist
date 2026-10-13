@@ -9,12 +9,16 @@ type Startup=ReturnType<typeof prepareNoteStartup>;
 type SessionOptions=Parameters<typeof prepareNoteStartup>[0]['session'];
 type Request={method:string;path:string;host:string;origin:string;authorization?:string;consent:boolean;signal:AbortSignal};
 export type PrivateNotesTrialActivation={approvalId:string;financialApproved:boolean;securityApproved:boolean;authorize:(reservationId:string,signal:AbortSignal)=>Promise<PrivateNotesTrialExecution>};
+export function validatePrivateNotesTrialActivation(value:PrivateNotesTrialActivation){
+ if(!value||value.financialApproved!==true||value.securityApproved!==true||! /^[A-Za-z0-9_-]{1,80}$/.test(value.approvalId)||typeof value.authorize!=='function')throw Error('Private notes trial activation is disabled.');
+ return Object.freeze({...value});
+}
 type Transports={open:Parameters<typeof prepareNoteStartup>[0]['open'];fetch:SessionOptions['fetch'];countFetch:NonNullable<SessionOptions['countFetch']>;capture:SessionOptions['capture'];dispose:()=>void};
 /** Protected dormant notes-only preparation, not a live route or spending grant.
  * No app startup import, default provider, key loader, persistence initializer,
  * avatar, recommendations, retry or reservation release. */
 export function preparePrivateNotesTrialOwner(options:{simulation?:boolean;activation?:PrivateNotesTrialActivation;preview:PreviewConfig;allowance:Pick<PrivateNotesTrialLedgerOwner,'reserve'|'recordOutcome'>;createTransports:(reservationId:string,execution:NoteExecutionOptions)=>Transports;publish:(snapshot:ReturnType<NotebookState['snapshot']>,receipt:number|null)=>void;turnReady?:(turnId:string)=>void;stopped?:()=>void}){
- const activation=options.activation?Object.freeze({...options.activation}):undefined;
+ const activation=options.activation?validatePrivateNotesTrialActivation(options.activation):undefined;
  if((options.simulation!==undefined&&typeof options.simulation!=='boolean')||(options.simulation===true?activation!==undefined:!activation||activation.financialApproved!==true||activation.securityApproved!==true||! /^[A-Za-z0-9_-]{1,80}$/.test(activation.approvalId)||typeof activation.authorize!=='function'))throw Error('Private notes trial activation is disabled.');
  const target=validatePreview(options.preview),gate=new PreviewGate(options.preview);
  let state:'idle'|'starting'|'active'|'closing'|'held'='idle';

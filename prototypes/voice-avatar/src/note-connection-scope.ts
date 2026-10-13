@@ -1,4 +1,4 @@
-import {validNoteExecution,noteExecutionOptions,isPrivateNotesTrialExecution} from './note-execution.ts';
+import {validNoteExecution,isPrivateNotesTrialExecution} from './note-execution.ts';
 import type {PrivateNotesTrialExecution} from './note-execution.ts';
 import {FIELDS} from './notebook-state.ts';
 import type {Field} from './notebook-state.ts';
@@ -21,10 +21,12 @@ export class NoteConnectionScope {
  private held=false;
  private create:()=>Probe;
  private id:()=>string;
- constructor(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;create:()=>Probe;id?:()=>string}){
-   if(!validNoteExecution(options))throw Error('Live note connections are disabled.');
- const execution=noteExecutionOptions(options);
-   this.liveEnabled=isPrivateNotesTrialExecution(execution.privateTrial);
+ constructor(options:{simulation?:boolean;privateTrial?:PrivateNotesTrialExecution;privateTrialAdmission?:boolean;create:()=>Probe;id?:()=>string}){
+   const admission=options.privateTrialAdmission===true&&options.simulation===undefined&&options.privateTrial===undefined;
+   if(options.privateTrialAdmission===true?!admission:!validNoteExecution(options))throw Error('Live note connections are disabled.');
+   // Admission owns only routing/lease state. The separate owner must still
+   // reserve and validate an execution capability before provider construction.
+   this.liveEnabled=admission||isPrivateNotesTrialExecution(options.privateTrial);
    this.create=options.create;this.id=options.id??(()=>globalThis.crypto.randomUUID());
  }
  private reap(){
