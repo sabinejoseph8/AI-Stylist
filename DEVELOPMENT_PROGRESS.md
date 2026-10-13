@@ -1,3 +1,9 @@
+## Minimal live-result publication receipt
+
+Approved minimal diagnostic activation and observed result are published as be3dcb6, with the private Memory snapshot bdf2a65. Seventeen committed changed files were copied to the approved AI stylist folder. Owner-private Memory source d37872dbd2b1e6995ed5179ca15e682d6add72a4 deployed successfully as appgdep_6ace3c01650081918663490c83a3f6c4 with MCP retained; all 16 site checks, build and artifact validation passed. Prototype tests are 1,706/118 plus type checking and build. The one authorized live run is finished and held; all five prior/current records were verified held. Allocation is $51, not actual charges. No retry or Render deployment occurred.
+
+Exact next human action: approve or decline sending docs/openai-minimal-startup-followup.md to OpenAI support in the pending question. No message has been sent from that draft. No further live experiment is approved. The stored goal remains blocked until resumed with a concrete actionable dependency change. Existing unstaged AGENTS.md edits remain preserved.
+
 ## Exact next action after the minimal diagnostic
 
 Publish the tested activation and sanitized result to GitHub, the approved AI stylist folder and owner-private Memory. Do not repeat the diagnostic, expand the parameter list speculatively to justify spending, change the customer model, adopt legacy startup or refund a held record. Prepare a concise support follow-up reporting the minimal failure and unrecognized parameter category; sending requires Sabine's explicit authorization. The next external evidence needed is a supported dedicated-transcription startup contract or a concrete correction from API engineering. Account/host/retailer gates remain as recorded. No paid trial is available. Goal tool status was verified blocked; request resume only after a concrete actionable dependency changes.
