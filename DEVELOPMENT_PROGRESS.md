@@ -1,3 +1,9 @@
+## Private Memory synchronization, 12 October 2026
+
+The owner-private Memory website now publishes the 1,454-test notebook protocol checkpoint. Site source 2bfa4c5d7d4f58d7a6e65860a3d2d6f7cad0535d deployed successfully as appgdep_6acda32c9e548191a959aa8343922adb with MCP retained. All 16 site checks, build and artifact validation pass. Product/design acceptance and Phase 1 gates are unchanged. No provider or hosted customer database changed.
+
+Exact next action: complete and review the disabled private-trial activation boundary, consent notice and page before requesting the separate live-experiment authorization. The existing $41 allocation remains unchanged; proposed $2 remains unapproved.
+
 ## Private notebook browser protocol rehearsal, 12 October 2026
 
 Connected the dormant private-trial owner to the existing simulation WebSocket protocol with explicit simulation and fixture-consent gates. Readiness waits for owner startup; shutdown clears transient notes and retains the consumed reservation. The bridge is not attached to normal server startup and contains no credential loader or live activation. Fixture consent is not customer consent.
