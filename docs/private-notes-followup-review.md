@@ -32,3 +32,13 @@ A persisted Render selector still referenced the old approval, despite the previ
 ## User-started follow-up outcome
 
 Sabine confirmed availability, then supplied an ended/cleared screenshot immediately after Start. Read-only RPC inspection confirms notes_private_20261013_02 is held. No spoken turn or live notes acceptance is established. Preserve this consumed record; no repeat is authorized. Fixed startup-log inspection is pending because browser approval review could not complete.
+
+## Revised bootstrap preparation and future validation boundary
+
+Both approved notes records are held and cannot fund this proposal. AI-assisted support now proposes gpt-realtime-2.1 only as the initial connection query, with gpt-live-transcribe selected in the transcription session.update. Local implementation accepts no audio before the resolved acknowledgment confirms transcription, 24 kHz PCM, gpt-live-transcribe and manual turn detection. It never requests an assistant response and closes on incompatible acknowledgment. The intended bootstrap sends no speech or generation request to the conversational model. This limits intended usage but is not an authoritative billing or conversion guarantee. The earlier $2 extraction/transcription worksheet still covers the intended two-turn/85-second processing; no new live allowance is approved and no hosted setting has changed.
+
+A future experiment requires a separate decision that explicitly accepts the unverified bootstrap, one new immutable approval, one user-started session, two turns/85 seconds and no retry/avatar/upgrade. Proposed allowance: $2, allocation $45 to $47 only if approved. No initializer or activation for that proposal is applied.
+
+## Revised startup test approved
+
+Sabine approved the specifically described $2 experiment, total allocation $47, approval ID notes_private_20261013_03, one start/two turns/85 seconds and no retries/avatar/upgrades. The support-proposed bootstrap and retention/failure limits were included in the question. Earlier records remain held. The proposal above is superseded only for this one approval; initialization/deployment verification is still required before Start.

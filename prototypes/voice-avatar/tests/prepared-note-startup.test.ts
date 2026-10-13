@@ -45,3 +45,16 @@ describe('disabled provider startup sequencing',()=>{
 });
 
 it('reports fixed creation/configuration stages and distinguishes configuration hold',async()=>{const s=fixture();await s.opened();s.receive(created);s.ack({...ack,session:{type:'transcription'}});await Promise.resolve();expect(s.diagnostic.mock.calls.map(([code])=>code)).toEqual(['startup-created','startup-configuring','startup-configuration-held']);expect(s.ready).not.toHaveBeenCalled();});
+
+it('proposed conversational bootstrap never captures before transcription-only acknowledgment',async()=>{
+ const s=fixture();await s.opened();s.receive({type:'session.created',session:{id:'synthetic',type:'realtime',model:'gpt-realtime-2.1'}});
+ expect(s.capture.start).not.toHaveBeenCalled();expect(s.startup.active()).toBeNull();
+ const commands=s.socket.send.mock.calls.map(([value])=>JSON.parse(value));
+ expect(commands).toHaveLength(1);expect(commands[0]).toMatchObject({type:'session.update',session:{type:'transcription',audio:{input:{transcription:{model:'gpt-live-transcribe'},turn_detection:null}}}});
+ s.ack({...ack,session:{type:'realtime',model:'gpt-realtime-2.1'}});await Promise.resolve();
+ expect(s.ready).not.toHaveBeenCalled();expect(s.capture.start).not.toHaveBeenCalled();expect(s.startup.active()).toBeNull();expect(s.socket.close).toHaveBeenCalledTimes(1);
+});
+it('the observed first-packet invalid request sends neither configuration nor audio and never retries',async()=>{
+ const s=fixture();await s.opened();s.receive({type:'error',error:{type:'invalid_request_error',message:'private sentinel'}});
+ expect(s.socket.send).not.toHaveBeenCalled();expect(s.capture.start).not.toHaveBeenCalled();expect(s.ready).not.toHaveBeenCalled();expect(s.open).toHaveBeenCalledTimes(1);expect(s.socket.close).toHaveBeenCalledTimes(1);expect(JSON.stringify(s.startup.status())).not.toContain('sentinel');
+});

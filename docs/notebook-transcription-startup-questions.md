@@ -48,3 +48,7 @@ Our server connects to `wss://api.openai.com/v1/realtime?model=gpt-live-transcri
 What exact GA URL, query parameters and headers initialize a dedicated gpt-live-transcribe transcription session? Should the initial connection select a transcription intent instead of using the model query? Please provide an explicit selected-model example and the initial event type, or clarify any account eligibility required. The earlier support answer described the model-query URL as an inference from generic Realtime documentation. We need to resolve this observed pre-configuration rejection before another paid test.
 
 No keys, account identifiers, request/session IDs, recordings or conversation content are included.
+
+## Revised AI-assisted reply received
+
+Sabine supplied a reply recommending the generic gpt-realtime-2.1 bootstrap followed by a transcription-only session.update. This is recorded as a support-proposed connection contract, not independently verified conversion. The support contact step is resolved by receipt of this reply. It also requests error.message/code/param; those fields were not retained, and must not be invented or recovered by replaying the consumed trial. No further message was sent. The local proposal is tested without live provider calls.

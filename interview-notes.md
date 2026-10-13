@@ -1515,3 +1515,7 @@ When the private notes page showed that testing was unavailable, I checked the s
 ## Locating a failure before speech capture
 
 I used the prototype's content-free startup stages to narrow a failed notes test to the provider connection. The connection opened, then received an invalid-request error before the session was created. This separated the failure from microphone capture and note extraction. I kept the consumed trial history and spending limits intact, and prepared a focused support question instead of repeating an unverified paid experiment. The exact cause and correction remain open.
+
+## Preparing a revised connection proposal
+
+Support revised its startup advice after I supplied the failure stages. I prepared the new connection proposal locally and kept the microphone blocked until the provider confirms the selected transcription configuration. I added checks that an incompatible session closes and that an initial error sends no audio or configuration. The tests pass, but I keep this separate from proof that the provider supports the proposed conversion. Both earlier trial records and the spending limit remain intact.

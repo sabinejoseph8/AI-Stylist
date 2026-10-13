@@ -1,10 +1,11 @@
 /** Inspection-only candidate. No socket, credentials or live activation path. */
 export const TRANSCRIPTION_CONNECTION_PLAN=Object.freeze({
  version:1,
- url:'wss://api.openai.com/v1/realtime?model=gpt-live-transcribe',
+ url:'wss://api.openai.com/v1/realtime?model=gpt-realtime-2.1',
  model:'gpt-live-transcribe',
+ bootstrapModel:'gpt-realtime-2.1',
  authentication:'server-bearer-header',
- startupEvidence:'ai-assisted-support-proposal',
+ startupEvidence:'ai-assisted-support-bootstrap-proposal',
  expectedInitialEvent:'session.created',
  configurationEvent:'session.update',
  readinessEvent:'session.updated',

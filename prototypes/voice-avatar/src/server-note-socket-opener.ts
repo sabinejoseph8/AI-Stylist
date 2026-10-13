@@ -2,7 +2,8 @@ import WebSocket from 'ws';
 import {boundedNoteStartupDiagnostic,providerErrorDiagnostic} from './note-startup-diagnostics.ts';
 import type {NoteStartupDiagnostic} from './note-startup-diagnostics.ts';
 import type {SimulatedTranscriptionSocket} from './transcription-socket-wire.ts';
-export const NOTE_TRANSCRIPTION_SOCKET_URL='wss://api.openai.com/v1/realtime?model=gpt-live-transcribe';
+import {TRANSCRIPTION_CONNECTION_PLAN} from './transcription-connection-plan.ts';
+export const NOTE_TRANSCRIPTION_SOCKET_URL=TRANSCRIPTION_CONNECTION_PLAN.url;
 type Raw=Pick<WebSocket,'on'|'off'|'send'|'close'|'terminate'|'readyState'|'bufferedAmount'>;
 type Connect=(url:string,options:WebSocket.ClientOptions)=>Raw;
 /** Dormant single-use server opener. No environment access or normal startup
