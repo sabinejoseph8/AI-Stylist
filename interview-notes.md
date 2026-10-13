@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Counting the full extraction input, 12 October 2026
+
+I prepared the official provider token-counting adapter so instructions and the structured-output schema can be included before generation. Simulation checks reject uncertain counts and cancel late response bodies. I also capped counting calls separately after spotting that overlapping unfinished counts could bypass a limit applied only to generation. The full 1,350-test suite passes. Actual model compatibility and counting charges still need a reviewed live check; no extra spending is authorized.
+
 ## Connecting accounting to requests, 12 October 2026
 
 I connected the prepared extraction budget to the exact serialized request so counting and sending cannot accidentally use different content. I tested overlapping requests, failed counting, failed delivery and cancellation. Review found a race where an ended owner could return a late result; I added a final cancellation check and regression. The full 1,331-test prototype suite passes. This remains disabled preparation until an authoritative token counter and live activation checks are complete.

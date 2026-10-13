@@ -48,6 +48,14 @@ describe('disabled exact-request dispatch composition',()=>{
   b=prepareBudgetedNoteDispatch({simulation:true,count:async()=>1,dispatch:async()=>{b.end();return {stale:true};}});
   await expect(b.request(input,signal())).rejects.toThrow();expect(b.snapshot()).toMatchObject({attempts:1,held:true});
  });
+ it('bounds counting requests before concurrent counters can complete',async()=>{
+  const count=vi.fn(()=>new Promise<number>(()=>{})),dispatch=vi.fn();
+  const b=prepareBudgetedNoteDispatch({simulation:true,count,dispatch});
+  const pending=Array.from({length:65},()=>b.request(input,signal()));
+  const results=await Promise.allSettled(pending);
+  expect(results.every(r=>r.status==='rejected')).toBe(true);expect(count).toHaveBeenCalledTimes(64);expect(dispatch).not.toHaveBeenCalled();
+  expect(b.snapshot()).toMatchObject({countRequests:64,attempts:0,held:true});
+ });
  it('pre-canceled input makes no counter or dispatch call',async()=>{
   const count=vi.fn(),dispatch=vi.fn(),controller=new AbortController();controller.abort();const b=prepareBudgetedNoteDispatch({simulation:true,count,dispatch});
   await expect(b.request(input,controller.signal)).rejects.toThrow();expect(count).not.toHaveBeenCalled();expect(dispatch).not.toHaveBeenCalled();

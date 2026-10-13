@@ -10,11 +10,13 @@ export function prepareBudgetedNoteDispatch(options:{simulation?:boolean;
  dispatch:(request:string,signal:AbortSignal)=>Promise<unknown>}){
  if(options.simulation!==true)throw Error('Live budgeted extraction is disabled.');
  const budget=prepareNoteDispatchBudget({simulation:true});
- const active=new Set<AbortController>();let ended=false;
+ const active=new Set<AbortController>();let ended=false,countRequests=0;
  const stop=()=>{ended=true;budget.hold();for(const controller of active)controller.abort();};
  return Object.freeze({
   async request(input:ExtractionInput,signal:AbortSignal):Promise<unknown>{
    if(ended||signal.aborted)throw Error('Budgeted extraction unavailable.');
+   if(countRequests>=64){stop();throw Error('Budgeted extraction unavailable.');}
+   countRequests++;
    const controller=new AbortController();active.add(controller);
    let rejectStop!:(error:Error)=>void;
    const stopped=new Promise<never>((_,reject)=>{rejectStop=reject;});
@@ -38,6 +40,6 @@ export function prepareBudgetedNoteDispatch(options:{simulation?:boolean;
    finally{clearTimeout(deadline);signal.removeEventListener('abort',cancel);controller.signal.removeEventListener('abort',abort);active.delete(controller);}
   },
   end:stop,
-  snapshot:()=>budget.snapshot()
+  snapshot:()=>Object.freeze({...budget.snapshot(),countRequests})
  });
 }
