@@ -1372,3 +1372,8 @@ I approved one bounded $4 interruption-and-resume experiment, bringing the exper
 ## Making a bounded test easier to follow
 
 I saw that leaving or refreshing the phone preview could consume a reserved test before I completed the instructions. I added a visible reminder and expandable steps, plus a best-effort browser warning. I kept the existing cleanup because iPhone browsers may skip navigation warnings. I verified the change with 1,299 automated checks and a synthetic mobile WebKit rehearsal. I kept actual recovery acceptance open and did not reuse reserved attempts or increase spending.
+
+
+## Learning from a real-device failure
+
+My phone test failed after I confirmed the first reply and gave a sleeve preference. I verified that the provider room had ended and the replacement never started. The screen's generic error could not explain the failure, so I added fixed messages that identify the failing stage without retaining speech or exposing provider error bodies. The simulated follow-up and recovery tests pass, but I kept physical-device acceptance open and did not spend on an automatic retry.

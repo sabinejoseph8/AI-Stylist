@@ -9,6 +9,9 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
+Current outcome: the second repeat failed after a confirmed first reply and the sleeve follow-up. Provider closure is verified; replacement never started. Root cause remains unknown, recovery acceptance is open, and no retry is authorized. Local stage-specific error reporting passes 1,303 tests and simulated WebKit recovery. Deployment and Memory synchronization are next.
+
+
 Current Task 1b recovery: one additional $4 test is approved, raising the experiment allocation to $37. Its exact allowance is installed with all thirteen earlier records preserved and no new room reserved. Tested code deployment and user-started iPhone acceptance are next. Phase 1 remains open.
 
 Hosted Tasks 2b/2c are authorized and in progress. Migrations 001 through 020 and 202610120021 are installed with live privilege checks; real customer isolation and end-to-end account acceptance remain. Customer account routes remain disabled. Task 2c local account preparation is active. The approved fixed seven-day session now restores through the connected screen after reload and persistent-profile WebKit relaunch; isolated expiry refusal and browser-driven refresh after server replacement pass with synthetic Auth, without extending the deadline. All 623 foundation tests across 94 files, type checking and build pass. Explicit runtime startup/shutdown and a separate direct-HTTPS entry are locally verified. The transport guard passes the combined browser/database rehearsal. Render immediate-proxy trust and proof-bearing URL logging remain unverified; Sabine sent the approved support inquiry and its reply is pending. The dormant factory composes password, Google/Apple, recovery, refresh and sign-out with shared session ownership and response cleanup. Factory paths pass isolated PostgreSQL checks with generated signed identities and synthetic providers. Guarded password delivery, disconnect and shutdown pass actual local HTTP checks. Expired reset cleanup is exposed for explicit host maintenance. Real account routes, emails and paid calls remain disabled. Hosted configuration, real recovery/linking acceptance, durable abuse controls, HTTPS/device/accessibility acceptance and remaining phase gates stay open.
@@ -2780,3 +2783,13 @@ Sabine approved one additional $4 recovery test, at most two rooms and ten reser
 
 
 Second recovery repeat deployment dep-db6oguff3r2c73bt1tu0 succeeded from 39cf4fba004054b68fae1e643728032ae57df8a7. Protected recovery mode and existing Free service are preserved. No new pair or provider room started. Exact next action: Sabine performs one test using complete advance instructions, keeping Safari visible until End. No retries are authorized.
+
+
+## Second repeat failed before recovery acceptance
+
+Sabine reported the automatic-turn failure screen after saying “I prefer long sleeves.” Screenshot confirms microphone/playback disabled and exchange display 1 of 3. Read-only hosted verification finds fifteen reservations: latest initial started, closed and Tavus provider-ended; latest replacement never started and has no room. No automatic retry or additional allowance. The $37 allocation is unchanged. The generic error does not identify whether failure occurred in request validation, provider generation or playback, and the stale exchange counter is not definitive. Recovery acceptance remains unproven. Exact next action: determine whether first-reply confirmation was selected, then add/test non-content diagnostic error categories before proposing any further paid test.
+
+
+## Follow-up failure diagnosis checkpoint
+
+Sabine confirms she selected I heard the whole reply before saying “I prefer long sleeves.” Do not attribute the failure to a missed confirmation. Root cause remains unknown: the deployed generic catch covered request failure, browser playback and avatar audio delivery. Local fixed-label stage reporting now distinguishes these paths without exposing exception bodies or conversation content. All 1,303 prototype tests, corrected type checking, build and synthetic WebKit follow-up/replacement rehearsal pass. These simulations do not explain the physical-device failure. The latest initial room is verified ended and the replacement never started. No retry is authorized. Exact next action: deploy the non-content error-reporting improvement and synchronize the failure outcome to private Memory. No new paid test or allowance change.

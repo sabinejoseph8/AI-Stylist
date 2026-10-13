@@ -2204,3 +2204,13 @@ Sabine approved one additional $4 recovery test, at most two rooms and ten reser
 
 
 Second recovery repeat deployment dep-db6oguff3r2c73bt1tu0 succeeded from 39cf4fba004054b68fae1e643728032ae57df8a7. Protected recovery mode and existing Free service are preserved. No new pair or provider room started. Exact next action: Sabine performs one test using complete advance instructions, keeping Safari visible until End. No retries are authorized.
+
+
+## Second repeat failed before recovery acceptance
+
+Sabine reported the automatic-turn failure screen after saying “I prefer long sleeves.” Screenshot confirms microphone/playback disabled and exchange display 1 of 3. Read-only hosted verification finds fifteen reservations: latest initial started, closed and Tavus provider-ended; latest replacement never started and has no room. No automatic retry or additional allowance. The $37 allocation is unchanged. The generic error does not identify whether failure occurred in request validation, provider generation or playback, and the stale exchange counter is not definitive. Recovery acceptance remains unproven. Exact next action: determine whether first-reply confirmation was selected, then add/test non-content diagnostic error categories before proposing any further paid test.
+
+
+## Follow-up failure diagnosis checkpoint
+
+Sabine confirms she selected I heard the whole reply before saying “I prefer long sleeves.” Do not attribute the failure to a missed confirmation. Root cause remains unknown: the deployed generic catch covered request failure, browser playback and avatar audio delivery. Local fixed-label stage reporting now distinguishes these paths without exposing exception bodies or conversation content. All 1,303 prototype tests, corrected type checking, build and synthetic WebKit follow-up/replacement rehearsal pass. These simulations do not explain the physical-device failure. The latest initial room is verified ended and the replacement never started. No retry is authorized. Exact next action: deploy the non-content error-reporting improvement and synchronize the failure outcome to private Memory. No new paid test or allowance change.

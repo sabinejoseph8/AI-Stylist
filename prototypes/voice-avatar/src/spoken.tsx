@@ -1,3 +1,4 @@
+import { automaticTurnFailure, type AutomaticTurnStage } from './automatic-turn-failure.ts';
 import { warnBeforeLeaving } from './navigation-warning.ts';
 import { useEffect, useRef, useState } from 'react';
 import { createRoot } from 'react-dom/client';
@@ -155,13 +156,16 @@ function SpokenApp() {
   const sendAutomatic = async (pcm: string, current: number) => {
     if (current !== epoch.current || state.current !== 'listening' || sending.current) return;
     sending.current = true; transition('thinking'); setMessage('Pause detected. Preparing her reply. Microphone remains on for spoken stop.');
+    let failureStage: AutomaticTurnStage = 'request';
     try {
       const result = await request('turn', { audio: pcm }); if (current !== epoch.current) return;
       reply.current = result.id; setTranscript(result.transcript);
+      failureStage = 'playback';
       await audio.current?.play(); await video.current?.play(); if (current !== epoch.current) return;
       transition('sending'); setMessage(RECOVERY ? 'Listening for interruption. Speaking during playback starts verified cleanup and one replacement.' : 'Listening for a spoken interruption. Speak over her to end this check safely.');
+      failureStage = 'stream';
       stream.current!.play(Uint8Array.from(atob(result.pcm), c => c.charCodeAt(0)), result.id);
-    } catch { if (current === epoch.current) await end('The automatic turn could not complete. Microphone and playback are off.'); }
+    } catch { if (current === epoch.current) await end(automaticTurnFailure(failureStage)); }
     finally { if (current === epoch.current) sending.current = false; }
   };
   const startAutomatic = async () => {
