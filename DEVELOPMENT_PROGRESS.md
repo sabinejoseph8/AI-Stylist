@@ -1,3 +1,9 @@
+## Private Memory publication, 12 October 2026
+
+The owner-private Memory site now publishes the 1,466-test checkpoint, including the local preparation page and reservation-bound transport composition. Source 78926679e960fd092a26ac66e0ecaaee6e46f6b8 deployed successfully as appgdep_6acda5d0d1cc819186f46b95a34565ca with MCP retained. All 16 site checks, build and artifact validation pass. No paid experiment, hosted customer database or approval changed.
+
+Exact next action: prepare an explicit live execution boundary and per-connection consent handshake, preserving all simulation defaults and truthful live versus simulated status, then review the full activation path before requesting the proposed additional $2/security authorization. Current allocation is $41; Phase 1 remains open.
+
 ## Reservation-bound provider transport composition, 12 October 2026
 
 Prepared the server provider transports as one dormant unit. Construction requires explicit simulation, injected HTTP/socket implementations and a matching reserved private-trial ledger approval/reservation. The protected owner now passes the actual reserved ID to its factory, including through the browser bridge. Disposal ends capture, cancels the socket and aborts HTTP requests; each cleanup is attempted even if another fails. Disposed adapters cannot send again. No default credential loader, network attachment, initializer or live activation was added. Ledger data alone is not human authorization.
