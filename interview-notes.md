@@ -1,5 +1,9 @@
 # My AI Stylist project story
 
+## Connecting accounting to requests, 12 October 2026
+
+I connected the prepared extraction budget to the exact serialized request so counting and sending cannot accidentally use different content. I tested overlapping requests, failed counting, failed delivery and cancellation. Review found a race where an ended owner could return a late result; I added a final cancellation check and regression. The full 1,331-test prototype suite passes. This remains disabled preparation until an authoritative token counter and live activation checks are complete.
+
 ## Bounding live-notebook costs, 12 October 2026
 
 I found that limiting request size alone does not bound total extraction spending. I added a disabled aggregate budget that counts attempted requests and reserves input and maximum output tokens, keeping failed attempts counted. Seventeen focused checks pass. The next step is connecting a trusted token counter before dispatch; this preparation alone does not enforce real billing or authorize another paid trial.

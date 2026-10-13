@@ -1,5 +1,11 @@
 # AI Stylist development progress
 
+## Exact-request extraction accounting, 12 October 2026
+
+Prepared disabled counting-to-dispatch composition. The trusted injected counter and dispatch receive the identical serialized full request, including pinned model, instructions and output schema. Synchronous aggregate reservation after counting prevents concurrent completions from exceeding the budget. Counter/dispatch errors, cancellation, owner end and a five-second operation deadline hold the trial and abort pending work; failed dispatches remain consumed. Added a post-dispatch cancellation check after review found a reentrant owner-end race. All 1,331 prototype tests across 91 files, type checking and build pass. No network adapter, token counter implementation, credentials, live route or durable authorization is activated. This cannot yet claim an actual billing bound.
+
+Exact next local action: review and prepare an authoritative full-request counting transport, then compose this owner with the protected notebook lifecycle and durable allowance. Keep the proposed $2 trial unapproved and disabled, existing allocation $41 and all historical reservations intact. No paid calls or deployment to the voice preview occurred. Synchronize this checkpoint to private Memory and save/publish completed work.
+
 ## Aggregate notebook dispatch budget preparation, 12 October 2026
 
 Added a disabled server-owned dispatch budget: at most 64 attempted extraction requests, one million trusted counted input tokens in aggregate and 2,048 reserved output tokens per request. Failed attempts remain consumed; invalid counts, overflow or cleanup uncertainty permanently hold this instance. No reset/refund, network, credential loader, live switch or durable authorization is included. All 17 focused tests and prototype type checking pass. The earlier full prototype suite was not rerun for this isolated module. The module still needs composition with an authoritative exact-request token counter and the protected owner before it can enforce live spending; caller estimates are not sufficient. Existing allocation remains $41; the proposed $2 experiment is unapproved.
