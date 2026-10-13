@@ -1,3 +1,9 @@
+## Camera acceptance publication, 13 October 2026
+
+Sabine's All steps worked response closes the seven-step local-computer camera manual check. GitHub commits 6e0d0de and 8128364 publish the acceptance and matching site snapshot; files were copied to the approved AI stylist folder. Private Memory source 9ffa30c0886240e53e9da8a5264a00861ece1c00 deployed successfully as appgdep_6acdf75da30c81918aaa070b66b93a50 with MCP retained; all 16 site checks, build and artifact validation passed. The Task 1c prototype evidence document now distinguishes this accepted local flow from untested physical-phone notebook/denial/timeout/accessibility scope. No application code or paid call changed.
+
+The historical blocked audits below predate this new acceptance; do not ask Sabine to repeat the seven-step check. The goal's tool state remains blocked and full completion is unproven. Remaining blockers are supported live transcription startup and any specifically approved further diagnostic, Render ingress/logging evidence, real account sender/social setup and retailer access. Next action: resolve one of those concrete dependencies before starting another paid test or later phase. The current allocation remains $49 with four held notes/startup records.
+
 ## Local notebook camera accepted by Sabine, 13 October 2026
 
 Sabine answered All steps worked to the complete seven-step local-computer review. Accepted scope: refresh/open notebook; camera-only permission and preview; Stop and restart retaining the new preview; capture and explicit item confirmation; changing the live view and stopping without replacing the confirmed still; and Clear removing the still with the device indicator off. This is human acceptance of the repaired local camera flow, not a new iPhone/network/provider test or complete accessibility review.

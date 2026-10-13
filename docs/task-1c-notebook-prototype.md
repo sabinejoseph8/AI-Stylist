@@ -1,6 +1,6 @@
 # Task 1c: Notebook prototype and review
 
-Updated: 10 October 2026. Status: local prototype manual review passed; Task 1c remains in progress.
+Updated: 13 October 2026. Status: local prototype review and the repaired seven-step local-computer camera flow accepted by Sabine; Task 1c remains in progress.
 
 ## Authorization and scope
 
@@ -15,7 +15,7 @@ The isolated notebook page follows the approved fashion journal design: ivory pa
 - Touch edits use a modal with Save/Cancel, keyboard focus and return to the edit control. A simulated explicit voice correction changes the budget immediately; an older result cannot undo it. This is not real speech recognition.
 - The collapsed notebook retains its current summary, pending-confirmation count and confirmed item thumbnail. Updates do not force expansion or move focus.
 - JPEG, PNG and WebP selection with file-size/type bounds, decode checks and an explicit confirmation step. The actual selected image appears in the notebook with editable description and owned/inspiration choice. A replacement does not remove the old reference until confirmed. Object URLs are revoked on replacement, cancellation, clear or page exit. No photo is uploaded or saved to a wardrobe.
-- Camera-only local preview, explicit Start, still capture/confirmation, Stop, page-hide cleanup, track-loss cleanup and a two-minute limit including permission wait. Late permission results are released. No microphone, live analysis or recording. Physical acceptance remains pending.
+- Camera-only local preview, explicit Start, still capture/confirmation, Stop, page-hide cleanup, track-loss cleanup and a two-minute limit including permission wait. Late permission results are released. No microphone, live analysis or recording. Sabine accepted camera permission, Stop/restart, still confirmation, retained reference after live-view change/Stop, and Clear with the device indicator off on this computer. Physical-phone notebook camera, timeout/denial/track-loss and broader accessibility acceptance are not established by that seven-step result.
 - A deterministic synthetic check keeps candidates hidden until the latest check passes. Conflicts, unknown required values, unsupported budget/date assumptions, timeouts, invalid results and stale approvals hold the look. Changing notes, reference or the synthetic saved-preference fixture invalidates old approval. This is not the future background AI validation agent.
 - The look is an explicitly labeled garment illustration with fictional test costs and no shopping links. Real item matching is not connected, so adding an image or owned wardrobe requirement holds this sample rather than pretending it matches that item.
 - Page Content Security Policy blocks network connections; microphone permission is disabled and camera is limited to the same origin. The existing preview password gate still covers the page when hosted. Local notes live only in page memory, not Supabase or the server. Reload/clear/page exit clears them. Server/session recovery integration remains future work.
