@@ -1,3 +1,11 @@
+## Latest local still selection race fixed, 13 October 2026
+
+Task 1c review found that successive Capture a still clicks shared one ownership revision until asynchronous JPEG encoding finished. If the earlier encoder completed first, it could invalidate the later selection. Each capture now claims a new revision before encoding; older callbacks cannot publish after another capture, upload, removal or session clearing. The isolated encoder also refuses absent drawing context, invalid/oversized dimensions, empty/non-JPEG/oversized output and synchronous failures with readable feedback. Output is bounded to 1,280 pixels on its longest edge. Confirmed references still change only through explicit confirmation; camera Stop retains them.
+
+Nine new focused tests cover reverse completion, invalidation, one delivery, malformed output and encoding failures. All 1,644 prototype tests across 118 files, type checking and build pass. The initial full run lacked loopback permission and was stopped; the authorized rerun passed. These are local deterministic checks, not physical-camera acceptance or a completed Task 1c. No paid call, device activation, hosted setting or Render deployment occurred. The $49 allocation and four held notes/startup records remain unchanged.
+
+Manual verification when reviewing the local notebook: start the local camera, capture two different items quickly, confirm the latest selected still, then show another item and stop the camera. The confirmed still must remain. Clear the session during a pending capture and verify no image reappears. Physical device checks and live transcription remain open.
+
 ## Startup support follow-up submitted and reviewed, 13 October 2026
 
 Sabine authorized the prepared sanitized question. Its submission and an AI-assisted reply are visibly verified. Support repeats that the low-delay guide and conversion proposal apply, but does not identify the rejected parameter or provide independent successful initialization evidence. The live notebook remains unverified. No new call, retry, allowance, deployment or model change occurred. The $49 allocation and all four held notes/startup records are unchanged. See docs/openai-startup-diagnostic-followup.md for the attributed review and unresolved contract.

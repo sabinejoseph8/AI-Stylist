@@ -1,3 +1,7 @@
+## Keeping the latest clothing photo selected
+
+I found a race in the camera prototype: two quick captures could finish encoding in a different order from the clicks, allowing the older frame to win. I moved ownership to the moment of capture and tested reversed completion, clearing and failed encoding. I also bounded portrait images and made image failures visible. The full prototype suite passed with 1,644 tests. I kept physical-camera verification separate from the automated result and left the discovery milestone open.
+
 ## Diagnosing a provider rejection without more phone testing
 
 I approved one bounded server-only experiment so I could isolate startup from microphone behavior. The connection opened, but the provider reported an invalid parameter when configuring transcription. I kept the result precise: it narrowed the failure category but did not identify the field. I preserved the earlier test history, stopped after the single approved attempt and kept raw errors and credentials out of published notes. This avoided asking a customer to repeat a voice test without a supported fix.

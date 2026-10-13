@@ -1,3 +1,11 @@
+## Latest local still selection race fixed, 13 October 2026
+
+Task 1c review found that successive Capture a still clicks shared one ownership revision until asynchronous JPEG encoding finished. If the earlier encoder completed first, it could invalidate the later selection. Each capture now claims a new revision before encoding; older callbacks cannot publish after another capture, upload, removal or session clearing. The isolated encoder also refuses absent drawing context, invalid/oversized dimensions, empty/non-JPEG/oversized output and synchronous failures with readable feedback. Output is bounded to 1,280 pixels on its longest edge. Confirmed references still change only through explicit confirmation; camera Stop retains them.
+
+Nine new focused tests cover reverse completion, invalidation, one delivery, malformed output and encoding failures. All 1,644 prototype tests across 118 files, type checking and build pass. The initial full run lacked loopback permission and was stopped; the authorized rerun passed. These are local deterministic checks, not physical-camera acceptance or a completed Task 1c. No paid call, device activation, hosted setting or Render deployment occurred. The $49 allocation and four held notes/startup records remain unchanged.
+
+Manual verification when reviewing the local notebook: start the local camera, capture two different items quickly, confirm the latest selected still, then show another item and stop the camera. The confirmed still must remain. Clear the session during a pending capture and verify no image reappears. Physical device checks and live transcription remain open.
+
 ## Support submission publication receipt
 
 GitHub source 8eb757c records the authorized submission and attributed unresolved response. Completed files were copied to the approved AI stylist folder. Private Memory source 3b5d62268d11311b1dbb982b5d9f0cf9f1c22ddf deployed successfully as appgdep_6acdf13d4bcc8191bd77529a9e9be1f3 with MCP retained; all 16 site checks, build and artifact validation passed. The screenshot proof stays private outside the repository. No provider experiment is running.

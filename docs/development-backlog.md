@@ -1,3 +1,11 @@
+## Latest local still selection race fixed, 13 October 2026
+
+Task 1c review found that successive Capture a still clicks shared one ownership revision until asynchronous JPEG encoding finished. If the earlier encoder completed first, it could invalidate the later selection. Each capture now claims a new revision before encoding; older callbacks cannot publish after another capture, upload, removal or session clearing. The isolated encoder also refuses absent drawing context, invalid/oversized dimensions, empty/non-JPEG/oversized output and synchronous failures with readable feedback. Output is bounded to 1,280 pixels on its longest edge. Confirmed references still change only through explicit confirmation; camera Stop retains them.
+
+Nine new focused tests cover reverse completion, invalidation, one delivery, malformed output and encoding failures. All 1,644 prototype tests across 118 files, type checking and build pass. The initial full run lacked loopback permission and was stopped; the authorized rerun passed. These are local deterministic checks, not physical-camera acceptance or a completed Task 1c. No paid call, device activation, hosted setting or Render deployment occurred. The $49 allocation and four held notes/startup records remain unchanged.
+
+Manual verification when reviewing the local notebook: start the local camera, capture two different items quickly, confirm the latest selected still, then show another item and stop the camera. The confirmed still must remain. Clear the session during a pending capture and verify no image reappears. Physical device checks and live transcription remain open.
+
 ## Server-only startup diagnostic result, 13 October 2026
 
 Sabine approved one additional $2 server-only diagnostic, raising the experiment allocation from $47 to $49. One new durable allowance was initialized and consumed. The single run reached provider-open and session.created, then received invalid_request_error with allowlisted code invalid_parameter. The configuration was rejected; no allowlisted parameter name or matching error event correlation was returned. This does not identify a correction or validate conversion from a conversation session into transcription.

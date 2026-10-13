@@ -7,6 +7,7 @@ import {createRoot} from 'react-dom/client';
 import {FIELDS,NotebookState,checkFixture} from './notebook-state.ts';
 import type {Field,Capture} from './notebook-state.ts';
 import {NotebookCamera} from './notebook-camera.ts';
+import {captureNotebookStill} from './notebook-still.ts';
 import {NotebookPresentation} from './notebook-presentation.ts';
 import {PartialNoteCoordinator} from './partial-note-coordinator.ts';
 import {LookRelease} from './look-release.ts';
@@ -108,9 +109,15 @@ function App(){
       if(video.current){video.current.srcObject=stream;await video.current.play();}setCameraMessage('Camera is on locally. Capture a still, then confirm the item.');
     }catch{stopCamera('Camera is unavailable or permission was denied. Upload a photo instead.');}
   }
-  function captureStill(){const v=video.current;if(!v?.videoWidth||!v.videoHeight)return;const canvas=document.createElement('canvas');const scale=Math.min(1,1280/v.videoWidth);canvas.width=Math.round(v.videoWidth*scale);canvas.height=Math.round(v.videoHeight*scale);canvas.getContext('2d')?.drawImage(v,0,0,canvas.width,canvas.height);const epoch=uploadEpoch.current;
-    canvas.toBlob(blob=>{if(blob&&epoch===uploadEpoch.current)void prepareFile(new File([blob],'camera-item.jpg',{type:'image/jpeg'}));},'image/jpeg',0.85);
+  function captureStill(){
+    const v=video.current;if(!v||!cameraOn)return;
+    // Claim ownership before asynchronous encoding, so the latest click wins.
+    const epoch=++uploadEpoch.current;setPhotoError('');
+    captureNotebookStill({video:v,createCanvas:()=>document.createElement('canvas'),current:()=>epoch===uploadEpoch.current,
+      completed:blob=>{void prepareFile(new File([blob],'camera-item.jpg',{type:'image/jpeg'}));},
+      failed:()=>setPhotoError('That still could not be captured. Try again or upload a photo.')});
   }
+
   function clear(){if(editing)closeEdit();stopSimulation();stopCamera();uploadEpoch.current++;urls.current.forEach(url=>URL.revokeObjectURL(url));urls.current.clear();setPhoto(null);setPendingPhoto(null);setPhotoError('');setEnlarged(false);state.clear();speech.reset();setRenderReceipt(null);setExcludeGreen(false);setCaption('A simulated conversation will appear here.');update('Session cleared. No notebook content was saved.');}
   function runCheck(){
     const ticket=lookRelease.begin({id:'emerald_sample',description:'A dress, neutral shoes and a small bag. Fixture item-price estimate: USD 320. Shipping, tax and real availability are not verified.'});
