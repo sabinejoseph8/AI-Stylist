@@ -1,3 +1,7 @@
+## Preparing transcription connection startup
+
+I prepared a single-use server socket opener so I can observe the provider's first packet before handing the connection to the notebook. I kept it disconnected from normal startup and tested it with synthetic sockets. I also made a failed local termination visible to the cleanup owner, which helps preserve a reservation when cleanup is uncertain. I am keeping actual provider compatibility and final usage completion separate from these local checks.
+
 ## Preparing server authentication without activating spending
 
 I prepared a separate server HTTP adapter so the notebook can eventually count and extract notes with the same protected provider boundary. I kept it disconnected from normal startup and used synthetic credentials in tests. I made the adapter accept only the two required destinations, remove caller-supplied credentials and stop reuse after shutdown. This gives me testable connection preparation while preserving the approval needed for the real experiment. It does not prove actual provider compatibility or final billing.
