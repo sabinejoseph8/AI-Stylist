@@ -1,6 +1,6 @@
 # Prepared OpenAI follow-up after the minimal diagnostic
 
-Status: draft only. Not submitted or authorized for sending. No new provider attempt is approved.
+Status: explicitly authorized by Sabine and submitted in the existing OpenAI Help conversation on 13 October 2026. Verified the message under You said and the cleared composer. Submission does not establish human escalation or a working correction. No new provider attempt is approved.
 
 ## Sanitized message
 

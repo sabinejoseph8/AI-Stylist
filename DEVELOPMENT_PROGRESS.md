@@ -1,3 +1,7 @@
+## Minimal diagnostic support update sent, 13 October 2026
+
+Sabine explicitly authorized sending docs/openai-minimal-startup-followup.md. Submitted its sanitized configuration/result in the existing OpenAI Help conversation and verified the new message under You said with the composer cleared. Requested API engineering clarification if available. This proves submission, not human escalation or a fix. No keys, account details, raw errors, audio or recordings were included. Private screenshot evidence remains outside Git. No new provider call, spending or deployment occurred; allocation remains $51 and all five records remain held. Exact next action: review the support response for a concrete correction or acknowledged uncertainty. Do not repeat a paid diagnostic from generic advice. Stored goal status remains blocked pending an actionable dependency change.
+
 ## Minimal live-result publication receipt
 
 Approved minimal diagnostic activation and observed result are published as be3dcb6, with the private Memory snapshot bdf2a65. Seventeen committed changed files were copied to the approved AI stylist folder. Owner-private Memory source d37872dbd2b1e6995ed5179ca15e682d6add72a4 deployed successfully as appgdep_6ace3c01650081918663490c83a3f6c4 with MCP retained; all 16 site checks, build and artifact validation passed. Prototype tests are 1,706/118 plus type checking and build. The one authorized live run is finished and held; all five prior/current records were verified held. Allocation is $51, not actual charges. No retry or Render deployment occurred.
