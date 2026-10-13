@@ -1,3 +1,11 @@
+## Local photo/camera checkpoint publication and review handoff
+
+Approved local preparation fe67831 and matching private Memory snapshot 4041481 are published to GitHub. Twenty-four committed files were copied to the approved AI stylist folder. All 771 foundation tests across 102 files, type checking/build and all 16 private Memory checks pass. Owner-private source 2392b10ccb3a836cb94a6c0a115581f0566d53a0 deployed successfully as appgdep_6ace7c7323b08191acaf106e4cc68d76 with MCP retained. Customer Render deployment is unchanged. Existing unstaged AGENTS.md edits remain untouched.
+
+Exact next human action: perform the complete ten-step local photo/camera review at http://127.0.0.1:4322/ as provided together in the clickable question and docs/task-4-local-media.md. The agent verified a labeled test image and confirmation/enlargement, but a subsequent automated file picker stalled beyond the session lifetime; expiry was visible and media cleared. Real multi-file/camera acceptance remains pending. The final source is frozen for the manual review; no device or provider was started by the agent. Do not request repetition of earlier accepted prototype/notebook reviews or mark full 4a/4b complete from these local tests.
+
+This explicit sequencing approval was acted on despite the stored goal being blocked; it did not change that tool status or authorize later phases. After the manual result, fix concrete reported defects and review remaining independent authorized work. Recognition, hosted media/persistence, voice capture and earlier integration/phase gates remain open. No further paid test is authorized. Allocation remains $51 and all five notes/startup records stay held. No email monitor or background provider experiment is running.
+
 ## Approved local photo and camera preparation, 13 October 2026
 
 Sabine explicitly approved preparing local Tasks 4a and 4b before Phase 3 integration finishes. This exception covers browser-memory photo selection, preview/enlargement, editable garment descriptions, owned/inspiration confirmation, replacement/removal and touch camera still selection in the main app. It does not authorize recognition, uploads, permanent wardrobe saving, paid calls, customer deployment, Task 4c/4d or later phase completion.
