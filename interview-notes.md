@@ -1,3 +1,7 @@
+## Bounding provider responses
+
+I found that the Tavus helper parsed response bodies without a size limit. I added a bounded streaming reader and one deadline covering both headers and body, then tested oversized, malformed, stalled and late responses. I preserved the empty End acknowledgment behavior and kept provider termination verification separate. All 1,668 prototype tests passed with type checking and build. No paid experiment was needed for this repair.
+
 ## Preparing account operations before launch
 
 I turned Apple sign-in renewal and email maintenance from broad to-do items into an operational runbook. It separates the expiring Apple client secret from its signing key, assigns private ownership and expiry records, and defines verification and safe rollback. I kept actual credential creation and paid sender/domain setup behind the owner's handoff. I also corrected old account summaries so they reflect my approved seven-day session and verified-email linking decisions.

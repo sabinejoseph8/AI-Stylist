@@ -1,3 +1,9 @@
+## Bounded Tavus responses, 13 October 2026
+
+Local Task 1b review replaced unbounded response.json() in the Tavus HTTP helper with a 65,536-byte streaming JSON-object reader and one eight-second deadline spanning headers and body. Oversized declared or chunked bodies, invalid UTF-8, malformed/non-object JSON and stalled reads fail with fixed sanitized errors. Late responses are canceled, and cancellation cannot indefinitely block completion. Existing fixed destinations, request methods and redirect refusal remain. Successful End responses still accept an empty body; provider-ended verification remains separate and is not inferred from body disposal.
+
+Fifteen new mocked HTTP tests cover byte/deadline enforcement, failed cancellation, late headers, malformed data, redaction and end acknowledgments. All 1,668 prototype tests across 118 files, type checking and build pass. No live provider request, room, device activation, hosted change or Render deployment occurred. This is local transport hardening, not live streaming/notebook acceptance or a completed phase. Allocation remains $49 and consumed history is unchanged.
+
 ## Account provider maintenance prepared, 13 October 2026
 
 The resumed goal is active. The latest camera acceptance was progress; its earlier blocker no longer applies. A fresh Task 2c audit found that Apple/email maintenance was listed but had no concrete renewal/rollback runbook. Prepared docs/account-provider-maintenance.md with a private owner/expiry inventory, Apple web OAuth client-secret renewal distinct from signing-key rotation, safe rollback, SMTP setup/rotation and actual verification scenarios. No credentials, reminders, sender purchases, domain changes, real emails or hosted provider activation occurred.

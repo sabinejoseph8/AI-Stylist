@@ -1,3 +1,9 @@
+## Bounded Tavus responses, 13 October 2026
+
+Local Task 1b review replaced unbounded response.json() in the Tavus HTTP helper with a 65,536-byte streaming JSON-object reader and one eight-second deadline spanning headers and body. Oversized declared or chunked bodies, invalid UTF-8, malformed/non-object JSON and stalled reads fail with fixed sanitized errors. Late responses are canceled, and cancellation cannot indefinitely block completion. Existing fixed destinations, request methods and redirect refusal remain. Successful End responses still accept an empty body; provider-ended verification remains separate and is not inferred from body disposal.
+
+Fifteen new mocked HTTP tests cover byte/deadline enforcement, failed cancellation, late headers, malformed data, redaction and end acknowledgments. All 1,668 prototype tests across 118 files, type checking and build pass. No live provider request, room, device activation, hosted change or Render deployment occurred. This is local transport hardening, not live streaming/notebook acceptance or a completed phase. Allocation remains $49 and consumed history is unchanged.
+
 ## Maintenance publication and next concrete review
 
 The account provider maintenance preparation is published as f5b341e and the matching Memory snapshot as 4e8a32d. Published files were copied to the approved AI stylist folder. Private Memory source ea3a88c35bbae496d65fe9e49bc4159d646329e8 deployed successfully as appgdep_6acdf91f93308191ba4332b895401d26 with MCP retained; all 16 site checks, build and artifact validation passed. Interview notes record the operational improvement. No credentials, calendar reminders, sender/domain purchase, provider activation or paid call occurred. The goal was verified active at the start of this resumed turn; earlier blocked-state statements are historical.

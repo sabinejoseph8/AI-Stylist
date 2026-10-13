@@ -11,16 +11,49 @@ export type Fixture = { pcm: Buffer; transcript: string; inputTokens: number; ou
 export type GeneratedFrame = { responseId: string; itemId: string; eventId: string; sequence: number; pcm: Buffer };
 export type StreamedReply = Omit<Fixture, 'pcm'> & { responseId: string; itemId: string; audioBytes: number };
 
+export const MAX_TAVUS_RESPONSE_BYTES = 65_536;
+function discardTavusBody(response:Response){try{void response.body?.cancel().catch(()=>{});}catch{}}
+function beforeTavusDeadline<T>(work:Promise<T>,signal:AbortSignal):Promise<T>{
+  return new Promise((resolve,reject)=>{
+    const abort=()=>{signal.removeEventListener('abort',abort);reject(Error('Tavus response unavailable.'));};
+    signal.addEventListener('abort',abort,{once:true});
+    work.then(value=>{signal.removeEventListener('abort',abort);if(signal.aborted)reject(Error('Tavus response unavailable.'));else resolve(value);},()=>{signal.removeEventListener('abort',abort);reject(Error('Tavus response unavailable.'));});
+    if(signal.aborted)abort();
+  });
+}
 export async function tavus(key: string, path: string, body?: unknown): Promise<Record<string, any>> {
   if (!/^\/v2\/(pals\/pipecat0|faces\/rc9cff32ceba|conversations(?:\/[a-zA-Z0-9_-]+(?:\/end)?)?)$/.test(path)) throw new Error('Provider path refused.');
-  const response = await fetch(`https://tavusapi.com${path}`, {
-    method: body === undefined ? 'GET' : 'POST', redirect: 'error', signal: AbortSignal.timeout(8_000),
-    headers: { 'x-api-key': key, 'Content-Type': 'application/json' },
-    body: body === undefined ? undefined : JSON.stringify(body),
-  });
-  if (!response.ok) { await response.body?.cancel(); throw new Error(`Tavus request failed (HTTP ${response.status}).`); }
-  if (path.endsWith('/end')) { await response.body?.cancel(); return {}; }
-  return response.json();
+  const lifetime=new AbortController(),timer=setTimeout(()=>lifetime.abort(),8000);
+  let response:Response|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
+  let failure=Error('Tavus response unavailable.');
+  try{
+    const opening=fetch(`https://tavusapi.com${path}`,{
+      method:body===undefined?'GET':'POST',redirect:'error',signal:lifetime.signal,
+      headers:{'x-api-key':key,'Content-Type':'application/json'},
+      body:body===undefined?undefined:JSON.stringify(body),
+    }).then(value=>{if(lifetime.signal.aborted){discardTavusBody(value);throw failure;}return value;});
+    response=await beforeTavusDeadline(opening,lifetime.signal);
+    if(!response.ok){failure=Error(`Tavus request failed (HTTP ${response.status}).`);throw failure;}
+    // End may acknowledge with an empty body. Provider-ended state is verified
+    // separately by the owner; discarding this body does not prove termination.
+    if(path.endsWith('/end'))return {};
+    const declared=response.headers.get('content-length');
+    if(declared!==null&&(!/^\d{1,10}$/.test(declared)||Number(declared)>MAX_TAVUS_RESPONSE_BYTES))throw failure;
+    if(!response.body)throw failure;
+    reader=response.body.getReader();const chunks:Uint8Array[]=[];let length=0;
+    for(;;){
+      const result=await beforeTavusDeadline(reader.read(),lifetime.signal);if(result.done)break;
+      length+=result.value.byteLength;if(length>MAX_TAVUS_RESPONSE_BYTES)throw failure;
+      chunks.push(result.value);
+    }
+    const value:unknown=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks)));
+    if(!value||typeof value!=='object'||Array.isArray(value))throw failure;
+    return value as Record<string,any>;
+  }catch{throw failure;}finally{
+    clearTimeout(timer);lifetime.abort();
+    if(reader){try{void reader.cancel().catch(()=>{});}catch{}try{reader.releaseLock();}catch{}}
+    else if(response)discardTavusBody(response);
+  }
 }
 
 export function verifyEchoPal(pal: Record<string, any>) {
