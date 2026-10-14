@@ -1,6 +1,6 @@
 # Tavus technical question: interruption and safe resume
 
-Status: Sent through the authenticated Tavus Contact support form on 9 October 2026, following Sabine's explicit approval. Tavus displayed ‘Message sent’ and ‘support will get back to you by email.’ Response pending.
+Status: Sent through the authenticated Tavus Contact support form on 9 October 2026, following Sabine's explicit approval. Tavus displayed ‘Message sent’ and ‘support will get back to you by email.’ Replies received and summarized below; original interruption questions answered. No architecture change is approved.
 
 ## Submitted support message
 
@@ -35,3 +35,11 @@ The Tavus event schema does not establish the required queue-clear acknowledgmen
 Subject: Audio Echo interruption: queue-clear acknowledgment and safe resume. Sent the message above once, without attachments. The form showed Sending, then closed; a visible notification said Message sent and that support will reply by email. No ticket number appeared. This verifies the application's submission acknowledgment, not an independent email-delivery receipt. A private screenshot was retained locally and shown to Sabine; it is excluded from the public repository. No secret, private test record, account identifier or media was submitted. No provider test, purchase, plan change or budget amendment was made.
 
 Next dependency: Sabine shares the support reply when it arrives. Live same-room recovery remains disabled until the required queue-clear and playback contract is established.
+
+## Full-pipeline recommendation reported, 14 October 2026
+
+Sabine supplied a further Tavus reply recommending its normal CVI full conversation pipeline for integrated latency and turn taking. Support contrasts that with Audio Echo, where already queued output may remain after interruption, and says the app can retain notes and an approval step. This is a provider recommendation, not a verified fit for the existing PS-07 release contract or an approved architecture change. No private correspondence text or account details are reproduced here.
+
+The unresolved integration question is whether the app can hold recommendation speech until its independent validator approves the exact current candidate, and cancel stale/failed output before playback. Keeping a visual approval button alone does not establish that behavior. A documented blocking tool or equivalent server-controlled release mechanism, ordering/cancellation behavior, notebook event access, selected model/voice compatibility, provider privacy and the ElevenLabs exclusion would need review before choosing this route. Ordinary conversation and recommendation release should be evaluated separately. Support has not yet supplied that mechanism in this reply.
+
+No pipeline change, provider configuration, paid experiment, support message or release is authorized by this supplied reply. The approved OpenAI-to-Echo prototype remains the current implementation; its limitations and the separate OpenAI transcription startup blocker remain open. A full-pipeline alternative could change those dependencies, but that has not been established.

@@ -1,3 +1,9 @@
+## Tavus full-pipeline recommendation recorded, 14 October 2026
+
+Sabine supplied a new support reply recommending normal CVI for integrated conversation latency/turn taking while retaining app notes and approval. Recorded a sanitized summary in docs/task-1b-tavus-recovery-question.md. Compared it with PS-07: app-side visual approval alone cannot prove that unchecked recommendation speech stays blocked. The exact full-pipeline release/cancellation, notebook events and permitted voice/provider configuration remain unverified. This is a candidate architecture, not an agreed change or working fix.
+
+No code, provider setting, credentials, new support message, paid test or spending change occurred. Existing implementation/test evidence and the $51 allocation remain unchanged. No application tests are rerun for correspondence-only documentation. Exact next action: obtain the concrete pre-speech validation/release mechanism for this proposed pipeline before seeking any architecture or paid-test decision; continue to review the existing OpenAI/Render replies when supplied. No reply has been sent to Tavus in this step.
+
 ## Email-only scope publication receipt, 14 October 2026
 
 Implementation 0ced8d6 is pushed to GitHub and all 24 changed committed files are verified in the approved AI Stylist folder. Twenty-three matching original-checkout files were copied; its independent AGENTS.md content was preserved while its current scope paragraph was updated. Local account UI shows email/password, creation and recovery only. The obsolete Google sign-in handoff is closed; no credential or hosted setting changed. All 1,244 tests, type checking/build and the browser inspection pass. Screenshot remains outside Git.
