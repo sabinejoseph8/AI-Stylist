@@ -1,3 +1,7 @@
+## Checking a draft independently before recommending it
+
+I separated deterministic requirement checks from simulated semantic judgments so a confident model answer cannot override a known contradiction or missing evidence. I preserved saved preferences and required a visible, confirmed session exception instead of silently relaxing them. I also distinguished item budgets from full purchase totals and refused to treat an unknown price as zero. Each simulated result belongs to the exact candidate and current requirements, so edits and cleanup invalidate old visual and audio checks. The illustrated draft stays unknown because it has no independent stock, size or delivery evidence. Automated tests pass; real provider evaluation and customer recommendation release remain disabled.
+
 ## Making the draft outfit visible before real recommendation integration
 
 I added an illustrated draft and responsive collage so I can review the arrangement without pretending real product integration is ready. The draft uses fixed sample pieces and an optional clearly labelled owned placeholder, with honest incomplete prices and no personal-fit claim. Recommendation, Save and Shop stay disabled. I connected navigation and session cleanup to canceling the draft and confirmed that it creates no saved look or shopping entry. I also caught a final source-check failure that could leave the builder stuck, added a regression test, and repaired keyboard focus after Clear. Automated tests and desktop/phone-width browser checks pass; real sourcing and customer acceptance remain open.
