@@ -1,0 +1,32 @@
+import {expect,it,vi} from 'vitest';
+import {LocalPrivacy} from '../src/privacy/local-privacy.ts';
+import {LocalReferenceStore} from '../src/media/local-reference.ts';
+import {LocalWardrobe} from '../src/media/local-wardrobe.ts';
+
+it('exports normalized copies and clears Wardrobe separately from a confirmed session photo',async()=>{
+ const sourceRevoke=vi.fn(),copyRevoke=vi.fn();
+ const pixels=new Blob([Uint8Array.from([82,73,70,70,0,0,0,0,87,69,66,80])],{type:'image/webp'});
+ const media=new LocalReferenceStore({normalize:async()=>pixels,createURL:()=> 'blob:synthetic-session',revokeURL:sourceRevoke});
+ const wardrobe=new LocalWardrobe({createURL:()=> 'blob:synthetic-copy',revokeURL:copyRevoke});
+ const privacy=new LocalPrivacy();
+ privacy.bind('session',{read:()=>({data:{reference:media.snapshot().reference?{description:media.snapshot().reference!.description}:null},photos:media.exportPhotos().map(p=>({id:'session_photo_'+p.id,blob:p.blob}))}),clear:()=>media.clear()});
+ privacy.bind('wardrobe',{read:()=>({data:wardrobe.exportItems().map(p=>({id:p.id,description:p.description,photoId:'wardrobe_photo_'+p.id})),photos:wardrobe.exportItems().map(p=>({id:'wardrobe_photo_'+p.id,blob:p.blob}))}),clear:()=>wardrobe.clear()});
+ media.subscribe(()=>privacy.invalidate());wardrobe.subscribe(()=>privacy.invalidate());
+ expect(await media.choose([new Blob(['synthetic input'])])).toBe(true);
+ expect(media.confirm('Synthetic blue jacket','owned')).toBe(true);
+ expect(wardrobe.save(media.exportOwned())).toBe(true);
+ expect(await privacy.prepare(['wardrobe'])).toBe(true);
+ const result=JSON.parse(privacy.consume(privacy.snapshot().ready!)!);
+ expect(Object.keys(result.categories)).toEqual(['wardrobe']);
+ expect(result.categories.wardrobe.photos[0]).toMatchObject({id:'wardrobe_photo_1',type:'image/webp',base64:Buffer.from(await pixels.arrayBuffer()).toString('base64')});
+ expect(JSON.stringify(result)).not.toContain('blob:');
+ expect(privacy.clear(['wardrobe'])).toBe(true);
+ expect(wardrobe.snapshot().items).toEqual([]);
+ expect(copyRevoke).toHaveBeenCalledWith('blob:synthetic-copy');
+ expect(media.snapshot().reference?.description).toBe('Synthetic blue jacket');
+ expect(sourceRevoke).not.toHaveBeenCalled();
+ expect(privacy.clear(['session'])).toBe(true);
+ expect(media.snapshot().reference).toBeNull();
+ expect(media.exportPhotos()).toEqual([]);
+ expect(sourceRevoke).toHaveBeenCalledWith('blob:synthetic-session');
+});

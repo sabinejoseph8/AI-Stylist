@@ -1,6 +1,6 @@
 # Local Task 7c privacy review
 
-Approved local-only preparation, 13 October 2026. All 888 foundation tests, type checking and build pass. Human review is pending. This does not complete full Task 7c or activate real account/provider deletion.
+Approved local-only preparation, 13 October 2026. All 888 foundation tests, type checking and build pass. Sabine delegated the functional review to automation. Browser checks and synthetic photo integration pass with 889 tests; the photo integration is model-level and does not exercise a browser file picker. The previous actual synthetic JSON download remains verified. No checklist action is required now, and no human visual/device acceptance is claimed. This does not complete full Task 7c or activate real account/provider deletion.
 
 Read all ten steps first. Report once at the end. Use made-up details. No sign-in, camera, microphone, server upload, paid call or real shopping is used. Step 10 optionally uses a clothing photo already on this computer, kept only in browser memory.
 

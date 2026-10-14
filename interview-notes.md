@@ -1,3 +1,7 @@
+## Delegating local functional review to automation
+
+I asked the engineer to complete the privacy checklist automatically. Browser checks verified category isolation, cancellation and saved-preference/session behavior. A synthetic photo integration test checked independent copies and cleanup without using my photos. I kept automated functional evidence separate from human readability and physical-device acceptance. This avoids asking me to repeat behavior that can be checked automatically, while keeping hosted privacy work open.
+
 ## Making sample privacy controls explicit
 
 I added local privacy controls so people can choose which sample data to export or clear. I kept notes, saved preferences, Wardrobe, looks and shopping separate, with unchecked choices and a confirmation naming the affected categories. Preparing a download does not start it. Cancellation and data changes invalidate old export work, so a late result cannot recreate a cleared export. Photo exports contain normalized copies rather than temporary browser links. I made the limits clear: downloaded files, real accounts and provider data are outside this local preview. Automated tests and a synthetic browser download passed; the new human review is still pending. Earlier accepted local reviews remain valid.
