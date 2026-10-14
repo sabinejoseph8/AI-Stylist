@@ -1,3 +1,9 @@
+## OpenAI follow-up reported sent, 14 October 2026
+
+Sabine reports sending the prepared reply with the local no-middleware findings and requests for engineering referral, supported startup, session conversion/account-access clarification and a further case update. Updated the correspondence record and current blockers. This is reported submission, not an inspected delivery receipt or resolution. No new provider request, paid diagnostic, spending or acceptance occurred. Next support action: review a concrete reply when Sabine supplies it; no repeat paid test is authorized. Independent Google setup still requires Sabine to complete the existing sign-in handoff.
+
+The preceding Rakuten deferral documentation is published as implementation 02c9dfe. Private Memory source a0d7b7a8b7253c9f7b54a2f14e1f18247200d043 deployed successfully as appgdep_6acfc2ba7ce881918d0964b6ef62ce89 with MCP enabled; its existing owner-private audience is preserved. Sixteen site checks, build and artifact validation passed. The pending generated content snapshot is included in this receipt. No application tests are rerun for this documentation-only update.
+
 ## Rakuten deferral reaffirmed, 14 October 2026
 
 Sabine selected Keep Rakuten deferred. The proposed public style-guide website is not approved and must not be prepared or published. Recorded the outcome in current project memory, source-inquiry status, blockers and AGENTS.md; historical pending language in the latest account-scope records is reconciled. Real source access and Task 1d remain incomplete. No code, hosted settings, spending, registration, support message or public-site creation occurred.
