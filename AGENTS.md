@@ -2,7 +2,7 @@
 
 ## Current MVP account scope, 14 October 2026
 
-Sabine explicitly removed Apple sign-in from the MVP and will not obtain an Apple Developer membership. Email/password with recovery and Google remain required. Do not reintroduce an Apple button, mount its callback, request Apple credentials or make membership/Apple testing a launch gate. Earlier Google-and-Apple approvals below are historical and superseded for MVP scope. Existing generic Apple helpers are disconnected scaffolding, not activation authorization. Seven-day sessions, cross-device recovery, Google verified-email automatic linking and all security/spending limits remain unchanged. Domain purchase is still deferred.
+Sabine explicitly removed Apple sign-in from the MVP and will not obtain an Apple Developer membership. Email/password with recovery and Google remain required. Do not reintroduce an Apple button, mount its callback, request Apple credentials or make membership/Apple testing a launch gate. Earlier Google-and-Apple approvals below are historical and superseded for MVP scope. Existing generic Apple helpers are disconnected scaffolding, not activation authorization. Seven-day sessions, cross-device recovery, Google verified-email automatic linking and all security/spending limits remain unchanged. Domain purchase is still deferred. Sabine also reaffirmed Rakuten deferral on 14 October 2026 and did not approve a proposed public style-guide website. Do not build/publish that site or start Rakuten registration without renewed authorization; continue independent approved Google/account work.
 
 This repository contains the AI Personal Stylist project.
 

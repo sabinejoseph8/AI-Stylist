@@ -1,6 +1,6 @@
 # Account/source prerequisite update, 14 October 2026
 
-Apple sign-in is removed from the MVP by Sabine, and membership is not being purchased. Google credentials are absent in the inspected Supabase provider panel; owner sign-in to Google Auth Platform is required. The working account host/security and production sender gates remain. Sabine has no public publisher presence; a separate style-guide preparation decision is pending. No source application or public publication is authorized by a pending answer.
+Apple sign-in is removed from the MVP by Sabine, and membership is not being purchased. Google credentials are absent in the inspected Supabase provider panel; owner sign-in to Google Auth Platform is required. The working account host/security and production sender gates remain. Sabine has no public publisher presence and reaffirmed Rakuten deferral on 14 October. The proposed style-guide site is not approved. No Rakuten registration, substitute public-site project or partner outreach is authorized by this decision. Google/account preparation remains independent.
 
 # Current authorized-work and acceptance audit
 
