@@ -1,12 +1,12 @@
 # Tavus full-pipeline validation follow-up
 
-Status: prepared on 14 October 2026, not sent. No provider configuration, paid call or architecture change.
+Status: Sabine reports sending the prepared follow-up to Tavus on 14 October 2026. Submission is reported by Sabine, not independently verified in the support conversation. Awaiting reply. No provider configuration, paid call or architecture change.
 
 ## Documentation findings
 
 [Tool calling](https://docs.tavus.io/sections/conversational-video-interface/pal/llm-tool) documents silent tool execution and verbatim result speech, but response_in_result falls back to generated speech on errors/timeouts. This is not proof of an enforced pre-speech validator. [Delivery](https://docs.tavus.io/sections/conversational-video-interface/pal/llm-tool-delivery) describes result correlation, deadlines and some retries; stale-result suppression remains to be established. [Custom LLMs](https://docs.tavus.io/sections/conversational-video-interface/pal/llm) supports an SSE chat-completions endpoint. App-controlled validation there is an alternative to investigate, not an approved or verified integration.
 
-## Prepared reply
+## Reply reported sent
 
 Hi Tavus team,
 
@@ -26,4 +26,4 @@ Sabine
 
 ## Acceptance boundary
 
-PS-07 still requires independent checks against current confirmed requirements before recommendation release. No generic filler, prompt instruction, background objective or result ID alone establishes this. Normal conversation can be evaluated separately. No code or tests change in this documentation-only investigation. Existing $51 allocation, held reservations and provider/hosting privacy requirements remain. Sabine must authorize sending this new message; previous message authorizations do not cover this draft.
+PS-07 still requires independent checks against current confirmed requirements before recommendation release. No generic filler, prompt instruction, background objective or result ID alone establishes this. Normal conversation can be evaluated separately. No code or tests change in this documentation-only investigation. Existing $51 allocation, held reservations and provider/hosting privacy requirements remain. Sabine reports sending this message herself. No duplicate submission or further outreach is authorized.

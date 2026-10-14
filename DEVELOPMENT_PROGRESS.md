@@ -1,3 +1,9 @@
+## Tavus full-pipeline follow-up reported sent, 14 October 2026
+
+Sabine reports sending the prepared questions about mandatory pre-speech validation, neutral failure behavior, stale-result cancellation, a custom-LLM alternative, live notebook events and a voice configuration excluding ElevenLabs. Updated the correspondence status. Await Tavus's concrete reply; reported submission is not a delivery receipt or technical resolution. No duplicate message, provider request, configuration, paid experiment or architecture change occurred. No tests are rerun for this correspondence-only update.
+
+Exact next action: review Tavus's reply against PS-07 before choosing a pipeline; OpenAI startup and Render security clarifications also remain pending. Existing $51 spending allocation, held reservations, email/password-only MVP accounts and domain/Rakuten deferrals remain unchanged.
+
 ## Full-pipeline documentation review and draft, 14 October 2026
 
 Reviewed Tavus official tool calling, delivery and custom-LLM documentation. Prepared docs/task-1b-tavus-full-pipeline-followup.md with links, evidence limits and a concise follow-up. A silent tool plus verbatim output is promising, but generated error fallback, mandatory tool use and stale-output cancellation remain unverified for PS-07. A custom LLM endpoint is a documented integration option, not approved architecture or a working fix. No implementation, hosted setting, credentials, provider request, extra spending or support submission occurred. Application tests are unchanged and not rerun for this research-only update.
