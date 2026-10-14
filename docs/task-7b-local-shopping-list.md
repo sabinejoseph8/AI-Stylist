@@ -1,6 +1,6 @@
 # Local Task 7b sample shopping-list review
 
-Approved local-only preparation, 13 October 2026. All 858 foundation tests, type checking and build pass. Human review pending. This does not complete full Task 7b or activate real shopping.
+Approved local-only preparation, 13 October 2026. All 858 foundation tests, type checking and build pass. Sabine confirmed all eight steps worked and were readable on 13 October 2026. The local-computer sample review is accepted. This does not complete full Task 7b or activate real shopping.
 
 Read all eight steps first. Report once after finishing. No photos, camera, microphone, sign-in, paid service or real shopping is used.
 
@@ -14,3 +14,7 @@ Read all eight steps first. Report once after finishing. No photos, camera, micr
 8. In Stylist, End sample session, Start new sample session, then Clear session notes. Return to Saved looks: the shoes should still be in the sample shopping list. Refresh: Saved looks and the shopping list must be empty, and no prior notebook values should return.
 
 Earlier accepted notebook, photo/camera, Wardrobe and Saved looks reviews need no repetition. Full Task 7b remains open for current real-product/requirement checks, permitted retailer links, persistent ownership and device/accessibility acceptance. Allocation stays $51; no provider allowance is created or reused.
+
+## Acceptance receipt
+
+All eight local steps accepted by Sabine. This is sample-flow acceptance only, not full Task 7b, real shopping or hosted persistence acceptance. No repeat is requested. The unchanged implementation retains its 858-test/type-check/build evidence.

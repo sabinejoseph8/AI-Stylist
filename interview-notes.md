@@ -1,6 +1,6 @@
 ## Separating a saved look from a shopping intention
 
-I approved a local shopping-list rehearsal and kept adding a piece separate from saving its look. I excluded owned items and pieces with unknown prices, prevented duplicate additions, and made an unavailable item turn the subtotal incomplete. Restoring a sample item's availability still requires a fresh sample recheck. I tested stale additions, independent saved records and removal, and kept real retailer actions disabled. All 858 foundation tests, type checking and build pass. The complete local human review is pending; no real shopping or account storage is connected.
+I approved a local shopping-list rehearsal and kept adding a piece separate from saving its look. I excluded owned items and pieces with unknown prices, prevented duplicate additions, and made an unavailable item turn the subtotal incomplete. Restoring a sample item's availability still requires a fresh sample recheck. I tested stale additions, independent saved records and removal, and kept real retailer actions disabled. All 858 foundation tests, type checking and build pass. I completed all eight local review steps and confirmed explicit additions, exclusions, duplicates, subtotal/rechecking, removal and cleanup worked and were readable. No real shopping or account storage is connected.
 
 ## Saving the look without saving its conversation
 
