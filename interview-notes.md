@@ -1667,3 +1667,7 @@ I approved one bounded server-only experiment after the offline preparation pass
 ## Progressing independently of a provider blocker
 
 While the transcription issue was escalated to a specialist, I approved moving the notebook into the main app using local sample conversations. I separated that preparation from accepting the live integration. I added revision-based session state, cancellation and stale-edit protection, then connected a collapsed notebook with progressive sample updates and explicit confirmations. I kept uncertain budgets unconfirmed and made saving selected sample preferences a separate action. Browser checks exposed the need to preserve an active notebook across app navigation, which I corrected. This work improved the app without another paid call or silently changing customer retention decisions.
+
+## Simplifying launch account access, 14 October 2026
+
+I removed Google sign-in from my MVP after removing Apple. I chose email/password with recovery so the first launch does not depend on social-provider configuration. I kept the seven-day session and cross-device recovery requirements. The app now hides social sign-in choices and rejects direct social initiation and callbacks. This scope reduction does not replace real account, email-delivery or privacy/security acceptance.

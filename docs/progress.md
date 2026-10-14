@@ -1,3 +1,7 @@
+## Current MVP account scope, 14 October 2026
+
+Sabine removed Google sign-in from the MVP after previously removing Apple. MVP accounts now use email/password with password recovery only. Do not request Google Cloud sign-in, OAuth credentials, consent-screen setup, social-provider acceptance tests or Apple membership for MVP delivery. Earlier social sign-in and automatic-linking approvals are historical, not current requirements. Local social buttons are removed, initiation is refused before provider work, and both social callbacks are absent from the composed customer host. Generic low-level OAuth helpers remain disconnected historical scaffolding. No hosted provider setting or existing account was changed. Seven-day sessions, cross-device recovery, confirmation, isolation and privacy/spending gates remain. Sender and exact customer-host security still need resolution; domain purchase and Rakuten remain deferred.
+
 ## Account scope amendment and prerequisite setup, 14 October 2026
 
 Sabine asked to complete missing account/source prerequisites, confirmed she has no Apple Developer membership and will not obtain one, then explicitly removed Apple sign-in from MVP launch requirements. Email/password with recovery and Google remain required. Apple is removed from sample/connected account choices, browser initiation guards and the mounted account callback map. Generic disconnected historical Apple helpers are retained without an MVP entry route or activation authority. Explicit tests reject Apple before fetch/provider/navigation/cookie issuance and verify the missing mounted callback. Seven-day sessions, cross-device recovery, verified-email automatic linking for Google, confirmation and owner protection remain unchanged.
@@ -710,7 +714,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current account scope, 14 October 2026: Sabine removed Apple sign-in from the MVP and declined membership. Email/password with recovery and Google remain required. Local entry points now exclude Apple; 1,243 foundation tests, type checking/build and an agent browser check pass. Real account setup still needs Google owner sign-in/credentials, the reviewed hosted origin/security contract and a sender. Sabine reaffirmed Rakuten deferral and declined the proposed style-guide preparation; real source approval remains open. No hosted setting or spending changed.
+Current account scope, 14 October 2026: Sabine removed both Google and Apple sign-in from the MVP. Email/password with recovery is the sole launch method. Social initiation and callbacks are disabled locally; 1,244 foundation tests pass. Account setup still needs the reviewed hosted origin/security contract, a sender and real email/recovery/isolation acceptance. Sabine reaffirmed Rakuten deferral and declined the proposed style-guide preparation; real source approval remains open. No hosted setting or spending changed.
 
 Current local failure/capacity status, 14 October 2026: approved Task 8c preparation passes 25 new composition cases, 35 isolated PostgreSQL/adapter assertions, 21 operations unit tests and all 1,237 foundation tests, type checking and build. Eight competing requests admit one consultation; restart and uncertain acknowledgments preserve cleanup holds. Task 8d local operations/restore and 8b accessibility preparation remain valid. Full integration, real devices and measured provider cost remain unverified. No spending or hosted changes occurred.
 
@@ -873,7 +877,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 
 - [x] **2a: Scaffold modules and checks.** Create the approved app/coordinator structure, shared schemas, design tokens, typed configuration, test scripts and continuous checks. Configure development/test separately from production; exclude secrets and private test assets from public GitHub.
 - [ ] **2b: Set up persistent data protections.** Add versioned database migrations, owner-scoped policies, private image buckets and controlled mutation interfaces. Reject access from an anonymous or different customer, including direct database/Storage requests.
-- [ ] **2c: Build all approved account methods.** Email/password with recovery and Google sign-in, callback/cancellation states and sign-out. Verify server tokens; resolve identity-linking behavior and provider configuration. Add production email maintenance. Apple was removed from the MVP by Sabine on 14 October 2026.
+- [ ] **2c: Build all approved account methods.** Email/password with recovery, confirmation states and sign-out. Verify server tokens and customer isolation. Add production email maintenance. Google and Apple were removed from the MVP by Sabine on 14 October 2026; social configuration and linking acceptance are outside launch scope.
 - [ ] **2d: Review Phase 2.** Review code, rerun the complete suite and affected manual checks; document decisions and fixes before completing the phase.
 
 ### Focused automated tests to build
@@ -883,21 +887,21 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 | P2-01 | Unauthenticated session request is denied; a valid signed-in request may proceed. |
 | P2-02 | For each personal table, user B's select/insert/update/delete targeting user A is denied, including an attempt to change ownership. |
 | P2-03 | A private image cannot be read using another customer's token or an expired signed URL. |
-| P2-04 | Canceled/failed provider callback returns to account access without creating a styling session. |
+| P2-04 | Canceled/failed recovery returns to account access without creating a styling session; removed social endpoints cannot initiate sign-in. |
 | P2-05 | Sign-out invalidates coordinator access; an old socket or token cannot continue the session. |
-| P2-06 | Duplicate or unverified account-linking input cannot merge two customers' saved data. |
+| P2-06 | Duplicate or unverified identity input cannot merge two customers' saved data; social linking is not exposed. |
 | P2-07 | Two simultaneous start requests acquire at most one active consultation lease. A valid reconnect reuses its own lease; expired/ended leases release capacity without allowing stale work. |
 
 ### Manual verification with Sabine
 
 1. Create a synthetic email account, confirm access as configured, sign in and use password recovery. Expected: return to the correct account without a required styling questionnaire.
-2. Try Google sign-in, cancel once, then complete it. Apple is outside the MVP. Expected: correct account access, clear cancellation recovery and no guest styling.
+2. Check account access offers only email/password and recovery, with no Google or Apple choice. Expected: failed sign-in offers retry/recovery without guest styling.
 3. Sign out and try to reopen protected data and continue an old session. Expected: sign-in is required.
 4. Use a second test customer and try to open the first customer's private record/image using a copied URL. Expected: access is refused.
 5. Inspect the phone shell, four navigation destinations, readable text and focus. Expected: approved design tokens and usable account controls.
 6. Start a consultation, then attempt another with a different test customer. Expected: only one active consultation, a clear busy/retry message for the second, and availability restored after the first ends.
 
-**Exit gate:** All three real account methods and recovery work in the test environment. Cross-customer access tests pass. No provider credentials or customer assets are committed.
+**Exit gate:** Email/password signup, confirmation, sign-in, sign-out and cross-device recovery work in the test environment. Cross-customer access tests pass. No provider credentials or customer assets are committed.
 
 ## Phase 3: Session state and live notebook
 

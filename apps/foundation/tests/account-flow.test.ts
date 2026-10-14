@@ -18,13 +18,7 @@ it('recovery acknowledgment never implies account existence or signs in',async()
  const flow=createAccountFlow(provider({status:'signedIn',userId:user}));await flow.submit({method:'recover',email:request.email});
  expect(flow.snapshot().status).toBe('recoveryRequested');expect(flow.snapshot().userId).toBeNull();
 });
-it('supports Google cancellation or redirect without guest access',async()=>{
- for(const name of ['google'] as const){
-  const flow=createAccountFlow(provider({status:'redirecting'}));await flow.submit({method:'social',provider:name});
-  expect(flow.snapshot().status).toBe('redirecting');expect(flow.snapshot().userId).toBeNull();flow.cancel();expect(flow.snapshot().status).toBe('signedOut');
-  const canceled=createAccountFlow(provider({status:'canceled'}));await canceled.submit({method:'social',provider:name});expect(canceled.snapshot().userId).toBeNull();
- }
-});
+it('refuses removed Google sign-in before provider work',async()=>{const submit=vi.fn(),flow=createAccountFlow({submit,signOut:async()=>{}});await flow.submit({method:'social',provider:'google'});expect(submit).not.toHaveBeenCalled();expect(flow.snapshot().status).toBe('error');expect(flow.snapshot().userId).toBeNull();});
 it('drops old replies after a newer attempt, cancellation or sign-out',async()=>{
  for(const action of ['new','cancel','out']){
   let resolve!:(x:AccountReply)=>void;let signal!:AbortSignal;

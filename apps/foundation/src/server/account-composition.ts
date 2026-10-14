@@ -54,8 +54,9 @@ export function createAccountComposition(origin:string,projectUrl:string,securit
  const active=new Set<AbortController>();
  const routes=new Map<string,AccountNodeRoute>();
  const prepared=new Map(registry.routes());
- // Apple is outside the approved MVP, including direct callback attempts.
+ // Both social providers are outside the approved MVP, including direct callbacks.
  prepared.delete('/auth/callback/apple');
+ prepared.delete('/auth/callback/google');
  if(confirmationHttp){
   prepared.set('/account/recovery',{handle:async(request,signal)=>confirmationHttp.landing(request,signal)});
   prepared.set('/api/account/recovery-confirm',{handle:confirmationHttp.confirm,discardResponse:confirmationHttp.discardResponse});
