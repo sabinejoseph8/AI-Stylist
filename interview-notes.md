@@ -1,3 +1,7 @@
+## Coordinating expiry cleanup without collecting private content
+
+I kept the approved notes time limits and added one coordinator for clearing temporary media and invalidating exports. Separate saved preferences and Wardrobe copies survive session cleanup. I tested expiry while photo preparation or export was still running, so a late result cannot bring old data back. Failed cleanup work can retry locally without rerunning successful work. I used bounded event counts instead of collecting note text, photos or account details. All automated checks pass; hosted cleanup and real-device acceptance remain separate.
+
 ## Delegating local functional review to automation
 
 I asked the engineer to complete the privacy checklist automatically. Browser checks verified category isolation, cancellation and saved-preference/session behavior. A synthetic photo integration test checked independent copies and cleanup without using my photos. I kept automated functional evidence separate from human readability and physical-device acceptance. This avoids asking me to repeat behavior that can be checked automatically, while keeping hosted privacy work open.
