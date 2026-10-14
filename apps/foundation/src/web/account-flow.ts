@@ -1,8 +1,9 @@
+import {isMvpSocialProvider} from '../account-policy.ts';
 /** Local account UI state only. Never authorizes styling or server access. */
 export type AccountRequest=
  |{method:'signIn'|'signUp';email:string;password:string}
  |{method:'recover';email:string}
- |{method:'social';provider:'google'|'apple'};
+ |{method:'social';provider:'google'};
 export type AccountReply={status:'signedIn';userId?:string}|{status:'confirmationRequired'|'redirecting'|'canceled'|'recoveryRequested'};
 export interface AccountProvider{
  submit(request:AccountRequest,signal:AbortSignal):Promise<AccountReply>;
@@ -15,7 +16,7 @@ function input(value:AccountRequest):AccountRequest{
  if(!value||typeof value!=='object'||Array.isArray(value))throw Error();
  const keys=Object.keys(value).sort().join(',');
  if(value.method==='social'){
-  if(keys!=='method,provider'||!['google','apple'].includes(value.provider))throw Error();
+  if(keys!=='method,provider'||!isMvpSocialProvider(value.provider))throw Error();
   return {method:'social',provider:value.provider};
  }
  if(!['signIn','signUp','recover'].includes(value.method)||typeof value.email!=='string')throw Error();

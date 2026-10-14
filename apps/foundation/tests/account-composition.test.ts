@@ -14,7 +14,7 @@ const signal=()=>new AbortController().signal;
 function passwordRequest(){return new Request(origin+'/api/account/password',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({method:'signIn',email:'sample@example.test',password:'synthetic'})});}
 describe('explicit dormant account composition',()=>{
  it('constructs all handlers without provider calls and closes admission idempotently',async()=>{
-  const {app,ports}=setup();expect(app.routes().size).toBe(10);expect(ports.password.password).not.toHaveBeenCalled();
+  const {app,ports}=setup();expect(app.routes().size).toBe(9);expect(ports.password.password).not.toHaveBeenCalled();
   const first=app.close();expect(app.close()).toBe(first);expect(await first).toBe(true);
   expect((await app.routes().get('/api/account/password')!.handle(passwordRequest(),signal())).status).toBe(503);
   expect(ports.password.password).not.toHaveBeenCalled();
@@ -97,7 +97,7 @@ describe('explicit dormant account composition',()=>{
 describe('optional cross-device account composition',()=>{
  it('completes a reset on the receiving browser without the original PKCE cookie',async()=>{
   const f=setup(),discard=vi.fn(async()=>true),resetPassword=vi.fn(async()=>true),verifyToken=vi.fn(async()=>({ownerId:'11111111-1111-4111-8111-111111111111',expiresAt:Date.now()+60000,resetPassword,discard}));
-  const app=createAccountComposition(origin,'https://example.supabase.co',f.security,{...f.ports,tokenRecovery:{verifyToken}}),routes=app.routes();expect(routes.size).toBe(12);
+  const app=createAccountComposition(origin,'https://example.supabase.co',f.security,{...f.ports,tokenRecovery:{verifyToken}}),routes=app.routes();expect(routes.size).toBe(11);
   const landing=await routes.get('/account/recovery')!.handle(new Request(origin+'/account/recovery?token_hash=proof'),signal()),html=await landing.text(),confirmation=html.match(/confirmation:'([A-Za-z0-9_-]{43})'/)![1]!;
   expect(verifyToken).not.toHaveBeenCalled();
   const confirmed=await routes.get('/api/account/recovery-confirm')!.handle(new Request(origin+'/api/account/recovery-confirm',{method:'POST',headers:{origin,'content-type':'application/json',cookie:landing.headers.getSetCookie()[0]!.split(';')[0]!},body:JSON.stringify({confirmation})}),signal());

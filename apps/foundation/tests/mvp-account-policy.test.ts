@@ -1,0 +1,12 @@
+import {it,expect,vi} from 'vitest';
+import {MVP_SOCIAL_PROVIDERS,isMvpSocialProvider} from '../src/account-policy.ts';
+import {createAccountFlow} from '../src/web/account-flow.ts';
+import {createAccountHttp} from '../src/web/account-http.ts';
+import {createOAuthHandoff} from '../src/web/oauth-handoff.ts';
+import {createOAuthStartHttp} from '../src/server/oauth-start-http.ts';
+const signal=()=>new AbortController().signal,origin='https://stylist.example';
+it('launch social policy is immutable and Google only',()=>{expect(MVP_SOCIAL_PROVIDERS).toEqual(['google']);expect(Object.isFrozen(MVP_SOCIAL_PROVIDERS)).toBe(true);for(const value of ['apple','Apple',null,{},'github'])expect(isMvpSocialProvider(value)).toBe(false);});
+it('removed Apple preview cannot submit to a provider',async()=>{const submit=vi.fn(),flow=createAccountFlow({submit,signOut:async()=>{}});await flow.submit({method:'social',provider:'apple'} as never);expect(submit).not.toHaveBeenCalled();expect(flow.snapshot().status).toBe('error');});
+it('removed Apple HTTP action cannot reach social or fetch',async()=>{const send=vi.fn(),social=vi.fn(),http=createAccountHttp(origin,send,10000,social);await expect(http.submit({method:'social',provider:'apple'} as never,signal())).rejects.toThrow();expect(send).not.toHaveBeenCalled();expect(social).not.toHaveBeenCalled();});
+it('removed Apple handoff cannot fetch or navigate',async()=>{const send=vi.fn(),navigate=vi.fn(),start=createOAuthHandoff(origin,'https://example.supabase.co',send,navigate);await expect(start('apple',signal())).rejects.toThrow();expect(send).not.toHaveBeenCalled();expect(navigate).not.toHaveBeenCalled();});
+it('direct Apple initiation is denied before issuing callback binding or cookies',async()=>{const begin=vi.fn(),http=createOAuthStartHttp(origin,{begin});const response=await http.handle(new Request(origin+'/api/account/oauth',{method:'POST',headers:{origin,'content-type':'application/json'},body:JSON.stringify({provider:'apple',returnPath:'/'})}),signal());expect(response.status).toBe(400);expect(response.headers.get('set-cookie')).toBeNull();expect(begin).not.toHaveBeenCalled();});

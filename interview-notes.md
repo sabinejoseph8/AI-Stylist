@@ -1,3 +1,7 @@
+## Reducing account scope to match the launch plan
+
+I chose not to buy an Apple Developer membership and removed Apple sign-in from the MVP. I kept email/password, recovery and Google, then removed the Apple button and blocked direct Apple initiation and callbacks so the UI and server agree. I preserved the earlier generic helpers as disconnected scaffolding rather than presenting them as active support. I also checked the real provider panel: Google still needs owner-controlled setup, and source access still needs a live public presence and advertiser approval. I separated those external prerequisites from tested local behavior and avoided a purchase or premature activation.
+
 ## Checking uncertain failures without spending on more provider trials
 
 I added a local failure rehearsal while real integration is blocked. I tested that disconnected or expired sessions, changed requirements, outages and delayed results cannot revive an old suggestion. I also sent eight competing claims through the existing consultation adapter into an actual isolated database: only one was admitted. A restart retained the provider cleanup hold, and lost acknowledgments did not automatically retry or free another slot. I kept the simulated cleanup evidence and test-only wiring clearly separate from actual provider recovery, phone behavior and measured production cost. This made progress without another paid diagnostic or a premature launch claim.

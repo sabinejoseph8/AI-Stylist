@@ -15,14 +15,14 @@ it('prepares a public handoff URL while keeping browser binding in a secure cook
 });
 it('abandons an undelivered handoff transaction idempotently',async()=>{
  const callbacks=createAccountCallbacks(origin),http=createOAuthStartHttp(origin,createOAuthStart(project,callbacks));
- const response=await http.handle(request({provider:'apple',returnPath:'/'}),signal()),body=await response.json();
+ const response=await http.handle(request({provider:'google',returnPath:'/'}),signal()),body=await response.json();
  expect(await http.discardResponse(response)).toBe(true);expect(await http.discardResponse(response)).toBe(true);
  const callback=new URL(new URL(body.url).searchParams.get('redirect_to')!);callback.searchParams.set('code','synthetic');
- expect(callbacks.fromRequest(new Request(callback,{headers:{cookie:response.headers.get('set-cookie')!.split(';')[0]}}),'apple')).toBeNull();
+ expect(callbacks.fromRequest(new Request(callback,{headers:{cookie:response.headers.get('set-cookie')!.split(';')[0]}}),'google')).toBeNull();
 });
 it('refuses cross-origin initiation, extra fields, providers and external return paths',async()=>{
  const start={begin:vi.fn()},http=createOAuthStartHttp(origin,start);
- for(const input of [{provider:'other',returnPath:'/'},{provider:'google',returnPath:'/',redirectTo:'https://evil.test'},{provider:'apple'}])expect((await http.handle(request(input),signal())).status).toBe(400);
+ for(const input of [{provider:'other',returnPath:'/'},{provider:'google',returnPath:'/',redirectTo:'https://evil.test'},{provider:'google'}])expect((await http.handle(request(input),signal())).status).toBe(400);
  expect((await http.handle(request({provider:'google',returnPath:'/'},'https://evil.test'),signal())).status).toBe(400);expect(start.begin).not.toHaveBeenCalled();
  const real=createOAuthStartHttp(origin,createOAuthStart(project,createAccountCallbacks(origin)));expect((await real.handle(request({provider:'google',returnPath:'https://evil.test'}),signal())).status).toBe(400);
  expect(()=>createOAuthStart(project+':9000',createAccountCallbacks(origin))).toThrow();

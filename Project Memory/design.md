@@ -101,7 +101,7 @@ Allow system text scaling and long labels. Avoid all-capital paragraphs, decorat
 
 | Screen | Main content and actions |
 | --- | --- |
-| Welcome and account access | Explain the AI stylist; offer email/password, Continue with Google and Continue with Apple. Create an account or sign in, recover password access when needed, then start a consultation. A canceled or failed provider sign-in offers retry or another method. Request microphone/camera permission when needed and offer alternatives. |
+| Welcome and account access | Explain the AI stylist; offer email/password and Continue with Google. Apple is outside the MVP, per Sabine’s 14 October decision. Create an account or sign in, recover password access when needed, then start a consultation. A canceled or failed provider sign-in offers retry or another method. Request microphone/camera permission when needed and offer alternatives. |
 | Style profile | Review and edit preferences collected during conversation, exclusions, sizes, USD budget, and explicit save controls. No required questionnaire before the first consultation. |
 | Styling consultation | Avatar, captions, session controls, live notebook, live camera controls, confirmed item reference, and one checked look at a time. |
 | Item confirmation | Photo preview, selected garment, uncertain attributes, owned/inspiration choice, replace/remove, and optional save to wardrobe. |
@@ -279,3 +279,5 @@ Show one explicitly labelled illustrated sample at a time in a separate Stylist 
 ## Local sample shopping list, 13 October 2026
 
 Keep the four main destinations. Place Sample shopping list below Saved looks; show explicit per-piece Add controls on fixed sample looks and reopened samples. Explain Owned exclusion and missing prices beside disabled controls. Saving a look must not add pieces automatically. Show dated illustrative USD price, no live-validation claim and no retailer destination. Mark unavailable/recheck states, incomplete subtotal and explicit sample restore/recheck controls. Use Keep/Confirm for removal and restore focus to the origin or list heading. Sample list memory survives End/Clear notes but clears on refresh. Production product checks, checkout and account storage remain gated. Sabine accepted all eight local steps as working and readable on 13 October 2026.
+
+- 14 October 2026: Remove the Apple choice from sample and connected account screens. Google, email/password and recovery remain; other approved design tokens and behavior are unchanged.

@@ -1,3 +1,13 @@
+## Account scope amendment and prerequisite setup, 14 October 2026
+
+Sabine asked to complete missing account/source prerequisites, confirmed she has no Apple Developer membership and will not obtain one, then explicitly removed Apple sign-in from MVP launch requirements. Email/password with recovery and Google remain required. Apple is removed from sample/connected account choices, browser initiation guards and the mounted account callback map. Generic disconnected historical Apple helpers are retained without an MVP entry route or activation authority. Explicit tests reject Apple before fetch/provider/navigation/cookie issuance and verify the missing mounted callback. Seven-day sessions, cross-device recovery, verified-email automatic linking for Google, confirmation and owner protection remain unchanged.
+
+Read-only inspection of the existing AI Stylist Supabase project confirms email enabled, Google and Apple disabled, new signup/email confirmation enabled, anonymous/manual linking disabled. Google Client IDs and OAuth secret are empty; its exact Supabase callback is verified in the dashboard. No setting was saved and no secret was read or created. The Google Auth Platform page is open at sign-in for Sabine; credential creation/entry remains a secure user handoff. Hosted customer origin/ingress/logging and production sender remain unresolved. Domain purchase stays deferred until public launch.
+
+Sabine confirmed she has no live public fashion website/blog/customized social page. Rakuten registration remains unfulfilled and no SID or retailer permission exists. Requested a business decision on preparing an original style-guide website for review, with public publication separately approved; no approval is inferred from silence. Do not use the private Memory/preview or unfinished app as an eligible live publisher site. No account/advertiser application, terms acceptance, support message, purchase or new paid call occurred. Allocation remains $51 and all held records remain intact. Full Tasks 2b/2c, source access and launch remain open.
+
+Exact next action: finish checks and publish/copy the approved Apple scope amendment; complete Google setup only after Sabine signs in and the secure credential handoff is available. Prepare a public-source eligibility presence only if she approves that path. Real email/recovery/Google/isolation acceptance follows the working host and required security evidence, not these configuration observations.
+
 # Account provider maintenance
 
 Status: local Task 2c operational preparation, 13 October 2026. Procedures are prepared; no Apple or SMTP credential exists by implication, no reminder has been scheduled, and no hosted provider was enabled. Task 2c remains incomplete.

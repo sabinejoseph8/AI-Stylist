@@ -34,8 +34,8 @@ it('composes browser handoff with the prepared server initiation response',async
   flowCookie=response.headers.get('set-cookie')??'';return response;
  };
  const social=createOAuthHandoff(origin,project,send,navigate);
- expect(await social('apple',signal())).toEqual({status:'redirecting'});
+ expect(await social('google',signal())).toEqual({status:'redirecting'});
  const url=new URL(navigate.mock.calls[0]![0]),callback=url.searchParams.get('redirect_to')!;
- const result=callbacks.fromRequest(new Request(callback+'&code=synthetic',{headers:{cookie:flowCookie.split(';')[0]!}}),'apple');
- expect(result?.status).toBe('exchangeRequired');expect(callbacks.fromRequest(new Request(callback+'&code=synthetic',{headers:{cookie:flowCookie.split(';')[0]!}}),'apple')).toBeNull();
+ const result=callbacks.fromRequest(new Request(callback+'&code=synthetic',{headers:{cookie:flowCookie.split(';')[0]!}}),'google');
+ expect(result?.status).toBe('exchangeRequired');expect(callbacks.fromRequest(new Request(callback+'&code=synthetic',{headers:{cookie:flowCookie.split(';')[0]!}}),'google')).toBeNull();
 });

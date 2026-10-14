@@ -29,7 +29,7 @@ async function harness(path:string,route:AccountNodeRoute){
  });
  return {open,send,close:()=>new Promise<void>(resolve=>server.close(()=>resolve()))};
 }
-for(const provider of ['google','apple'] as const)it(`delivers verified ${provider} callback cookies over Node HTTP and refuses replay`,async()=>{
+for(const provider of ['google'] as const)it(`delivers verified ${provider} callback cookies over Node HTTP and refuses replay`,async()=>{
  const f=await fixture(),discard=vi.fn(async()=>true),adopt=vi.fn(async()=>true),exchange=vi.fn(async()=>({accessToken:f.jwt,adopt,discard}));
  const app=composition(f.security,{exchange:{exchange}});
  const h=await harness('/auth/callback/'+provider,app.routes().get('/auth/callback/'+provider)!);
@@ -67,4 +67,10 @@ for(const mode of ['disconnect','shutdown'] as const)it(`revokes late factory re
   await vi.waitFor(()=>expect(f.revoke).toHaveBeenCalledOnce());await new Promise(resolve=>setTimeout(resolve,20));expect(app.cleanupHeld()).toBe(false);expect(updatePassword).not.toHaveBeenCalled();
   // Independent cleanup identity verification correlates absence without restoring reset permission.
  }finally{release?.({access_token:f.jwt,token_type:'bearer'});await h.close();expect(await app.close()).toBe(true);}
+});
+it('MVP composition mounts no Apple callback and cannot exchange its credential',async()=>{
+ const f=await fixture(),exchange=vi.fn(),app=composition(f.security,{exchange:{exchange}});
+ expect(app.routes().has('/auth/callback/apple')).toBe(false);expect(app.routes().has('/auth/callback/google')).toBe(true);
+ const h=await harness('/auth/callback/google',app.routes().get('/auth/callback/google')!);
+ try{const reply=await h.send(origin+'/auth/callback/apple?code=synthetic','');expect(reply.status).toBe(404);expect(exchange).not.toHaveBeenCalled();}finally{await h.close();await app.close();}
 });

@@ -1,10 +1,11 @@
+import {isMvpSocialProvider} from '../account-policy.ts';
 /** Dormant browser handoff. Caller supplies both fetch and navigation; preview never selects it. */
 export function createOAuthHandoff(origin:string,projectUrl:string,send:typeof fetch,navigate:(url:string)=>void,deadlineMs=10000){
  const app=new URL(origin),project=new URL(projectUrl);
  if(app.protocol!=='https:'||app.origin!==origin||project.protocol!=='https:'||project.origin!==projectUrl||project.port||!/^[a-z0-9-]+\.supabase\.co$/.test(project.hostname)||typeof send!=='function'||typeof navigate!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>10000)throw Error('Account unavailable');
  let pending=false;
  return async(provider:'google'|'apple',external:AbortSignal)=>{
-  if(!['google','apple'].includes(provider)||external.aborted||pending)throw Error('Account unavailable');pending=true;
+  if(!isMvpSocialProvider(provider)||external.aborted||pending)throw Error('Account unavailable');pending=true;
   const controller=new AbortController();let timer:ReturnType<typeof setTimeout>|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
   let stop!:()=>void;
   const canceled=new Promise<never>((_,reject)=>{stop=()=>{controller.abort();void reader?.cancel().catch(()=>{});reject(Error('Account unavailable'));};external.addEventListener('abort',stop,{once:true});timer=setTimeout(stop,deadlineMs);});

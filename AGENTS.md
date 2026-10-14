@@ -1,5 +1,9 @@
 # AI Stylist project
 
+## Current MVP account scope, 14 October 2026
+
+Sabine explicitly removed Apple sign-in from the MVP and will not obtain an Apple Developer membership. Email/password with recovery and Google remain required. Do not reintroduce an Apple button, mount its callback, request Apple credentials or make membership/Apple testing a launch gate. Earlier Google-and-Apple approvals below are historical and superseded for MVP scope. Existing generic Apple helpers are disconnected scaffolding, not activation authorization. Seven-day sessions, cross-device recovery, Google verified-email automatic linking and all security/spending limits remain unchanged. Domain purchase is still deferred.
+
 This repository contains the AI Personal Stylist project.
 
 ## Autonomous development mode

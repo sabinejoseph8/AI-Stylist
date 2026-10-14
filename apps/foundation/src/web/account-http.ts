@@ -1,3 +1,4 @@
+import {isMvpSocialProvider} from '../account-policy.ts';
 import type {AccountProvider,AccountRequest,AccountReply} from './account-flow.ts';
 /** Injected transport only. Not selected by the preview and never authorizes a server operation. */
 export function createAccountStatusTransport(origin:string,send:typeof fetch,deadlineMs=15000){
@@ -37,7 +38,7 @@ export function createAccountHttp(origin:string,send:typeof fetch,deadlineMs=150
  return Object.freeze({
   async submit(input:AccountRequest,signal:AbortSignal):Promise<AccountReply>{
    if(!input||typeof input!=='object'||Array.isArray(input))throw Error('Account unavailable');
-   if(input.method==='social'){if(Object.keys(input).sort().join(',')!=='method,provider'||!['google','apple'].includes(input.provider)||typeof social!=='function')throw Error('Account unavailable');return social(input.provider,signal);}
+   if(input.method==='social'){if(Object.keys(input).sort().join(',')!=='method,provider'||!isMvpSocialProvider(input.provider)||typeof social!=='function')throw Error('Account unavailable');return social(input.provider,signal);}
    const keys=Object.keys(input).sort().join(',');
    if(!['signIn','signUp','recover'].includes(input.method)||typeof input.email!=='string')throw Error('Account unavailable');
    const email=input.email.trim();if(email.length>254||!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email))throw Error('Account unavailable');
