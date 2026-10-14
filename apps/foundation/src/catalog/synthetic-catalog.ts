@@ -1,0 +1,10 @@
+import type {CatalogAdapter,CatalogPolicy,CatalogProduct} from '../../../../packages/catalog-contracts/src/index.ts';
+import {validateCatalogQuery} from '../../../../packages/catalog-contracts/src/index.ts';
+/** Fixed local fixtures, never retailer facts. Retrieval time is captured once;
+ * search/get do not manufacture freshness by stamping old facts again. */
+export function createSyntheticCatalog(checkedAt:number):CatalogAdapter {
+ if(!Number.isSafeInteger(checkedAt)||checkedAt<0)throw Error('Synthetic catalog clock held.');
+ const policy:CatalogPolicy={sourceId:'foundation_sample',synthetic:true,permittedHosts:[],imageHosts:[],rightsReferences:['original-demo-illustrations-v1'],maxAgeMs:86400000,capabilities:{externalCheckout:false,embeddedCheckout:false,cartTransfer:false,orderTracking:false}};
+ const products:CatalogProduct[]=[['sample_dress','dress_m','Illustrated emerald dress','Dress','Emerald green','M',14000,'dress'],['sample_shoes','shoes_8','Illustrated flat shoes','Shoes','Neutral','8',6500,'shoes']].map(([productId,variantId,name,category,color,size,priceCents,art])=>({sourceId:policy.sourceId,productId:String(productId),variantId:String(variantId),name:String(name),category:String(category),colors:[String(color)],size:String(size),priceCents:Number(priceCents),currency:'USD',country:'US',availability:'unknown',delivery:{status:'unknown',destination:null},image:{url:`/demo-catalog/${art}.svg`,rightsReference:'original-demo-illustrations-v1'},productUrl:null,checkedAt,sourceUpdatedAt:checkedAt,synthetic:true}));
+ return {get policy(){return structuredClone(policy);},async search(query){validateCatalogQuery(query);const term=query.text.trim().toLowerCase();return structuredClone(products.filter(p=>(!query.category||p.category===query.category)&&[p.name,p.category,...p.colors].join(' ').toLowerCase().includes(term)).slice(0,query.limit));},async get(productId,variantId){return structuredClone(products.find(p=>p.productId===productId&&p.variantId===variantId)??null);}};
+}

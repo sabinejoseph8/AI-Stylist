@@ -1,3 +1,7 @@
+## Preparing product integration without claiming real inventory
+
+I reused the catalog contract to prepare the main app boundary with two illustrated fixtures. I kept source, product and variant identities separate and tested rejection of conflicting data, stale timestamps and unsupported image rights. Unknown stock, delivery and prices stay explicit. Synthetic products remain ineligible even when their sample facts look complete, and they cannot create checkout or shopping actions. I bounded waiting and canceled late results so outdated responses cannot replace newer data. This prepares integration while retailer permission and real-source acceptance remain open.
+
 ## Coordinating expiry cleanup without collecting private content
 
 I kept the approved notes time limits and added one coordinator for clearing temporary media and invalidating exports. Separate saved preferences and Wardrobe copies survive session cleanup. I tested expiry while photo preparation or export was still running, so a late result cannot bring old data back. Failed cleanup work can retry locally without rerunning successful work. I used bounded event counts instead of collecting note text, photos or account details. All automated checks pass; hosted cleanup and real-device acceptance remain separate.
