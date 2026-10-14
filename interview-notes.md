@@ -1,3 +1,7 @@
+## Making the draft outfit visible before real recommendation integration
+
+I added an illustrated draft and responsive collage so I can review the arrangement without pretending real product integration is ready. The draft uses fixed sample pieces and an optional clearly labelled owned placeholder, with honest incomplete prices and no personal-fit claim. Recommendation, Save and Shop stay disabled. I connected navigation and session cleanup to canceling the draft and confirmed that it creates no saved look or shopping entry. I also caught a final source-check failure that could leave the builder stuck, added a regression test, and repaired keyboard focus after Clear. Automated tests and desktop/phone-width browser checks pass; real sourcing and customer acceptance remain open.
+
 ## Separating affiliate opportunities from customer suitability and earnings
 
 I reused the existing disabled affiliate guards so the main app and prototype follow the same source and permission rules. A commission opportunity cannot bypass the current customer requirements. Prepared affiliate metadata requires nearby disclosure, while ordinary source previews make no affiliation claim. I added a simulated accounting harness where clicks never become earnings, replays do not double-count a transaction, and pending, confirmed and reversed states remain separate. Conflicts or capacity limits withhold totals. I kept real program approval, provider verification and actual earnings reporting outside this local preparation.
