@@ -1,3 +1,7 @@
+## Separating affiliate opportunities from customer suitability and earnings
+
+I reused the existing disabled affiliate guards so the main app and prototype follow the same source and permission rules. A commission opportunity cannot bypass the current customer requirements. Prepared affiliate metadata requires nearby disclosure, while ordinary source previews make no affiliation claim. I added a simulated accounting harness where clicks never become earnings, replays do not double-count a transaction, and pending, confirmed and reversed states remain separate. Conflicts or capacity limits withhold totals. I kept real program approval, provider verification and actual earnings reporting outside this local preparation.
+
 ## Keeping cost and shopping-link claims honest
 
 I separated known item prices from the full purchase total. Confirmed owned pieces cost nothing to buy again, while missing or stale prices make the estimate incomplete. I kept shipping, tax and budget verification unknown rather than implying the subtotal was the final cost. I tested exact source links, variant identity and broken-link recovery without inventing replacement URLs or changing source parameters. All link previews remain disabled in this local preparation. Hypothetical source fixtures test the rules without claiming real retailer access or affiliate approval.
