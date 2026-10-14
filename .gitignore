@@ -9,3 +9,5 @@ dist/
 private-preflight.json
 recordings/
 test-results/
+
+__pycache__/
