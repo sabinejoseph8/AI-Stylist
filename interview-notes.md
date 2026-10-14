@@ -1,3 +1,7 @@
+## Keeping cost and shopping-link claims honest
+
+I separated known item prices from the full purchase total. Confirmed owned pieces cost nothing to buy again, while missing or stale prices make the estimate incomplete. I kept shipping, tax and budget verification unknown rather than implying the subtotal was the final cost. I tested exact source links, variant identity and broken-link recovery without inventing replacement URLs or changing source parameters. All link previews remain disabled in this local preparation. Hypothetical source fixtures test the rules without claiming real retailer access or affiliate approval.
+
 ## Preparing product integration without claiming real inventory
 
 I reused the catalog contract to prepare the main app boundary with two illustrated fixtures. I kept source, product and variant identities separate and tested rejection of conflicting data, stale timestamps and unsupported image rights. Unknown stock, delivery and prices stay explicit. Synthetic products remain ineligible even when their sample facts look complete, and they cannot create checkout or shopping actions. I bounded waiting and canceled late results so outdated responses cannot replace newer data. This prepares integration while retailer permission and real-source acceptance remain open.
