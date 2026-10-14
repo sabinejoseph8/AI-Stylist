@@ -1,3 +1,4 @@
+import type {LocalLookFeedback} from '../feedback/local-look-feedback.ts';
 import type {LocalDraftOutfit} from '../outfits/local-draft-outfit.ts';
 import {LocalDiagnostics} from '../diagnostics/local-diagnostics.ts';
 import {LocalSessionLifecycle} from '../session/local-session-lifecycle.ts';
@@ -12,7 +13,7 @@ import type {Field} from '../../../../packages/style-contracts/src/index.ts';
 import {createNotebookPreview,NotebookPreviewController,PREVIEW_OWNER} from '../session/notebook-preview.ts';
 import type {EditDraft} from '../session/notebook-preview.ts';
 
-export function NotebookPanel({visible=true,wardrobe,privacy,draft:draftOutfit,onActiveChange}:{visible?:boolean;wardrobe?:LocalWardrobe;privacy?:LocalPrivacy;draft?:LocalDraftOutfit;onActiveChange?:(active:boolean)=>void}={}){
+export function NotebookPanel({visible=true,wardrobe,privacy,draft:draftOutfit,feedback,onActiveChange}:{visible?:boolean;wardrobe?:LocalWardrobe;privacy?:LocalPrivacy;draft?:LocalDraftOutfit;feedback?:LocalLookFeedback;onActiveChange?:(active:boolean)=>void}={}){
  const [diagnostics]=useState(()=>new LocalDiagnostics());
  const [wardrobeSnapshot,setWardrobeSnapshot]=useState(()=>wardrobe?.snapshot());
  useEffect(()=>wardrobe?.subscribe(()=>setWardrobeSnapshot(wardrobe.snapshot())),[wardrobe]);
@@ -38,7 +39,7 @@ export function NotebookPanel({visible=true,wardrobe,privacy,draft:draftOutfit,o
  useEffect(()=>{
   const lifecycle=new LocalSessionLifecycle(controller.session,PREVIEW_OWNER,{
    invalidateExport:()=>privacy?.invalidate(),
-   clearTemporary:()=>{draftOutfit?.clear();media.clear();wardrobe?.clearSelection();cancelSample();setDraft(null);setValue('');setCaption('');setSelected([]);},
+   clearTemporary:()=>{feedback?.clear();draftOutfit?.clear();media.clear();wardrobe?.clearSelection();cancelSample();setDraft(null);setValue('');setCaption('');setSelected([]);},
   },diagnostics);
   const refresh=()=>{const next=lifecycle.poll();if(next){setSnapshot(next);onActiveChange?.(next.state==='active');}};
   const unsubscribe=controller.session.subscribe(refresh);refresh();
@@ -46,7 +47,7 @@ export function NotebookPanel({visible=true,wardrobe,privacy,draft:draftOutfit,o
   const visibility=()=>{if(document.hidden)controller.session.disconnect(PREVIEW_OWNER);else controller.session.reconnect(PREVIEW_OWNER);refresh();};
   const exit=()=>controller.end();document.addEventListener('visibilitychange',visibility);window.addEventListener('pagehide',exit);
   return()=>{cancelSample();clearInterval(timer);unsubscribe();document.removeEventListener('visibilitychange',visibility);window.removeEventListener('pagehide',exit);controller.end();};
- },[controller,wardrobe,media,privacy,diagnostics,draftOutfit,onActiveChange]);
+ },[controller,wardrobe,media,privacy,diagnostics,draftOutfit,feedback,onActiveChange]);
  useEffect(()=>{if(draft)editInput.current?.focus();},[draft]);
  const closeEdit=()=>{setDraft(null);setValue('');queueMicrotask(()=>originButton.current?.focus());};
  const startEdit=(field:Field,button:HTMLButtonElement)=>{const next=controller.beginEdit(field);if(next){originButton.current=button;setDraft(next);setValue(next.value);}};
