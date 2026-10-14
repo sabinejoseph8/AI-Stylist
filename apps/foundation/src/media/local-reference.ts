@@ -51,6 +51,7 @@ export class LocalReferenceStore {
   if(this.loading||!photo||typeof description!=='string'||!description.trim()||description.length>160||!['owned','inspiration'].includes(ownership??''))return false;
   this.reference=Object.freeze({photo,description:description.trim(),ownership:ownership!});this.message='Reference confirmed for this session only. It has not been saved to Wardrobe.';this.prune();this.notify();return true;
  }
+ exportPhotos(){const photos=[...this.photos];if(this.reference&&!photos.some(photo=>photo.id===this.reference!.photo.id))photos.push(this.reference.photo);return Object.freeze(photos.map(photo=>Object.freeze({id:photo.id,blob:this.blobs.get(photo.url)!})));}
  exportOwned(){const reference=this.reference;if(!reference||reference.ownership!=='owned')return null;const blob=this.blobs.get(reference.photo.url);return blob?Object.freeze({photo:reference.photo,description:reference.description,ownership:'owned' as const,blob}):null;}
  remove(id:number){++this.generation;this.loading=false;this.photos=this.photos.filter(photo=>photo.id!==id);if(this.reference?.photo.id===id)this.reference=null;if(this.selected===id)this.selected=this.photos[0]?.id??null;this.prune();this.message='Photo removed from this session.';this.notify();}
  cancelPending(){++this.generation;this.loading=false;this.prune();this.notify();}

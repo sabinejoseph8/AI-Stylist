@@ -1,3 +1,7 @@
+## Making sample privacy controls explicit
+
+I added local privacy controls so people can choose which sample data to export or clear. I kept notes, saved preferences, Wardrobe, looks and shopping separate, with unchecked choices and a confirmation naming the affected categories. Preparing a download does not start it. Cancellation and data changes invalidate old export work, so a late result cannot recreate a cleared export. Photo exports contain normalized copies rather than temporary browser links. I made the limits clear: downloaded files, real accounts and provider data are outside this local preview. Automated tests and a synthetic browser download passed; the new human review is still pending. Earlier accepted local reviews remain valid.
+
 ## Separating a saved look from a shopping intention
 
 I approved a local shopping-list rehearsal and kept adding a piece separate from saving its look. I excluded owned items and pieces with unknown prices, prevented duplicate additions, and made an unavailable item turn the subtotal incomplete. Restoring a sample item's availability still requires a fresh sample recheck. I tested stale additions, independent saved records and removal, and kept real retailer actions disabled. All 858 foundation tests, type checking and build pass. I completed all eight local review steps and confirmed explicit additions, exclusions, duplicates, subtotal/rechecking, removal and cleanup worked and were readable. No real shopping or account storage is connected.

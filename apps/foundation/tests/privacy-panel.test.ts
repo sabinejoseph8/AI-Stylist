@@ -1,0 +1,7 @@
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+import {expect,it} from 'vitest';
+import {LocalPrivacy,PRIVACY_CATEGORIES} from '../src/privacy/local-privacy.ts';
+import {PrivacyPanel} from '../src/web/privacy-panel.tsx';
+it('shows five explicit unchecked categories and honest local limits',()=>{const html=renderToStaticMarkup(React.createElement(PrivacyPanel,{model:new LocalPrivacy(),visible:true}));expect(html.match(/type="checkbox"/g)).toHaveLength(5);expect(html).not.toContain('checked=""');expect(html).toContain('Current session notes and photos');expect(html).toContain('Saved sample preferences');expect(html).toContain('Sample Wardrobe items and photos');expect(html).toContain('Saved sample looks');expect(html).toContain('Sample shopping list');expect(html).toContain('does not delete downloaded files');expect(html).toContain('disabled');expect(html).not.toMatch(/href=|src=|<audio|<video|<img/);});
+it('prepared export names only selected categories before explicit download',async()=>{const model=new LocalPrivacy();for(const category of PRIVACY_CATEGORIES)model.bind(category,{read:()=>({data:[],photos:[]}),clear:()=>{}});await model.prepare(['looks']);const html=renderToStaticMarkup(React.createElement(PrivacyPanel,{model,visible:true}));expect(html).toContain('Ready to download');expect(html).toContain('Includes only: Saved sample looks');expect(html).toContain('Download sample JSON');});

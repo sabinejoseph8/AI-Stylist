@@ -1,0 +1,4 @@
+import type {LocalPrivacy,PreparedExport} from './local-privacy.ts';
+export type DownloadPorts={createURL:(blob:Blob)=>string;revokeURL:(url:string)=>void;start:(url:string,filename:string)=>void};
+/** Explicit local download; no fetch, upload or server destination. */
+export function prepareSampleDownload(ports:DownloadPorts){let active:string|null=null,timer:ReturnType<typeof setTimeout>|undefined;const release=()=>{if(timer!==undefined)clearTimeout(timer);timer=undefined;if(active!==null){try{ports.revokeURL(active);}catch{}active=null;}};return{release,download:(privacy:LocalPrivacy,prepared:PreparedExport)=>{if(!privacy.current(prepared))return false;release();const json=privacy.consume(prepared);if(json===null)return false;try{active=ports.createURL(new Blob([json],{type:'application/json'}));ports.start(active,'ai-stylist-local-sample.json');timer=setTimeout(release,60000);return true;}catch{release();return false;}}};}

@@ -1,3 +1,4 @@
+import type {LocalPrivacy} from '../privacy/local-privacy.ts';
 import type {LocalWardrobe} from '../media/local-wardrobe.ts';
 import {LocalReferenceStore} from '../media/local-reference.ts';
 import {normalizeBrowserImage} from '../media/browser-image.ts';
@@ -8,7 +9,7 @@ import type {Field} from '../../../../packages/style-contracts/src/index.ts';
 import {createNotebookPreview,NotebookPreviewController,PREVIEW_OWNER} from '../session/notebook-preview.ts';
 import type {EditDraft} from '../session/notebook-preview.ts';
 
-export function NotebookPanel({visible=true,wardrobe}:{visible?:boolean;wardrobe?:LocalWardrobe}={}){
+export function NotebookPanel({visible=true,wardrobe,privacy}:{visible?:boolean;wardrobe?:LocalWardrobe;privacy?:LocalPrivacy}={}){
  const [wardrobeSnapshot,setWardrobeSnapshot]=useState(()=>wardrobe?.snapshot());
  useEffect(()=>wardrobe?.subscribe(()=>setWardrobeSnapshot(wardrobe.snapshot())),[wardrobe]);
  const [media]=useState(()=>new LocalReferenceStore({normalize:normalizeBrowserImage,createURL:blob=>URL.createObjectURL(blob),revokeURL:url=>URL.revokeObjectURL(url)}));
@@ -21,6 +22,15 @@ export function NotebookPanel({visible=true,wardrobe}:{visible?:boolean;wardrobe
  const sampleSequence=useRef(0);
  const sampleTimer=useRef<ReturnType<typeof setTimeout>|null>(null),originButton=useRef<HTMLButtonElement|null>(null),editInput=useRef<HTMLInputElement|null>(null);
  const cancelSample=()=>{if(sampleTimer.current!==null)clearTimeout(sampleTimer.current);sampleTimer.current=null;};
+ const savedRef=useRef(saved);savedRef.current=saved;
+ useEffect(()=>{
+  if(!privacy)return;
+  const unbindSession=privacy.bind('session',{read:()=>{const state=controller.session.snapshot(PREVIEW_OWNER)!;const photos=media.exportPhotos();const reference=media.snapshot().reference;return{data:{notes:FIELDS.map(([field,label])=>({field,label,value:state.notes[field].value,status:state.notes[field].status})),reference:reference?{description:reference.description,ownership:reference.ownership,photoId:'session_photo_'+reference.photo.id}:null},photos:photos.map(photo=>({id:'session_photo_'+photo.id,blob:photo.blob}))};},clear:()=>{cancelSample();controller.clear();media.clear();wardrobe?.clearSelection();setDraft(null);setValue('');setCaption('');setSelected([]);originButton.current=null;setMessage('Current sample session notes and photos cleared from privacy controls.');}});
+  const unbindPreferences=privacy.bind('preferences',{read:()=>({data:Object.fromEntries((['color','style','budget','lookType'] as const).filter(field=>savedRef.current[field]!==undefined).map(field=>[field,savedRef.current[field]])),photos:[]}),clear:()=>{setSaved({});setSelected([]);}});
+  const unsubscribeSession=controller.session.subscribe(()=>privacy.invalidate()),unsubscribeMedia=media.subscribe(()=>privacy.invalidate());
+  return()=>{unsubscribeSession();unsubscribeMedia();unbindSession();unbindPreferences();};
+ },[privacy,controller,media,wardrobe]);
+ useEffect(()=>{privacy?.invalidate();},[saved,privacy]);
  useEffect(()=>{
   let endedCleaned=false;
   const refresh=()=>{

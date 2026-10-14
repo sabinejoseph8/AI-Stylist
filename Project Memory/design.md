@@ -1,3 +1,7 @@
+## Local sample privacy controls, 13 October 2026
+
+Profile contains Manage sample data below the simulated account controls. Five unchecked category choices make the scope explicit. Prepare shows only included category names; Download is separate and single-use. Cancel discards pending/ready work. Clear opens a named category list with Keep sample data and Confirm sample clearing; focus returns to the clear control after either action. Navigation resets selections and cancels prepared exports. Short explanations distinguish current notes, separately saved preferences, Wardrobe, looks and shopping. Normalized WebP photo copies may be included in local JSON; downloaded files cannot be removed by these controls. There is no real account/provider deletion button or secure-erasure promise. Local Task 7c only; human review pending.
+
 # AI Stylist: Design specification
 
 Status: Approved design baseline, v1.0  

@@ -27,5 +27,6 @@ export class LocalWardrobe {
  select(id:number,checked:boolean){if(!this.blobs.has(id))return false;if(checked&&!this.selected.includes(id)){if(this.selected.length>=4){this.publish('Select up to four sample wardrobe items.');return false;}this.selected.push(id);}else if(!checked)this.selected=this.selected.filter(value=>value!==id);this.publish('Sample styling selection updated. No stylist or AI service is connected.');return true;}
  clearSelection(){this.selected=[];this.publish('Session selection cleared. Explicitly saved sample wardrobe items remain until refresh.');}
  remove(id:number){const item=this.items.find(item=>item.id===id);if(!item)return false;this.items=this.items.filter(item=>item.id!==id);this.selected=this.selected.filter(value=>value!==id);this.blobs.delete(id);try{this.ports.revokeURL(item.url);}catch{}this.publish('Sample wardrobe copy removed. A separately confirmed session reference is unchanged.');return true;}
+ exportItems(){return Object.freeze(this.items.map(item=>Object.freeze({id:item.id,description:item.description,blob:this.blobs.get(item.id)!})));}
  clear(){for(const item of [...this.items])this.remove(item.id);this.selected=[];this.sources=new WeakMap();this.publish('Sample wardrobe cleared.');}
 }

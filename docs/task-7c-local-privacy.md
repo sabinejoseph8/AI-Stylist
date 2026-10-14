@@ -1,0 +1,18 @@
+# Local Task 7c privacy review
+
+Approved local-only preparation, 13 October 2026. All 888 foundation tests, type checking and build pass. Human review is pending. This does not complete full Task 7c or activate real account/provider deletion.
+
+Read all ten steps first. Report once at the end. Use made-up details. No sign-in, camera, microphone, server upload, paid call or real shopping is used. Step 10 optionally uses a clothing photo already on this computer, kept only in browser memory.
+
+1. Open http://127.0.0.1:4322/ on this computer and refresh. In Stylist choose Preview spoken budget correction. Under Sample profile preferences, select Budget and Save selected sample preferences.
+2. Below the notebook, Save sample look for Emerald structure and add Illustrated emerald dress to the sample shopping list. Open Saved looks: both the saved look and separate shopping entry should appear.
+3. Open Profile, scroll below the account form to Manage sample data. All five category boxes should be unchecked, and Prepare/Clear disabled. Do not enter account details.
+4. Select only Saved sample looks and Sample shopping list. Choose Prepare selected sample export. Ready to download should list only those two categories. Choose Cancel sample export: the Download button should disappear.
+5. Prepare the same selection again and choose Download sample JSON once. Confirm ai-stylist-local-sample.json appears in Downloads. It is a text data file, not a photo viewer; you do not need to decode it. Nothing is uploaded and clearing the app will not remove this downloaded copy.
+6. Uncheck Sample shopping list, leaving only Saved sample looks selected. Choose Clear selected sample categories, then Keep sample data. Visit Saved looks: the look and shopping entry should remain. Return to Profile, select only Saved sample looks again, Clear, then Confirm sample clearing. Visit Saved looks: the saved look should be gone and the shopping entry remain.
+7. Return to Profile and select only Saved sample preferences. Clear and Confirm. Return to Stylist and expand My Styling Notes: the current USD 350 budget should remain. End sample session, then Start new sample session: the saved budget should no longer return.
+8. Choose Preview spoken budget correction again. In Profile select only Current session notes and photos, Clear and Confirm. Return to Stylist: budget should be empty. Saved looks should still contain the shopping entry. This shows session clearing is separate from shopping.
+9. In Profile select only Sample shopping list, prepare its export, then go to Stylist and return to Profile. All category boxes should be unchecked and no prepared Download button remain. Select shopping again, Clear and Confirm; its list should now be empty.
+10. Optional photo separation check: in Stylist expand My Styling Notes, choose a clothing photo, describe it, choose Owned and confirm the session reference. Use Save to sample wardrobe. In Profile select only Sample Wardrobe items and photos, Clear and Confirm. Wardrobe should become empty, while Stylist still shows the separately confirmed session reference. Clear only Current session notes and photos to remove that reference too. Finally refresh: sample data should be empty. The downloaded JSON from step 5 remains in Downloads until you remove it yourself.
+
+Report any failed step number and the visible message. Earlier accepted notebook/photo/camera/Wardrobe/Saved looks/shopping reviews need no repetition. Full authenticated exports, database/media/reference deletion, provider cleanup, comprehensive device/accessibility acceptance and Phase 7 review remain open. Allocation stays $51; no provider allowance is created or reused.
