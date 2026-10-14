@@ -1,3 +1,9 @@
+## Full-pipeline documentation review and draft, 14 October 2026
+
+Reviewed Tavus official tool calling, delivery and custom-LLM documentation. Prepared docs/task-1b-tavus-full-pipeline-followup.md with links, evidence limits and a concise follow-up. A silent tool plus verbatim output is promising, but generated error fallback, mandatory tool use and stale-output cancellation remain unverified for PS-07. A custom LLM endpoint is a documented integration option, not approved architecture or a working fix. No implementation, hosted setting, credentials, provider request, extra spending or support submission occurred. Application tests are unchanged and not rerun for this research-only update.
+
+Exact next action: Sabine may send the prepared technical follow-up or explicitly authorize its submission. Review the reply before choosing an alternative pipeline or proposing a paid experiment. Existing OpenAI and Render issues remain open. Email/password with recovery remains the sole MVP account method; no Google setup is needed.
+
 ## Tavus full-pipeline recommendation recorded, 14 October 2026
 
 Sabine supplied a new support reply recommending normal CVI for integrated conversation latency/turn taking while retaining app notes and approval. Recorded a sanitized summary in docs/task-1b-tavus-recovery-question.md. Compared it with PS-07: app-side visual approval alone cannot prove that unchecked recommendation speech stays blocked. The exact full-pipeline release/cancellation, notebook events and permitted voice/provider configuration remain unverified. This is a candidate architecture, not an agreed change or working fix.
