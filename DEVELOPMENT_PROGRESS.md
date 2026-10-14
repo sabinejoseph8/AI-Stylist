@@ -1,3 +1,9 @@
+## Local privacy publication receipt
+
+Checkpoint b234414 is pushed to GitHub and all 21 changed committed files copied to the approved AI stylist folder. Private Memory source 0e6c65ba9db63789ebde36cd2cbd57f6ef2b7e8b deployed successfully as appgdep_6aced62cf49c8191b680824eaf57cdd9 with MCP preserved. All 888 foundation tests across 111 files, type checking/build and all 16 Memory checks/build/artifact validation pass. Agent browser rehearsal and the synthetic JSON file confirm selected-category download and independent clearing. No actual user photo, microphone, provider call, spending or customer deployment occurred.
+
+Exact next human action: complete all ten local privacy review steps in docs/task-7c-local-privacy.md and report once at the end; the final photo separation step is optional. All earlier accepted local reviews remain valid. Full Task 7c remains open for real ownership/export/deletion/provider acceptance. Remaining independent work is blocked by the preserved phase gates and external/configuration prerequisites in docs/current-blockers.md. Allocation remains $51 and all five notes/startup records remain held. Preexisting unstaged AGENTS.md edits remain untouched. This receipt supersedes the previous shopping-list-only handoff.
+
 ## Local Task 7c privacy controls prepared, 13 October 2026
 
 Sabine approved local Task 7c preparation before earlier phase dependencies finish. Profile now has five explicitly selected browser-memory categories: current session notes/photos, saved sample preferences, sample Wardrobe/photos, saved sample looks and sample shopping list. Preparation creates a reviewable local JSON export; downloading is a separate explicit single-use action. Selected photo copies are normalized WebP bytes, never Blob URLs or original filenames. Saved looks exclude session notes. No real account, full transcript, feedback history, provider cleanup, server upload, paid call or customer deployment is included.
