@@ -1,3 +1,7 @@
+## Checking the permissions behind a dashboard label
+
+I found that the provider's Read and Write preset also included permission to change bucket settings. The connection check stopped before accessing backup files because the key was broader than the backup runner needed. I prepared an exact file-only replacement request and required a separate administrator handoff to create it. I kept the original diagnostic receipt intact and recorded the actual permission names so the reason would not be lost.
+
 ## Preparing backups within a free account
 
 I checked the actual free-account restrictions before connecting backups. The daily download limit changed the design: I bounded each encrypted recovery set so a restore has room for validation and current deletion evidence. I tested failed and competing transfers without cloud calls, and configured expiry while the private bucket was still empty. I kept the account credential limited to its backup prefix and retained a separate acceptance gate for real recovery and deletion timing.
