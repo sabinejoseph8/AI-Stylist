@@ -1,18 +1,18 @@
 # Backup and recovery plan
 
-Status: planning authorized by Sabine on 14 October 2026. Proposed targets below need her decision. No backup job, new storage, paid add-on, credentials, restore or customer deployment is activated. Full Task 8d remains open.
+Status: planning authorized by Sabine on 14 October 2026. Sabine approved the three targets below on 14 October 2026. No backup job, new storage, paid add-on, credentials, restore or customer deployment is activated. Full Task 8d remains open.
 
-## Proposed initial targets
+## Approved initial targets
 
-| Decision | Recommended planning baseline | Meaning and limitation |
+| Decision | Approved planning baseline | Meaning and limitation |
 | --- | --- | --- |
 | Saved-data recovery point | At most 24 hours of lost saved changes | Applies jointly to preferences, Wardrobe photos/descriptions, saved looks and shopping lists. Daily database backups alone do not establish this target. A failed or overdue backup breaks it. |
 | Recovery time | Within 48 hours of incident declaration | Includes data and image restoration, identity/access checks and deletion reconciliation before reopening. Record outage onset and detection delay separately. This is an internal target pending a timed drill and available operator, not a customer SLA. |
-| Recovery history | Seven days | Proposed rolling maximum for app-managed backup copies, including clothing photos. Provider backup windows must be checked separately. Deleted data can remain in restricted backups until expiry, but must never be served after restore. |
+| Recovery history | Seven days | Approved rolling maximum for app-managed backup copies, including clothing photos. Provider backup windows must be checked separately. Deleted data can remain in restricted backups until expiry, but must never be served after restore. |
 
 Alternative: a tighter saved-data target such as one hour and a shorter recovery target require a different design, staffing and cost assessment. Do not assume a database PITR add-on protects image files or achieves app-wide recovery. No purchase is proposed until actual requirements and costs are reviewed.
 
-Approval of planning does not approve these three business/privacy choices. Keep them marked proposed until Sabine responds.
+Sabine explicitly accepted up to 24 hours of lost saved changes, restoration within 48 hours of incident declaration, and up to seven days of protected backup retention including deleted clothing photos. These are approved targets, not demonstrated capabilities. Deleted items must remain excluded from restored customer access.
 
 ## Verified public capability and unverified account state
 
@@ -42,7 +42,7 @@ The approved seven-day technical photo-deletion receipt and account-linked retir
 3. Couple each completed backup set to a database recovery point and a private manifest: schema/source version, start/end times, object versions/digests, required key identifiers and completion status. Use immutable object versions or a bounded coordinated snapshot so concurrent photo replacement cannot mix versions. Incomplete sets are not selectable recovery points.
 4. Copy only approved persistent data. Never place archives, customer rows, images, secrets or detailed manifests in GitHub or the public documentation. Public receipts contain aggregate outcome only.
 5. Monitor the age of the last verified complete set against the selected target; report failures and missing objects. Alert destination and operator coverage must be established before claiming a recovery-time target. No monitor or schedule is created by this document.
-6. After retention approval, expire app-managed backups by age and verify deletion. Provider-held copies follow the verified provider contract. Failed purge is an incident, not evidence of deletion; never claim a universal seven-day purge guarantee.
+6. Under the approved seven-day maximum, expire app-managed backups by age and verify deletion. Provider-held copies follow the verified provider contract. Failed purge is an incident, not evidence of deletion; never claim a universal seven-day purge guarantee.
 7. Keep a separate recovery copy accessible through the approved incident procedure. Verify loss-of-project and loss-of-operator-access scenarios; shared failure domains and key access can otherwise defeat recovery.
 
 ## Restore sequence and acceptance gates
@@ -61,11 +61,11 @@ The approved seven-day technical photo-deletion receipt and account-linked retir
 
 Existing synthetic database rehearsal covers 21 migrations, saved rows, RLS/functions/grants, retired-image refusal, sequence continuation and atomic failure on truncated archives. It does not cover image bytes, a managed Auth restore, production keys, current deletion replay across systems or real restore timing.
 
-After target decisions, prepare the next local-only drill with made-up object bytes and two recovery points: save A, take backup, replace/delete A, then restore the older point and apply current deletion evidence. Include missing/corrupt images, wrong key, unavailable deletion evidence, expired sessions and preserved spending holds. An in-memory local drill provides logic evidence only. Real provider restore and capacity/timing acceptance stay open.
+With the targets approved, prepare the next local-only drill with made-up object bytes and two recovery points: save A, take backup, replace/delete A, then restore the older point and apply current deletion evidence. Include missing/corrupt images, wrong key, unavailable deletion evidence, expired sessions and preserved spending holds. An in-memory local drill provides logic evidence only. Real provider restore and capacity/timing acceptance stay open.
 
 ## Decision and execution queue
 
-1. Sabine chooses saved-data loss tolerance, recovery-time target and backup retention.
-2. Record approved targets in project memory; complete the synthetic object/deletion recovery design within local Task 8d preparation.
+1. Completed: Sabine approved 24-hour saved-data loss tolerance, 48-hour recovery and seven-day protected backup retention.
+2. Complete the synthetic object/deletion recovery design within local Task 8d preparation.
 3. Inspect actual backup availability when account access permits. Select storage/key/alert/operator arrangements and obtain any new financial, credential or privacy approvals before implementation.
 4. Resolve secure hosted activation, rehearse the full recovery with authorized infrastructure and measure outcomes before any launch promise.

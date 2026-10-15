@@ -1,3 +1,9 @@
+## Recovery targets approved, 14 October 2026
+
+Sabine approved at most 24 hours of lost saved changes, restoration within 48 hours of incident declaration, and protected backup retention up to seven days including deleted clothing photos. Deleted items must stay excluded from restored customer access. These are planning targets, not a proven capability or customer SLA. No spending, new infrastructure, backup activation or hosted restore is authorized. Provider-held retention must be verified separately.
+
+Updated docs/backup-recovery-plan.md and the operations checklist. Next: prepare the local object/deletion recovery rehearsal described there; inspect real backup availability when account access permits, then select storage, key custody and operator/alert arrangements before requesting any necessary activation or spending. Full Task 8d remains open. Existing application test results are unchanged; documentation-only updates require no repeat application tests.
+
 ## Backup and recovery planning, 14 October 2026
 
 Sabine authorized planning. Prepared docs/backup-recovery-plan.md with proposed 24-hour saved-data loss tolerance, 48-hour recovery target and seven-day backup history, pending her business/privacy decision. Verified official Supabase documentation: database backups exclude image bytes. The plan covers matched database/object recovery, current deletion and spending evidence, identity/key dependencies, access controls, retention and a staged restore drill. Existing synthetic database evidence does not prove full recovery. No settings, schedule, backup copy, provider call, new charge or policy activation occurred.

@@ -1,3 +1,7 @@
+## Choosing recovery targets, 14 October 2026
+
+For the initial launch I accepted up to one day of lost saved changes and a two-day recovery target. I approved keeping protected backup copies for up to seven days, including deleted photos, provided deleted items cannot return to customer access after restoration. These choices give us concrete acceptance criteria; they do not prove recovery works or authorize extra costs.
+
 ## Planning recovery before launch, 14 October 2026
 
 I asked for a recovery plan while provider questions were open. We identified that database backups alone would not recover clothing photos. I am reviewing proposed data-loss, downtime and retention targets before committing to storage or costs. The plan also prevents an older backup from bringing back deleted photos or spent trial allowances. These targets are proposals, not promises already proved by our database rehearsal.

@@ -2,7 +2,7 @@
 
 Status: approved local preparation, 14 October 2026. Full Task 8d and Phase 8 remain open. These instructions do not activate accounts, deploy customer code, change settings, rotate keys, schedule cleanup or authorize spending.
 
-See [backup and recovery planning](backup-recovery-plan.md) for the proposed targets and complete recovery inventory. Targets are pending Sabine’s decision.
+See [backup and recovery planning](backup-recovery-plan.md) for the approved targets and complete recovery inventory: at most 24 hours of lost saved changes, 48-hour recovery and seven-day protected backup retention. These targets still require implementation and measured acceptance.
 
 ## Release inventory
 
@@ -23,7 +23,7 @@ The two Render files select different prototype modes. Never deploy a manifest b
 2. Select an immutable, reviewed commit. Run the applicable foundation/prototype suites, type checks, builds and affected acceptance checks. Inspect the exact staged files for secrets, `.env`, recordings, backups, private ledgers and support-message/account details. Record results without private content.
 3. Privately inventory existing runtime settings by name and mode. Keep the current service protected. Account callback origins must match the reviewed HTTPS origin; arbitrary Host/forwarded headers must not determine callbacks. Application URL cleanup cannot redact upstream logs. The direct-TLS entry is not a workaround for the unresolved Render ingress contract.
 4. Compare every proposed migration hash and precondition with recorded hosted state. The SQL Editor did not populate CLI history. Do not replay migrations, reset the database or assume idempotence. Rehearse an upgrade and its data/access checks on synthetic data before a separately authorized hosted change.
-5. Require a verified recovery point covering the actual database, private Storage object bytes, managed Auth dependencies, encryption key dependencies and deletion reconciliation. A PostgreSQL dump alone is insufficient. Production backup frequency, retention, recovery-point objective and recovery-time objective require decisions before activation; none is set by this preparation.
+5. Require a verified recovery point covering the actual database, private Storage object bytes, managed Auth dependencies, encryption key dependencies and deletion reconciliation. A PostgreSQL dump alone is insufficient. Sabine approved a 24-hour recovery-point target, 48-hour recovery-time target and seven-day backup retention. Verify complete-set freshness, storage configuration and timed restoration before claiming compliance.
 6. Deploy only the approved artifact/mode and retain private access. Verify build/start status and non-starting health plus unauthorized-route denial. A 200 health response does not establish transcription readiness, account isolation, cleanup or billing completion. Do not press a paid trial's Start as a smoke check.
 7. Perform only previously authorized functional acceptance. Record deployed commit, deployment ID, selected mode and evidence in project memory. Leave unresolved checks open. Public launch requires Sabine's separate approval.
 
@@ -75,7 +75,7 @@ This is database-only logical recovery evidence. Roles remain in the same dispos
 
 - Supported and accepted customer integration, security review and phase dependencies.
 - Approved real deployment/origin/callback and ingress/logging contract.
-- Production backup/retention/access/encryption and recovery objectives.
+- Implementation and measured verification of the approved recovery targets, with approved storage/access/encryption arrangements.
 - Database plus actual private object recovery, safe deletion reconciliation and key dependencies.
 - Real incident/rollback drill, durable bounded cleanup scheduling and monitoring under approved settings.
 - Authorized credential rotation rehearsal and full customer/device acceptance.
