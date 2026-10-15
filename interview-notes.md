@@ -1,3 +1,7 @@
+## Preparing complete photo backups
+
+I verified that the photo source bucket is private using a single read-only request. I then added checks for ownership, file size and cryptographic checksums so a missing or changed photo cannot quietly become a successful backup. Older photos without checksums pause the backup instead of disappearing from it. The prepared backup helpers pass 81 operations tests and four encryption tests; complete hosted recovery is still unproven.
+
 ## Repairing the secure backup connection
 
 I kept certificate and hostname checks enabled when the backup connection failed. I traced the first failure to a missing certificate bundle in the database client and configured the official provider certificate in a read-only mount. The connection then reached authentication, where the saved password was rejected. I paused for a private password check instead of weakening security or resetting a credential. Seventy automated operations tests pass, but real backup activation and recovery proof remain open.
