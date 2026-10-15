@@ -1,3 +1,11 @@
+## Permanent runtime and cloud candidate evidence published
+
+Private Memory source 73fc23cbfe749561460f4dbb60a369f5e42c3d91 deployed successfully as appgdep_6ad0781fe7d0819188d80feab3573756. Owner-only access and MCP remain; all 16 website checks, build and artifact validation pass. The snapshot records the permanent private runtime, preserved state, actual encrypted candidate round trip and 139 operations tests plus four encryption tests. Value-based scanning found none of the backup, recovery, monitoring or source keys in tracked files. No full task or phase was marked complete. Next source work and automatic quota/recovery blockers are recorded below; no backup schedule is active.
+
+## Durable public runtime synchronized
+
+The permanent runtime now contains 22 public operations files from source 3d7e5a0. Verified the runtime manifest and compared all 24 private credential, quota, candidate and attempt files before/after; every private byte remained unchanged. The earlier approved 20-file transfer plus its receipt and the three new candidate-transfer records are preserved. No scheduler or provider operation ran during this code update. Next: coordinate fresh source/photo recovery points and establish automatic financial evidence before unattended activation; the verified cloud candidate remains a limited earlier snapshot.
+
 ## Durable runtime installed and encrypted database candidate recovered from B2, 15 October 2026
 
 Installed 21 reviewed public operations files in an owner-only permanent Library/Application Support/AI Stylist Backups runtime. Sabine explicitly approved transferring the existing backup credentials, encryption recovery key, encrypted candidate and retained attempt/usage state. Copied and byte-verified all 20 allowlisted private files with owner-only permissions, preserving originals and excluding the old broader B2 dashboard key. The durable runtime is now the authoritative location for new private backup state; do not switch back to the stale development copy or recreate its quota/attempt history. No scheduler was installed.
