@@ -24,9 +24,21 @@ A complete recovery must also address roles, managed Auth, Storage and configura
 
 Sabine authorized proceeding with actual backup setup. Read-only inspection of the AI Stylist Supabase dashboard confirms six scheduled physical database restore points dated 9 through 14 October 2026. The newest is 14 October 2026 at 13:52:01 UTC. The dashboard states daily backups and explicitly excludes Storage object bytes. The existing Storage inventory lists stylist-wardrobe with a 10 MB limit and JPEG/PNG/WebP types; its contents were not downloaded or inspected. No restore, new backup, credential, paid add-on or setting change was performed.
 
-Database backups already run; complete application backup activation remains incomplete. Next action: identify Sabine's existing independent storage account, then finalize a private encrypted destination, separate key custody, aligned database/object recovery points, current deletion/reservation evidence and alerts. A question about existing S3/R2/B2 account availability is pending. No new provider or spending is assumed from general setup approval. Full Task 8d remains open.
+Database backups already run; complete application backup activation remains incomplete. Next action: identify Sabine's existing independent storage account, then finalize a private encrypted destination, separate key custody, aligned database/object recovery points, current deletion/reservation evidence and alerts. Sabine confirmed no separate storage account exists. No new provider or spending is assumed from general setup approval. Full Task 8d remains open.
 
 A possible independent destination is R2 Standard, pending account selection and authorization. Its published free tier includes 10 GB-month storage, one million Class A and ten million Class B requests monthly; overages are billable. This is not a guaranteed free complete backup system: source egress, scheduler and key management must also be costed. No account or resource has been created. Source: https://developers.cloudflare.com/r2/pricing/ (reviewed 14 October 2026).
+
+## Independent backup account prerequisite
+
+Sabine confirmed she has no separate S3, R2 or B2 account. The proposed destination is a private Cloudflare R2 Standard bucket, subject to her approval of the new vendor and its usage-billed subscription. Existing app hosting stays on Render/Supabase. R2 activation requires checkout; its free allowance is not a hard spending cap. Do not activate billing, create credentials or upload customer data on the strength of the general backup setup approval.
+
+Proposed protection: encrypt backup sets before upload using an established authenticated-encryption tool, store recovery key material separately from the bucket, restrict the backup credential to its bucket, disable public access and retain only persistent approved data. A worker must verify completed sets, remove expired copies and alert on failure. R2 lifecycle deletion is asynchronous and typically follows expiration within 24 hours, so a seven-day lifecycle rule alone cannot prove the approved seven-day maximum. Use earlier scheduled deletion with verified results and lifecycle protection; retain this as an unverified target until the real expiry drill passes. Missing deletion/financial evidence prevents promotion of restored data.
+
+Published R2 Standard allowances: 10 GB-month storage, one million Class A and ten million Class B operations monthly; standard storage beyond the allowance is $0.015/GB-month. Source transfer, execution, key custody and alerts require a complete cost assessment before activation. Seven full daily copies of a 1 GB source would use roughly 7 GB before database exports, metadata and overhead; this is an illustration, not a measured forecast. No amount or billing authorization is inferred.
+
+Next user action: approve or decline using Cloudflare R2 as the new backup destination, then complete account/password/terms/payment entry personally. Before billable activation, agree a concrete monthly allowance and verify current checkout terms. Before real uploads, complete the encryption, coordinated snapshot, durable evidence, monitoring and recovery acceptance gates. Actual backup setup remains incomplete.
+
+References reviewed: https://developers.cloudflare.com/r2/get-started/ ; https://developers.cloudflare.com/r2/pricing/ ; https://developers.cloudflare.com/r2/buckets/object-lifecycles/ .
 
 ## Recovery inventory
 

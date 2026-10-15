@@ -1,3 +1,7 @@
+## Independent backup storage prerequisite
+
+Sabine confirmed no separate storage account. Prepared the R2 Standard candidate, published costs, account handoff and seven-day expiry limitations in docs/backup-recovery-plan.md. Database backups are active; complete backup activation is blocked on new storage account/vendor and billing authorization, then encryption/key custody, coordinated recovery points, durable current evidence and alert setup. No new subscription, credential or upload occurred. Exact next action: obtain the storage choice and explicit billing allowance before activation. Full Task 8d remains open.
+
 ## Actual backup setup inspection, 14 October 2026
 
 Sabine authorized proceeding with actual backup setup. Read-only inspection of the AI Stylist Supabase dashboard confirms six scheduled physical database restore points dated 9 through 14 October 2026. The newest is 14 October 2026 at 13:52:01 UTC. The dashboard states daily backups and explicitly excludes Storage object bytes. The existing Storage inventory lists stylist-wardrobe with a 10 MB limit and JPEG/PNG/WebP types; its contents were not downloaded or inspected. No restore, new backup, credential, paid add-on or setting change was performed.
