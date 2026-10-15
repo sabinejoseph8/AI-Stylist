@@ -1,3 +1,7 @@
+## Keeping recovery reservations open through cleanup, 15 October 2026
+
+I connected the local recovery checks to a simulated durable admission interface. The design keeps a reservation open while reset permission waits for the user, records the reset claim before changing a password, and requires confirmed cleanup plus a saved outcome before success. Fresh-process crash tests showed that unfinished verification or password work stays blocked after restart. Signed ordinary sign-in proof still could not reset a password. Thirty-five new foundation and eight journal tests brought the suites to 1,366 and 253 passing tests. I kept real storage, provider compatibility and launch acceptance separate from this local evidence, with no spending or hosted changes.
+
 ## Protecting recovery on the receiving browser, 15 October 2026
 
 I tested recovery on a separate receiving browser without relying on the original device's cookies. The review found that late permission could survive an expired or replaced confirmation binding, so I added a final lifecycle check and cleanup. I also protected the confirmation page from late navigation after leaving, returning from cache or timing out. Twenty-four new synthetic tests brought the foundation suite to 1,331 passing tests. I documented that browser binding does not identify a physical device and kept real email, provider and hosted acceptance open. No new spending or hosted settings changed.

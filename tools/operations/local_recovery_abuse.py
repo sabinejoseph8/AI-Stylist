@@ -76,7 +76,8 @@ def validate(state, expected):
                 not isinstance(item['id'], str) or not re.fullmatch(r'fixture-operation-[0-9a-f]{32}', item['id']) or
                 item['id'] in ids or not isinstance(item['subject'], str) or
                 not re.fullmatch(r'fixture-subject-[a-z0-9]{1,24}', item['subject']) or
-                item['kind'] not in ('send', 'verify') or item['state'] not in ('reserved', 'completed', 'rejected', 'held') or
+                item['kind'] not in ('send', 'verify') or item['state'] not in ('reserved', 'resetting', 'completed', 'rejected', 'held') or
+                (item['state']=='resetting' and item['kind']!='verify') or
                 not integer(item['at']) or not last <= item['at'] <= state['clock'] or item['at'] >= state['policy']['expires'] or
                 not integer(item['generation']) or item['generation'] < 1 or reserved):
             raise RecoveryHeld('recovery-unavailable')
@@ -93,7 +94,7 @@ def validate(state, expected):
             guesses[subject]=guesses.get(subject,0)+1
         if guesses.get(subject,0) > state['policy']['guesses'] or sends.get(subject,0) > state['policy']['sends']:
             raise RecoveryHeld('recovery-unavailable')
-        if item['state'] in ('reserved', 'held'): reserved += 1
+        if item['state'] in ('reserved', 'resetting', 'held'): reserved += 1
 
 
 @contextmanager
@@ -142,7 +143,7 @@ def reserve(root, expected, *, subject, kind, generation, now, operation_id, cra
                 not isinstance(subject,str) or not re.fullmatch(r'fixture-subject-[a-z0-9]{1,24}',subject) or
                 kind not in ('send','verify') or not isinstance(operation_id,str) or
                 not re.fullmatch(r'fixture-operation-[0-9a-f]{32}',operation_id) or
-                any(x['state'] in ('reserved','held') or x['id']==operation_id for x in records) or
+                any(x['state'] in ('reserved','resetting','held') or x['id']==operation_id for x in records) or
                 len(records)>=policy['total']):
             raise RecoveryHeld('recovery-unavailable')
         own=[x for x in records if x['subject']==subject]
@@ -161,11 +162,25 @@ def reserve(root, expected, *, subject, kind, generation, now, operation_id, cra
         return dict(operation_id=operation_id,generation=selected)
 
 
+def claim_reset(root, expected, operation_id, *, now):
+    """Test-only second atomic phase, required before the simulated password update."""
+    with locked(root) as root:
+        state=load(root,expected)
+        matches=[x for x in state['records'] if x['id']==operation_id]
+        if (len(matches)!=1 or matches[0]['kind']!='verify' or matches[0]['state']!='reserved' or
+                not integer(now) or not state['clock']<=now<state['policy']['expires']):
+            raise RecoveryHeld('recovery-unavailable')
+        item=matches[0];sends=[x for x in state['records'] if x['subject']==item['subject'] and x['kind']=='send']
+        if not sends or now>=sends[-1]['at']+state['policy']['code_ttl']:
+            raise RecoveryHeld('recovery-unavailable')
+        item['state']='resetting';state['clock']=now;validate(state,expected);save(root,state)
+
+
 def finish(root, expected, operation_id, *, outcome, cleanup_verified, crash_at=None):
     with locked(root) as root:
         state=load(root,expected)
         matches=[x for x in state['records'] if x['id']==operation_id]
-        if len(matches)!=1 or matches[0]['state']!='reserved' or outcome not in ('completed','rejected','uncertain') or type(cleanup_verified) is not bool:
+        if len(matches)!=1 or matches[0]['state'] not in ('reserved','resetting') or outcome not in ('completed','rejected','uncertain') or type(cleanup_verified) is not bool:
             raise RecoveryHeld('recovery-unavailable')
         matches[0]['state']=outcome if cleanup_verified and outcome!='uncertain' else 'held'
         validate(state,expected);save(root,state,crash_at=crash_at)

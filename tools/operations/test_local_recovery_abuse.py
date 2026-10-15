@@ -260,4 +260,51 @@ class RecoveryAbuseTests(unittest.TestCase):
         self.assertEqual(result,{'status':'unavailable'});self.assertEqual(calls,[True])
         self.unavailable(self.run_child('send',110));self.assertTrue((self.root/'pending').exists());self.assertEqual(self.calls(),0)
 
+    def test_reset_claim_is_durable_and_blocks_new_admission(self):
+        self.send();args=self.args();m.reserve(self.root,self.expected,**args)
+        m.claim_reset(self.root,self.expected,args['operation_id'],now=101)
+        self.assertEqual(self.state()['records'][-1]['state'],'resetting')
+        self.unavailable(self.run_child(now=102));self.assertEqual(self.calls(),1)
+
+    def test_reset_claim_is_one_use_and_cannot_claim_send_or_unknown_operation(self):
+        self.send();args=self.args();m.reserve(self.root,self.expected,**args);m.claim_reset(self.root,self.expected,args['operation_id'],now=101)
+        for operation_id in [args['operation_id'],self.state()['records'][0]['id'],'fixture-operation-'+'f'*32]:
+            with self.assertRaises(m.RecoveryHeld):m.claim_reset(self.root,self.expected,operation_id,now=101)
+
+    def test_reset_claim_refuses_expired_code_and_backward_clock(self):
+        self.send();args=self.args(now=120);m.reserve(self.root,self.expected,**args)
+        for now in [119,150,1000]:
+            with self.assertRaises(m.RecoveryHeld):m.claim_reset(self.root,self.expected,args['operation_id'],now=now)
+        self.assertEqual(self.state()['records'][-1]['state'],'reserved')
+
+    def test_resetting_record_finishes_once_after_confirmed_cleanup(self):
+        self.send();args=self.args();m.reserve(self.root,self.expected,**args);m.claim_reset(self.root,self.expected,args['operation_id'],now=101)
+        m.finish(self.root,self.expected,args['operation_id'],outcome='completed',cleanup_verified=True)
+        self.assertEqual(self.state()['records'][-1]['state'],'completed')
+        with self.assertRaises(m.RecoveryHeld):m.finish(self.root,self.expected,args['operation_id'],outcome='completed',cleanup_verified=True)
+
+    def test_resetting_unknown_cleanup_remains_held_after_restart(self):
+        self.send();args=self.args();m.reserve(self.root,self.expected,**args);m.claim_reset(self.root,self.expected,args['operation_id'],now=101)
+        m.finish(self.root,self.expected,args['operation_id'],outcome='completed',cleanup_verified=False)
+        self.assertEqual(self.state()['records'][-1]['state'],'held');self.unavailable(self.run_child(now=102))
+
+    def test_missing_journal_cannot_be_created_by_reset_claim(self):
+        (self.root/'ledger.json').unlink()
+        with self.assertRaises(m.RecoveryHeld):m.claim_reset(self.root,self.expected,'fixture-operation-'+'f'*32,now=101)
+        self.assertFalse((self.root/'ledger.json').exists())
+
+    def test_concurrent_reset_claims_allow_one_transition(self):
+        self.send();args=self.args();m.reserve(self.root,self.expected,**args)
+        def claim():
+            try:m.claim_reset(self.root,self.expected,args['operation_id'],now=101);return True
+            except m.RecoveryHeld:return False
+        with ThreadPoolExecutor(max_workers=8) as pool:results=list(pool.map(lambda _:claim(),range(8)))
+        self.assertEqual(sum(results),1);self.assertEqual(self.state()['records'][-1]['state'],'resetting')
+
+    def test_resetting_phase_on_a_send_record_is_structurally_invalid(self):
+        self.send();state=self.state();state['records'][0]['state']='resetting'
+        payload=m.encoded(state);(self.root/'ledger.json').write_bytes(payload)
+        (self.root/'checkpoint.json').write_bytes(m.encoded({'sha256':hashlib.sha256(payload).hexdigest()}))
+        self.unavailable(self.run_child());self.assertEqual(self.calls(),1)
+
 if __name__=='__main__':unittest.main()

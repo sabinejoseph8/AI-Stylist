@@ -1,3 +1,7 @@
+## Subsequent local interface composition, 15 October 2026
+
+The [durable admission interface](local-durable-recovery-admission.md) adds an atomic resetting phase and test-only Node/Python bridge. It retains unresolved reservations through a reset capability's lifetime and proves restart refusal after simulated verification/reset crashes. The bridge is not a production adapter, and the local checkpoint/rollback limits below remain.
+
 # Local recovery abuse and restart rehearsal
 
 15 October 2026. Authorized scope: local tests and preparation, no new spending, real accounts or hosted changes.
