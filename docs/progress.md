@@ -1,3 +1,9 @@
+## Backup and recovery planning, 14 October 2026
+
+Sabine authorized planning. Prepared docs/backup-recovery-plan.md with proposed 24-hour saved-data loss tolerance, 48-hour recovery target and seven-day backup history, pending her business/privacy decision. Verified official Supabase documentation: database backups exclude image bytes. The plan covers matched database/object recovery, current deletion and spending evidence, identity/key dependencies, access controls, retention and a staged restore drill. Existing synthetic database evidence does not prove full recovery. No settings, schedule, backup copy, provider call, new charge or policy activation occurred.
+
+Exact next action: obtain Sabine's three target decisions, then prepare the local object/deletion recovery rehearsal. Storage destination, cost, operator/alert coverage and hosted acceptance remain unresolved. Full Task 8d remains open.
+
 ## Prepared-flow code review, 14 October 2026
 
 Sabine approved a focused review of the existing local notebook, clothing photos, Wardrobe and Saved looks. Reviewed their state owners, UI event wiring, cancellation, explicit save/remove behavior and privacy cleanup. Found and fixed one asynchronous capture defect: removing a confirmed reference did not invalidate a still already encoding, allowing a late camera result to reappear as a candidate. Camera completion now checks the photo store's current input generation as well as the camera epoch. Removal, replacement, cancellation and Clear invalidate unfinished capture results. Explicit confirmation is still required.

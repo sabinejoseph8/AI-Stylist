@@ -1,3 +1,7 @@
+## Planning recovery before launch, 14 October 2026
+
+I asked for a recovery plan while provider questions were open. We identified that database backups alone would not recover clothing photos. I am reviewing proposed data-loss, downtime and retention targets before committing to storage or costs. The plan also prevents an older backup from bringing back deleted photos or spent trial allowances. These targets are proposals, not promises already proved by our database rehearsal.
+
 ## Reviewing the prepared experience, 14 October 2026
 
 I used the wait for provider answers to review the local experience. We found a timing bug: a camera still could finish preparing after I had removed the confirmed photo and then appear in the photo choices. I had the capture tied to the current photo operation, so removal cancels late results too. We added five regression cases, and all 1,249 tests passed. I kept this separate from proving the complete live experience.

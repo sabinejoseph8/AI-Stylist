@@ -2,6 +2,8 @@
 
 Status: approved local preparation, 14 October 2026. Full Task 8d and Phase 8 remain open. These instructions do not activate accounts, deploy customer code, change settings, rotate keys, schedule cleanup or authorize spending.
 
+See [backup and recovery planning](backup-recovery-plan.md) for the proposed targets and complete recovery inventory. Targets are pending Sabine’s decision.
+
 ## Release inventory
 
 | Artifact | Purpose and limit |
@@ -17,7 +19,7 @@ The two Render files select different prototype modes. Never deploy a manifest b
 
 ## Deployment checklist, to execute only after its existing gates clear
 
-1. Check the latest progress/blocker records and the intended release's explicit authorization. Resolve OpenAI startup, account origin/ingress/logging, sender/social credentials and permitted source requirements for the features being enabled. Preserve the deferred domain purchase and all existing spending limits.
+1. Check the latest progress/blocker records and the intended release's explicit authorization. Resolve OpenAI startup, account origin/ingress/logging, sender credentials and permitted source requirements for the features being enabled. Preserve the deferred domain purchase and all existing spending limits.
 2. Select an immutable, reviewed commit. Run the applicable foundation/prototype suites, type checks, builds and affected acceptance checks. Inspect the exact staged files for secrets, `.env`, recordings, backups, private ledgers and support-message/account details. Record results without private content.
 3. Privately inventory existing runtime settings by name and mode. Keep the current service protected. Account callback origins must match the reviewed HTTPS origin; arbitrary Host/forwarded headers must not determine callbacks. Application URL cleanup cannot redact upstream logs. The direct-TLS entry is not a workaround for the unresolved Render ingress contract.
 4. Compare every proposed migration hash and precondition with recorded hosted state. The SQL Editor did not populate CLI history. Do not replay migrations, reset the database or assume idempotence. Rehearse an upgrade and its data/access checks on synthetic data before a separately authorized hosted change.
