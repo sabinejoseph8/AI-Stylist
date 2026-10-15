@@ -1,3 +1,9 @@
+## Independent encryption-key custody confirmed, 15 October 2026
+
+Sabine confirmed saving the entire recovery-key file in her password manager and reopening it to verify the copy. This is user-attested independent custody, not an executed lost-computer restore drill. The original owner-only local key is preserved; no secret was inspected, copied to public project folders, committed or uploaded. The prior synthetic encryption/decryption evidence remains valid.
+
+Prepared an ignored owner-only placeholder for the missing Supabase Storage source credential. It contains no credential. Next security decision: approval to store the existing AI Stylist server credential locally for a bounded read-only photo backup source adapter. A server credential can bypass RLS and must remain private; do not read, transfer or populate it before that approval. No new hosted credential or privilege is created. Then implement/test the fixed-project, fixed-bucket read-only adapter, complete coordinated exports, quota reconciliation and bounded encrypted transport before any backup activation. No schedule, photo download, upload or paid service ran. Full Task 8d remains open.
+
 ## Private backup key generated; independent custody pending, 15 October 2026
 
 Sabine confirmed she can store a separate backup encryption recovery key in her password manager. Generated one random 256-bit key with a random non-secret identifier in an exclusive owner-only file under ignored tools/operations/.private. Existing keys are preserved rather than overwritten. The key was not displayed, committed, copied to project folders, uploaded or included in an archive. A synthetic in-memory AES-256-GCM encrypt/decrypt round trip passed with that key; no customer data or persistent encrypted test file was used.
