@@ -1763,3 +1763,7 @@ I checked the sample app with a generated image, a long clothing description, ke
 ## Closing a form-lifecycle privacy gap
 
 I reviewed the sample app for browser storage, logs, images and exports. I found that unsent account/reset drafts lacked a page-exit boundary, so I added immediate field clearing, cached-return clearing and cancellation of late results. I also ensured decoder failures expose only a fixed message. Synthetic browser checks showed empty fields and no local-origin storage entries; malformed images preserved the prior reference. All 1,267 foundation tests pass. I kept actual device-cache and hosted privacy acceptance open.
+
+## Separating preparation from launch readiness
+
+I mapped all 21 acceptance criteria to tests, reviews and the evidence still missing. I found that the displayed five completed items included three discovery entries, while the phased build itself had two of 38 tasks checked. I clarified that metric and ranked the remaining provider, product-access, account, privacy, recovery and integration blockers. I kept local preparation distinct from production acceptance and preserved the decisions to defer a domain and Rakuten. The audit gives me a concrete way to evaluate support replies without repeating paid tests or assuming the MVP is ready.

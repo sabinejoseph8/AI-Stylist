@@ -1,0 +1,486 @@
+{
+  "version": 1,
+  "asOf": "2026-10-15",
+  "evidenceCommit": "e5f302a4a1320aa9501c6f33ebb620fb36ea5645",
+  "scope": "Repository evidence audit only; no fresh hosted/provider/device checks",
+  "acceptedProductionCriteria": 0,
+  "criteriaCount": 21,
+  "phaseTasks": {
+    "complete": 2,
+    "total": 38
+  },
+  "combinedMemoryItems": {
+    "complete": 5,
+    "total": 41,
+    "extraChecked": [
+      "D02",
+      "D03",
+      "X01"
+    ]
+  },
+  "criteria": [
+    {
+      "id": "A01",
+      "requirement": "Customer describes an outdoor wedding in November, elegant style, emerald green, and $500. The notebook captures supplied details progressively. Currency, season, and budget meaning are confirmed when ambiguous; look type and wardrobe stay Not specified until provided.",
+      "summary": "Progressive notes and ambiguity confirmation",
+      "acceptance": "open",
+      "evidenceLevel": "Local sample, controller and user review",
+      "evidence": [
+        "docs/task-3-local-notebook.md",
+        "apps/foundation/tests/notebook-preview.test.ts"
+      ],
+      "remaining": "Actual live transcription/extraction with representative speech; complete confirmations in the active customer context.",
+      "blockers": [
+        "B01",
+        "B03",
+        "B06"
+      ]
+    },
+    {
+      "id": "A02",
+      "requirement": "Stable notes appear within 2 seconds at the 95th percentile and before a continuous multi-sentence turn ends.",
+      "summary": "Notes within 2 seconds p95 before turn end",
+      "acceptance": "open",
+      "evidenceLevel": "Timing instrumentation and synthetic partial-event tests",
+      "evidence": [
+        "docs/phase-1-readiness.md",
+        "prototypes/voice-avatar/tests/notebook-timing-review.test.tsx"
+      ],
+      "remaining": "Measured live p95 on representative phones/networks; no qualifying live timing evidence is recorded.",
+      "blockers": [
+        "B01",
+        "B06",
+        "B08"
+      ]
+    },
+    {
+      "id": "A03",
+      "requirement": "A saved touch correction reaches the active styling context within 1 second. A voice correction reaches it within 2 seconds after understanding. A correction from $500 to $350 refreshes affected results.",
+      "summary": "Touch/voice correction timing and refreshed results",
+      "acceptance": "open",
+      "evidenceLevel": "Local revisions, stale-event rejection and browser edits",
+      "evidence": [
+        "docs/local-sample-journey-review.md",
+        "apps/foundation/tests/proposal-stream.test.ts"
+      ],
+      "remaining": "Live voice correction, active recommendation refresh and measured one-/two-second targets.",
+      "blockers": [
+        "B01",
+        "B06",
+        "B08"
+      ]
+    },
+    {
+      "id": "A04",
+      "requirement": "A jacket photo appears before analysis completes, remains as a collapsed thumbnail, can be enlarged, and stays the owned anchor through three feedback rounds. Its cost is excluded from totals.",
+      "summary": "Actual photo thumbnail/enlargement and owned anchor",
+      "acceptance": "open",
+      "evidenceLevel": "Generated-image walkthrough; user photo/camera review; simulated anchor protection",
+      "evidence": [
+        "docs/task-4-local-media.md",
+        "apps/foundation/tests/local-reference.test.ts"
+      ],
+      "remaining": "Actual customer photo persists through three integrated checked rounds, with ownership and cost exclusion verified.",
+      "blockers": [
+        "B03",
+        "B06",
+        "B07"
+      ]
+    },
+    {
+      "id": "A05",
+      "requirement": "Multi-item photos, uncertain recognition, and ownership ambiguity prompt confirmation. Replacing or removing the reference works by voice or touch, without late events restoring it.",
+      "summary": "Ambiguous images, ownership and reference replacement",
+      "acceptance": "open",
+      "evidenceLevel": "Local explicit description/ownership and late-reference fencing",
+      "evidence": [
+        "docs/local-sample-privacy-security-review.md",
+        "apps/foundation/tests/local-reference.test.ts"
+      ],
+      "remaining": "Real recognition uncertainty/multiple garments, voice replacement/removal and integrated late-result safety.",
+      "blockers": [
+        "B01",
+        "B06"
+      ]
+    },
+    {
+      "id": "A06",
+      "requirement": "The customer receives one coordinated look at a time with clear owned/shoppable labels and real retailer product links for new items. After feedback, one revised look is presented. A saved no-high-heels exclusion blocks high heels before they appear.",
+      "summary": "One checked look with real links and saved exclusions",
+      "acceptance": "open",
+      "evidenceLevel": "Illustrated draft plus independent deterministic simulated validation",
+      "evidence": [
+        "docs/task-6b-local-validation.md",
+        "apps/foundation/tests/local-outfit-validation.test.ts"
+      ],
+      "remaining": "Real generator/semantic checker, authorized catalog and enforced pre-display/pre-speech release.",
+      "blockers": [
+        "B01",
+        "B02",
+        "B06"
+      ]
+    },
+    {
+      "id": "A07",
+      "requirement": "\u201cKeep the dress and bag, but replace the high heels with lower heels\u201d retains the named pieces and changes the shoes. Three feedback rounds preserve current constraints and show explanations and totals.",
+      "summary": "Keep exact pieces through three feedback rounds",
+      "acceptance": "open",
+      "evidenceLevel": "Local item-scoped feedback, fixed owned anchors and bounded changes",
+      "evidence": [
+        "docs/task-6c-local-feedback.md",
+        "apps/foundation/tests/local-look-feedback.test.ts"
+      ],
+      "remaining": "Live understanding of named items and three real checked revisions with explanations/current totals.",
+      "blockers": [
+        "B01",
+        "B02",
+        "B06"
+      ]
+    },
+    {
+      "id": "A08",
+      "requirement": "A conflicting request prompts a focused question. A confirmed session exception is visible and does not silently change the profile.",
+      "summary": "Focused conflict question and visible session exception",
+      "acceptance": "open",
+      "evidenceLevel": "Deterministic conflict/exception fixtures and scoped feedback",
+      "evidence": [
+        "docs/task-6b-local-validation.md",
+        "apps/foundation/tests/local-outfit-validation.test.ts"
+      ],
+      "remaining": "Integrated conversational clarification and customer-visible confirmed exception with profile unchanged.",
+      "blockers": [
+        "B01",
+        "B06"
+      ]
+    },
+    {
+      "id": "A09",
+      "requirement": "A budget or preference changes while a look is being prepared. An obsolete check or delayed result cannot publish it. Restored looks and additions to the shopping list also pass current checks.",
+      "summary": "No stale result after requirements change",
+      "acceptance": "open",
+      "evidenceLevel": "Revision-bound authorization, validation/restore/list and cancellation fixtures",
+      "evidence": [
+        "docs/task-6d-local-revisions.md",
+        "prototypes/voice-avatar/tests/look-release.test.ts"
+      ],
+      "remaining": "Same revision authority across actual generator, renderer, speech, restored look and shopping addition.",
+      "blockers": [
+        "B01",
+        "B02",
+        "B06"
+      ]
+    },
+    {
+      "id": "A10",
+      "requirement": "The customer can compare, undo feedback, save, reopen, and delete looks, and explicitly save product links to a shopping list. A Shop at [retailer] action opens the matching real product page; purchasing happens on that retailer website. No product is automatically purchased or added to a retailer cart.",
+      "summary": "Compare/undo/save/reopen/delete and real shopping action",
+      "acceptance": "open",
+      "evidenceLevel": "Local revisions, saved-look/list controls and complete sample walkthrough",
+      "evidence": [
+        "docs/local-sample-journey-review.md",
+        "apps/foundation/tests/local-look-revisions.test.ts"
+      ],
+      "remaining": "Authenticated persistence and real matching retailer navigation through fresh checks; no cart automation.",
+      "blockers": [
+        "B02",
+        "B03",
+        "B06",
+        "B07"
+      ]
+    },
+    {
+      "id": "A11",
+      "requirement": "Denied camera/microphone access, recognition failure, and service timeouts offer usable recovery. Failed preference validation never releases an unchecked look.",
+      "summary": "Permission/failure recovery without unchecked release",
+      "acceptance": "open",
+      "evidenceLevel": "Synthetic outages and gates; one accepted bounded replacement-room recovery",
+      "evidence": [
+        "docs/task-8c-local-failure-capacity.md",
+        "apps/foundation/tests/local-outfit-validation.test.ts",
+        "docs/progress.md"
+      ],
+      "remaining": "Integrated device denial, actual recognition/provider/feed failures and reliable cleanup/recovery.",
+      "blockers": [
+        "B01",
+        "B06",
+        "B08"
+      ]
+    },
+    {
+      "id": "A12",
+      "requirement": "The core journey works with touch/text, captions, screen readers, keyboard/switch input, and reduced motion. Notebook status remains understandable without color.",
+      "summary": "Accessible touch/text/captions/keyboard/switch/reduced motion",
+      "acceptance": "open",
+      "evidenceLevel": "Populated keyboard and 320px normal/doubled-text audits, focus fixes",
+      "evidence": [
+        "docs/task-8b-local-accessibility.md",
+        "apps/foundation/tests/dialog-focus.test.ts"
+      ],
+      "remaining": "Real VoiceOver/TalkBack, switch, native zoom, OS reduced motion and integrated captions on devices.",
+      "blockers": [
+        "B01",
+        "B08"
+      ]
+    },
+    {
+      "id": "A13",
+      "requirement": "Session clearing and authorized export/deletion cover notes, feedback, wardrobe images, saved preferences, looks, and associated records as applicable. Permanent saving of profiles, wardrobe items, and looks requires explicit consent and a save action; notebook notes and session feedback are not saved with a look.",
+      "summary": "Explicit saving, scoped export/clear/deletion",
+      "acceptance": "open",
+      "evidenceLevel": "Local five-category exports, SQL lifecycle and recovery/deletion rehearsals",
+      "evidence": [
+        "docs/local-sample-privacy-security-review.md",
+        "apps/foundation/tests/privacy-media-integration.test.ts"
+      ],
+      "remaining": "Authorized hosted export/deletion, permanent data/reference cleanup, current independent deletion evidence and provider limits.",
+      "blockers": [
+        "B03",
+        "B05",
+        "B07"
+      ]
+    },
+    {
+      "id": "A14",
+      "requirement": "During a conversation, the customer starts the live camera with permission, shows a garment, and captures and confirms a still by voice or touch. The actual still appears in the notebook and remains after the camera stops. A different item shown later does not replace it without confirmation. Stopping or losing the camera preserves the conversation and reference, with upload or description alternatives available. The stream is not automatically recorded or permanently saved.",
+      "summary": "Live camera during conversation and confirmed stable still",
+      "acceptance": "open",
+      "evidenceLevel": "User-approved local camera start/stop/capture/collapse; mocked late-frame tests",
+      "evidence": [
+        "docs/task-4-local-media.md",
+        "apps/foundation/tests/local-notebook-camera.test.ts"
+      ],
+      "remaining": "Simultaneous live conversation/camera, voice capture, device permissions/loss and retained reference without recording.",
+      "blockers": [
+        "B01",
+        "B05",
+        "B06",
+        "B08"
+      ]
+    },
+    {
+      "id": "A15",
+      "requirement": "Each new item links to its matching real retailer product page. The look shows a source-backed, dated estimate in the confirmed currency, excludes owned items, and identifies unknown shipping or tax. Missing prices never yield a complete or falsely budget-compliant total. A broken link or unavailable item offers a checked replacement; any affiliate relationship is disclosed.",
+      "summary": "Matching real links, dated cost and checked replacement",
+      "acceptance": "open",
+      "evidenceLevel": "Synthetic source/URL/price contracts, owned exclusion and incomplete totals",
+      "evidence": [
+        "docs/task-5b-local-shopping-evidence.md",
+        "apps/foundation/tests/retail-snapshot.test.ts"
+      ],
+      "remaining": "Permitted actual product/imagery data, matching live links, current estimates and checked unavailable replacements.",
+      "blockers": [
+        "B02",
+        "B06"
+      ]
+    },
+    {
+      "id": "A16",
+      "requirement": "For a US customer, new-item links open the US product pages and prices and budgets are in USD. Recommendations consider the confirmed delivery destination and requested size; unavailable or unverified delivery is not presented as confirmed. Unsupported shopping countries or currencies are explained without inventing availability or conversion.",
+      "summary": "US/USD size and delivery evidence",
+      "acceptance": "open",
+      "evidenceLevel": "Local country/currency/source-policy and uncertainty rejection",
+      "evidence": [
+        "docs/task-5a-local-catalog.md",
+        "apps/foundation/tests/local-catalog.test.ts"
+      ],
+      "remaining": "Approved real US inventory, requested sizes and destination-specific delivery evidence.",
+      "blockers": [
+        "B02",
+        "B06"
+      ]
+    },
+    {
+      "id": "A17",
+      "requirement": "Affiliate shopping links use the confirmed program attribution and show a clear commission disclosure nearby. Non-affiliate links are not presented as commission-earning, and commission opportunities cannot bypass customer constraints or preference validation. A click alone is not treated as earned commission.",
+      "summary": "Confirmed affiliate attribution/disclosure; click is not commission",
+      "acceptance": "open",
+      "evidenceLevel": "Disabled affiliate contracts and simulated event ledger",
+      "evidence": [
+        "docs/task-5c-local-attribution.md",
+        "apps/foundation/tests/local-affiliate-ledger.test.ts"
+      ],
+      "remaining": "Actual approved program, attribution/disclosure verification and authoritative transaction events. Rakuten remains deferred.",
+      "blockers": [
+        "B02"
+      ]
+    },
+    {
+      "id": "A18",
+      "requirement": "A customer who is not signed in must create an account and sign in, or sign in to an existing account, before starting a consultation or receiving personalized looks. Successful sign-in through email/password enables the styling flow. Failed sign-in offers retry and access recovery; signing out prevents further account access. Camera, microphone, and permanent session-data storage still require their separate permissions or consent.",
+      "summary": "Email/password account and recovery before styling",
+      "acceptance": "open",
+      "evidenceLevel": "Prepared account host, synthetic HTTPS/SQL tests; local forms keep Stylist locked",
+      "evidence": [
+        "docs/hosted-account-activation.md",
+        "apps/foundation/tests/supabase-account-host.test.ts"
+      ],
+      "remaining": "Actual customer origin, email confirmation/recovery, identity/isolation/sign-out and permission acceptance. Social sign-in is removed.",
+      "blockers": [
+        "B03",
+        "B04",
+        "B07"
+      ]
+    },
+    {
+      "id": "A19",
+      "requirement": "After account creation and sign-in, a new customer starts the stylist conversation without completing a separate style questionnaire. The stylist collects preferences naturally, updates the notebook progressively, asks focused follow-ups, and accepts voice or touch corrections. Confirmed reusable preferences enter the saved profile only with explicit consent and a save action. A returning customer can use those preferences without repeating the full initial interview.",
+      "summary": "Conversational onboarding and explicit reusable profile",
+      "acceptance": "open",
+      "evidenceLevel": "No-questionnaire sample UI, progressive notes and explicit Budget save/return",
+      "evidence": [
+        "docs/task-3-local-notebook.md",
+        "apps/foundation/tests/local-sample-journey.test.ts"
+      ],
+      "remaining": "Authenticated first/returning live conversation, focused follow-ups and persisted consented profile reuse.",
+      "blockers": [
+        "B01",
+        "B03",
+        "B04",
+        "B06"
+      ]
+    },
+    {
+      "id": "A20",
+      "requirement": "A signed-in customer explicitly saves an owned-item photo and confirmed details to the digital wardrobe. In a later session, they retrieve and select that item; its actual photo appears in the notebook and the stylist includes it in a look checked against current requirements. The customer can edit or delete the wardrobe item. An item not explicitly saved does not become a permanent wardrobe entry, and another customer cannot access it.",
+      "summary": "Persist/reuse actual owned wardrobe photo with isolation",
+      "acceptance": "open",
+      "evidenceLevel": "Local Wardrobe user review, controlled SQL/media and synthetic owner checks",
+      "evidence": [
+        "docs/task-4c-local-wardrobe.md",
+        "apps/foundation/tests/wardrobe-save.test.ts"
+      ],
+      "remaining": "Actual authenticated hosted photo save/retrieve/delete, cross-customer denial and checked inclusion in live look.",
+      "blockers": [
+        "B03",
+        "B06",
+        "B07"
+      ]
+    },
+    {
+      "id": "A21",
+      "requirement": "The customer saves a look and reopens it in a later session. Its visual arrangement, component items, shopping links, and dated estimate are available, but related notebook notes, feedback, conversation, and session revision history are not stored with it or restored. Reopening uses current requirements and fresh checks. Saving the look does not automatically create wardrobe entries or update the saved profile.",
+      "summary": "Persist look only; reopen with fresh checks and empty notes",
+      "acceptance": "open",
+      "evidenceLevel": "Local saved-look projection, SQL-backed saving contracts and user review",
+      "evidence": [
+        "docs/task-7a-local-saved-looks.md",
+        "apps/foundation/tests/saved-look-save.test.ts"
+      ],
+      "remaining": "Hosted later-session look/links/assets restoration, fresh actual requirements and independent profile/Wardrobe consent.",
+      "blockers": [
+        "B02",
+        "B03",
+        "B06",
+        "B07"
+      ]
+    }
+  ],
+  "blockers": [
+    {
+      "id": "B01",
+      "rank": 1,
+      "priority": "P0",
+      "name": "Prove the live media and enforced recommendation-release contract",
+      "owner": "Provider clarification, then engineering and approved experiment",
+      "gate": "A supported transcription startup or an explicitly approved alternative; enforced pre-display/pre-speech validation, neutral failure output and stale-result cancellation. Verify any Tavus full-pipeline voice excludes ElevenLabs.",
+      "state": "OpenAI minimal startup failed; latest recorded specialist reply confirms no working procedure/referral. Tavus recommends full CVI but hard validation/fallback guarantees remain unresolved.",
+      "dependsOn": []
+    },
+    {
+      "id": "B02",
+      "rank": 2,
+      "priority": "P0",
+      "name": "Obtain permitted real product and affiliate access",
+      "owner": "Business/source eligibility, then engineering",
+      "gate": "Approved US/USD retailer data and imagery rights, product/variant/size/delivery evidence and confirmed affiliate terms.",
+      "state": "Only synthetic/illustrated catalog and inert attribution are prepared. Rakuten and the public-presence prerequisite are explicitly deferred; no alternative program is approved.",
+      "dependsOn": []
+    },
+    {
+      "id": "B03",
+      "rank": 3,
+      "priority": "P0",
+      "name": "Accept the customer host, authentication and isolation",
+      "owner": "Render clarification, engineering, then authorized real checks",
+      "gate": "Exact HTTPS customer origin, trusted ingress/callback handling, no sensitive proof logging, working mounted account routes, cookies/session/isolation/sign-out and durable abuse controls.",
+      "state": "21 hosted migrations and historical privilege checks are evidence of setup, not customer acceptance. Private voice preview is not the deployed customer account app. Render guarantees remain unresolved.",
+      "dependsOn": []
+    },
+    {
+      "id": "B04",
+      "rank": 4,
+      "priority": "P0",
+      "name": "Complete production email confirmation and cross-device recovery",
+      "owner": "Sender/domain business decision and account configuration",
+      "gate": "A production-capable sender and exact approved receiving origin, verified registration/confirmation/recovery delivery and receiving-device checks.",
+      "state": "Email/password with recovery is the sole MVP method. Domain purchase remains deferred until public launch; do not request Google/Apple setup or silently buy a domain.",
+      "dependsOn": [
+        "B03"
+      ]
+    },
+    {
+      "id": "B05",
+      "rank": 5,
+      "priority": "P0",
+      "name": "Accept provider privacy and media consent",
+      "owner": "Provider evidence plus business/privacy acceptance",
+      "gate": "Account-specific recording, retention/training/cleanup and voice-provider facts; accepted limits and separate camera/microphone/permanent-save consent.",
+      "state": "Private experiment consent and connection closure do not establish customer retention/deletion guarantees. Full pipeline is not accepted by Echo inspection.",
+      "dependsOn": [
+        "B01"
+      ]
+    },
+    {
+      "id": "B07",
+      "rank": 6,
+      "priority": "P0",
+      "name": "Complete customer/photo recovery and independent reconciliation",
+      "owner": "Operations design and authorized hosted acceptance",
+      "gate": "Off-Mac recoverable object inventory/latest deletion and spending authority, coordinated customer/photo snapshots, actual managed restore and deletion/financial reconciliation.",
+      "state": "Only empty-source database automation is accepted. It intentionally holds when any account/photo data appears. 183 local recovery checks and restart/Mac-loss simulations do not accept full hosted recovery.",
+      "dependsOn": []
+    },
+    {
+      "id": "B06",
+      "rank": 7,
+      "priority": "P0",
+      "name": "Connect and verify the actual current-context consultation",
+      "owner": "Engineering after prerequisite contracts",
+      "gate": "One authoritative authenticated session across live notes, recognition, current requirements, generation, independent checking, display/speech, camera, feedback, saving and shopping.",
+      "state": "Prepared modules and fixed local rehearsals remain separate. Neither simulated semantic pass nor illustrated draft permits real recommendation release.",
+      "dependsOn": [
+        "B01",
+        "B02",
+        "B03",
+        "B04",
+        "B05",
+        "B07"
+      ]
+    },
+    {
+      "id": "B08",
+      "rank": 8,
+      "priority": "P1",
+      "name": "Measure the real journey, devices, accessibility, capacity and cost",
+      "owner": "Engineering and authorized private trials/device checks",
+      "gate": "Representative phone/weak-network timing, 2-second p95 partial notes, correction deadlines, actual one-consultation cleanup, cost and assistive-technology acceptance.",
+      "state": "Local checks are strong but representative live evidence is incomplete. Existing allocation/held records are preserved; no new paid diagnostic, retry or spending is authorized by this audit.",
+      "dependsOn": [
+        "B06"
+      ]
+    },
+    {
+      "id": "B09",
+      "rank": 9,
+      "priority": "P1",
+      "name": "Complete phase reviews and obtain explicit launch approval",
+      "owner": "Engineering reviews and Sabine",
+      "gate": "Required phase-wide reviews/regressions, all affected live/manual criteria and operating risks accepted; explicit release approval and exact version.",
+      "state": "No phase or customer launch is accepted by test counts, this audit or historical private experiments.",
+      "dependsOn": [
+        "B04",
+        "B08"
+      ]
+    }
+  ]
+}

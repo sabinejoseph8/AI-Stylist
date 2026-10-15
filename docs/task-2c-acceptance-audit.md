@@ -1,3 +1,7 @@
+## Current scope reconciliation, 15 October 2026
+
+The body below records a historical checkpoint. Use the current product specification, docs/progress.md and [launch-readiness audit](launch-readiness-audit.md) for current evidence and remaining gates. Hosted 2b/2c preparation is authorized; twenty-one customer migrations are recorded. Email/password with recovery is the sole MVP account method; Google/Apple setup and linking are outside launch scope. Seven-day absolute sessions and cross-device recovery are approved and locally prepared. Current foundation coverage is 1,267 passing tests, not the older count below; real hosted account/email/isolation acceptance remains open. Domain purchase and Rakuten remain deferred. This annotation changes no hosted setting or acceptance checkbox.
+
 # Task 2c acceptance audit
 
 Status: Hosted Tasks 2b/2c are authorized and in progress. Task 2c and Phase 2 remain open. Updated 12 October 2026.

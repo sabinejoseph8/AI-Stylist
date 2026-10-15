@@ -1,3 +1,15 @@
+## Launch-readiness audit completed, 15 October 2026
+
+Mapped every exact A01–A21 requirement to existing review/test evidence, remaining live acceptance and nine ranked blockers in docs/launch-readiness-audit.md and its adjacent JSON matrix. All 21 have supporting partial evidence; none has complete production acceptance recorded. This is an audit of recorded evidence, not a new provider/device/hosted test. Existing test checkpoints remain 1,267 foundation, 208 operations, four encryption, 183 isolated recovery checks and 16 local Memory checks, each with its own scope and date.
+
+Corrected a reporting ambiguity: the phase checklist contains 38 tasks with 1a and 2a checked (2/38). The Memory snapshot's 5/41 combined items additionally counts completed discovery entries D02, D03 and X01. Earlier wording calling all five full build tasks was imprecise. No checkbox or business scope changed. Older account acceptance/activation documents now explicitly identify their historical Google/Apple, local-only and test-count statements; current email/password-only scope, hosted preparation approval and seven-day/cross-device decisions remain controlling.
+
+Ranked independent gates cover media/checked speech, permitted real US product and affiliate access, customer host/authentication, sender/recovery, provider privacy, customer/photo recovery and independent deletion/spending authority. Then actual current-context integration, real device/timing/cost checks, phase reviews and explicit launch approval must follow. The shortest-path section distinguishes a future synthetic-source engineering trial from accepting the real-shopping MVP. Domain purchase/Rakuten deferrals, ElevenLabs exclusion and existing spending/private activation gates are preserved. Initial backups intentionally hold on customer/account/photo data and are not full customer coverage.
+
+Project memory and interview notes are updated. Product A01–A21 and design requirements are unchanged. Local Memory source is synchronized, with no hosted site publication. No paid call, real account, support outreach, hosted setting, credential or allowance changed.
+
+Next action: use blocker IDs to review incoming concrete provider/host replies and resolve the independent source/recovery prerequisites. Implement only against accepted contracts; request the existing specific financial/security authorization before a real experiment. Do not mark sample evidence as complete acceptance or reopen deferred business decisions automatically.
+
 ## Local sample privacy/security review and fixes, 15 October 2026
 
 Sabine approved the complete local sample review/fixes without paid calls, real accounts or hosted changes. Added page-exit and cached-return clearing for account/reset drafts: visible input values erase synchronously, React state clears and pending local flows cancel. Late simulated completion cannot restore identity or reuse reset permission. This is local cleanup, not remote sign-out/revocation. Image normalization now redacts decoder exceptions at its own boundary while preserving resource cleanup.
