@@ -1,3 +1,13 @@
+## Initial database-only automatic backups activated, 15 October 2026
+
+Sabine explicitly accepted initial empty-source database coverage while customer/photo and hosted recovery acceptance remain open. Installed and loaded the native user LaunchAgent in the permanent private runtime. macOS reports last exit zero; its actual first run reports waiting. The preserved cumulative ledger still contains exactly one completed manual readiness attempt, with no new provider backup attempt at activation. The next attempt becomes eligible at 2:15 PM America/Cayman on 15 October, with up to 15 minutes until the local schedule check.
+
+Healthchecks now monitors the limited database job with a 12-hour period and one-hour grace. Its live status is up, seeded from the recent real, verified empty-source recovery point, not a fabricated backup. Earlier failure and stalled-run emails were confirmed received. Only empty status requests are sent. The Mac must stay signed in, awake, online and running Docker Desktop.
+
+The approved cumulative limits, earlier ledgers, keys and reservations are unchanged. The job stops on customer/photo data, schema/role changes, unresolved attempts, failures, expiry or exhausted allowance; it never retries or renews its own policy. This remains initial database-only protection, not complete customer/photo recovery or a proven hosted restore. Full Task 8d stays open and 5 of 41 full tasks remain complete. No new spending, plan change or support request occurred.
+
+Next action: let the scheduled job reach its existing due time and inspect its private receipt and monitor afterward. Do not force an early run. Before introducing customer/photo data, complete and accept coordinated customer/photo recovery, hosted restore and deletion reconciliation. Review expiry before the limited policy/key ends; renewal requires a new decision and never resets history.
+
 ## Limited job installed inactive and ready for scope review
 
 Permanent runtime source 5756bca contains 26 public files, with all 30 private files byte-verified unchanged. Its actual readiness command reports inactive because no activation record exists. The descriptor is disabled and no LaunchAgent is loaded. Added a regression proving the upload locator is saved before a failed readback; all 173 operations tests plus four encryption tests pass. Sabine was asked to accept or decline initial database-only automation while the source remains customer/photo-empty; that scope decision is pending. If approved, configure the limited monitor and native job using the existing cumulative ledger, without an early retry, new spending or reset. If declined, retain the disabled state. Full customer/photo/hosted recovery remains open.

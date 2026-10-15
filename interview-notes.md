@@ -1735,3 +1735,7 @@ While the transcription issue was escalated to a specialist, I approved moving t
 ## Simplifying launch account access, 14 October 2026
 
 I removed Google sign-in from my MVP after removing Apple. I chose email/password with recovery so the first launch does not depend on social-provider configuration. I kept the seven-day session and cross-device recovery requirements. The app now hides social sign-in choices and rejects direct social initiation and callbacks. This scope reduction does not replace real account, email-delivery or privacy/security acceptance.
+
+## Activating limited backups safely
+
+I approved initial automatic database backups while the app has no customer accounts or photos. I kept full customer recovery acceptance open. The fresh encrypted copy survived upload, readback and a 21-check local restore rehearsal. I activated the Mac job with cumulative limits and independent email alerts, and verified it waited instead of creating an early duplicate attempt. This gives me limited protection now while keeping customer launch dependent on complete photo and hosted recovery checks.

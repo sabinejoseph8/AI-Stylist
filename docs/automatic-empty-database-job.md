@@ -1,6 +1,6 @@
 # Initial automatic database job
 
-Status: prepared and tested, disabled pending Sabine's scope decision.
+Status: activated with Sabine's explicit initial database-only scope acceptance on 15 October 2026. The native Mac job loaded and reported waiting; no second backup attempt occurred. Full customer/photo recovery remains open.
 
 ## Scope
 
@@ -17,11 +17,11 @@ This job copies the current AI Stylist database only while it has no customer ac
 
 ## Scheduling and limits
 
-A disabled native macOS LaunchAgent descriptor is staged in the permanent private runtime. It has no credentials in its arguments or environment. It checks locally every 15 minutes but admits no more than one attempt per 12 hours, including failures, under the already approved cumulative allowance. It cannot reset counters, refund failures or renew the policy. It waits quietly between due times. The first live manual trial already used one attempt; activation cannot create an early retry.
+The native macOS user LaunchAgent is installed and loaded from the permanent private runtime. The original disabled descriptor is preserved as preparation evidence. It has no credentials in its arguments or environment. It checks locally every 15 minutes but admits no more than one attempt per 12 hours, including failures, under the already approved cumulative allowance. It cannot reset counters, refund failures or renew the policy. It waits quietly between due times. The first live manual trial already used one attempt; activation cannot create an early retry.
 
 This requires the Mac to be awake, online and signed in, with Docker Desktop running and the existing Node/Python clients available. No power/startup setting is changed. Independent Healthchecks email monitoring can report a missed run when the Mac stops reporting. No Codex background automation or model call is needed for this native application job.
 
-The proposed check timing is a 12-hour expected period and one-hour grace. The job sends empty start/success/failure requests only. Success means an authenticated, fresh recovery point for this limited scope, not customer recovery or final provider deletion/billing. No free-form content or keys are sent to monitoring.
+The active monitor timing is a 12-hour expected period and one-hour grace. The job sends empty start/success/failure requests only. Success means an authenticated, fresh recovery point for this limited scope, not customer recovery or final provider deletion/billing. No free-form content or keys are sent to monitoring.
 
 ## Failure and recovery
 
@@ -31,6 +31,6 @@ Existing provider lifecycle rules remain. Actual purge timing and production del
 
 ## Activation and stopping
 
-Before installation, Sabine must accept this narrower initial scope while full customer recovery remains open. Then write the reviewed private activation record, bind the accepted local drill fingerprint, set the Healthchecks period, load the native user LaunchAgent and verify it reports waiting or completion under the preserved budget. Keep the customer backup limitation visible in project memory.
+Sabine accepted this narrower initial scope on 15 October. The reviewed owner-only activation record is present, the accepted drill fingerprint is bound, the Healthchecks schedule is configured and macOS loaded the native job. Its first run exited zero and reported waiting. Next eligible attempt: 2:15 PM America/Cayman on 15 October, with up to 15 minutes until the local check. Keep the customer backup limitation visible in project memory.
 
 To stop, unload the user LaunchAgent, record the disabled state and pause its monitor after verifying no backup operation is in flight. Preserve all credentials, archives, receipts and counters. Removing a schedule never refunds or resets an attempt. Do not retire an uncertain active attempt merely because a process stopped.
