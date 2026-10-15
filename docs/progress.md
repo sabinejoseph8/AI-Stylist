@@ -1,3 +1,15 @@
+## Local deletion and spending restart tests passed, 15 October 2026
+
+Sabine approved local restart tests only, with no new spending or hosted changes. A disposable synthetic evidence writer exits before a fresh reader opens the deletion/account records and the same held reservation. Owner-only data and checksum checkpoint are flushed to disk, separate from the old database archive. An unfinished-write marker prevents incomplete state being accepted. The customer/photo drill consumes fresh-process evidence before deletion replay and financial reconciliation.
+
+Eleven new restart cases pass: record/held-reservation equality; missing evidence without empty fallback; forced exit between data and checkpoint; corrupt, truncated or missing files; stale evidence against the retained checkpoint; shared permissions/symlinks; overwrite refusal; real spending-process exit after reservation; completed-attempt interval/totals after restart; and missing/damaged financial ledgers without recreation or reset. The actual budget module uses disposable synthetic SQLite files only. A temporary-folder alias initially triggered the existing symlink guard; resolving the fixture path fixed test setup without relaxing protection.
+
+All 190 operations tests and four encryption tests pass. The isolated customer/photo database rehearsal passes 183 checks across 21 migrations; its disposable container is removed. No permanent allowance, runtime, scheduler, credential, hosted service or provider account changed. No spending or manual test is required. Local Memory source is updated, with its hosted deployment unchanged.
+
+Limits: the synthetic checksum checkpoint is not an independently authenticated production authority. Losing or rolling back both local files, losing the Mac, power-loss durability and managed Auth/Storage or hosted recovery remain unproven. No production evidence store or recovery endpoint was activated. Full Task 8d stays open and 5 of 41 full tasks remain complete. Product/design requirements need no change.
+
+Next action: specify the production evidence authority and loss/rollback acceptance requirements before connecting this local pattern to customer recovery. Preserve independent durability and hosted restore gates. OpenAI/Tavus/Render contract replies remain external dependencies.
+
 ## Local customer/photo recovery composition passed, 15 October 2026
 
 Sabine approved local customer/photo backup recovery tests only, with no new spending or hosted changes. Extended the isolated rehearsal to generate three one-pixel PNG images with database checksums and Storage metadata, package them with a real synthetic PostgreSQL dump and roles, and round-trip the actual authenticated encryption format using a throwaway in-memory key. No permanent credentials, real customer data, provider uploads or active-job changes were involved.
@@ -1015,6 +1027,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Local restart recovery: 190 operations tests plus four encryption tests pass; the customer/photo drill passes 183 checks. Fresh processes recover synthetic deletion/account records and the same held reservation. Incomplete, missing or damaged evidence and unresolved spending block recovery without reset. The checkpoint is a local fixture, not an independent production authority. Active backups and all hosted services are unchanged.
 
 Local customer/photo recovery: the expanded encrypted-package rehearsal passes 180 checks using generated PNGs, with 179 operations tests plus four encryption tests. Later photo/account deletion, spending holds, expired sessions and atomic failed restore are covered locally. Hosted customer/photo recovery and durable independent reconciliation remain open; the active database-only job is unchanged.
 

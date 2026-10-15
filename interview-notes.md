@@ -1743,3 +1743,7 @@ I approved initial automatic database backups while the app has no customer acco
 ## Testing customer and photo recovery locally
 
 I extended the recovery rehearsal to include generated images alongside customer preferences, wardrobe entries and saved looks. I tested the real encrypted package and checked that a photo or account deleted after backup could not reappear in restored access. I also checked damaged backups, an interrupted restore and preservation of later spending holds. The local drill passed 180 checks. I kept hosted recovery acceptance open because the independent evidence still lived only in rehearsal memory.
+
+## Checking recovery after process loss
+
+I tested deletion records and spending holds with separate writer and reader processes so the result did not depend on shared memory. I forced a spending process to stop after reserving its allowance and confirmed the next process kept the reservation and refused another attempt. Missing, damaged or incomplete evidence blocked recovery. The expanded database rehearsal passed 183 checks. I kept production recovery open because two local fixture files do not establish an independent authority after losing the computer or rolling back both files.

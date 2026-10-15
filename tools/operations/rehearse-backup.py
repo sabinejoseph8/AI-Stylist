@@ -9,6 +9,8 @@ import uuid
 import secrets
 import struct
 import zlib
+import tempfile
+from local_recovery_evidence import restart_round_trip
 from local_recovery_package import round_trip
 from recovery_objects import manifest, restore_objects
 
@@ -167,7 +169,17 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         current_ledger = json.loads(sql("set role service_role; select public.stylist_private_notes_trial_read_approved('synthetic_restore_only');"))
         require(current_ledger == held)
         require(sql(f"select count(*) from stylist_private.retired_media_ids where id='{DOOMED}';") == '1')
-        # Keep current evidence independently in drill memory; a real durable store is not implemented.
+        stage = 'independent-evidence-process-restart'
+        with tempfile.TemporaryDirectory(prefix='stylist-recovery-evidence-') as evidence_directory:
+            # Separate from the old DB archive; writer exits before a new reader starts.
+            recovered_evidence = restart_round_trip(evidence_directory, dict(version=1,
+                deleted_keys=sorted(current_deleted), deleted_accounts=[DELETED_OWNER], ledger=current_ledger))
+            current_deleted = frozenset(recovered_evidence['deleted_keys'])
+            current_ledger = recovered_evidence['ledger']
+            require(current_deleted == frozenset({deletion['key'], deleted_account_key}))
+            require(recovered_evidence['deleted_accounts'] == [DELETED_OWNER])
+            require(current_ledger == held)
+        # This is disposable local durability, not a hosted independent authority.
         object_source.clear()
         # The checksum and archive exist only in this process. Neither is printed or saved.
         sql('drop database source; create database restored; create database corrupt;', 'postgres')
