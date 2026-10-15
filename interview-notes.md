@@ -1,3 +1,7 @@
+## Investigating a path around a hosting support delay, 15 October 2026
+
+I approved a local investigation into keeping recovery proof out of URLs and using a fixed website address. The tests showed that a fixed address helps prevent URL substitution but does not prove an encrypted connection. I also found a mismatch to resolve between OTP authentication and my recovery-specific safeguard, so I kept that safeguard intact. Fourteen new tests brought the foundation suite to 1,281 passing tests. This gave me a clearer next step without spending more, changing hosted services or presenting a partial experiment as a finished account system.
+
 ## Testing a fresh automatic-path database copy
 
 I approved a conservative cumulative allowance for an account used only for these backups. I then verified a fresh encrypted upload and recovery and rehearsed the new archive in an isolated database with 21 passing checks. I prepared a job that stops when customer data, photos or schema changes appear. I kept that initial scope separate from full customer recovery and left the scheduler disabled until the narrower coverage is accepted.

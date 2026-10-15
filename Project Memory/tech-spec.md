@@ -1,3 +1,13 @@
+## Local Render alternative investigation, 15 October 2026
+
+Sabine approved local investigation with no new spending or hosted changes. The existing fixed-origin adapter ignores forwarded host/scheme values when building application URLs; loopback tests show this does not establish secure transport. The production transport guard remains unchanged and refuses plaintext. A disconnected recovery-code transport seam keeps synthetic email/code proof in a fixed-purpose POST body, with cancellation, response bounds and generic errors. No route, email template, customer UI or account authority was activated.
+
+Public Supabase Auth source supports email-code recovery verification but its OTP token issuance raises a compatibility question with the existing recovery-specific signed-purpose check. A real signed synthetic identity test confirms ordinary OTP remains refused for reset. Do not weaken that gate or claim the deployed project's behavior is proven. Short-code abuse protection, complete purpose binding/cleanup, signup confirmation, sender configuration and deployed ingress/body logging still require evidence. Changing the agreed emailed-link experience requires Sabine's decision before adoption, not for this investigation.
+
+All 1,281 foundation tests across 128 files, type checking and production build pass, including 14 new investigation cases. The initial restricted run lacked loopback permission; the authorized rerun passed. See docs/render-local-alternative-investigation.md. B03/B04 and all acceptance/task checkboxes remain unchanged: 2/38 phased tasks, 5/41 combined Memory items. Product and design requirements are unchanged. Project progress/MVP/technical memory and the local Memory snapshot are updated. No spending, real accounts, private runtime, hosted setting, support message or hosted publication changed.
+
+Exact next local action: design and review server-owned recovery-purpose binding against the existing one-use reset and cleanup owners. Do not mount the candidate or replace the transport policy before resolving its security contract. No action is required from Sabine for the completed investigation.
+
 ## Launch-readiness audit completed, 15 October 2026
 
 Mapped every exact A01–A21 requirement to existing review/test evidence, remaining live acceptance and nine ranked blockers in docs/launch-readiness-audit.md and its adjacent JSON matrix. All 21 have supporting partial evidence; none has complete production acceptance recorded. This is an audit of recorded evidence, not a new provider/device/hosted test. Existing test checkpoints remain 1,267 foundation, 208 operations, four encryption, 183 isolated recovery checks and 16 local Memory checks, each with its own scope and date.

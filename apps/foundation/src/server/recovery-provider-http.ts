@@ -61,6 +61,12 @@ export function createRecoveryProviderHttp(projectUrl:string,appOrigin:string,se
    if(typeof tokenHash!=='string'||!/^[-_A-Za-z0-9]{1,256}$/.test(tokenHash))return Promise.reject(Error('Supabase operation unavailable'));
    return request('/auth/v1/verify','POST',{token_hash:tokenHash,type:'recovery'},undefined,signal);
   },
+  /** Local investigation seam only. Not mounted or selected by the account composition.
+   * A six-digit recovery code is bearer proof; never place it in a URL or return provider tokens. */
+  verifyRecoveryCode(input:Readonly<{email:string;code:string}>,signal:AbortSignal){
+   if(!input||typeof input!=='object'||Array.isArray(input)||Object.keys(input).sort().join(',')!=='code,email'||typeof input.email!=='string'||input.email.length>254||!/^\S+@\S+\.\S+$/.test(input.email)||/[\u0000-\u001f\u007f]/.test(input.email)||typeof input.code!=='string'||!/^\d{6}$/.test(input.code))return Promise.reject(Error('Supabase operation unavailable'));
+   return request('/auth/v1/verify','POST',{email:input.email,token:input.code,type:'recovery'},undefined,signal);
+  },
   exchange(input:Readonly<{code:string;verifier:string}>,signal:AbortSignal){
    if(!input||typeof input.code!=='string'||!/^[-._~A-Za-z0-9]{1,2048}$/.test(input.code)||typeof input.verifier!=='string'||!/^[-_A-Za-z0-9]{43}$/.test(input.verifier))return Promise.reject(Error('Supabase operation unavailable'));
    return request('/auth/v1/token?grant_type=pkce','POST',{auth_code:input.code,code_verifier:input.verifier},undefined,signal);

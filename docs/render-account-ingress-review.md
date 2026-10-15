@@ -1,3 +1,7 @@
+# Current local investigation, 15 October 2026
+
+See [local alternative investigation](render-local-alternative-investigation.md). Fixed-origin construction is already present; it does not establish TLS trust. A disconnected recovery-code POST seam is tested locally but cannot yet replace complete recovery. Current MVP excludes social sign-in. The earlier support questions below are historical context; their unresolved security topics and hosted acceptance gates remain open.
+
 # Render customer account ingress review
 
 Status: researched, not activated. 12 October 2026.
