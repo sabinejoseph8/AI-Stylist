@@ -1,3 +1,7 @@
+## Later local signed authority contract
+
+See docs/local-tavus-history-authority-contract.md for authenticated fresh-read and conditional-update protocol tests. Signing and independent authority protection remain separate requirements. No real independent backend is selected or activated; authority/floor rollback and malicious generic-writer semantics remain explicit limits.
+
 # Local CVI history rollback witness rehearsal
 
 Sabine approved local preparation/tests on 15 October 2026, with no new spending or hosted changes. This is a disconnected model of an independently preserved authority. The actual witnesses are separate disposable local folders, so their independent protection is an explicit test assumption, not an established production capability.

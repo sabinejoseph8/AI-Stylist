@@ -1,3 +1,7 @@
+## Defining an independent history authority contract
+
+I prepared a local contract for fresh signed history reads and conditional updates. It pins the authority identity, rejects replayed replies and keeps uncertain updates held. I tested the contract with my speech endpoint so failures prevent draft work or text delivery. The review also showed that signatures do not make storage independent and cannot stop an authorized writer from submitting an invalid future history. I documented those limits and the need for restricted, validated domain operations before any real deployment.
+
 ## Testing rollback against a separate history witness
 
 I extended the local restart rehearsal to compare request and credential history with a separate monotonic witness. Restoring old journal and checksum files is refused while the witness remains current. I tested interrupted commits and deliberately kept uncertain states blocked. I also retained tests showing that restoring the witness along with all local history defeats the model. That makes the real deployment requirement clear: the authority must be independently protected, and separate folders on the same computer do not establish that protection.

@@ -1,3 +1,13 @@
+## Local independent CVI history authority contract, 15 October 2026
+
+Sabine approved local preparation/tests without new spending or hosted changes. Added a disconnected authority client requiring pinned Ed25519 identity, fresh challenges, exact signed scope/request binding, preserved epoch floors, immutable one-use read capabilities and conditional head advancement. Unavailable/unknown/stale/lost acknowledgments hold the client without retry, reset or fallback. Endpoint composition tests verify refusal before drafting and delivery.
+
+52 new foundation cases cover signatures, replay/forks, competing updates, capability/clock/deadline bounds, fixture read-only roles, outage/lost-ack behavior and six signed endpoint compositions. Review fixed a pending-read hold race and deadline arithmetic overflow. All 1,626 foundation tests across 142 files, 331 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks pass. See docs/local-tavus-history-authority-contract.md for evidence and required real backend controls.
+
+Boundaries: signer keys and linearizable storage are ephemeral test models. A fresh signature does not establish independent storage or actual privilege separation. Negative cases show authority+floor rollback is still accepted by a fresh caller and generic digest writers can erase semantic history at a higher epoch. Production needs independently protected floors/identities and validated domain transitions, not only signatures/CAS. No provider/account/hosted changes, private credentials, spending, permanent backup/runtime ledger or scheduler changes. Local Memory/interview records updated without publication, architecture approval or task completion changes.
+
+Exact next action: specify/simulate domain-specific nondecreasing replay and credential transitions and least-privilege operations, then review an independent backend proposal against approved hosting/spending. Existing real activation, privacy/provider and financial gates remain. No user action is needed for the completed local contract tests.
+
 ## Local CVI coordinated rollback witness rehearsal, 15 October 2026
 
 Sabine approved local preparation/tests with no new spending or hosted changes. Added protected replay/credential journal operations that compare exact history against a separate monotonic witness and advance that witness before acknowledging journal changes. A joint ledger/checkpoint rollback is refused while its witness remains current. Missing/mismatched/unavailable witness and interrupted witness/journal commits hold admission without reseed, rebase, retry or refund. The protected test bridge requires a witness and is not imported by any app entry point.
