@@ -1,3 +1,7 @@
+## Verifying the replacement backup credential
+
+I replaced the dashboard preset with a key that passed an exact permission check. The one-time administrator operation kept the administrator credential in memory, and the new key was saved privately. A separate read-only check verified its restrictions and the empty backup folder. I kept backup activation open because connecting a storage provider is only one part of a recoverable database-and-photo backup.
+
 ## Checking the permissions behind a dashboard label
 
 I found that the provider's Read and Write preset also included permission to change bucket settings. The connection check stopped before accessing backup files because the key was broader than the backup runner needed. I prepared an exact file-only replacement request and required a separate administrator handoff to create it. I kept the original diagnostic receipt intact and recorded the actual permission names so the reason would not be lost.

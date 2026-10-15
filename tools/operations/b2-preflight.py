@@ -91,13 +91,16 @@ def inspect(config, call=request_json, now=None):
 
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--inspect-approved-account', action='store_true', required=True)
-    parser.parse_args()
-    receipt = PRIVATE / 'b2-preflight-held.json'
+    modes = parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument('--inspect-approved-account', action='store_true')
+    modes.add_argument('--inspect-approved-replacement', action='store_true')
+    args = parser.parse_args()
+    replacement = args.inspect_approved_replacement
+    receipt = PRIVATE / ('b2-restricted-preflight-held.json' if replacement else 'b2-preflight-held.json')
     try:
         if PRIVATE.stat().st_mode & 0o077:
             raise Held('private-directory-permissions')
-        path = PRIVATE / 'b2.env'
+        path = PRIVATE / ('b2-restricted.env' if replacement else 'b2.env')
         if path.stat().st_mode & 0o077:
             raise Held('private-file-permissions')
         config = {}
