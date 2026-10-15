@@ -1,3 +1,9 @@
+## Source database connection verified, 15 October 2026
+
+After Sabine saved the credential again and explicitly requested another check, the bounded preflight succeeded: correct database, explicit read-only transaction, PostgreSQL major 17, full client certificate/hostname verification and disposable-client removal. Zero database writes, dumps and uploads. This supersedes the earlier authentication holds without erasing their history. The password was never printed or committed. No assumption is made about whether Sabine reset it or corrected her saved value.
+
+Next actions: establish independent backup encryption-key recovery custody and the approved private Storage source-credential handoff; finish coordinated export, quota baseline/reconciliation, bounded transport and restore verification before activation. No backup schedule or real-data upload is active. Full Task 8d stays open and free-limit constraints remain unchanged.
+
 ## Database certificate repaired; password verification required, 15 October 2026
 
 Sabine saved the private password file. The bounded connection check first held at TLS verification. Local inspection found the pinned PostgreSQL client image has no readable system CA bundle at the configured path. Downloaded and parsed the public CA certificate linked by the approved project's Database Settings over HTTPS, keeping it in ignored private storage. The client now mounts only this certificate read-only and runs under the local non-root owner identity so the owner-only certificate is readable. Full CA and hostname verification remain enabled. No hosted security setting was changed.

@@ -1,3 +1,9 @@
+## Source database connection verified, 15 October 2026
+
+After Sabine saved the credential again and explicitly requested another check, the bounded preflight succeeded: correct database, explicit read-only transaction, PostgreSQL major 17, full client certificate/hostname verification and disposable-client removal. Zero database writes, dumps and uploads. This supersedes the earlier authentication holds without erasing their history. The password was never printed or committed. No assumption is made about whether Sabine reset it or corrected her saved value.
+
+Next actions: establish independent backup encryption-key recovery custody and the approved private Storage source-credential handoff; finish coordinated export, quota baseline/reconciliation, bounded transport and restore verification before activation. No backup schedule or real-data upload is active. Full Task 8d stays open and free-limit constraints remain unchanged.
+
 ## Saved-password verification remains blocked, 15 October 2026
 
 After Sabine verified her saved database password and reported saved again, one explicitly requested bounded connection check still returned database-authentication-refused. Full TLS verification remained enabled; no metadata query, export, upload or database change occurred. The disposable client was removed. No automatic retry or credential reset was performed. Next action requires Sabine to establish the correct AI Stylist database credential, with a user-performed reset only if she chooses it after considering existing direct database connections. Backup activation remains paused.
