@@ -1,3 +1,13 @@
+## Local CVI replay protection across restarts, 15 October 2026
+
+Sabine approved local preparation/tests with no new spending or hosted changes. Added a required replay-port endpoint factory and metadata-only reservation/consumption acknowledgments. Requests reserve durably before draft work and spend one-use permission before response bytes. Missing storage never falls back in the restart factory; mismatched/unknown acknowledgments and late canceled results release no text. Only disposable test bridges connect the port to a local file journal.
+
+42 new foundation tests include 19 fresh-process and 23 port/acknowledgment cases. Fifteen new operations tests cover file/schema/clock/replay/disk limits. Process crashes before delivery hold further admission; spent IDs remain consumed even after a crash before byte handoff. Competing workers and interrupted reserve/spend stages are tested. All 1,514 foundation tests across 137 files, 293 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks pass. See docs/local-tavus-replay-restart.md for evidence and limits.
+
+Limits: a negative test confirms coordinated valid-file rollback still defeats the checksum. Independent monotonic history, real credential revocation/fencing, actual current notes, permanent spending admission, production privacy retention and Tavus request correlation remain gates. New IDs after spent records can be admitted; this does not establish worker/provider quiescence or revoke the old credential. No provider calls, hosted settings, paid services, private credentials, permanent backup runtime/ledgers or scheduler changed. Local Memory updated only; no publication, production architecture or checklist completion changes.
+
+Exact next action: prepare the disconnected consultation-owner lifecycle for old-credential invalidation, restart refusal and authoritative experiment admission; preserve live/provider/privacy/financial gates. No user action is needed for the completed local replay rehearsal.
+
 ## Local protected CVI endpoint safeguards, 15 October 2026
 
 Sabine approved local preparation/tests with no new spending or hosted changes. Added a disconnected Request/Response candidate with fixed origin/conversation and injected bearer authentication, strict minimal body schema and byte/deadline caps, bounded one-use request IDs, one active operation and delivery-time cancellation/revision checks. Incoming prompts cannot confirm app notes. Late/failed/unknown output is suppressed; no unchecked generated fallback is introduced. Caller configuration is captured immutably and forwarded headers never select authority.

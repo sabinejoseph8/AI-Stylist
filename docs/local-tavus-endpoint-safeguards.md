@@ -1,3 +1,7 @@
+## Later local restart rehearsal
+
+See docs/local-tavus-replay-restart.md for the required replay-port factory, disposable durable journal and fresh-process evidence. The volatile limitation below still applies to the original no-port fixture. Neither variant is hosted or accepted for live Tavus use. Coordinated journal rollback, credential revocation and real provider correlation remain open.
+
 # Local protected CVI endpoint candidate
 
 Sabine approved local safeguards and tests on 15 October 2026, with no new spending or hosted changes. This extends the disconnected flow in docs/local-tavus-cvi-styling.md. It is a Request/Response harness only: no listener, public route, environment credentials, provider, account, room or media device is connected. Only tests import it.

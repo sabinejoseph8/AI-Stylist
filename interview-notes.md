@@ -1,3 +1,7 @@
+## Making replay evidence survive a restart
+
+I added a local rehearsal that records a request before draft work and spends its delivery permission before releasing text. I tested fresh processes, competing workers, damaged history and crashes during writes. A restart does not refund an attempt or let a delivered request run again, and unresolved reservations stop new work. I also kept a negative test showing that rolling back both local files defeats a checksum. That distinction keeps me from treating a useful restart rehearsal as complete production security or provider cleanup proof.
+
 ## Protecting the conversation boundary before live testing
 
 I prepared and tested a local endpoint that belongs to one styling conversation. It checks credentials, refuses repeated or competing requests, limits input size and waits for independent outfit checks before delivering speech text. I also tested the moment of delivery, because a previously approved answer can become stale while waiting. Incoming prompt instructions cannot confirm my app's styling notes. I recorded that these safeguards do not yet prove Tavus request compatibility, restart protection or downstream audio cancellation, so I can separate local evidence from the next live experiment.
