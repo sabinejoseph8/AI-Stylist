@@ -57,3 +57,11 @@ class CandidateTransferTests(unittest.TestCase):
             with self.assertRaises(m.TransferHeld):m.download(url,'fixture','fixture',size)
         with self.assertRaises(m.TransferHeld):
             m.NoRedirect().redirect_request(None,None,302,'',{},'https://other.test')
+
+    def test_upload_locator_recorded_before_a_failed_readback(self):
+        saved=[]
+        def read(*args):
+            self.assertEqual(saved[0]['file_id'],'fixture')
+            raise OSError('fixture failure')
+        with self.assertRaises(OSError):self.run_transfer(read=read,uploaded=lambda result:saved.append(result))
+        self.assertEqual(len(saved),1)

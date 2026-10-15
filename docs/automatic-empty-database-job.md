@@ -13,7 +13,7 @@ This job copies the current AI Stylist database only while it has no customer ac
 - The fresh archive passed 21 checks in a disposable network-disabled local database, including owner isolation and anonymous denial. That container was removed.
 - Managed owner/grantor equivalence, hosted Supabase restoration and real photo recovery remain unverified. The local drill adapts role grantors/owners; it is not a production clone.
 - Schema signatures are stable across the two real captures; changed SQL/roles would require another review.
-- 172 operations tests and four encryption tests pass, including a simulated full job and retained upload locators. Simulated activation records are test fixtures only.
+- 173 operations tests and four encryption tests pass, including a simulated full job and retained upload locators. Simulated activation records are test fixtures only.
 
 ## Scheduling and limits
 
