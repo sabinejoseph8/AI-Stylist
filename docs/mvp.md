@@ -1,3 +1,15 @@
+## Durable Mac backup runtime prepared, 15 October 2026
+
+Prepared backup_runtime.py for a dedicated owner-only Library/Application Support/AI Stylist Backups folder. Public code installation and private transfer are separate operations. The helper rejects an existing destination, symlink/traversal paths, non-owner/shared private files, changed/oversized files, live SQLite sidecars and nonempty private destinations. It records public source hashes and commit, copies only an exact private allowlist after explicit approval, preserves original files and all existing attempt/quota receipts, and excludes the old overbroad B2 dashboard key. It does not refresh stale counters, refund reservations, invoke a provider, install a scheduler or claim a complete backup. Partial transfers remain held instead of overwriting history.
+
+The empty-source candidate command now resolves its source commit from a verified runtime manifest when outside a Git checkout. Ten runtime cases plus the existing suites pass: 130 operations tests, with the four encryption tests unchanged. Manifest hashes detect accidental changes; they are not independent authentication against an attacker who can alter both code and manifest. No private credential has yet been copied to the durable location. Preparation is not activation.
+
+Current blockers remain trustworthy automatic account-wide daily request/download/storage evidence, full coordinated database/photo export, current deletion/financial reconciliation and hosted recovery acceptance. Official caps documentation confirms daily counters reset at midnight GMT and that caps/alerts and transaction classes matter; reviewed Native API documentation has not established an automatic current-usage source for this restricted account. Organization/partner reports are not assumed to be a current real-time interface for this account. No inquiry was sent, no free guard weakened and no paid service added.
+
+Exact next action: install the reviewed public runtime, obtain approval before copying the existing private credentials/recovery key and state to that durable owner-only folder, verify permissions and preserved bytes, then continue bounded source/runner integration while uploads and scheduling stay held on unknown usage.
+
+References: https://www.backblaze.com/docs/en/cloud-storage-data-caps-and-alerts ; https://www.backblaze.com/docs/cloud-storage-native-api .
+
 ## Stalled-run email rehearsal confirmed, 15 October 2026
 
 After Sabine confirmed the explicit failure email, temporarily set the setup-only monitor to a one-minute grace and sent exactly one empty-body start signal. No completion or false backup-success signal was sent. Healthchecks independently changed to down after the deadline, reported the alert delivered, and Sabine confirmed that second email arrived. Restored the one-day period/one-hour grace and verified the check is paused. Two separate permanent private attempt receipts prevent automatic repetition. The ping URL file is owner-only and ignored by Git.

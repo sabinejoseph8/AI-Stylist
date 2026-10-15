@@ -13,6 +13,7 @@ import time
 import uuid
 from bounded_client import capture,ClientHeld
 from backup_bundle import build_candidate
+from backup_runtime import source_commit
 
 _spec=importlib.util.spec_from_file_location('source_candidate_readiness',Path(__file__).with_name('supabase-backup-source-readiness.py'))
 source=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(source)
@@ -83,7 +84,7 @@ def main():
         receipt=PRIVATE/'database-candidate-export.json'
         fd=os.open(receipt,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
         with os.fdopen(fd,'w') as f:json.dump({'outcome':'held','maximum_exports':2,'uploads':0},f)
-        commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=ROOT,text=True).strip()
+        commit=source_commit(ROOT)
         encrypted=prepare(config,password,commit)
         destination=PRIVATE/'database-candidate.asb'
         fd=os.open(destination,os.O_WRONLY|os.O_CREAT|os.O_EXCL,0o600)
