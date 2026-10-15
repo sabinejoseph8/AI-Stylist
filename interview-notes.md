@@ -1,3 +1,7 @@
+## Preparing an automatic backup allowance
+
+I found that requiring a fresh dashboard observation before every upload prevented unattended backups. I prepared a separate conservative allowance that counts all attempted bytes and requests without resetting or refunding failures, then stops when a limit or expiry is reached. I kept it inactive while asking for the account-use facts and the decision needed to change the financial safeguard. Automated checks cover exhausted budgets, interrupted attempts, clock reversal and preservation of earlier history.
+
 ## Recovering the encrypted database candidate from cloud storage
 
 I installed the backup runtime in a permanent private folder and verified the approved credentials and state transfer. I then used fresh free-cap evidence and conservative reservations to upload and recover the encrypted database candidate. Its downloaded bytes matched, decryption worked and the package checks passed. I kept the earlier snapshot date and limited restore evidence visible, so this progress does not become an unsupported claim of fresh complete customer backups or automatic recovery.
