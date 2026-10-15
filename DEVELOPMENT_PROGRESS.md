@@ -1,3 +1,21 @@
+## Private Memory transport publication receipt
+
+Source f8c04218b1b6f6f4b48b62900077d2fa43b6559e deployed successfully as appgdep_6ad0678cf4dc8191972066542608c9d7 with owner-private access and MCP preserved. All 16 Site checks, build and artifact validation passed. Sabine's subsequent withdrawal of the support inquiry and candidate-packaging preparation are being synchronized in the next snapshot. No private credential, key or customer archive was included.
+
+## Complete-set packaging prepared; current B2 usage inspection needs sign-in
+
+Prepared backup_bundle.py as an in-memory candidate format pairing a PostgreSQL custom archive, role definitions and an exact checksum-verified photo manifest. Missing/extra/changed/legacy checksum-free photos, duplicate identifiers, expired/future metadata, unsafe members, compression, truncated archives and altered member digests are refused. No files are extracted to disk. The package remains a candidate and explicitly does not authorize a production restore; outer authenticated encryption, real coordinated export and current deletion/identity/financial reconciliation remain separate required boundaries. Conservative database/role/member/whole-package size bounds hold oversized sets instead of silently omitting data. No real source dump was generated.
+
+Six synthetic package cases bring operations coverage to 92 passing tests; four encryption tests remain passing. The B2 dashboard session expired when opening the known bucket page for current free-account usage verification. A sign-in handoff was requested; no stored login credential was retrieved or guessed. No support inquiry was sent, and Sabine's instruction not to send it is preserved.
+
+Exact next action requiring Sabine: sign in to Backblaze and report signed in. Then read current account storage/download/request evidence and caps before admitting one bounded encrypted synthetic transfer; reserve known request/byte maxima, retain failures and verify recovered bytes before any activation. Do not seed unknown counters as zero or bypass login. Full real snapshot/export, deletion evidence, expiry checks, failure alerts and scheduled-run acceptance remain incomplete. No backup schedule, customer-data transfer or new charge was activated.
+
+## Backblaze support inquiry withdrawn by Sabine, 15 October 2026
+
+Sabine instructed not to send the prepared Backblaze questions and said a support answer is not required. No inquiry was sent. Do not contact Backblaze about this draft or keep support authorization/reply as a prerequisite. Continue from published documentation and observed account controls. This does not authorize paid overage, seed unknown usage as zero, release held reservations or silently weaken the existing quota guards. Resolve cost-control evidence through documented interfaces and local verification where possible; report a concrete remaining limitation without treating a vendor reply as mandatory.
+
+Exact next implementation action: prepare/test a complete-set snapshot/package boundary and local runner readiness checks. Financial admission, consistent source export, current deletion evidence, live transfer/restore verification and alerts remain required before unattended activation. The Mac runner choice and user-confirmed independent key custody remain accepted. No backup schedule or real-data transfer is active.
+
 ## Private Memory source-access publication receipt
 
 The verified connection, independent key-custody report, photo-source preparation and local runner selection were published successfully to the existing owner-private Memory website from source b39956e3050d3c2e513f65486826ca70ac68575f as appgdep_6ad0670b573c81919abc5242d05ed04c. All 16 Site checks and artifact validation passed; MCP and owner-private access are preserved. The subsequent inactive encrypted-transport update is being synchronized separately. No private credential or recovery-key file was packaged.
