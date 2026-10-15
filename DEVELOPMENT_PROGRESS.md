@@ -1,3 +1,15 @@
+## Private Memory publication receipt
+
+The prepared source 1839adb77a30a8ca7f4b52d74c1dfd1298e22fb2 deployed successfully as appgdep_6ad061df2eec81919e6e049f3bdee7a6 at https://ai-stylist-project-memory.idealgnat256.chatgpt.site, preserving owner-private access and MCP. Its 16 checks/build/artifact validation passed before publication. It reflects the verified restricted B2 key and prepared database check; the subsequent certificate repair and password rejection recorded below require the next content refresh. No secret or private backup file was packaged.
+
+## Database certificate repaired; password verification required, 15 October 2026
+
+Sabine saved the private password file. The bounded connection check first held at TLS verification. Local inspection found the pinned PostgreSQL client image has no readable system CA bundle at the configured path. Downloaded and parsed the public CA certificate linked by the approved project's Database Settings over HTTPS, keeping it in ignored private storage. The client now mounts only this certificate read-only and runs under the local non-root owner identity so the owner-only certificate is readable. Full CA and hostname verification remain enabled. No hosted security setting was changed.
+
+Seventy Python operations tests pass, including certificate-format/permissions/symlink refusal and exact certificate mount checks. A single revised connection reached authentication, which Supabase refused. Raw errors and the password were not printed. No metadata query, dump, upload, download or backup schedule ran; disposable clients were removed. The password may be incorrect for this project, so no automatic retry or password reset is performed.
+
+Exact next action requiring Sabine: verify the saved AI Stylist database password, correct the private password file if necessary, save with Command-S and report ready. After her correction, perform one bounded read-only connection check. Complete export/Storage credentials, independent encryption-key recovery custody, coordinated recovery evidence, quota reconciliation and hosted restore verification before backup activation. B2 restricted-key scope verification remains accepted; the original held records stay intact. Full Task 8d remains open.
+
 ## Read-only source check prepared, awaiting private password
 
 Prepared supabase-backup-preflight.py with fixed-purpose PostgreSQL metadata SQL inside an explicit read-only transaction, verify-full client TLS, the observed included session-pooler route and the existing pinned PostgreSQL 17 client image. The password enters the client via stdin rather than Docker arguments/configuration, and raw errors are replaced by fixed categories. Container logging is disabled, privileges/resources are bounded, there is no image pull, and timeout handling removes and verifies the disposable client container. Pooler-side pg_stat_ssl was deliberately excluded because it describes the backend hop, not proof of the client TLS connection; successful verify-full client negotiation is the relevant evidence.

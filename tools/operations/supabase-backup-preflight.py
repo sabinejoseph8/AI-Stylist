@@ -6,8 +6,10 @@ Raw client errors are classified, never printed. No retry or IPv4 add-on.
 """
 import argparse
 import json
+import os
 import re
 import subprocess
+import ssl
 import uuid
 from pathlib import Path
 
@@ -39,10 +41,11 @@ def arguments(config,name):
     validate_config(config)
     args=['docker','run','--rm','--pull=never','--name',name,'--read-only',
           '--log-driver','none','--cap-drop','ALL','--security-opt','no-new-privileges',
-          '--pids-limit','32','--memory','128m','--user','999:999','-i']
+          '--mount','type=bind,src='+str(PRIVATE/'supabase-ca.crt')+',dst=/run/supabase-ca.crt,readonly',
+          '--pids-limit','32','--memory','128m','--user',str(os.getuid())+':'+str(os.getgid()),'-i']
     environment={'PGHOST':config['host'],'PGPORT':'5432','PGDATABASE':'postgres',
                  'PGUSER':config['user'],'PGSSLMODE':'verify-full',
-                 'PGSSLROOTCERT':'/etc/ssl/certs/ca-certificates.crt','PGCONNECT_TIMEOUT':'10',
+                 'PGSSLROOTCERT':'/run/supabase-ca.crt','PGCONNECT_TIMEOUT':'10',
                  'PGOPTIONS':'-c default_transaction_read_only=on -c statement_timeout=10000 -c lock_timeout=5000'}
     for key,value in environment.items():args+=['-e',key+'='+value]
     return args+[IMAGE,'sh','-c',CLIENT,'client',QUERY]
@@ -92,6 +95,18 @@ def inspect(config,password,run=subprocess.run):
         raise Held('database-response-invalid') from None
 
 
+def validate_certificate(path):
+    if path.is_symlink() or not path.is_file() or path.stat().st_mode&0o077:
+        raise Held('database-certificate-not-ready')
+    data=path.read_bytes()
+    if len(data)>32768 or not data.startswith(b'-----BEGIN CERTIFICATE-----'):
+        raise Held('database-certificate-invalid')
+    try:
+        ssl.SSLContext(ssl.PROTOCOL_TLS_CLIENT).load_verify_locations(cadata=data.decode('ascii'))
+    except (ValueError, UnicodeError, ssl.SSLError):
+        raise Held('database-certificate-invalid') from None
+
+
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
     parser.add_argument('--check-approved-database',action='store_true',required=True)
@@ -101,6 +116,7 @@ def main():
         if PRIVATE.stat().st_mode&0o077:raise Held('private-directory-permissions')
         paths=[PRIVATE/'supabase-password.txt',PRIVATE/'supabase-connection.json']
         if any(p.stat().st_mode&0o077 for p in paths):raise Held('private-file-permissions')
+        validate_certificate(PRIVATE/'supabase-ca.crt')
         config=json.loads(paths[1].read_text())
         password=paths[0].read_text().removesuffix('\n')
         result=inspect(config,password)

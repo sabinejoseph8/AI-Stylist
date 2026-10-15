@@ -1,3 +1,7 @@
+## Repairing the secure backup connection
+
+I kept certificate and hostname checks enabled when the backup connection failed. I traced the first failure to a missing certificate bundle in the database client and configured the official provider certificate in a read-only mount. The connection then reached authentication, where the saved password was rejected. I paused for a private password check instead of weakening security or resetting a credential. Seventy automated operations tests pass, but real backup activation and recovery proof remain open.
+
 ## Verifying the replacement backup credential
 
 I replaced the dashboard preset with a key that passed an exact permission check. The one-time administrator operation kept the administrator credential in memory, and the new key was saved privately. A separate read-only check verified its restrictions and the empty backup folder. I kept backup activation open because connecting a storage provider is only one part of a recoverable database-and-photo backup.

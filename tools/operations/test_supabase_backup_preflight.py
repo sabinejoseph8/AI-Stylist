@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 import subprocess
 import unittest
+import tempfile
 from types import SimpleNamespace
 
 spec=importlib.util.spec_from_file_location('supabase_backup_preflight',Path(__file__).with_name('supabase-backup-preflight.py'))
@@ -37,6 +38,9 @@ class DatabasePreflightTests(unittest.TestCase):
         self.assertNotIn('fixture-password',' '.join(args))
         self.assertEqual(kwargs['input'],b'fixture-password\n')
         self.assertIn('PGSSLMODE=verify-full',args)
+        self.assertIn('PGSSLROOTCERT=/run/supabase-ca.crt',args)
+        self.assertEqual(args.count('--mount'),1)
+        self.assertTrue(args[args.index('--mount')+1].endswith(',dst=/run/supabase-ca.crt,readonly'))
         self.assertIn('none',args)
         self.assertIn('--read-only',args)
         self.assertTrue(any('default_transaction_read_only=on' in a for a in args))
@@ -75,3 +79,15 @@ class DatabasePreflightTests(unittest.TestCase):
         run,calls=self.fake(outcome)
         with self.assertRaisesRegex(module.Held,'^database-authentication-refused$'):
             module.inspect(CONFIG,'fixture-password',run)
+
+    def test_invalid_or_public_certificate_refused(self):
+        with tempfile.TemporaryDirectory() as root:
+            p=Path(root)/'ca.crt'
+            p.write_text('not a certificate')
+            p.chmod(0o600)
+            with self.assertRaisesRegex(module.Held,'certificate-invalid'):module.validate_certificate(p)
+            p.chmod(0o644)
+            with self.assertRaisesRegex(module.Held,'certificate-not-ready'):module.validate_certificate(p)
+            link=Path(root)/'link.crt'
+            link.symlink_to(p)
+            with self.assertRaisesRegex(module.Held,'certificate-not-ready'):module.validate_certificate(link)
