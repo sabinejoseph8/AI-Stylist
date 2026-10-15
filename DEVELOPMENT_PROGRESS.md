@@ -1,3 +1,9 @@
+## Corrected private password check still refused, 15 October 2026
+
+Sabine reported correcting and saving the private database password. One bounded TLS-verified read-only connection was attempted and returned the fixed database-authentication-refused category. No metadata query, export, upload or backup activation occurred. The client was removed and no automatic retry ran. A local format-only check found no surrounding whitespace/quotes, connection-string prefix or environment-assignment prefix; the password itself was not displayed or copied.
+
+Exact next action requires Sabine: establish the correct password for the AI Stylist project. If she cannot recover it, a user-performed reset needs explicit consideration because it can break existing database connections; do not reset it automatically. After she establishes the credential, run one bounded connection check. Existing B2 scope verification remains valid; full snapshot integration, encryption recovery custody and restore verification remain open. No backup schedule is active.
+
 ## Private Memory publication receipt
 
 The prepared source 1839adb77a30a8ca7f4b52d74c1dfd1298e22fb2 deployed successfully as appgdep_6ad061df2eec81919e6e049f3bdee7a6 at https://ai-stylist-project-memory.idealgnat256.chatgpt.site, preserving owner-private access and MCP. Its 16 checks/build/artifact validation passed before publication. It reflects the verified restricted B2 key and prepared database check; the subsequent certificate repair and password rejection recorded below require the next content refresh. No secret or private backup file was packaged.

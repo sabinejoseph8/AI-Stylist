@@ -1,3 +1,9 @@
+## Corrected private password check still refused, 15 October 2026
+
+Sabine reported correcting and saving the private database password. One bounded TLS-verified read-only connection was attempted and returned the fixed database-authentication-refused category. No metadata query, export, upload or backup activation occurred. The client was removed and no automatic retry ran. A local format-only check found no surrounding whitespace/quotes, connection-string prefix or environment-assignment prefix; the password itself was not displayed or copied.
+
+Exact next action requires Sabine: establish the correct password for the AI Stylist project. If she cannot recover it, a user-performed reset needs explicit consideration because it can break existing database connections; do not reset it automatically. After she establishes the credential, run one bounded connection check. Existing B2 scope verification remains valid; full snapshot integration, encryption recovery custody and restore verification remain open. No backup schedule is active.
+
 ## Database certificate repaired; password verification required, 15 October 2026
 
 Sabine saved the private password file. The bounded connection check first held at TLS verification. Local inspection found the pinned PostgreSQL client image has no readable system CA bundle at the configured path. Downloaded and parsed the public CA certificate linked by the approved project's Database Settings over HTTPS, keeping it in ignored private storage. The client now mounts only this certificate read-only and runs under the local non-root owner identity so the owner-only certificate is readable. Full CA and hostname verification remain enabled. No hosted security setting was changed.
