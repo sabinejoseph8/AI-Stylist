@@ -10,7 +10,7 @@ export function createRecoveryConfirmation(origin:string,owner:Pick<ReturnType<t
  const base=new URL(origin);
  if(base.protocol!=='https:'||base.origin!==origin||typeof owner?.confirm!=='function')throw Error('Recovery unavailable');
  const entries=new Map<string,{proof:string;nonce:string;expires:number}>();
- const active=new Set<AbortController>();
+ const active=new Map<string,AbortController>();
  let closed=false;
  const clear=()=>`${cookieName}=; ${attributes}; Max-Age=0`;
  function sweep(){for(const [key,value] of entries)if(value.expires<=Date.now())entries.delete(key);}
@@ -26,7 +26,7 @@ export function createRecoveryConfirmation(origin:string,owner:Pick<ReturnType<t
  }
  return Object.freeze({
   clear,
-  close(){closed=true;entries.clear();for(const controller of active)controller.abort();},
+  close(){closed=true;entries.clear();for(const controller of active.values())controller.abort();},
   /** Accept only the fixed email landing URL; an email scanner cannot consume provider proof here. */
   begin(request:Request){
    sweep();
@@ -34,7 +34,7 @@ export function createRecoveryConfirmation(origin:string,owner:Pick<ReturnType<t
    const query=new URL(request.url).searchParams;
    if([...query.keys()].join(',')!=='token_hash')return null;
    const proof=query.get('token_hash');if(!proof||!/^[-_A-Za-z0-9]{1,256}$/.test(proof))return null;
-   const previous=cookie(request);if(previous)entries.delete(previous);
+   const previous=cookie(request);if(previous){entries.delete(previous);active.get(previous)?.abort();}
    if(entries.size>=128)return null;
    const token=randomBytes(32).toString('base64url'),nonce=randomBytes(32).toString('base64url');
    entries.set(hash(token),{proof,nonce:hash(nonce),expires:Date.now()+300000});
@@ -51,8 +51,16 @@ export function createRecoveryConfirmation(origin:string,owner:Pick<ReturnType<t
    const key=cookie(request),entry=key?entries.get(key):undefined;
    if(!key||!entry||entry.nonce!==hash(nonce))return unavailable;
    entries.delete(key);
-   const controller=new AbortController();active.add(controller);
-   try{return await owner.confirm(entry.proof,AbortSignal.any([signal,request.signal,controller.signal]));}finally{active.delete(controller);}
+   const controller=new AbortController();active.set(key,controller);
+   const scope=AbortSignal.any([signal,request.signal,controller.signal]);
+   try{
+    const result=await owner.confirm(entry.proof,scope);
+    if(closed||scope.aborted||Date.now()>=entry.expires){
+     if(result.status==='resetRequired')try{await result.discard();}catch{}
+     return unavailable;
+    }
+    return result;
+   }finally{if(active.get(key)===controller)active.delete(key);}
   }
  });
 }

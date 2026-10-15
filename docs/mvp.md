@@ -1,3 +1,15 @@
+## Local receiving-browser recovery protection, 15 October 2026
+
+Sabine approved local receiving-browser tests/fixes without new spending or hosted changes. Added 24 synthetic cases for cross-device confirmation without the original PKCE cookie, mismatched binding parts, forged headers, replacement/expiry, replay, refresh, shutdown, late grants, cleanup holds and password-field lifecycle. The generated confirmation script is executed in a Node VM with synthetic DOM/events/fetch; no real device or provider was used.
+
+Fixed late grant delivery after a binding was replaced, expired, canceled or closed: in-flight confirmation is associated with its cookie, replacement aborts it, and completion rechecks lifecycle/expiry before returning authority. Rejected late grants retain the existing owner cleanup/hold behavior. The confirmation page now aborts and disables reuse on exit/cached return/timeout, ignores late replies, clears its nonce variable and uses fixed-origin-root same-origin request settings. Exact Origin, reset-only cookies, signed purpose, no-store/no-referrer and hash CSP remain intact.
+
+All 1,331 foundation tests across 130 files, type checking and build pass. Existing test nonce parsers were updated for the script declaration; no behavioral checks were removed. See docs/local-receiving-browser-recovery.md. Prior 245 operations/four encryption evidence is unchanged and not rerun here. Product/design requirements, customer route activation and checklist counts remain unchanged (2/38 phased tasks, 5/41 combined items). Local Memory source and interview notes are updated; no hosted publication occurred.
+
+Limits: a complete stolen cookie/nonce pair is indistinguishable from the original bearer binding, and a negative test records that fact. Local field clearing/abort is not remote cleanup or undo of a completed change. Native browser/device/cache, real email/provider, incoming proof-URL logging, provider purpose, durable abuse and hosted ingress acceptance remain open. The separate code candidate/journal and permanent backup runtime/credentials/scheduler are unchanged; no paid call or real account was used.
+
+Exact next action: design the local durable admission-port contract and its relationship to the receiving-browser and reset-only owners. Resolve existing provider/hosting/sender and policy/evidence ownership gates before mounting any candidate. No action from Sabine is needed for these completed local tests.
+
 ## Local recovery abuse and restart protection rehearsal, 15 October 2026
 
 Sabine approved local recovery abuse/restart tests with no new spending or hosted changes. Added a disconnected synthetic journal that reserves attempts before callbacks and preserves cumulative guess/send counts, resend generations, policy/store binding and unresolved holds across fresh processes. Process locking prevents competing callers from exceeding the last available slot. Resends, new operation IDs and elapsed time do not refund counters. Missing/damaged/shared/symlink state, interrupted writes and uncertain outcomes block further simulated provider work.

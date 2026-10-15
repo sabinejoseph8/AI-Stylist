@@ -1,3 +1,7 @@
+## Protecting recovery on the receiving browser, 15 October 2026
+
+I tested recovery on a separate receiving browser without relying on the original device's cookies. The review found that late permission could survive an expired or replaced confirmation binding, so I added a final lifecycle check and cleanup. I also protected the confirmation page from late navigation after leaving, returning from cache or timing out. Twenty-four new synthetic tests brought the foundation suite to 1,331 passing tests. I documented that browser binding does not identify a physical device and kept real email, provider and hosted acceptance open. No new spending or hosted settings changed.
+
 ## Testing recovery limits through crashes and restarts, 15 October 2026
 
 I tested a separate local recovery ledger with synthetic identities and provider callbacks. Guess and resend counts survived fresh processes, and eight competing processes could not exceed the last available guess. I tested crashes and disk failures so uncertain work would stay blocked instead of being retried. The review also made lock contention refuse promptly. Thirty-seven new tests brought operations coverage to 245 passing tests. I documented that rolling back both local evidence files together remains undetected, so this rehearsal is not a finished production security system. No customer account, hosted service or spending changed.
