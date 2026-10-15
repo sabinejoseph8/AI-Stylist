@@ -1,3 +1,7 @@
+## Proving encrypted backup transfer and exposing restore limits
+
+I verified a real encrypted sample upload and download using four requests and 159 bytes each way, then checked decryption. I also prepared an encrypted local database candidate from the currently empty source and rehearsed its customer schemas in an isolated database. The first drill exposed differences in managed role grantors and missing local schema namespaces. I fixed the local setup while preserving the original archive and production configuration, then passed 21 isolation checks. I kept hosted recovery, real photo recovery and automatic scheduling open rather than treating a small successful transfer as a complete backup. I chose a free independent email monitor so a sleeping or disconnected Mac can be detected once monitoring is configured.
+
 ## Preparing complete photo backups
 
 I verified that the photo source bucket is private using a single read-only request. I then added checks for ownership, file size and cryptographic checksums so a missing or changed photo cannot quietly become a successful backup. Older photos without checksums pause the backup instead of disappearing from it. The prepared backup helpers pass 81 operations tests and four encryption tests; complete hosted recovery is still unproven.

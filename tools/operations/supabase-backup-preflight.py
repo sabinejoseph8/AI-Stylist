@@ -60,7 +60,7 @@ def classify(stderr):
     return 'database-client-or-query-held'
 
 
-def inspect(config,password,run=subprocess.run):
+def run_readonly_json(config,password,query,run=subprocess.run):
     validate_config(config)
     if (not isinstance(password,str) or not password or password=='PASTE_DATABASE_PASSWORD_HERE' or
         '\n' in password or '\r' in password or '\x00' in password or len(password)>1024):
@@ -69,7 +69,8 @@ def inspect(config,password,run=subprocess.run):
     result=None
     cleanup_ok=False
     try:
-        result=run(arguments(config,name),input=(password+'\n').encode(),capture_output=True,timeout=30)
+        args=arguments(config,name);args[-1]=query
+        result=run(args,input=(password+'\n').encode(),capture_output=True,timeout=30)
     except subprocess.TimeoutExpired:
         raise Held('database-check-timeout') from None
     finally:
@@ -86,13 +87,19 @@ def inspect(config,password,run=subprocess.run):
     try:
         if len(result.stdout)>4096:raise Held('database-response-invalid')
         data=json.loads(result.stdout)
-        if (not isinstance(data,dict) or set(data)!={'database_ok','read_only','server_major'} or
-            data['database_ok'] is not True or data['read_only'] is not True or
-            type(data['server_major']) is not int or not 14<=data['server_major']<=17):
-            raise Held('database-readiness-held')
-        return {**data,'client_tls_verify_full':True,'container_removed':True,'database_writes':0,'dumps':0,'uploads':0}
-    except (ValueError,TypeError,KeyError):
+        if not isinstance(data,dict):raise Held('database-response-invalid')
+        return data
+    except (ValueError,TypeError):
         raise Held('database-response-invalid') from None
+
+
+def inspect(config,password,run=subprocess.run):
+    data=run_readonly_json(config,password,QUERY,run)
+    if (set(data)!={'database_ok','read_only','server_major'} or
+        data['database_ok'] is not True or data['read_only'] is not True or
+        type(data['server_major']) is not int or not 14<=data['server_major']<=17):
+        raise Held('database-readiness-held')
+    return {**data,'client_tls_verify_full':True,'container_removed':True,'database_writes':0,'dumps':0,'uploads':0}
 
 
 def validate_certificate(path):
