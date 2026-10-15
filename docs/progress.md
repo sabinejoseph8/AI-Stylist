@@ -1,3 +1,15 @@
+## Populated local accessibility review and focus fixes, 15 October 2026
+
+Sabine approved local accessibility checks/fixes without paid calls, real accounts or hosted changes. Keyboard checks covered generated-photo dialogs, Wardrobe editing/error/Cancel, populated saved looks/shopping, privacy confirmation and export preparation/cancellation. Narrow 320px checks used normal 16px and enlarged 32px root text; the latter included a long garment description and actual locally normalized fixture image. Read-only audits found no horizontal overflow, unlabeled visible inputs, missing image alt attributes or active targets below 44-by-44. Focused confirmation context remained above the fixed navigation. Arriving November sample notes left the active Color editor focused; Cancel returned to Edit color. Browser error log was empty and viewport override was reset.
+
+Fixed three focus problems: Tab could leave the photo dialog's only control, privacy confirmation retained focus on a disabled Clear button, and export preparation/cancellation could leave focus on disabled controls or the page body. Both photo dialogs now contain forward/backward Tab while retaining native Escape/return behavior. Privacy confirmation focuses its heading on entry and restores the origin on cancellation/completion. Explicit export actions move to an enabled Cancel/Prepare control; background updates never request focus.
+
+Nine focused regression cases bring the foundation suite to 1,260 passing tests across 126 files. Type checking and production build pass. No palette, retention, account, provider, backup-runtime or hosted setting changed. Local Memory source and project/interview notes are updated; the hosted site stays unchanged. Five of 41 full tasks remain complete and full Task 8b stays open.
+
+Limits: this is local keyboard/DOM and enlarged-root-text evidence, not WCAG certification, native browser zoom, real screen-reader/switch acceptance, OS reduced-motion verification or a physical-phone test. No microphone, camera, real photo/account or paid provider was used. Product requirements are unchanged; design memory records the focus rules.
+
+Next action: retain the pending real assistive-technology/device and full live-journey acceptance gates. Resolve provider/host contracts and independent recovery authority before production integration; do not treat local accessibility checks as launch approval.
+
 ## Complete local sample walkthrough and status fix, 15 October 2026
 
 Sabine approved the automated local sample journey and fixes, without paid calls, real accounts or hosted changes. Browser walkthrough covered notebook confirmation/budget saving, a generated PNG reference/enlargement, explicit Wardrobe save/selection, separate illustrated draft/feedback revision, separate saved look and shopping entry, unavailable/recheck totals, five-category JSON export, canceled clearing, session-only clearing, late sample cancellation, End/new session, full clearing and refresh. The downloaded JSON was parsed and verified: five selected categories, two normalized WebP copies, no blob URLs and no notebook/history inside the saved-look projection. No camera/microphone was requested.
@@ -1051,6 +1063,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Local accessibility: populated keyboard/320px normal and doubled-text checks passed. Fixed photo-dialog Tab containment, privacy-confirmation focus and export-action focus; ordinary status updates do not move focus. All 1,260 foundation tests, type checking and build pass. Real assistive-technology/device and hosted acceptance remain open; no spending or hosted changes.
 
 Local app journey: the automated normal-preview walkthrough passed notes/photo/Wardrobe, separate sample feedback and saved-look/list, export, clear, End and refresh checks. Fixed stale Wardrobe-save wording and added two regressions. All 1,251 foundation tests, type checking and build pass. Hosted/live integration and full phase acceptance remain open; no paid calls, real accounts or hosted changes occurred.
 

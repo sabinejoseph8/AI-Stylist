@@ -1,3 +1,15 @@
+## Populated local accessibility review and focus fixes, 15 October 2026
+
+Sabine approved local accessibility checks/fixes without paid calls, real accounts or hosted changes. Keyboard checks covered generated-photo dialogs, Wardrobe editing/error/Cancel, populated saved looks/shopping, privacy confirmation and export preparation/cancellation. Narrow 320px checks used normal 16px and enlarged 32px root text; the latter included a long garment description and actual locally normalized fixture image. Read-only audits found no horizontal overflow, unlabeled visible inputs, missing image alt attributes or active targets below 44-by-44. Focused confirmation context remained above the fixed navigation. Arriving November sample notes left the active Color editor focused; Cancel returned to Edit color. Browser error log was empty and viewport override was reset.
+
+Fixed three focus problems: Tab could leave the photo dialog's only control, privacy confirmation retained focus on a disabled Clear button, and export preparation/cancellation could leave focus on disabled controls or the page body. Both photo dialogs now contain forward/backward Tab while retaining native Escape/return behavior. Privacy confirmation focuses its heading on entry and restores the origin on cancellation/completion. Explicit export actions move to an enabled Cancel/Prepare control; background updates never request focus.
+
+Nine focused regression cases bring the foundation suite to 1,260 passing tests across 126 files. Type checking and production build pass. No palette, retention, account, provider, backup-runtime or hosted setting changed. Local Memory source and project/interview notes are updated; the hosted site stays unchanged. Five of 41 full tasks remain complete and full Task 8b stays open.
+
+Limits: this is local keyboard/DOM and enlarged-root-text evidence, not WCAG certification, native browser zoom, real screen-reader/switch acceptance, OS reduced-motion verification or a physical-phone test. No microphone, camera, real photo/account or paid provider was used. Product requirements are unchanged; design memory records the focus rules.
+
+Next action: retain the pending real assistive-technology/device and full live-journey acceptance gates. Resolve provider/host contracts and independent recovery authority before production integration; do not treat local accessibility checks as launch approval.
+
 # Local Task 8b accessibility preparation
 
 Approved sequencing exception, 14 October 2026. Full Task 8b remains unchecked.

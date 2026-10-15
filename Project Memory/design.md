@@ -1,3 +1,7 @@
+## Populated keyboard focus rules, 15 October 2026
+
+Photo enlargement dialogs currently contain one Close control. Tab and Shift+Tab stay on that control; Escape uses native close and returns to the opener. When privacy clearing opens, focus its confirmation heading rather than the disabled Clear button. Cancel or completion returns to the Clear origin. Explicit export preparation moves focus to enabled Cancel, and cancellation returns to Prepare. Ordinary background status updates must not move focus. Wardrobe and notebook editor Cancel return to the initiating edit control. Narrow enlarged-text checks pass; real assistive-technology/device acceptance remains open.
+
 ## Session reference and Wardrobe status wording, 15 October 2026
 
 Keep session confirmation and explicit Wardrobe saving separate. Confirmation status should describe the action rather than claim a continuing unsaved state, which becomes false after Save. The Wardrobe status reports actual save results independently. The local browser walkthrough verified this after save and navigation. No palette, layout or component behavior changed.

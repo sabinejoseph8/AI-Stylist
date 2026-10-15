@@ -1755,3 +1755,7 @@ I separated losing my Mac from losing the hosted database, so a computer failure
 ## Reviewing the whole sample journey
 
 I walked through notes, a generated photo, Wardrobe, separate sample revisions, saved looks, shopping and privacy controls in one local browser session. I found that a photo status still claimed it had not been saved after a successful Wardrobe save, and corrected the wording. I inspected the downloaded export and tested clear, End and refresh so old notes and photos could not return. Two new regression tests protect the save and clearing boundaries; all 1,251 foundation tests pass. I kept real consultation and hosted acceptance separate from the sample result.
+
+## Improving keyboard access in populated screens
+
+I checked the sample app with a generated image, a long clothing description, keyboard controls and doubled text on a narrow screen. I fixed focus leaving photo dialogs and focus being stranded on disabled privacy/export buttons. Confirmations now announce their context through a focused heading, cancellation returns to a usable control and background notes do not interrupt editing. All 1,260 foundation tests pass. I kept real screen-reader and physical-device acceptance open.
