@@ -28,8 +28,8 @@ export function LocalMediaPanel({model,active,visible,onInput,wardrobe}:{wardrob
  };
  const capture=()=>{
   if(cameraState!=='on'||!active||!visible||!cameraExpanded||!video.current||!onInput())return;
-  const epoch=++captureEpoch.current,reset=model.snapshot().reset;
-  captureNotebookStill({video:video.current,createCanvas:()=>document.createElement('canvas'),current:()=>epoch===captureEpoch.current&&model.snapshot().reset===reset,completed:blob=>choose([blob]),failed:()=>setCameraMessage('Still capture failed. Choose a photo or try another capture.')});
+  const epoch=++captureEpoch.current,currentInput=model.pendingInputGuard();
+  captureNotebookStill({video:video.current,createCanvas:()=>document.createElement('canvas'),current:()=>epoch===captureEpoch.current&&currentInput(),completed:blob=>choose([blob]),failed:()=>setCameraMessage('Still capture failed. Choose a photo or try another capture.')});
  };
  return <section className="local-media" aria-label="Local clothing photos"><h3>Style around this item</h3><p className="muted">Photos stay in browser memory for this session. No AI recognition or server upload is connected. Saving an owned reference creates a separate sample wardrobe copy only. Choose a garment and describe it yourself.</p>
  <label className="photo-picker">Choose clothing photos<input type="file" accept="image/jpeg,image/png,image/webp" multiple disabled={!active||!visible} onChange={event=>{const files=Array.from(event.target.files??[]);event.target.value='';if(files.length)choose(files);}}/></label><p className="muted">Up to 4 photos, 8 MB each and 16 MB together. JPEG, PNG or WebP; no HEIC yet.</p>

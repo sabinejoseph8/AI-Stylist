@@ -1,3 +1,11 @@
+## Prepared-flow code review, 14 October 2026
+
+Sabine approved a focused review of the existing local notebook, clothing photos, Wardrobe and Saved looks. Reviewed their state owners, UI event wiring, cancellation, explicit save/remove behavior and privacy cleanup. Found and fixed one asynchronous capture defect: removing a confirmed reference did not invalidate a still already encoding, allowing a late camera result to reappear as a candidate. Camera completion now checks the photo store's current input generation as well as the camera epoch. Removal, replacement, cancellation and Clear invalidate unfinished capture results. Explicit confirmation is still required.
+
+Exact next action: publish the reviewed fix, synchronize the approved folder and private Memory, then assess substantive support replies. No new action is required from Sabine.
+
+Five new regression cases exercise the real photo owner with delayed camera encoding and a current-result control. All 1,249 foundation tests, type checking and production build pass. The first sandboxed full run could not open local sockets; the permitted loopback run passed. No actual camera, provider, upload or paid service was used. This focused review does not close a phase-wide code review or physical-device acceptance. No other confirmed defect was identified in the inspected notebook/Wardrobe/Saved looks paths. Full integration remains blocked by the recorded provider/account/source dependencies.
+
 ## Support checkpoint publication receipt, 14 October 2026
 
 Project checkpoint 968a7eb is pushed and copied to the approved AI Stylist folder and matching original files. Private Memory source f538b065da57ee0b6c55ac3399460a6a6c217cde deployed successfully as appgdep_6acfc9fb9b888191af3aa553e2eb2e49 with MCP enabled and owner-private audience preserved. All 16 site checks, build and artifact validation pass. The current banner records the three pending support replies; the five-of-41 completion count and incomplete Task 2c remain accurate. Application evidence remains 1,244 passing tests/type checking/build; no new runtime change or paid call occurred.

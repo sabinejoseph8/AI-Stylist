@@ -23,6 +23,8 @@ export class LocalReferenceStore {
  private notify(){for(const listener of [...this.listeners])try{listener();}catch{}}
  private release(url:string){if(!this.urls.has(url))return;this.urls.delete(url);this.blobs.delete(url);try{this.ports.revokeURL(url);}catch{}}
  private prune(){const kept=new Set(this.photos.map(photo=>photo.url));if(this.reference)kept.add(this.reference.photo.url);for(const url of [...this.urls])if(!kept.has(url))this.release(url);}
+ /** Fence external image work, including camera encoding, against removal or replacement. */
+ pendingInputGuard(){const generation=this.generation;return()=>generation===this.generation;}
  async choose(files:readonly Blob[]){
   const generation=++this.generation;
   if(!Array.isArray(files)||files.length<1||files.length>4||files.some(file=>!(file instanceof Blob)||file.size===0||file.size>8*1024*1024)||files.reduce((size,file)=>size+file.size,0)>16*1024*1024){this.loading=false;this.message='Choose 1 to 4 JPEG, PNG or WebP photos, up to 8 MB each and 16 MB together.';this.notify();return false;}

@@ -1,3 +1,7 @@
+## Reviewing the prepared experience, 14 October 2026
+
+I used the wait for provider answers to review the local experience. We found a timing bug: a camera still could finish preparing after I had removed the confirmed photo and then appear in the photo choices. I had the capture tied to the current photo operation, so removal cancels late results too. We added five regression cases, and all 1,249 tests passed. I kept this separate from proving the complete live experience.
+
 ## Reducing account scope to match the launch plan
 
 I chose not to buy an Apple Developer membership and removed Apple sign-in from the MVP. I kept email/password, recovery and Google, then removed the Apple button and blocked direct Apple initiation and callbacks so the UI and server agree. I preserved the earlier generic helpers as disconnected scaffolding rather than presenting them as active support. I also checked the real provider panel: Google still needs owner-controlled setup, and source access still needs a live public presence and advertiser approval. I separated those external prerequisites from tested local behavior and avoided a purchase or premature activation.

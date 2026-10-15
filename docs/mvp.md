@@ -1,3 +1,7 @@
+## Local capture review, 14 October 2026
+
+The approved prepared-flow review found a late camera encoding result could appear after reference removal. Completion now requires the photo owner input generation to remain current, preventing revival after remove, replace, cancel or Clear. Five added regressions and all 1,249 foundation tests/type checking/build pass. This is local cancellation evidence, not hosted media or device acceptance; scope, privacy and spending decisions are unchanged.
+
 ## Provider support checkpoint, 14 October 2026
 
 Sabine reports sending the latest follow-ups to OpenAI and Tavus. OpenAI's assigned specialist has not confirmed engineering referral, a supported transcription startup or a timeframe; current-code middleware inspection found no altered outgoing fields and no repeat paid diagnostic is approved. Tavus recommends the full conversation pipeline; its documented silent tool/verbatim result option still leaves mandatory approval, generated failure fallback and stale-output suppression unresolved. The prepared full-pipeline questions are now reported sent, not pending authorization. Render ingress and sensitive callback-query logging clarification remains outstanding. Await concrete replies from all three; none establishes a working fix or permits architecture changes. Email/password with recovery remains the sole MVP account method. Google/Apple configuration is no longer a prerequisite; domain purchase and Rakuten remain deferred. The $51 allocation and held records are unchanged.
