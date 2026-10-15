@@ -1,3 +1,9 @@
+## Backup runner location selected, 15 October 2026
+
+Sabine confirmed this Mac can stay awake and online for backups. Prepare a local runner rather than introducing new paid hosting. This selection does not establish a 24-hour recovery point or 48-hour restore capability: sleep, network loss, local credential loss and missed runs must be detected and reported. No scheduler or power setting is installed or changed yet. Keep the independent password-manager key copy and private destination.
+
+Next implementation remains a complete coordinated snapshot/transport with trustworthy quota reconciliation and current deletion evidence. No partial backup may be labelled complete. Actual scheduling requires successful encrypted transfer/recovery and a failure alert path; retain holds when any prerequisite is missing.
+
 ## Photo source access verified and bounded reader prepared, 15 October 2026
 
 Sabine approved storing the existing AI Stylist Supabase server key privately for photo backups. Retrieved the existing secret key from the selected project's API Keys screen, saved it only in the ignored owner-only source-key file, cleared the transfer variable and hid the key again. No key was generated, rotated, printed, committed, copied to public project folders or uploaded. The credential itself remains broader than the read-only adapter and can bypass RLS; local code boundaries do not reduce its underlying authority.
