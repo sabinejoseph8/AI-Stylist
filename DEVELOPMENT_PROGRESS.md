@@ -1,3 +1,9 @@
+## Actual backup setup inspection, 14 October 2026
+
+Sabine authorized proceeding with actual backup setup. Read-only inspection of the AI Stylist Supabase dashboard confirms six scheduled physical database restore points dated 9 through 14 October 2026. The newest is 14 October 2026 at 13:52:01 UTC. The dashboard states daily backups and explicitly excludes Storage object bytes. The existing Storage inventory lists stylist-wardrobe with a 10 MB limit and JPEG/PNG/WebP types; its contents were not downloaded or inspected. No restore, new backup, credential, paid add-on or setting change was performed.
+
+Database backups already run; complete application backup activation remains incomplete. Next action: identify Sabine's existing independent storage account, then finalize a private encrypted destination, separate key custody, aligned database/object recovery points, current deletion/reservation evidence and alerts. A question about existing S3/R2/B2 account availability is pending. No new provider or spending is assumed from general setup approval. Full Task 8d remains open.
+
 ## Recovery rehearsal publication receipt, 14 October 2026
 
 Implementation d30be37 is pushed; ten changed files are byte-verified in the approved AI Stylist folder and matching original checkout. Private Memory source fc6b3e7b81df26e4c8d685c883d9dd0e98663bfe deployed successfully as appgdep_6ad046d3f35c819197b892d3a8b6102c, preserving private access and MCP. All 16 site checks and artifact validation pass. Rehearsal evidence is 155 assertions and 30 operations tests; the disposable container was removed. No application change or real-data backup was made. Next: inspect existing backup capabilities and prepare a concrete protected storage/key/evidence design before any financial or hosted activation decision. Full Task 8d and the recovery targets remain unverified in production.

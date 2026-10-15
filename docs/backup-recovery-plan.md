@@ -14,11 +14,19 @@ Alternative: a tighter saved-data target such as one hour and a shorter recovery
 
 Sabine explicitly accepted up to 24 hours of lost saved changes, restoration within 48 hours of incident declaration, and up to seven days of protected backup retention including deleted clothing photos. These are approved targets, not demonstrated capabilities. Deleted items must remain excluded from restored customer access.
 
-## Verified public capability and unverified account state
+## Verified provider capability and account inspection
 
-Supabase documents daily database backups with seven days accessible on Pro. Storage object bytes are excluded. Project deletion also removes provider backups. Restores cause downtime; duration varies. PITR is an optional paid feature with compute requirements. These are documentation facts, not inspection of this project's backup history or entitlements. [Supabase database backups](https://supabase.com/docs/guides/platform/backups), reviewed 14 October 2026.
+Supabase documents daily database backups with seven days accessible on Pro. Storage object bytes are excluded. Project deletion also removes provider backups. Restores cause downtime; duration varies. PITR is an optional paid feature with compute requirements. These documentation facts are supplemented by the account inspection below. [Supabase database backups](https://supabase.com/docs/guides/platform/backups), reviewed 14 October 2026.
 
 A complete recovery must also address roles, managed Auth, Storage and configuration differences. Use the current provider instructions when preparing a specific restore; a logical database dump is not a full project clone. [Supabase backup and restore guide](https://supabase.com/docs/guides/platform/migrating-within-supabase/backup-restore), reviewed 14 October 2026.
+
+## Actual backup setup inspection, 14 October 2026
+
+Sabine authorized proceeding with actual backup setup. Read-only inspection of the AI Stylist Supabase dashboard confirms six scheduled physical database restore points dated 9 through 14 October 2026. The newest is 14 October 2026 at 13:52:01 UTC. The dashboard states daily backups and explicitly excludes Storage object bytes. The existing Storage inventory lists stylist-wardrobe with a 10 MB limit and JPEG/PNG/WebP types; its contents were not downloaded or inspected. No restore, new backup, credential, paid add-on or setting change was performed.
+
+Database backups already run; complete application backup activation remains incomplete. Next action: identify Sabine's existing independent storage account, then finalize a private encrypted destination, separate key custody, aligned database/object recovery points, current deletion/reservation evidence and alerts. A question about existing S3/R2/B2 account availability is pending. No new provider or spending is assumed from general setup approval. Full Task 8d remains open.
+
+A possible independent destination is R2 Standard, pending account selection and authorization. Its published free tier includes 10 GB-month storage, one million Class A and ten million Class B requests monthly; overages are billable. This is not a guaranteed free complete backup system: source egress, scheduler and key management must also be costed. No account or resource has been created. Source: https://developers.cloudflare.com/r2/pricing/ (reviewed 14 October 2026).
 
 ## Recovery inventory
 

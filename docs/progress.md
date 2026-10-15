@@ -1,3 +1,9 @@
+## Actual backup setup inspection, 14 October 2026
+
+Sabine authorized proceeding with actual backup setup. Read-only inspection of the AI Stylist Supabase dashboard confirms six scheduled physical database restore points dated 9 through 14 October 2026. The newest is 14 October 2026 at 13:52:01 UTC. The dashboard states daily backups and explicitly excludes Storage object bytes. The existing Storage inventory lists stylist-wardrobe with a 10 MB limit and JPEG/PNG/WebP types; its contents were not downloaded or inspected. No restore, new backup, credential, paid add-on or setting change was performed.
+
+Database backups already run; complete application backup activation remains incomplete. Next action: identify Sabine's existing independent storage account, then finalize a private encrypted destination, separate key custody, aligned database/object recovery points, current deletion/reservation evidence and alerts. A question about existing S3/R2/B2 account availability is pending. No new provider or spending is assumed from general setup approval. Full Task 8d remains open.
+
 ## Local object and deletion recovery rehearsal, 14 October 2026
 
 Completed the authorized local recovery rehearsal: 155 assertions pass against a disposable PostgreSQL database with all 21 migrations and the two existing private-notes ledger preparation contracts. Thirty operations unit/invocation tests pass. The drill destroys the source database, restores its real dump, verifies schema/data/access controls, then restores matching synthetic object bytes while excluding a deletion made after the backup. Replayed deletion leaves a retired ID that refuses resurrection; expired Auth fixture sessions remain inactive. An old database alone loses a newer spending hold, so the drill replays independently retained evidence and proves the existing ledger rejects resetting/reopening that hold.
