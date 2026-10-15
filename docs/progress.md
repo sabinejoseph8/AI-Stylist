@@ -1,3 +1,13 @@
+## Local protected CVI endpoint safeguards, 15 October 2026
+
+Sabine approved local preparation/tests with no new spending or hosted changes. Added a disconnected Request/Response candidate with fixed origin/conversation and injected bearer authentication, strict minimal body schema and byte/deadline caps, bounded one-use request IDs, one active operation and delivery-time cancellation/revision checks. Incoming prompts cannot confirm app notes. Late/failed/unknown output is suppressed; no unchecked generated fallback is introduced. Caller configuration is captured immutably and forwarded headers never select authority.
+
+53 new local tests cover credential/conversation/Host substitution, schema/input limits, concurrency/replay, prompt isolation, canceled/expired/unconsumed delivery, malformed UTF-8, old/new operation ownership and fixed error redaction. All 1,472 foundation tests across 135 files, type checking/build and 16 local Memory checks pass. See docs/local-tavus-endpoint-safeguards.md for evidence and limits. No actual listener, route, provider call, room, microphone, credential storage, account or hosted change. Only test code imports this candidate.
+
+Limits: proposed conversation/request headers and minimal envelope are unverified with Tavus. Same-secret owner recreation permits replay, explicitly recorded by a negative test. Durable reservation, fresh revoked-on-restart credentials, actual request correlation, ingress/TLS, real transcript extraction, downstream playback/fallback and permitted non-ElevenLabs voice remain gates. Existing spending ($51 allocation), held ledgers, acceptance/checklist counts and production requirements are unchanged. Local Memory/interview records updated; no GitHub or hosted publication.
+
+Exact next local action: prepare live-readiness and disconnected consultation-owner checks for credential lifecycle, restart refusal, permanent experiment admission and authenticated note updates. Hosted/private activation and one priced bounded trial require separate approval. No user action is needed for the completed local safeguards.
+
 ## Local full-CVI styling preparation, 15 October 2026
 
 Sabine approved local preparation and simulated tests, with no new spending or hosted changes. Added a disconnected app-controlled response boundary: immutable seven-field notes, explicit confirmation state, full reply buffering, independent exact-text/current-revision checking and one-use SSE output. Corrections, interruptions, cancellation, replacement requests and End suppress pending or unsent replies. Failures/timeouts emit no recommendation or generated fallback. No real transcript extraction, HTTP endpoint, provider, microphone or account is connected.

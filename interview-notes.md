@@ -1,3 +1,7 @@
+## Protecting the conversation boundary before live testing
+
+I prepared and tested a local endpoint that belongs to one styling conversation. It checks credentials, refuses repeated or competing requests, limits input size and waits for independent outfit checks before delivering speech text. I also tested the moment of delivery, because a previously approved answer can become stale while waiting. Incoming prompt instructions cannot confirm my app's styling notes. I recorded that these safeguards do not yet prove Tavus request compatibility, restart protection or downstream audio cancellation, so I can separate local evidence from the next live experiment.
+
 ## Testing full CVI without more paid attempts
 
 I decided to investigate Tavus's full conversation pipeline locally while support remains unresolved. I prepared a response boundary that holds the whole reply until separate checks approve its exact content against current styling notes. Corrections and interruptions invalidate pending replies, and failures release no unchecked recommendation. The simulated tests distinguish what my app controls from audio already sent to Tavus or the browser. This gives me a concrete experiment before I approve another live test, without claiming the provider integration works yet.
