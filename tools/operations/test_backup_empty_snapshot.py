@@ -41,3 +41,14 @@ class EmptySnapshotTests(unittest.TestCase):
             calls.append(kind)
         self.assertTrue(m.capture_current({},'fixture','a'*40,None,prepare=prepare,export=export).startswith(b'ASB1'))
         self.assertEqual(calls,['database'])
+
+    def test_schema_signature_ignores_only_random_restrictions_and_timing(self):
+        first=b'\\restrict random1\nCREATE TABLE fixture(id int);\n\\unrestrict random1\n-- Started on time1\n'
+        second=b'\\restrict random2\nCREATE TABLE fixture(id int);\n\\unrestrict random2\n-- Started on time2\n'
+        self.assertEqual(m.normalize_schema(first),m.normalize_schema(second))
+        self.assertNotEqual(m.normalize_schema(first),m.normalize_schema(second.replace(b'int',b'text')))
+
+    def test_schema_signature_binds_roles_and_schema(self):
+        one=m.schema_fingerprint(b'PGDMPfixture',b'ROLE fixture',inspect=lambda *_args,**_kwargs:b'CREATE TABLE fixture(id int);')
+        two=m.schema_fingerprint(b'PGDMPfixture',b'ROLE changed',inspect=lambda *_args,**_kwargs:b'CREATE TABLE fixture(id int);')
+        self.assertNotEqual(one,two)

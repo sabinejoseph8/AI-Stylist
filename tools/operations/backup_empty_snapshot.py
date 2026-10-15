@@ -4,6 +4,7 @@ The archive itself must have empty Auth users, media and Storage object tables.
 This is not support for backing up a populated customer/photo application.
 """
 import importlib.util
+import hashlib
 from pathlib import Path
 import re
 import subprocess
@@ -40,18 +41,19 @@ def require_empty_sql(sql):
     return True
 
 
-def inspect_archive(database,*,capture_client=capture,run=subprocess.run):
+def archive_sql(database,*,schema_only=False,capture_client=capture,run=subprocess.run):
     if not isinstance(database,bytes) or not database.startswith(b'PGDMP') or len(database)>MAX_ENVELOPE:
         raise EmptySnapshotHeld('archive-input-held')
     name='stylist-empty-scope-'+uuid.uuid4().hex[:12]
     args=['docker','run','--rm','--pull=never','--network','none','--name',name,
           '--read-only','--log-driver','none','--cap-drop','ALL','--security-opt','no-new-privileges',
           '--user','65534:65534','--memory','128m','--pids-limit','32','-i',legacy.db.IMAGE,
-          'pg_restore','--data-only','--file=-','--schema=auth','--schema=public','--schema=storage',
+          'pg_restore','--file=-']
+    args+=['--schema-only','--no-owner'] if schema_only else [
+          '--data-only','--schema=auth','--schema=public','--schema=storage',
           '--table=users','--table=stylist_media_assets','--table=objects']
     try:
-        sql=capture_client(args,database,limit=256*1024,timeout=20)
-        return require_empty_sql(sql)
+        return capture_client(args,database,limit=1024*1024 if schema_only else 256*1024,timeout=20)
     finally:
         try:
             run(['docker','rm','-f',name],capture_output=True,timeout=10)
@@ -62,20 +64,44 @@ def inspect_archive(database,*,capture_client=capture,run=subprocess.run):
             raise EmptySnapshotHeld('archive-inspection-cleanup-held') from None
 
 
+def inspect_archive(database,**kwargs):
+    return require_empty_sql(archive_sql(database,**kwargs))
+
+
+def normalize_schema(sql):
+    if not isinstance(sql,bytes) or len(sql)>1024*1024:
+        raise EmptySnapshotHeld('archive-schema-held')
+    # PostgreSQL's random script restriction key and optional timing comments
+    # are not schema definitions. Preserve every other SQL byte/line.
+    return b'\n'.join(line for line in sql.splitlines() if not
+        line.startswith((b'\\restrict ',b'\\unrestrict ',b'-- Started on ',b'-- Completed on ')))
+
+
+def schema_fingerprint(database,roles,*,inspect=archive_sql):
+    schema=normalize_schema(inspect(database,schema_only=True))
+    role_sql=normalize_schema(roles)
+    return hashlib.sha256(len(schema).to_bytes(8,'big')+schema+role_sql).hexdigest()
+
+
 def crypt(value,key_path,mode):
     if mode not in ('seal','open'):raise EmptySnapshotHeld('archive-crypto-mode-held')
     read_file(key_path,private=True,limit=4096)
     return capture([NODE,'-e',CRYPT,str(key_path),mode],value,limit=MAX_ENVELOPE,timeout=10)
 
 
-def verify(value,key_path,*,now=None,decrypt=crypt,inspect=inspect_archive):
+def verify(value,key_path,*,now=None,decrypt=crypt,inspect=inspect_archive,expected_fingerprint=None):
     now=int(time.time()) if now is None else now
     if not isinstance(value,bytes) or not 36<=len(value)<=MAX_ENVELOPE or not value.startswith(b'ASB1'):
         raise EmptySnapshotHeld('archive-envelope-held')
     parts=read_candidate(decrypt(value,key_path,'open'),now=now)
     if parts['photos'] or parts['metadata']['assets'] or not 0<=now-parts['metadata']['captured_at']<300:
         raise EmptySnapshotHeld('archive-fresh-empty-source-held')
-    return inspect(parts['database']) is True
+    if inspect(parts['database']) is not True:return False
+    if expected_fingerprint is not None:
+        if (not isinstance(expected_fingerprint,str) or not re.fullmatch('[a-f0-9]{64}',expected_fingerprint) or
+                schema_fingerprint(parts['database'],parts['roles'])!=expected_fingerprint):
+            raise EmptySnapshotHeld('archive-schema-changed-since-drill')
+    return True
 
 
 def capture_current(config,password,commit,key_path,*,prepare=legacy.prepare,export=legacy.read_export):

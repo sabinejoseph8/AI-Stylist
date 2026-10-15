@@ -46,7 +46,7 @@ all transport functions it admits must retain their fixed no-retry contracts.
 
 
 GATES={'runtime_verified','credential_permissions_verified','source_snapshot_supported',
-       'complete_restore_accepted','deletion_reconciliation_supported','sole_use_confirmed',
+       'restore_accepted_for_scope','deletion_reconciliation_supported','sole_use_confirmed',
        'approved_cumulative_policy'}
 
 

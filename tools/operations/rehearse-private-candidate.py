@@ -12,6 +12,7 @@ import subprocess
 import time
 import uuid
 from backup_bundle import read_candidate
+from backup_runtime import DESTINATION
 
 _spec=importlib.util.spec_from_file_location('private_candidate_source',Path(__file__).with_name('supabase-empty-source-candidate.py'))
 candidate=importlib.util.module_from_spec(_spec);_spec.loader.exec_module(candidate)
@@ -36,7 +37,12 @@ def local_roles(data):
 
 def main():
     parser=argparse.ArgumentParser(description=__doc__)
-    parser.add_argument('--run-approved-local-candidate-drill',action='store_true',required=True);parser.parse_args()
+    modes=parser.add_mutually_exclusive_group(required=True)
+    modes.add_argument('--run-approved-local-candidate-drill',action='store_true')
+    modes.add_argument('--run-approved-initial-automatic-candidate-drill',action='store_true')
+    options=parser.parse_args()
+    private_root=DESTINATION/'tools/operations/.private' if options.run_approved_initial_automatic_candidate_drill else PRIVATE
+    archive_name='automatic-initial-candidate.asb' if options.run_approved_initial_automatic_candidate_drill else 'database-candidate.asb'
     name='stylist-candidate-drill-'+uuid.uuid4().hex[:12]
     created=False;stage='private-input';checks=0;result=None
     def run(args,data=None,timeout=30):
@@ -52,12 +58,12 @@ def main():
         require(value.returncode==0)
         return value.stdout.decode().strip()
     try:
-        if PRIVATE.is_symlink() or PRIVATE.stat().st_mode&0o077:raise DrillHeld('private-input-held')
-        for filename in ['backup-recovery-key.json','database-candidate.asb']:
-            p=PRIVATE/filename
+        if private_root.is_symlink() or private_root.stat().st_mode&0o077:raise DrillHeld('private-input-held')
+        for filename in ['backup-recovery-key.json',archive_name]:
+            p=private_root/filename
             if p.is_symlink() or not p.is_file() or p.stat().st_mode&0o077:raise DrillHeld('private-input-held')
-        decrypt="const fs=require('node:fs');const {open}=require('./tools/operations/backup-envelope.cjs');const c=JSON.parse(fs.readFileSync('./tools/operations/.private/backup-recovery-key.json','utf8'));const key=Buffer.from(c.keyHex,'hex');const bytes=open(fs.readFileSync('./tools/operations/.private/database-candidate.asb'),key,{keyId:c.keyId,now:Math.floor(Date.now()/1000)});key.fill(0);process.stdout.write(bytes);"
-        value=run([candidate.NODE,'-e',decrypt])
+        decrypt="const fs=require('node:fs');const {open}=require('./tools/operations/backup-envelope.cjs');const c=JSON.parse(fs.readFileSync(process.argv[1],'utf8'));const key=Buffer.from(c.keyHex,'hex');const bytes=open(fs.readFileSync(process.argv[2]),key,{keyId:c.keyId,now:Math.floor(Date.now()/1000)});key.fill(0);process.stdout.write(bytes);"
+        value=run([candidate.NODE,'-e',decrypt,str(private_root/'backup-recovery-key.json'),str(private_root/archive_name)])
         require(value.returncode==0)
         parts=read_candidate(value.stdout,now=int(time.time()));require(parts['photos']=={})
         stage='local-startup'

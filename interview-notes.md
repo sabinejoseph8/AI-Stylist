@@ -1,3 +1,7 @@
+## Testing a fresh automatic-path database copy
+
+I approved a conservative cumulative allowance for an account used only for these backups. I then verified a fresh encrypted upload and recovery and rehearsed the new archive in an isolated database with 21 passing checks. I prepared a job that stops when customer data, photos or schema changes appear. I kept that initial scope separate from full customer recovery and left the scheduler disabled until the narrower coverage is accepted.
+
 ## Preparing an automatic backup allowance
 
 I found that requiring a fresh dashboard observation before every upload prevented unattended backups. I prepared a separate conservative allowance that counts all attempted bytes and requests without resetting or refunding failures, then stops when a limit or expiry is reached. I kept it inactive while asking for the account-use facts and the decision needed to change the financial safeguard. Automated checks cover exhausted budgets, interrupted attempts, clock reversal and preservation of earlier history.

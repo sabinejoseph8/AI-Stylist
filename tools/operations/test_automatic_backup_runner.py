@@ -35,7 +35,7 @@ class RunnerTests(unittest.TestCase):
         self.assertEqual(self.events,[('start',False),('success',True)])
 
     def test_missing_real_acceptance_gates_starts_nothing(self):
-        self.gates['complete_restore_accepted']=False
+        self.gates['restore_accepted_for_scope']=False
         with self.assertRaises(m.RunnerHeld):self.run_job(capture=lambda:self.fail('source called'))
         self.assertEqual(self.events,[])
 

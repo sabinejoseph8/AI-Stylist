@@ -38,7 +38,7 @@ def download(api, token, file_id, expected_size):
 
 
 def transfer(config, value, ledger, *, now, verify, authorize=preflight.request_json,
-             upload=upload_envelope, read=download,budget_guard=None):
+             upload=upload_envelope, read=download,budget_guard=None,uploaded=None):
     if (config.get('B2_BUCKET_ID')!='92135d40b02e32dcab1a0e10' or
             config.get('B2_BUCKET_NAME')!='AIstylist' or config.get('B2_PREFIX')!='backups/' or
             not isinstance(value,bytes) or not 36<=len(value)<=MAX_CANDIDATE or
@@ -53,6 +53,7 @@ def transfer(config, value, ledger, *, now, verify, authorize=preflight.request_
     api,token=preflight.validate_authorization(response,config,now())
     extra={} if budget_guard is None else {'budget_guard':budget_guard}
     result=upload(api,token,config['B2_BUCKET_ID'],value,ledger,now=now(),**extra)
+    if uploaded is not None:uploaded(dict(result))
     recovered=guard(ledger,now=now(),download_bytes=len(value),class_b=1,class_c=1,
         operation=lambda:read(api,token,result['file_id'],len(value)))
     if recovered!=value or verify(recovered) is not True:
