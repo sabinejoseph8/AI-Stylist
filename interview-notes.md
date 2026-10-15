@@ -1751,3 +1751,7 @@ I tested deletion records and spending holds with separate writer and reader pro
 ## Planning for losing the backup computer
 
 I separated losing my Mac from losing the hosted database, so a computer failure would not trigger a restore over healthy data. I documented the required independent backup inventory, encryption key and current deletion/spending evidence. A new process tested separate mock recovery stores after the old fixture folder was removed. Missing keys, old or conflicting evidence and an authenticated but mismatched archive blocked recovery. I kept customer access disabled and recorded that actual replacement-device and hosted restoration remain unverified.
+
+## Reviewing the whole sample journey
+
+I walked through notes, a generated photo, Wardrobe, separate sample revisions, saved looks, shopping and privacy controls in one local browser session. I found that a photo status still claimed it had not been saved after a successful Wardrobe save, and corrected the wording. I inspected the downloaded export and tested clear, End and refresh so old notes and photos could not return. Two new regression tests protect the save and clearing boundaries; all 1,251 foundation tests pass. I kept real consultation and hosted acceptance separate from the sample result.

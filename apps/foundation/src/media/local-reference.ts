@@ -51,7 +51,7 @@ export class LocalReferenceStore {
  confirm(description:string,ownership:Ownership|null){
   const photo=this.photos.find(photo=>photo.id===this.selected);
   if(this.loading||!photo||typeof description!=='string'||!description.trim()||description.length>160||!['owned','inspiration'].includes(ownership??''))return false;
-  this.reference=Object.freeze({photo,description:description.trim(),ownership:ownership!});this.message='Reference confirmed for this session only. It has not been saved to Wardrobe.';this.prune();this.notify();return true;
+  this.reference=Object.freeze({photo,description:description.trim(),ownership:ownership!});this.message='Reference confirmed for this session. Saving to Wardrobe is a separate action.';this.prune();this.notify();return true;
  }
  exportPhotos(){const photos=[...this.photos];if(this.reference&&!photos.some(photo=>photo.id===this.reference!.photo.id))photos.push(this.reference.photo);return Object.freeze(photos.map(photo=>Object.freeze({id:photo.id,blob:this.blobs.get(photo.url)!})));}
  exportOwned(){const reference=this.reference;if(!reference||reference.ownership!=='owned')return null;const blob=this.blobs.get(reference.photo.url);return blob?Object.freeze({photo:reference.photo,description:reference.description,ownership:'owned' as const,blob}):null;}

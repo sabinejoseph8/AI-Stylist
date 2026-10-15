@@ -1,3 +1,15 @@
+## Complete local sample walkthrough and status fix, 15 October 2026
+
+Sabine approved the automated local sample journey and fixes, without paid calls, real accounts or hosted changes. Browser walkthrough covered notebook confirmation/budget saving, a generated PNG reference/enlargement, explicit Wardrobe save/selection, separate illustrated draft/feedback revision, separate saved look and shopping entry, unavailable/recheck totals, five-category JSON export, canceled clearing, session-only clearing, late sample cancellation, End/new session, full clearing and refresh. The downloaded JSON was parsed and verified: five selected categories, two normalized WebP copies, no blob URLs and no notebook/history inside the saved-look projection. No camera/microphone was requested.
+
+Fixed one misleading message: session-reference confirmation claimed the item had not been saved even after an explicit Wardrobe save. It now states that saving is a separate action; the independent save status remains accurate. Rechecked the save/navigation path in the browser with no client errors. Two new model-composition regressions cover the journey's save/clear boundaries and late photo-export cancellation.
+
+All 1,251 foundation tests across 125 files, type checking and production build pass. The first sandboxed suite had local HTTP timeouts; rerunning with loopback access passed, without weakening tests or guards. See docs/local-sample-journey-review.md for the complete observed steps and limits. Fixed illustrated samples are still independent rehearsals, not an integrated live stylist or real sourcing.
+
+Project memory and interview notes are updated. Local Memory source is synchronized; no hosted site or service changed. No credentials, spending, backup job, permanent allowance or real accounts were touched. Full task completion remains 5 of 41; this review does not close integration/launch acceptance.
+
+Next action: resolve the existing provider/host contracts and independent recovery authority before live integration; do not treat this sample walkthrough as production acceptance. Continue other authorized local checks only where their prerequisites are satisfied. No manual action is needed for this walkthrough.
+
 ## Local Mac-loss recovery plan and admission tests, 15 October 2026
 
 Sabine approved local planning/tests only, with no spending or hosted changes. Added docs/mac-loss-recovery-plan.md with the recovery inventory, missing-copy gaps and ordered checks. Losing only the Mac does not justify overwriting a healthy hosted database. Production recovery still needs independently recoverable object locators and latest deletion/account/spending authority; local receipts and two local files do not establish those guarantees.
@@ -1039,6 +1051,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Local app journey: the automated normal-preview walkthrough passed notes/photo/Wardrobe, separate sample feedback and saved-look/list, export, clear, End and refresh checks. Fixed stale Wardrobe-save wording and added two regressions. All 1,251 foundation tests, type checking and build pass. Hosted/live integration and full phase acceptance remain open; no paid calls, real accounts or hosted changes occurred.
 
 Mac-loss planning: a recovery inventory and 18 new local admission tests bring operations coverage to 208 passing tests, plus four encryption tests. Missing independent copies/keys, stale or conflicting evidence and mismatched archives block the simulated recovery sequence. Customer access always stays disabled. Production independent evidence authority, object inventory and hosted recovery remain open; the active job and hosted services are unchanged.
 

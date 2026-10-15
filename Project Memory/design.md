@@ -1,3 +1,7 @@
+## Session reference and Wardrobe status wording, 15 October 2026
+
+Keep session confirmation and explicit Wardrobe saving separate. Confirmation status should describe the action rather than claim a continuing unsaved state, which becomes false after Save. The Wardrobe status reports actual save results independently. The local browser walkthrough verified this after save and navigation. No palette, layout or component behavior changed.
+
 ## Local accessibility and text scaling, 14 October 2026
 
 Keep the approved palette/type/spacing direction. Text sizes now use rem and the root defaults to 100%, respecting user font preferences. Requested page changes update the title and move focus to the page heading; ordinary note updates do not move focus. Keep the skip link/main heading association. Measure the bottom navigation and reserve its actual height in page/scroll clearance. Use a scalable navigation grid that can become two columns for enlarged text without splitting labels. Preserve visible focus, native controls, 44-by-44 active targets, labelled choice hit areas, narrow wrapping and reduced-motion suppression. Local normal/200%-root-text audits pass across four destinations at 320px, including populated sample controls and editor focus. Actual screen-reader, switch, user-agent zoom and physical-device acceptance remain open; the fixture is not customer deployment or certification.
