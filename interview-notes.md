@@ -1,6 +1,6 @@
 ## Verifying independent backup alerts
 
-I set up one free email monitor and confirmed its test email arrived. I also sent a deliberate failure signal and verified that the monitoring service dispatched the alert. I kept backup contents and logs out of status requests, protected the private status URL and paused the setup monitor until the real runner is ready. I did not label the test as a successful backup or claim that scheduled recovery is already working.
+I set up one free email monitor and confirmed its test email arrived. I also sent a deliberate failure signal and verified that the monitoring service dispatched the alert and that it reached my inbox. A second rehearsal withheld completion after a start signal, and the independent monitor also alerted me after its deadline. I kept backup contents and logs out of status requests, protected the private status URL and paused the setup monitor until the real runner is ready. I did not label the test as a successful backup or claim that scheduled recovery is already working.
 
 ## Proving encrypted backup transfer and exposing restore limits
 

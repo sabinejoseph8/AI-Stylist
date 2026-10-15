@@ -1,12 +1,24 @@
+## Monitoring evidence published privately
+
+Source 48ec4870b3d3a0f1b09ad0edfc709e364c4b6fc5 deployed successfully as appgdep_6ad073ce14ac81918a67cc35f987d971. Owner-private access and MCP are preserved; all 16 website checks, build and artifact validation pass. The snapshot records both inbox-confirmed failure alerts, 120 operations tests, four encryption tests and the paused monitor. A value-based scan found no private ping URL in tracked source. Full Task 8d and automatic backup activation remain open for the quota, coordinated-source and recovery gates above.
+
+## Stalled-run email rehearsal confirmed, 15 October 2026
+
+After Sabine confirmed the explicit failure email, temporarily set the setup-only monitor to a one-minute grace and sent exactly one empty-body start signal. No completion or false backup-success signal was sent. Healthchecks independently changed to down after the deadline, reported the alert delivered, and Sabine confirmed that second email arrived. Restored the one-day period/one-hour grace and verified the check is paused. Two separate permanent private attempt receipts prevent automatic repetition. The ping URL file is owner-only and ignored by Git.
+
+This proves integration-test delivery, explicit failure delivery and a missing-completion timeout alert for the configured service. It does not prove scheduled backup execution, a complete recovery point, final production monitoring timing, exact-period missed-run detection without any start, or recovery after losing this Mac. All 120 operations tests and four encryption tests pass. Task 8d remains open. No backup archive was uploaded, extra paid service activated or scheduler installed by these monitoring checks.
+
+Next implementation: prepare a durable local runner and trustworthy account-wide quota reconciliation, finish coordinated source/deletion evidence and complete recovery verification, then align monitoring timing and activate only after those gates pass. Missing financial counters must hold unattended writes, never default to zero. No support message is authorized or required.
+
 ## Free backup monitoring configured, 15 October 2026
 
 Sabine completed Healthchecks signup/login. Verified the account is on the free Hobbyist plan ($0/month, 20 jobs, 100 log entries per job). Reused the unused default check as AI Stylist backup, retaining one check with its existing enabled email integration. The integration test reported delivered, and Sabine confirmed the test email arrived. No paid upgrade, payment entry, support message or extra notification service was used.
 
 Sabine explicitly approved storing the secret ping URL in an ignored owner-only local healthchecks.env file. Prepared an inactive fixed-destination adapter with empty POST bodies, only start/success/failure signals, ten-second timeout, bounded acknowledgment, no inherited proxies, redirects or retries, and fixed errors that suppress private URLs. It rejects a success signal without an explicit complete-recovery-point verification flag; the caller must supply real evidence, and the flag itself is not a backup verifier. Unknown/rate-limited acknowledgments are held. Six simulated cases bring the operations suite to 120 passing tests.
 
-One separately recorded live failure signal was accepted, the dashboard showed down and the email integration reported delivered. Inbox confirmation for this actual failure alert is pending. Paused the setup-only check afterward without sending a false backup-success signal. No complete backup, schedule, missed-run detection or end-to-end runner integration is active. Current dashboard period remains one day with one-hour grace; final monitoring timing must be aligned with the actual backup schedule before activation. The private URL, account email and check identifiers are excluded from public documentation.
+One separately recorded live failure signal was accepted, the dashboard showed down and the email integration reported delivered. Sabine confirmed that this actual failure alert arrived in her inbox. Paused the setup-only check afterward without sending a false backup-success signal. No complete backup, schedule, missed-run detection or end-to-end runner integration is active. Current dashboard period remains one day with one-hour grace; final monitoring timing must be aligned with the actual backup schedule before activation. The private URL, account email and check identifiers are excluded from public documentation.
 
-Exact next action: receive Sabine's failure-email confirmation, then continue durable runner preparation, fresh financial admission, coordinated source/deletion evidence and complete recovery verification before activating scheduled backups. No Backblaze support reply is required.
+Exact next action: verify the short missed-run rehearsal, restore safe paused configuration, then continue durable runner preparation, fresh financial admission, coordinated source/deletion evidence and complete recovery verification before activating scheduled backups. No Backblaze support reply is required.
 
 Reference: https://healthchecks.io/docs/http_api/ .
 
