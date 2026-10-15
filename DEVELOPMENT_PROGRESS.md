@@ -1,3 +1,7 @@
+## Private Memory source-access publication receipt
+
+The verified connection, independent key-custody report, photo-source preparation and local runner selection were published successfully to the existing owner-private Memory website from source b39956e3050d3c2e513f65486826ca70ac68575f as appgdep_6ad0670b573c81919abc5242d05ed04c. All 16 Site checks and artifact validation passed; MCP and owner-private access are preserved. The subsequent inactive encrypted-transport update is being synchronized separately. No private credential or recovery-key file was packaged.
+
 ## Encrypted upload boundary prepared; unattended quota evidence unresolved
 
 Prepared b2_encrypted_transport.py as an inactive callable boundary, without a CLI, credential reader or schedule. It accepts an ASB1-format envelope from the existing encryption producer, uses a random backups/ object name, reserves worst-case bytes and conservatively counts both request classes before either of its two requests. It requires a fresh quota ledger, validates the provider upload destination, refuses redirects/proxy inheritance/retries, requests SSE-B2 in addition to app encryption and verifies exact bucket/name/length/SHA-1/type/encryption acknowledgment. Failure retains reservations. A successful upload result deliberately says restore_verified=false; format magic alone does not prove encryption, so callers must use the reviewed encryption producer.
