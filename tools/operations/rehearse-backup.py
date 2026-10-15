@@ -6,12 +6,16 @@ import json
 import subprocess
 import time
 import uuid
+import secrets
+from recovery_objects import manifest, restore_objects
 
 IMAGE = 'postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
 ROOT = Path(__file__).resolve().parents[2]
 OWNER = '00000000-0000-0000-0000-000000000001'
 OTHER = '00000000-0000-0000-0000-000000000002'
 ASSET = '00000000-0000-0000-0000-000000000003'
+DOOMED = '00000000-0000-0000-0000-000000000005'
+EXPIRED_SESSION = '00000000-0000-0000-0000-000000000006'
 RETIRED = '00000000-0000-0000-0000-000000000004'
 
 
@@ -53,15 +57,15 @@ def main():
 
     def snapshot(db):
         tables = sql("select schemaname||'.'||tablename from pg_tables where schemaname in "
-                     "('public','auth','storage','stylist_private') order by 1;", db).splitlines()
+                     "('public','auth','storage','stylist_private','stylist_notes_trial_private') order by 1;", db).splitlines()
         rows = {}
         for table in tables:
             # Names come only from the fixed, synthetic schema, not command-line input.
             rows[table] = sql(f"select coalesce(jsonb_agg(row_data order by row_data::text),'[]') "
                               f"from (select to_jsonb(t) row_data from {table} t) s;", db)
         rows['policies'] = sql("select coalesce(jsonb_agg(to_jsonb(p) order by schemaname,tablename,policyname),'[]') from pg_policies p;", db)
-        rows['table_security'] = sql("select jsonb_agg(jsonb_build_array(n.nspname,c.relname,c.relrowsecurity,c.relforcerowsecurity,(select jsonb_agg(jsonb_build_array(r,priv,has_table_privilege(r,c.oid,priv)) order by r,priv) from unnest(array['anon','authenticated','service_role']) r cross join unnest(array['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER']) priv)) order by n.nspname,c.relname) from pg_class c join pg_namespace n on n.oid=c.relnamespace where c.relkind='r' and n.nspname in ('public','stylist_private','storage','auth');", db)
-        rows['functions'] = sql("select jsonb_agg(jsonb_build_array(n.nspname,p.proname,pg_get_function_identity_arguments(p.oid),p.prosecdef,p.proconfig,p.prosrc,(select jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) order by r) from unnest(array['anon','authenticated','service_role']) r)) order by n.nspname,p.proname,p.oid::regprocedure::text) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname in ('public','stylist_private','auth');", db)
+        rows['table_security'] = sql("select jsonb_agg(jsonb_build_array(n.nspname,c.relname,c.relrowsecurity,c.relforcerowsecurity,(select jsonb_agg(jsonb_build_array(r,priv,has_table_privilege(r,c.oid,priv)) order by r,priv) from unnest(array['anon','authenticated','service_role']) r cross join unnest(array['SELECT','INSERT','UPDATE','DELETE','TRUNCATE','REFERENCES','TRIGGER']) priv)) order by n.nspname,c.relname) from pg_class c join pg_namespace n on n.oid=c.relnamespace where c.relkind='r' and n.nspname in ('public','stylist_private','storage','auth','stylist_notes_trial_private');", db)
+        rows['functions'] = sql("select jsonb_agg(jsonb_build_array(n.nspname,p.proname,pg_get_function_identity_arguments(p.oid),p.prosecdef,p.proconfig,p.prosrc,(select jsonb_agg(jsonb_build_array(r,has_function_privilege(r,p.oid,'EXECUTE')) order by r) from unnest(array['anon','authenticated','service_role']) r)) order by n.nspname,p.proname,p.oid::regprocedure::text) from pg_proc p join pg_namespace n on n.oid=p.pronamespace where n.nspname in ('public','stylist_private','auth','stylist_notes_trial_private');", db)
         return rows
 
     try:
@@ -92,6 +96,16 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         require(len(migrations) == 21)
         for migration in migrations:
             sql(migration.read_text())
+        # Install the real private-notes ledger contracts in the isolated database only.
+        for filename in ['private-notes-trial-preparation.sql', 'private-notes-approved-trials-preparation.sql']:
+            sql((ROOT / 'prototypes/voice-avatar/supabase' / filename).read_text())
+        allowance = dict(version=1, purpose='notes-only-private-trial', approval=dict(id='synthetic_restore_only', cents=200, maxSeconds=85, maxTurns=2, maxExtractions=64, maxInputTokens=1000000, maxOutputTokens=2048), reservation=None)
+        reserved = dict(allowance, reservation=dict(id='synthetic_reservation', state='reserved'))
+        held = dict(allowance, reservation=dict(id='synthetic_reservation', state='held'))
+        sql(f"insert into stylist_notes_trial_private.approved_trials values ('synthetic_restore_only','{json.dumps(allowance)}');")
+
+        def ledger_change(before_ledger, after_ledger, db='source', success=True):
+            return sql(f"set role service_role; select public.stylist_private_notes_trial_change_approved('synthetic_restore_only','{json.dumps(before_ledger)}','{json.dumps(after_ledger)}');", db, success)
         stage = 'synthetic-saved-data'
         sql(f"insert into auth.users(id) values ('{OWNER}'),('{OTHER}');")
         sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{ASSET}','{OWNER}','{OWNER}/fixture.webp','image/webp',100,100);")
@@ -101,6 +115,11 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         items = json.dumps([dict(assetId=ASSET, label='Synthetic jacket')])
         sql(actor(OWNER, f"select public.stylist_save_owned_look('Synthetic look','{items}'::jsonb,true);"))
         sql(f"insert into stylist_private.media_deletion_receipts(id,user_id,storage_key,deletion_token) values ('{RETIRED}','{OWNER}','{OWNER}/retired.webp',gen_random_uuid());")
+        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{DOOMED}','{OWNER}','{OWNER}/deleted-later.webp','image/webp',1,1);")
+        sql(f"insert into auth.sessions(id,user_id,not_after) values ('{EXPIRED_SESSION}','{OWNER}',statement_timestamp()-interval '1 hour');")
+        # Synthetic bytes stand in for two private Storage objects; never user photos.
+        object_source = {f'{OWNER}/fixture.webp': b'synthetic-surviving-image',
+                         f'{OWNER}/deleted-later.webp': b'synthetic-deleted-image'}
         before = snapshot('source')
         stage = 'backup-integrity'
         dump = run(['docker', 'exec', name, 'pg_dump', '-U', 'postgres', '-Fc', '-d', 'source'])
@@ -109,6 +128,21 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         digest = hashlib.sha256(archive).hexdigest()
         require(verify_archive(archive, digest))
         require(not verify_archive(archive[:-1], digest))
+        stage = 'post-backup-deletion'
+        signing_key = secrets.token_bytes(32)
+        object_backup = dict(object_source)
+        body, signature = manifest(object_backup, digest, 100, signing_key)
+        deletion = json.loads(sql(actor(OWNER, f"select public.stylist_begin_media_delete('{DOOMED}',1,true);")))
+        object_source.pop(deletion['key'])
+        sql(f"select public.stylist_finish_media_delete('{DOOMED}','{OWNER}','{deletion['deletionToken']}');")
+        current_deleted = frozenset({deletion['key']})
+        ledger_change(allowance, reserved)
+        ledger_change(reserved, held)
+        current_ledger = json.loads(sql("set role service_role; select public.stylist_private_notes_trial_read_approved('synthetic_restore_only');"))
+        require(current_ledger == held)
+        require(sql(f"select count(*) from stylist_private.retired_media_ids where id='{DOOMED}';") == '1')
+        # Keep current evidence independently in drill memory; a real durable store is not implemented.
+        object_source.clear()
         # The checksum and archive exist only in this process. Neither is printed or saved.
         sql('drop database source; create database restored; create database corrupt;', 'postgres')
         stage = 'restore-transaction'
@@ -122,10 +156,35 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
                 stage = 'snapshot-' + ('security' if key in ['policies','functions','table_security'] else 'data')
                 require(False)
         require(after == before)
+        stage = 'object-recovery'
+        restored_objects = restore_objects(object_backup, body, signature, signing_key, digest, 200, current_deleted)
+        require(restored_objects == {f'{OWNER}/fixture.webp': b'synthetic-surviving-image'})
+        # Restored DB predates deletion. Replay via existing controlled lifecycle before access checks.
+        stage = 'deletion-replay-begin'
+        replay = json.loads(sql(actor(OWNER, f"select public.stylist_begin_media_delete('{DOOMED}',1,true);"), 'restored'))
+        stage = 'deletion-replay-finish'
+        sql(f"select public.stylist_finish_media_delete('{DOOMED}','{OWNER}','{replay['deletionToken']}');", 'restored')
+        require(sql(f"select count(*) from public.stylist_media_assets where id='{DOOMED}';", 'restored') == '0')
+        require(sql(f"select count(*) from stylist_private.retired_media_ids where id='{DOOMED}';", 'restored') == '1')
+        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{DOOMED}','{OWNER}','{OWNER}/revived.webp','image/webp',1,1);", 'restored', False)
+        stage = 'expired-session-check'
+        require(sql(f"set role service_role; select public.stylist_auth_session_active('{OWNER}','{EXPIRED_SESSION}');", 'restored') == 'f')
+        # Replaying a completed delete must not create new data or silently claim success.
+        sql(f"select public.stylist_finish_media_delete('{DOOMED}','{OWNER}','{replay['deletionToken']}');", 'restored', False)
+        stage = 'reservation-reconciliation'
+        # Demonstrate why restoring the old DB alone is unsafe: it lacks the later hold.
+        require(json.loads(sql("set role service_role; select public.stylist_private_notes_trial_read_approved('synthetic_restore_only');", 'restored')) == allowance)
+        require(current_ledger == held)
+        # Replay the independently retained reservation ID/state, never issue a new one.
+        ledger_change(allowance, reserved, 'restored')
+        ledger_change(reserved, current_ledger, 'restored')
+        ledger_change(current_ledger, allowance, 'restored', False)
+        ledger_change(current_ledger, reserved, 'restored', False)
+        require(json.loads(sql("set role service_role; select public.stylist_private_notes_trial_read_approved('synthetic_restore_only');", 'restored')) == held)
         stage = 'corrupt-transaction'
         # Deliberately bypass integrity gate only to rehearse PostgreSQL atomic failure.
         require(run(restore_cmd + ['corrupt'], archive[:len(archive)//2]).returncode != 0)
-        require(sql("select count(*) from pg_tables where schemaname in ('public','auth','storage','stylist_private');", 'corrupt') == '0')
+        require(sql("select count(*) from pg_tables where schemaname in ('public','auth','storage','stylist_private','stylist_notes_trial_private');", 'corrupt') == '0')
         stage = 'restored-access-protection'
         for table in ['stylist_profiles', 'stylist_media_assets', 'stylist_wardrobe_items', 'stylist_saved_looks', 'stylist_saved_look_items']:
             require(sql(actor(OWNER, f'select count(*) from public.{table};'), 'restored') == '1')
@@ -141,7 +200,7 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         sql(actor(OWNER, f"select public.stylist_save_profile('{profile}'::jsonb,1,true);"), 'restored', False)
         stage = 'verified'
         receipt = dict(status='passed', checks=checks, migrations=len(migrations),
-                       scope='synthetic PostgreSQL only; no Storage objects or hosted recovery')
+                       scope='synthetic PostgreSQL and in-memory object bytes; no managed Storage/Auth or hosted recovery')
     except Exception:
         # Known stages only. Never echo database output, configuration or payloads.
         print(json.dumps(dict(status='failed', stage=stage)))

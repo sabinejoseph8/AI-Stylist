@@ -54,6 +54,10 @@ Use existing fixed lifecycle stages, aggregate counters and bounded timing resul
 
 For escalation, prepare a sanitized event sequence and public configuration shape. Sending it needs explicit authorization. Operational support replies are attributed evidence, not proof of an untested runtime contract.
 
+## Extended local recovery evidence, 14 October 2026
+
+The current drill passes 155 assertions plus 30 operations unit/invocation tests. It adds matching in-memory synthetic object bytes, authenticated manifest checks, post-backup deletion replay, retired-ID protection, expired-session rejection and reconciliation of a later held private-notes reservation using the existing ledger contracts. A fresh database restore alone loses that later hold; independent current evidence is essential. The helper verifies integrity/authentication, not encryption. No managed Storage/Auth, real photos, external evidence durability or hosted timing is proved. See backup-recovery-plan.md. The original database-only description below records the earlier baseline; current code includes these additions.
+
 ## Synthetic backup and restore rehearsal
 
 Run from the repository root:

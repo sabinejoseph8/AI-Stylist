@@ -1,3 +1,13 @@
+## Local object and deletion recovery rehearsal, 14 October 2026
+
+Completed the authorized local recovery rehearsal: 155 assertions pass against a disposable PostgreSQL database with all 21 migrations and the two existing private-notes ledger preparation contracts. Thirty operations unit/invocation tests pass. The drill destroys the source database, restores its real dump, verifies schema/data/access controls, then restores matching synthetic object bytes while excluding a deletion made after the backup. Replayed deletion leaves a retired ID that refuses resurrection; expired Auth fixture sessions remain inactive. An old database alone loses a newer spending hold, so the drill replays independently retained evidence and proves the existing ledger rejects resetting/reopening that hold.
+
+Nine new object-helper tests cover wrong verification key, changed manifest, missing/corrupt objects, mismatched database recovery point, unavailable deletion evidence, seven-day expiry, backward time and successful deletion filtering. The synthetic manifest uses HMAC integrity/authentication with a process-only key; it provides no encryption or production key-management evidence. Initial rehearsal debugging fixed a fixture variable collision; the final clean run passes and removes its container.
+
+Objects and current deletion/ledger evidence exist only in drill memory. No actual photos, managed Storage/Auth restoration, durable independent evidence source, hosted backup or provider call was used. No actual backup schedule or retention purge is active. The 24-hour data-loss and 48-hour recovery targets remain unproven for the deployed application. Task 8d and launch remain open.
+
+Exact next action: select and authorize the real protected backup destination, key custody and independent deletion/financial evidence arrangements after checking existing account capabilities; obtain separate approval before credentials, spending or hosted changes. Provider/account/source blockers remain. No additional user test is needed for this rehearsal.
+
 ## Approved recovery targets published, 14 October 2026
 
 Decision commit f6156f7 is pushed and verified in both approved project copies. Private Memory source 44d34289c062be5489f4de1fa7544056dc4f6168 deployed successfully as appgdep_6ad0457b36b0819186bb2bc17fd2d423, preserving private access and MCP. All 16 site checks and artifact validation pass. No application code changed; existing 1,249-test evidence remains unchanged. Next local implementation action is the object/deletion recovery rehearsal in docs/backup-recovery-plan.md. Storage destination, key custody, operator/alert arrangements and actual recovery verification remain open; no policy activation or new spending occurred.

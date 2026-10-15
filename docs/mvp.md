@@ -1,3 +1,13 @@
+## Local object and deletion recovery rehearsal, 14 October 2026
+
+Completed the authorized local recovery rehearsal: 155 assertions pass against a disposable PostgreSQL database with all 21 migrations and the two existing private-notes ledger preparation contracts. Thirty operations unit/invocation tests pass. The drill destroys the source database, restores its real dump, verifies schema/data/access controls, then restores matching synthetic object bytes while excluding a deletion made after the backup. Replayed deletion leaves a retired ID that refuses resurrection; expired Auth fixture sessions remain inactive. An old database alone loses a newer spending hold, so the drill replays independently retained evidence and proves the existing ledger rejects resetting/reopening that hold.
+
+Nine new object-helper tests cover wrong verification key, changed manifest, missing/corrupt objects, mismatched database recovery point, unavailable deletion evidence, seven-day expiry, backward time and successful deletion filtering. The synthetic manifest uses HMAC integrity/authentication with a process-only key; it provides no encryption or production key-management evidence. Initial rehearsal debugging fixed a fixture variable collision; the final clean run passes and removes its container.
+
+Objects and current deletion/ledger evidence exist only in drill memory. No actual photos, managed Storage/Auth restoration, durable independent evidence source, hosted backup or provider call was used. No actual backup schedule or retention purge is active. The 24-hour data-loss and 48-hour recovery targets remain unproven for the deployed application. Task 8d and launch remain open.
+
+Exact next action: select and authorize the real protected backup destination, key custody and independent deletion/financial evidence arrangements after checking existing account capabilities; obtain separate approval before credentials, spending or hosted changes. Provider/account/source blockers remain. No additional user test is needed for this rehearsal.
+
 ## Recovery targets approved, 14 October 2026
 
 Sabine approved at most 24 hours of lost saved changes, restoration within 48 hours of incident declaration, and protected backup retention up to seven days including deleted clothing photos. Deleted items must stay excluded from restored customer access. These are planning targets, not a proven capability or customer SLA. No spending, new infrastructure, backup activation or hosted restore is authorized. Provider-held retention must be verified separately.

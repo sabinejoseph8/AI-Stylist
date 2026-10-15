@@ -1,3 +1,7 @@
+## Rehearsing recovery across photos and saved state, 14 October 2026
+
+I asked for a local recovery drill using made-up data. We restored a real database dump and matching synthetic photo bytes, then checked that a deletion made after the backup still took effect. We also demonstrated why an older backup cannot be trusted for current spending: it was missing a newer hold. Replaying separate current evidence preserved the hold and prevented a reset. The local checks passed, but I am keeping real hosting, storage, encryption and recovery-time acceptance open.
+
 ## Choosing recovery targets, 14 October 2026
 
 For the initial launch I accepted up to one day of lost saved changes and a two-day recovery target. I approved keeping protected backup copies for up to seven days, including deleted photos, provided deleted items cannot return to customer access after restoration. These choices give us concrete acceptance criteria; they do not prove recovery works or authorize extra costs.

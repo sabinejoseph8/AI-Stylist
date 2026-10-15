@@ -57,15 +57,17 @@ The approved seven-day technical photo-deletion receipt and account-linked retir
 8. Measure actual data loss and recovery duration. A successful database command does not establish the complete-app target. Record failures against the chosen targets and fix them before launch acceptance.
 9. Obtain applicable promotion authorization, then reopen only verified features. Retain rollback evidence and remove temporary recovery copies under the approved retention/access policy.
 
-## Next rehearsal and evidence limits
+## Completed local rehearsal and remaining evidence limits
 
 Existing synthetic database rehearsal covers 21 migrations, saved rows, RLS/functions/grants, retired-image refusal, sequence continuation and atomic failure on truncated archives. It does not cover image bytes, a managed Auth restore, production keys, current deletion replay across systems or real restore timing.
 
-With the targets approved, prepare the next local-only drill with made-up object bytes and two recovery points: save A, take backup, replace/delete A, then restore the older point and apply current deletion evidence. Include missing/corrupt images, wrong key, unavailable deletion evidence, expired sessions and preserved spending holds. An in-memory local drill provides logic evidence only. Real provider restore and capacity/timing acceptance stay open.
+The extended drill now passes 155 PostgreSQL assertions and 30 operations unit/invocation tests. Two synthetic byte objects are paired with the database archive digest through a process-key HMAC manifest. A post-backup deletion is replayed through the real media lifecycle functions after restoration; the deleted object is omitted and its ID cannot be resurrected. Existing private-notes ledger SQL shows the older backup lacks a newer hold; independently retained fixture evidence restores that hold and reset/reopen attempts fail. Expired Auth fixture sessions remain inactive.
+
+Negative helper cases reject missing/corrupt bytes, a mismatched database digest, wrong verification key, modified manifest, absent deletion evidence and expired/future recovery points. Seven-day eligibility is tested, not an actual retention purge. Objects and later evidence are held only in process memory, with no filesystem image/archive output. This is a simulation of coordinated recovery, not a production storage format, encryption system or independent durable evidence source. Real Storage/Auth/key recovery, workload timing, provider cleanup and current financial reconciliation remain unverified.
 
 ## Decision and execution queue
 
 1. Completed: Sabine approved 24-hour saved-data loss tolerance, 48-hour recovery and seven-day protected backup retention.
-2. Complete the synthetic object/deletion recovery design within local Task 8d preparation.
+2. Completed locally: synthetic object/deletion recovery rehearsal; evidence limits above remain.
 3. Inspect actual backup availability when account access permits. Select storage/key/alert/operator arrangements and obtain any new financial, credential or privacy approvals before implementation.
 4. Resolve secure hosted activation, rehearse the full recovery with authorized infrastructure and measure outcomes before any launch promise.
