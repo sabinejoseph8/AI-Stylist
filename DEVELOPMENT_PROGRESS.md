@@ -1,3 +1,9 @@
+## Private backup key generated; independent custody pending, 15 October 2026
+
+Sabine confirmed she can store a separate backup encryption recovery key in her password manager. Generated one random 256-bit key with a random non-secret identifier in an exclusive owner-only file under ignored tools/operations/.private. Existing keys are preserved rather than overwritten. The key was not displayed, committed, copied to project folders, uploaded or included in an archive. A synthetic in-memory AES-256-GCM encrypt/decrypt round trip passed with that key; no customer data or persistent encrypted test file was used.
+
+Requested that Sabine copy the entire private recovery-key JSON into her password manager, save it, reopen it and verify the copy matches. Editor opening is queued, not confirmed visible. Next required user action: confirm the separate password-manager copy is saved and verified, or report the file cannot open. Independent custody is not established merely by generating the local key. Source Storage access, coordinated snapshots, quota baseline/reconciliation, bounded transport and complete restore verification remain open; backups are inactive.
+
 ## Source database connection verified, 15 October 2026
 
 After Sabine saved the credential again and explicitly requested another check, the bounded preflight succeeded: correct database, explicit read-only transaction, PostgreSQL major 17, full client certificate/hostname verification and disposable-client removal. Zero database writes, dumps and uploads. This supersedes the earlier authentication holds without erasing their history. The password was never printed or committed. No assumption is made about whether Sabine reset it or corrected her saved value.
