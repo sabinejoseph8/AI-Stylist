@@ -7,6 +7,9 @@ import subprocess
 import time
 import uuid
 import secrets
+import struct
+import zlib
+from local_recovery_package import round_trip
 from recovery_objects import manifest, restore_objects
 
 IMAGE = 'postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
@@ -17,6 +20,14 @@ ASSET = '00000000-0000-0000-0000-000000000003'
 DOOMED = '00000000-0000-0000-0000-000000000005'
 EXPIRED_SESSION = '00000000-0000-0000-0000-000000000006'
 RETIRED = '00000000-0000-0000-0000-000000000004'
+DELETED_OWNER = '00000000-0000-0000-0000-000000000007'
+DELETED_OWNER_ASSET = '00000000-0000-0000-0000-000000000008'
+
+
+def synthetic_png(red):
+    def chunk(kind, data):
+        return struct.pack('>I',len(data))+kind+data+struct.pack('>I',zlib.crc32(kind+data)&0xffffffff)
+    return b'\x89PNG\r\n\x1a\n'+chunk(b'IHDR',struct.pack('>IIBBBBB',1,1,8,2,0,0,0))+chunk(b'IDAT',zlib.compress(bytes([0,red,0,0])))+chunk(b'IEND',b'')
 
 
 def verify_archive(archive, expected_digest):
@@ -107,19 +118,24 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         def ledger_change(before_ledger, after_ledger, db='source', success=True):
             return sql(f"set role service_role; select public.stylist_private_notes_trial_change_approved('synthetic_restore_only','{json.dumps(before_ledger)}','{json.dumps(after_ledger)}');", db, success)
         stage = 'synthetic-saved-data'
-        sql(f"insert into auth.users(id) values ('{OWNER}'),('{OTHER}');")
-        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{ASSET}','{OWNER}','{OWNER}/fixture.webp','image/webp',100,100);")
+        sql(f"insert into auth.users(id) values ('{OWNER}'),('{OTHER}'),('{DELETED_OWNER}');")
+        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{ASSET}','{OWNER}','{OWNER}/fixture.png','image/png',1,1);")
         profile = json.dumps(dict(preferredColors=['Blue'], excludedColors=[], styles=['Structured'], excludedCategories=[], budgetCents=35000, currency='USD'))
         sql(actor(OWNER, f"select public.stylist_save_profile('{profile}'::jsonb,0,true);"))
         sql(actor(OWNER, f"select public.stylist_save_wardrobe('{ASSET}','Synthetic jacket',true);"))
         items = json.dumps([dict(assetId=ASSET, label='Synthetic jacket')])
         sql(actor(OWNER, f"select public.stylist_save_owned_look('Synthetic look','{items}'::jsonb,true);"))
         sql(f"insert into stylist_private.media_deletion_receipts(id,user_id,storage_key,deletion_token) values ('{RETIRED}','{OWNER}','{OWNER}/retired.webp',gen_random_uuid());")
-        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{DOOMED}','{OWNER}','{OWNER}/deleted-later.webp','image/webp',1,1);")
+        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{DOOMED}','{OWNER}','{OWNER}/deleted-later.png','image/png',1,1);")
         sql(f"insert into auth.sessions(id,user_id,not_after) values ('{EXPIRED_SESSION}','{OWNER}',statement_timestamp()-interval '1 hour');")
-        # Synthetic bytes stand in for two private Storage objects; never user photos.
-        object_source = {f'{OWNER}/fixture.webp': b'synthetic-surviving-image',
-                         f'{OWNER}/deleted-later.webp': b'synthetic-deleted-image'}
+        # Generated one-pixel PNGs, not human images. Include a later-deleted account.
+        sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{DELETED_OWNER_ASSET}','{DELETED_OWNER}','{DELETED_OWNER}/account-deleted.png','image/png',1,1);")
+        object_source = {f'{OWNER}/fixture.png': synthetic_png(30),
+                         f'{OWNER}/deleted-later.png': synthetic_png(60),
+                         f'{DELETED_OWNER}/account-deleted.png': synthetic_png(90)}
+        for key, data in object_source.items():
+            sql(f"update public.stylist_media_assets set checksum='{hashlib.sha256(data).hexdigest()}' where storage_key='{key}'; insert into storage.objects(bucket_id,name) values ('stylist-wardrobe','{key}');")
+        rows = json.loads(sql("select jsonb_agg(jsonb_build_object('id',id,'user_id',user_id,'storage_key',storage_key,'content_type',content_type,'checksum',checksum,'state',state) order by id) from public.stylist_media_assets;"))
         before = snapshot('source')
         stage = 'backup-integrity'
         dump = run(['docker', 'exec', name, 'pg_dump', '-U', 'postgres', '-Fc', '-d', 'source'])
@@ -128,14 +144,24 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         digest = hashlib.sha256(archive).hexdigest()
         require(verify_archive(archive, digest))
         require(not verify_archive(archive[:-1], digest))
+        stage = 'encrypted-customer-photo-package'
+        roles = run(['docker','exec',name,'pg_dumpall','-U','postgres','--roles-only'])
+        require(roles.returncode == 0)
+        recovered, crypto_checks = round_trip(archive, roles.stdout, rows, object_source)
+        require(recovered['production_restore_authorized'] is False)
+        checks += crypto_checks
+        archive = recovered['database']
         stage = 'post-backup-deletion'
         signing_key = secrets.token_bytes(32)
-        object_backup = dict(object_source)
+        object_backup = dict(recovered['photos'])
         body, signature = manifest(object_backup, digest, 100, signing_key)
         deletion = json.loads(sql(actor(OWNER, f"select public.stylist_begin_media_delete('{DOOMED}',1,true);")))
         object_source.pop(deletion['key'])
         sql(f"select public.stylist_finish_media_delete('{DOOMED}','{OWNER}','{deletion['deletionToken']}');")
-        current_deleted = frozenset({deletion['key']})
+        deleted_account_key = f'{DELETED_OWNER}/account-deleted.png'
+        sql(f"delete from auth.users where id='{DELETED_OWNER}';")
+        object_source.pop(deleted_account_key)
+        current_deleted = frozenset({deletion['key'], deleted_account_key})
         ledger_change(allowance, reserved)
         ledger_change(reserved, held)
         current_ledger = json.loads(sql("set role service_role; select public.stylist_private_notes_trial_read_approved('synthetic_restore_only');"))
@@ -158,7 +184,7 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         require(after == before)
         stage = 'object-recovery'
         restored_objects = restore_objects(object_backup, body, signature, signing_key, digest, 200, current_deleted)
-        require(restored_objects == {f'{OWNER}/fixture.webp': b'synthetic-surviving-image'})
+        require(restored_objects == {f'{OWNER}/fixture.png': synthetic_png(30)})
         # Restored DB predates deletion. Replay via existing controlled lifecycle before access checks.
         stage = 'deletion-replay-begin'
         replay = json.loads(sql(actor(OWNER, f"select public.stylist_begin_media_delete('{DOOMED}',1,true);"), 'restored'))
@@ -167,6 +193,13 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         require(sql(f"select count(*) from public.stylist_media_assets where id='{DOOMED}';", 'restored') == '0')
         require(sql(f"select count(*) from stylist_private.retired_media_ids where id='{DOOMED}';", 'restored') == '1')
         sql(f"insert into public.stylist_media_assets(id,user_id,storage_key,content_type,width,height) values ('{DOOMED}','{OWNER}','{OWNER}/revived.webp','image/webp',1,1);", 'restored', False)
+        stage = 'deleted-account-replay'
+        sql(f"delete from auth.users where id='{DELETED_OWNER}';", 'restored')
+        sql(f"delete from storage.objects where name in ('{deletion['key']}','{deleted_account_key}');", 'restored')
+        require(sql(f"select count(*) from auth.users where id='{DELETED_OWNER}';", 'restored') == '0')
+        require(sql(f"select count(*) from public.stylist_media_assets where user_id='{DELETED_OWNER}';", 'restored') == '0')
+        require(sql("select count(*) from storage.objects;", 'restored') == '1')
+        require(set(restored_objects) == {f'{OWNER}/fixture.png'})
         stage = 'expired-session-check'
         require(sql(f"set role service_role; select public.stylist_auth_session_active('{OWNER}','{EXPIRED_SESSION}');", 'restored') == 'f')
         # Replaying a completed delete must not create new data or silently claim success.
@@ -200,7 +233,7 @@ grant select,insert,update,delete on storage.objects to authenticated,anon;''')
         sql(actor(OWNER, f"select public.stylist_save_profile('{profile}'::jsonb,1,true);"), 'restored', False)
         stage = 'verified'
         receipt = dict(status='passed', checks=checks, migrations=len(migrations),
-                       scope='synthetic PostgreSQL and in-memory object bytes; no managed Storage/Auth or hosted recovery')
+                       scope='synthetic PostgreSQL and generated PNGs through authenticated encrypted package; no managed Storage/Auth or hosted recovery')
     except Exception:
         # Known stages only. Never echo database output, configuration or payloads.
         print(json.dumps(dict(status='failed', stage=stage)))

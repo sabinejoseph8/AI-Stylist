@@ -1739,3 +1739,7 @@ I removed Google sign-in from my MVP after removing Apple. I chose email/passwor
 ## Activating limited backups safely
 
 I approved initial automatic database backups while the app has no customer accounts or photos. I kept full customer recovery acceptance open. The fresh encrypted copy survived upload, readback and a 21-check local restore rehearsal. I activated the Mac job with cumulative limits and independent email alerts, and verified it waited instead of creating an early duplicate attempt. This gives me limited protection now while keeping customer launch dependent on complete photo and hosted recovery checks.
+
+## Testing customer and photo recovery locally
+
+I extended the recovery rehearsal to include generated images alongside customer preferences, wardrobe entries and saved looks. I tested the real encrypted package and checked that a photo or account deleted after backup could not reappear in restored access. I also checked damaged backups, an interrupted restore and preservation of later spending holds. The local drill passed 180 checks. I kept hosted recovery acceptance open because the independent evidence still lived only in rehearsal memory.

@@ -1,3 +1,13 @@
+## Local customer/photo recovery composition passed, 15 October 2026
+
+Sabine approved local customer/photo backup recovery tests only, with no new spending or hosted changes. Extended the isolated rehearsal to generate three one-pixel PNG images with database checksums and Storage metadata, package them with a real synthetic PostgreSQL dump and roles, and round-trip the actual authenticated encryption format using a throwaway in-memory key. No permanent credentials, real customer data, provider uploads or active-job changes were involved.
+
+The expanded drill passed 180 checks across all 21 local migrations. It restored the original rows/security definitions, excluded a later-deleted photo and a deleted account's photo, replayed deletion before access checks, preserved expired-session denial and later spending holds, and proved a truncated database restore leaves no application tables. Eight encryption assertions cover round-trip, interrupted/truncated envelope, altered bytes, wrong key and retention expiry. Six new composition unit cases cover actual encrypted packaging, absent photos, interrupted encryption, later-object corruption without partial results, unknown deletion evidence and deleted-account image exclusion. Operations coverage is now 179 passing tests, plus four encryption tests.
+
+The disposable network-isolated container was removed. No hosted service, private cumulative ledger, permanent runtime, backup schedule or budget changed. Photos were generated fixtures in memory, not a managed Storage restore. Independent deletion/financial evidence was retained in drill memory; durable production reconciliation, coordinated hosted snapshots, managed owner/grantor equivalence and hosted customer/photo restoration remain unverified. Full Task 8d stays open and 5 of 41 full tasks remain complete.
+
+Next action: prepare a local durable reconciliation rehearsal for deletion and financial evidence surviving process loss, without creating a hosted restore endpoint or changing the active empty-source backup job. Continue awaiting concrete OpenAI/Tavus/Render replies for their blocked integration contracts.
+
 ## Initial database-only automatic backups activated, 15 October 2026
 
 Sabine explicitly accepted initial empty-source database coverage while customer/photo and hosted recovery acceptance remain open. Installed and loaded the native user LaunchAgent in the permanent private runtime. macOS reports last exit zero; its actual first run reports waiting. The preserved cumulative ledger still contains exactly one completed manual readiness attempt, with no new provider backup attempt at activation. The next attempt becomes eligible at 2:15 PM America/Cayman on 15 October, with up to 15 minutes until the local schedule check.
@@ -1005,6 +1015,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Local customer/photo recovery: the expanded encrypted-package rehearsal passes 180 checks using generated PNGs, with 179 operations tests plus four encryption tests. Later photo/account deletion, spending holds, expired sessions and atomic failed restore are covered locally. Hosted customer/photo recovery and durable independent reconciliation remain open; the active database-only job is unchanged.
 
 Backup setup, 15 October 2026: initial empty-source database automatic backups are active after Sabine accepted this narrower scope. The native Mac job loaded successfully and reported waiting without creating another attempt. Next eligible backup: 2:15 PM America/Cayman today, with local checks every 15 minutes and at least 12 hours between attempts. One fresh encrypted B2 round trip and 21 local restore checks passed. Operations coverage is 173 tests plus four encryption tests. The free email monitor is up with a 12-hour period and one-hour grace; failure and stalled-run alerts were inbox-confirmed. The job preserves cumulative free-budget counters and stops on customer/photo data, schema changes, uncertainty, failures, caps or expiry. The Mac must stay signed in, awake, online and running Docker Desktop. Full customer/photo recovery, managed owner/grantor equivalence, hosted restoration and production deletion reconciliation remain open. Full Task 8d stays open; 5 of 41 full tasks remain complete. No new spending or Backblaze support request is required.
 
