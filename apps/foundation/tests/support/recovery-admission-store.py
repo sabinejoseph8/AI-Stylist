@@ -4,6 +4,7 @@ from pathlib import Path
 import sys
 sys.path.insert(0,str(Path(__file__).resolve().parents[4]/'tools/operations'))
 import local_recovery_abuse as ledger
+import local_recovery_reconciliation as reconciliation
 x=json.load(sys.stdin);root=Path(x['root']);mode=x['mode']
 try:
     if mode=='prepare':
@@ -16,13 +17,25 @@ try:
     r=x['request']
     if r['storeId']!=expected['store_id'] or r['policyId']!=expected['policy_digest']:raise ValueError()
     operation=r['operationId']
+    if mode=='challenge':print(json.dumps(reconciliation.challenge(root,expected,operation)));sys.exit(0)
+    if mode=='reconcile':
+        # Public, fixed TEST keys simulate two authorities. They are not provider credentials.
+        result=reconciliation.reconcile(root,expected,operation,fence=r['fence'],cleanup=r['cleanup'],
+            fence_key=bytes.fromhex('11'*32),cleanup_key=bytes.fromhex('22'*32),
+            fence_epoch=r['fenceEpoch'],now=r['now'],max_age=30,crash_at=r.get('crashAt'))
+        print(json.dumps(result));sys.exit(0)
+    now=max(101,ledger.inspect(root,expected)['clock'])
+    if mode=='resend':
+        result=ledger.reserve(root,expected,subject='fixture-subject-a',kind='send',generation=None,now=now+10,operation_id=operation)
+        ledger.finish(root,expected,operation,outcome='completed',cleanup_verified=True)
+        print(json.dumps(result));sys.exit(0)
     if mode=='reserve':
         if set(r)!={'storeId','policyId','operationId','subjectKey','generation'} or r['subjectKey']!='b'*64:raise ValueError()
-        ledger.reserve(root,expected,subject='fixture-subject-a',kind='verify',generation=r['generation'],now=101,operation_id=operation)
+        ledger.reserve(root,expected,subject='fixture-subject-a',kind='verify',generation=r['generation'],now=now,operation_id=operation)
         status='reserved'
     elif mode=='claimReset':
         if set(r)!={'storeId','policyId','operationId'}:raise ValueError()
-        ledger.claim_reset(root,expected,operation,now=101);status='resetting'
+        ledger.claim_reset(root,expected,operation,now=now);status='resetting'
     elif mode=='settle':
         if set(r)!={'storeId','policyId','operationId','outcome','cleanupVerified'}:raise ValueError()
         status=r['outcome']

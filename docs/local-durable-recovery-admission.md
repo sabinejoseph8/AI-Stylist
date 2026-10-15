@@ -1,3 +1,7 @@
+## Subsequent local reconciliation evidence, 15 October 2026
+
+The [crash reconciliation model](local-recovery-reconciliation.md) now tests retiring unresolved synthetic work after separate fencing/cleanup evidence. It preserves counters and requires a fresh email generation. The model does not clear old in-memory holds, introduce a hosted reconciliation endpoint or establish real provider guarantees. Production authority/rollback and acceptance gates below remain open.
+
 # Local durable recovery admission interface
 
 15 October 2026. Authorized scope: local design, synthetic tests and disposable persistent state. No spending, hosted changes, real accounts or provider calls.

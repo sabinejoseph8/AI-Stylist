@@ -18,12 +18,12 @@ export function fixturePort(root:string,expected:unknown):RecoveryAdmissionPort{
 }
 if(process.argv[2]==='probe'){
  let source='';for await(const chunk of process.stdin)source+=chunk;
- const {root,expected,mode}=JSON.parse(source);let providerCalls=0,passwordCalls=0;
+ const {root,expected,mode,generation=1}=JSON.parse(source);let providerCalls=0,passwordCalls=0;
  const guard=createDurableRecoveryAdmission({storeId:expected.store_id,policyId:expected.policy_digest},fixturePort(root,expected),{exchange:async()=>{
   providerCalls++;if(mode==='crash-verify')process.exit(71);
   return {ownerId:'00000000-0000-4000-8000-000000000002',expiresAt:Date.now()+60000,resetPassword:async()=>{passwordCalls++;if(mode==='crash-reset')process.exit(72);return true;},discard:async()=>true};
  }},3000);
- const value=await guard.exchange({subjectKey:'b'.repeat(64),generation:1},'synthetic-only',new AbortController().signal);
+ const value=await guard.exchange({subjectKey:'b'.repeat(64),generation},'synthetic-only',new AbortController().signal);
  if('status' in value)process.stdout.write(JSON.stringify({status:value.status,providerCalls,passwordCalls}));
  else{const changed=await value.resetPassword('made-up-only',new AbortController().signal),cleaned=await value.discard(new AbortController().signal);process.stdout.write(JSON.stringify({status:changed&&cleaned?'complete':'unavailable',providerCalls,passwordCalls}));}
 }

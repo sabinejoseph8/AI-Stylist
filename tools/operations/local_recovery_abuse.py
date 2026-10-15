@@ -70,18 +70,33 @@ def validate(state, expected):
             len(state['records']) > state['policy']['total']):
         raise RecoveryHeld('recovery-unavailable')
     ids = set();generations = {};last_send = {};guesses = {};sends = {};last = 0
-    reserved = 0
+    reserved = 0;retired_epoch=0;retirement_ids=set()
     for item in state['records']:
-        if (not isinstance(item, dict) or set(item) != {'id', 'subject', 'kind', 'generation', 'at', 'state'} or
+        if (not isinstance(item, dict) or set(item) != ({'id', 'subject', 'kind', 'generation', 'at', 'state'}|({'retirement'} if item.get('state')=='retired' else set())) or
                 not isinstance(item['id'], str) or not re.fullmatch(r'fixture-operation-[0-9a-f]{32}', item['id']) or
                 item['id'] in ids or not isinstance(item['subject'], str) or
                 not re.fullmatch(r'fixture-subject-[a-z0-9]{1,24}', item['subject']) or
-                item['kind'] not in ('send', 'verify') or item['state'] not in ('reserved', 'resetting', 'completed', 'rejected', 'held') or
+                item['kind'] not in ('send', 'verify') or item['state'] not in ('reserved', 'resetting', 'completed', 'rejected', 'held', 'retired') or
                 (item['state']=='resetting' and item['kind']!='verify') or
                 not integer(item['at']) or not last <= item['at'] <= state['clock'] or item['at'] >= state['policy']['expires'] or
                 not integer(item['generation']) or item['generation'] < 1 or reserved):
             raise RecoveryHeld('recovery-unavailable')
-        ids.add(item['id']);last=item['at'];subject=item['subject']
+        if item['state']=='retired':
+            retirement=item['retirement']
+            if (not isinstance(retirement,dict) or set(retirement)!={'version','previous_state','fence_epoch','at','evidence_digest','fence_id','cleanup_id'} or
+                    type(retirement['version']) is not int or retirement['version']!=1 or
+                    retirement['previous_state'] not in ('reserved','resetting','held') or
+                    (retirement['previous_state']=='resetting' and item['kind']!='verify') or
+                    not integer(retirement['fence_epoch']) or retirement['fence_epoch']<1 or
+                    not integer(retirement['at']) or not item['at']<=retirement['at']<=state['clock'] or
+                    not isinstance(retirement['evidence_digest'],str) or not re.fullmatch(r'[a-f0-9]{64}',retirement['evidence_digest']) or
+                    any(not isinstance(retirement[k],str) or not re.fullmatch(r'fixture-evidence-[a-f0-9]{32}',retirement[k]) for k in ('fence_id','cleanup_id'))):
+                raise RecoveryHeld('recovery-unavailable')
+            if (retirement['fence_epoch']<=retired_epoch or retirement['fence_id']==retirement['cleanup_id'] or
+                    retirement['fence_id'] in retirement_ids or retirement['cleanup_id'] in retirement_ids):
+                raise RecoveryHeld('recovery-unavailable')
+            retired_epoch=retirement['fence_epoch'];retirement_ids.update((retirement['fence_id'],retirement['cleanup_id']))
+        ids.add(item['id']);last=max(item['at'],item['retirement']['at'] if item['state']=='retired' else item['at']);subject=item['subject']
         if item['kind'] == 'send':
             if item['generation'] != generations.get(subject, 0)+1:
                 raise RecoveryHeld('recovery-unavailable')
@@ -153,7 +168,8 @@ def reserve(root, expected, *, subject, kind, generation, now, operation_id, cra
                 raise RecoveryHeld('recovery-unavailable')
             selected=len(sends)+1
         else:
-            if (not integer(generation) or not sends or generation!=sends[-1]['generation'] or
+            if (not integer(generation) or not sends or generation!=sends[-1]['generation'] or sends[-1]['state']!='completed' or
+                    any(x['state']=='retired' and x['generation']==generation for x in own) or
                     len(guesses)>=policy['guesses'] or now>=sends[-1]['at']+policy['code_ttl']):
                 raise RecoveryHeld('recovery-unavailable')
             selected=generation

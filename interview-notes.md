@@ -1,3 +1,7 @@
+## Retiring uncertain recovery work without pretending it succeeded, 15 October 2026
+
+I tested reconciliation after a recovery crash using separate simulated fencing and cleanup evidence. A matching, fresh pair could retire an attempt, but could not declare a password reset successful, restore the old permission or refund a consumed count. I required a fresh email generation for another attempt and tested stale evidence, replay, competing reconcilers and interrupted writes. Twenty-five operations and five fresh-process foundation cases brought the suites to 278 and 1,371 passing tests. I documented that real provider finality, fencing and independent storage authority are still prerequisites. No spending or hosted changes were made.
+
 ## Keeping recovery reservations open through cleanup, 15 October 2026
 
 I connected the local recovery checks to a simulated durable admission interface. The design keeps a reservation open while reset permission waits for the user, records the reset claim before changing a password, and requires confirmed cleanup plus a saved outcome before success. Fresh-process crash tests showed that unfinished verification or password work stays blocked after restart. Signed ordinary sign-in proof still could not reset a password. Thirty-five new foundation and eight journal tests brought the suites to 1,366 and 253 passing tests. I kept real storage, provider compatibility and launch acceptance separate from this local evidence, with no spending or hosted changes.
