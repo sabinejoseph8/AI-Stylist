@@ -1,3 +1,7 @@
+## Testing recovery limits through crashes and restarts, 15 October 2026
+
+I tested a separate local recovery ledger with synthetic identities and provider callbacks. Guess and resend counts survived fresh processes, and eight competing processes could not exceed the last available guess. I tested crashes and disk failures so uncertain work would stay blocked instead of being retried. The review also made lock contention refuse promptly. Thirty-seven new tests brought operations coverage to 245 passing tests. I documented that rolling back both local evidence files together remains undetected, so this rehearsal is not a finished production security system. No customer account, hosted service or spending changed.
+
 ## Keeping recovery intent separate from recovery proof, 15 October 2026
 
 I prepared local checks that bind a single-use recovery attempt to the intended email and independently verified recovery identity. I kept ordinary sign-in tokens out of password-reset permission and tested forged attempts, overlapping requests, expiry and late results. A duplicate-session test prompted a tighter safeguard that also blocks future use of the earlier candidate. The full foundation suite now passes 1,307 tests. The provider compatibility question remains open, and I kept this experiment disconnected from customers and hosted services.

@@ -1,3 +1,13 @@
+## Local recovery abuse and restart protection rehearsal, 15 October 2026
+
+Sabine approved local recovery abuse/restart tests with no new spending or hosted changes. Added a disconnected synthetic journal that reserves attempts before callbacks and preserves cumulative guess/send counts, resend generations, policy/store binding and unresolved holds across fresh processes. Process locking prevents competing callers from exceeding the last available slot. Resends, new operation IDs and elapsed time do not refund counters. Missing/damaged/shared/symlink state, interrupted writes and uncertain outcomes block further simulated provider work.
+
+Thirty-seven new cases bring operations coverage to 245 passing tests with ResourceWarning treated as an error. Eight actual child processes compete for the last guess; restart, canceled/failed callbacks, late completion, all journal interruption stages and reservation/completion disk failures are covered. Review made lock acquisition nonblocking so contention refuses promptly. All 1,307 foundation tests, type checking, build and four encryption tests also pass. See docs/local-recovery-abuse-restart.md. The 183-check isolated database/photo restore checkpoint is unchanged and was not rerun.
+
+Limits: this is a separate Python admission rehearsal, not a connected TypeScript/customer guard. Fixture-only identifiers, limits and synthetic clock values introduce no production privacy/retention policy. A negative test explicitly confirms coordinated rollback of both valid files is not detected; independently protected monotonic evidence remains a production prerequisite. Ordinary OTP purpose is still refused by the existing recovery candidate. No real account, provider request, email, credential, permanent backup runtime/ledger, scheduler or hosted service changed. Local Memory source and interview notes are updated; no hosted publication or checkbox changed (2/38 phased tasks, 5/41 combined items).
+
+Exact next action: prepare receiving-browser binding and the durable admission-port contract locally, preserving strict purpose verification. Actual identifier/clock/evidence ownership, customer rate/retention policy, provider compatibility, restart cleanup reconciliation, sender and hosted/device acceptance remain gated. No action is required from Sabine for the completed rehearsal.
+
 ## Local recovery-purpose checks, 15 October 2026
 
 Sabine approved local recovery-purpose design/tests with no new spending or hosted changes. Added a disconnected server-only code candidate with opaque email-bound attempts, synchronous single-use claims, fixed verification inputs, signed email/freshness correlation and repeated-session invalidation. It reuses the original signed recovery-purpose verifier and bounded reset/cleanup owners. Ordinary OTP, password and magic-link authority remain refused; an intended recovery request is not accepted as independent provider proof.
@@ -1107,6 +1117,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Local recovery abuse/restart rehearsal: 37 new synthetic cases pass, with 245 operations tests, four encryption tests and the unchanged 1,307-test foundation suite/type checking/build. Counters and unresolved holds survive fresh processes; missing/damaged state and interrupted writes refuse callbacks. The separate fixture is not connected to customer accounts, and coordinated full-state rollback remains unprotected. See docs/local-recovery-abuse-restart.md. No spending, hosted changes or checkbox changes.
 
 Local recovery-purpose checks: 1,307 foundation tests, type checking and build pass. The disconnected candidate binds single-use attempts to signed recovery authority and retains independent cleanup; ordinary OTP remains refused. See docs/recovery-purpose-checks.md. Production compatibility, durable abuse/restart protection and browser binding remain open; no hosted changes or checkbox changes.
 

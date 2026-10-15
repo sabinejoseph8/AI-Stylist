@@ -1,3 +1,7 @@
+## Subsequent local admission rehearsal, 15 October 2026
+
+The [abuse/restart rehearsal](local-recovery-abuse-restart.md) adds 37 fresh-process and failure cases for a separate synthetic journal. It does not replace the TypeScript candidate's process-local maps, supply provider-purpose proof or activate account protection. Its explicit coordinated-rollback limitation remains a production gate.
+
 # Local recovery-purpose checks
 
 15 October 2026. Sabine authorized local design and tests with no new spending or hosted changes. This candidate is disconnected from customer routes, email templates and account runtime configuration.
