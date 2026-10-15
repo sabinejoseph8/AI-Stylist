@@ -11,3 +11,6 @@ recordings/
 test-results/
 
 __pycache__/
+
+# Private backup keys, quota ledgers and recovery artifacts
+tools/operations/.private/

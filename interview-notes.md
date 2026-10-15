@@ -1,3 +1,7 @@
+## Preparing backups within a free account
+
+I checked the actual free-account restrictions before connecting backups. The daily download limit changed the design: I bounded each encrypted recovery set so a restore has room for validation and current deletion evidence. I tested failed and competing transfers without cloud calls, and configured expiry while the private bucket was still empty. I kept the account credential limited to its backup prefix and retained a separate acceptance gate for real recovery and deletion timing.
+
 ## Controlling backup costs
 
 I chose to keep backup storage within the free allowance. After payment setup, I checked the difference between a billing warning and an enforced limit. I prepared a conservative usage guard that reserves capacity before an upload and keeps uncertain reservations after failures. Tests showed competing uploads cannot both claim the last available space. I kept live backups disabled while the runner, account-wide usage verification and recovery protections are unfinished, because local checks alone do not guarantee that the provider cannot charge the account.
