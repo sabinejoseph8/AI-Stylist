@@ -10,6 +10,7 @@ from pathlib import Path
 import re
 import stat
 import subprocess
+import uuid
 
 DESTINATION = Path.home() / 'Library/Application Support/AI Stylist Backups'
 PRIVATE_FILES = (
@@ -114,12 +115,41 @@ def verify_public(destination):
             data.get('schedule_active') is not False):
         raise RuntimeHeld('runtime-manifest-held')
     target = private_directory(destination / 'tools/operations')
+    actual = {p.name for p in target.iterdir() if p.suffix in ('.py', '.cjs')}
+    if actual != set(data['files']):
+        raise RuntimeHeld('runtime-unexpected-code-held')
     for name, expected in data['files'].items():
         if (not re.fullmatch('[A-Za-z0-9_-]+\.(?:py|cjs)', name) or
                 not isinstance(expected, str) or not re.fullmatch('[a-f0-9]{64}', expected) or
                 digest(read_file(target / name, private=True)) != expected):
             raise RuntimeHeld('runtime-integrity-held')
     return data
+
+
+def update_public(source, destination, commit):
+    """Preserve private state; interruption leaves a detectable manifest mismatch."""
+    old = verify_public(destination)
+    source = safe_path(source)
+    if not re.fullmatch('[a-f0-9]{40}', commit):
+        raise RuntimeHeld('runtime-commit-held')
+    operations = source / 'tools/operations'
+    contents = {p.name: read_file(p) for p in operations.iterdir()
+                if p.suffix in ('.py', '.cjs') and not p.name.startswith('test_')
+                and not p.name.endswith('.test.cjs')}
+    if not set(old['files']) <= set(contents):
+        raise RuntimeHeld('runtime-removal-held')
+    target = Path(destination) / 'tools/operations'
+    for name, data in contents.items():
+        stage = target / ('.'+name+'.'+uuid.uuid4().hex+'.tmp')
+        write_exclusive(stage, data)
+        os.replace(stage, target / name)
+    manifest = {**old, 'source_commit': commit,
+                'files': {name: digest(data) for name, data in contents.items()}}
+    stage = Path(destination) / ('.manifest.'+uuid.uuid4().hex+'.tmp')
+    write_exclusive(stage, json.dumps(manifest, sort_keys=True).encode())
+    os.replace(stage, Path(destination) / 'runtime-manifest.json')
+    verify_public(destination)
+    return {'public_files': len(contents), 'private_state_preserved': True, 'schedule_active': False}
 
 
 def source_commit(root):

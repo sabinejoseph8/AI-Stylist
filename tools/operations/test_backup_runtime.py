@@ -103,3 +103,20 @@ class RuntimeTests(unittest.TestCase):
     def test_writable_parent_refused(self):
         self.prepare(); (self.destination/'tools').chmod(0o777)
         with self.assertRaises(m.RuntimeHeld): m.verify_public(self.destination)
+
+    def test_public_update_preserves_private_bytes_and_receipts(self):
+        self.prepare(); m.transfer_private(self.private,self.destination,approved=True)
+        target=self.destination/'tools/operations/.private'
+        before={p.name:p.read_bytes() for p in target.iterdir()}
+        (self.ops/'new_module.py').write_text('# additional public code')
+        result=m.update_public(self.source,self.destination,'b'*40)
+        self.assertTrue(result['private_state_preserved'])
+        self.assertEqual(before,{p.name:p.read_bytes() for p in target.iterdir()})
+        self.assertEqual(m.source_commit(self.destination),'b'*40)
+
+    def test_unexpected_code_and_public_removal_hold(self):
+        self.prepare(); target=self.destination/'tools/operations/extra.py'
+        target.write_text('# unexpected'); target.chmod(0o600)
+        with self.assertRaises(m.RuntimeHeld):m.verify_public(self.destination)
+        target.unlink(); (self.ops/'module.cjs').unlink()
+        with self.assertRaises(m.RuntimeHeld):m.update_public(self.source,self.destination,'b'*40)
