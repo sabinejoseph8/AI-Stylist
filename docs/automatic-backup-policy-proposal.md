@@ -38,4 +38,4 @@ A whole attempt is reserved before its callback. Failed attempts retain all rese
 
 ## Current evidence
 
-Eight synthetic policy cases pass; the operations suite is 147 tests. No real cumulative policy database, scheduler, new transfer, account setting or provider call was created by this preparation. The existing fresh-usage transport and all historical ledgers remain unchanged.
+Nine synthetic policy cases pass; the operations suite is 148 tests. No real cumulative policy database, scheduler, new transfer, account setting or provider call was created by this preparation. The existing fresh-usage transport and all historical ledgers remain unchanged.

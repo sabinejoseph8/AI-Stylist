@@ -111,7 +111,9 @@ def _finish(path, attempt, outcome):
             db.execute('BEGIN IMMEDIATE')
             if db.execute('SELECT active FROM policy WHERE id=1').fetchone() != (attempt,):
                 raise AutomaticHeld('automatic-completion-held')
-            db.execute('UPDATE attempts SET outcome=? WHERE id=? AND outcome=?',(outcome,attempt,'unresolved'))
+            changed=db.execute('UPDATE attempts SET outcome=? WHERE id=? AND outcome=?',(outcome,attempt,'unresolved'))
+            if changed.rowcount != 1:
+                raise AutomaticHeld('automatic-attempt-history-held')
             db.execute('UPDATE policy SET active=NULL WHERE id=1')
             db.commit()
     except sqlite3.Error:

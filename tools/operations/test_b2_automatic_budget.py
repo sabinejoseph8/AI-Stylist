@@ -78,3 +78,10 @@ class AutomaticBudgetTests(unittest.TestCase):
         self.assertFalse(self.path.exists())
         self.prepare();self.path.chmod(0o644)
         with self.assertRaises(Exception):m.run_reserved(self.path,now=1000,operation=lambda:self.fail('called'))
+
+    def test_missing_attempt_history_keeps_run_unresolved(self):
+        self.prepare()
+        def operation():
+            with sqlite3.connect(self.path) as db:db.execute('DELETE FROM attempts')
+        with self.assertRaises(m.AutomaticHeld):m.run_reserved(self.path,now=1000,operation=operation)
+        self.assertIsNotNone(self.row()[-1])
