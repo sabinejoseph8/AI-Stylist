@@ -1,3 +1,7 @@
+## Saved-password verification remains blocked, 15 October 2026
+
+After Sabine verified her saved database password and reported saved again, one explicitly requested bounded connection check still returned database-authentication-refused. Full TLS verification remained enabled; no metadata query, export, upload or database change occurred. The disposable client was removed. No automatic retry or credential reset was performed. Next action requires Sabine to establish the correct AI Stylist database credential, with a user-performed reset only if she chooses it after considering existing direct database connections. Backup activation remains paused.
+
 ## Corrected private password check still refused, 15 October 2026
 
 Sabine reported correcting and saving the private database password. One bounded TLS-verified read-only connection was attempted and returned the fixed database-authentication-refused category. No metadata query, export, upload or backup activation occurred. The client was removed and no automatic retry ran. A local format-only check found no surrounding whitespace/quotes, connection-string prefix or environment-assignment prefix; the password itself was not displayed or copied.
