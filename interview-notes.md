@@ -1759,3 +1759,7 @@ I walked through notes, a generated photo, Wardrobe, separate sample revisions, 
 ## Improving keyboard access in populated screens
 
 I checked the sample app with a generated image, a long clothing description, keyboard controls and doubled text on a narrow screen. I fixed focus leaving photo dialogs and focus being stranded on disabled privacy/export buttons. Confirmations now announce their context through a focused heading, cancellation returns to a usable control and background notes do not interrupt editing. All 1,260 foundation tests pass. I kept real screen-reader and physical-device acceptance open.
+
+## Closing a form-lifecycle privacy gap
+
+I reviewed the sample app for browser storage, logs, images and exports. I found that unsent account/reset drafts lacked a page-exit boundary, so I added immediate field clearing, cached-return clearing and cancellation of late results. I also ensured decoder failures expose only a fixed message. Synthetic browser checks showed empty fields and no local-origin storage entries; malformed images preserved the prior reference. All 1,267 foundation tests pass. I kept actual device-cache and hosted privacy acceptance open.

@@ -1,3 +1,4 @@
+import {bindSensitivePageLifecycle,clearSensitiveFieldValues} from './sensitive-page-lifecycle.ts';
 import {RecoveryPanel} from './recovery-panel.tsx';
 import React,{useEffect,useMemo,useRef,useState} from 'react';
 import {createAccountFlow,type AccountProvider,type AccountRequest} from './account-flow.ts';
@@ -25,6 +26,8 @@ function AccountPanelSession({provider=sampleAccountProvider,connected=false}:Ac
  const [state,setState]=useState(flow.snapshot),[mode,setMode]=useState<'signIn'|'signUp'|'recover'>('signIn');
  const [resetPreview,setResetPreview]=useState(false);
  const [email,setEmail]=useState(''),[password,setPassword]=useState('');
+ const emailField=useRef<HTMLInputElement|null>(null),passwordField=useRef<HTMLInputElement|null>(null);
+ useEffect(()=>bindSensitivePageLifecycle(window,()=>{clearSensitiveFieldValues([emailField.current,passwordField.current]);setEmail('');setPassword('');setResetPreview(false);flow.cancel();setState(flow.snapshot());}),[flow]);
  const statusRef=useRef<HTMLParagraphElement>(null),previous=useRef(state);
  useEffect(()=>{if(previous.current!==state&&state.status!=='pending')statusRef.current?.focus();previous.current=state;},[state]);
  useEffect(()=>{
@@ -41,8 +44,8 @@ function AccountPanelSession({provider=sampleAccountProvider,connected=false}:Ac
   <div className="account-modes" aria-label="Account options">{(['signIn','signUp','recover'] as const).map(value=><button key={value} type="button" aria-pressed={mode===value} onClick={()=>change(value)}>{value==='signIn'?'Sign in':value==='signUp'?'Create account':'Recover access'}</button>)}</div>
   {resetPreview?<RecoveryPanel onClose={()=>{setResetPreview(false);change('signIn');}}/>:state.status==='signedIn'?<><p>{preview?"Sample account connected on this page only. Your stylist remains unavailable.":"Sign-in completed. Protected features verify your session on the server."}</p><button type="button" onClick={async()=>{const work=flow.signOut();setEmail('');setPassword('');setState(flow.snapshot());await work;setState(flow.snapshot());}}>{preview?"Sign out of sample account":"Sign out"}</button></>:<>
    <form aria-describedby="account-preview-note" onSubmit={event=>{event.preventDefault();void submit(mode==='recover'?{method:'recover',email}:{method:mode,email,password});}}>
-    <label htmlFor="account-email">{preview?"Email address (made-up)":"Email address"}</label><input id="account-email" type="email" autoComplete={preview?"off":"email"} maxLength={254} required value={email} onChange={event=>setEmail(event.target.value)} disabled={pending}/>
-    {mode!=='recover'&&<><label htmlFor="account-password">{preview?"Password (made-up)":"Password"}</label><input id="account-password" type="password" autoComplete={preview?"off":mode==="signUp"?"new-password":"current-password"} maxLength={4096} required value={password} onChange={event=>setPassword(event.target.value)} disabled={pending}/></>}
+    <label htmlFor="account-email">{preview?"Email address (made-up)":"Email address"}</label><input ref={emailField} id="account-email" type="email" autoComplete={preview?"off":"email"} maxLength={254} required value={email} onChange={event=>setEmail(event.target.value)} disabled={pending}/>
+    {mode!=='recover'&&<><label htmlFor="account-password">{preview?"Password (made-up)":"Password"}</label><input ref={passwordField} id="account-password" type="password" autoComplete={preview?"off":mode==="signUp"?"new-password":"current-password"} maxLength={4096} required value={password} onChange={event=>setPassword(event.target.value)} disabled={pending}/></>}
     <button className="account-primary" disabled={pending} type="submit">{preview?(mode==='recover'?'Preview recovery':mode==='signUp'?'Preview account creation':'Preview sign-in'):(mode==='recover'?'Request recovery':mode==='signUp'?'Create account':'Sign in')}</button>
    </form>
   </>}

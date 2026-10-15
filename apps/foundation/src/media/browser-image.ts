@@ -33,5 +33,6 @@ export async function normalizeBrowserImage(file:Blob):Promise<Blob>{
   return await new Promise<Blob>((resolve,reject)=>canvas!.toBlob(blob=>!retired&&blob?.type==='image/webp'&&blob.size<=8*1024*1024?resolve(blob):reject(Error('Photo unavailable')),'image/webp',0.85));
  })();
  try{return await Promise.race([work,deadline]);}
+ catch{throw Error('Photo unavailable');}
  finally{retired=true;if(timer!==undefined)clearTimeout(timer);releaseBitmap();if(canvas){(canvas as HTMLCanvasElement).width=0;(canvas as HTMLCanvasElement).height=0;}}
 }

@@ -1,3 +1,7 @@
+## Volatile account/reset draft lifecycle, 15 October 2026
+
+Account and reset drafts clear on page exit and persisted cached-page return as well as their existing submit/cancel boundaries. Erase visible input values synchronously before rendering can pause, then clear React state and cancel pending local flows. A cached page must not restore filled drafts or accept late local completion. This does not imply hosted sign-out, credential revocation or forensic erasure. Sample controls remain explicitly simulated.
+
 ## Populated keyboard focus rules, 15 October 2026
 
 Photo enlargement dialogs currently contain one Close control. Tab and Shift+Tab stay on that control; Escape uses native close and returns to the opener. When privacy clearing opens, focus its confirmation heading rather than the disabled Clear button. Cancel or completion returns to the Clear origin. Explicit export preparation moves focus to enabled Cancel, and cancellation returns to Prepare. Ordinary background status updates must not move focus. Wardrobe and notebook editor Cancel return to the initiating edit control. Narrow enlarged-text checks pass; real assistive-technology/device acceptance remains open.
