@@ -1,3 +1,7 @@
+## B2 setup publication receipt
+
+Preparation 9dc62a5 is pushed and its ten changed public files are byte-verified in the approved AI Stylist folder and matching original checkout. The private Memory website imported the latest approved documents, passed all 16 checks and artifact validation, and deployed source e6c4e17038cea2bfa1d8c6375cfb81fea179ebd9 successfully as appgdep_6ad05b1422508191ba720dedf44e1dd9. Owner-private access and MCP are preserved. Five of 41 full tasks remain complete; Task 8d stays open. No private keys, receipts or backups are in the site/source archive. The narrowed-key administrator approval remains pending. Exact next action: obtain that security decision, then implement and review the bounded one-time creation procedure before requesting private administrator credential access. No backup process is active.
+
 ## B2 credential transfer and capability mismatch
 
 Sabine created the dashboard key and approved direct private local storage. Saved it to tools/operations/.private/b2.env with mode 0600 inside a 0700 directory, verified ignored and untracked. No secret was displayed or copied to public documents. Initial transfer validation was corrected to accept the provider's credential character set without printing it.
