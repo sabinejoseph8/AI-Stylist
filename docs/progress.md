@@ -1,3 +1,11 @@
+## Approved R2 free-allowance constraint
+
+Sabine selected Cloudflare R2 and will create the account herself. MVP backup storage must stay within the free 10 GB allowance; no R2 overage spending is authorized. R2 Standard's published allowance is 10 GB-month per month, with one million Class A and ten million Class B operations. Request limits matter independently of stored bytes. Account-wide consumption, overhead, incomplete uploads and concurrent writes must be included before admission; unknown usage must stop new backup writes and alert the operator. This control is required preparation, not implemented or verified protection against charges. Cloudflare's free allowance must not be represented as an automatic hard billing cap.
+
+Use a conservative capacity margin below 10 GB total stored backup data. Count all retained copies, manifests, encrypted overhead and recovery evidence, not only current wardrobe originals. Do not delete needed valid recovery points early to make room or silently weaken the approved recovery target. If capacity blocks a fresh backup, report that recovery freshness is at risk and request a business decision. Keep existing seven-day maximum and deletion reconciliation requirements. No billable scheduler, paid upgrade or source-transfer overage is authorized by this decision.
+
+Exact next action: Sabine creates her Cloudflare account and reports when ready. Then inspect R2 activation terms and existing account usage, configure the private destination and credentials through the authorized handoff, and finish/test capacity and operation guards before enabling uploads. No account, credential, subscription or photo backup has been activated by recording this decision.
+
 ## Independent backup storage prerequisite
 
 Sabine confirmed no separate storage account. Prepared the R2 Standard candidate, published costs, account handoff and seven-day expiry limitations in docs/backup-recovery-plan.md. Database backups are active; complete backup activation is blocked on new storage account/vendor and billing authorization, then encryption/key custody, coordinated recovery points, durable current evidence and alert setup. No new subscription, credential or upload occurred. Exact next action: obtain the storage choice and explicit billing allowance before activation. Full Task 8d remains open.

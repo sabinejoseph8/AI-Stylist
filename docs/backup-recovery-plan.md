@@ -1,3 +1,11 @@
+## Approved R2 free-allowance constraint
+
+Sabine selected Cloudflare R2 and will create the account herself. MVP backup storage must stay within the free 10 GB allowance; no R2 overage spending is authorized. R2 Standard's published allowance is 10 GB-month per month, with one million Class A and ten million Class B operations. Request limits matter independently of stored bytes. Account-wide consumption, overhead, incomplete uploads and concurrent writes must be included before admission; unknown usage must stop new backup writes and alert the operator. This control is required preparation, not implemented or verified protection against charges. Cloudflare's free allowance must not be represented as an automatic hard billing cap.
+
+Use a conservative capacity margin below 10 GB total stored backup data. Count all retained copies, manifests, encrypted overhead and recovery evidence, not only current wardrobe originals. Do not delete needed valid recovery points early to make room or silently weaken the approved recovery target. If capacity blocks a fresh backup, report that recovery freshness is at risk and request a business decision. Keep existing seven-day maximum and deletion reconciliation requirements. No billable scheduler, paid upgrade or source-transfer overage is authorized by this decision.
+
+Exact next action: Sabine creates her Cloudflare account and reports when ready. Then inspect R2 activation terms and existing account usage, configure the private destination and credentials through the authorized handoff, and finish/test capacity and operation guards before enabling uploads. No account, credential, subscription or photo backup has been activated by recording this decision.
+
 # Backup and recovery plan
 
 Status: planning authorized by Sabine on 14 October 2026. Sabine approved the three targets below on 14 October 2026. No backup job, new storage, paid add-on, credentials, restore or customer deployment is activated. Full Task 8d remains open.
@@ -30,13 +38,13 @@ A possible independent destination is R2 Standard, pending account selection and
 
 ## Independent backup account prerequisite
 
-Sabine confirmed she has no separate S3, R2 or B2 account. The proposed destination is a private Cloudflare R2 Standard bucket, subject to her approval of the new vendor and its usage-billed subscription. Existing app hosting stays on Render/Supabase. R2 activation requires checkout; its free allowance is not a hard spending cap. Do not activate billing, create credentials or upload customer data on the strength of the general backup setup approval.
+Sabine confirmed she has no separate S3, R2 or B2 account. The proposed destination is a private Cloudflare R2 Standard bucket, selected by Sabine with a free-allowance-only MVP constraint; account activation is pending. Existing app hosting stays on Render/Supabase. R2 activation requires checkout; its free allowance is not a hard spending cap. Do not activate billing, create credentials or upload customer data on the strength of the general backup setup approval.
 
 Proposed protection: encrypt backup sets before upload using an established authenticated-encryption tool, store recovery key material separately from the bucket, restrict the backup credential to its bucket, disable public access and retain only persistent approved data. A worker must verify completed sets, remove expired copies and alert on failure. R2 lifecycle deletion is asynchronous and typically follows expiration within 24 hours, so a seven-day lifecycle rule alone cannot prove the approved seven-day maximum. Use earlier scheduled deletion with verified results and lifecycle protection; retain this as an unverified target until the real expiry drill passes. Missing deletion/financial evidence prevents promotion of restored data.
 
 Published R2 Standard allowances: 10 GB-month storage, one million Class A and ten million Class B operations monthly; standard storage beyond the allowance is $0.015/GB-month. Source transfer, execution, key custody and alerts require a complete cost assessment before activation. Seven full daily copies of a 1 GB source would use roughly 7 GB before database exports, metadata and overhead; this is an illustration, not a measured forecast. No amount or billing authorization is inferred.
 
-Next user action: approve or decline using Cloudflare R2 as the new backup destination, then complete account/password/terms/payment entry personally. Before billable activation, agree a concrete monthly allowance and verify current checkout terms. Before real uploads, complete the encryption, coordinated snapshot, durable evidence, monitoring and recovery acceptance gates. Actual backup setup remains incomplete.
+Next user action: create the selected Cloudflare account and complete account/password/terms/payment entry personally. Before billable activation, agree a concrete monthly allowance and verify current checkout terms. Before real uploads, complete the encryption, coordinated snapshot, durable evidence, monitoring and recovery acceptance gates. Actual backup setup remains incomplete.
 
 References reviewed: https://developers.cloudflare.com/r2/get-started/ ; https://developers.cloudflare.com/r2/pricing/ ; https://developers.cloudflare.com/r2/buckets/object-lifecycles/ .
 
