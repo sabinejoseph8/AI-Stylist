@@ -38,7 +38,7 @@ def download(api, token, file_id, expected_size):
 
 
 def transfer(config, value, ledger, *, now, verify, authorize=preflight.request_json,
-             upload=upload_envelope, read=download):
+             upload=upload_envelope, read=download,budget_guard=None):
     if (config.get('B2_BUCKET_ID')!='92135d40b02e32dcab1a0e10' or
             config.get('B2_BUCKET_NAME')!='AIstylist' or config.get('B2_PREFIX')!='backups/' or
             not isinstance(value,bytes) or not 36<=len(value)<=MAX_CANDIDATE or
@@ -47,11 +47,13 @@ def transfer(config, value, ledger, *, now, verify, authorize=preflight.request_
     # Authenticate and validate all packaged members before any provider request.
     if verify(value) is not True:raise TransferHeld('candidate-verification-held')
     auth='Basic '+base64.b64encode((config['B2_KEY_ID']+':'+config['B2_APPLICATION_KEY']).encode()).decode()
-    response=run_b2_guarded(ledger,now=now(),class_b=1,class_c=1,
+    guard=run_b2_guarded if budget_guard is None else budget_guard
+    response=guard(ledger,now=now(),class_b=1,class_c=1,
         operation=lambda:authorize(preflight.AUTH_URL,auth))
     api,token=preflight.validate_authorization(response,config,now())
-    result=upload(api,token,config['B2_BUCKET_ID'],value,ledger,now=now())
-    recovered=run_b2_guarded(ledger,now=now(),download_bytes=len(value),class_b=1,class_c=1,
+    extra={} if budget_guard is None else {'budget_guard':budget_guard}
+    result=upload(api,token,config['B2_BUCKET_ID'],value,ledger,now=now(),**extra)
+    recovered=guard(ledger,now=now(),download_bytes=len(value),class_b=1,class_c=1,
         operation=lambda:read(api,token,result['file_id'],len(value)))
     if recovered!=value or verify(recovered) is not True:
         raise TransferHeld('candidate-recovery-held')

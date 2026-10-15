@@ -1,6 +1,6 @@
 # Proposed automatic-backup budget
 
-Status: prepared for Sabine's decision, not approved or active.
+Status: budget design approved by Sabine on 15 October 2026; sole-use account confirmed. One private allowance is initialized. Scheduling remains inactive pending backup checks.
 
 ## Why a decision is needed
 

@@ -41,7 +41,7 @@ def request(url,token,body,headers=None):
     except (urllib.error.URLError,TimeoutError,OSError,ValueError):
         raise TransferHeld('transfer-unavailable-or-refused') from None
 
-def upload_envelope(api,authorization,bucket_id,envelope,ledger,*,now,call=request):
+def upload_envelope(api,authorization,bucket_id,envelope,ledger,*,now,call=request,budget_guard=None):
     if (not isinstance(api,str) or not re.fullmatch(r'https://api[0-9]{3}\.backblazeb2\.com',api) or
         not isinstance(bucket_id,str) or not re.fullmatch(r'[a-f0-9]{24}',bucket_id) or
         not isinstance(envelope,bytes) or not 36<=len(envelope)<=SNAPSHOT_LIMIT or
@@ -73,4 +73,5 @@ def upload_envelope(api,authorization,bucket_id,envelope,ledger,*,now,call=reque
                 'uploaded':True,'restore_verified':False}
     # Overcount both charged request classes conservatively, independent of API
     # classification. Auth/inventory are separate and must reserve their own calls.
-    return run_b2_guarded(ledger,now=now,upload_bytes=len(envelope),class_b=2,class_c=2,operation=operation)
+    guard=run_b2_guarded if budget_guard is None else budget_guard
+    return guard(ledger,now=now,upload_bytes=len(envelope),class_b=2,class_c=2,operation=operation)

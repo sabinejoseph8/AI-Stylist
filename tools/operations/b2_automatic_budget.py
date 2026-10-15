@@ -1,7 +1,7 @@
-"""Prepared cumulative automatic-run admission policy, not approved or activated.
+"""Approved cumulative admission policy; scheduler activation remains separate.
 
-No scheduler, provider calls, credentials or usage collector. A new owner
-decision is required before replacing per-operation fresh-usage admission.
+No scheduler, provider calls, credentials or usage collector. Sabine approved
+this policy and confirmed a sole-use B2 account on 15 October 2026.
 All counters are cumulative from one fresh anchor, never reset or refunded.
 """
 import os
