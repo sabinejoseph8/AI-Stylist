@@ -1,3 +1,11 @@
+## Backblaze B2 free-account inspection
+
+Sabine authorized creating and trying a Backblaze B2 account to evaluate a backup destination without payment details. She completed signup and created an empty private bucket with encryption enabled. Read-only inspection verifies 0 files/bytes, no payment method displayed, and estimated fees $0.00. Caps & Alerts shows a $0.00 daily storage cap (10 GB), $0.00 daily download cap (1 GB), and Class B/Class C limits of 2,500 transactions per day each. Opening Edit Caps shows that a credit card must be entered before caps can be edited. No caps were changed.
+
+This is observed account-level restriction evidence, not a contractual guarantee against any payable balance or a tested boundary upload. Do not perform a 10 GB upload to test the limit. The existing R2 quota helper uses R2 operation classes and monthly bounds and cannot be reused unchanged for B2's observed daily limits. B2 still needs encryption/key custody review, seven-day lifecycle configuration (currently Keep all versions), restricted credential handoff, provider-specific admission and download/recovery feasibility checks. A 1 GB daily download cap can prevent a large restore from meeting the 48-hour target; do not silently alter recovery promises. No automatic backup, credential or upload was created by the inspection. R2 remains subscribed with its empty private bucket; no cancellation or provider migration was performed.
+
+Exact next action: prepare the B2 backup design against the observed daily limits and resolve restore-size feasibility before activation. Preserve zero additional spending and no payment method. Full Task 8d remains open.
+
 ## R2 activation and prepared usage guard
 
 Sabine completed Cloudflare payment setup herself and reaffirmed the 10 GB/no-overage constraint. Read-only dashboard verification confirms R2 subscription active and overview shows no buckets, 0 B storage and $0 billable usage at inspection. Cloudflare budget alerts explicitly do not cap or pause usage. No provider-enforced 10 GB cap is established. No payment identifiers or account contact details are retained here.
