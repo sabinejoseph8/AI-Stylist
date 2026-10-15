@@ -1,3 +1,7 @@
+## Activation publication verified, 15 October 2026
+
+The approved database-only native job is loaded, its first exit is zero and its log reports waiting. Exactly one completed cumulative attempt remains; activation made no new backup attempt. The live email check is up with period 12 hours and grace one hour. Private Memory deployment appgdep_6ad082c8568081919f44af8b4cb069e5 succeeded from source a6843d8d92f98b7f2e82c1d224ee084dee4b417a, preserving owner-private access and MCP. All 16 site checks pass, alongside 173 operations and four encryption checks. The existing 21-check fresh-archive local drill remains applicable. GitHub activation summary is published at 22e95bb. No acceptance checkbox was advanced for full Task 8d. Next action remains waiting for the existing scheduled due time, not forcing another attempt; full customer/photo/hosted recovery remains open.
+
 ## Initial database-only automatic backups activated, 15 October 2026
 
 Sabine explicitly accepted initial empty-source database coverage while customer/photo and hosted recovery acceptance remain open. Installed and loaded the native user LaunchAgent in the permanent private runtime. macOS reports last exit zero; its actual first run reports waiting. The preserved cumulative ledger still contains exactly one completed manual readiness attempt, with no new provider backup attempt at activation. The next attempt becomes eligible at 2:15 PM America/Cayman on 15 October, with up to 15 minutes until the local schedule check.

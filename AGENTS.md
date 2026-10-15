@@ -222,4 +222,3 @@ Healthchecks now monitors the limited database job with a 12-hour period and one
 The approved cumulative limits, earlier ledgers, keys and reservations are unchanged. The job stops on customer/photo data, schema/role changes, unresolved attempts, failures, expiry or exhausted allowance; it never retries or renews its own policy. This remains initial database-only protection, not complete customer/photo recovery or a proven hosted restore. Full Task 8d stays open and 5 of 41 full tasks remain complete. No new spending, plan change or support request occurred.
 
 Next action: let the scheduled job reach its existing due time and inspect its private receipt and monitor afterward. Do not force an early run. Before introducing customer/photo data, complete and accept coordinated customer/photo recovery, hosted restore and deletion reconciliation. Review expiry before the limited policy/key ends; renewal requires a new decision and never resets history.
-
