@@ -9,6 +9,7 @@ import re
 import uuid
 from local_recovery_abuse import encoded, integer, sync_root, locked, save, RecoveryHeld
 from local_recovery_evidence import private_root, read_private, durable_create
+from local_cvi_witness import journal_locked, journal_save
 
 
 def digest(x):
@@ -53,12 +54,12 @@ def load(root,store_id):
     return s
 
 
-def operate(root,request,mode,crash_at=None):
+def operate(root,request,mode,crash_at=None,*,witness=None,witness_crash_at=None):
     keys={'storeId','bindingDigest','requestDigest','now'}
     if mode=='consume':keys|={'receipt','status'}
     if (mode not in ('reserve','consume') or not isinstance(request,dict) or set(request)!=keys or
         not digest(request['bindingDigest']) or not digest(request['requestDigest']) or not integer(request['now'])):raise RecoveryHeld('cvi-unavailable')
-    with locked(root) as root:
+    with journal_locked(root,request['storeId'],'replay',witness) as root:
         s=load(root,request['storeId']);now=request['now']
         if request['bindingDigest']!=s['bindingDigest'] or not s['clock']<=now<s['expires']:raise RecoveryHeld('cvi-unavailable')
         if mode=='reserve':
@@ -68,5 +69,5 @@ def operate(root,request,mode,crash_at=None):
             rows=[r for r in s['records'] if r['requestDigest']==request['requestDigest'] and r['receipt']==request['receipt']]
             if request['status']!='reserved' or len(rows)!=1 or rows[0]['status']!='reserved':raise RecoveryHeld('cvi-unavailable')
             r=rows[0];r['status']='spent';r['spentAt']=now
-        s['clock']=now;save(root,s,crash_at=crash_at)
+        s['clock']=now;journal_save(root,s,witness,crash_at=crash_at,witness_crash_at=witness_crash_at)
         return dict(storeId=s['storeId'],bindingDigest=s['bindingDigest'],requestDigest=r['requestDigest'],now=now,receipt=r['receipt'],status=r['status'])

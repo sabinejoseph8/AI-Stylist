@@ -1,3 +1,7 @@
+## Later local rollback witness rehearsal
+
+See docs/local-tavus-rollback-witness.md for conditional rejection of journal/checkpoint rollback against separately preserved witness state. The witness is a local simulation of independent protection. Rolling back all journals and witnesses remains undetectable, and no hosted authority is activated. The older unprotected fixture limitations below remain valid.
+
 # Local credential invalidation at CVI restart
 
 Sabine approved local preparation/tests on 15 October 2026, with no new spending or hosted changes. Only synthetic public test credentials and disposable journals are used. No real Tavus credential is generated, stored, rotated or revoked.

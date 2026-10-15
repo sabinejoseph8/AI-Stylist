@@ -1,3 +1,13 @@
+## Local CVI coordinated rollback witness rehearsal, 15 October 2026
+
+Sabine approved local preparation/tests with no new spending or hosted changes. Added protected replay/credential journal operations that compare exact history against a separate monotonic witness and advance that witness before acknowledging journal changes. A joint ledger/checkpoint rollback is refused while its witness remains current. Missing/mismatched/unavailable witness and interrupted witness/journal commits hold admission without reseed, rebase, retry or refund. The protected test bridge requires a witness and is not imported by any app entry point.
+
+17 new fresh-process endpoint cases and 23 new operations cases cover rollback of either/both histories, identity substitution, stale/missing witnesses, clock/cap/hold preservation, concurrency, delivery-time refusal and interrupted writes. All 1,574 foundation tests across 140 files, 331 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks pass. See docs/local-tavus-rollback-witness.md.
+
+Boundary: the separate witness folders simulate independent protection. Negative operations/endpoint tests confirm that rolling back all journals and witnesses together still succeeds. No real independent authority, privilege isolation, hosted atomic transaction or absolute revocation/playback guarantee is established. Existing unprotected comparison fixtures retain their original limitations. No credentials, provider/account/hosted changes, spending, permanent backup runtime/ledgers or scheduler changes. Local Memory/interview records updated without publication or phase/task completion changes.
+
+Exact next action: specify the independently protected authority contract, fresh-head/identity pinning, privileges and conservative reconciliation within approved hosting/spending limits. A real hosted adapter or provider test requires its existing separate authorization gates. No user action is needed for the completed local conditional rehearsal.
+
 ## Local CVI credential invalidation on restart, 15 October 2026
 
 Sabine approved local preparation/tests with no new spending or hosted changes. Added a startup gate requiring a committed fresh credential/boot generation before endpoint construction, plus an exact current-authority check before drafting and on both sides of spending reply permission. Old bearer and old worker leases are refused after activation; generation history, replay counts and unresolved holds are preserved. No activation is exposed to incoming requests and no real credential is used or changed.

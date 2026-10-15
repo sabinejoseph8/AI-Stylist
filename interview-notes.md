@@ -1,3 +1,7 @@
+## Testing rollback against a separate history witness
+
+I extended the local restart rehearsal to compare request and credential history with a separate monotonic witness. Restoring old journal and checksum files is refused while the witness remains current. I tested interrupted commits and deliberately kept uncertain states blocked. I also retained tests showing that restoring the witness along with all local history defeats the model. That makes the real deployment requirement clear: the authority must be independently protected, and separate folders on the same computer do not establish that protection.
+
 ## Invalidating an old conversation credential at restart
 
 I prepared a startup gate that must commit a fresh credential generation before the local endpoint can serve. I tested old credentials in fresh workers, competing restarts and rotation while an approved reply waits for delivery. The tests preserve replay history and show that rotating a credential does not clear unresolved work. I recorded two important limits: process exit alone does not revoke a key, and coordinated rollback of the local authority files can restore old authority. No real credential or provider was changed in this rehearsal.
