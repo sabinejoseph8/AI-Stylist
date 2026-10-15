@@ -1,3 +1,13 @@
+## Local recovery-purpose checks, 15 October 2026
+
+Sabine approved local recovery-purpose design/tests with no new spending or hosted changes. Added a disconnected server-only code candidate with opaque email-bound attempts, synchronous single-use claims, fixed verification inputs, signed email/freshness correlation and repeated-session invalidation. It reuses the original signed recovery-purpose verifier and bounded reset/cleanup owners. Ordinary OTP, password and magic-link authority remain refused; an intended recovery request is not accepted as independent provider proof.
+
+Twenty-six new synthetic tests cover signed identity/purpose, forged/foreign/replayed attempts, mismatches, expiry, concurrency, cancellation, late cleanup, cleanup holds, stalled work, shutdown and duplicate-session invalidation. Review tightened the duplicate-session case so a repeated provider session also disables the earlier candidate's future reset checks. All 1,307 foundation tests across 129 files, type checking and production build pass. See docs/recovery-purpose-checks.md. There is no customer route/UI, real password change, provider call, credential/runtime change, spending or hosted publication. Product/design requirements and 2/38 phased / 5/41 combined checklist counts are unchanged.
+
+Limits: the signed recovery-method compatibility question remains unresolved; this candidate intentionally still rejects OTP-only replies. Attempt/session maps and cleanup holds are process-local, not durable distributed guessing protection. Closing the candidate blocks use but does not prove remote cleanup. No provider contract, production retention policy, hosting trust boundary or emailed-link experience was changed.
+
+Exact next action: review a supported provider-purpose contract before accepting OTP recovery; prepare durable abuse/restart and receiving-browser binding designs locally before composing a customer code screen. Preserve B03/B04, sender, ingress/logging, hosted/device and financial approval gates. No action is required from Sabine for these completed local tests.
+
 ## Local Render alternative investigation, 15 October 2026
 
 Sabine approved local investigation with no new spending or hosted changes. The existing fixed-origin adapter ignores forwarded host/scheme values when building application URLs; loopback tests show this does not establish secure transport. The production transport guard remains unchanged and refuses plaintext. A disconnected recovery-code transport seam keeps synthetic email/code proof in a fixed-purpose POST body, with cancellation, response bounds and generic errors. No route, email template, customer UI or account authority was activated.

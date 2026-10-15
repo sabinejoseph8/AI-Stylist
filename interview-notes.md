@@ -1,3 +1,7 @@
+## Keeping recovery intent separate from recovery proof, 15 October 2026
+
+I prepared local checks that bind a single-use recovery attempt to the intended email and independently verified recovery identity. I kept ordinary sign-in tokens out of password-reset permission and tested forged attempts, overlapping requests, expiry and late results. A duplicate-session test prompted a tighter safeguard that also blocks future use of the earlier candidate. The full foundation suite now passes 1,307 tests. The provider compatibility question remains open, and I kept this experiment disconnected from customers and hosted services.
+
 ## Investigating a path around a hosting support delay, 15 October 2026
 
 I approved a local investigation into keeping recovery proof out of URLs and using a fixed website address. The tests showed that a fixed address helps prevent URL substitution but does not prove an encrypted connection. I also found a mismatch to resolve between OTP authentication and my recovery-specific safeguard, so I kept that safeguard intact. Fourteen new tests brought the foundation suite to 1,281 passing tests. This gave me a clearer next step without spending more, changing hosted services or presenting a partial experiment as a finished account system.

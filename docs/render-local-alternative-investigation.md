@@ -1,3 +1,7 @@
+## Subsequent local design, 15 October 2026
+
+The [recovery-purpose checks](recovery-purpose-checks.md) now have 26 additional synthetic cases and reuse the original strict signed-purpose/cleanup owners. The code candidate remains disconnected and refuses OTP-only authority. This adds local evidence without establishing provider compatibility or changing the conclusions below.
+
 # Local investigation: accounts without forwarded-header dependence
 
 15 October 2026. Authorized scope: local investigation and simulated tests, no new spending, real accounts or hosted changes. This is not a replacement deployment contract or a change to the approved recovery experience.

@@ -94,3 +94,11 @@ export function createTokenRecoveryOwner(port:{verifyToken(tokenHash:string,sign
   return owner.complete(tokenHash,signal);
  }});
 }
+
+/** Disconnected code candidate: only a trusted server adapter can return reset-only authority.
+ * Invalid attempts return notCreated; unknown/late results retain the shared cleanup hold. */
+export function createCodeRecoveryOwner(port:{verifyCode(input:unknown,signal:AbortSignal):ReturnType<RecoveryPort['exchange']>},deadlineMs=8000){
+ if(typeof port?.verifyCode!=='function')throw Error('Recovery unavailable');
+ const owner=createRecoveryOwner((input:unknown,signal)=>port.verifyCode(input,signal),deadlineMs);
+ return Object.freeze({cleanupHeld:owner.cleanupHeld,confirm:owner.complete});
+}
