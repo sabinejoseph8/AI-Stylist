@@ -1,3 +1,17 @@
+## Encrypted upload boundary prepared; unattended quota evidence unresolved
+
+Prepared b2_encrypted_transport.py as an inactive callable boundary, without a CLI, credential reader or schedule. It accepts an ASB1-format envelope from the existing encryption producer, uses a random backups/ object name, reserves worst-case bytes and conservatively counts both request classes before either of its two requests. It requires a fresh quota ledger, validates the provider upload destination, refuses redirects/proxy inheritance/retries, requests SSE-B2 in addition to app encryption and verifies exact bucket/name/length/SHA-1/type/encryption acknowledgment. Failure retains reservations. A successful upload result deliberately says restore_verified=false; format magic alone does not prove encryption, so callers must use the reviewed encryption producer.
+
+Five synthetic transport cases bring Python operations coverage to 86 passing tests; four encryption tests also pass. No B2 upload or download ran. The actual transport has not been accepted against the provider. Auth/inventory require separate reservations; this helper is not a complete backup runner.
+
+Unattended activation remains held: the prepared financial guard requires trustworthy account-wide daily download/request usage and fresh stored-byte evidence, but an automated supported source for all these counters has not been established with the restricted key. Do not seed unknown counters as zero, reset held reservations, silently relax the approved guard, or call dashboard alerts a billing guarantee. The Mac runner choice is accepted. Coordinated source export, current deletion/financial evidence, complete restore verification and failure-alert delivery remain incomplete. Exact next action: resolve the supported usage/reconciliation contract before enabling an unattended writer, while preserving the free limits and zero new spending.
+
+### Prepared Backblaze support question
+
+We are preparing a private, encrypted backup runner using a bucket- and prefix-restricted B2 application key. Before enabling unattended uploads, we need a supported way to obtain account-wide current stored bytes, current UTC-day downloaded bytes, and current UTC-day Class B/C request counts. Which API or supported machine-readable export provides these counters, what are their delay/reset semantics, and can it be accessed without bucket-setting or account-administration permissions? If no such interface exists, what supported approach do you recommend for an unattended runner that must stop within the account's free caps? Please also clarify whether cap enforcement can lag usage and whether non-paying account caps prevent payable overage, rather than simply sending alerts. No boundary-filling test or paid upgrade is planned.
+
+This draft has not been sent and contains no credential, account ID, private usage result or customer data.
+
 ## Backup runner location selected, 15 October 2026
 
 Sabine confirmed this Mac can stay awake and online for backups. Prepare a local runner rather than introducing new paid hosting. This selection does not establish a 24-hour recovery point or 48-hour restore capability: sleep, network loss, local credential loss and missed runs must be detected and reported. No scheduler or power setting is installed or changed yet. Keep the independent password-manager key copy and private destination.
