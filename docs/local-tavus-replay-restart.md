@@ -1,3 +1,7 @@
+## Later local credential-generation rehearsal
+
+See docs/local-tavus-credential-restart.md for trusted startup activation and current-credential checks before draft/delivery. It preserves replay history through a test-only stable-scope adapter. Independent rollback authority, cross-store atomicity and real provider activation remain open. The original replay-only fixture still has the credential limitations described below.
+
 # Local CVI replay protection across restarts
 
 Sabine approved local preparation/tests on 15 October 2026, with no new spending or hosted changes. This is a disconnected experiment, not a hosted endpoint or new production policy.

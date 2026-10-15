@@ -1,3 +1,13 @@
+## Local CVI credential invalidation on restart, 15 October 2026
+
+Sabine approved local preparation/tests with no new spending or hosted changes. Added a startup gate requiring a committed fresh credential/boot generation before endpoint construction, plus an exact current-authority check before drafting and on both sides of spending reply permission. Old bearer and old worker leases are refused after activation; generation history, replay counts and unresolved holds are preserved. No activation is exposed to incoming requests and no real credential is used or changed.
+
+43 new foundation tests include 15 fresh-process/lifecycle and 28 authority/startup cases. Fifteen new operations cases cover clocks, history bounds, substitutions and disk uncertainty. All 1,557 foundation tests across 139 files, 308 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks pass. See docs/local-tavus-credential-restart.md.
+
+Limits: OS process exit alone does not revoke a key; the trusted startup gate must commit the next generation. Coordinated authority-file rollback can restore old authority, explicitly tested. Cross-store atomicity and the gap after the last authority check remain unproven. Revocation cannot recall already delivered audio or establish provider quiescence. Actual Tavus request/voice compatibility, transcript context, independent monotonic history and permanent experiment admission remain gates. Old low-level fixture factories remain disconnected. No spending, hosted/provider/account changes, private credential storage, real key rotation, backup runtime/ledger or scheduler changes. Local Memory/interview records updated without publication or task completion changes.
+
+Exact next action: review disconnected startup/replay/permanent-experiment admission composition and current-notes ownership, preserving rollback, provider, privacy, financial and live-activation gates. No user action is needed for the completed local credential rehearsal.
+
 ## Local CVI replay protection across restarts, 15 October 2026
 
 Sabine approved local preparation/tests with no new spending or hosted changes. Added a required replay-port endpoint factory and metadata-only reservation/consumption acknowledgments. Requests reserve durably before draft work and spend one-use permission before response bytes. Missing storage never falls back in the restart factory; mismatched/unknown acknowledgments and late canceled results release no text. Only disposable test bridges connect the port to a local file journal.

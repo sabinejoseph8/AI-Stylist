@@ -1,3 +1,7 @@
+## Invalidating an old conversation credential at restart
+
+I prepared a startup gate that must commit a fresh credential generation before the local endpoint can serve. I tested old credentials in fresh workers, competing restarts and rotation while an approved reply waits for delivery. The tests preserve replay history and show that rotating a credential does not clear unresolved work. I recorded two important limits: process exit alone does not revoke a key, and coordinated rollback of the local authority files can restore old authority. No real credential or provider was changed in this rehearsal.
+
 ## Making replay evidence survive a restart
 
 I added a local rehearsal that records a request before draft work and spends its delivery permission before releasing text. I tested fresh processes, competing workers, damaged history and crashes during writes. A restart does not refund an attempt or let a delivered request run again, and unresolved reservations stop new work. I also kept a negative test showing that rolling back both local files defeats a checksum. That distinction keeps me from treating a useful restart rehearsal as complete production security or provider cleanup proof.
