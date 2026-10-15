@@ -1,3 +1,15 @@
+## Free backup monitoring configured, 15 October 2026
+
+Sabine completed Healthchecks signup/login. Verified the account is on the free Hobbyist plan ($0/month, 20 jobs, 100 log entries per job). Reused the unused default check as AI Stylist backup, retaining one check with its existing enabled email integration. The integration test reported delivered, and Sabine confirmed the test email arrived. No paid upgrade, payment entry, support message or extra notification service was used.
+
+Sabine explicitly approved storing the secret ping URL in an ignored owner-only local healthchecks.env file. Prepared an inactive fixed-destination adapter with empty POST bodies, only start/success/failure signals, ten-second timeout, bounded acknowledgment, no inherited proxies, redirects or retries, and fixed errors that suppress private URLs. It rejects a success signal without an explicit complete-recovery-point verification flag; the caller must supply real evidence, and the flag itself is not a backup verifier. Unknown/rate-limited acknowledgments are held. Six simulated cases bring the operations suite to 120 passing tests.
+
+One separately recorded live failure signal was accepted, the dashboard showed down and the email integration reported delivered. Inbox confirmation for this actual failure alert is pending. Paused the setup-only check afterward without sending a false backup-success signal. No complete backup, schedule, missed-run detection or end-to-end runner integration is active. Current dashboard period remains one day with one-hour grace; final monitoring timing must be aligned with the actual backup schedule before activation. The private URL, account email and check identifiers are excluded from public documentation.
+
+Exact next action: receive Sabine's failure-email confirmation, then continue durable runner preparation, fresh financial admission, coordinated source/deletion evidence and complete recovery verification before activating scheduled backups. No Backblaze support reply is required.
+
+Reference: https://healthchecks.io/docs/http_api/ .
+
 ## Live encrypted sample and local database candidate verified, 15 October 2026
 
 After Sabine signed in again, captured fresh B2 free-cap/usage evidence privately. The bucket was empty; displayed daily Class B usage was 0 and Class C 27. Seeded a separate one-time quota ledger with conservative 4 KB byte and 100-request margins above those observations, preserving all earlier receipts. The explicit four-request sample check succeeded: 159 encrypted bytes uploaded, downloaded byte-for-byte and authenticated/decrypted to the fixed synthetic sample. No database/photo/customer data was transferred to B2, no retry or deletion ran, and no schedule was activated. The tiny encrypted sample remains under the configured lifecycle. Dashboard delay and other writers still prevent this from being an absolute billing guarantee or an unattended account-wide reconciliation solution.

@@ -1,3 +1,7 @@
+## Verifying independent backup alerts
+
+I set up one free email monitor and confirmed its test email arrived. I also sent a deliberate failure signal and verified that the monitoring service dispatched the alert. I kept backup contents and logs out of status requests, protected the private status URL and paused the setup monitor until the real runner is ready. I did not label the test as a successful backup or claim that scheduled recovery is already working.
+
 ## Proving encrypted backup transfer and exposing restore limits
 
 I verified a real encrypted sample upload and download using four requests and 159 bytes each way, then checked decryption. I also prepared an encrypted local database candidate from the currently empty source and rehearsed its customer schemas in an isolated database. The first drill exposed differences in managed role grantors and missing local schema namespaces. I fixed the local setup while preserving the original archive and production configuration, then passed 21 isolation checks. I kept hosted recovery, real photo recovery and automatic scheduling open rather than treating a small successful transfer as a complete backup. I chose a free independent email monitor so a sleeping or disconnected Mac can be detected once monitoring is configured.
