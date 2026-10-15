@@ -1,3 +1,15 @@
+## Local Mac-loss recovery plan and admission tests, 15 October 2026
+
+Sabine approved local planning/tests only, with no spending or hosted changes. Added docs/mac-loss-recovery-plan.md with the recovery inventory, missing-copy gaps and ordered checks. Losing only the Mac does not justify overwriting a healthy hosted database. Production recovery still needs independently recoverable object locators and latest deletion/account/spending authority; local receipts and two local files do not establish those guarantees.
+
+Added a disconnected planning fixture with 18 new tests. A fresh replacement process reads separate mock backup, evidence-authority and password-manager stores after removal of the disposable old-Mac directory. Missing/wrong keys or copies, damaged/expired archives, older signed evidence, equal-sequence conflicts, wrong projects, future evidence, mismatched archive/capture time and refund states hold before simulated restoration. Stage failures/unknown results stop later checks. The same reservation IDs and held/reserved states reach reconciliation. There is no customer-release operation; even a successful local plan reports customer access disabled and hosted recovery unverified.
+
+Focused review added binding between the authenticated fixture archive, its capture time and the current evidence checkpoint. This prevents valid authentication of a different archive from satisfying the selected recovery plan. The fixture uses synthetic HMAC keys only; it neither replaces real AES-GCM archives nor establishes a production trust service. No permanent key, runtime, scheduler, financial ledger or provider account was read or changed. All 208 operations tests and four encryption tests pass. The existing 183-check isolated database drill remains applicable and was not rerun because its code is unchanged.
+
+Project memory and interview notes are updated; product/design requirements are unchanged. Local Memory source is synchronized, while the hosted site stays unchanged under the no-hosted-changes instruction. Full Task 8d remains open and 5 of 41 full tasks remain complete. Current 24-hour/48-hour recovery objectives remain unproven production targets.
+
+Next action: establish the production independent evidence authority and recoverable object inventory before attempting actual replacement-machine recovery or reconnecting the scheduler. Do not reset missing financial history, rotate credentials, create a new allowance or restore over healthy hosted data. Support-dependent media/host contracts remain blocked pending concrete replies.
+
 ## Local deletion and spending restart tests passed, 15 October 2026
 
 Sabine approved local restart tests only, with no new spending or hosted changes. A disposable synthetic evidence writer exits before a fresh reader opens the deletion/account records and the same held reservation. Owner-only data and checksum checkpoint are flushed to disk, separate from the old database archive. An unfinished-write marker prevents incomplete state being accepted. The customer/photo drill consumes fresh-process evidence before deletion replay and financial reconciliation.

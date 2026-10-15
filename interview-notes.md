@@ -1747,3 +1747,7 @@ I extended the recovery rehearsal to include generated images alongside customer
 ## Checking recovery after process loss
 
 I tested deletion records and spending holds with separate writer and reader processes so the result did not depend on shared memory. I forced a spending process to stop after reserving its allowance and confirmed the next process kept the reservation and refused another attempt. Missing, damaged or incomplete evidence blocked recovery. The expanded database rehearsal passed 183 checks. I kept production recovery open because two local fixture files do not establish an independent authority after losing the computer or rolling back both files.
+
+## Planning for losing the backup computer
+
+I separated losing my Mac from losing the hosted database, so a computer failure would not trigger a restore over healthy data. I documented the required independent backup inventory, encryption key and current deletion/spending evidence. A new process tested separate mock recovery stores after the old fixture folder was removed. Missing keys, old or conflicting evidence and an authenticated but mismatched archive blocked recovery. I kept customer access disabled and recorded that actual replacement-device and hosted restoration remain unverified.
