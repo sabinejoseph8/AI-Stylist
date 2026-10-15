@@ -1,3 +1,7 @@
+## Testing full CVI without more paid attempts
+
+I decided to investigate Tavus's full conversation pipeline locally while support remains unresolved. I prepared a response boundary that holds the whole reply until separate checks approve its exact content against current styling notes. Corrections and interruptions invalidate pending replies, and failures release no unchecked recommendation. The simulated tests distinguish what my app controls from audio already sent to Tavus or the browser. This gives me a concrete experiment before I approve another live test, without claiming the provider integration works yet.
+
 ## Retiring uncertain recovery work without pretending it succeeded, 15 October 2026
 
 I tested reconciliation after a recovery crash using separate simulated fencing and cleanup evidence. A matching, fresh pair could retire an attempt, but could not declare a password reset successful, restore the old permission or refund a consumed count. I required a fresh email generation for another attempt and tested stale evidence, replay, competing reconcilers and interrupted writes. Twenty-five operations and five fresh-process foundation cases brought the suites to 278 and 1,371 passing tests. I documented that real provider finality, fencing and independent storage authority are still prerequisites. No spending or hosted changes were made.

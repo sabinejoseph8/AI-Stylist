@@ -1,3 +1,11 @@
+## Local full-CVI styling preparation, 15 October 2026
+
+Sabine approved local preparation and simulated tests, with no new spending or hosted changes. Added a disconnected app-controlled response boundary: immutable seven-field notes, explicit confirmation state, full reply buffering, independent exact-text/current-revision checking and one-use SSE output. Corrections, interruptions, cancellation, replacement requests and End suppress pending or unsent replies. Failures/timeouts emit no recommendation or generated fallback. No real transcript extraction, HTTP endpoint, provider, microphone or account is connected.
+
+All 48 new simulated cases pass, including six compositions through the existing local hard outfit validator for budget, coverage, missing price and unknown semantic outcomes. All 1,419 foundation tests across 134 files, type checking/build and 16 local Memory checks pass. These fixtures test app logic only. They cannot recall audio already sent downstream, prove Tavus fallback behavior, validate real notes extraction or establish live CVI compatibility. Non-ElevenLabs voice, privacy, authentication, request correlation, costs and actual interruption/playback remain acceptance gates. No checklist or production architecture decision changes; the $51 allocation and old reservations remain untouched. Local-only source and Memory snapshot updated, with no GitHub/hosted publication.
+
+Exact next action: prepare disconnected request-envelope/transcript adapter checks for authentication, consultation binding, retries, corrections and canceled delivery. Any private provider activation requires its own reviewed allowance and approval. See docs/local-tavus-cvi-styling.md.
+
 ## Local crash recovery reconciliation, 15 October 2026
 
 Sabine approved local reconciliation tests without new spending or hosted changes. Added a disconnected reconciliation model requiring separately signed synthetic fencing and cleanup attestations. Both bind the exact current operation/ledger snapshot, source policy/store, generation and independently supplied fence epoch. Unknown finality, session correlation or actual fencing leaves work blocked. A validated operation becomes retired, never resetComplete, and issues no permission/cookie or counter refund.
