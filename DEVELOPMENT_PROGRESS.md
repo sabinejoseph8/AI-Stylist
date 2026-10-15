@@ -1,3 +1,7 @@
+## Approved recovery targets published, 14 October 2026
+
+Decision commit f6156f7 is pushed and verified in both approved project copies. Private Memory source 44d34289c062be5489f4de1fa7544056dc4f6168 deployed successfully as appgdep_6ad0457b36b0819186bb2bc17fd2d423, preserving private access and MCP. All 16 site checks and artifact validation pass. No application code changed; existing 1,249-test evidence remains unchanged. Next local implementation action is the object/deletion recovery rehearsal in docs/backup-recovery-plan.md. Storage destination, key custody, operator/alert arrangements and actual recovery verification remain open; no policy activation or new spending occurred.
+
 ## Recovery targets approved, 14 October 2026
 
 Sabine approved at most 24 hours of lost saved changes, restoration within 48 hours of incident declaration, and protected backup retention up to seven days including deleted clothing photos. Deleted items must stay excluded from restored customer access. These are planning targets, not a proven capability or customer SLA. No spending, new infrastructure, backup activation or hosted restore is authorized. Provider-held retention must be verified separately.
