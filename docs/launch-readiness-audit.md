@@ -1,3 +1,9 @@
+## Native-owner replay mutation follow-up, 16 October 2026
+
+The disabled guarded mutation path checks the original native lease and complete signed current state inside replay/witness then SQLite locks. A synthetic endpoint fixture uses that path, and old-worker reserve/consume is refused after native renewal. Review fixed mutable inputs/proof expiry and a disposable cancellation cleanup race.
+
+Final verification passes 2,419 foundation tests across 175 files, 518 operations tests, TypeScript/build, four encryption checks and 19 local Memory checks. The prior 556-check PostgreSQL result was not rerun; no SQL contract changed. Mandatory private-lease binding, handoff adoption, transition-wide authority gating, independent restore floors and live acceptance remain open. No production criterion closes, no hosted change occurred, completion stays 5 of 41 and allocation stays $51. See docs/local-tavus-native-owner-replay.md.
+
 ## Durable replay inspection follow-up, 16 October 2026
 
 Local startup and renewal now inspect retained replay records across fresh coordinators and hold pending/unknown evidence without refund or repair. Final verification passes 2,403 foundation tests across 174 files, 499 operations tests and 19 local Memory checks. TypeScript/build and four encryption checks pass. No SQL changed; the prior 556-check PostgreSQL result was not rerun.

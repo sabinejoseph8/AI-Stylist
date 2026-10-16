@@ -1,3 +1,9 @@
+## Checking ownership where the request is actually saved
+
+I moved ownership checks inside the local replay and database locks, then verified the complete signed state before and after saving. A worker that passed an earlier check can no longer write through this path after its native lease is renewed. If the final result is uncertain, I keep the original record and refuse a fresh attempt.
+
+Review found that a callback could change caller-owned configuration during the check, so I captured the original values and added regression tests. I also fixed a disposable-test cleanup race after cancellation. The native write path is prepared locally, but service-wide coordination and authenticated private-lease adoption remain open before live activation.
+
 ## Finding unfinished requests after a restart
 
 I added durable checks so a restarted conversation cannot mistake an unfinished request for an idle session. I preserve the original reservation and stop startup or renewal when its outcome is uncertain. I also tested the limits: a later writer can still change state after a read, and restoring both local records can defeat the fixture. Those gaps remain open until ownership checks and storage protection cover the actual writes.

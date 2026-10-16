@@ -1,3 +1,9 @@
+## Native-owner replay mutation pattern, 16 October 2026
+
+The local guarded mutation path holds replay/witness then SQLite locks, validates the original current native lease and verifies challenge-bound signed observer reads against the complete native aggregate. Check before preparation, immediately before saving and after saving; hold unknown results while retaining saved records. Capture configuration, requests and evidence before callbacks so later object mutation cannot widen the original scope or proof expiry. Public verification receives no private lease token.
+
+The disabled endpoint fixture uses an original startup execution lease. This is not mandatory binding across every general port, nor adoption of renewed private leases. A separate authority can still advance after the final signed read; SQLite alone does not serialize that service. Require a transition-wide replay gate and persistent original-operation evidence before authority advance, with authenticated one-use private handoff adoption. See docs/local-tavus-native-owner-replay.md. Independent restore protection, all-writer coverage, production clocks and provider/device acceptance remain open. No product/design, hosted or financial decision changed.
+
 ## Durable replay inspection pattern, 16 October 2026
 
 Require an exact scope-bound, nonce-bound replay snapshot at local startup and before/after native ownership adoption. Validate status, counts, fixed capacity, observed time and expiry; retain all pending/spent records. Backend inspection may persist an observed-clock advance through the existing journal/witness protocol, while the response grants no write, activation, renewal, signing or resume capability. Unknown results hold without bootstrap, repair, refund or reconstructed handoff.

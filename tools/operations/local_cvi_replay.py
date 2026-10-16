@@ -54,23 +54,42 @@ def load(root,store_id):
     return s
 
 
-def operate(root,request,mode,crash_at=None,*,witness=None,witness_crash_at=None):
+def _validate_operation(request,mode):
     keys={'storeId','bindingDigest','requestDigest','now'}
     if mode=='consume':keys|={'receipt','status'}
     if (mode not in ('reserve','consume') or not isinstance(request,dict) or set(request)!=keys or
         not digest(request['bindingDigest']) or not digest(request['requestDigest']) or not integer(request['now'])):raise RecoveryHeld('cvi-unavailable')
+
+
+def _operate_locked(root,request,mode,crash_at=None,*,witness=None,witness_crash_at=None,before_save=None,after_save=None):
+    """Internal primitive. Caller owns the replay/witness locks. Not admission."""
+    _validate_operation(request,mode)
+    s=load(root,request['storeId']);now=request['now']
+    if request['bindingDigest']!=s['bindingDigest'] or not s['clock']<=now<s['expires']:raise RecoveryHeld('cvi-unavailable')
+    if mode=='reserve':
+        if len(s['records'])>=s['limit'] or any(r['requestDigest']==request['requestDigest'] or r['status']=='reserved' for r in s['records']):raise RecoveryHeld('cvi-unavailable')
+        r=dict(requestDigest=request['requestDigest'],receipt='fixture-receipt-'+uuid.uuid4().hex,status='reserved',at=now,spentAt=None);s['records'].append(r)
+    else:
+        rows=[r for r in s['records'] if r['requestDigest']==request['requestDigest'] and r['receipt']==request['receipt']]
+        if request['status']!='reserved' or len(rows)!=1 or rows[0]['status']!='reserved':raise RecoveryHeld('cvi-unavailable')
+        r=rows[0];r['status']='spent';r['spentAt']=now
+    s['clock']=now
+    if before_save is not None:
+        observed=before_save()
+        if not integer(observed) or not now<=observed<s['expires']:raise RecoveryHeld('cvi-unavailable')
+        s['clock']=observed
+    journal_save(root,s,witness,crash_at=crash_at,witness_crash_at=witness_crash_at)
+    if after_save is not None:
+        observed=after_save()
+        if not integer(observed) or not s['clock']<=observed<s['expires']:raise RecoveryHeld('cvi-unavailable')
+    return dict(storeId=s['storeId'],bindingDigest=s['bindingDigest'],requestDigest=r['requestDigest'],now=now,receipt=r['receipt'],status=r['status'])
+
+
+def operate(root,request,mode,crash_at=None,*,witness=None,witness_crash_at=None):
+    """Low-level disposable fixture helper, not the owner-fenced composition."""
+    _validate_operation(request,mode)
     with journal_locked(root,request['storeId'],'replay',witness) as root:
-        s=load(root,request['storeId']);now=request['now']
-        if request['bindingDigest']!=s['bindingDigest'] or not s['clock']<=now<s['expires']:raise RecoveryHeld('cvi-unavailable')
-        if mode=='reserve':
-            if len(s['records'])>=s['limit'] or any(r['requestDigest']==request['requestDigest'] or r['status']=='reserved' for r in s['records']):raise RecoveryHeld('cvi-unavailable')
-            r=dict(requestDigest=request['requestDigest'],receipt='fixture-receipt-'+uuid.uuid4().hex,status='reserved',at=now,spentAt=None);s['records'].append(r)
-        else:
-            rows=[r for r in s['records'] if r['requestDigest']==request['requestDigest'] and r['receipt']==request['receipt']]
-            if request['status']!='reserved' or len(rows)!=1 or rows[0]['status']!='reserved':raise RecoveryHeld('cvi-unavailable')
-            r=rows[0];r['status']='spent';r['spentAt']=now
-        s['clock']=now;journal_save(root,s,witness,crash_at=crash_at,witness_crash_at=witness_crash_at)
-        return dict(storeId=s['storeId'],bindingDigest=s['bindingDigest'],requestDigest=r['requestDigest'],now=now,receipt=r['receipt'],status=r['status'])
+        return _operate_locked(root,request,mode,crash_at,witness=witness,witness_crash_at=witness_crash_at)
 
 
 def inspect_boundary(root,request,*,witness=None):

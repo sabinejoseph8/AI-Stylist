@@ -1,3 +1,9 @@
+## Native-owner replay mutation, 16 October 2026
+
+Prepared locked replay writes that verify the original native lease and fresh signed complete-state evidence inside the replay/witness then SQLite locks. A guarded endpoint fixture completes synthetic reserve/consume; an old worker cannot write after native renewal. Unknown saved results remain recorded. See docs/local-tavus-native-owner-replay.md and DEVELOPMENT_PROGRESS.md for exact evidence and review fixes.
+
+Mandatory private-lease binding, handoff adoption and a transition-wide authority gate remain open. No phase/launch gate, spending limit or hosted service changed.
+
 ## Durable replay startup inspection, 16 October 2026
 
 Retained pending replay rows now hold local startup and native continuation across new coordinators. Inspection is required before/after protected transitions and final startup proof; records, capacity and expiry are retained. Snapshot freshness does not establish all-writer quiescence or independent rollback protection. See docs/local-tavus-replay-inspection.md and DEVELOPMENT_PROGRESS.md for exact verification. No phase or launch gate closes.
@@ -1516,14 +1522,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: durable replay inspection now detects retained pending reservations at startup and before/after authenticated native renewal. Focused verification passes 131 startup/continuation/HTTP/integration checks, 29 inspector unit checks and 499 operations tests. Final foundation regression passes 2,403 tests across 174 files; TypeScript/build, four encryption checks and 19 local Memory checks also pass. No production acceptance criterion closes. See docs/local-tavus-replay-inspection.md.
+Current local focus: native-owner replay mutations now validate the original lease and fresh signed complete-state evidence inside replay/witness and SQLite locks. A guarded endpoint fixture and old-worker rejection tests are prepared. Final regression passes 2,419 foundation tests across 175 files and 518 operations tests; TypeScript/build, four encryption checks and 19 local Memory checks pass. No production acceptance criterion closes. See docs/local-tavus-native-owner-replay.md.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** implement and test the owner-fenced replay transaction contract in docs/local-tavus-owner-fenced-replay-contract.md. A fresh idle snapshot alone does not exclude a later writer or prove independent rollback protection.
+- **Next local action:** require original private-lease binding and authenticated handoff adoption, then add the transition-wide replay/authority gate and durable original-operation marker. The native mutation portion is prepared; universal fencing and independent rollback protection remain open. See docs/local-tavus-owner-fenced-replay-contract.md.
 
 ## Historical summary checkpoints
 

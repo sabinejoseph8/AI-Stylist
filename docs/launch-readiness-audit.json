@@ -637,6 +637,19 @@
       "scope": "Disabled durable replay snapshot at startup/renewal; retains pending/spent records across ordinary restarts. Later-writer and coordinated-restore negative boundaries remain. Memory source/served integrity strengthened.",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-native-owner-replay.md",
+      "foundationTests": 2419,
+      "foundationFiles": 175,
+      "operationsTests": 518,
+      "localMemoryChecks": 19,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled native-owner replay mutation and original-lease endpoint fixture; locked signed full-state checks, captured inputs and retained unknown writes. Mandatory binding, handoff adoption and transition-wide authority gate remain open.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

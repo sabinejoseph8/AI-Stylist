@@ -1,3 +1,7 @@
+## Native mutation follow-up, 16 October 2026
+
+The native mutation portion is now implemented locally: replay/witness then SQLite locking, original lease validation and fresh signed aggregate proofs around saving. A guarded endpoint fixture uses that path. See [native-owner replay writes](local-tavus-native-owner-replay.md). Mandatory private-lease binding, original-handoff adoption, transition-wide authority gating and persistent transition markers remain unimplemented. This does not close the all-writer gap or authorize activation.
+
 # Next local contract: owner-fenced replay mutations
 
 This is an implementation plan for the next local preparation step, not an activated permission or a verified production guarantee. Existing independent restore, all-writer, financial and provider acceptance gates remain unchanged.
@@ -34,3 +38,12 @@ The lease token stays private to the original owner. A stale generation, retired
 7. One-sided restore is held against the configured authority. Coordinated restore remains a negative boundary until independent storage administration is established.
 
 This plan does not require customer data, a provider call, hosted changes, new spending or changes to the fixed consultation cap.
+
+## Next private binding sequence
+
+1. Retain the original transient startup handoff before cloning any public permit. The successful durable admission may privately bind its exact execution lease; persisted observations or copied JSON must not recreate it.
+2. Bind the replay backend once after the current startup proofs and before registering a started owner. Pin the replay scope and original native store, owner, boot, generation, expiry and revision. Expose no token-read route or mutable HTTP configuration.
+3. Adopt a renewed private lease only from the original consumed continuation handoff, once, within its unchanged application cap. An uncertain commit or failed adoption remains held without reconstructing a lease or refunding records.
+4. Require that protected binding in strong startup and the HTTP candidate. Reject a plain replay port before privileged work; lower fixture helpers remain explicitly disconnected.
+5. Hold the shared replay gate before authority advance through native commit and authenticated adoption. Persist the original intent marker first, and retain ambiguous markers across restart. Read-only inspection cannot release that gate or finish another process's transition.
+6. Verify complete body/turn replay and notebook/HTTP flows across adoption, plus copied/retired handoffs, competing writers, cancellation and crash boundaries. Continue preserving immediate Clear/End for temporary notes, separately from durable evidence.

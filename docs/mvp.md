@@ -1,3 +1,9 @@
+## Native replay write checks and remaining composition, 16 October 2026
+
+Local guarded writes now verify current native ownership inside the locks, closing the tested old-worker write after native renewal. Complete signed state is required even when generation and head appear unchanged. Unknown writes retain their reservation or consumption. Review also fixed mutable input/proof configuration and a cancellation cleanup race in the disposable fixture.
+
+This does not establish universal fencing: general ports still need mandatory private-lease binding, original-handoff adoption and a transition-wide authority gate with durable operation evidence. Independent restore protection and actual provider/account/sourcing/device acceptance remain open. These local preparations close no production criterion. Scope, 5-of-41 completion, deferred purchases and $51 allocation are unchanged. See docs/local-tavus-native-owner-replay.md.
+
 ## Replay restart evidence and remaining race, 16 October 2026
 
 Local startup and renewal now refuse retained pending replay reservations even after a new coordinator starts. This closes dependence on a process-local idle flag for that retained evidence, while preserving original records and limits. A fresh snapshot still cannot exclude a later writer; restoring both colocated records remains outside the protection. Owner-fenced replay mutations and independent restore floors are therefore still launch blockers, alongside real provider/account/sourcing/device acceptance.
