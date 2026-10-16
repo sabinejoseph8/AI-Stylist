@@ -536,6 +536,17 @@
       "scope": "Composed endpoint exact-checkpoint fencing and explicit owner expiry; native writer compatibility fixed; same-owner progress still held",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-current-owner-continuity.md",
+      "foundationTests": 2155,
+      "foundationFiles": 163,
+      "operationsTests": 475,
+      "isolatedPostgresChecks": 503,
+      "scope": "Signed current-owner inspection across registered native writes; request-version stale-output suppression and original live reservation settlement; volatile floor limit retained",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

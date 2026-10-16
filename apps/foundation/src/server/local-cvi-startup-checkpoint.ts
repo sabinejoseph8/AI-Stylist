@@ -5,6 +5,7 @@ import {verifyLocalWitnessReply,witnessServiceDigest} from './local-cvi-witness-
 import {fullStateMetadata,fullStateProjection} from './local-cvi-full-state-reconciliation.ts';
 import type {WitnessServicePin} from './local-cvi-witness-service.ts';
 import type {AuthorityEvidence} from './local-cvi-mandatory-persistence.ts';
+export type StartupOwnerPin=Readonly<{storeId:string;generation:number;ownerDigest:string;bootDigest:string;expiresAt:number;minimumRevision:number}>;
 export type StartupRegistry=Readonly<{version:1;entries:readonly Readonly<{operationId:string;target:Record<string,unknown>;projection:Record<string,unknown>}>[]}>;
 export type StartupPin=Readonly<{authority:WitnessServicePin;database:Readonly<{keyId:string;publicKeyPem:string}>;readerPrincipal:string;registryDigest:string;minimumRevision:number}>;
 export interface StartupReadPorts {authority(nonce:string,signal:AbortSignal):Promise<AuthorityEvidence>;database(nonce:string,signal:AbortSignal):Promise<unknown>}
@@ -22,7 +23,7 @@ export function createLocalStartupCheckpointInspector(pin:StartupPin,registry:St
  if(Buffer.byteLength(historyCanonical({pin:config,registry:known}))>131072)throw Error('Startup checkpoint unavailable');
  let attempted=false,last=-1;
  const now=()=>{const n=clock();if(!int(n)||n<last)throw Error();last=n;return n;};
- return Object.freeze({async inspect(external:AbortSignal){
+ async function inspect(external:AbortSignal,owner?:StartupOwnerPin){
   if(attempted||external.aborted)throw Error('Startup checkpoint unavailable');attempted=true;
   const abort=new AbortController(),signal=AbortSignal.any([external,abort.signal]);let timer:ReturnType<typeof setTimeout>|undefined,onAbort:(()=>void)|undefined;
   try{
@@ -40,10 +41,22 @@ export function createLocalStartupCheckpointInspector(pin:StartupPin,registry:St
     // Final authority read detects a participating transition during observation.
     const finalNonce=randomBytes(32).toString('hex'),f=structuredClone(await read(finalNonce,signal)),current=verifyLocalWitnessReply(config.authority,f.request,f.reply,now()) as any;
     if(signal.aborted||now()>=b.expiresAt||f.request.action!=='read'||f.request.challenge!==finalNonce||f.request.principalDigest!==config.readerPrincipal||current.status!=='read'||current.pending!==null||current.revision!==a.revision||!equal(current.current,a.current))throw Error();
+    const finished=now();if(finished>=b.expiresAt||finished>=f.request.expiresAt)throw Error();
+    if(owner){
+     const snapshot=c.snapshot as any,g=snapshot.gate[0],active=snapshot.grants.filter((x:any)=>x[6]==='active'),grant=active[0];
+     if(g[3]!=='active'||active.length!==1||grant[0]!==g[2]||!int(grant[4])||!int(grant[5])||grant[4]>finished||finished>=grant[5]||grant[5]<=grant[4]||!hex(grant[3])||a.revision<owner.minimumRevision)throw Error();
+     const actual={storeId:g[0],generation:g[2],ownerDigest:grant[1],bootDigest:grant[2],expiresAt:grant[5]}, {minimumRevision,...wanted}=owner;
+     if(!equal(actual,wanted))throw Error();
+     return Object.freeze({status:'owner-current',revision:a.revision,operationId:matches[0].operationId,owner:Object.freeze(actual),permissions:noPermission});
+    }
     return Object.freeze({status:'checkpoint-consistent',revision:a.revision,operationId:matches[0].operationId,permissions:noPermission,reason:'fresh-owner-required'});
    };
    return await Promise.race([work(),canceled]);
   }catch{abort.abort();throw Error('Startup checkpoint unavailable');}
   finally{if(timer)clearTimeout(timer);if(onAbort)signal.removeEventListener('abort',onAbort);}
+ }
+ return Object.freeze({inspect:(signal:AbortSignal)=>inspect(signal),inspectOwner:(owner:StartupOwnerPin,signal:AbortSignal)=>{
+  if(!safeJson(owner)||!exact(owner,['storeId','generation','ownerDigest','bootDigest','expiresAt','minimumRevision'])||owner.storeId!==config.authority.storeId||!int(owner.generation)||owner.generation<1||!hex(owner.ownerDigest)||!hex(owner.bootDigest)||!int(owner.expiresAt)||owner.expiresAt<1||!int(owner.minimumRevision))throw Error('Startup owner unavailable');
+  return inspect(signal,structuredClone(owner));
  }});
 }

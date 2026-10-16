@@ -1,3 +1,13 @@
+## Local current-owner continuity and stale-reply settlement, 16 October 2026
+
+Continued authorized local preparation under the active goal. Read-only signed inspection now confirms an active native owner across registered same-owner state advances, binding generation, writer, native boot, expiry and revision floor. One composed endpoint serves before and after an actual authenticated state write. Replaced, fenced, expired, missing or rolled-back ownership remains held; a historical consistency diagnostic cannot substitute for this proof.
+
+Request-local state versions invalidate a prepared stale reply without ending the valid owner. Testing exposed an open-reservation bug: the stale reply was suppressed but the next turn was blocked. The handler now spends only its original live reservation after verified same-owner staleness, with no output, refund or duplicate consumption. Unknown or invalid ownership does not authorize settlement. The focused current-owner suite passes 36 cases, with six more admission-binding cases. Final regression passes 2,155 foundation tests across 163 files, 475 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks. The existing PostgreSQL rehearsal passes 503 checks. Type checking/build, 475 operations tests and the existing 503-check PostgreSQL rehearsal pass. See docs/local-tavus-current-owner-continuity.md.
+
+Limits: the guard retains its latest floor in memory. Losing that floor with a coordinated restore can still produce an old read-only owner view, with every write/sign/resume permission false. Independent administration/floors, native observer markers, universal fencing, production clocks/lease renewal and hosted/provider/device acceptance remain open. Real notebook/transcript/context integration is still separate. No phase or launch criterion closes; product/design scope and allocation ($51) are unchanged. No real credentials, spending, provider calls, hosted publication or permanent backup runtime/ledger/scheduler changes.
+
+Exact next local action: connect authenticated simulated seven-field notebook updates/confirmation to the current-owner styling snapshot and native state version. Test real context propagation and stale-content refusal while raw conversation messages retain no confirmation authority. Review documented Tavus wire compatibility before a live proposal. Preserve all real activation/privacy/financial/hosted gates. Continue from /private/tmp/ai-stylist-recovered-20261014; preserve the older checkout and refresh only its tracked-source archive/pointer after commit.
+
 ## Local full-state request fencing, 16 October 2026
 
 Continued authorized local preparation under the active goal. The disabled composed endpoint now requires exact full-state inspection around every credential proof, including after durable delivery consumption. A changed or unavailable checkpoint, unknown credential result or expired owner holds the old guard and clears temporary notes. A previously constructed composed owner cannot respond after admission commits, even when credential rotation fails. Startup and request timeouts are separate.
@@ -1398,7 +1408,9 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Latest local follow-up: composed endpoint request checks now refuse a replaced/expired checkpoint owner and clear temporary notes. Native writer identity is corrected. Continuing through legitimate same-owner state advances remains open, so no phase or launch criterion closes; full task completion remains 5 of 41. See docs/local-tavus-checkpoint-request-fence.md.
+Latest local follow-up: the composed endpoint now continues through registered same-owner state writes, while stale prepared replies are suppressed and their known live reservations are spent without refund. Authenticated notebook/context propagation and production gates remain open; full task completion stays 5 of 41. See docs/local-tavus-current-owner-continuity.md.
+
+Previous local checkpoint: composed endpoint request checks now refuse a replaced/expired checkpoint owner and clear temporary notes. Native writer identity is corrected. Continuing through legitimate same-owner state advances remains open, so no phase or launch criterion closes; full task completion remains 5 of 41. See docs/local-tavus-checkpoint-request-fence.md.
 
 Latest local follow-up: authenticated startup admission now commits through the mandatory SQLite adapter and verifies signed completed state. The separate-store request-fencing gap is explicitly reproduced and remains the next local fix. No launch criterion closes; full task completion remains 5 of 41. See docs/local-tavus-durable-startup-admission.md.
 

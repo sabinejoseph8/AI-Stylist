@@ -21,7 +21,7 @@ function validBody(v:unknown):boolean{
 /** Proposed local wire contract, NOT verified Tavus request/header compatibility.
  * Secret is injected by server/test owner, never body or forwarded headers.
  * No listener, route registration, SDK, environment access or provider work. */
-export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,deadlineMs=1000,replay?:CviReplayPort,fence?:Readonly<{check(signal:AbortSignal,now:number):Promise<boolean>}>){
+export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,deadlineMs=1000,replay?:CviReplayPort,fence?:Readonly<{check(signal:AbortSignal,now:number):Promise<boolean>;stale?(signal:AbortSignal):boolean}>){
  let u:URL;try{u=new URL(binding.origin);}catch{throw Error('Invalid local CVI configuration');}
  if(u.origin!==binding.origin||u.protocol!=='https:'||!/^fixture-[a-z0-9-]{1,60}$/.test(binding.conversation)||
   !/^[a-f0-9]{64}$/.test(binding.secret)||!Number.isSafeInteger(binding.expiresAt)||
@@ -63,8 +63,18 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
   let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
   const canceled=new Promise<never>((_,reject)=>abort.signal.addEventListener('abort',()=>{void reader?.cancel().catch(()=>{});reject(Error('Stopped'));},{once:true}));
   try{
-   let durable:CviReplayReceipt|undefined;
-   if(fence&&await Promise.race([fence.check(abort.signal,lastClock),canceled])!==true)throw Error();
+   let durable:CviReplayReceipt|undefined,consumed=false;
+   const requireFence=async()=>{
+    if(!fence||await Promise.race([fence.check(abort.signal,lastClock),canceled])===true)return;
+    // A still-live original reservation may be spent without output only after
+    // an explicit verified same-owner stale refusal. Unknown/retired owners do
+    // not use this path, and no old handoff is reconstructed from storage.
+    if(durable&&!consumed&&replay&&fence.stale?.(abort.signal)===true&&!abort.signal.aborted&&current()){
+     const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;
+    }
+    throw Error();
+   };
+   await requireFence();
    if(abort.signal.aborted||!current())throw Error();
    if(replay){
     const input=Object.freeze({storeId:storeId!,bindingDigest,requestDigest:hash(id),now:lastClock});
@@ -84,14 +94,14 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
     async pull(controller){
      if(sent)return;sent=true;
      try{if(abort.signal.aborted||!current())throw Error();
-      if(fence&&await Promise.race([fence.check(abort.signal,lastClock),canceled])!==true)throw Error();
+      await requireFence();
       if(abort.signal.aborted||!current())throw Error();
       if(replay&&durable){
        // Spend delivery permission durably BEFORE handing any bytes to a transport.
        const input=Object.freeze({...durable,now:lastClock});
-       acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);
+       acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;
       }
-      if(fence&&await Promise.race([fence.check(abort.signal,lastClock),canceled])!==true)throw Error();
+      await requireFence();
       if(abort.signal.aborted||!current())throw Error();const wire=reply.takeSse();if(wire===null)throw Error();
       controller.enqueue(new TextEncoder().encode(wire));controller.close();
      }catch{controller.error(Error('CVI delivery unavailable'));}

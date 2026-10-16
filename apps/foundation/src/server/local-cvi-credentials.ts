@@ -3,7 +3,7 @@ import {createLocalCviEndpoint} from './local-cvi-endpoint.ts';
 import type {CviReplayPort} from './local-cvi-endpoint.ts';
 import type {createLocalCviStyling} from './local-cvi-styling.ts';
 export type CviCredentialLease=Readonly<{storeId:string;scopeDigest:string;bindingDigest:string;bootDigest:string;generation:number}>;
-export interface CviCredentialAuthority {check(input:CviCredentialLease & {now:number},signal:AbortSignal):Promise<unknown>}
+export interface CviCredentialAuthority {check(input:CviCredentialLease & {now:number},signal:AbortSignal):Promise<unknown>;stale?(signal:AbortSignal):boolean}
 const hash=(s:string)=>createHash('sha256').update(s).digest('hex');
 export function cviCredentialDigests(binding:{origin:string;conversation:string;secret:string;expiresAt:number}){
  return Object.freeze({scopeDigest:hash(JSON.stringify([binding.origin,binding.conversation,binding.expiresAt])),bindingDigest:hash(JSON.stringify([binding.origin,binding.conversation,binding.secret,binding.expiresAt]))});
@@ -18,10 +18,10 @@ export function createLocalCviCredentialEndpoint(
  if(!replay||!authority||typeof authority.check!=='function'||!lease||Object.keys(lease).sort().join(',')!=='bindingDigest,bootDigest,generation,scopeDigest,storeId'||
   !/^[a-f0-9-]{36}$/.test(lease.storeId)||!Number.isSafeInteger(lease.generation)||lease.generation<1||
   !/^[a-f0-9]{64}$/.test(lease.bootDigest)||lease.scopeDigest!==d.scopeDigest||lease.bindingDigest!==d.bindingDigest)throw Error('Local credential authority required');
- const captured=Object.freeze({...lease});
- return createLocalCviEndpoint(binding,flow,clock,deadlineMs,replay,{async check(signal,now){
+ const captured=Object.freeze({...lease}),check=authority.check.bind(authority),stale=typeof authority.stale==='function'?authority.stale.bind(authority):undefined;
+ return createLocalCviEndpoint(binding,flow,clock,deadlineMs,replay,{stale:(signal)=>stale?.(signal)===true,async check(signal,now){
   if(signal.aborted)return false;
-  const raw=await authority.check(Object.freeze({...captured,now}),signal);
+  const raw=await check(Object.freeze({...captured,now}),signal);
   if(signal.aborted||!raw||typeof raw!=='object'||Array.isArray(raw))return false;
   const x=raw as Record<string,unknown>;
   return Object.keys(x).sort().join(',')==='active,bindingDigest,bootDigest,generation,now,scopeDigest,storeId'&&x.active===true&&x.now===now&&

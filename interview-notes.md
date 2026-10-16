@@ -1,3 +1,7 @@
+## Continuing after a valid update without speaking an old reply
+
+I changed the local endpoint to recognize the same active owner across an authenticated state update. It can now serve another turn after that update, while still rejecting an expired, fenced or replaced owner. A test caught a practical bug: discarding an old reply left its reservation open and blocked the next turn. I fixed this by spending the original live attempt after verified staleness, without sending its text or refunding it. Unknown ownership still holds. The next integration is carrying actual notebook changes and confirmations into the styling context. No live or paid service was used.
+
 ## Closing the old-owner request gap and testing a real state write
 
 I added full-state checks before and after the endpoint waits for a credential result, including its final delivery check. An older composed owner now stops when admission commits, even if the separate credential rotation fails, and its temporary notes clear. Review also found that request binding had replaced the native writer identity. I preserved the configured actor and bound the request into the boot record instead, then proved an authenticated state write works. The current fence still holds on valid same-owner state changes, so I recorded continuing safely through those changes as the next integration task. Everything remains local and unpaid.

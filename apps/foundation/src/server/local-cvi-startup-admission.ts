@@ -46,7 +46,7 @@ export function createLocalDurableStartupAdmission(
     const lease=structuredClone(await execute(p,signal));const at=now();
     if(!exact(lease,['storeId','policyDigest','generation','ownerDigest','bootDigest','token','issuedAt','expiresAt'])||lease.storeId!==publicPin.storeId||lease.policyDigest!==publicPin.policyDigest||lease.generation!==input.previous+1||lease.ownerDigest!==p.args.owner||lease.bootDigest!==p.args.boot||lease.token!==p.args.token||lease.issuedAt!==input.issuedAt||!int(lease.expiresAt)||lease.expiresAt>input.expiresAt||lease.expiresAt<=at)throw Error();
     const proofExpiry=await fresh(scope.checkpoint.revision+2,p.to),finished=now();if(finished>=proofExpiry||finished>=lease.expiresAt)throw Error();
-    return {status:'authorized',authorizationId:id,ownerExpiresAt:lease.expiresAt,input:structuredClone(input),after:{storeId:publicPin.storeId,operationId:id,revision:scope.checkpoint.revision+2}};
+    return {status:'authorized',authorizationId:id,ownerExpiresAt:lease.expiresAt,owner:{storeId:publicPin.storeId,generation:lease.generation,ownerDigest:lease.ownerDigest,bootDigest:lease.bootDigest,expiresAt:lease.expiresAt,minimumRevision:scope.checkpoint.revision+2},input:structuredClone(input),after:{storeId:publicPin.storeId,operationId:id,revision:scope.checkpoint.revision+2}};
    };
    return await Promise.race([work(),canceled]);
   }catch{held=true;abort.abort();throw Error('Local startup admission unavailable');}

@@ -1,3 +1,7 @@
+## Continuity follow-up, 16 October 2026
+
+[Current-owner continuity](local-tavus-current-owner-continuity.md) closes the exact-checkpoint limitation in the disabled startup path. A registered native write by the same owner can now continue; a prepared reply tied to an older state is suppressed and its verified live reservation settled without refund. The historical exact-checkpoint helper below is not a fallback. Production and real notebook/provider integration remain open.
+
 # Local full-state request fence
 
 Authorized local preparation only, 16 October 2026. No provider requests, real credentials, listener, spending or hosted changes.

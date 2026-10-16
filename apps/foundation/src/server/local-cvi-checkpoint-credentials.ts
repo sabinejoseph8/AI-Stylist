@@ -33,3 +33,32 @@ export function createLocalCviCheckpointEndpoint(
  const guard=createLocalCheckpointCredentialAuthority(expected,lease,checkpoint,authority,validUntil,clock);
  return createLocalCviCredentialEndpoint(binding,flow,replay,lease,{check:async(input,signal)=>{const proof=await guard.check(input,signal);if(proof===null)flow.end();return proof;}},clock,deadlineMs);
 }
+
+/** Current active native owner, allowing only registry-verified same-owner
+ * state progress. Revision floors increase in this instance and never reset. */
+export function createLocalCurrentOwnerCredentialAuthority(
+ native:import('./local-cvi-startup-checkpoint.ts').StartupOwnerPin,lease:CviCredentialLease,
+ checkpoint:Pick<import('./local-cvi-startup-owner.ts').CurrentOwnerCheckpointPort,'inspectOwnerFresh'>,authority:CviCredentialAuthority,clock=Date.now,
+):CviCredentialAuthority & {isHeld():boolean;isStale(signal:AbortSignal):boolean}{
+ if(!exact(native,['storeId','generation','ownerDigest','bootDigest','expiresAt','minimumRevision'])||!uuid(native.storeId)||!Number.isSafeInteger(native.generation)||native.generation<1||!hex(native.ownerDigest)||!hex(native.bootDigest)||!Number.isSafeInteger(native.expiresAt)||native.expiresAt<1||!Number.isSafeInteger(native.minimumRevision)||native.minimumRevision<0||!exact(lease,['storeId','scopeDigest','bindingDigest','bootDigest','generation'])||!uuid(lease.storeId)||!hex(lease.scopeDigest)||!hex(lease.bindingDigest)||!hex(lease.bootDigest)||lease.generation!==native.generation||typeof checkpoint?.inspectOwnerFresh!=='function'||typeof authority?.check!=='function'||typeof clock!=='function')throw Error('Current owner unavailable');
+ const want=Object.freeze({...native}),credential=Object.freeze({...lease}),inspect=checkpoint.inspectOwnerFresh.bind(checkpoint),check=authority.check.bind(authority);let held=false,floor=want.minimumRevision,last=-1,operation:string|undefined;const versions=new WeakMap<AbortSignal,{revision:number;operation:string}>(),stale=new WeakSet<AbortSignal>();
+ const current=(minimum:number)=>{const at=clock();if(!Number.isSafeInteger(at)||at<minimum||at<last||at>=want.expiresAt)throw Error();last=at;};
+ const observe=async(signal:AbortSignal)=>{
+  const r=structuredClone(await inspect(Object.freeze({...want,minimumRevision:floor}),signal));
+  if(signal.aborted||!exact(r,['status','revision','operationId','owner','permissions'])||r.status!=='owner-current'||!Number.isSafeInteger(r.revision)||Number(r.revision)<floor||!hex(r.operationId)||!exact(r.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt'])||Object.entries(want).some(([k,v])=>k!=='minimumRevision'&&(r.owner as Record<string,unknown>)[k]!==v)||!exact(r.permissions,['write','reconcile','sign','resume'])||Object.values(r.permissions).some(v=>v!==false))throw Error();
+  if(operation!==undefined&&((Number(r.revision)===floor&&r.operationId!==operation)||(Number(r.revision)>floor&&r.operationId===operation)))throw Error();floor=Number(r.revision);operation=r.operationId;
+ };
+ return Object.freeze({isHeld:()=>held,isStale:(signal:AbortSignal)=>!held&&!signal.aborted&&stale.has(signal),async check(input:CviCredentialLease & {now:number},signal:AbortSignal){
+  if(held||signal.aborted)return null;
+  try{
+   if(!exact(input,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now'])||!Number.isSafeInteger(input.now)||input.now<0||Object.entries(credential).some(([k,v])=>(input as any)[k]!==v))throw Error();
+   current(input.now);await observe(signal);current(input.now);
+   const raw=structuredClone(await check(Object.freeze({...credential,now:input.now}),signal));
+   if(signal.aborted||!exact(raw,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||raw.active!==true||raw.now!==input.now||Object.entries(credential).some(([k,v])=>raw[k]!==v))throw Error();
+   current(input.now);await observe(signal);current(input.now);const previous=versions.get(signal);if(previous&&(previous.revision!==floor||previous.operation!==operation)){stale.add(signal);return null;}versions.set(signal,{revision:floor,operation:operation!});return raw;
+  }catch{held=true;return null;}
+ }});
+}
+export function createLocalCviCurrentOwnerEndpoint(
+ binding:Parameters<typeof createLocalCviCredentialEndpoint>[0],flow:Parameters<typeof createLocalCviCredentialEndpoint>[1],replay:Parameters<typeof createLocalCviCredentialEndpoint>[2],lease:CviCredentialLease,native:import('./local-cvi-startup-checkpoint.ts').StartupOwnerPin,checkpoint:Pick<import('./local-cvi-startup-owner.ts').CurrentOwnerCheckpointPort,'inspectOwnerFresh'>,authority:CviCredentialAuthority,clock=Date.now,deadlineMs=1000,
+){const guard=createLocalCurrentOwnerCredentialAuthority(native,lease,checkpoint,authority,clock);return createLocalCviCredentialEndpoint(binding,flow,replay,lease,{stale:s=>guard.isStale(s),check:async(i,s)=>{const result=await guard.check(i,s);if(result===null){if(guard.isHeld())flow.end();else flow.interrupt();}return result;}},clock,deadlineMs);}

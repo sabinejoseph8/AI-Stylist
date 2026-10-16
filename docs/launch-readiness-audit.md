@@ -155,3 +155,7 @@ The adjacent [machine-readable matrix](launch-readiness-audit.json) retains each
 ## Composed request-fence follow-up, 16 October 2026
 
 [Local request-fence evidence](local-tavus-checkpoint-request-fence.md) refuses replaced or expired composed owners and suppresses output after a consumed request loses its checkpoint. Native writer identity is fixed and an authenticated state write passes. Exact checkpoint pinning still holds legitimate same-owner progress, and the lower legacy helper remains disconnected. No production criterion or blocker closes.
+
+## Same-owner continuity follow-up, 16 October 2026
+
+[Local continuity evidence](local-tavus-current-owner-continuity.md) verifies active ownership across registered native writes and invalidates prepared replies tied to old state. Known stale live attempts are spent without output or refund, permitting a new turn. Independent durable floors, actual notebook context and provider acceptance remain open. No production criterion or blocker closes.
