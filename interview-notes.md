@@ -1,3 +1,9 @@
+## Connecting sample outfits to one shared consultation
+
+I connected the sample outfit, item feedback and explicit saving flow to the same notebook coordinator. Separate simulated catalog facts and a second check keep an attractive illustration from being treated as a real product recommendation. My browser rehearsal keeps the dress and owned reference through three shoe changes, excludes the owned piece from purchase costs, and reopens a saved sample without restoring old notes.
+
+A timeout test caught a subtle bug: an earlier sample could still be saved after a feedback request stalled. I fixed the view to hide uncertain results and reject late or replayed revisions. I kept the passing local rehearsal separate from live provider and launch acceptance, and kept the existing spending and security limits unchanged.
+
 ## Keeping the replay witness attached to the real writer
 
 I prepared a local version that captures the replay witness before work and constructs the actual driver inside the protected factory. Adding a witness label to a caller-supplied writer would not prove that the writer uses it, so I connected the same captured reference through the gate, inspection and saved replay records.
