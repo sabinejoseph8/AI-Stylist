@@ -759,8 +759,7 @@
       "earlierIntegratedFocusedTests": 107,
       "earlierIntegratedFocusedFiles": 6,
       "operationsTests": 564,
-      "foundationFullStatus": "running",
-      "foundationFullSession": 85326,
+      "foundationFullStatus": "passed",
       "priorFullFoundationTests": 2472,
       "priorFullFoundationFiles": 181,
       "isolatedPostgresRerun": false,
@@ -769,7 +768,9 @@
       "hostedProviderDeviceChecks": false,
       "extraFinishAuthorityReads": 0,
       "scope": "Disabled deferred original admission binding; actual SQLite commit/close, full-state check and signed finish. SQLite markers and protected flag are fixture evidence; general handoff/publication composition and actual PG renewal/identity remain open.",
-      "localMemoryChecks": 19
+      "localMemoryChecks": 19,
+      "foundationTests": 2504,
+      "foundationFiles": 182
     }
   ]
 }
