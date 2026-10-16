@@ -1,3 +1,15 @@
+## Local guarded custom-LLM HTTP candidate, 16 October 2026
+
+Prepared a disabled HTTP boundary using documented static configuration, without provider-generated app IDs. Only a successful startup owner, its exact notebook flow and its bound completed-transcript source can be composed. A scoped canonical body HMAC is permanently spent through the existing protected owner before a separate customer-turn delivery. Modified bodies cannot obtain a second response for one turn, and identical bodies are not guessed to be fresh input. No direct journal-write or lower credential-only fallback was added.
+
+Immutable advisory dialogue now reaches draft and independent check ports as untrusted customer/stylist/provider-context data, pinned to the accepted input epoch/revision. It cannot confirm notes. Clear/End/observed expiry remove cached transcript text. Original Request-bound consumption evidence lets an already-spent stale response be suppressed without clearing newer notes; unknown outcomes remain held without retry, refund or reconstructed handoff. See docs/local-tavus-http-adapter.md.
+
+Final regression passes 2,280 foundation tests across 167 files, 475 operations tests with ResourceWarning as error, TypeScript checking/build, four encryption checks and 16 local Memory checks. Focused coverage includes two HTTP exchanges through actual signed authority, SQLite, credential and replay fixtures, plus a fresh-process duplicate-body refusal. Account identity, Daily admission, extraction and semantic model outcomes remain simulated. The prior 503-check PostgreSQL baseline is unchanged and not rerun; no SQL contract changed.
+
+This is not native Tavus or launch acceptance. Exact payload defaults, event/request ordering, retries/cancellation, real transport identity, writer-lease lifetime, independent restore floors, all-writer coverage and provider/device checks remain open. The original eight-second native lease is unchanged. Product/design scope, 5-of-41 full completion and the $51 allocation remain unchanged. No real credentials, provider calls, spending, hosted publication or permanent backup runtime/ledger/scheduler changes.
+
+Exact next local action: design and test bounded consultation ownership across native writer-lease expiry, separating request deadlines from leases while preserving old-owner fencing and both replay guards. Use synthetic data only; extend no live allowance. Continue in /private/tmp/ai-stylist-recovered-20261014, preserve the older modified checkout, and refresh only source checkpoints after commit. The goal remains active and incomplete; no action is required from Sabine for this checkpoint.
+
 ## Local documented transcript adapter, 16 October 2026
 
 Reviewed current public Tavus LLM and transcript documentation. Static custom headers and accumulated streaming text are documented; automatic app request IDs and exact native request/retry correlation remain unverified. Added a disabled parser and simulated transport-admission/extraction composition into the authenticated notebook. PAL/legacy replica output and optional visual/audio analyses never become customer preferences. Streaming proposals remain tentative, preserve original touch-edit baselines and close on a complete utterance.
@@ -1438,7 +1450,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Latest local follow-up: documented Tavus streaming/full text frames now feed tentative proposals into the authenticated notebook through simulated transport admission and extraction. Pending input holds output, native inspections are serialized, and stale/canceled work is refused. Full regression passes 2,226 foundation tests. Real room/request matching, lease lifetime and provider acceptance remain open; full task completion stays 5 of 41. See docs/local-tavus-wire-compatibility.md.
+Latest local follow-up: a disabled static-header HTTP candidate now binds complete transcript input to the authenticated notebook, spends keyed body admission plus separate turn delivery, and passes immutable untrusted dialogue to draft/check. Clear removes cached transcript text and known spent stale replies preserve newer notes. Real Tavus wire/transport behavior and lease lifetime remain open; full task completion stays 5 of 41. See docs/local-tavus-http-adapter.md.
 
 Previous local checkpoint: the composed endpoint now continues through registered same-owner state writes, while stale prepared replies are suppressed and their known live reservations are spent without refund. Authenticated notebook/context propagation and production gates remain open; full task completion stays 5 of 41. See docs/local-tavus-current-owner-continuity.md.
 

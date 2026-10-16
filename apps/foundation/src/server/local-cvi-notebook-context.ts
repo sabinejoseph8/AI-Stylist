@@ -67,10 +67,16 @@ export function createLocalCviNotebookContext(options:Readonly<{
  };
  const same=(a:CviSnapshot,b:CviSnapshot|null)=>!!b&&JSON.stringify(a)===JSON.stringify(b);
  const validContext=async(s:CviSnapshot,signal:AbortSignal)=>!proposalPending&&!!native&&await liveIdentity(signal)&&same(s,project());
- flow=createLocalCviStyling({draft:async(s,signal)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const text=await draft(s,signal);if(!await validContext(s,signal))throw Error('Context changed');return text;},check:async(text,s,signal)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const result=await check(text,s,signal);if(!await validContext(s,signal))throw Error('Context changed');return result;}},deadline,{snapshot:project,subscribe:change=>session.subscribe(change),ready:()=>!proposalPending&&!!native&&active(),end:()=>{session.end(owner);}});
+ flow=createLocalCviStyling({draft:async(s,signal,conversation)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const text=await(conversation?draft(s,signal,conversation):draft(s,signal));if(!await validContext(s,signal))throw Error('Context changed');return text;},check:async(text,s,signal,conversation)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const result=await(conversation?check(text,s,signal,conversation):check(text,s,signal));if(!await validContext(s,signal))throw Error('Context changed');return result;}},deadline,{snapshot:project,subscribe:change=>session.subscribe(change),ready:()=>!proposalPending&&!!native&&active(),end:()=>{session.end(owner);}});
  const ready=async(signal:AbortSignal)=>{if(!native||!await liveIdentity(signal))return false;await checkpoint.inspectOwnerFresh({...native,minimumRevision:nativeRevision},signal);return active()&&!signal.aborted;};
  const admittedCaller=async(request:Request,signal:AbortSignal)=>await caller(request,signal)&&await ready(signal);
  return Object.freeze({flow,checkpoint,
+  /** Internal cleanup observer. It cannot authorize a note update. */
+  onReset(listener:()=>void){
+   if(typeof listener!=='function')throw Error('Context observer unavailable');
+   let previousEpoch=session.snapshot(owner)?.epoch,wasActive=true;
+   return session.subscribe(()=>{const s=session.snapshot(owner),isActive=s?.state==='active';if(s?.epoch!==previousEpoch||wasActive&&!isActive){previousEpoch=s?.epoch;wasActive=isActive;try{listener();}catch{/* Observers cannot veto cleanup. */}}});
+  },
   async snapshot(request:Request,signal:AbortSignal):Promise<SessionSnapshot|null>{return bounded(signal,async s=>await admittedCaller(request,s)?session.snapshot(owner):null);},
   async edit(request:Request,command:unknown,signal:AbortSignal):Promise<UpdateResult>{
    let captured:unknown;try{captured=structuredClone(command);}catch{return 'invalid';}
@@ -93,7 +99,7 @@ export function createLocalCviNotebookContext(options:Readonly<{
   async acceptProposal(request:Request,handle:ProposalTurn,revision:number,values:readonly Proposal[],final:boolean,signal:AbortSignal){
    let captured:readonly Proposal[];try{captured=structuredClone(values);}catch{return null;}
    const ticket=session.ticket(owner);if(!ticket)return null;
-   return bounded(signal,async s=>{if(!await admittedCaller(request,s)||!session.isCurrent(owner,ticket)||handle!==currentProposal||revision!==proposalRevision||!Array.isArray(captured)||captured.some(v=>!exact(v,['field','value'])))return null;const result=proposals.accept(handle,revision,captured,final);if(result.status==='accepted'){proposalPending=false;if(final)currentProposal=null;}return result;});
+   return bounded(signal,async s=>{if(!await admittedCaller(request,s)||!session.isCurrent(owner,ticket)||handle!==currentProposal||revision!==proposalRevision||!Array.isArray(captured)||captured.some(v=>!exact(v,['field','value'])))return null;const result=proposals.accept(handle,revision,captured,final);if(result.status==='accepted'){proposalPending=false;if(final)currentProposal=null;const snap=project();return Object.freeze({...result,version:snap?.context?Object.freeze({...snap.context,revision:snap.revision}):null});}return Object.freeze({...result,version:null});});
   },
   async clear(request:Request,signal:AbortSignal){return await bounded(signal,async s=>{if(!await admittedCaller(request,s)||!session.clear(owner))return false;proposalPending=false;return true;})===true;},
   async end(request:Request,signal:AbortSignal){return await bounded(signal,async s=>{if(!await admittedCaller(request,s))return false;close();return true;})===true;},

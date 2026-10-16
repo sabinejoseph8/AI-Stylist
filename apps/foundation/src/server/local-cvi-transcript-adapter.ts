@@ -4,6 +4,8 @@
 import type {createLocalCviNotebookContext} from './local-cvi-notebook-context.ts';
 import type {Proposal,ProposalTurn} from '../session/proposal-stream.ts';
 type Context=ReturnType<typeof createLocalCviNotebookContext>;
+const sources=new WeakMap<object,Context>();
+export type CviCompletedInput=Readonly<{conversation:string;turnId:string;turnOrdinal:number;seq:number;text:string;epoch:number;inputRevision:number}>;
 export type CviUtterance=Readonly<{
  conversation:string;seq:number;timestamp:number;role:'user'|'pal'|'replica';text:string;
  kind:'streaming'|'complete';participantId?:string;inferenceId?:string;turnIndex?:number;
@@ -43,11 +45,13 @@ export function createLocalCviTranscriptAdapter(options:Readonly<{
  if(options.simulation!==true||!id(options.conversation)||!id(options.participantId)||typeof options.admit!=='function'||typeof options.extract!=='function'||typeof options.context?.beginProposal!=='function'||typeof options.context.refreshProposal!=='function'||!int(timeout)||timeout<1||timeout>8000)throw Error('Local transcript adapter unavailable');
  const conversation=options.conversation,participant=options.participantId,admit=options.admit.bind(options),extract=options.extract.bind(options),context=options.context;
  const stop=new AbortController();let closed=false,inflight=0,ordinal=-1;
- type Turn={id:string;ordinal:number;seq:number;index:number;revision:number;closed:boolean;handle:Promise<ProposalTurn|null>;text?:string};
+ type Turn={id:string;ordinal:number;seq:number;index:number;revision:number;closed:boolean;handle:Promise<ProposalTurn|null>;text?:string;acceptedRevision?:number;epoch?:number;inputRevision?:number};
  const turns=new Map<string,Turn>();let active:Turn|undefined;
  const valid=(a:CviTranscriptAdmission|null):a is CviTranscriptAdmission=>!!a&&Object.keys(a).sort().join(',')==='request,turnId,turnOrdinal'&&a.request instanceof Request&&id(a.turnId)&&int(a.turnOrdinal);
- const close=()=>{if(closed)return;closed=true;stop.abort();turns.clear();active=undefined;context.flow.end();};
- return Object.freeze({close,async ingest(room:string,sender:string,raw:unknown,external:AbortSignal):Promise<Readonly<{status:'applied'|'ignored'|'held'|'stale'}>>{
+ const reset=()=>{for(const turn of turns.values()){turn.closed=true;turn.text=undefined;turn.acceptedRevision=undefined;}active=undefined;};
+ const unsubscribe=context.onReset(reset);
+ const close=()=>{if(closed)return;closed=true;stop.abort();reset();turns.clear();unsubscribe();context.flow.end();};
+ const adapter=Object.freeze({close,currentInput():CviCompletedInput|null{try{if(closed)return null;const state=context.flow.snapshot(),t=active;return t?.closed&&t.acceptedRevision===t.revision&&typeof t.text==='string'&&int(t.epoch)&&int(t.inputRevision)&&state.context?.epoch===t.epoch&&state.context.inputRevision===t.inputRevision?Object.freeze({conversation,turnId:t.id,turnOrdinal:t.ordinal,seq:t.seq,text:t.text,epoch:t.epoch,inputRevision:t.inputRevision}):null;}catch{return null;}},async ingest(room:string,sender:string,raw:unknown,external:AbortSignal):Promise<Readonly<{status:'applied'|'ignored'|'held'|'stale'}>>{
   const event=decodeCviUtterance(raw);
   if(!event)return {status:'held'};
   if(event.role!=='user')return {status:'ignored'};
@@ -81,11 +85,16 @@ export function createLocalCviTranscriptAdapter(options:Readonly<{
    const fresh=await admit(delivery,signal);
    if(!current()||!valid(fresh)||fresh.turnId!==turnId||fresh.turnOrdinal!==turnOrdinal)return {status:'held'} as const;
    const result=await context.acceptProposal(new Request(fresh.request),handle,revision,values,complete,signal);
-   if(!current()||result?.status!=='accepted')return {status:'held'} as const;
-   turn.text=event.text;turn.closed=complete;return {status:'applied'} as const;
+   if(!current()||result?.status!=='accepted'||!result.version)return {status:'held'} as const;
+   turn.text=event.text;turn.acceptedRevision=revision;turn.epoch=result.version.epoch;turn.inputRevision=result.version.inputRevision;turn.closed=complete;return {status:'applied'} as const;
   })().catch(()=>({status:'held'} as const)).finally(()=>{inflight--;});
   let timer:ReturnType<typeof setTimeout>|undefined,onAbort:(()=>void)|undefined;
   try{return await Promise.race([pending,new Promise<{status:'held'}>(resolve=>{onAbort=()=>resolve({status:'held'});signal.addEventListener('abort',onAbort,{once:true});timer=setTimeout(()=>abort.abort(),timeout);})]);}
   finally{if(timer)clearTimeout(timer);if(onAbort)signal.removeEventListener('abort',onAbort);}
  }});
+ sources.set(adapter,context);return adapter;
 }
+/** Only the factory's source bound to this exact notebook may be composed. */
+export function localCviCompletedInput(adapter:ReturnType<typeof createLocalCviTranscriptAdapter>,context:Context):CviCompletedInput|null{return sources.get(adapter)===context?adapter.currentInput():null;}
+
+export const localCviTranscriptSourceMatches=(adapter:ReturnType<typeof createLocalCviTranscriptAdapter>,context:Context)=>sources.get(adapter)===context;

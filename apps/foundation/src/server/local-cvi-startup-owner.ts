@@ -9,6 +9,9 @@ import type {CviCredentialAuthority,CviCredentialBootAuthority,CviCredentialLeas
 import type {CviReplayPort} from './local-cvi-endpoint.ts';
 import {CVI_FIELDS} from './local-cvi-styling.ts';
 import type {createLocalCviStyling} from './local-cvi-styling.ts';
+const startedOwners=new WeakSet<object>();
+/** Only successful full-checkpoint startup can register this owner. */
+export const isLocalCviStartedOwner=(owner:object)=>startedOwners.has(owner);
 export type CviCheckpointIdentity=Readonly<{storeId:string;operationId:string;revision:number}>;
 export type FreshOwnerAdmissionInput=Readonly<{checkpoint:CviCheckpointIdentity;credentialStoreId:string;replayStoreId:string;previous:number;bootDigest:string;scopeDigest:string;bindingDigest:string;nonce:string;issuedAt:number;expiresAt:number}>;
 /** Trusted server ports, never supplied by an HTTP body. Admission must be
@@ -59,7 +62,7 @@ export function createLocalCviStartupOwner(
     guard=createLocalCurrentOwnerCredentialAuthority(nativeOwner,lease,{inspectOwnerFresh:inspectOwner},{check},now);
     const at=current(),proof=structuredClone(await guard.check(Object.freeze({...lease,now:at}),signal));current();
     if(!exact(proof,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||proof.active!==true||proof.now!==at||Object.entries(lease).some(([k,v])=>proof[k]!==v))throw Error();
-    return endpoint;
+    startedOwners.add(endpoint);return endpoint;
    };
    return await Promise.race([work(),canceled]);
   }catch{held=true;cancel.abort();(endpoint as Awaited<ReturnType<typeof startLocalCviCredentialEndpoint>>)?.end();flow?.end();return null;}

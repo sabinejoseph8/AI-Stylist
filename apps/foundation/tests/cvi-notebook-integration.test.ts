@@ -1,3 +1,5 @@
+import {createLocalCviHttpAdapter} from '../src/server/local-cvi-http-adapter.ts';
+import {call as replayCall} from './support/cvi-replay-process.ts';
 import {createLocalCviTranscriptAdapter} from '../src/server/local-cvi-transcript-adapter.ts';
 import {it,expect,vi} from 'vitest';
 import {generateKeyPair,SignJWT,exportJWK,createLocalJWKSet} from 'jose';
@@ -7,21 +9,21 @@ import {createLocalCviNotebookContext} from '../src/server/local-cvi-notebook-co
 import {createLocalCviStartupOwner} from '../src/server/local-cvi-startup-owner.ts';
 import {createIdentityVerifier} from '../src/server/verified-identity.ts';
 import {APPROVED_NOTES_RETENTION} from '../src/session/notes-retention-policy.ts';
-import type {CviSimulationPorts,CviSnapshot} from '../src/server/local-cvi-styling.ts';
+import type {CviSimulationPorts,CviSnapshot,CviConversationInput} from '../src/server/local-cvi-styling.ts';
 import type {Field} from '../../../packages/style-contracts/src/index.ts';
 const A='00000000-0000-4000-8000-000000000001',B='00000000-0000-4000-8000-000000000002',S='11111111-1111-4111-8111-111111111111';
 const signal=()=>new AbortController().signal;
 async function fixture(ports?:CviSimulationPorts){
- const f=await startupAdmissionFixture();let active=true;const identity={ownerId:A,sessionId:S,isCurrent:async()=>active},seen:CviSnapshot[]=[];
+ const f=await startupAdmissionFixture();let active=true;const identity={ownerId:A,sessionId:S,isCurrent:async()=>active},seen:CviSnapshot[]=[],seenConversations:(CviConversationInput|undefined)[]=[],checkedConversations:(CviConversationInput|undefined)[]=[];
  const authorize=vi.fn(async(r:Request)=>r.headers.get('authorization')==='Bearer fixture-customer'?identity:null);
- const brain=ports??{draft:async(s:CviSnapshot)=>{seen.push(s);return 'Synthetic context: '+JSON.stringify(s.notes);},check:async(text:string,s:CviSnapshot)=>({approved:true,text,revision:s.revision})};
+ const brain=ports??{draft:async(s:CviSnapshot,_signal?:AbortSignal,conversation?:CviConversationInput)=>{seen.push(s);seenConversations.push(conversation);return 'Synthetic context: '+JSON.stringify(s.notes);},check:async(text:string,s:CviSnapshot,_signal?:AbortSignal,conversation?:CviConversationInput)=>{checkedConversations.push(conversation);return {approved:true,text,revision:s.revision};}};
  let afterConsume:(()=>void)|undefined;const consume=f.resources.replay.consume;f.resources.replay.consume=async(r,s)=>{const ack=await consume(r,s);afterConsume?.();return ack;};
  const bridge=createLocalCviNotebookContext({simulation:true,identity,authorize,checkpoint:f.checkpoint,ports:brain,clock:()=>1000,policy:APPROVED_NOTES_RETENTION});
  f.resources.makeFlow=()=>bridge.flow;
  const e=await createLocalCviStartupOwner(f.expected,bridge.checkpoint,f.admission(),f.resources,()=>1000,8000).start(signal());if(!e){await f.close();throw Error('Context owner fixture held');}
  const request=()=>new Request('https://app.example.test/local/notebook',{method:'POST',headers:{authorization:'Bearer fixture-customer'}});let operation=0;
  const edit=async(field:Field,value:string)=>{const snap=await bridge.snapshot(request(),signal());return bridge.edit(request(),{action:'edit',id:'fixture-context-'+(++operation),epoch:snap!.epoch,field,baseRevision:snap!.notes[field].revision,sequence:snap!.notes[field].sequence+1,value},signal());};
- return {afterConsume:(fn:()=>void)=>{afterConsume=fn;},f,bridge,e,request,edit,seen,authorize,active:(v:boolean)=>{active=v;},close:async()=>{e.end();await f.close();}};
+ return {afterConsume:(fn:()=>void)=>{afterConsume=fn;},f,bridge,e,request,edit,seen,seenConversations,checkedConversations,authorize,active:(v:boolean)=>{active=v;},close:async()=>{e.end();await f.close();}};
 }
 it('actual protected SSE draft/check receive all seven authenticated notebook fields and native state version',async()=>{const f=await fixture();try{
  const values:Record<Field,string>={occasion:'Outdoor wedding',season:'November',color:'Emerald',style:'Long sleeves',budget:'USD 350 maximum (items only)',lookType:'Full look',wardrobe:'I own a navy blazer'};
@@ -78,3 +80,16 @@ it('a verified transcript can finish while an older protected reply is being can
  const result=await adapter.ingest('fixture-room','fixture-pal',{message_type:'conversation',event_type:'conversation.utterance',timestamp:1746000000.123,seq:1,conversation_id:'c_fixture',properties:{role:'user',speech:'Long sleeves',participant_id:'h_fixture'}},signal());
  expect(result.status).toBe('applied');expect((await old).status).toBe(409);first=false;resolve('Old');const fresh=await f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-wire-fresh'));expect(fresh.status).toBe(200);expect(await fresh.text()).toContain('Long sleeves');adapter.close();
 }finally{await f.close();}},30000);
+
+it('static HTTP requests compose with actual signed startup, SQLite and durable body/turn replay',async()=>{const f=await fixture();let ordinal=1,seq=0;try{
+ const transcript=createLocalCviTranscriptAdapter({simulation:true,conversation:'c_fixture',participantId:'h_fixture',context:f.bridge,admit:async()=>({request:f.request(),turnId:'fixture-http-real-'+ordinal,turnOrdinal:ordinal}),extract:async({text})=>[{field:'style',value:text}],deadlineMs:8000});
+ const say=(text:string)=>transcript.ingest('fixture-room','fixture-pal',{message_type:'conversation',event_type:'conversation.utterance',timestamp:1,seq:++seq,conversation_id:'c_fixture',properties:{role:'user',speech:text,participant_id:'h_fixture'}},signal());
+ const wire=createLocalCviHttpAdapter({simulation:true,binding:f.f.resources.binding,owner:f.e,context:f.bridge,transcript,applicationRequest:f.request(),clock:()=>1000,deadlineMs:8000});
+ const request=(text:string,prefix='')=>new Request(f.f.resources.binding.origin+'/cvi/v1/chat/completions',{method:'POST',headers:{'x-ai-stylist-token':f.f.resources.binding.secret,'content-type':'application/json'},body:JSON.stringify({model:'local-simulation',stream:true,messages:[...(prefix?[{role:'assistant',content:prefix}]:[]),{role:'user',content:text}]})});
+ expect((await say('Long sleeves')).status).toBe('applied');const first=await wire.handle(request('Long sleeves'));expect(first.status).toBe(200);expect(await first.text()).toContain('Long sleeves');
+ expect((await wire.handle(request('Long sleeves'))).status).toBe(409);expect((await wire.handle(request('Long sleeves','Changed prefix'))).status).toBe(409);expect(f.seen).toHaveLength(1);expect(f.seenConversations[0]?.messages.at(-1)).toEqual({speaker:'customer',text:'Long sleeves'});expect(f.checkedConversations[0]).toBe(f.seenConversations[0]);
+ ordinal=2;expect((await say('Navy blazer')).status).toBe('applied');const second=await wire.handle(request('Navy blazer','New history'));expect(second.status).toBe(200);expect(await second.text()).toContain('Navy blazer');
+ const journal:any=await replayCall(f.f.replayRoot,'inspect',{storeId:f.f.journal.storeId});expect(journal.records).toHaveLength(4);expect(journal.records.every((r:any)=>r.status==='spent')).toBe(true);
+ const original=journal.records[0];await expect(replayCall(f.f.replayRoot,'reserve',{request:{storeId:journal.storeId,bindingDigest:journal.bindingDigest,requestDigest:original.requestDigest,now:1000}})).rejects.toThrow();
+ const after:any=await replayCall(f.f.replayRoot,'inspect',{storeId:journal.storeId});expect(after.records).toEqual(journal.records);wire.close();expect(transcript.currentInput()).toBeNull();
+ }finally{await f.close();}},60000);

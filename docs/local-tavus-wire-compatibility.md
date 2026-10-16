@@ -1,3 +1,7 @@
+## Follow-up HTTP preparation, 16 October 2026
+
+The disabled [HTTP candidate](local-tavus-http-adapter.md) now supplies internal IDs from app-owned input and accepts documented static configuration. It combines keyed body admission with a separate turn-delivery guard. Exact native request behavior and real transport admission remain unverified; the original evidence below records the transcript checkpoint.
+
 # Local Tavus wire compatibility, 16 October 2026
 
 Scope: disabled local parsing and simulated transcript extraction into the existing authenticated notebook. No live room, SDK, listener, provider call, credentials, deployment, spending or production acceptance. Financial allocation remains $51.
@@ -46,7 +50,7 @@ The notebook now holds draft output while the latest admitted proposal revision 
 
 ## Live preflight gaps
 
-- Native request authentication, body extras, retry/request identity and transcript-to-LLM ordering are unverified. The existing protected HTTP endpoint still requires proposed fixture headers and is not a drop-in Tavus endpoint.
+- Native request authentication, body extras, retry/request identity and transcript-to-LLM ordering are unverified. The historical internal endpoint requires fixture headers and must not be mounted as a public fallback. The new disabled candidate supplies them internally; it still needs real wire verification.
 - Real Daily room/sender authentication and customer-turn correlation are not implemented. The parser's normalized IDs are content metadata, not proof.
 - The local native writer lease is capped at eight seconds. It is not the approved private trial's 85-second lifetime or a production consultation lifetime. Renewal, fencing, credential lifetime and deadlines need an explicit integrated design before activation; no time or spending limit was extended.
 - No real extraction, semantic approval, speech playback, interruption, retention, phone or hosted acceptance is established. Independent restore floors, native domain rules and universal writer fencing remain open.
@@ -58,4 +62,4 @@ Regression passes 2,226 foundation tests across 166 files, including 70 cases in
 
 The endpoint now refuses a known pending context before reserving delivery. If a transcript becomes pending during reservation, only a verified current-owner fence permits spending the original live reservation without output; unknown ownership stays held. This does not refund an attempt or reconstruct a handoff.
 
-Next local action: design and test native HTTP compatibility using the documented static header configuration, preserving authenticated room binding and replay refusal without requiring undocumented dynamic provider headers. Real Daily admission/correlation, native lease lifetime and hosted activation remain separate gates.
+Original next action, now prepared locally: accept static configuration while preserving room binding and replay refusal without undocumented dynamic provider headers. Current next work is bounded consultation ownership across native lease expiry. Real Daily admission/correlation, native lease lifetime and hosted activation remain separate gates.

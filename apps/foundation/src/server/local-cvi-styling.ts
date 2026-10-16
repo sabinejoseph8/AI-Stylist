@@ -4,10 +4,11 @@ export type CviField = typeof CVI_FIELDS[number];
 export type CviNotes = Readonly<Record<CviField, Readonly<{text:string;confirmed:boolean}>>>;
 export type CviSnapshot = Readonly<{revision:number;notes:CviNotes;context?:Readonly<{epoch:number;nativeRevision:number;inputRevision:number}>}>;
 export interface CviContextPort {snapshot():CviSnapshot|null;subscribe(change:()=>void):()=>void;end():void;ready?():boolean}
+export type CviConversationInput=Readonly<{kind:'untrusted-conversation';epoch:number;inputRevision:number;messages:readonly Readonly<{speaker:'customer'|'stylist'|'provider-context';text:string}>[]}>;
 export type CviCheck = Readonly<{approved:boolean;revision:number;text:string}>;
 export interface CviSimulationPorts {
-  draft(snapshot:CviSnapshot, signal:AbortSignal):Promise<string>;
-  check(text:string, snapshot:CviSnapshot, signal:AbortSignal):Promise<CviCheck>;
+  draft(snapshot:CviSnapshot, signal:AbortSignal,conversation?:CviConversationInput):Promise<string>;
+  check(text:string, snapshot:CviSnapshot, signal:AbortSignal,conversation?:CviConversationInput):Promise<CviCheck>;
 }
 export type CviPrepared = Readonly<{status:'prepared'|'blocked';reason?:'context-changed'|'context-pending';takeSse():string|null}>;
 const empty = ():CviNotes=>Object.freeze(Object.fromEntries(CVI_FIELDS.map(k=>[k,Object.freeze({text:'',confirmed:false})])) as Record<CviField,{text:string;confirmed:boolean}>);
@@ -48,11 +49,17 @@ export function createLocalCviStyling(ports:CviSimulationPorts, deadlineMs=1000,
     },
     interrupt(){if(!closed)invalidate();},
     end(){invalidate();closed=true;notes=empty();revision++;seen.clear();unsubscribe?.();unsubscribe=undefined;try{endContext?.();}catch{/* Closed locally; no remote deletion claim. */}},
-    async prepare(signal?:AbortSignal):Promise<CviPrepared>{
+    async prepare(signal?:AbortSignal,conversation?:CviConversationInput):Promise<CviPrepared>{
       if(closed||signal?.aborted)return blocked();
+      let input:CviConversationInput|undefined;
+      if(conversation!==undefined){try{
+       const c=structuredClone(conversation);
+       if(!read||!c||Object.keys(c).sort().join(',')!=='epoch,inputRevision,kind,messages'||c.kind!=='untrusted-conversation'||!Number.isSafeInteger(c.epoch)||c.epoch<1||!Number.isSafeInteger(c.inputRevision)||c.inputRevision<1||!Array.isArray(c.messages)||!c.messages.length||c.messages.length>32||c.messages.at(-1)?.speaker!=='customer'||!c.messages.at(-1)?.text.trim()||c.messages.some(m=>!m||Object.keys(m).sort().join(',')!=='speaker,text'||!['customer','stylist','provider-context'].includes(m.speaker)||typeof m.text!=='string'||m.text.length>4000)||new TextEncoder().encode(JSON.stringify(c)).length>65536)return blocked();
+       input=Object.freeze({...c,messages:Object.freeze(c.messages.map(m=>Object.freeze({...m})))});
+      }catch{return blocked();}}
       const state=readiness();if(state==='unavailable')return blocked();
       if(state==='pending')return Object.freeze({status:'blocked',reason:'context-pending',takeSse:()=>null});
-      invalidate();let snap:CviSnapshot;try{snap=snapshot();}catch{return blocked();}const mine=epoch,controller=new AbortController();pending=controller;
+      invalidate();let snap:CviSnapshot;try{snap=snapshot();}catch{return blocked();}if(input&&(input.epoch!==snap.context?.epoch||input.inputRevision!==snap.context?.inputRevision))return stale();const mine=epoch,controller=new AbortController();pending=controller;
       let timer:ReturnType<typeof setTimeout>|undefined;
       let onAbort:()=>void=()=>{};
       const canceled=new Promise<never>((_,reject)=>{
@@ -63,9 +70,9 @@ export function createLocalCviStyling(ports:CviSimulationPorts, deadlineMs=1000,
       });
       try{
         // Nothing streams until the full text and exact snapshot pass a separate check.
-        const text=await Promise.race([Promise.resolve().then(()=>ports.draft(snap,controller.signal)),canceled]);
+        const text=await Promise.race([Promise.resolve().then(()=>(input?ports.draft(snap,controller.signal,input):ports.draft(snap,controller.signal))),canceled]);
         if(!textOk(text)||controller.signal.aborted||epoch!==mine||closed)return changed(snap,signal)?stale():blocked();
-        const verdict=await Promise.race([Promise.resolve().then(()=>ports.check(text,snap,controller.signal)),canceled]);
+        const verdict=await Promise.race([Promise.resolve().then(()=>(input?ports.check(text,snap,controller.signal,input):ports.check(text,snap,controller.signal))),canceled]);
         if(!verdict||Object.keys(verdict).sort().join(',')!=='approved,revision,text'||verdict.approved!==true||
           verdict.revision!==snap.revision||verdict.text!==text||controller.signal.aborted||epoch!==mine||closed)return changed(snap,signal)?stale():blocked();
         let consumed=false;

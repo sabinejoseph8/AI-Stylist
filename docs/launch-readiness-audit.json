@@ -568,6 +568,17 @@
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false,
       "limitations": "Transport admission and extraction are simulated. Native request/retry matching, room correlation, writer lease lifetime and provider/device acceptance remain open."
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-http-adapter.md",
+      "scope": "Disabled static-header HTTP candidate, protected body/turn replay, advisory dialogue and cached transcript cleanup",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "limitations": "Account/transport/extraction/model outcomes are simulated; native wire behavior, longer ownership and independent restore protection remain open.",
+      "foundationTests": 2280,
+      "foundationFiles": 167,
+      "operationsTests": 475
     }
   ]
 }
