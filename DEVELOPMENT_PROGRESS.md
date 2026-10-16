@@ -10,6 +10,8 @@ See docs/local-tavus-paired-evidence-map.md for the exact split between 38 genui
 
 Product/design scope, 5-of-41 full tasks, 0-of-21 production acceptance and the $51 allocation remain unchanged. No providers, real credentials, spending, hosted changes, support messages or permanent backup runtime changes. Original gate-to-PostgreSQL composition, independent witness administration/restore floors, universal writer coverage, production clocks and live provider/device acceptance remain open. Earlier staging descriptions below are historical.
 
+The new source stage is prepared at /private/tmp/ai-stylist-witness-pair-stage from verified checkpoint b2cd9cfbee86b249ae82939f962241600413b312, with no source changes yet. Read docs/local-tavus-captured-witness-composition.md there for the concrete driver and test plan. A copy is saved with the durable source checkpoints.
+
 Exact next action: continue authorized local preparation of captured witness-pin composition. The Python gate primitive supports a pinned disposable witness, but the configured Node port and paired replay transport do not yet carry that configuration. Inspect and wire the captured pin through the original gate and every participating replay inspection/mutation path, reject missing/mismatched scope before work, and test interrupted witness/journal updates and one-sided restore without reset or fallback. Preserve the complete two-turn/renewal flow, fixed 128-row authority cap, original pairing and all deadlines. Use a separate source stage; do not change hosted credentials, production roles or backup runtime. Local folders do not prove independent administration. The goal remains active and incomplete.
 
 ## Original paired full-state reconciliation verification, 16 October 2026
