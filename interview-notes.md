@@ -1,3 +1,7 @@
+## Separating history permissions from signed success
+
+I prepared a local hosted-adapter proposal that pins a signing identity and binds each reply to the exact request and principal. I verified that a backend commit happens before a signed success, and that losing the signature does not roll the committed history back. Review added protection against request mutation during asynchronous work and a backward clock before signing. I also rehearsed PostgreSQL role restrictions in a disposable isolated container, with every mutation procedure deliberately disabled. I kept those permission checks separate from SQLite transaction evidence and documented the missing receipt-to-signer integration, real authentication and independent rollback protection. No hosted change or paid call was made.
+
 ## Rehearsing durable history transactions
 
 I prepared a service-only projection and commit contract, then exercised it with temporary SQLite databases and fresh processes. The backend reruns the actual history validator inside the transaction and acknowledges only after state and token use commit together. I tested crashes on both sides of commit, competing writers and lost acknowledgments, including through the speech endpoint. I kept independent rollback protection, real role grants and hosted durability open, because local transaction evidence does not establish those capabilities.

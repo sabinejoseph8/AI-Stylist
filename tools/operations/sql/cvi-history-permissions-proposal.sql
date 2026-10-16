@@ -1,0 +1,32 @@
+-- LOCAL REHEARSAL ONLY. Not a migration. All mutation procedures remain disabled.
+-- Apply only to the new disposable PostgreSQL instance used by the rehearsal.
+CREATE ROLE cvi_history_owner NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE ROLE cvi_history_observer NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE ROLE cvi_history_writer NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE ROLE cvi_history_rotator NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE ROLE cvi_history_ack_signer NOLOGIN NOINHERIT NOSUPERUSER NOCREATEDB NOCREATEROLE NOREPLICATION NOBYPASSRLS;
+CREATE SCHEMA cvi_history_proposal AUTHORIZATION cvi_history_owner;
+REVOKE ALL ON SCHEMA cvi_history_proposal FROM PUBLIC,anon,authenticated,service_role;
+SET ROLE cvi_history_owner;
+ALTER DEFAULT PRIVILEGES IN SCHEMA cvi_history_proposal REVOKE EXECUTE ON FUNCTIONS FROM PUBLIC;
+CREATE TABLE cvi_history_proposal.history(store_id uuid PRIMARY KEY,epoch bigint NOT NULL CHECK(epoch>=0),head text NOT NULL CHECK(head ~ '^[a-f0-9]{64}$'),payload jsonb NOT NULL);
+CREATE TABLE cvi_history_proposal.receipts(operation_id uuid PRIMARY KEY,status text NOT NULL CHECK(status='committed'),payload jsonb NOT NULL);
+ALTER TABLE cvi_history_proposal.history ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cvi_history_proposal.history FORCE ROW LEVEL SECURITY;
+ALTER TABLE cvi_history_proposal.receipts ENABLE ROW LEVEL SECURITY;
+ALTER TABLE cvi_history_proposal.receipts FORCE ROW LEVEL SECURITY;
+CREATE POLICY owner_metadata_read ON cvi_history_proposal.history FOR SELECT TO cvi_history_owner USING(true);
+CREATE POLICY owner_receipt_read ON cvi_history_proposal.receipts FOR SELECT TO cvi_history_owner USING(true);
+CREATE VIEW cvi_history_proposal.heads WITH(security_barrier=true) AS SELECT store_id,epoch,head FROM cvi_history_proposal.history;
+CREATE VIEW cvi_history_proposal.committed_receipts WITH(security_barrier=true) AS SELECT operation_id,status,payload FROM cvi_history_proposal.receipts;
+CREATE FUNCTION cvi_history_proposal.reserve(p_command jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,cvi_history_proposal AS $$ BEGIN RAISE EXCEPTION 'history activation unavailable' USING ERRCODE='55000'; END $$;
+CREATE FUNCTION cvi_history_proposal.consume(p_command jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,cvi_history_proposal AS $$ BEGIN RAISE EXCEPTION 'history activation unavailable' USING ERRCODE='55000'; END $$;
+CREATE FUNCTION cvi_history_proposal.rotate(p_command jsonb) RETURNS jsonb LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,cvi_history_proposal AS $$ BEGIN RAISE EXCEPTION 'history activation unavailable' USING ERRCODE='55000'; END $$;
+REVOKE ALL ON ALL TABLES IN SCHEMA cvi_history_proposal FROM PUBLIC,anon,authenticated,service_role,cvi_history_observer,cvi_history_writer,cvi_history_rotator,cvi_history_ack_signer;
+REVOKE ALL ON ALL FUNCTIONS IN SCHEMA cvi_history_proposal FROM PUBLIC,anon,authenticated,service_role,cvi_history_observer,cvi_history_writer,cvi_history_rotator,cvi_history_ack_signer;
+GRANT USAGE ON SCHEMA cvi_history_proposal TO cvi_history_observer,cvi_history_writer,cvi_history_rotator,cvi_history_ack_signer;
+GRANT SELECT ON cvi_history_proposal.heads TO cvi_history_observer,cvi_history_writer,cvi_history_rotator;
+GRANT SELECT ON cvi_history_proposal.committed_receipts TO cvi_history_ack_signer;
+GRANT EXECUTE ON FUNCTION cvi_history_proposal.reserve(jsonb),cvi_history_proposal.consume(jsonb) TO cvi_history_writer;
+GRANT EXECUTE ON FUNCTION cvi_history_proposal.rotate(jsonb) TO cvi_history_rotator;
+RESET ROLE;

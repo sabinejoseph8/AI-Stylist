@@ -1,5 +1,7 @@
 # Local CVI persistence and transaction adapter contract
 
+Follow-up: [local hosted adapter proposal](local-tavus-hosted-adapter-proposal.md) adds signed acknowledgment tests and a separately rehearsed, mutation-disabled PostgreSQL permission scaffold. Real hosted mutation and signer integration remain open.
+
 Sabine approved local preparation/tests on 15 October 2026, with no new spending or hosted changes. The contract remains disconnected. SQLite is a disposable test fixture, not a selection of the production database or a change to approved Supabase/Render hosting.
 
 ## Service-only interface

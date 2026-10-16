@@ -1,3 +1,13 @@
+## Local Tavus hosted history adapter proposal, 15 October 2026
+
+Sabine approved local preparation/tests, including permissions and signed acknowledgments, with no new spending or hosted changes. Added a disconnected pinned Ed25519 transaction port and gateway that signs only validated server results after commit. Exact request/challenge/principal binding, immutable request capture, bounded resources, monotonic clocks and conservative cancellation/replay/lost-ack behavior prevent unknown results from releasing text.
+
+30 signing tests and four actual disposable SQLite integrations cover forgery, replay, restart capability loss, commit-before-signing, signing failure after commit and endpoint delivery refusal. A separate isolated PostgreSQL scaffold passed 111 permission checks across seven runtime roles. All mutation functions deliberately remain disabled; PostgreSQL domain mutations and the receipt-to-signer path are not integrated. Review added request capture and post-work clock checks; an asynchronous test helper was corrected to await backend entry. Final regression: 1,773 foundation tests across 149 files, 331 operations tests with ResourceWarning as error, type checking/build, four encryption tests and 16 local Memory checks. See docs/local-tavus-hosted-adapter-proposal.md.
+
+Limits: no authenticated network transport, real role/login mapping, hosted grants, independent epoch/token authority, durable signer outbox or provider compatibility is proven. SQLite commit evidence and PostgreSQL permission evidence are distinct. No real credentials, provider calls, spending, hosted changes, permanent backup runtime/ledger or scheduler changes. Local Memory/interview records updated without hosted publication or phase/task completion changes; allocation remains $51.
+
+Exact next local action: design and test the durable committed-receipt-to-signer contract with crash/replay refusal and principal binding. Real mutation procedures, credential provisioning, hosted activation and live trials retain their separate gates. No user action is needed for this completed local proposal.
+
 ## Local CVI persistence and transaction adapter contract, 15 October 2026
 
 Sabine approved local preparation/tests without new spending or hosted changes. Added a disconnected metadata projection/commit contract with pinned immutable policy, exact acknowledgments, private immutable snapshots and one-use capabilities. Commit submits a command and projection metadata, never replacement state. A disposable SQLite backend invokes the actual TypeScript domain validator inside BEGIN IMMEDIATE, persists state/head/token consumption atomically and acknowledges only after COMMIT.
