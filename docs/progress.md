@@ -1,3 +1,13 @@
+## Captured witness integration in isolated regression, 16 October 2026
+
+Prepared the captured witness integration in /private/tmp/ai-stylist-witness-pair-stage. The protected factory now requires a scoped, separate replay-witness reference and constructs its own fixed bounded replay driver. Caller-selected replay callbacks are refused before work. The original Node gate passes the same captured reference to the Python transition primitive; ordinary inspection and owner-fenced reserve/consume use that reference too. The driver uses captured clocks, an absolute wall deadline, strict frames, original native leases and three fresh signed checks per mutation, with no alternate script, fault flags or raw-write fallback.
+
+Ninety-nine composed checks across nine suites pass before the final two restore additions and separate driver suite; runtime source is unchanged since that run. The final 15 configuration/restore cases pass, as do all nine concrete-driver cases. They cover one-sided replay or witness restoration, removal of a held marker after COMMIT, interrupted witness writes, cancellation/lost proof after saving, stalled callbacks, clock rollback, delayed timer dispatch, oversized frames, native writer exclusion and competing requests. Coordinated restoration of both local stores remains an explicit negative boundary, not a solved guarantee. One newly written concurrency assertion initially attempted ordinary inspection while the actual lock was held; it was corrected to assert that refusal and compare unchanged disposable ledger bytes. No runtime protection was removed. All 570 operations tests pass with ResourceWarning as error. TypeScript and client build pass. The complete two-turn/renewal journey still uses exactly 127 of the fixed 128 authority records.
+
+Full isolated regression is RUNNING in original session 37385, output /private/tmp/ai-stylist-witness-full-regression.log. Source is frozen for that run; 513 source hashes are recorded. The source-only 11-file patch is prepared-captured-witness-a5b0b8b7ab1d.patch, SHA-256 a5b0b8b7ab1db12b85c735162d911a56947d474dfef3a50ed29cfa90cd7e7381, saved in the durable source-checkpoints folder with a clean merge preflight. This candidate is NOT merged and no full candidate result is claimed. Main remains on its verified original-pair source: 2,579 tests across 189 files, 47 independent focused checks and 19 local Memory checks. Existing SQL is unchanged; prior 638 isolated PostgreSQL checks were not rerun.
+
+Product/design were reviewed without scope changes. Full completion stays 5 of 41 tasks and 0 of 21 production criteria; allocation stays $51. No providers, real credentials, spending, hosted changes, support messages or permanent backup runtime changes. Local witness folders still assume independent protection; hosted administration, all-writer coverage, PostgreSQL composition, production clocks and provider/device acceptance remain open.
+
 ## Verified original paired reconciliation, 16 October 2026
 
 The original configured SQLite owner pair is now merged into the main workspace. Protected startup requires the original admission, private replay, signed checkpoint, credential service and captured clock before privileged work. Only original one-use startup/renewal handoffs can bind or adopt its completed execution context. Generic, copied or mismatched ports cannot register a protected HTTP owner. Lower protocol harnesses remain explicitly unbranded.
@@ -1670,14 +1680,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: original paired full-state reconciliation is merged and verified by 2,579 tests across 189 files, exact source matching and 47 main-workspace focused checks. Captured witness-pin composition is the next local integration.
+Current local focus: captured witness and concrete replay integration passes focused/operations checks in an isolated stage; its full regression is running. Main remains verified at 2,579 tests across 189 files; the new candidate is not merged.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** prepare captured witness configuration across the original Node gate and all participating replay paths, with restore/split-update tests; keep hosted and production acceptance gates open.
+- **Next local action:** collect full isolated regression session 37385, verify the frozen source, then merge only after a passing result and refresh local Memory.
 
 ## Historical summary checkpoints
 

@@ -926,6 +926,32 @@
       "localMemoryChecks": 19,
       "productionCriteriaClosed": 0,
       "hostedChanges": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-captured-witness-composition.md",
+      "earlierComposedTests": 99,
+      "earlierComposedFiles": 9,
+      "finalConfigurationRestoreTests": 15,
+      "finalConcreteDriverTests": 9,
+      "operationsTests": 570,
+      "operationsTerminalExit": 0,
+      "typecheckPassed": true,
+      "clientBuildPassed": true,
+      "fullRegressionStatus": "running",
+      "fullRegressionSession": 37385,
+      "fullRegressionLog": "/private/tmp/ai-stylist-witness-full-regression.log",
+      "frozenSourceFiles": 513,
+      "sourcePatchSha256": "a5b0b8b7ab1db12b85c735162d911a56947d474dfef3a50ed29cfa90cd7e7381",
+      "sourcePatchName": "prepared-captured-witness-a5b0b8b7ab1d.patch",
+      "notMerged": true,
+      "completeAuthorityRecords": 127,
+      "authorityRecordCap": 128,
+      "mainFoundationTests": 2579,
+      "mainFoundationFiles": 189,
+      "localMemoryChecks": 19,
+      "productionCriteriaClosed": 0,
+      "hostedChanges": false
     }
   ]
 }

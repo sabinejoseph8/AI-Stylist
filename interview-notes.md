@@ -1,3 +1,9 @@
+## Keeping the replay witness attached to the real writer
+
+I prepared a local version that captures the replay witness before work and constructs the actual driver inside the protected factory. Adding a witness label to a caller-supplied writer would not prove that the writer uses it, so I connected the same captured reference through the gate, inspection and saved replay records.
+
+The focused tests verify one-sided restoration, interrupted writes, late or canceled replies and competing requests. They preserve saved evidence and refuse output when uncertain. I also recorded a negative boundary: restoring both local stores can defeat this disposable witness model. I kept the candidate separate for its full regression and kept hosted protection and launch acceptance open.
+
 ## Verifying the original configuration through publication
 
 I completed the local original-pair integration and merged only the exact source that passed the full regression. The main workspace matches all 506 recorded source files and independently passes the focused checks, type checking and build. The complete two-turn journey still stays within the original journal allowance.

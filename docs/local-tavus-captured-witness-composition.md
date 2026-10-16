@@ -1,6 +1,20 @@
+## Captured witness integration in isolated regression, 16 October 2026
+
+Prepared the captured witness integration in /private/tmp/ai-stylist-witness-pair-stage. The protected factory now requires a scoped, separate replay-witness reference and constructs its own fixed bounded replay driver. Caller-selected replay callbacks are refused before work. The original Node gate passes the same captured reference to the Python transition primitive; ordinary inspection and owner-fenced reserve/consume use that reference too. The driver uses captured clocks, an absolute wall deadline, strict frames, original native leases and three fresh signed checks per mutation, with no alternate script, fault flags or raw-write fallback.
+
+Ninety-nine composed checks across nine suites pass before the final two restore additions and separate driver suite; runtime source is unchanged since that run. The final 15 configuration/restore cases pass, as do all nine concrete-driver cases. They cover one-sided replay or witness restoration, removal of a held marker after COMMIT, interrupted witness writes, cancellation/lost proof after saving, stalled callbacks, clock rollback, delayed timer dispatch, oversized frames, native writer exclusion and competing requests. Coordinated restoration of both local stores remains an explicit negative boundary, not a solved guarantee. One newly written concurrency assertion initially attempted ordinary inspection while the actual lock was held; it was corrected to assert that refusal and compare unchanged disposable ledger bytes. No runtime protection was removed. All 570 operations tests pass with ResourceWarning as error. TypeScript and client build pass. The complete two-turn/renewal journey still uses exactly 127 of the fixed 128 authority records.
+
+Full isolated regression is RUNNING in original session 37385, output /private/tmp/ai-stylist-witness-full-regression.log. Source is frozen for that run; 513 source hashes are recorded. The source-only 11-file patch is prepared-captured-witness-a5b0b8b7ab1d.patch, SHA-256 a5b0b8b7ab1db12b85c735162d911a56947d474dfef3a50ed29cfa90cd7e7381, saved in the durable source-checkpoints folder with a clean merge preflight. This candidate is NOT merged and no full candidate result is claimed. Main remains on its verified original-pair source: 2,579 tests across 189 files, 47 independent focused checks and 19 local Memory checks. Existing SQL is unchanged; prior 638 isolated PostgreSQL checks were not rerun.
+
+Product/design were reviewed without scope changes. Full completion stays 5 of 41 tasks and 0 of 21 production criteria; allocation stays $51. No providers, real credentials, spending, hosted changes, support messages or permanent backup runtime changes. Local witness folders still assume independent protection; hosted administration, all-writer coverage, PostgreSQL composition, production clocks and provider/device acceptance remain open.
+
+Exact next action: collect original full regression session 37385; do not duplicate or restart a healthy run. Fix any failure at its actual boundary while preserving original pairing, native/signature/lease checks, immediate temporary-note cleanup, permanent/uncertain records and the complete 127-of-128 journey. After a passing full result, verify all 513 frozen source hashes, merge only the exact source/test patch, run main focused/type/build checks, refresh local Memory and archive verified source. Do not copy stale staged docs or generated Memory. Then audit remaining authorized local work against the actual backlog before selecting the next integration. The goal remains active and incomplete; no user action is required for this local work.
+
+## Original implementation plan
+
 # Next local integration: captured replay witness
 
-Implementation plan, 16 October 2026. Continue in `/private/tmp/ai-stylist-witness-pair-stage`, created from verified main checkpoint `b2cd9cfbee86b249ae82939f962241600413b312`. Main currently passes 2,579 tests across 189 files, 47 independent focused checks, types/build and 19 local Memory checks. The new stage has no source changes yet.
+Implementation plan, 16 October 2026. Continue in `/private/tmp/ai-stylist-witness-pair-stage`, created from verified main checkpoint `b2cd9cfbee86b249ae82939f962241600413b312`. Main currently passes 2,579 tests across 189 files, 47 independent focused checks, types/build and 19 local Memory checks. That describes the creation checkpoint; the implementation is now staged as recorded above.
 
 ## Existing gap
 
@@ -17,7 +31,7 @@ The Python transition primitive already supports a pinned disposable witness and
 
 ## Required checks
 
-- Missing/mismatched/copied-scope configuration refuses before planning, authority work, credentials or mutation.
+- Missing/mismatched scope and copied producer objects refuse before planning, authority work, credentials or mutation.
 - Complete actual two-turn transcript/notebook/HTTP exchange works across renewal at exactly 127 of the unchanged 128 authority records. Do not add authority reads, reset allowances, remove existing checks or shorten the exchange.
 - Known replay records and witness heads remain coherent through inspection, reserve, consume, startup and renewal. All participating paths use the captured reference.
 - One-sided restoration cannot remove held transition evidence or reuse spent records when the witness is preserved. Restoring both stores remains an explicit negative boundary.
