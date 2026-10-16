@@ -1,3 +1,9 @@
+## Current verification and continuation, 16 October 2026
+
+Local shared-notebook source checkpoint a57086339baa8a2a05ddec7f3a1506a4fb2937ec passes 113 focused tests across 11 suites, TypeScript, client build and 19 local Memory checks. The complete new-source regression is running in original session 42799, output /private/tmp/ai-stylist-8a-full-regression.log, in isolated /private/tmp/ai-stylist-8a-notebook-regression-stage. Its 533 tracked source/test/operations files are frozen and hashed in /private/tmp/ai-stylist-8a-full-regression.json. No full new-source result is claimed. The separate opt-in WebKit walkthrough already passed; the ordinary full suite intentionally skips that browser-only case.
+
+Exact next action: preserve and collect original session 42799 without duplicating a healthy run. Continue authorized Task 8a application work independently: bind synthetic reference versions and candidate/check/feedback rounds to the same coordinator context, then verify Clear/End and separate saved-look behavior. Use a separate source stage for changes while the regression remains frozen. Do not copy staged documentation or generated Memory into main. No Sabine action or renewed sequencing approval is needed. Full Task 8a remains open; the goal is active and incomplete. Local-only scope, 5-of-41 completion, 0-of-21 production criteria and $51 allocation are unchanged.
+
 ## Shared app notebook rehearsal, 16 October 2026
 
 Sabine approved local Task 8a preparation. The normal sample App now accepts an explicit, test-only consultation view instead of creating another notebook session. Default startup is unchanged. A captured application request binds the view port to the original coordinator. Only accepted seven-field snapshots appear; edits/confirmations carry original field revisions. Clear/End hide temporary notes immediately, cancel late updates and preserve separately selected sample preferences. Local sample drafts/feedback are invalidated when shared context changes; saved sample looks remain separate. Combined privacy export and full reference/draft/feedback generation are not connected yet and are not claimed complete.
@@ -1698,14 +1704,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: approved Task 8a shared-app notebook preparation. The captured-witness source is merged after 2,603 full tests across 191 files; newer app/view code passes 113 focused checks across 11 suites, including the automated browser journey. Full Task 8a remains open.
+Current local focus: approved Task 8a shared-app notebook preparation. The captured-witness source is merged after 2,603 full tests across 191 files; newer app/view code passes 113 focused checks across 11 suites, including the automated browser journey. A complete new-source regression is running in original session 42799; its result is not yet known. Full Task 8a remains open.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** save verified source and refresh local Memory, then connect synthetic references, candidate/check and feedback rounds to the same coordinator context.
+- **Next local action:** collect frozen regression session 42799 while preparing the next local context-bound reference/candidate/feedback composition independently.
 
 ## Historical summary checkpoints
 

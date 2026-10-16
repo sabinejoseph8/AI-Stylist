@@ -1,7 +1,7 @@
 {
   "version": 1,
   "asOf": "2026-10-16",
-  "evidenceCommit": "d6e1b4815753147f6e03696b1a303a402f7f8235",
+  "evidenceCommit": "a57086339baa8a2a05ddec7f3a1506a4fb2937ec",
   "scope": "Repository evidence audit only; no fresh hosted/provider/device checks",
   "acceptedProductionCriteria": 0,
   "criteriaCount": 21,
@@ -976,7 +976,12 @@
       "fullRegressionCoversNewApp": false,
       "productionCriteriaClosed": 0,
       "hostedChanges": false,
-      "newSpending": false
+      "newSpending": false,
+      "fullRegressionStatus": "running",
+      "fullRegressionSession": 42799,
+      "fullRegressionLog": "/private/tmp/ai-stylist-8a-full-regression.log",
+      "frozenSourceFiles": 533,
+      "fullRegressionSourceCommit": "a57086339baa8a2a05ddec7f3a1506a4fb2937ec"
     }
   ]
 }
