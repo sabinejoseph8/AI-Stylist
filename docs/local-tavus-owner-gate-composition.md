@@ -1,3 +1,7 @@
+## Original final inspection and finish connected, 16 October 2026
+
+The guard and notebook transition adapter now preserve the original last signed inspection and await verified original gate completion before startup registration or renewed acceptance. The complete local two-turn transcript/notebook/HTTP journey passes at exactly 127 of the fixed 128 records. Fifty-nine focused checks pass in the isolated source copy, and 14 publication/handoff checks pass independently in the main workspace. Full run 82115 is pending. Mandatory original paired construction and pre-work identity rejection remain next. See docs/local-tavus-original-finish.md. Earlier missing-finish descriptions below are historical.
+
 ## Original handoffs prepared, 16 October 2026
 
 Startup and consumed-renewal handoffs now retain the original execution context before public lease cloning. Private replay routes transition inspection through that gate and blocks writes until finish; genuine unfinished contexts refuse owner registration/recognition. 136 focused checks pass; full run 27313 passes 2,545 tests across 185 files. The private paired producer/checkpoint factory and final signed inspection/awaited finish connection remain incomplete. See docs/local-tavus-original-handoff.md. Earlier producer-only descriptions below are historical.

@@ -835,6 +835,26 @@
       "foundationFullTests": 2545,
       "foundationFullFiles": 185,
       "foundationFullExitCode": 0
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-original-finish.md",
+      "isolatedFocusedFoundationTests": 59,
+      "isolatedFocusedFoundationFiles": 5,
+      "mainFocusedFoundationTests": 14,
+      "mainFocusedFoundationFiles": 2,
+      "completeGatedTwoTurnAuthorityRecords": 127,
+      "authorityRecordCap": 128,
+      "foundationFullStatus": "running",
+      "foundationFullSession": 82115,
+      "priorFullFoundationTests": 2545,
+      "priorFullFoundationFiles": 185,
+      "operationsRerun": false,
+      "isolatedPostgresRerun": false,
+      "localMemoryChecks": 19,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "scope": "Original last signed inspections and awaited original gate completion in actual local startup/renewal and complete two-turn HTTP journey; mandatory original paired configuration remains open."
     }
   ]
 }

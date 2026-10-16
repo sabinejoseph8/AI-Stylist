@@ -1,4 +1,6 @@
-import {inspectOwnerContinuation,consumeOwnerContinuation} from './local-cvi-owner-continuation.ts';
+import {localGatedExecutionBinding,localGatedExecutionFinished,finishLocalGatedExecution} from './local-cvi-gated-execution.ts';
+import type {LocalGatedExecutionContext} from './local-cvi-gated-execution.ts';
+import {inspectOwnerContinuation,consumeOwnerContinuation,inspectOwnerContinuationExecution} from './local-cvi-owner-continuation.ts';
 import type {OwnerCheckpointTransition,OwnerContinuationPort,OwnerContinuationInput} from './local-cvi-owner-continuation.ts';
 /** Mandatory full-state fence for the disconnected local endpoint composition.
  * Inspection ports are pinned server configuration, never request data. */
@@ -40,24 +42,31 @@ export function createLocalCviCheckpointEndpoint(
  * state progress. Revision floors increase in this instance and never reset. */
 export function createLocalCurrentOwnerCredentialAuthority(
  native:import('./local-cvi-startup-checkpoint.ts').StartupOwnerPin,lease:CviCredentialLease,
- checkpoint:Pick<import('./local-cvi-startup-owner.ts').CurrentOwnerCheckpointPort,'inspectOwnerFresh'|'beginOwnerContinuation'>,authority:CviCredentialAuthority,clock=Date.now,applicationExpiresAt=native.expiresAt,adoptReplay?:(raw:unknown,input:OwnerContinuationInput,now:number)=>void,
-):CviCredentialAuthority & {isHeld():boolean;isStale(signal:AbortSignal):boolean;continue(port:OwnerContinuationPort,signal:AbortSignal,invalidate:()=>void,alive:()=>boolean):Promise<boolean>}{
- if(!exact(native,['storeId','generation','ownerDigest','bootDigest','expiresAt','minimumRevision'])||!uuid(native.storeId)||!Number.isSafeInteger(native.generation)||native.generation<1||!hex(native.ownerDigest)||!hex(native.bootDigest)||!Number.isSafeInteger(native.expiresAt)||native.expiresAt<1||!Number.isSafeInteger(native.minimumRevision)||native.minimumRevision<0||!exact(lease,['storeId','scopeDigest','bindingDigest','bootDigest','generation'])||!uuid(lease.storeId)||!hex(lease.scopeDigest)||!hex(lease.bindingDigest)||!hex(lease.bootDigest)||lease.generation!==native.generation||typeof checkpoint?.inspectOwnerFresh!=='function'||typeof authority?.check!=='function'||typeof clock!=='function'||adoptReplay!==undefined&&typeof adoptReplay!=='function'||!Number.isSafeInteger(applicationExpiresAt)||applicationExpiresAt<native.expiresAt)throw Error('Current owner unavailable');
- let want=Object.freeze({...native});const credential=Object.freeze({...lease}),inspect=checkpoint.inspectOwnerFresh.bind(checkpoint),check=authority.check.bind(authority),begin=checkpoint.beginOwnerContinuation?.bind(checkpoint);let held=false,continuing=false,checks=0,floor=want.minimumRevision,last=-1,operation:string|undefined;const versions=new WeakMap<AbortSignal,{revision:number;operation:string}>(),stale=new WeakSet<AbortSignal>();
+ checkpoint:Pick<import('./local-cvi-startup-owner.ts').CurrentOwnerCheckpointPort,'inspectOwnerFresh'|'inspectOwnerGatedFresh'|'beginOwnerContinuation'>,authority:CviCredentialAuthority,clock=Date.now,applicationExpiresAt=native.expiresAt,adoptReplay?:(raw:unknown,input:OwnerContinuationInput,now:number)=>void,execution?:()=>LocalGatedExecutionContext|undefined,
+):CviCredentialAuthority & {isHeld():boolean;isStale(signal:AbortSignal):boolean;finishGatedExecution(signal:AbortSignal):Promise<void>;continue(port:OwnerContinuationPort,signal:AbortSignal,invalidate:()=>void,alive:()=>boolean):Promise<boolean>}{
+ if(!exact(native,['storeId','generation','ownerDigest','bootDigest','expiresAt','minimumRevision'])||!uuid(native.storeId)||!Number.isSafeInteger(native.generation)||native.generation<1||!hex(native.ownerDigest)||!hex(native.bootDigest)||!Number.isSafeInteger(native.expiresAt)||native.expiresAt<1||!Number.isSafeInteger(native.minimumRevision)||native.minimumRevision<0||!exact(lease,['storeId','scopeDigest','bindingDigest','bootDigest','generation'])||!uuid(lease.storeId)||!hex(lease.scopeDigest)||!hex(lease.bindingDigest)||!hex(lease.bootDigest)||lease.generation!==native.generation||typeof checkpoint?.inspectOwnerFresh!=='function'||typeof authority?.check!=='function'||typeof clock!=='function'||adoptReplay!==undefined&&typeof adoptReplay!=='function'||execution!==undefined&&typeof execution!=='function'||checkpoint.inspectOwnerGatedFresh!==undefined&&typeof checkpoint.inspectOwnerGatedFresh!=='function'||!Number.isSafeInteger(applicationExpiresAt)||applicationExpiresAt<native.expiresAt)throw Error('Current owner unavailable');
+ let want=Object.freeze({...native});const credential=Object.freeze({...lease}),inspect=checkpoint.inspectOwnerFresh.bind(checkpoint),check=authority.check.bind(authority),gatedInspect=checkpoint.inspectOwnerGatedFresh?.bind(checkpoint),context=execution,begin=checkpoint.beginOwnerContinuation?.bind(checkpoint);let held=false,continuing=false,checks=0,floor=want.minimumRevision,last=-1,operation:string|undefined,pendingFinish:{context:LocalGatedExecutionContext;inspection:unknown}|undefined;const versions=new WeakMap<AbortSignal,{revision:number;operation:string}>(),stale=new WeakSet<AbortSignal>();
  const current=(minimum:number)=>{const at=clock();if(held||!Number.isSafeInteger(at)||at<minimum||at<last||at>=want.expiresAt)throw Error();last=at;return at;};
- const observe=async(signal:AbortSignal)=>{
-  const r=structuredClone(await inspect(Object.freeze({...want,minimumRevision:floor}),signal));
+ const observe=async(signal:AbortSignal,final=false)=>{
+  const candidate=final?context?.():undefined,active=candidate&&!localGatedExecutionFinished(candidate)?candidate:undefined,owner=Object.freeze({...want,minimumRevision:floor});
+  if(active&&!gatedInspect)throw Error();
+  const originalInspection=await(active?gatedInspect!(owner,localGatedExecutionBinding(active),signal):inspect(owner,signal));
+  const r=structuredClone(originalInspection);
   if(signal.aborted||!exact(r,['status','revision','operationId','owner','permissions'])||r.status!=='owner-current'||!Number.isSafeInteger(r.revision)||Number(r.revision)<floor||!hex(r.operationId)||!exact(r.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt'])||Object.entries(want).some(([k,v])=>k!=='minimumRevision'&&(r.owner as Record<string,unknown>)[k]!==v)||!exact(r.permissions,['write','reconcile','sign','resume'])||Object.values(r.permissions).some(v=>v!==false))throw Error();
-  if(operation!==undefined&&((Number(r.revision)===floor&&r.operationId!==operation)||(Number(r.revision)>floor&&r.operationId===operation)))throw Error();floor=Number(r.revision);operation=r.operationId;
+  if(operation!==undefined&&((Number(r.revision)===floor&&r.operationId!==operation)||(Number(r.revision)>floor&&r.operationId===operation)))throw Error();floor=Number(r.revision);operation=r.operationId;if(active)pendingFinish={context:active,inspection:originalInspection};
  };
- return Object.freeze({isHeld:()=>held,isStale:(signal:AbortSignal)=>!held&&!signal.aborted&&stale.has(signal),async check(input:CviCredentialLease & {now:number},signal:AbortSignal){
+ return Object.freeze({isHeld:()=>held,async finishGatedExecution(signal:AbortSignal){
+  const active=context?.();if(!active||localGatedExecutionFinished(active))return;
+  try{current(0);if(signal.aborted||!pendingFinish||pendingFinish.context!==active)throw Error();await finishLocalGatedExecution(active,pendingFinish.inspection,signal);current(0);if(signal.aborted)throw Error();}
+  catch{held=true;throw Error('Original owner gate finish unavailable');}finally{pendingFinish=undefined;}
+ },isStale:(signal:AbortSignal)=>!held&&!signal.aborted&&stale.has(signal),async check(input:CviCredentialLease & {now:number},signal:AbortSignal){
   if(held||continuing||signal.aborted)return null;checks++;
   try{
    if(!exact(input,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now'])||!Number.isSafeInteger(input.now)||input.now<0||Object.entries(credential).some(([k,v])=>(input as any)[k]!==v))throw Error();
    current(input.now);await observe(signal);current(input.now);
    const raw=structuredClone(await check(Object.freeze({...credential,now:input.now}),signal));
    if(signal.aborted||!exact(raw,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||raw.active!==true||raw.now!==input.now||Object.entries(credential).some(([k,v])=>raw[k]!==v))throw Error();
-   current(input.now);await observe(signal);current(input.now);const previous=versions.get(signal);if(previous&&(previous.revision!==floor||previous.operation!==operation)){stale.add(signal);return null;}versions.set(signal,{revision:floor,operation:operation!});return raw;
+   current(input.now);await observe(signal,true);current(input.now);const previous=versions.get(signal);if(previous&&(previous.revision!==floor||previous.operation!==operation)){stale.add(signal);return null;}versions.set(signal,{revision:floor,operation:operation!});return raw;
   }catch{held=true;return null;}finally{checks--;}
  },async continue(port:OwnerContinuationPort,external:AbortSignal,invalidate:()=>void,alive:()=>boolean){
   if(held||continuing||checks||external.aborted||want.expiresAt>=applicationExpiresAt)return false;continuing=true;
@@ -74,17 +83,20 @@ export function createLocalCurrentOwnerCredentialAuthority(
     await observe(signal);current(started);
     const input:OwnerContinuationInput={owner:Object.freeze({...want,minimumRevision:floor}),operationId:operation!,revision:floor,bindingDigest:credential.bindingDigest,applicationExpiresAt};
     invalidate();const raw=await port.renew(Object.freeze(input),signal);current(started);
-    const next=inspectOwnerContinuation(raw,input,current(started));
-    const fresh=async()=>{const r=structuredClone(await (transition?transition.inspect(raw,input,signal):inspect(next.owner,signal)));current(started);if(signal.aborted||!exact(r,['status','revision','operationId','owner','permissions'])||r.status!=='owner-current'||r.revision!==next.after.revision||r.operationId!==next.after.operationId||!exact(r.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt'])||Object.entries(next.owner).some(([k,v])=>k!=='minimumRevision'&&(r.owner as any)[k]!==v)||!exact(r.permissions,['write','reconcile','sign','resume'])||Object.values(r.permissions).some(v=>v!==false))throw Error();};
+    const next=inspectOwnerContinuation(raw,input,current(started)),active=inspectOwnerContinuationExecution(raw,input,current(started));let finalInspection:unknown;
+    const fresh=async(final=false)=>{
+     if(active&&final&&!gatedInspect)throw Error();
+     const originalInspection=await(transition?transition.inspect(raw,input,signal,active&&final?'gated-final':'fresh'):active&&final?gatedInspect!(next.owner,localGatedExecutionBinding(active),signal):inspect(next.owner,signal));
+     const r=structuredClone(originalInspection);current(started);if(signal.aborted||!exact(r,['status','revision','operationId','owner','permissions'])||r.status!=='owner-current'||r.revision!==next.after.revision||r.operationId!==next.after.operationId||!exact(r.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt'])||Object.entries(next.owner).some(([k,v])=>k!=='minimumRevision'&&(r.owner as any)[k]!==v)||!exact(r.permissions,['write','reconcile','sign','resume'])||Object.values(r.permissions).some(v=>v!==false))throw Error();if(active&&final)finalInspection=originalInspection;};
     await fresh();const at=current(started);const proof=structuredClone(await check(Object.freeze({...credential,now:at}),signal));
     if(signal.aborted||!exact(proof,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||proof.active!==true||proof.now!==at||Object.entries(credential).some(([k,v])=>proof[k]!==v))throw Error();
-    await fresh();current(at);if(!alive())throw Error();invalidate();if(signal.aborted||held||!alive())throw Error();
-    const accepted=consumeOwnerContinuation(raw,input,current(at));adoptReplay?.(raw,input,current(at));await transition?.finish(raw,input,signal);current(at);if(signal.aborted||!alive())throw Error();adopted=true;want=Object.freeze({...accepted.owner});floor=accepted.after.revision;operation=accepted.after.operationId;return true;
+    await fresh(true);current(at);if(!alive())throw Error();invalidate();if(signal.aborted||held||!alive())throw Error();
+    const accepted=consumeOwnerContinuation(raw,input,current(at));adoptReplay?.(raw,input,current(at));if(active){if(!finalInspection)throw Error();await finishLocalGatedExecution(active,finalInspection,signal);}await transition?.finish(raw,input,signal);current(at);if(signal.aborted||!alive())throw Error();adopted=true;want=Object.freeze({...accepted.owner});floor=accepted.after.revision;operation=accepted.after.operationId;return true;
    };
    return await Promise.race([work(),canceled]);
   }catch{held=true;abort.abort();return false;}finally{if(timer)clearTimeout(timer);if(!adopted&&typeof transition?.cancel==='function'){try{transition.cancel();}catch{held=true;}}continuing=false;}
  }});
 }
 export function createLocalCviCurrentOwnerEndpoint(
- binding:Parameters<typeof createLocalCviCredentialEndpoint>[0],flow:Parameters<typeof createLocalCviCredentialEndpoint>[1],replay:Parameters<typeof createLocalCviCredentialEndpoint>[2],lease:CviCredentialLease,native:import('./local-cvi-startup-checkpoint.ts').StartupOwnerPin,checkpoint:Pick<import('./local-cvi-startup-owner.ts').CurrentOwnerCheckpointPort,'inspectOwnerFresh'|'beginOwnerContinuation'>,authority:CviCredentialAuthority,clock=Date.now,deadlineMs=1000,
+ binding:Parameters<typeof createLocalCviCredentialEndpoint>[0],flow:Parameters<typeof createLocalCviCredentialEndpoint>[1],replay:Parameters<typeof createLocalCviCredentialEndpoint>[2],lease:CviCredentialLease,native:import('./local-cvi-startup-checkpoint.ts').StartupOwnerPin,checkpoint:Pick<import('./local-cvi-startup-owner.ts').CurrentOwnerCheckpointPort,'inspectOwnerFresh'|'inspectOwnerGatedFresh'|'beginOwnerContinuation'>,authority:CviCredentialAuthority,clock=Date.now,deadlineMs=1000,
 ){const guard=createLocalCurrentOwnerCredentialAuthority(native,lease,checkpoint,authority,clock);return createLocalCviCredentialEndpoint(binding,flow,replay,lease,{stale:s=>guard.isStale(s),check:async(i,s)=>{const result=await guard.check(i,s);if(result===null){if(guard.isHeld())flow.end();else flow.interrupt();}return result;}},clock,deadlineMs);}

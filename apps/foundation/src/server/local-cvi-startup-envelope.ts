@@ -1,3 +1,4 @@
+import type {LocalGatedExecutionContext} from './local-cvi-gated-execution.ts';
 import {createLocalReplayInspector} from './local-cvi-replay-inspection.ts';
 import {localCviOwnerIsIdle} from './local-cvi-endpoint.ts';
 import type {OwnerCheckpointTransition,OwnerContinuationPort,OwnerContinuationInput} from './local-cvi-owner-continuation.ts';
@@ -27,6 +28,7 @@ export interface StartupEnvelopeHooks {
  bind(raw:unknown,input:FreshOwnerAdmissionInput):void;
  adopt(raw:unknown,input:OwnerContinuationInput):void;
  hold():void;
+ execution?():LocalGatedExecutionContext|undefined;
  ready():boolean;
  register(owner:object,renew:(port:OwnerContinuationPort,signal:AbortSignal)=>Promise<boolean>):void;
 }
@@ -35,10 +37,10 @@ export function createLocalCviStartupEnvelope(
  resources:Readonly<{binding:Readonly<{origin:string;conversation:string;secret:string;expiresAt:number}>;boot:Readonly<{storeId:string;previous:number;bootDigest:string}>;replay:CviReplayPort;authority:CviCredentialBootAuthority;makeFlow:()=>ReturnType<typeof createLocalCviStyling>}>,
  clock=Date.now,deadlineMs=8000,writerLeaseMs:number|undefined,hooks:StartupEnvelopeHooks,
 ){
- if(!exact(hooks,['claim','bind','adopt','hold','ready','register'])||Object.values(hooks).some(v=>typeof v!=='function'))throw Error('Startup envelope hooks required');
- const claim=hooks.claim.bind(hooks),bind=hooks.bind.bind(hooks),adopt=hooks.adopt.bind(hooks),hold=hooks.hold.bind(hooks),ready=hooks.ready.bind(hooks),register=hooks.register.bind(hooks);
+ if(!(exact(hooks,['claim','bind','adopt','hold','ready','register'])||exact(hooks,['claim','bind','adopt','hold','ready','register','execution']))||Object.values(hooks).some(v=>typeof v!=='function'))throw Error('Startup envelope hooks required');
+ const claim=hooks.claim.bind(hooks),bind=hooks.bind.bind(hooks),adopt=hooks.adopt.bind(hooks),hold=hooks.hold.bind(hooks),ready=hooks.ready.bind(hooks),register=hooks.register.bind(hooks),execution=hooks.execution?.bind(hooks);
  if(!exact(resources?.binding,['origin','conversation','secret','expiresAt'])||!identity(expected)||typeof checkpoint?.inspectFresh!=='function'||typeof checkpoint.inspectOwnerFresh!=='function'||typeof admission?.admit!=='function'||typeof resources?.makeFlow!=='function'||typeof resources.authority?.activate!=='function'||typeof resources.authority.check!=='function'||!resources.replay||typeof resources.replay.inspect!=='function'||typeof resources.replay.reserve!=='function'||typeof resources.replay.consume!=='function'||!uuid(resources.replay.storeId)||!exact(resources.boot,['storeId','previous','bootDigest'])||!uuid(resources.boot.storeId)||!int(resources.boot.previous)||resources.boot.previous>=Number.MAX_SAFE_INTEGER||!hex(resources.boot.bootDigest)||typeof clock!=='function'||!int(deadlineMs)||deadlineMs<1||deadlineMs>8000||writerLeaseMs!==undefined&&(!int(writerLeaseMs)||writerLeaseMs<1||writerLeaseMs>8000))throw Error('Local startup owner unavailable');
- const before=Object.freeze({...expected}),binding=Object.freeze({...resources.binding}),boot=Object.freeze({...resources.boot}),replay={storeId:resources.replay.storeId,inspect:resources.replay.inspect!.bind(resources.replay),reserve:resources.replay.reserve.bind(resources.replay),consume:resources.replay.consume.bind(resources.replay),close:hold},inspect=checkpoint.inspectFresh.bind(checkpoint),inspectOwner=checkpoint.inspectOwnerFresh.bind(checkpoint),beginContinuation=checkpoint.beginOwnerContinuation?.bind(checkpoint),admit=admission.admit.bind(admission),activate=resources.authority.activate.bind(resources.authority),check=resources.authority.check.bind(resources.authority),makeFlow=resources.makeFlow;
+ const before=Object.freeze({...expected}),binding=Object.freeze({...resources.binding}),boot=Object.freeze({...resources.boot}),replay={storeId:resources.replay.storeId,inspect:resources.replay.inspect!.bind(resources.replay),reserve:resources.replay.reserve.bind(resources.replay),consume:resources.replay.consume.bind(resources.replay),close:hold},inspect=checkpoint.inspectFresh.bind(checkpoint),inspectOwner=checkpoint.inspectOwnerFresh.bind(checkpoint),inspectOwnerGated=checkpoint.inspectOwnerGatedFresh?.bind(checkpoint),beginContinuation=checkpoint.beginOwnerContinuation?.bind(checkpoint),admit=admission.admit.bind(admission),activate=resources.authority.activate.bind(resources.authority),check=resources.authority.check.bind(resources.authority),makeFlow=resources.makeFlow;
  const origin=new URL(binding.origin);if(origin.origin!==binding.origin||origin.protocol!=='https:'||!/^fixture-[a-z0-9-]{1,60}$/.test(binding.conversation)||!hex(binding.secret)||!int(binding.expiresAt))throw Error('Local startup owner unavailable');
  let attempted=false,held=false,last=-1;
  const now=()=>{const at=clock();if(!int(at)||at<last||at>=binding.expiresAt)throw Error();last=at;return at;};
@@ -72,12 +74,12 @@ export function createLocalCviStartupEnvelope(
     const authority:CviCredentialBootAuthority={stale:s=>guard?.isStale(s)===true,activate:async(i,s)=>{const raw=structuredClone(await activate(i,AbortSignal.any([s,signal])));current();lease=raw as CviCredentialLease;return raw;},check:async(i,s)=>{if(!guard)throw Error();const proof=await guard.check(i,s);if(proof===null){if(guard.isHeld()){flow?.end();hold();}else flow?.interrupt();}return proof;}};
     const prepared=await startLocalCviCredentialEndpoint(binding,flow,replay,boot,authority,now,Math.max(1,Math.min(deadlineMs,end-current())),deadlineMs);
     endpoint=prepared;if(signal.aborted||held){endpoint?.end();throw Error();}current();if(!endpoint||!lease)throw Error();
-    guard=createLocalCurrentOwnerCredentialAuthority(nativeOwner,lease,{inspectOwnerFresh:inspectOwner,...(beginContinuation?{beginOwnerContinuation:beginContinuation}:{})},{check},now,binding.expiresAt,(raw,input)=>adopt(raw,input));
+    guard=createLocalCurrentOwnerCredentialAuthority(nativeOwner,lease,{inspectOwnerFresh:inspectOwner,...(inspectOwnerGated?{inspectOwnerGatedFresh:inspectOwnerGated}:{}),...(beginContinuation?{beginOwnerContinuation:beginContinuation}:{})},{check},now,binding.expiresAt,(raw,input)=>adopt(raw,input),execution);
     const at=current(),proof=structuredClone(await guard.check(Object.freeze({...lease,now:at}),signal));current();
     if(!exact(proof,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||proof.active!==true||proof.now!==at||Object.entries(lease).some(([k,v])=>proof[k]!==v))throw Error();
     if(!await replayBoundary.idle(signal))throw Error();current();
     const owner=endpoint,currentGuard=guard,currentFlow=flow;let renewing=false;const renewal=async(port:OwnerContinuationPort,s:AbortSignal)=>{if(renewing)return false;renewing=true;try{if(!await replayBoundary.idle(s)){owner.end();return false;}if(!localCviOwnerIsIdle(owner))return false;const ok=await currentGuard.continue(port,s,()=>currentFlow.interrupt(),()=>currentFlow.isOpen());if(!ok&&currentGuard.isHeld())owner.end();if(ok&&!await replayBoundary.idle(s)){owner.end();return false;}return ok;}finally{renewing=false;}};
-    if(!ready())throw Error();register(endpoint,renewal);return endpoint;
+    await guard.finishGatedExecution(signal);current();if(!ready())throw Error();register(endpoint,renewal);return endpoint;
    };
    return await Promise.race([work(),canceled]);
   }catch{held=true;cancel.abort();hold();(endpoint as Awaited<ReturnType<typeof startLocalCviCredentialEndpoint>>)?.end();flow?.end();return null;}

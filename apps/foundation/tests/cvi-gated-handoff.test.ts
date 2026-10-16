@@ -73,7 +73,7 @@ it('canceled renewal results cannot be consumed to recreate an execution context
 },30000);
 
 it('a genuine gated startup cannot register an owner before its gate has finished',async()=>{
- const f=await startupAdmissionFixture(()=>1000,10000,true,true);try{
+ const f=await startupAdmissionFixture(()=>1000,10000,true,true);delete (f.checkpoint as any).inspectOwnerGatedFresh;try{
   const owner=await f.make().start(signal());expect(owner).toBeNull();expect(f.drafts()).toBe(0);expect(localOwnedReplayState(f.resources.replay).held).toBe(true);expect((await readFile(f.replayRoot+'/owner-transition.json','utf8')).length).toBeGreaterThan(0);
  }finally{await f.close();}
 },30000);

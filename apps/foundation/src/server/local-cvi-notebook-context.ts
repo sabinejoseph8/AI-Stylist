@@ -1,4 +1,6 @@
-import {inspectOwnerContinuation,claimOwnerContinuationContext} from './local-cvi-owner-continuation.ts';
+import {localGatedExecutionBinding} from './local-cvi-gated-execution.ts';
+import type {GateFinishBinding} from './local-cvi-gate-finish-proof.ts';
+import {inspectOwnerContinuation,claimOwnerContinuationContext,inspectOwnerContinuationExecution} from './local-cvi-owner-continuation.ts';
 import type {OwnerContinuationInput} from './local-cvi-owner-continuation.ts';
 /** Local authenticated notebook/context composition. No route, extraction,
  * provider, profile write or note persistence. Authorize is a trusted app gate. */
@@ -27,7 +29,7 @@ export function createLocalCviNotebookContext(options:Readonly<{
 }>){
  const deadline=options.deadlineMs??8000;
  if(options?.simulation!==true||!uuid(options.identity?.ownerId)||!uuid(options.identity.sessionId)||typeof options.identity.isCurrent!=='function'||typeof options.authorize!=='function'||typeof options.checkpoint?.inspectFresh!=='function'||typeof options.checkpoint.inspectOwnerFresh!=='function'||typeof options.ports?.draft!=='function'||typeof options.ports.check!=='function'||typeof options.clock!=='function'||!int(deadline)||deadline<1||deadline>8000)throw Error('Local notebook context unavailable');
- const owner=options.identity.ownerId,authSession=options.identity.sessionId,currentIdentity=options.identity.isCurrent.bind(options.identity),authorize=options.authorize.bind(options),inspect=options.checkpoint.inspectFresh.bind(options.checkpoint),inspectOwner=options.checkpoint.inspectOwnerFresh.bind(options.checkpoint),draft=options.ports.draft.bind(options.ports),check=options.ports.check.bind(options.ports);
+ const owner=options.identity.ownerId,authSession=options.identity.sessionId,currentIdentity=options.identity.isCurrent.bind(options.identity),authorize=options.authorize.bind(options),inspect=options.checkpoint.inspectFresh.bind(options.checkpoint),inspectOwner=options.checkpoint.inspectOwnerFresh.bind(options.checkpoint),inspectOwnerGated=options.checkpoint.inspectOwnerGatedFresh?.bind(options.checkpoint),draft=options.ports.draft.bind(options.ports),check=options.ports.check.bind(options.ports);
  const session=new StylingSession({simulation:true,owner,clock:options.clock,policy:options.policy}),proposals=new NotebookProposalStream(session,owner);
  let flow:ReturnType<typeof createLocalCviStyling>|undefined,closed=false,admitted=0,cleanupAdmitted=0,native:StartupOwnerPin|undefined,nativeRevision=0,operation:string|undefined,inputRevision=0,proposalPending=false,proposalRevision=0,currentProposal:ProposalTurn|null=null,proposalAdmission=0,latestAuthorizedProposal=0;
  let transition:{signal:AbortSignal;done:Promise<boolean>;release(ok:boolean):void;candidate?:{raw:unknown;input:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number}}}|undefined;
@@ -53,25 +55,26 @@ export function createLocalCviNotebookContext(options:Readonly<{
   try{await previous;if(signal.aborted)throw Error('Context unavailable');return await work();}
   finally{inspections--;release();}
  };
- const observeNative=async(wanted:StartupOwnerPin,signal:AbortSignal)=>{const pin=structuredClone(wanted);if(native&&Object.entries(native).some(([k,v])=>k!=='minimumRevision'&&(pin as any)[k]!==v))throw Error('Stale context pin');try{
+ const observeNative=async(wanted:StartupOwnerPin,signal:AbortSignal,finish?:GateFinishBinding)=>{const pin=structuredClone(wanted);if(native&&Object.entries(native).some(([k,v])=>k!=='minimumRevision'&&(pin as any)[k]!==v))throw Error('Stale context pin');try{
     if(!await liveIdentity(signal))throw Error();
-    const r=structuredClone(await inspectOwner(pin,signal));if(!await liveIdentity(signal))throw Error();
+    if(finish&&!inspectOwnerGated)throw Error();const originalInspection=await(finish?inspectOwnerGated!(pin,finish,signal):inspectOwner(pin,signal));const r=structuredClone(originalInspection);if(!await liveIdentity(signal))throw Error();
     if(!exact(r,['status','revision','operationId','owner','permissions'])||r.status!=='owner-current'||!int(r.revision)||r.revision<pin.minimumRevision||r.revision<nativeRevision||!hex(r.operationId)||!exact(r.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt'])||Object.entries(pin).some(([k,v])=>k!=='minimumRevision'&&(r.owner as Record<string,unknown>)[k]!==v)||!exact(r.permissions,['write','reconcile','sign','resume'])||Object.values(r.permissions).some(v=>v!==false))throw Error();
     if(native&&Object.entries(native).some(([k,v])=>k!=='minimumRevision'&&(pin as any)[k]!==v))throw Error();
     if(operation!==undefined&&r.revision===nativeRevision&&r.operationId!==operation)throw Error();
-    const changed=r.revision!==nativeRevision||r.operationId!==operation;native=Object.freeze({...pin,minimumRevision:r.revision});nativeRevision=r.revision;operation=r.operationId;if(changed)flow?.interrupt();return r;
+    const changed=r.revision!==nativeRevision||r.operationId!==operation;native=Object.freeze({...pin,minimumRevision:r.revision});nativeRevision=r.revision;operation=r.operationId;if(changed)flow?.interrupt();return finish?originalInspection:r;
    }catch{if(!signal.aborted)close();throw Error('Context unavailable');}};
  const checkpoint:CurrentOwnerCheckpointPort={
   inspectFresh:async signal=>{if(!await waitTransition(signal))throw Error('Context unavailable');return inspectSerial(signal,async()=>{if(!await liveIdentity(signal))throw Error('Context unavailable');const r=structuredClone(await inspect(signal));if(!await liveIdentity(signal))throw Error('Context unavailable');return r;});},
   inspectOwnerFresh:(wanted,signal)=>inspectSerial(signal,()=>observeNative(wanted,signal)),
+  ...(inspectOwnerGated?{inspectOwnerGatedFresh:(wanted:StartupOwnerPin,finish:GateFinishBinding,signal:AbortSignal)=>inspectSerial(signal,()=>observeNative(wanted,signal,finish))}:{}),
   beginOwnerContinuation(signal){
    if(signal.aborted||!active()||!native)throw Error('Context unavailable');if(transition||inspections||gated)return null;
    let release!:(ok:boolean)=>void;const token={signal,done:new Promise<boolean>(r=>release=r),release:(ok:boolean)=>release(ok),candidate:undefined as {raw:unknown;input:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number}}|undefined};transition=token;
-   return Object.freeze({async inspect(raw:unknown,input:OwnerContinuationInput,s:AbortSignal){
+   return Object.freeze({async inspect(raw:unknown,input:OwnerContinuationInput,s:AbortSignal,phase?:'fresh'|'gated-final'){
     if(transition!==token||s!==signal||s.aborted)throw Error('Context unavailable');
     const next=inspectOwnerContinuation(raw,input,options.clock());
     if(!native||input.revision!==nativeRevision||input.operationId!==operation||Object.entries(native).some(([k,v])=>k!=='minimumRevision'&&(input.owner as any)[k]!==v)||token.candidate&&(token.candidate.raw!==raw||JSON.stringify(token.candidate.input)!==JSON.stringify(input)))throw Error('Context unavailable');
-    const result=await inspectSerial(s,async()=>{if(!await liveIdentity(s))throw Error('Context unavailable');const r=structuredClone(await inspectOwner(next.owner,s));if(!await liveIdentity(s)||transition!==token)throw Error('Context unavailable');return r;});
+    const result=await inspectSerial(s,async()=>{if(!await liveIdentity(s))throw Error('Context unavailable');const active=phase==='gated-final'?inspectOwnerContinuationExecution(raw,input,options.clock()):undefined;if(phase==='gated-final'&&(!active||!inspectOwnerGated))throw Error('Context unavailable');const originalInspection=await(active?inspectOwnerGated!(next.owner,localGatedExecutionBinding(active),s):inspectOwner(next.owner,s));if(!await liveIdentity(s)||transition!==token)throw Error('Context unavailable');return active?originalInspection:structuredClone(originalInspection);});
     token.candidate={raw,input:structuredClone(input),owner:next.owner,after:next.after};return result;
    },finish(raw:unknown,input:OwnerContinuationInput,s:AbortSignal){
     if(transition!==token||s!==signal||s.aborted||!active()||!token.candidate||token.candidate.raw!==raw||JSON.stringify(token.candidate.input)!==JSON.stringify(input))throw Error('Context unavailable');

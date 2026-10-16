@@ -8,6 +8,7 @@ import {localCviOwnerIsIdle} from './local-cvi-endpoint.ts';
 import type {CviReplayPort} from './local-cvi-endpoint.ts';
 import type {CviCredentialBootAuthority} from './local-cvi-credentials.ts';
 import type {OwnerCheckpointTransition,OwnerContinuationPort} from './local-cvi-owner-continuation.ts';
+import type {GateFinishBinding} from './local-cvi-gate-finish-proof.ts';
 import type {StartupOwnerPin} from './local-cvi-startup-checkpoint.ts';
 import type {createLocalCviStyling} from './local-cvi-styling.ts';
 const startedOwners=new WeakSet<object>();
@@ -22,7 +23,7 @@ export type FreshOwnerAdmissionInput=Readonly<{checkpoint:CviCheckpointIdentity;
  * durably spent before acknowledgment; this module cannot prove its storage. */
 export interface FreshOwnerAdmissionPort {admit(input:FreshOwnerAdmissionInput,signal:AbortSignal):Promise<unknown>}
 export interface FreshCheckpointPort {inspectFresh(signal:AbortSignal):Promise<unknown>}
-export interface CurrentOwnerCheckpointPort extends FreshCheckpointPort {inspectOwnerFresh(owner:StartupOwnerPin,signal:AbortSignal):Promise<unknown>;beginOwnerContinuation?(signal:AbortSignal):OwnerCheckpointTransition|null}
+export interface CurrentOwnerCheckpointPort extends FreshCheckpointPort {inspectOwnerFresh(owner:StartupOwnerPin,signal:AbortSignal):Promise<unknown>;inspectOwnerGatedFresh?(owner:StartupOwnerPin,binding:GateFinishBinding,signal:AbortSignal):Promise<unknown>;beginOwnerContinuation?(signal:AbortSignal):OwnerCheckpointTransition|null}
 export function createLocalCviStartupOwner(
  expected:CviCheckpointIdentity,checkpoint:CurrentOwnerCheckpointPort,admission:FreshOwnerAdmissionPort,
  resources:Readonly<{binding:Readonly<{origin:string;conversation:string;secret:string;expiresAt:number}>;boot:Readonly<{storeId:string;previous:number;bootDigest:string}>;replay:CviReplayPort;authority:CviCredentialBootAuthority;makeFlow:()=>ReturnType<typeof createLocalCviStyling>}>,
@@ -36,6 +37,7 @@ export function createLocalCviStartupOwner(
   bind:(raw,input)=>bindLocalOwnedReplay(privateReplay,raw,input),
   adopt:(raw,input)=>adoptLocalOwnedReplay(privateReplay,raw,input),
   hold:()=>holdLocalOwnedReplay(privateReplay),
+  execution:()=>localOwnedReplayExecutionContext(privateReplay),
   ready,
   register:(owner,renew)=>{if(!ready())throw Error('Private replay retired or gated execution unfinished');privateOwners.set(owner,privateReplay);continuations.set(owner,renew);startedOwners.add(owner);},
  });

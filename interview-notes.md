@@ -1,3 +1,9 @@
+## Completing the original gate before publishing a session
+
+I connected the original final signed inspection to verified gate completion before startup or renewed output becomes available. I reused the existing last inspection instead of adding another round of authority reads. The complete local transcript, notebook and HTTP journey now works before and after renewal while using 127 of the fixed 128 journal records.
+
+Copying the final inspection, canceling startup or ending during renewal prevents publication and keeps committed evidence intact. The checks use actual local transactions and signatures with simulated account, model and provider transport. Mandatory paired configuration and live acceptance remain separate work.
+
 ## Keeping original evidence through the session handoff
 
 I connected the original local execution context to startup permits and consumed renewal handoffs before their public lease data is copied. Replay checks now use the lock already held by that context, avoiding a second lock acquisition. Replay writes and owner publication remain blocked while its gate is unfinished.

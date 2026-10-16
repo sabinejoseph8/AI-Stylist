@@ -23,6 +23,8 @@ export function inspectOwnerContinuation(raw:unknown,input:OwnerContinuationInpu
  if(!r||r.used||!r.valid()||!int(now)||now<r.observedAt||now>=r.expiresAt||!same(r.before,input))throw Error('Owner continuation unavailable');
  r.observedAt=now;return {owner:structuredClone(r.owner),after:{...r.after}};
 }
+/** Read only the original unconsumed handoff's context for final inspection. */
+export function inspectOwnerContinuationExecution(raw:unknown,input:OwnerContinuationInput,now:number){inspectOwnerContinuation(raw,input,now);return handoffs.get(raw as object)!.execution;}
 export function consumeOwnerContinuation(raw:unknown,input:OwnerContinuationInput,now:number){const result=inspectOwnerContinuation(raw,input,now),r=handoffs.get(raw as object)!;r.used=true;r.accept();return result;}
 /** Complete one notebook adoption only after the original guard consumed it. */
 export function claimOwnerContinuationContext(raw:unknown,input:OwnerContinuationInput,now:number){
@@ -37,7 +39,7 @@ export function claimLocalContinuationReplayLease(raw:unknown,input:OwnerContinu
  r.replayClaimed=true;r.observedAt=now;return {lease:structuredClone(r.replayLease),execution:r.execution,owner:structuredClone(r.owner),after:{...r.after}};
 }
 export interface OwnerCheckpointTransition {
- inspect(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>;
+ inspect(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal,phase?:'fresh'|'gated-final'):Promise<unknown>;
  finish(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):void|Promise<void>;
  cancel():void;
 }
