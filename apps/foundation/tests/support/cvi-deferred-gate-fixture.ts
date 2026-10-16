@@ -12,6 +12,8 @@ import {fixtureKey} from './cvi-witness-service-fixture.ts';
 import {createLocalSignedDatabaseBridge} from '../../src/server/local-cvi-database-authority-bridge.ts';
 import {fullStateProjection,assertCommittedFullState} from '../../src/server/local-cvi-full-state-reconciliation.ts';
 import {createLocalStartupCheckpointInspector} from '../../src/server/local-cvi-startup-checkpoint.ts';
+import {createLocalGatedSqliteExecution} from '../../src/server/local-cvi-gated-execution.ts';
+import type {GateFinishBinding} from '../../src/server/local-cvi-gate-finish-proof.ts';
 import {historyCanonical} from '../../src/server/local-cvi-history-authority.ts';
 import {witnessServiceDigest} from '../../src/server/local-cvi-witness-service.ts';
 import {inspectLocalTransitionGate,bindLocalTransitionAdmission,localTransitionFinishBinding} from '../../src/server/local-cvi-transition-port.ts';
@@ -48,7 +50,9 @@ export async function deferredGateFixture(mode:'activate'|'renew'='activate'){
    await authority.reconcile(plan);return observed;
   };
   const registry={version:1 as const,entries:[{operationId:plan.id,target:plan.to,projection:fullStateProjection(states.target)}]};
-  const inspector=(gate:LocalTransitionGate,prepared=true)=>{const b=localTransitionFinishBinding(gate);return createLocalStartupCheckpointInspector({authority:x.pin,database,readerPrincipal:reader.principalDigest,registryDigest:witnessServiceDigest(registry),minimumRevision:owner.minimumRevision},registry,{authority:n=>authority.read(n),database:async nonce=>{const body={version:1,keyId:database.keyId,storeId:x.pin.storeId,policyDigest:x.pin.policyDigest,nonce,issuedAt:time,expiresAt:time+3000,checkpoint:await observe()};return {body,signature:key.sign(historyCanonical(body))};}},()=>time,5000,prepared?b:undefined);};
-  return {setup,root,x,owner,plan,previousLease,clock:()=>time,at:(at:number)=>time=at,execute,observe,inspector,admission:()=>admission,close:async()=>{await resident.close();await x.close();await rm(root,{recursive:true,force:true});}};
+  const inspectorForBinding=(b:GateFinishBinding,prepared=true)=>{return createLocalStartupCheckpointInspector({authority:x.pin,database,readerPrincipal:reader.principalDigest,registryDigest:witnessServiceDigest(registry),minimumRevision:owner.minimumRevision},registry,{authority:n=>authority.read(n),database:async nonce=>{const body={version:1,keyId:database.keyId,storeId:x.pin.storeId,policyDigest:x.pin.policyDigest,nonce,issuedAt:time,expiresAt:time+3000,checkpoint:await observe()};return {body,signature:key.sign(historyCanonical(body))};}},()=>time,5000,prepared?b:undefined);};
+  const inspector=(gate:LocalTransitionGate,prepared=true)=>inspectorForBinding(localTransitionFinishBinding(gate),prepared);
+  const producer=(patch:Record<string,unknown>={})=>createLocalGatedSqliteExecution({gate:setup,nativeRoot:x.root,target:states.target,command},{authority,observe,identity:async(request,binding)=>{const body={version:1,keyId:database.keyId,...request,bindingDigest:witnessServiceDigest(binding),issuedAt:time,expiresAt:time+3000};return {body,signature:key.sign(historyCanonical(body))};},...patch},()=>time);
+  return {producer,inspectorForBinding,setup,root,x,owner,plan,previousLease,clock:()=>time,at:(at:number)=>time=at,execute,observe,inspector,admission:()=>admission,close:async()=>{await resident.close();await x.close();await rm(root,{recursive:true,force:true});}};
  }catch(e){await resident.close();await x.close();await rm(root,{recursive:true,force:true});throw e;}
 }

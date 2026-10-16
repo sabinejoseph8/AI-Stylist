@@ -794,6 +794,23 @@
       "foundationFullTests": 2518,
       "foundationFullFiles": 183,
       "foundationFullExitCode": 0
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-gated-execution-producer.md",
+      "focusedFoundationTests": 14,
+      "focusedFoundationFiles": 1,
+      "earlierJointTests": 61,
+      "operationsTests": 568,
+      "foundationFullStatus": "running",
+      "foundationFullSession": 10384,
+      "priorFullFoundationTests": 2518,
+      "priorFullFoundationFiles": 183,
+      "isolatedPostgresRerun": false,
+      "productionCriteriaClosed": 0,
+      "localMemoryChecks": 19,
+      "hostedProviderDeviceChecks": false,
+      "scope": "Concrete disabled SQLite original-gate producer with actual commit/close, full-state reconciliation and private one-use original execution contexts; mandatory application handoff/publication remains open."
     }
   ]
 }

@@ -1,3 +1,7 @@
+## Original gated execution producer, 16 October 2026
+
+The disabled concrete SQLite producer passes 14 final focused checks and operations pass 568 tests. Full regression 10384 is running. Original execution contexts now survive commit/reconciliation privately, but application startup/renewal handoff and mandatory paired publication remain open. This adds no production acceptance. See docs/local-tavus-gated-execution-producer.md.
+
 ## Local PostgreSQL renewal follow-up, 16 October 2026
 
 The isolated network-disabled PostgreSQL rehearsal passes 638 checks, including restricted renewal, original transaction binding and six continuous transitions. The latest focused run passes 39 checks, operations pass 567 tests, and TypeScript/build plus four encryption checks pass. Full foundation run 16796 passes 2,518 tests across 183 files with terminal exit zero. Nineteen refreshed local Memory checks pass. Two stopped SQL runs exposed test-role/unique-ID setup errors and are not counted as passed. Actual gate/PostgreSQL/owner composition, independent hosting and live acceptance remain open; no production criterion closes. See docs/local-tavus-postgres-renewal.md.

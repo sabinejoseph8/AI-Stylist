@@ -1,3 +1,9 @@
+## Preserving the original execution through reconciliation
+
+I prepared a local producer that owns the gate before the database operation starts, waits for the actual connection to commit and close, and checks the complete saved state before reconciliation. Only its original result can create the temporary handoff; copying a success object does not recreate permission.
+
+I also fixed stalled-callback and close-during-observation cases so cancellation cannot leave a caller waiting forever or accept a late result. The local checks use actual SQLite transactions and signatures. Connecting this context to session startup and renewal remains the next step; it is not evidence of live customer readiness.
+
 ## Renewing ownership through the restricted database path
 
 I extended the local PostgreSQL contract to renew the same owner through the complete-state path. It keeps the owner and generation, rotates the token, advances expiry within the limit and preserves the domain and receipt history. Tests use real local database roles and transaction IDs, including concurrent attempts and malformed targets.
