@@ -2,6 +2,8 @@
 
 Sabine approved local preparation/tests on 16 October 2026, including restarts and concurrent changes, with no new spending or hosted changes. This is a disconnected SQLite contract for participating writers, not production database grants or an independently administered authority.
 
+Follow-up: [authenticated monotonic authority and mandatory adapter](local-tavus-monotonic-lease-authority.md) includes control tables in the authority digest and requires durable execution claims before participating writes. The earlier helper-bypass and coordinated-restore limits remain relevant.
+
 ## Lease and generation contract
 
 `tools/operations/local_cvi_writer_lease.py` adds private control tables to new disposable test databases. Lease-control rows are separate from the earlier logical domain/receipt aggregate. A privileged fixture rotator must commit a fresh generation before admitting a restarted writer. The previous generation's grants are retired and preserved. Process exit alone does not revoke a lease.

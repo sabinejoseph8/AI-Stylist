@@ -1,3 +1,7 @@
+## Requiring authenticated authority before every participating write
+
+I combined writer generations, retained grants and release tombstones with the domain history checked by a separate local authority. My new adapter refuses to write without signed approval and fresh evidence. Review exposed a replay gap: a captured approval could be reused after restoring the database while the authority still considered the operation pending. I fixed it with a permanent execution claim before the SQL write, then tested lost replies, crashes and restore attempts. I kept the limits explicit: restoring both local stores still defeats the model, and real database grants and independently administered storage remain unverified. No paid calls or hosted changes were made.
+
 ## Fencing participating writers during receipt signing
 
 I prepared a local lease contract that binds each writer to a startup generation, owner, boot and expiry. A retired generation cannot commit through the guarded transaction path. I also added permanent receipt-release admission and held the SQLite write lock while the existing signer runs, testing that even a privileged concurrent activation is blocked until the critical section ends. I tested crashes, expired replies and retained-record replay without refunding permission. Negative tests show why real grants and independent control history are still necessary: a raw helper can bypass the cooperative guard, and a full database restore can restore an old lease. No real key, paid call or hosted setting changed.

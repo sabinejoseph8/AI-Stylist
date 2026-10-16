@@ -56,7 +56,15 @@ def operate(root,pin,actor,mode,args,now,crash_at=None):
         s=load(root,pin)
         if not isinstance(actor,dict) or set(actor)!={'principalDigest','role'} or not hex64(actor['principalDigest']) or actor['role'] not in ('observer','writer','signer','reconciler') or not integer(now) or now<s['clock']:raise RecoveryHeld('witness-service-unavailable')
         if mode=='inspect':return s
-        if mode=='admit':
+        if mode=='claim-execution':
+            if actor['role']!='writer' or not isinstance(args,dict) or set(args)!={'operationId','revision','challenge','issuedAt','expiresAt'} or not all(hex64(args[k]) for k in ('operationId','challenge')) or not all(integer(args[k]) for k in ('revision','issuedAt','expiresAt')) or not args['issuedAt']<=now<args['expiresAt'] or args['expiresAt']-args['issuedAt']>8000:raise RecoveryHeld('witness-service-unavailable')
+            op=next((o for o in s['operations'] if o['id']==args['operationId'] and o['status']=='prepared' and o['principalDigest']==actor['principalDigest']),None)
+            grant=next((r for r in s['requests'] if r['action']=='advance' and r['operationId']==args['operationId'] and r['principalDigest']==actor['principalDigest'] and r['state']=='used'),None)
+            identity=digest(dict(execution=args['operationId'],revision=args['revision'],owner=actor['principalDigest']))
+            if not op or not grant or s['pending']!=op['id'] or op['revision']!=args['revision'] or s['revision']!=args['revision'] or len(s['requests'])>=128 or any(r['id']==identity or r['challenge']==args['challenge'] for r in s['requests']):raise RecoveryHeld('witness-service-unavailable')
+            s['requests'].append(dict(id=identity,challenge=args['challenge'],**actor,action='read',operationId=op['id'],expectedRevision=args['revision'],issuedAt=args['issuedAt'],expiresAt=args['expiresAt'],token=secrets.token_hex(32),state='used'))
+            result=dict(status='execution-claimed',operationId=op['id'],revision=s['revision'],targetDigest=digest(op['to']),grantHash=grant['id'])
+        elif mode=='admit':
             if not isinstance(args,dict) or set(args)!={'id','challenge','action','operationId','expectedRevision','issuedAt','expiresAt'} or not all(hex64(args[k]) for k in ('id','challenge','operationId')) or not integer(args['expectedRevision']) or not integer(args['issuedAt']) or not integer(args['expiresAt']) or not args['issuedAt']<=now<args['expiresAt'] or args['expiresAt']-args['issuedAt']>8000 or args['action'] not in ('read','advance','reconcile') or len(s['requests'])>=128 or any(r['id']==args['id'] or r['challenge']==args['challenge'] for r in s['requests']):raise RecoveryHeld('witness-service-unavailable')
             if (args['action']=='advance' and any(r['action']=='advance' and r['operationId']==args['operationId'] for r in s['requests'])):raise RecoveryHeld('witness-service-unavailable')
             if (args['action']=='advance' and actor['role']!='writer') or (args['action']=='reconcile' and actor['role']!='reconciler'):raise RecoveryHeld('witness-service-unavailable')

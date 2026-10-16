@@ -1,0 +1,53 @@
+/** Mandatory composition only. Legacy helpers are private setup/validation fixtures. */
+import {spawn} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
+import {mkdtemp,rm,readFile,writeFile} from 'node:fs/promises';
+import {join} from 'node:path';
+import {tmpdir} from 'node:os';
+import {randomBytes} from 'node:crypto';
+import {createLocalLeaseAuthorityService,createLocalMandatoryLeaseAdapter} from '../../src/server/local-cvi-mandatory-persistence.ts';
+import type {MandatoryLeaseIntent,LeaseAuthorityRole,AuthorityEvidence,MandatoryLeasePersistencePort} from '../../src/server/local-cvi-mandatory-persistence.ts';
+import type {WitnessServiceRequest} from '../../src/server/local-cvi-witness-service.ts';
+import {verifyLocalWitnessReply,witnessServiceDigest} from '../../src/server/local-cvi-witness-service.ts';
+import {historyCanonical} from '../../src/server/local-cvi-history-authority.ts';
+import {writerLeaseFixture} from './cvi-writer-lease-fixture.ts';
+import {fixtureKey,serviceCall} from './cvi-witness-service-fixture.ts';
+import {D} from './cvi-domain-history-fixture.ts';
+export function mandatoryCall(input:Record<string,unknown>,authorize?:(m:unknown)=>Promise<unknown>,signal?:AbortSignal):Promise<any>{return new Promise((resolve,reject)=>{
+ const p=spawn('python3',[fileURLToPath(new URL('./cvi-mandatory-store.py',import.meta.url))],{stdio:['pipe','pipe','pipe']});let buffer='',answer:unknown,settled=false;
+ const fail=()=>{if(!settled){settled=true;reject(Error('Mandatory fixture unavailable'));}p.kill('SIGKILL');};
+ const timer=setTimeout(fail,20000),abort=()=>fail();signal?.addEventListener('abort',abort,{once:true});if(signal?.aborted)fail();
+ p.stdout.on('data',d=>{buffer+=d.toString();if(buffer.length>1048576)return fail();let at:number;while((at=buffer.indexOf('\n'))>=0){const line=buffer.slice(0,at);buffer=buffer.slice(at+1);let m:any;try{m=JSON.parse(line);}catch{return fail();}if(m.stage==='result')answer=m.result;else if(m.stage==='held')fail();else if(authorize)Promise.resolve().then(()=>authorize(m)).then(r=>{if(!settled)p.stdin.write(JSON.stringify(r)+'\n');},fail);else fail();}});
+ p.stderr.resume();p.stdin.on('error',()=>{});p.on('error',fail);p.on('close',code=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);if(!settled){settled=true;if(code!==0||answer===undefined)reject(Error('Mandatory fixture unavailable'));else resolve(answer);}});p.stdin.write(JSON.stringify(input)+'\n');
+});}
+export async function mandatoryFixture(){
+ const x=await writerLeaseFixture(),root=x.dbRoot,authorityRoot=await mkdtemp(join(tmpdir(),'stylist-monotonic-authority-')),authorityKey=fixtureKey(),database=fixtureKey(),fence=fixtureKey();
+ const keys={rotator:fixtureKey(),fencer:fixtureKey(),writer:fixtureKey(),signer:fixtureKey(),observer:fixtureKey(),reconciler:fixtureKey()};
+ const actors=Object.entries(keys).map(([role,key],i)=>({role:role as LeaseAuthorityRole|'observer'|'reconciler',principalDigest:D(90+i),keyId:'fixture-key-monotonic-'+role,publicKeyPem:key.pem}));
+ const config={...x.config,verifier:fileURLToPath(new URL('./cvi-mandatory-verifier.ts',import.meta.url))};
+ const observe=()=>mandatoryCall({root,mode:'observe',config}),initial=await observe();
+ const pin={authorityId:'fixture-authority-monotonic',witnessId:'33333333-3333-4333-8333-333333333333',storeId:initial.storeId,policyDigest:initial.policyDigest,keyId:'fixture-key-monotonic-authority',publicKeyPem:authorityKey.pem},storePin={authorityId:pin.authorityId,witnessId:pin.witnessId,storeId:pin.storeId,policyDigest:pin.policyDigest};
+ await serviceCall({root:authorityRoot,mode:'prepare',pin:storePin,current:initial,now:1000});
+ const invoke=(a:any,mode:string,args:Record<string,unknown>)=>serviceCall({root:authorityRoot,pin:storePin,actor:{principalDigest:a.principalDigest,role:a.role},mode,args,now:1000});
+ const store={admit:(a:any,r:WitnessServiceRequest,id:string)=>invoke(a,'admit',{id,challenge:r.challenge,action:r.action,operationId:r.operationId,expectedRevision:r.expectedRevision,issuedAt:r.issuedAt,expiresAt:r.expiresAt}),inspect:(a:any)=>invoke(a,'inspect',{}),apply:(a:any,mode:string,args:Record<string,unknown>)=>invoke(a,mode,args)};
+ const plans=new Map<string,MandatoryLeaseIntent>(),proofPins={database:{keyId:'fixture-key-monotonic-database',publicKeyPem:database.pem},fence:{keyId:'fixture-key-monotonic-fence',publicKeyPem:fence.pem}};
+ const inspect=()=>invoke({role:'observer',principalDigest:actors.find(a=>a.role==='observer')!.principalDigest},'inspect',{});
+ let unavailable=false,tamperRead=false,replayRead=false,oldRead:AuthorityEvidence|undefined,crashAt:string|undefined,denyReconcile=false;
+ const proof=(kind:'database'|'fence',b:any,state:string)=>{const body={version:1,kind,state,keyId:proofPins[kind].keyId,...b,issuedAt:1000,expiresAt:3000};return {body,signature:(kind==='database'?database:fence).sign(historyCanonical(body))};};
+ const sources={database:async(b:any)=>{const actual=await observe();return proof('database',b,witnessServiceDigest(actual)===b.targetDigest?'target-committed':'old-state');},fence:async(b:any)=>{const s=await inspect(),actual=await observe();/* Participating mandatory writers cannot acquire another prepared intent. This is not a hosted all-writer coverage proof. */return proof('fence',b,s.pending===b.operationId&&s.revision===b.revision&&witnessServiceDigest(actual)===b.targetDigest?'writers-fenced':'writers-running');}};
+ const service=()=>createLocalLeaseAuthorityService(pin,actors,id=>plans.get(id),store,sources,proofPins,authorityKey.sign,()=>1000);
+ const request=(role:keyof typeof keys,action:WitnessServiceRequest['action'],operationId:string,revision:number,nonce=randomBytes(32).toString('hex'))=>{const actor=actors.find(a=>a.role===role)!,r:WitnessServiceRequest={version:1,authorityId:pin.authorityId,witnessId:pin.witnessId,storeId:pin.storeId,policyDigest:pin.policyDigest,principalDigest:actor.principalDigest,keyId:actor.keyId,action,operationId,expectedRevision:revision,challenge:nonce,issuedAt:1000,expiresAt:4000};return {request:r,signature:keys[role].sign(historyCanonical(r))};};
+ const evidence=async(e:ReturnType<typeof request>):Promise<AuthorityEvidence>=>{if(unavailable)throw Error('Fixture authority unavailable');return {request:e.request,reply:await service().handle(e,new AbortController().signal)};};
+ const authorityPort=(role:LeaseAuthorityRole)=>({advance:async(p:MandatoryLeaseIntent)=>evidence(request(role,'advance',p.id,(await inspect()).revision)),claim:async(p:MandatoryLeaseIntent,nonce:string)=>{const e=request(role,'read',p.id,(await inspect()).revision,nonce);(e.request as any).action='claim-execution';e.signature=keys[role].sign(historyCanonical(e.request));const result=await evidence(e);oldRead=result;return result;},read:async(nonce:string)=>{if(replayRead&&oldRead)return oldRead;const e=await evidence(request('observer','read',D(99),0,nonce));oldRead=e;if(tamperRead)return {...e,reply:{...(e.reply as any),signature:'0'.repeat(128)}};return e;},reconcile:async(p:MandatoryLeaseIntent)=>{if(denyReconcile)throw Error('Fixture recovery unavailable');return evidence(request('reconciler','reconcile',p.id,(await inspect()).revision));}});
+ const persistence:MandatoryLeasePersistencePort={execute:(p,approval,authorize,signal)=>mandatoryCall({root,mode:'execute',config:{...config,authorityPin:pin,readPrincipal:actors.find(a=>a.role==='observer')!.principalDigest,...(p.kind==='release'?{signer:{node:process.execPath,script:fileURLToPath(new URL('./cvi-leased-sign.ts',import.meta.url)),pin:x.receiptPin,receiptId:x.receiptId,privateKeyPem:x.receiptTestKey.privateKey.export({type:'pkcs8',format:'pem'}).toString()}}:{})},intent:p,approval,crashAt},authorize,signal)};
+ const adapter=(role:LeaseAuthorityRole)=>createLocalMandatoryLeaseAdapter(pin,{role,principalDigest:actors.find(a=>a.role===role)!.principalDigest},authorityPort(role),persistence,()=>1000,30000);
+ const plan=async(kind:MandatoryLeaseIntent['kind'],args:Record<string,unknown>,role:LeaseAuthorityRole=({activate:'rotator',fence:'fencer',apply:'writer',release:'signer'} as const)[kind])=>{const actor={role,principalDigest:actors.find(a=>a.role===role)!.principalDigest},p=await mandatoryCall({root,mode:'plan',config,actor,kind,args});plans.set(p.id,structuredClone(p));return p as MandatoryLeaseIntent;};
+ let boot=2100;const activation=(previous=0)=>plan('activate',{previous,owner:x.owner,boot:D(boot++),ttl:1000,token:randomBytes(32).toString('hex')}),fencing=(generation:number)=>plan('fence',{generation});
+ const commitPlan=async(lease:any)=>{const intent=await x.plan('commit');return plan('apply',{intent,lease});};
+ const claimPlan=async(lease:any)=>{const intent=await x.plan('claim');return plan('apply',{intent,lease});};
+ const releasePlan=async(barrier:any,record:any)=>plan('release',{barrier,expectedDomain:await x.observe(),record});
+ const recover=async(p:MandatoryLeaseIntent)=>{const e=await evidence(request('reconciler','reconcile',p.id,(await inspect()).revision));return verifyLocalWitnessReply(pin,e.request,e.reply,1000);};
+ return {root,authorityRoot,pin,actors,initial,config,observe,inspect,plan,activation,fencing,commitPlan,claimPlan,releasePlan,adapter,persistence,authorityPort,service,request,evidence,recover,receiptId:x.receiptId,domainObserve:x.observe,
+ setUnavailable:(v:boolean)=>{unavailable=v;},setTamperRead:(v:boolean)=>{tamperRead=v;},setReplayRead:(v:boolean)=>{replayRead=v;},setCrash:(v:string|undefined)=>{crashAt=v;},setDenyReconcile:(v:boolean)=>{denyReconcile=v;},
+ dbSnapshot:()=>readFile(join(root,'history.sqlite')),dbRestore:(b:Buffer)=>writeFile(join(root,'history.sqlite'),b),authoritySnapshot:()=>Promise.all(['ledger.json','checkpoint.json'].map(n=>readFile(join(authorityRoot,n)))),authorityRestore:async(b:Buffer[])=>{for(let i=0;i<2;i++)await writeFile(join(authorityRoot,['ledger.json','checkpoint.json'][i]),b[i]);},close:async()=>{await x.close();await rm(authorityRoot,{recursive:true,force:true});}};
+}

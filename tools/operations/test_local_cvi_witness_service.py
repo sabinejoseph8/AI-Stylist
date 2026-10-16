@@ -99,3 +99,15 @@ class WitnessServiceTests(unittest.TestCase):
         self.advance();token=self.ticket(self.reconciler,'reconcile',revision=1)
         self.assertEqual(self.op(self.reconciler,'reconcile',dict(token=token,targetDigest=service.digest(self.target),ownerDigest=self.writer['principalDigest'],revision=1,validUntil=1000))['status'],'held')
         self.assertEqual(self.inspect()['pending'],h(20))
+    def test_execution_claim_is_permanent_while_operation_is_prepared(self):
+        self.advance();args=dict(operationId=h(20),revision=1,challenge=h(800),issuedAt=1000,expiresAt=2000)
+        self.assertEqual(self.op(self.writer,'claim-execution',args)['status'],'execution-claimed')
+        with self.assertRaises(ValueError):self.op(self.writer,'claim-execution',dict(args,challenge=h(801)))
+        self.assertEqual(self.inspect()['pending'],h(20))
+    def test_execution_claim_bound_to_original_owner(self):
+        self.advance();args=dict(operationId=h(20),revision=1,challenge=h(800),issuedAt=1000,expiresAt=2000)
+        with self.assertRaises(ValueError):self.op(dict(self.writer,principalDigest=h(99)),'claim-execution',args)
+    def test_lost_execution_claim_reply_does_not_reset_permission(self):
+        self.advance();args=dict(operationId=h(20),revision=1,challenge=h(800),issuedAt=1000,expiresAt=2000)
+        with self.assertRaises(ValueError):self.op(self.writer,'claim-execution',args,crash='after-save')
+        with self.assertRaises(ValueError):self.op(self.writer,'claim-execution',dict(args,challenge=h(801)))

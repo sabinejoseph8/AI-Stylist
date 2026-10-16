@@ -23,7 +23,7 @@ function proof(raw:unknown,kind:'database'|'fence',binding:WitnessProofBinding,p
  const b=raw.body;if(b.version!==1||b.kind!==kind||b.state!==(kind==='database'?'target-committed':'writers-fenced')||b.keyId!==pin.keyId||!integer(b.issuedAt)||!integer(b.expiresAt)||b.issuedAt>at||at>=b.expiresAt||b.expiresAt-b.issuedAt>8000||Object.entries(binding).some(([k,v])=>b[k]!==v)||!signature(b,raw.signature,pin.publicKeyPem))throw Error();
  return b.expiresAt;
 }
-export function verifyLocalWitnessReply(pin:WitnessServicePin,request:WitnessServiceRequest,raw:unknown,at:number):unknown{
+export function verifyLocalWitnessReply(pin:WitnessServicePin,request:Omit<WitnessServiceRequest,'action'>&{action:string},raw:unknown,at:number):unknown{
  if(!integer(at)||at<request.issuedAt||at>=request.expiresAt||!exact(raw,['body','signature'])||!exact(raw.body,['version','authorityId','witnessId','storeId','policyDigest','keyId','principalDigest','challenge','requestHash','result']))throw Error('Witness reply unavailable');
  const b=raw.body;if(b.version!==1||b.keyId!==pin.keyId||b.principalDigest!==request.principalDigest||b.challenge!==request.challenge||b.requestHash!==witnessServiceDigest(request)||(['authorityId','witnessId','storeId','policyDigest'] as const).some(k=>b[k]!==pin[k])||!signature(b,raw.signature,pin.publicKeyPem))throw Error('Witness reply unavailable');return structuredClone(b.result);
 }
