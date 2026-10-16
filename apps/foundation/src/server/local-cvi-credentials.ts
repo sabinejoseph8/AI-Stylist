@@ -36,10 +36,10 @@ export interface CviCredentialBootAuthority extends CviCredentialAuthority {
  * Unknown activation returns null; never reuse the previous credential or retry. */
 export async function startLocalCviCredentialEndpoint(
  binding:{origin:string;conversation:string;secret:string;expiresAt:number},flow:ReturnType<typeof createLocalCviStyling>,replay:CviReplayPort,
- boot:{storeId:string;previous:number;bootDigest:string},authority:CviCredentialBootAuthority,clock=Date.now,deadlineMs=1000,
+ boot:{storeId:string;previous:number;bootDigest:string},authority:CviCredentialBootAuthority,clock=Date.now,deadlineMs=1000,requestDeadlineMs=deadlineMs,
 ){
  if(!authority||typeof authority.activate!=='function'||typeof authority.check!=='function'||!replay||
-  !Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000||!Number.isSafeInteger(boot?.previous)||boot.previous<0||
+  !Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000||!Number.isInteger(requestDeadlineMs)||requestDeadlineMs<1||requestDeadlineMs>8000||!Number.isSafeInteger(boot?.previous)||boot.previous<0||
   !/^[a-f0-9]{64}$/.test(boot.bootDigest)||!/^[a-f0-9-]{36}$/.test(boot.storeId))return null;
  const abort=new AbortController();let timer:ReturnType<typeof setTimeout>|undefined;
  try{
@@ -52,6 +52,6 @@ export async function startLocalCviCredentialEndpoint(
   const lease=raw as CviCredentialLease;
   if(Object.keys(lease).sort().join(',')!=='bindingDigest,bootDigest,generation,scopeDigest,storeId'||lease.generation!==input.previous+1||
    lease.storeId!==input.storeId||lease.scopeDigest!==input.scopeDigest||lease.bindingDigest!==input.bindingDigest||lease.bootDigest!==input.bootDigest)return null;
-  return createLocalCviCredentialEndpoint(binding,flow,replay,lease,authority,clock,deadlineMs);
+  return createLocalCviCredentialEndpoint(binding,flow,replay,lease,authority,clock,requestDeadlineMs);
  }catch{abort.abort();return null;}finally{if(timer)clearTimeout(timer);}
 }

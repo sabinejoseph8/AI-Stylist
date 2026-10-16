@@ -1,3 +1,7 @@
+## Request-fencing follow-up, 16 October 2026
+
+[Composed request-fence evidence](local-tavus-checkpoint-request-fence.md) adds mandatory full-state checks around credential work, explicit owner expiry and separate request timeouts. The composed old owner refuses after admission even when credential rotation fails. Exact checkpoint pinning still holds legitimate same-owner state advances; that integration remains open. No live route is activated.
+
 ## Follow-up evidence, 16 October 2026
 
 A separate [durable admission composition](local-tavus-durable-startup-admission.md) now uses the authenticated authority and mandatory SQLite adapter. The original fixtures below still use simulated admission. New tests expose the split-store request-fencing gap rather than closing live readiness. No hosted activation or production security guarantee is established.

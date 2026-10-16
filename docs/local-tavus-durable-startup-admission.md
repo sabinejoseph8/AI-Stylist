@@ -4,7 +4,7 @@ Authorized local preparation only, 16 October 2026. No spending, real credential
 
 ## Implemented path
 
-The disabled startup coordinator can now call an admission implementation backed by the existing authenticated monotonic authority and mandatory SQLite transaction adapter. Admission requires an exact pinned checkpoint/baseline, credential/replay namespaces, previous generation and new boot/binding digests. The complete request, including its fresh nonce and time bounds, is hashed into the new owner digest. The trusted planner chooses a separate random fixture lease token once, retaining it through preview and COMMIT.
+The disabled startup coordinator can now call an admission implementation backed by the existing authenticated monotonic authority and mandatory SQLite transaction adapter. Admission requires an exact pinned checkpoint/baseline, credential/replay namespaces, previous generation and new boot/binding digests. Follow-up review preserved the configured native actor digest and bound the complete request, including its fresh nonce and time bounds, into a domain-separated native boot record. This fixes native writer compatibility; see local-tavus-checkpoint-request-fence.md. The trusted planner chooses a separate random fixture lease token once, retaining it through preview and COMMIT.
 
 A fresh signed authority read must match the pinned completed baseline before planning. The planned activation must match the exact request, role, baseline and next generation. The mandatory adapter then obtains signed advance approval, permanently claims execution, commits the validated transition under the database lock and reconciles authority state. Admission validates the returned lease and requires another fresh signed read of the exact completed target before acknowledging it.
 
@@ -12,7 +12,7 @@ The acknowledgment names the committed operation and new authority revision. Sta
 
 ## Local test evidence
 
-19 focused cases cover:
+The original 19 focused cases cover:
 
 - An actual signed-service/SQLite admission followed by credential rotation, full-state inspection and synthetic checked output.
 - Complete-request binding in durable owner history and refusal of second use or new-object replay.

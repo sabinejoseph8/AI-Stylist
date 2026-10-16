@@ -526,6 +526,16 @@
       "scope": "Actual local signed-authority/SQLite startup admission, with explicit separate credential-store gap and simulated observer transaction labels",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-checkpoint-request-fence.md",
+      "foundationTests": 2113,
+      "foundationFiles": 162,
+      "operationsTests": 475,
+      "scope": "Composed endpoint exact-checkpoint fencing and explicit owner expiry; native writer compatibility fixed; same-owner progress still held",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

@@ -6,6 +6,7 @@ import {verifyLocalWitnessReply,witnessServiceDigest} from './local-cvi-witness-
 import type {WitnessServicePin} from './local-cvi-witness-service.ts';
 import type {MandatoryLeaseIntent,AuthorityEvidence} from './local-cvi-mandatory-persistence.ts';
 import type {FreshOwnerAdmissionInput,FreshOwnerAdmissionPort} from './local-cvi-startup-owner.ts';
+export const localStartupOwnerBoot=(input:FreshOwnerAdmissionInput)=>witnessServiceDigest({purpose:'local-startup-owner-boot-v1',boot:input.bootDigest,admission:witnessServiceDigest(input)});
 type StartupScope=Omit<FreshOwnerAdmissionInput,'nonce'|'issuedAt'|'expiresAt'>;
 export interface DurableStartupPorts {
  plan(input:FreshOwnerAdmissionInput,signal:AbortSignal):Promise<MandatoryLeaseIntent>;
@@ -18,9 +19,9 @@ const int=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
 const same=(a:any,b:any)=>historyCanonical(a)===historyCanonical(b);
 export function createLocalDurableStartupAdmission(
  pin:WitnessServicePin,expected:StartupScope,baseline:Record<string,unknown>,
- actor:Readonly<{principalDigest:string;readerPrincipal:string}>,ports:DurableStartupPorts,clock=Date.now,
+ actor:Readonly<{principalDigest:string;readerPrincipal:string;ownerDigest:string}>,ports:DurableStartupPorts,clock=Date.now,
 ):FreshOwnerAdmissionPort & {isHeld():boolean}{
- if(!exact(expected,['checkpoint','credentialStoreId','replayStoreId','previous','bootDigest','scopeDigest','bindingDigest'])||!exact(expected.checkpoint,['storeId','operationId','revision'])||expected.checkpoint.storeId!==pin.storeId||!hex(expected.checkpoint.operationId)||!int(expected.checkpoint.revision)||expected.checkpoint.revision>Number.MAX_SAFE_INTEGER-2||!int(expected.previous)||expected.previous>=Number.MAX_SAFE_INTEGER||!hex(expected.bootDigest)||!hex(expected.scopeDigest)||!hex(expected.bindingDigest)||!exact(baseline,['storeId','policyDigest','epochFloor','headFloor','observedClock','historyDigest'])||baseline.storeId!==pin.storeId||baseline.policyDigest!==pin.policyDigest||baseline.epochFloor!==expected.previous||!hex(baseline.headFloor)||!hex(baseline.historyDigest)||!int(baseline.observedClock)||!hex(actor.principalDigest)||!hex(actor.readerPrincipal)||typeof ports?.plan!=='function'||typeof ports.execute!=='function'||typeof ports.read!=='function'||typeof clock!=='function')throw Error('Local startup admission unavailable');
+ if(!exact(expected,['checkpoint','credentialStoreId','replayStoreId','previous','bootDigest','scopeDigest','bindingDigest'])||!exact(expected.checkpoint,['storeId','operationId','revision'])||expected.checkpoint.storeId!==pin.storeId||!hex(expected.checkpoint.operationId)||!int(expected.checkpoint.revision)||expected.checkpoint.revision>Number.MAX_SAFE_INTEGER-2||!int(expected.previous)||expected.previous>=Number.MAX_SAFE_INTEGER||!hex(expected.bootDigest)||!hex(expected.scopeDigest)||!hex(expected.bindingDigest)||!exact(baseline,['storeId','policyDigest','epochFloor','headFloor','observedClock','historyDigest'])||baseline.storeId!==pin.storeId||baseline.policyDigest!==pin.policyDigest||baseline.epochFloor!==expected.previous||!hex(baseline.headFloor)||!hex(baseline.historyDigest)||!int(baseline.observedClock)||!exact(actor,['principalDigest','readerPrincipal','ownerDigest'])||!hex(actor.principalDigest)||!hex(actor.readerPrincipal)||!hex(actor.ownerDigest)||typeof ports?.plan!=='function'||typeof ports.execute!=='function'||typeof ports.read!=='function'||typeof clock!=='function')throw Error('Local startup admission unavailable');
  const scope=structuredClone(expected),base=structuredClone(baseline),publicPin=structuredClone(pin),principal={...actor},plan=ports.plan.bind(ports),execute=ports.execute.bind(ports),read=ports.read.bind(ports);
  let used=false,held=false,last=-1;
  return Object.freeze({isHeld:()=>held,async admit(raw:FreshOwnerAdmissionInput,external:AbortSignal){
@@ -40,12 +41,12 @@ export function createLocalDurableStartupAdmission(
    const work=async()=>{
     await fresh(scope.checkpoint.revision,base);
     const p=structuredClone(await plan(structuredClone(input),signal));now();
-    if(!exact(p,['id','version','kind','args','actor','now','from','to'])||p.version!==1||p.kind!=='activate'||!hex(p.id)||!exact(p.actor,['role','principalDigest'])||p.actor.role!=='rotator'||p.actor.principalDigest!==principal.principalDigest||p.now!==input.issuedAt||!same(p.from,base)||!exact(p.args,['previous','owner','boot','ttl','token'])||p.args.previous!==input.previous||p.args.owner!==witnessServiceDigest(input)||p.args.boot!==input.bootDigest||!hex(p.args.token)||p.args.ttl!==input.expiresAt-input.issuedAt||p.to.storeId!==publicPin.storeId||p.to.policyDigest!==publicPin.policyDigest||p.to.epochFloor!==input.previous+1)throw Error();
+    if(!exact(p,['id','version','kind','args','actor','now','from','to'])||p.version!==1||p.kind!=='activate'||!hex(p.id)||!exact(p.actor,['role','principalDigest'])||p.actor.role!=='rotator'||p.actor.principalDigest!==principal.principalDigest||p.now!==input.issuedAt||!same(p.from,base)||!exact(p.args,['previous','owner','boot','ttl','token'])||p.args.previous!==input.previous||p.args.owner!==principal.ownerDigest||p.args.boot!==localStartupOwnerBoot(input)||!hex(p.args.token)||p.args.ttl!==input.expiresAt-input.issuedAt||p.to.storeId!==publicPin.storeId||p.to.policyDigest!==publicPin.policyDigest||p.to.epochFloor!==input.previous+1)throw Error();
     const {id,...body}=p;if(witnessServiceDigest(body)!==id)throw Error();
     const lease=structuredClone(await execute(p,signal));const at=now();
-    if(!exact(lease,['storeId','policyDigest','generation','ownerDigest','bootDigest','token','issuedAt','expiresAt'])||lease.storeId!==publicPin.storeId||lease.policyDigest!==publicPin.policyDigest||lease.generation!==input.previous+1||lease.ownerDigest!==p.args.owner||lease.bootDigest!==input.bootDigest||lease.token!==p.args.token||lease.issuedAt!==input.issuedAt||!int(lease.expiresAt)||lease.expiresAt>input.expiresAt||lease.expiresAt<=at)throw Error();
+    if(!exact(lease,['storeId','policyDigest','generation','ownerDigest','bootDigest','token','issuedAt','expiresAt'])||lease.storeId!==publicPin.storeId||lease.policyDigest!==publicPin.policyDigest||lease.generation!==input.previous+1||lease.ownerDigest!==p.args.owner||lease.bootDigest!==p.args.boot||lease.token!==p.args.token||lease.issuedAt!==input.issuedAt||!int(lease.expiresAt)||lease.expiresAt>input.expiresAt||lease.expiresAt<=at)throw Error();
     const proofExpiry=await fresh(scope.checkpoint.revision+2,p.to),finished=now();if(finished>=proofExpiry||finished>=lease.expiresAt)throw Error();
-    return {status:'authorized',authorizationId:id,input:structuredClone(input),after:{storeId:publicPin.storeId,operationId:id,revision:scope.checkpoint.revision+2}};
+    return {status:'authorized',authorizationId:id,ownerExpiresAt:lease.expiresAt,input:structuredClone(input),after:{storeId:publicPin.storeId,operationId:id,revision:scope.checkpoint.revision+2}};
    };
    return await Promise.race([work(),canceled]);
   }catch{held=true;abort.abort();throw Error('Local startup admission unavailable');}

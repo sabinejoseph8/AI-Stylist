@@ -1,3 +1,7 @@
+## Closing the old-owner request gap and testing a real state write
+
+I added full-state checks before and after the endpoint waits for a credential result, including its final delivery check. An older composed owner now stops when admission commits, even if the separate credential rotation fails, and its temporary notes clear. Review also found that request binding had replaced the native writer identity. I preserved the configured actor and bound the request into the boot record instead, then proved an authenticated state write works. The current fence still holds on valid same-owner state changes, so I recorded continuing safely through those changes as the next integration task. Everything remains local and unpaid.
+
 ## Testing the gap between two durable stores
 
 I connected startup admission to the local signed authority and actual database transaction. A lost reply no longer allows the same admission to run again. The tests also exposed a separate-store gap: if admission commits but credential rotation fails, an older credential-only path can still respond. I kept that negative test visible and made checking the full-state owner on every request the next fix. This remains local preparation, with no live service or spending.

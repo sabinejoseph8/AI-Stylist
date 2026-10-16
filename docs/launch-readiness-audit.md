@@ -151,3 +151,7 @@ The adjacent [machine-readable matrix](launch-readiness-audit.json) retains each
 ## Durable startup-admission follow-up, 16 October 2026
 
 [Local admission evidence](local-tavus-durable-startup-admission.md) binds the complete startup request into an authenticated SQLite transition and verifies fresh completed authority state. Nineteen focused cases include committed-but-unacknowledged results and the explicit separate-store negative boundary. The old credential-only path can still respond when admission commits but credential rotation fails, so request fencing remains open. No production criterion or blocker closes.
+
+## Composed request-fence follow-up, 16 October 2026
+
+[Local request-fence evidence](local-tavus-checkpoint-request-fence.md) refuses replaced or expired composed owners and suppresses output after a consumed request loses its checkpoint. Native writer identity is fixed and an authenticated state write passes. Exact checkpoint pinning still holds legitimate same-owner progress, and the lower legacy helper remains disconnected. No production criterion or blocker closes.
