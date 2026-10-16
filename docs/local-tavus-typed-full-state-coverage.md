@@ -2,6 +2,8 @@
 
 On 16 October 2026, continued the authorized full-state reconciliation preparation under the active development goal. No spending, credentials, provider calls or hosted changes are included.
 
+Follow-up: [continuous state and restore rehearsal](local-tavus-continuous-state-rehearsal.md) now tests one five-step history, a competing connection and full native control-table restores. Fresh-process startup and independent restore protection remain open.
+
 ## Coverage added
 
 The full-state fixture can now prepare domain commit, receipt claim, fencing and release targets. Each scenario's prerequisites are produced through the actual existing SQLite validator, authenticated authority and mandatory adapter. The selected target is exported by rollback-only planning, admitted through the signed database bridge, atomically persisted in disposable PostgreSQL and reconciled from a separate committed observer.

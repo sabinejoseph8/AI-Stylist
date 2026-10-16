@@ -1,13 +1,16 @@
+import {continuousFullStateFixture} from './cvi-continuous-full-state-fixture.ts';
 /** Test-only parent: ephemeral private keys never cross the JSON-lines pipe. */
 import {fullStateFixture} from './cvi-full-state-fixture.ts';
 import {createInterface} from 'node:readline';
 import {databaseBridgeFixture} from './cvi-database-bridge-fixture.ts';
 import {historyCanonical} from '../../src/server/local-cvi-history-authority.ts';
 import {witnessServiceDigest} from '../../src/server/local-cvi-witness-service.ts';
-const full=process.argv.includes('--full-state'),f:any=full?await fullStateFixture(process.argv.find(v=>v.startsWith('--stage='))?.slice(8)??'activate'):await databaseBridgeFixture(),lines=createInterface({input:process.stdin,crlfDelay:Infinity}),iterator=lines[Symbol.asyncIterator]();
+const full=process.argv.includes('--full-state'),sequence=process.argv.includes('--continuous')?await continuousFullStateFixture():null;
+let f:any=sequence?await sequence.phase(0):(full?await fullStateFixture(process.argv.find(v=>v.startsWith('--stage='))?.slice(8)??'activate'):await databaseBridgeFixture());
+const lines=createInterface({input:process.stdin,crlfDelay:Infinity}),iterator=lines[Symbol.asyncIterator]();
 const receive=async()=>{const n=await iterator.next();if(n.done)throw Error();return JSON.parse(n.value);};
 const send=(x:unknown)=>process.stdout.write(JSON.stringify(x)+'\n');
-let mode='normal',oldProof:any,lastGrant:any,lastBinding:any,finalizer:any;
+let mode='normal',oldProof:any,lastGrant:any,lastBinding:any,finalizer:any,finalized=false,checkpoint:any;
 const source=async(request:any)=>{
  send({stage:'observe',request});const observed=await receive();
  const body={version:1,keyId:f.identityPin.keyId,...request,bindingDigest:witnessServiceDigest(observed.binding),issuedAt:1000,expiresAt:2000};
@@ -15,8 +18,7 @@ const source=async(request:any)=>{
  if(mode==='bad-proof')proof.signature='0'.repeat(128);
  if(mode==='replayed-proof'&&oldProof)return oldProof;oldProof=proof;return proof;
 };
-const originalClaim=f.port.claim;
-f.port.claim=async(...args:any[])=>{const e=await originalClaim(...args);if(mode==='lost-claim')throw Error('Lost');if(mode==='bad-claim')return {...e,reply:{...(e.reply as any),signature:'0'.repeat(128)}};return e;};
+const configure=()=>{const originalClaim=f.port.claim;f.port.claim=async(...args:any[])=>{const e=await originalClaim(...args);if(mode==='lost-claim')throw Error('Lost');if(mode==='bad-claim')return {...e,reply:{...(e.reply as any),signature:'0'.repeat(128)}};return e;};};configure();
 const make=()=>full?f.makeBridge(source):f.make(source);let bridge=make();
 try{
  while(true){const x=await receive();try{
@@ -28,9 +30,13 @@ try{
   else if(x.method==='finalize'&&full){
    if(!lastGrant||!lastBinding)throw Error();
    finalizer??=f.finalizer(lastGrant.claimHash,lastBinding.connection.transactionId,async()=>{send({stage:'committed'});return (await receive()).observed;});
-   const result=await finalizer.finalize(new AbortController().signal);if(mode==='lost-reconcile')throw Error('Lost finalized reply');send({stage:'result',result});
+   const result=await finalizer.finalize(new AbortController().signal);if(mode==='lost-reconcile')throw Error('Lost finalized reply');finalized=true;send({stage:'result',result});
   }
-  else if(x.method==='inspect'){const s=await f.x.inspect();send({stage:'result',result:{requests:s.requests.length,operations:s.operations.length,pending:s.pending,claimed:s.requests.some((r:any)=>r.id===witnessServiceDigest({execution:f.plan.id,revision:1,owner:f.plan.actor.principalDigest}))}});}
+  else if(x.method==='next'&&sequence){if(!finalized)throw Error();f=await sequence.phase(x.index);configure();bridge=make();oldProof=lastGrant=lastBinding=finalizer=undefined;finalized=false;send({stage:'result',result:true});}
+  else if(x.method==='verify-current'&&sequence){send({stage:'committed'});const seen=(await receive()).observed;send({stage:'result',result:await sequence.verifyCurrent(seen)});}
+  else if(x.method==='checkpoint-authority'&&sequence){checkpoint=await f.x.authoritySnapshot();send({stage:'result',result:true});}
+  else if(x.method==='restore-authority'&&sequence){if(!checkpoint)throw Error();await f.x.authorityRestore(checkpoint);send({stage:'result',result:true});}
+  else if(x.method==='inspect'){const s=await f.x.inspect();send({stage:'result',result:{requests:s.requests.length,operations:s.operations.length,pending:s.pending,claimed:s.requests.some((r:any)=>r.id===witnessServiceDigest({execution:f.plan.id,revision:s.operations.find((o:any)=>o.id===f.plan.id)?.revision,owner:f.plan.actor.principalDigest}))}});}
   else if(x.method==='close'){send({stage:'result',result:true});break;}
   else throw Error();
  }catch{send({stage:'held'});}}

@@ -20,12 +20,13 @@ export function mandatoryCall(input:Record<string,unknown>,authorize?:(m:unknown
  p.stdout.on('data',d=>{buffer+=d.toString();if(buffer.length>1048576)return fail();let at:number;while((at=buffer.indexOf('\n'))>=0){const line=buffer.slice(0,at);buffer=buffer.slice(at+1);let m:any;try{m=JSON.parse(line);}catch{return fail();}if(m.stage==='result')answer=m.result;else if(m.stage==='held')fail();else if(authorize)Promise.resolve().then(()=>authorize(m)).then(r=>{if(!settled)p.stdin.write(JSON.stringify(r)+'\n');},fail);else fail();}});
  p.stderr.resume();p.stdin.on('error',()=>{});p.on('error',fail);p.on('close',code=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);if(!settled){settled=true;if(code!==0||answer===undefined)reject(Error('Mandatory fixture unavailable'));else resolve(answer);}});p.stdin.write(JSON.stringify(input)+'\n');
 });}
-export async function mandatoryFixture(){
+export async function mandatoryFixture(seed?:Record<string,unknown>){
  const x=await writerLeaseFixture(),root=x.dbRoot,authorityRoot=await mkdtemp(join(tmpdir(),'stylist-monotonic-authority-')),authorityKey=fixtureKey(),database=fixtureKey(),fence=fixtureKey();
  const keys={rotator:fixtureKey(),fencer:fixtureKey(),writer:fixtureKey(),signer:fixtureKey(),observer:fixtureKey(),reconciler:fixtureKey()};
  const actors=Object.entries(keys).map(([role,key],i)=>({role:role as LeaseAuthorityRole|'observer'|'reconciler',principalDigest:D(90+i),keyId:'fixture-key-monotonic-'+role,publicKeyPem:key.pem}));
  const config={...x.config,verifier:fileURLToPath(new URL('./cvi-mandatory-verifier.ts',import.meta.url))};
- const observe=()=>mandatoryCall({root,mode:'observe',config}),initial=await observe();
+ const observe=()=>mandatoryCall({root,mode:'observe',config}),localInitial=await observe(),initial=seed?structuredClone(seed):localInitial;
+ if(initial.storeId!==localInitial.storeId||initial.policyDigest!==localInitial.policyDigest)throw Error('Fixture seed scope unavailable');
  const pin={authorityId:'fixture-authority-monotonic',witnessId:'33333333-3333-4333-8333-333333333333',storeId:initial.storeId,policyDigest:initial.policyDigest,keyId:'fixture-key-monotonic-authority',publicKeyPem:authorityKey.pem},storePin={authorityId:pin.authorityId,witnessId:pin.witnessId,storeId:pin.storeId,policyDigest:pin.policyDigest};
  await serviceCall({root:authorityRoot,mode:'prepare',pin:storePin,current:initial,now:1000});
  const invoke=(a:any,mode:string,args:Record<string,unknown>)=>serviceCall({root:authorityRoot,pin:storePin,actor:{principalDigest:a.principalDigest,role:a.role},mode,args,now:1000});
@@ -47,7 +48,7 @@ export async function mandatoryFixture(){
  const claimPlan=async(lease:any)=>{const intent=await x.plan('claim');return plan('apply',{intent,lease});};
  const releasePlan=async(barrier:any,record:any)=>plan('release',{barrier,expectedDomain:await x.observe(),record});
  const recover=async(p:MandatoryLeaseIntent)=>{const e=await evidence(request('reconciler','reconcile',p.id,(await inspect()).revision));return verifyLocalWitnessReply(pin,e.request,e.reply,1000);};
- return {setRecoverySources:(patch:Partial<typeof sources>)=>Object.assign(sources,patch),sourceProof:proof,root,authorityRoot,pin,actors,initial,config,observe,inspect,plan,activation,fencing,commitPlan,claimPlan,releasePlan,adapter,persistence,authorityPort,service,request,evidence,recover,receiptId:x.receiptId,domainObserve:x.observe,
+ return {registerReferencePlan:(p:MandatoryLeaseIntent)=>{const {id,...body}=p;if(witnessServiceDigest(body)!==id||p.from.storeId!==pin.storeId||p.to.storeId!==pin.storeId||p.from.policyDigest!==pin.policyDigest||p.to.policyDigest!==pin.policyDigest)throw Error('Fixture reference unavailable');plans.set(id,structuredClone(p));},setRecoverySources:(patch:Partial<typeof sources>)=>Object.assign(sources,patch),sourceProof:proof,root,authorityRoot,pin,actors,initial,config,observe,inspect,plan,activation,fencing,commitPlan,claimPlan,releasePlan,adapter,persistence,authorityPort,service,request,evidence,recover,receiptId:x.receiptId,domainObserve:x.observe,
  setUnavailable:(v:boolean)=>{unavailable=v;},setTamperRead:(v:boolean)=>{tamperRead=v;},setReplayRead:(v:boolean)=>{replayRead=v;},setCrash:(v:string|undefined)=>{crashAt=v;},setDenyReconcile:(v:boolean)=>{denyReconcile=v;},
  dbSnapshot:()=>readFile(join(root,'history.sqlite')),dbRestore:(b:Buffer)=>writeFile(join(root,'history.sqlite'),b),authoritySnapshot:()=>Promise.all(['ledger.json','checkpoint.json'].map(n=>readFile(join(authorityRoot,n)))),authorityRestore:async(b:Buffer[])=>{for(let i=0;i<2;i++)await writeFile(join(authorityRoot,['ledger.json','checkpoint.json'][i]),b[i]);},close:async()=>{await x.close();await rm(authorityRoot,{recursive:true,force:true});}};
 }

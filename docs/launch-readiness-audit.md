@@ -2,13 +2,19 @@
 
 15 October 2026. Evidence snapshot: `e5f302a4a1320aa9501c6f33ebb620fb36ea5645`.
 
+## Local preparation addendum, 16 October 2026
+
+The continuous full-state rehearsal now records 2,006 foundation tests across 158 files, 475 operations tests and 479 isolated PostgreSQL checks, plus type checking/build, four encryption checks and 16 local Memory checks. It covers a five-step state history, competing connection, one-sided restore refusal and an explicit coordinated-restore limitation. See [the scoped evidence and limits](local-tavus-continuous-state-rehearsal.md).
+
+This adds local engineering evidence for B01/B06/B07 preparation only. It does not resolve a provider contract, deploy the account app, provide real product access, accept customer/photo recovery or close any A01–A21 criterion. The original production-evidence snapshot below remains historical; no hosted/provider/device state was rechecked. All nine ranked blockers and both completion counts remain unchanged.
+
 ## Current conclusion
 
 **Public launch is not ready. None of A01–A21 has complete production acceptance evidence recorded.** Local preparation, simulations, accepted user reviews and a bounded private avatar-recovery test establish useful parts of the requirements. They do not close the combined live criteria.
 
 The phased backlog has **2 of 38 tasks checked**: 1a and 2a. The Memory snapshot reports **5 of 41 combined items**, including three discovery entries: D02, D03 and X01. Earlier descriptions calling these “5 of 41 full tasks” were imprecise. This audit changes no checkbox or agreed scope.
 
-Current recorded tests: 1,267 foundation tests across 127 files, type checking/build; 208 operations tests and four encryption tests; 183 isolated synthetic database/photo recovery checks; 16 local Memory checks. These are recorded checkpoints from their respective work, not fresh executions or percentages of launch readiness. Old task documents contain earlier counts. No live provider, account, dashboard, support inbox or hosted configuration was rechecked for this audit.
+Recorded tests at the 15 October snapshot: 1,267 foundation tests across 127 files, type checking/build; 208 operations tests and four encryption tests; 183 isolated synthetic database/photo recovery checks; 16 local Memory checks. These are recorded checkpoints from their respective work, not fresh executions or percentages of launch readiness. Old task documents contain earlier counts. No live provider, account, dashboard, support inbox or hosted configuration was rechecked for this audit.
 
 ## All 21 acceptance criteria
 

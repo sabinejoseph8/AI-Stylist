@@ -482,5 +482,18 @@
         "B08"
       ]
     }
+  ],
+  "localPreparationUpdates": [
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-continuous-state-rehearsal.md",
+      "foundationTests": 2006,
+      "foundationFiles": 158,
+      "operationsTests": 475,
+      "isolatedPostgresChecks": 479,
+      "scope": "Continuous reference-state persistence/reconciliation, competing connection and synthetic control-table restores only",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
+    }
   ]
 }

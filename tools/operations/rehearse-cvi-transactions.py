@@ -18,7 +18,7 @@ def literal(x):return "'"+str(x).replace("'","''")+"'"
 def state(x):return literal(json.dumps(x,separators=(',',':')))+'::jsonb'
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local-synthetic',action='store_true',required=True);parser.add_argument('--signed-authority-bridge',action='store_true');parser.add_argument('--full-state-reconciliation',action='store_true');options=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local-synthetic',action='store_true',required=True);parser.add_argument('--signed-authority-bridge',action='store_true');parser.add_argument('--full-state-reconciliation',action='store_true');parser.add_argument('--continuous-full-state',action='store_true');options=parser.parse_args()
     socket=Path.home()/'.docker/run/docker.sock';binary=Path.home()/'.docker/bin/docker'
     if not stat.S_ISSOCK(socket.stat().st_mode):raise RuntimeError('local Docker unavailable')
     docker=[str(binary),'--host','unix://'+str(socket)]
@@ -72,11 +72,11 @@ def main():
     class BridgeWorker:
         def __init__(self,full=False,operation='activate'):
             node=Path.home()/'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node'
-            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')]+(['--full-state','--stage='+operation] if full else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
-            self.buffer='';self.sel=selectors.DefaultSelector();self.sel.register(self.p.stdout,selectors.EVENT_READ);self.active=None;workers.append(self)
+            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')]+(['--full-state','--continuous'] if operation=='sequence' else (['--full-state','--stage='+operation] if full else [])),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
+            self.timeout=30 if operation=='sequence' else 12;self.buffer='';self.sel=selectors.DefaultSelector();self.sel.register(self.p.stdout,selectors.EVENT_READ);self.active=None;workers.append(self)
             self.prepared=self.call('prepare');self.command=self.prepared['command']
         def call(self,method,**args):
-            self.p.stdin.write(json.dumps(dict(method=method,**args))+'\n');self.p.stdin.flush();limit=time.monotonic()+12
+            self.p.stdin.write(json.dumps(dict(method=method,**args))+'\n');self.p.stdin.flush();limit=time.monotonic()+self.timeout
             while time.monotonic()<limit:
                 while '\n' in self.buffer:
                     line,self.buffer=self.buffer.split('\n',1);message=json.loads(line)
@@ -261,7 +261,7 @@ def main():
         require(good("SELECT count(*)=7 AND bool_and(NOT rolcanlogin AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolreplication) FROM pg_roles WHERE rolname LIKE 'cvi_tx_%';")=='t')
         require(good("SELECT count(*)=4 AND bool_and(relrowsecurity AND relforcerowsecurity) FROM pg_class WHERE relnamespace='cvi_tx_fixture'::regnamespace AND relkind='r';")=='t')
         require(good("SELECT count(*)=0 FROM pg_auth_members WHERE roleid='cvi_tx_owner'::regrole;")=='t')
-        if options.full_state_reconciliation:
+        if options.full_state_reconciliation or options.continuous_full_state:
             stage='full-schema';good((ROOT/'tools/operations/sql/cvi-full-state-contract.sql').read_text())
             for role in ROLES:
                 for table in ['full_states','full_admissions']:
@@ -311,7 +311,53 @@ def main():
                 try:wrapper.execute(w.command);raise RuntimeError('unexpected full retry')
                 except DatabaseHeld:checks+=1
                 w.close()
-        print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='full-reconciliation' if options.full_state_reconciliation else ('signed-bridge' if options.signed_authority_bridge else 'simulated'),network='none')))
+        if options.continuous_full_state:
+            stage='continuous-start';w=BridgeWorker(True,'sequence')
+            good('TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(w.command['previous'])+'; INSERT INTO cvi_tx_fixture.full_states VALUES(true,'+state(w.prepared['states']['previous'])+',NULL);')
+            saved=None
+            for n in range(5):
+                stage='continuous-step-'+str(n)
+                if n:
+                    w.call('next',index=n);w.prepared=w.call('prepare');w.command=w.prepared['command']
+                s=Session(w.prepared['principal']);w.active=s
+                def apply_continuous(op,claim):
+                    result=json.loads(s.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');'));result['operationId']=uuid.UUID(result['operationId']).hex
+                    # A competing connection cannot use the original admission.
+                    if n==1:
+                        other=Session(w.prepared['principal'])
+                        try:other.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');');raise RuntimeError('unexpected competing writer')
+                        except DatabaseHeld:pass
+                        finally:other.close()
+                    return result
+                s.execute_admitted=apply_continuous
+                base=DatabaseTransactionAdapter(w.prepared['principal'],w.command['kind'],type('Port',(),{'begin':lambda _:s})(),FullVerifier(w,'normal'),lambda:1000)
+                final=type('Finalizer',(),{'finalize':lambda _,p,r:w.call('finalize')})()
+                wrapper=ReconciledDatabaseAdapter(base,final,w.prepared['targetDigest'],lambda:1000)
+                require(wrapper.execute(w.command)['reconciliation']['status']=='reconciled')
+                require(w.call('verify-current') is True)
+                require(good('SELECT count(*) FROM cvi_tx_fixture.executions;')==str(n+1))
+                if n==1:
+                    require(True);w.call('checkpoint-authority')
+                    saved={table:json.loads(good('SELECT coalesce(jsonb_agg(to_jsonb(t)),\'[]\'::jsonb) FROM cvi_tx_fixture.'+table+' t;')) for table in ['state','admissions','full_admissions','executions','releases','full_states']}
+            require(good('SELECT count(*) FROM cvi_tx_fixture.releases;')=='1')
+            stage='continuous-database-restore'
+            latest={table:json.loads(good('SELECT coalesce(jsonb_agg(to_jsonb(t)),\'[]\'::jsonb) FROM cvi_tx_fixture.'+table+' t;')) for table in ['state','admissions','full_admissions','executions','releases','full_states']}
+            def restore_view(checkpoint):
+                query='BEGIN; TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions,cvi_tx_fixture.state;'
+                for table in ['state','admissions','full_admissions','executions','releases','full_states']:
+                    query+=' INSERT INTO cvi_tx_fixture.'+table+' SELECT * FROM jsonb_populate_recordset(NULL::cvi_tx_fixture.'+table+','+state(checkpoint[table])+');'
+                good(query+' COMMIT;')
+            restore_view(saved)
+            try:w.call('verify-current');raise RuntimeError('unexpected database restore acceptance')
+            except DatabaseHeld:checks+=1
+            restore_view(latest);require(w.call('verify-current') is True)
+            stage='continuous-authority-restore';w.call('restore-authority')
+            try:w.call('verify-current');raise RuntimeError('unexpected authority restore acceptance')
+            except DatabaseHeld:checks+=1
+            stage='continuous-coordinated-restore';restore_view(saved)
+            # Negative boundary: matching rollback of both stores still passes a current-state comparison.
+            require(w.call('verify-current') is True);w.close()
+        print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='continuous-full-state' if options.continuous_full_state else ('full-reconciliation' if options.full_state_reconciliation else ('signed-bridge' if options.signed_authority_bridge else 'simulated')),network='none')))
     except Exception:
         print(json.dumps(dict(status='held',stage=stage,checks=checks)));raise SystemExit(1)
     finally:

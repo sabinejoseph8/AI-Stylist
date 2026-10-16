@@ -1,3 +1,7 @@
+## Keeping one state history through concurrency and recovery checks
+
+I connected the local full-state targets into one continuous database and authority history. The next step cannot begin while the previous one is pending, and another database connection cannot reuse the original transaction's admission. I restored complete local control-table checkpoints and tested each side against the other. One-sided rollback is refused, while rolling back both stores still passes the state comparison. I kept that limitation visible instead of claiming independent restore protection. The reference release target does not recreate an application signing handoff or emit audio. No paid service or hosted setting changed.
+
 ## Preserving receipt changes when the visible state stays the same
 
 I extended the full-state database rehearsal to domain commits, receipt claims, fencing and release records. A receipt claim changes protected history without changing the visible head or generation, so I kept the reduced write path disabled and required the complete validated snapshot. I checked each target through the signed authority and a separate committed database reader. I also found an older checkout with missing files and preserved it as a recovery source instead of overwriting it. Continuous consultation, concurrency and restore acceptance remain separate work. No paid service or hosted setting changed.
