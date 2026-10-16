@@ -1,3 +1,5 @@
+import {isOriginalLocalGatedExecution,claimLocalGatedExecution} from './local-cvi-gated-execution.ts';
+import type {LocalGatedExecutionContext} from './local-cvi-gated-execution.ts';
 /** Disabled authenticated continuation. Ports are trusted server composition.
  * No HTTP activation, token recovery, environment access or raw-write fallback. */
 import {randomBytes} from 'node:crypto';
@@ -9,7 +11,7 @@ import type {StartupOwnerPin} from './local-cvi-startup-checkpoint.ts';
 export type OwnerContinuationInput=Readonly<{owner:StartupOwnerPin;operationId:string;revision:number;bindingDigest:string;applicationExpiresAt:number}>;
 export interface OwnerContinuationPort {renew(input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>}
 type NativeLease=Readonly<{storeId:string;policyDigest:string;generation:number;ownerDigest:string;bootDigest:string;token:string;issuedAt:number;expiresAt:number}>;
-type Result={before:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number};expiresAt:number;observedAt:number;used:boolean;contextClaimed?:boolean;replayClaimed?:boolean;replayLease:NativeLease;valid():boolean;accept():void};
+type Result={before:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number};expiresAt:number;observedAt:number;used:boolean;contextClaimed?:boolean;replayClaimed?:boolean;replayLease:NativeLease;execution?:LocalGatedExecutionContext;valid():boolean;accept():void};
 const handoffs=new WeakMap<object,Result>();
 const exact=(v:any,keys:string[])=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const int=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
@@ -32,7 +34,7 @@ export function claimOwnerContinuationContext(raw:unknown,input:OwnerContinuatio
 export function claimLocalContinuationReplayLease(raw:unknown,input:OwnerContinuationInput,now:number){
  const r=raw&&typeof raw==='object'?handoffs.get(raw):undefined;
  if(!r||!r.used||r.replayClaimed||!r.valid()||!int(now)||now<r.observedAt||now>=r.expiresAt||!same(r.before,input))throw Error('Replay continuation unavailable');
- r.replayClaimed=true;r.observedAt=now;return {lease:structuredClone(r.replayLease),owner:structuredClone(r.owner),after:{...r.after}};
+ r.replayClaimed=true;r.observedAt=now;return {lease:structuredClone(r.replayLease),execution:r.execution,owner:structuredClone(r.owner),after:{...r.after}};
 }
 export interface OwnerCheckpointTransition {
  inspect(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>;
@@ -70,11 +72,12 @@ export function createLocalDurableOwnerContinuation(
     const p=structuredClone(await plan({lease:structuredClone(original),ttl,token,issuedAt},signal));now();
     if(!exact(p,['id','version','kind','args','actor','now','from','to'])||p.version!==1||p.kind!=='renew'||!hex(p.id)||p.actor.role!=='rotator'||p.actor.principalDigest!==principal.principalDigest||p.now!==issuedAt||!same(p.from,baseline.current)||!exact(p.args,['lease','ttl','token'])||!same(p.args.lease,original)||p.args.ttl!==ttl||p.args.token!==token||p.to.storeId!==scope.storeId||p.to.policyDigest!==scope.policyDigest||p.to.epochFloor!==original.generation)throw Error();
     const {id,...body}=p;if(witnessServiceDigest(body)!==id)throw Error();
-    const next=structuredClone(await execute(structuredClone(p),signal)) as NativeLease;const at=now();
+    const originalExecution=await execute(structuredClone(p),signal),execution=isOriginalLocalGatedExecution(originalExecution)?claimLocalGatedExecution(originalExecution,p,now()):undefined;
+    const next=structuredClone(originalExecution) as NativeLease;const at=now();
     if(!exact(next,['storeId','policyDigest','generation','ownerDigest','bootDigest','token','issuedAt','expiresAt'])||['storeId','policyDigest','generation','ownerDigest','bootDigest'].some(k=>(next as any)[k]!== (original as any)[k])||next.token!==token||next.token===original.token||next.issuedAt!==issuedAt||!int(next.expiresAt)||next.expiresAt<=original.expiresAt||next.expiresAt>issuedAt+ttl||next.expiresAt>applicationExpiresAt||next.expiresAt<=at)throw Error();
     const proof=await fresh(before.revision+2,p.to),finished=now(),expiresAt=Math.min(deadline,baseline.expiresAt,proof.expiresAt);if(finished>=expiresAt)throw Error();
     const owner={...before.owner,expiresAt:next.expiresAt,minimumRevision:before.revision+2},after={operationId:id,revision:before.revision+2},result=Object.freeze({status:'owner-continuation'});
-    handoffs.set(result,{before,owner,after,expiresAt,observedAt:finished,used:false,replayLease:structuredClone(next),valid:()=>!signal.aborted&&!held,accept(){lease=structuredClone(next);busy=false;}});
+    handoffs.set(result,{before,owner,after,expiresAt,observedAt:finished,used:false,replayLease:structuredClone(next),execution,valid:()=>!signal.aborted&&!held,accept(){lease=structuredClone(next);busy=false;}});
     return result;
    };
    return await Promise.race([work(),canceled]);

@@ -1,3 +1,15 @@
+## Original execution through startup and renewal handoffs, 16 October 2026
+
+Startup admission and renewal now capture the original gated execution before cloning and validating the public native lease. The context stays private in the original startup permit or renewal handoff and transfers through the existing one-use replay claim. Renewal still requires original handoff consumption before its replay claim. Copied or canceled permits/handoffs cannot expose a context. Private replay validates the context's original native/replay/application scope and operation/revision, routes transition inspection through that held gate, and blocks replay writes until verified finish. Retirement closes the original gate and preserves uncertain/permanent evidence, including a context already claimed before a later validation failure.
+
+Startup now binds the private replay context before the existing post-admission idle check, avoiding a second acquisition of the held lock. Every existing check remains. A genuine unfinished context refuses protected owner registration and subsequent owner recognition. The constructor also validates the complete prior state and command before gate entry or authority advancement; malformed commands, prior projections/state and expired/late deadlines refuse before privileged work. These changes do not make generic legacy ports a genuine paired producer, and absence of a context is not proof of verified completion.
+
+The final focused regression passes 136 checks across six startup, renewal, replay, producer and original-handoff suites, including eight new actual handoff checks and 19 producer checks. The earlier 27-check new-suite run passed before the final readiness/cleanup refinement; the six-suite result covers the final source. TypeScript and client build pass. Full foundation regression 27313 is running, log /private/tmp/ai-stylist-original-handoff-regression.log; source is frozen. Collect the same handle before claiming full totals. The previous full 2,532-test/184-file result at 1526c9d predates this handoff change. Operations and SQL sources are unchanged; prior 568 operations and 638 isolated PostgreSQL checks were not rerun. Nineteen refreshed local Memory checks pass.
+
+Actual handoff tests use local SQLite commits and signatures. They exercise startup-to-private-replay context transfer and consumed-renewal-to-context transfer separately, not a complete protected HTTP exchange before and after renewal. Generic lower harnesses and structural finish hooks still exist. Next, implement the private paired admission/replay/checkpoint factory, require its original pair before privileged protected startup, preserve the original last signed inspection, and await original gate finish after all final checks before registration or renewed publication. Keep the fixed 128-row cap, complete two-turn/renewal exchange and all deadlines; remeasure the composed path rather than claiming these isolated checks establish the previous 127-row count.
+
+Witness-pin composition, independent restore floors, universal participating-writer coverage, production clocks and live acceptance remain open. Product/design scope, 5-of-41 completion, 0-of-21 production acceptance and the $51 allocation are unchanged. No provider calls, real credentials, new spending, hosted changes, support messages or permanent backup runtime changes.
+
 ## Original local gated execution producer, 16 October 2026
 
 Prepared a concrete disabled SQLite producer. It captures and freezes the original native plan, complete target, command, replay/native roots, principals and pins before callbacks. The producer enters its original supervised gate before authority advancement, performs the signed original admission and confirmation, binds that admission once, and waits for the same SQLite connection to commit and close. It validates the exact committed transaction/claim and full-state target, verifies the native lease against its stored token hash, reconciles and verifies a fresh completed authority read. Only then does it retain an original frozen execution result and private one-use context. Copied leases, copied contexts and reentrant claims cannot recreate it. The retained context inspects through the held gate and finishes only with the original prepared signed inspection and actual lock-context exit.
@@ -1610,14 +1622,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: original gated SQLite execution and private one-use contexts are prepared; 14 final focused checks and 568 operations tests pass. Full regression passes 2,532 tests across 184 files. Mandatory startup/renewal/replay/publication composition and hosted acceptance remain open.
+Current local focus: original contexts now transfer through startup and consumed-renewal handoffs; 136 focused checks across six suites pass. Full regression 27313 is running. Mandatory paired composition, final signed finish and protected HTTP acceptance remain open.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** retain original producer context through startup and consumed-renewal handoffs and require paired gate finish before protected publication.
+- **Next local action:** collect full regression 27313, then require original paired admission/replay/checkpoint identities and connect the original final signed inspection to awaited gate finish before protected publication.
 
 ## Historical summary checkpoints
 

@@ -31,6 +31,8 @@ export function claimLocalGatedExecution(raw:unknown,plan:MandatoryLeaseIntent,a
   live(r,at);if(r.claimed)throw Error('Original gated execution unavailable');r.claimed=true;const context=Object.freeze({status:'original-gated-execution' as const});contexts.set(context,r);return context;
  }finally{r.claiming=false;}
 }
+export const isOriginalLocalGatedExecution=(raw:unknown)=>!!raw&&typeof raw==='object'&&results.has(raw);
+export const localGatedExecutionFinished=(c:LocalGatedExecutionContext)=>{const r=contexts.get(c);if(!r)throw Error('Original gated execution required');return r.finished&&!r.held;};
 const original=(c:LocalGatedExecutionContext)=>{const r=contexts.get(c);if(!r)throw Error('Original gated execution required');live(r,r.clock());return r;};
 export const localGatedExecutionBinding=(c:LocalGatedExecutionContext)=>localTransitionFinishBinding(original(c).gate);
 export async function inspectLocalGatedExecution(c:LocalGatedExecutionContext,request:ReplayInspectionRequest,signal:AbortSignal){
@@ -63,16 +65,16 @@ function transact(input:object,signal:AbortSignal,handler:(stage:'admit'|'confir
   const line=JSON.stringify(input);if(Buffer.byteLength(line)>1048576)hold();else child.stdin.write(line+'\n');
  });
 }
-export function createLocalGatedSqliteExecution(raw:Readonly<{gate:LocalTransitionSetup;nativeRoot:string;target:unknown;command:Record<string,unknown>}>,ports:Readonly<{
+export function createLocalGatedSqliteExecution(raw:Readonly<{gate:LocalTransitionSetup;nativeRoot:string;previous:unknown;target:unknown;command:Record<string,unknown>}>,ports:Readonly<{
  authority:MonotonicLeaseAuthorityPort;
  identity(request:DatabaseProofRequest,binding:DatabaseBinding,signal:AbortSignal):Promise<unknown>;
  observe(signal:AbortSignal):Promise<unknown>;
 }>,clock=Date.now){
- if(!exact(raw,['gate','nativeRoot','target','command'])||typeof raw.nativeRoot!=='string'||!raw.nativeRoot.startsWith('/')||raw.nativeRoot===raw.gate.root||typeof clock!=='function'||!['activate','renew'].includes(raw.gate.plan.kind)||raw.gate.plan.actor.role!=='rotator'||typeof ports?.identity!=='function'||typeof ports.observe!=='function'||!['advance','claim','read','reconcile'].every(k=>typeof (ports.authority as any)?.[k]==='function'))throw Error('Local gated producer unavailable');
+ if(!exact(raw,['gate','nativeRoot','previous','target','command'])||typeof raw.nativeRoot!=='string'||!raw.nativeRoot.startsWith('/')||raw.nativeRoot===raw.gate.root||typeof clock!=='function'||!['activate','renew'].includes(raw.gate.plan.kind)||raw.gate.plan.actor.role!=='rotator'||typeof ports?.identity!=='function'||typeof ports.observe!=='function'||!['advance','claim','read','reconcile'].every(k=>typeof (ports.authority as any)?.[k]==='function'))throw Error('Local gated producer unavailable');
  const setup=freeze(structuredClone(raw)),p=setup.gate.plan,command=setup.command,identity=ports.identity.bind(ports),observe=ports.observe.bind(ports),authority=Object.fromEntries(['advance','claim','read','reconcile'].map(k=>[k,(ports.authority as any)[k].bind(ports.authority)])) as unknown as MonotonicLeaseAuthorityPort;
- if(!same(fullStateMetadata(setup.target),p.to)||!same(fullStateProjection(setup.target),command.target)||command.operationId!==p.id.slice(0,32)||command.kind!==p.kind||!Number.isSafeInteger(command.expiresAt)||Number(command.expiresAt)>setup.gate.scope.expiresAt)throw Error('Local gated producer unavailable');
+ if(!exact(command,['operationId','kind','previous','target','recordHash','expiresAt'])||command.recordHash!==null||!same(fullStateMetadata(setup.previous),p.from)||!same(fullStateProjection(setup.previous),command.previous)||!same(fullStateMetadata(setup.target),p.to)||!same(fullStateProjection(setup.target),command.target)||command.operationId!==p.id.slice(0,32)||command.kind!==p.kind||!Number.isSafeInteger(command.expiresAt)||Number(command.expiresAt)<=p.now||Number(command.expiresAt)>setup.gate.scope.expiresAt)throw Error('Local gated producer unavailable');
  let attempted=false,held=false,gate:LocalTransitionGate|undefined,record:RecordState|undefined,activeAbort:AbortController|undefined;
- return Object.freeze({isHeld:()=>held||!!record?.held,async close(){held=true;activeAbort?.abort();if(record)record.held=true;if(gate)await closeLocalTransitionGate(gate);},async execute(plan:MandatoryLeaseIntent,external:AbortSignal){
+ return Object.freeze({isHeld:()=>held||!!record?.held||!!gate&&localTransitionIsHeld(gate),async close(){held=true;activeAbort?.abort();if(record)record.held=true;if(gate)await closeLocalTransitionGate(gate);},async execute(plan:MandatoryLeaseIntent,external:AbortSignal){
   if(attempted||held||external.aborted||!same(structuredClone(plan),p))throw Error('Local gated producer unavailable');attempted=true;
   const abort=new AbortController();activeAbort=abort;const signal=AbortSignal.any([external,abort.signal]);let timer:ReturnType<typeof setTimeout>|undefined,onAbort:(()=>void)|undefined,last=-1;
   const now=()=>{const at=clock();if(held||signal.aborted||!Number.isSafeInteger(at)||at<last||at<p.now||at>=Number(command.expiresAt))throw Error();last=at;return at;};

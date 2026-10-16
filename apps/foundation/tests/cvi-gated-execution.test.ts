@@ -1,8 +1,10 @@
-import {it,expect} from 'vitest';
+import {mandatoryCall} from './support/cvi-mandatory-fixture.ts';
+import {fullStateProjection} from '../src/server/local-cvi-full-state-reconciliation.ts';
+import {it,expect,vi} from 'vitest';
 import {access,readFile} from 'node:fs/promises';
 import {randomBytes} from 'node:crypto';
 import {deferredGateFixture} from './support/cvi-deferred-gate-fixture.ts';
-import {claimLocalGatedExecution,localGatedExecutionBinding,inspectLocalGatedExecution,finishLocalGatedExecution,closeLocalGatedExecution} from '../src/server/local-cvi-gated-execution.ts';
+import {createLocalGatedSqliteExecution,claimLocalGatedExecution,localGatedExecutionBinding,inspectLocalGatedExecution,finishLocalGatedExecution,closeLocalGatedExecution} from '../src/server/local-cvi-gated-execution.ts';
 const signal=()=>new AbortController().signal;
 it.each(['activate','renew'] as const)('retains the original %s execution through actual commit, reconciliation and signed finish',async mode=>{
  const f=await deferredGateFixture(mode),producer=f.producer();try{
@@ -86,4 +88,15 @@ it('closing during observation aborts pending work without reconciling afterward
   const work=producer.execute(f.plan,signal());void work.catch(()=>{});await observing;await producer.close();await expect(work).rejects.toThrow();
   release(await f.observe());await new Promise(r=>setTimeout(r,10));expect((await f.x.inspect()).pending).toBe(f.plan.id);
  }finally{await producer.close();await f.close();}
+},30000);
+
+it.each(['shape','previous-projection','previous-state','expired','late'])('invalid %s configuration refuses before gate entry or authority work',async mode=>{
+ const f=await deferredGateFixture();try{
+  const states=await mandatoryCall({root:f.x.root,config:f.x.config,mode:'plan-full',actor:f.plan.actor,kind:f.plan.kind,args:f.plan.args});
+  const command:any={operationId:f.plan.id.slice(0,32),kind:f.plan.kind,previous:fullStateProjection(states.previous),target:fullStateProjection(states.target),recordHash:null,expiresAt:f.setup.scope.expiresAt};
+  let previous=states.previous;if(mode==='shape')command.extra=true;if(mode==='previous-projection')command.previous.head='0'.repeat(64);if(mode==='previous-state')previous=states.target;if(mode==='expired')command.expiresAt=f.plan.now;if(mode==='late')command.expiresAt=f.setup.scope.expiresAt+1;
+  const work=vi.fn(async()=>{throw Error('Must not run');});
+  expect(()=>createLocalGatedSqliteExecution({gate:f.setup,nativeRoot:f.x.root,previous,target:states.target,command},{authority:{advance:work,claim:work,read:work,reconcile:work},identity:work,observe:work},f.clock)).toThrow();
+  expect(work).not.toHaveBeenCalled();expect((await f.x.inspect()).revision).toBe(0);await expect(access(f.root+'/owner-transition.json')).rejects.toThrow();
+ }finally{await f.close();}
 },30000);

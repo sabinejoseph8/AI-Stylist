@@ -1,3 +1,9 @@
+## Keeping original evidence through the session handoff
+
+I connected the original local execution context to startup permits and consumed renewal handoffs before their public lease data is copied. Replay checks now use the lock already held by that context, avoiding a second lock acquisition. Replay writes and owner publication remain blocked while its gate is unfinished.
+
+I kept lease validation and the earlier fresh checks, added malformed-configuration refusal before authority work, and preserved uncertain evidence on cancellation or retirement. The local tests exercise actual committed handoffs, copied/canceled results and unfinished-publication refusal. The final paired composition and full protected conversation still need verification.
+
 ## Preserving the original execution through reconciliation
 
 I prepared a local producer that owns the gate before the database operation starts, waits for the actual connection to commit and close, and checks the complete saved state before reconciliation. Only its original result can create the temporary handoff; copying a success object does not recreate permission.

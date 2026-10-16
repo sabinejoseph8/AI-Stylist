@@ -1,3 +1,5 @@
+import {createLocalGatedSqliteExecution} from '../../src/server/local-cvi-gated-execution.ts';
+import {transactionCall} from './cvi-deferred-gate-fixture.ts';
 import {residentWitnessTransport} from './cvi-resident-witness.ts';
 import {vi} from 'vitest';
 import {createLocalOwnedReplayPort,localOwnedReplayState} from '../../src/server/local-cvi-owned-replay.ts';
@@ -24,7 +26,7 @@ import {witnessServiceDigest} from '../../src/server/local-cvi-witness-service.t
 import type {DurableStartupPorts} from '../../src/server/local-cvi-startup-admission.ts';
 import type {FreshOwnerAdmissionInput} from '../../src/server/local-cvi-startup-owner.ts';
 import type {GateFinishBinding} from '../../src/server/local-cvi-gate-finish-proof.ts';
-export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bindingExpiresAt=10000,useResidentAuthority=false){
+export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bindingExpiresAt=10000,useResidentAuthority=false,useGatedExecution=false){
  const resident=useResidentAuthority?residentWitnessTransport():undefined;
  const x=await mandatoryFixture(undefined,testClock,resident?.call),signal=()=>new AbortController().signal,first=await x.activation();
  const firstLease:any=await x.adapter('rotator').execute(first,signal());
@@ -35,13 +37,23 @@ export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bind
  const rotator=x.actors.find(a=>a.role==='rotator')!,reader=x.actors.find(a=>a.role==='observer')!,authority=x.authorityPort('rotator'),key=fixtureKey();
  const registry={version:1 as const,entries:[{operationId:first.id,target:first.to,projection:fullStateProjection(initialSnapshot)}]};
  const ownerDigest=witnessServiceDigest(x.config.actor);
- let nativeLease:any;
+ let nativeLease:any;const gatedProducers=new Set<ReturnType<typeof createLocalGatedSqliteExecution>>();
  let marker={operationId:first.id.slice(0,32),transactionId:'1',claimHash:'c'.repeat(64),consumed:true,protected:true},claimHash='',lastPlan:any,drafts=0;
  const claim=authority.claim;authority.claim=async(p,n)=>{const e=await claim(p,n);claimHash=witnessServiceDigest(e.request);return e;};
  const adapter=()=>createLocalMandatoryLeaseAdapter(x.pin,{role:'rotator',principalDigest:rotator.principalDigest},authority,x.persistence,testClock,8000);
  const ports:DurableStartupPorts={
   plan:async(input)=>{const p=await x.plan('activate',{previous:input.previous,owner:ownerDigest,boot:localStartupOwnerBoot(input),ttl:input.expiresAt-input.issuedAt,token:randomBytes(32).toString('hex')});lastPlan=p;registry.entries.push({operationId:p.id,target:p.to,projection:{...fullStateProjection(initialSnapshot),generation:2,owner:p.args.owner as string,boot:p.args.boot as string}});return p;},
-  execute:async(p,s)=>{const lease=await adapter().execute(p,s);nativeLease=lease;marker={operationId:p.id.slice(0,32),transactionId:'2',claimHash,consumed:true,protected:true};return lease;},
+  execute:async(p,s)=>{
+   if(useGatedExecution){
+    const states=await mandatoryCall({root:x.root,config:x.config,mode:'plan-full',actor:p.actor,kind:p.kind,args:p.args});
+    const command={operationId:p.id.slice(0,32),kind:p.kind,previous:fullStateProjection(states.previous),target:fullStateProjection(states.target),recordHash:null,expiresAt:p.now+Number(p.args.ttl)};
+    const observe=async()=>{const seen=await transactionCall({root:x.root,plan:p,command,config:x.config,principal:'fixture_rotator',mode:'observe'});marker={operationId:seen.operationId,transactionId:seen.transactionId,claimHash:seen.claimHash,consumed:true,protected:true};return seen;};
+    const owner={storeId:x.pin.storeId,generation:Number(p.to.epochFloor),ownerDigest:p.args.owner as string,bootDigest:p.args.boot as string,expiresAt:Number(command.expiresAt),minimumRevision:expected.revision+2};
+    const producer=createLocalGatedSqliteExecution({gate:{root:replayRoot,scope:{storeId:journal.storeId,bindingDigest:oldDigests.scopeDigest,nativeStoreId:x.pin.storeId,applicationExpiresAt:binding.expiresAt,expiresAt:Number(command.expiresAt)},plan:p,pin:{authority:x.pin,database:{keyId:'fixture-key-startup-observer',publicKeyPem:key.pem},readerPrincipal:reader.principalDigest},writerPrincipal:rotator.principalDigest,owner,databasePrincipal:'fixture_rotator'},nativeRoot:x.root,previous:states.previous,target:states.target,command},{authority,observe,identity:async(request,b)=>{const body={version:1,keyId:'fixture-key-startup-observer',...request,bindingDigest:witnessServiceDigest(b),issuedAt:testClock(),expiresAt:testClock()+3000};return {body,signature:key.sign(historyCanonical(body))};}},testClock);
+    gatedProducers.add(producer);nativeLease=await producer.execute(p,s);return nativeLease;
+   }
+   const lease=await adapter().execute(p,s);nativeLease=lease;marker={operationId:p.id.slice(0,32),transactionId:'2',claimHash,consumed:true,protected:true};return lease;
+  },
   read:(n,s)=>authority.read(n),
  };
  const readPorts={authority:(n:string)=>authority.read(n),database:async(nonce:string)=>{const snapshotValue=await snapshot(),issuedAt=testClock(),body={version:1,keyId:'fixture-key-startup-observer',storeId:x.pin.storeId,policyDigest:x.pin.policyDigest,nonce,issuedAt,expiresAt:issuedAt+7000,checkpoint:{snapshot:snapshotValue,projection:fullStateProjection(snapshotValue),...marker}};return {body,signature:key.sign(historyCanonical(body))};}};
@@ -64,5 +76,5 @@ export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bind
  const write=async()=>tracked(await x.commitPlan(nativeLease)),fence=async()=>tracked(await x.fencing(nativeLease.generation)),replace=async()=>tracked(await x.plan('activate',{previous:nativeLease.generation,owner:ownerDigest,boot:randomBytes(32).toString('hex'),ttl:1000,token:randomBytes(32).toString('hex')}));
  const oldOwner={storeId:x.pin.storeId,generation:firstLease.generation,ownerDigest:firstLease.ownerDigest,bootDigest:firstLease.bootDigest,expiresAt:firstLease.expiresAt,minimumRevision:2};
  const input=():FreshOwnerAdmissionInput=>({...structuredClone(scope),nonce:'4'.repeat(64),issuedAt:1000,expiresAt:8000});
- return {gateMaterial:()=>({pin:startupPin(),registry:structuredClone(registry),readPorts,databaseKey:key,writerPrincipal:rotator.principalDigest,physicalBindingDigest:oldDigests.scopeDigest}),residentStats:()=>resident?.stats(),newReplay,rawReplay,replayHooks,executeTracked:tracked,inspector,markerCopy:()=>structuredClone(marker),restoreMarker:(m:typeof marker)=>{marker=structuredClone(m);},oldOwner,write,fence,replace,ownerDigest,nativeLease:()=>nativeLease,oldOwnerExpiresAt:initialSnapshot.grants[0][5] as number,x,root,credential,replayRoot,journal,oldLease,scope,expected,baseline,ports,checkpoint,resources,admission,input,snapshot,lastPlan:()=>lastPlan,drafts:()=>drafts,make:()=>{if(localOwnedReplayState(resources.replay).bound||localOwnedReplayState(resources.replay).held)resources.replay=newReplay();return createLocalCviStartupOwner(expected,checkpoint,admission(),resources,testClock,7000);},close:async()=>{for(const p of privatePorts)p.close?.();await Promise.allSettled([...backendWork]);await resident?.close();await x.close();await rm(root,{recursive:true,force:true});}};
+ return {gateMaterial:()=>({pin:startupPin(),registry:structuredClone(registry),readPorts,databaseKey:key,writerPrincipal:rotator.principalDigest,physicalBindingDigest:oldDigests.scopeDigest}),residentStats:()=>resident?.stats(),newReplay,rawReplay,replayHooks,executeTracked:tracked,inspector,markerCopy:()=>structuredClone(marker),restoreMarker:(m:typeof marker)=>{marker=structuredClone(m);},oldOwner,write,fence,replace,ownerDigest,nativeLease:()=>nativeLease,oldOwnerExpiresAt:initialSnapshot.grants[0][5] as number,x,root,credential,replayRoot,journal,oldLease,scope,expected,baseline,ports,checkpoint,resources,admission,input,snapshot,lastPlan:()=>lastPlan,drafts:()=>drafts,make:()=>{if(localOwnedReplayState(resources.replay).bound||localOwnedReplayState(resources.replay).held)resources.replay=newReplay();return createLocalCviStartupOwner(expected,checkpoint,admission(),resources,testClock,7000);},close:async()=>{await Promise.allSettled([...gatedProducers].map(p=>p.close()));for(const p of privatePorts)p.close?.();await Promise.allSettled([...backendWork]);await resident?.close();await x.close();await rm(root,{recursive:true,force:true});}};
 }

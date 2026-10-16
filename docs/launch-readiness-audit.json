@@ -814,6 +814,24 @@
       "foundationFullTests": 2532,
       "foundationFullFiles": 184,
       "foundationFullExitCode": 0
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-original-handoff.md",
+      "focusedFoundationTests": 136,
+      "focusedFoundationFiles": 6,
+      "newOriginalHandoffTests": 8,
+      "gatedProducerTests": 19,
+      "foundationFullStatus": "running",
+      "foundationFullSession": 27313,
+      "priorFullFoundationTests": 2532,
+      "priorFullFoundationFiles": 184,
+      "operationsRerun": false,
+      "isolatedPostgresRerun": false,
+      "localMemoryChecks": 19,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "scope": "Original execution contexts through private startup/consumed-renewal handoffs; held-gate replay inspection and unfinished-context publication refusal. Mandatory paired factory, original last inspection/awaited finish and complete protected HTTP flow remain open."
     }
   ]
 }

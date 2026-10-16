@@ -61,11 +61,11 @@ export function createLocalCviStartupEnvelope(
     const input:FreshOwnerAdmissionInput=Object.freeze({checkpoint:before,credentialStoreId:boot.storeId,replayStoreId:replay.storeId,previous:boot.previous,bootDigest:boot.bootDigest,...cviCredentialDigests(binding),nonce:randomBytes(32).toString('hex'),issuedAt,expiresAt:lifetime.requestedLeaseExpiresAt});
     const originalPermit=await admit(input,signal),permit=structuredClone(originalPermit);current();
     if(!exact(permit,['status','authorizationId','input','after','ownerExpiresAt','owner'])||permit.status!=='authorized'||!int(permit.ownerExpiresAt)||permit.ownerExpiresAt<=current()||permit.ownerExpiresAt>binding.expiresAt||permit.ownerExpiresAt>input.expiresAt||!hex(permit.authorizationId)||!exact(permit.input,['checkpoint','credentialStoreId','replayStoreId','previous','bootDigest','scopeDigest','bindingDigest','nonce','issuedAt','expiresAt'])||!same(permit.input,input)||!identity(permit.after)||permit.after.storeId!==before.storeId||permit.after.revision<before.revision||((permit.after.revision===before.revision)!==(permit.after.operationId===before.operationId)))throw Error();
-    if(!await replayBoundary.idle(signal))throw Error();current();
     const after=Object.freeze({...permit.after});
     if(!exact(permit.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt','minimumRevision'])||permit.owner.storeId!==after.storeId||permit.owner.generation!==boot.previous+1||!hex(permit.owner.ownerDigest)||permit.owner.bootDigest!==localStartupOwnerBoot(input)||permit.owner.expiresAt!==permit.ownerExpiresAt||permit.owner.minimumRevision!==after.revision)throw Error();
     const nativeOwner=Object.freeze({...permit.owner}) as StartupOwnerPin;
     bind(originalPermit,input);current();
+    if(!await replayBoundary.idle(signal))throw Error();current();
     flow=makeFlow();const initial=flow.snapshot();
     if(initial.revision!==0||!exact(initial.notes,[...CVI_FIELDS])||Object.values(initial.notes).some(n=>n.text!==''||n.confirmed!==false))throw Error();
     let lease:CviCredentialLease|undefined,guard:ReturnType<typeof createLocalCurrentOwnerCredentialAuthority>|undefined;
