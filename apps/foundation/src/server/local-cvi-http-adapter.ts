@@ -33,14 +33,17 @@ export function localCviLlmConfiguration(binding:Binding,profile:Profile={}){
  const extra=configuration(binding,profile);
  return Object.freeze({pipeline_mode:'full',layers:Object.freeze({llm:Object.freeze({model:'local-simulation',base_url:binding.origin+'/cvi/v1',api_key:binding.secret,headers:Object.freeze({'X-AI-Stylist-Token':binding.secret}),speculative_inference:false,...(Object.keys(extra).length?{extra_body:extra}:{})})})});
 }
-export function createLocalCviHttpAdapter(options:Readonly<{
+/** @internal Shared unbranded protocol envelope. Protected construction is below. */
+export function createLocalCviHttpEnvelope(options:Readonly<{
  simulation:true;binding:Binding;owner:Owner;context:Context;transcript:Transcript;
  applicationRequest:Request;profile?:Profile;clock?:()=>number;deadlineMs?:number;
-}>){
+}>,hooks:Readonly<{ready(owner:object):boolean;continue(owner:object,port:OwnerContinuationPort,signal:AbortSignal):Promise<boolean>}>){
+ if(!hooks||Object.keys(hooks).sort().join(',')!=='continue,ready'||typeof hooks.ready!=='function'||typeof hooks.continue!=='function')throw Error('HTTP envelope hooks required');
+ const ownerReady=hooks.ready.bind(hooks),continueOwner=hooks.continue.bind(hooks);
  const binding=Object.freeze({...options.binding}),profile=configuration(binding,options.profile??{}),clock=options.clock??Date.now,deadline=options.deadlineMs??8000;
  const context=options.context,transcript=options.transcript,owner=options.owner;
  const digest=cviCredentialDigests(binding).bindingDigest,boundary=localCviOwnerBoundary(owner,context.flow,digest);
- if(options.simulation!==true||!isLocalCviStartedOwner(owner)||!boundary||!localCviTranscriptSourceMatches(transcript,context)||!(options.applicationRequest instanceof Request)||typeof clock!=='function'||!int(deadline)||deadline<1||deadline>8000)throw Error('Local HTTP adapter unavailable');
+ if(options.simulation!==true||!ownerReady(owner)||!boundary||!localCviTranscriptSourceMatches(transcript,context)||!(options.applicationRequest instanceof Request)||typeof clock!=='function'||!int(deadline)||deadline<1||deadline>8000)throw Error('Local HTTP adapter unavailable');
  const applicationRequest=new Request(options.applicationRequest),handle=owner.handle.bind(owner),spend=owner.spendAdmission.bind(owner),end=owner.end.bind(owner),origin=new URL(binding.origin),token=Buffer.from(binding.secret);
  let closed=false,held=false,transitioning=false,last=-1,attempts=0;
  type Operation={abort:AbortController;phase:'none'|'body-started'|'body-spent'|'turn-started'|'turn-spent';release():void;stop():void};
@@ -48,7 +51,7 @@ export function createLocalCviHttpAdapter(options:Readonly<{
  const bodySeen=new Set<string>(),turnSeen=new Set<string>();
  const hold=()=>{held=true;transcript.close();end();};
  const close=()=>{if(closed)return;closed=true;active?.stop();transcript.close();end();};
- const current=()=>{try{const at=clock();if(!isLocalCviStartedOwner(owner)||!int(at)||at<last||at>=binding.expiresAt){close();return false;}last=at;return !closed&&!held;}catch{close();return false;}};
+ const current=()=>{try{const at=clock();if(!ownerReady(owner)||!int(at)||at<last||at>=binding.expiresAt){close();return false;}last=at;return !closed&&!held;}catch{close();return false;}};
  const match=async(text:string,signal:AbortSignal)=>{
   const input=localCviCompletedInput(transcript,context);if(!input||input.text!==text||!context.flow.available()||signal.aborted)return null;
   const snapshot=await context.snapshot(new Request(applicationRequest),signal),state=context.flow.snapshot(),again=localCviCompletedInput(transcript,context);
@@ -62,7 +65,7 @@ export function createLocalCviHttpAdapter(options:Readonly<{
   try{
    const canceled=new Promise<never>((_,reject)=>{signal.addEventListener('abort',()=>reject(Error()),{once:true});timer=setTimeout(()=>abort.abort(),deadline);});void canceled.catch(()=>{});
    const work=async()=>{const before=await context.snapshot(new Request(applicationRequest),signal);if(!before||!live())return false;
-    started=true;const ok=await continueLocalCviOwner(owner,port,signal);if(!live())throw Error();if(!ok){if(!context.flow.isOpen())hold();return false;}
+    started=true;const ok=await continueOwner(owner,port,signal);if(!live())throw Error();if(!ok){if(!context.flow.isOpen())hold();return false;}
     if(!live()||!context.flow.isOpen())throw Error();return true;};
    return await Promise.race([work(),canceled]);
   }catch{abort.abort();if(started)hold();return false;}finally{if(timer)clearTimeout(timer);transitioning=false;}
@@ -109,4 +112,10 @@ export function createLocalCviHttpAdapter(options:Readonly<{
   }catch{terminal();if(active===operation&&['body-started','turn-started'].includes(operation.phase))hold();operation.stop();return deny(409);}
   finally{if(active===operation&&operation.phase!=='turn-started'&&operation.phase!=='turn-spent')operation.release();}
  }});
+}
+
+/** Mandatory protected entry. There is no configurable readiness/renewal fallback. */
+export function createLocalCviHttpAdapter(options:Parameters<typeof createLocalCviHttpEnvelope>[0]){
+ if(!isLocalCviStartedOwner(options.owner))throw Error('Original paired HTTP owner required');
+ return createLocalCviHttpEnvelope(options,{ready:isLocalCviStartedOwner,continue:continueLocalCviOwner});
 }

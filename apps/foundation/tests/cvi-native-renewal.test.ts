@@ -1,3 +1,4 @@
+/** Unbranded native/guard protocol contracts; genuine pair acceptance is tested separately. */
 import {it,expect} from 'vitest';
 import {randomBytes} from 'node:crypto';
 import {mandatoryFixture} from './support/cvi-mandatory-fixture.ts';
@@ -50,7 +51,7 @@ it('altering a planned renewal token refuses before authority admission',async()
  expect(await f.x.observe()).toEqual(p.from);expect((await f.x.inspect()).requests).toHaveLength(before.requests.length);
  }finally{await f.x.close();}},30000);
 it('an existing composed owner cannot silently adopt a renewed native grant',async()=>{
- let time=1000;const {startupAdmissionFixture}=await import('./support/cvi-startup-admission-fixture.ts'),{createLocalCviStartupOwner}=await import('../src/server/local-cvi-startup-owner.ts');
+ let time=1000;const {startupAdmissionFixture}=await import('./support/cvi-startup-admission-fixture.ts'),{createLocalCviStartupOwner}=await import('./support/cvi-private-contract-owner.ts');
  const f=await startupAdmissionFixture(()=>time);try{
   const owner=await createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>time,5000,8000).start(signal());expect(owner).not.toBeNull();
   const old=f.nativeLease();time=8500;const p=await f.x.plan('renew',{lease:old,ttl:8000,token:randomBytes(32).toString('hex')}),updated:any=await f.x.adapter('rotator').execute(p,signal());

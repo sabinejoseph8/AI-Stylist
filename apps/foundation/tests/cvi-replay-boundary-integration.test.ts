@@ -1,7 +1,8 @@
+/** Unbranded native/guard protocol contracts; genuine pair acceptance is tested separately. */
 /** Actual disposable file journals and signed native transitions. No provider. */
 import {it,expect,vi} from 'vitest';
 import {startupAdmissionFixture} from './support/cvi-startup-admission-fixture.ts';
-import {createLocalCviStartupOwner,continueLocalCviOwner} from '../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner,continueLocalCviOwner} from './support/cvi-private-contract-owner.ts';
 import {createLocalDurableOwnerContinuation} from '../src/server/local-cvi-owner-continuation.ts';
 import {cviCredentialDigests} from '../src/server/local-cvi-credentials.ts';
 import {call} from './support/cvi-replay-process.ts';

@@ -1,7 +1,8 @@
+/** Unbranded native/guard protocol contracts; genuine pair acceptance is tested separately. */
 import {startupAdmissionFixture} from './support/cvi-startup-admission-fixture.ts';
 import {ownerReplayCall} from './support/cvi-owner-replay-process.ts';
 import {cviCredentialDigests} from '../src/server/local-cvi-credentials.ts';
-import {createLocalCviStartupOwner,continueLocalCviOwner} from '../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner,continueLocalCviOwner} from './support/cvi-private-contract-owner.ts';
 import {createLocalDurableOwnerContinuation,inspectOwnerContinuation} from '../src/server/local-cvi-owner-continuation.ts';
 import {it,expect,vi} from 'vitest';
 import {ownedReplayFixture} from './support/cvi-owned-replay-fixture.ts';

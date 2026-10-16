@@ -18,6 +18,10 @@ import type {CviSnapshot,CviField,CviSimulationPorts} from './local-cvi-styling.
 import type {CurrentOwnerCheckpointPort} from './local-cvi-startup-owner.ts';
 import type {StartupOwnerPin} from './local-cvi-startup-checkpoint.ts';
 import type {VerifiedMediaAccess} from './media-read.ts';
+const checkpointParents=new WeakMap<object,object>(),checkpointClocks=new WeakMap<object,()=>number>();
+/** Only wrappers constructed here can identify their captured parent port. */
+export const localNotebookCheckpointParent=(port:object)=>checkpointParents.get(port);
+export const localNotebookCheckpointClock=(port:object)=>checkpointClocks.get(port);
 const exact=(v:unknown,keys:string[]):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const int=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
 const hex=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
@@ -29,8 +33,9 @@ export function createLocalCviNotebookContext(options:Readonly<{
 }>){
  const deadline=options.deadlineMs??8000;
  if(options?.simulation!==true||!uuid(options.identity?.ownerId)||!uuid(options.identity.sessionId)||typeof options.identity.isCurrent!=='function'||typeof options.authorize!=='function'||typeof options.checkpoint?.inspectFresh!=='function'||typeof options.checkpoint.inspectOwnerFresh!=='function'||typeof options.ports?.draft!=='function'||typeof options.ports.check!=='function'||typeof options.clock!=='function'||!int(deadline)||deadline<1||deadline>8000)throw Error('Local notebook context unavailable');
- const owner=options.identity.ownerId,authSession=options.identity.sessionId,currentIdentity=options.identity.isCurrent.bind(options.identity),authorize=options.authorize.bind(options),inspect=options.checkpoint.inspectFresh.bind(options.checkpoint),inspectOwner=options.checkpoint.inspectOwnerFresh.bind(options.checkpoint),inspectOwnerGated=options.checkpoint.inspectOwnerGatedFresh?.bind(options.checkpoint),draft=options.ports.draft.bind(options.ports),check=options.ports.check.bind(options.ports);
- const session=new StylingSession({simulation:true,owner,clock:options.clock,policy:options.policy}),proposals=new NotebookProposalStream(session,owner);
+ const capturedCheckpoint=options.checkpoint,capturedClock=options.clock;
+ const owner=options.identity.ownerId,authSession=options.identity.sessionId,currentIdentity=options.identity.isCurrent.bind(options.identity),authorize=options.authorize.bind(options),inspect=capturedCheckpoint.inspectFresh.bind(capturedCheckpoint),inspectOwner=capturedCheckpoint.inspectOwnerFresh.bind(capturedCheckpoint),inspectOwnerGated=capturedCheckpoint.inspectOwnerGatedFresh?.bind(capturedCheckpoint),draft=options.ports.draft.bind(options.ports),check=options.ports.check.bind(options.ports);
+ const session=new StylingSession({simulation:true,owner,clock:capturedClock,policy:options.policy}),proposals=new NotebookProposalStream(session,owner);
  let flow:ReturnType<typeof createLocalCviStyling>|undefined,closed=false,admitted=0,cleanupAdmitted=0,native:StartupOwnerPin|undefined,nativeRevision=0,operation:string|undefined,inputRevision=0,proposalPending=false,proposalRevision=0,currentProposal:ProposalTurn|null=null,proposalAdmission=0,latestAuthorizedProposal=0;
  let transition:{signal:AbortSignal;done:Promise<boolean>;release(ok:boolean):void;candidate?:{raw:unknown;input:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number}}}|undefined;
  const waitTransition=async(signal:AbortSignal)=>{if(!transition||signal===transition.signal)return true;const waiting=transition;let listener:(()=>void)|undefined;try{return await Promise.race([waiting.done,new Promise<boolean>(resolve=>{listener=()=>resolve(false);signal.addEventListener('abort',listener,{once:true});if(signal.aborted)resolve(false);})]);}finally{if(listener)signal.removeEventListener('abort',listener);}};
@@ -72,17 +77,18 @@ export function createLocalCviNotebookContext(options:Readonly<{
    let release!:(ok:boolean)=>void;const token={signal,done:new Promise<boolean>(r=>release=r),release:(ok:boolean)=>release(ok),candidate:undefined as {raw:unknown;input:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number}}|undefined};transition=token;
    return Object.freeze({async inspect(raw:unknown,input:OwnerContinuationInput,s:AbortSignal,phase?:'fresh'|'gated-final'){
     if(transition!==token||s!==signal||s.aborted)throw Error('Context unavailable');
-    const next=inspectOwnerContinuation(raw,input,options.clock());
+    const next=inspectOwnerContinuation(raw,input,capturedClock());
     if(!native||input.revision!==nativeRevision||input.operationId!==operation||Object.entries(native).some(([k,v])=>k!=='minimumRevision'&&(input.owner as any)[k]!==v)||token.candidate&&(token.candidate.raw!==raw||JSON.stringify(token.candidate.input)!==JSON.stringify(input)))throw Error('Context unavailable');
-    const result=await inspectSerial(s,async()=>{if(!await liveIdentity(s))throw Error('Context unavailable');const active=phase==='gated-final'?inspectOwnerContinuationExecution(raw,input,options.clock()):undefined;if(phase==='gated-final'&&(!active||!inspectOwnerGated))throw Error('Context unavailable');const originalInspection=await(active?inspectOwnerGated!(next.owner,localGatedExecutionBinding(active),s):inspectOwner(next.owner,s));if(!await liveIdentity(s)||transition!==token)throw Error('Context unavailable');return active?originalInspection:structuredClone(originalInspection);});
+    const result=await inspectSerial(s,async()=>{if(!await liveIdentity(s))throw Error('Context unavailable');const active=phase==='gated-final'?inspectOwnerContinuationExecution(raw,input,capturedClock()):undefined;if(phase==='gated-final'&&(!active||!inspectOwnerGated))throw Error('Context unavailable');const originalInspection=await(active?inspectOwnerGated!(next.owner,localGatedExecutionBinding(active),s):inspectOwner(next.owner,s));if(!await liveIdentity(s)||transition!==token)throw Error('Context unavailable');return active?originalInspection:structuredClone(originalInspection);});
     token.candidate={raw,input:structuredClone(input),owner:next.owner,after:next.after};return result;
    },finish(raw:unknown,input:OwnerContinuationInput,s:AbortSignal){
     if(transition!==token||s!==signal||s.aborted||!active()||!token.candidate||token.candidate.raw!==raw||JSON.stringify(token.candidate.input)!==JSON.stringify(input))throw Error('Context unavailable');
-    const accepted=claimOwnerContinuationContext(raw,input,options.clock());if(JSON.stringify(accepted.owner)!==JSON.stringify(token.candidate.owner)||JSON.stringify(accepted.after)!==JSON.stringify(token.candidate.after))throw Error('Context unavailable');
+    const accepted=claimOwnerContinuationContext(raw,input,capturedClock());if(JSON.stringify(accepted.owner)!==JSON.stringify(token.candidate.owner)||JSON.stringify(accepted.after)!==JSON.stringify(token.candidate.after))throw Error('Context unavailable');
     native=Object.freeze({...accepted.owner});nativeRevision=accepted.after.revision;operation=accepted.after.operationId;flow?.interrupt();transition=undefined;token.release(true);
    },cancel(){if(transition===token){transition=undefined;close();token.release(false);}}});
   },
  };
+ Object.freeze(checkpoint);checkpointParents.set(checkpoint,capturedCheckpoint);checkpointClocks.set(checkpoint,capturedClock);
  const project=():CviSnapshot|null=>{
   const s=session.snapshot(owner);if(closed||!s||s.state!=='active')return null;
   return Object.freeze({revision:s.revision,context:Object.freeze({epoch:s.epoch,nativeRevision,inputRevision}),notes:Object.freeze(Object.fromEntries(FIELDS.map(([field])=>[map[field],Object.freeze({text:s.notes[field].value,confirmed:s.notes[field].status==='confirmed'})])) as CviSnapshot['notes'])});

@@ -1,3 +1,9 @@
+## Verifying the original configuration through publication
+
+I completed the local original-pair integration and merged only the exact source that passed the full regression. The main workspace matches all 506 recorded source files and independently passes the focused checks, type checking and build. The complete two-turn journey still stays within the original journal allowance.
+
+I kept test-only protocol identities separate from actual protected startup. A separate cleanup check confirmed that losing the final admission proof after a successful commit aborts the original process, preserves the grant and refuses restart. These are local engineering results, so I kept hosted, provider and device acceptance open rather than treating simulations as launch evidence.
+
 ## Checking the complete committed state before access
 
 I expanded the local verification to cover the actual protected startup path. A successful database commit alone cannot activate access: the complete state, original transaction and claim must match, followed by fresh signed reconciliation and gate completion. When the post-commit check fails, the committed record stays intact and the app refuses another attempt.

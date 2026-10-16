@@ -8,9 +8,9 @@ import type {ReplayInspectionRequest} from '../../src/server/local-cvi-replay-in
 import {vi} from 'vitest';
 import {createLocalCviNotebookContext} from '../../src/server/local-cvi-notebook-context.ts';
 import {createLocalCviTranscriptAdapter} from '../../src/server/local-cvi-transcript-adapter.ts';
-import {createLocalCviStartupOwner} from '../../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner} from './cvi-private-contract-owner.ts';
 import {localStartupOwnerBoot} from '../../src/server/local-cvi-startup-admission.ts';
-import {createLocalCviHttpAdapter} from '../../src/server/local-cvi-http-adapter.ts';
+import {createLocalCviHttpAdapter} from './cvi-http-contract.ts';
 import {APPROVED_NOTES_RETENTION} from '../../src/session/notes-retention-policy.ts';
 import type {CviConversationInput} from '../../src/server/local-cvi-styling.ts';
 import type {CviReplayReceipt,CviReplayRequest} from '../../src/server/local-cvi-endpoint.ts';

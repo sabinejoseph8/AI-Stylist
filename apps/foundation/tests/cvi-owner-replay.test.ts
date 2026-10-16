@@ -1,9 +1,10 @@
+/** Unbranded native/guard protocol contracts; genuine pair acceptance is tested separately. */
 import {execFileSync} from 'node:child_process';
 import {join} from 'node:path';
 /** Actual native locks, durable file writes and public-key authority checks. */
 import {it,expect} from 'vitest';
 import {startupAdmissionFixture} from './support/cvi-startup-admission-fixture.ts';
-import {createLocalCviStartupOwner} from '../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner} from './support/cvi-private-contract-owner.ts';
 import {ownerReplayCall,ownerReplayRequest} from './support/cvi-owner-replay-process.ts';
 import {cviCredentialDigests} from '../src/server/local-cvi-credentials.ts';
 import {mandatoryCall} from './support/cvi-mandatory-fixture.ts';

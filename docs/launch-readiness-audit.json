@@ -903,6 +903,29 @@
       "evidenceMap": "docs/local-tavus-paired-evidence-map.md",
       "genuinePairedCases": 38,
       "lowerContractCases": 147
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-paired-evidence-map.md",
+      "fullFoundationTests": 2579,
+      "fullFoundationFiles": 189,
+      "fullFoundationSession": 79137,
+      "fullFoundationTerminalExit": 0,
+      "mainMatchedSourceFiles": 506,
+      "mainFocusedTests": 47,
+      "mainFocusedFiles": 6,
+      "supplementalCleanupReviewTests": 1,
+      "supplementalCleanupReviewSession": 72689,
+      "supplementalReviewOutsideFullRegression": true,
+      "mainTypecheckPassed": true,
+      "mainClientBuildPassed": true,
+      "completeAuthorityRecords": 127,
+      "authorityRecordCap": 128,
+      "sourcePatchSha256": "a41c342a3194b10e00293c6471c79fa3e9c1d40c3bdd1ae70e341aef93773b45",
+      "merged": true,
+      "localMemoryChecks": 19,
+      "productionCriteriaClosed": 0,
+      "hostedChanges": false
     }
   ]
 }

@@ -1,8 +1,9 @@
+import {localOwnerPairMatches,claimLocalOwnerPair,bindLocalOwnerPair,adoptLocalOwnerPair,acceptLocalOwnerPair,localOwnerPairContinuationMatches} from './local-cvi-owner-pair.ts';
 /** Mandatory private replay startup. No unbound activation fallback. */
 import {localGatedExecutionFinished} from './local-cvi-gated-execution.ts';
 import {localOwnedReplayExecutionContext} from './local-cvi-owned-replay.ts';
 import {createLocalCviStartupEnvelope} from './local-cvi-startup-envelope.ts';
-import {isLocalOwnedReplayPort,localOwnedReplayState,localOwnedReplayMatches,claimLocalOwnedReplayStartup,bindLocalOwnedReplay,adoptLocalOwnedReplay,holdLocalOwnedReplay} from './local-cvi-owned-replay.ts';
+import {isLocalOwnedReplayPort,localOwnedReplayState,localOwnedReplayMatches,holdLocalOwnedReplay} from './local-cvi-owned-replay.ts';
 import {cviCredentialDigests} from './local-cvi-credentials.ts';
 import {localCviOwnerIsIdle} from './local-cvi-endpoint.ts';
 import type {CviReplayPort} from './local-cvi-endpoint.ts';
@@ -12,10 +13,10 @@ import type {GateFinishBinding} from './local-cvi-gate-finish-proof.ts';
 import type {StartupOwnerPin} from './local-cvi-startup-checkpoint.ts';
 import type {createLocalCviStyling} from './local-cvi-styling.ts';
 const startedOwners=new WeakSet<object>();
-const privateOwners=new WeakMap<object,object>();
+const privateOwners=new WeakMap<object,object>(),ownerAdmissions=new WeakMap<object,object>();
 const continuations=new WeakMap<object,(port:OwnerContinuationPort,signal:AbortSignal)=>Promise<boolean>>();
-export async function continueLocalCviOwner(owner:object,port:OwnerContinuationPort,signal:AbortSignal){const renew=continuations.get(owner);return renew&&localCviOwnerIsIdle(owner)?renew(port,signal):false;}
-const publicationReady=(port:object)=>{if(!localOwnedReplayState(port).bound)return false;const execution=localOwnedReplayExecutionContext(port);return !execution||localGatedExecutionFinished(execution);};
+export async function continueLocalCviOwner(owner:object,port:OwnerContinuationPort,signal:AbortSignal){const renew=continuations.get(owner);return renew&&localCviOwnerIsIdle(owner)&&localOwnerPairContinuationMatches(ownerAdmissions.get(owner)??{},port as object)?renew(port,signal):false;}
+const publicationReady=(port:object)=>{if(!localOwnedReplayState(port).bound)return false;const execution=localOwnedReplayExecutionContext(port);return !!execution&&localGatedExecutionFinished(execution);};
 export const isLocalCviStartedOwner=(owner:object)=>startedOwners.has(owner)&&publicationReady(privateOwners.get(owner)??{});
 export type CviCheckpointIdentity=Readonly<{storeId:string;operationId:string;revision:number}>;
 export type FreshOwnerAdmissionInput=Readonly<{checkpoint:CviCheckpointIdentity;credentialStoreId:string;replayStoreId:string;previous:number;bootDigest:string;scopeDigest:string;bindingDigest:string;nonce:string;issuedAt:number;expiresAt:number}>;
@@ -31,15 +32,16 @@ export function createLocalCviStartupOwner(
 ){
  const privateReplay=resources?.replay;
  if(!privateReplay||!isLocalOwnedReplayPort(privateReplay)||localOwnedReplayState(privateReplay).bound||localOwnedReplayState(privateReplay).held)throw Error('Original private replay port required');
+ if(!localOwnerPairMatches(admission,checkpoint,privateReplay,expected,resources.binding,resources.boot,resources.authority,clock))throw Error('Original configured owner pair required');
  const ready=()=>publicationReady(privateReplay);
  const controller=createLocalCviStartupEnvelope(expected,checkpoint,admission,resources,clock,deadlineMs,writerLeaseMs,{
-  claim:()=>claimLocalOwnedReplayStartup(privateReplay),
-  bind:(raw,input)=>bindLocalOwnedReplay(privateReplay,raw,input),
-  adopt:(raw,input)=>adoptLocalOwnedReplay(privateReplay,raw,input),
+  claim:()=>claimLocalOwnerPair(admission),
+  bind:(raw,input)=>bindLocalOwnerPair(admission,raw,input),
+  adopt:(raw,input)=>adoptLocalOwnerPair(admission,raw,input),
   hold:()=>holdLocalOwnedReplay(privateReplay),
   execution:()=>localOwnedReplayExecutionContext(privateReplay),
   ready,
-  register:(owner,renew)=>{if(!ready())throw Error('Private replay retired or gated execution unfinished');privateOwners.set(owner,privateReplay);continuations.set(owner,renew);startedOwners.add(owner);},
+  register:(owner,renew)=>{if(!ready())throw Error('Private replay retired or gated execution unfinished');acceptLocalOwnerPair(admission);privateOwners.set(owner,privateReplay);ownerAdmissions.set(owner,admission);continuations.set(owner,async(port,s)=>{if(!localOwnerPairContinuationMatches(admission,port as object))return false;const ok=await renew(port,s);if(ok)acceptLocalOwnerPair(admission);return ok;});startedOwners.add(owner);},
  });
  if(!localOwnedReplayMatches(privateReplay,{storeId:privateReplay.storeId,nativeStoreId:expected.storeId,...cviCredentialDigests(resources.binding),applicationExpiresAt:resources.binding.expiresAt})||localOwnedReplayState(privateReplay).held||localOwnedReplayState(privateReplay).bound)throw Error('Private replay scope unavailable');
  return controller;

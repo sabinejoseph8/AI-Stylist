@@ -1,6 +1,6 @@
 # Original paired reconciliation: evidence boundaries
 
-Local preparation, 16 October 2026. This map describes the frozen candidate in `/private/tmp/ai-stylist-paired-stage`, patch `prepared-owner-pair-a41c342a3194.patch`. Its full regression is running in original session 79137. It is not merged or activated. Consult DEVELOPMENT_PROGRESS.md for the current result before treating this snapshot as current.
+Local preparation, 16 October 2026. This map describes the frozen candidate in `/private/tmp/ai-stylist-paired-stage`, patch `prepared-owner-pair-a41c342a3194.patch`. Its full regression passes 2,579 tests across 189 files, collected from original session 79137 with terminal exit zero. The source is merged into main and all 506 recorded source files match. Main independently passes 47 focused checks, types and build. It remains disabled and is not hosted acceptance.
 
 ## What must remain true
 
@@ -43,4 +43,8 @@ The focused scope comprises 38 genuine paired cases and 147 lower contract cases
 
 ## Integration decision
 
-Wait for the terminal result of original full regression session 79137. If it passes, apply only the exact source/test patch to the main workspace, verify matching hashes and main focused/type/build checks, then update the current evidence and archive source. Preserve both old and isolated workspaces. Do not copy stale staged documents or generated Memory assets.
+Original session 79137 completed successfully. The exact 25-file source/test patch is merged, and all 506 recorded source files match the tested candidate. Main focused/type/build checks pass. Both workspaces and historical source archives are preserved; no stale staged documents or generated Memory assets were copied.
+
+## Supplemental cleanup review
+
+One additional test ran in a separate disposable source copy with all 506 candidate source hashes matched. It loses the admission proof after completed reconciliation, verifies the original gate process exits promptly, retains the committed grant and refuses restart. It passed with terminal exit zero in session 72689. Its source/hash/result are saved separately in the durable source-checkpoints folder. This one-case result is outside the 2,579-test full regression and the 185-case focused scope above.

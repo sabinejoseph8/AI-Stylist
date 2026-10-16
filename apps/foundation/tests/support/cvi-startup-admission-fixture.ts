@@ -17,7 +17,7 @@ import {credentialBinding,credentialCall,scopeReplay} from './cvi-credential-pro
 import {call} from './cvi-replay-process.ts';
 import {createLocalMandatoryLeaseAdapter} from '../../src/server/local-cvi-mandatory-persistence.ts';
 import {createLocalDurableStartupAdmission,localStartupOwnerBoot} from '../../src/server/local-cvi-startup-admission.ts';
-import {createLocalCviStartupOwner} from '../../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner} from './cvi-private-contract-owner.ts';
 import {createLocalStartupCheckpointInspector} from '../../src/server/local-cvi-startup-checkpoint.ts';
 import {fullStateProjection} from '../../src/server/local-cvi-full-state-reconciliation.ts';
 import {createLocalCviStyling} from '../../src/server/local-cvi-styling.ts';

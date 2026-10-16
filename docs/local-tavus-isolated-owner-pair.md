@@ -1,3 +1,15 @@
+## Verified original paired reconciliation, 16 October 2026
+
+The original configured SQLite owner pair is now merged into the main workspace. Protected startup requires the original admission, private replay, signed checkpoint, credential service and captured clock before privileged work. Only original one-use startup/renewal handoffs can bind or adopt its completed execution context. Generic, copied or mismatched ports cannot register a protected HTTP owner. Lower protocol harnesses remain explicitly unbranded.
+
+The pair retains the original full-state target and actual committed transaction/claim, verifies exact state and fresh signed reconciliation, then awaits the original signed finish and actual gate exit before startup publication or renewed output. A captured read-only append-only reference feed permits verified same-owner state updates and refuses changed known targets. Post-COMMIT mismatches preserve pending authority and the committed grant, hold the gate, leave replay evidence unchanged and refuse credentials, output and retry. Notebook correction, Clear, End, expiry and stale proof checks remain intact; known reservations may become spent but cannot be refunded or reused.
+
+Full candidate regression passes 2,579 tests across 189 files, collected from original session 79137 with terminal exit zero. All 506 recorded source files match exactly in the main workspace. The main workspace independently passes 47 focused checks across six suites, TypeScript and client build. A separate disposable one-case cleanup review also passes: losing the final admission proof after reconciliation aborts the original gate process promptly, preserves COMMIT and refuses restart. Its test is saved as a supplemental source artifact, not counted in the full regression. Nineteen refreshed local Memory checks pass. Operations/SQL sources are unchanged; prior 568 operations and 638 isolated PostgreSQL checks were not rerun.
+
+See docs/local-tavus-paired-evidence-map.md for the exact split between 38 genuine paired cases and 147 retained lower contract cases in the focused scopes. The earlier failed assertions and their corrections remain recorded there. The complete actual local two-turn journey across gated renewal still uses exactly 127 of the unchanged 128 authority records. Test identities, account/model transports, production clocks and the observer protected flag remain fixture assumptions; local SQLite markers are not PostgreSQL xids or proof of hosted isolation.
+
+Product/design scope, 5-of-41 full tasks, 0-of-21 production acceptance and the $51 allocation remain unchanged. No providers, real credentials, spending, hosted changes, support messages or permanent backup runtime changes. Original gate-to-PostgreSQL composition, independent witness administration/restore floors, universal writer coverage, production clocks and live provider/device acceptance remain open. Earlier staging descriptions below are historical.
+
 # Original pair verification status
 
 ## Original paired full-state reconciliation verification, 16 October 2026

@@ -1,3 +1,15 @@
+## Verified original paired reconciliation, 16 October 2026
+
+The original configured SQLite owner pair is now merged into the main workspace. Protected startup requires the original admission, private replay, signed checkpoint, credential service and captured clock before privileged work. Only original one-use startup/renewal handoffs can bind or adopt its completed execution context. Generic, copied or mismatched ports cannot register a protected HTTP owner. Lower protocol harnesses remain explicitly unbranded.
+
+The pair retains the original full-state target and actual committed transaction/claim, verifies exact state and fresh signed reconciliation, then awaits the original signed finish and actual gate exit before startup publication or renewed output. A captured read-only append-only reference feed permits verified same-owner state updates and refuses changed known targets. Post-COMMIT mismatches preserve pending authority and the committed grant, hold the gate, leave replay evidence unchanged and refuse credentials, output and retry. Notebook correction, Clear, End, expiry and stale proof checks remain intact; known reservations may become spent but cannot be refunded or reused.
+
+Full candidate regression passes 2,579 tests across 189 files, collected from original session 79137 with terminal exit zero. All 506 recorded source files match exactly in the main workspace. The main workspace independently passes 47 focused checks across six suites, TypeScript and client build. A separate disposable one-case cleanup review also passes: losing the final admission proof after reconciliation aborts the original gate process promptly, preserves COMMIT and refuses restart. Its test is saved as a supplemental source artifact, not counted in the full regression. Nineteen refreshed local Memory checks pass. Operations/SQL sources are unchanged; prior 568 operations and 638 isolated PostgreSQL checks were not rerun.
+
+See docs/local-tavus-paired-evidence-map.md for the exact split between 38 genuine paired cases and 147 retained lower contract cases in the focused scopes. The earlier failed assertions and their corrections remain recorded there. The complete actual local two-turn journey across gated renewal still uses exactly 127 of the unchanged 128 authority records. Test identities, account/model transports, production clocks and the observer protected flag remain fixture assumptions; local SQLite markers are not PostgreSQL xids or proof of hosted isolation.
+
+Product/design scope, 5-of-41 full tasks, 0-of-21 production acceptance and the $51 allocation remain unchanged. No providers, real credentials, spending, hosted changes, support messages or permanent backup runtime changes. Original gate-to-PostgreSQL composition, independent witness administration/restore floors, universal writer coverage, production clocks and live provider/device acceptance remain open. Earlier staging descriptions below are historical.
+
 ## Original paired full-state reconciliation verification, 16 October 2026
 
 The isolated candidate now requires the original admission/replay/checkpoint/credential/clock pair before protected startup or renewal. A captured read-only reference feed accepts new signed same-owner state references and refuses replacement of known targets. Actual SQLite COMMIT, original transaction/claim correlation, exact complete-state comparison, signed reconciliation and original gate finish remain mandatory. Copies, generic ports, stale/late proofs and post-COMMIT mismatches cannot publish access or retry.
@@ -1658,14 +1670,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: isolated original-pair reconciliation and genuine notebook/lifetime checks pass; full candidate regression is running, and merging remains pending. Main source remains verified at 2,551 tests across 186 files.
+Current local focus: original paired full-state reconciliation is merged and verified by 2,579 tests across 189 files, exact source matching and 47 main-workspace focused checks. Captured witness-pin composition is the next local integration.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** collect original isolated full regression session 79137, fix any failures, then merge only verified source and refresh local Memory.
+- **Next local action:** prepare captured witness configuration across the original Node gate and all participating replay paths, with restore/split-update tests; keep hosted and production acceptance gates open.
 
 ## Historical summary checkpoints
 

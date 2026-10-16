@@ -1,4 +1,5 @@
-import {createLocalCviHttpAdapter} from '../src/server/local-cvi-http-adapter.ts';
+/** Unbranded native/guard protocol contracts; genuine pair acceptance is tested separately. */
+import {createLocalCviHttpAdapter} from './support/cvi-http-contract.ts';
 import {call as replayCall} from './support/cvi-replay-process.ts';
 import {createLocalCviTranscriptAdapter} from '../src/server/local-cvi-transcript-adapter.ts';
 import {it,expect,vi} from 'vitest';
@@ -6,7 +7,7 @@ import {generateKeyPair,SignJWT,exportJWK,createLocalJWKSet} from 'jose';
 import {startupAdmissionFixture} from './support/cvi-startup-admission-fixture.ts';
 import {fixtureRequest} from './support/cvi-credential-process.ts';
 import {createLocalCviNotebookContext} from '../src/server/local-cvi-notebook-context.ts';
-import {createLocalCviStartupOwner} from '../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner} from './support/cvi-private-contract-owner.ts';
 import {createIdentityVerifier} from '../src/server/verified-identity.ts';
 import {APPROVED_NOTES_RETENTION} from '../src/session/notes-retention-policy.ts';
 import type {CviSimulationPorts,CviSnapshot,CviConversationInput} from '../src/server/local-cvi-styling.ts';

@@ -1,33 +1,29 @@
-/** Actual signed/native startup; no plain replay or copied-permit fallback. */
+/** Genuine configured pairs only; no test harness can acquire the protected brand. */
 import {it,expect,vi} from 'vitest';
-import {startupAdmissionFixture} from './support/cvi-startup-admission-fixture.ts';
+import {pairedOwnerFixture} from './support/cvi-paired-owner-fixture.ts';
 import {createLocalCviStartupOwner,isLocalCviStartedOwner} from '../src/server/local-cvi-startup-owner.ts';
-import {createLocalOwnedReplayPort,localOwnedReplayState} from '../src/server/local-cvi-owned-replay.ts';
+import {claimLocalOwnerPair,bindLocalOwnerPair} from '../src/server/local-cvi-owner-pair.ts';
+import {localOwnedReplayState} from '../src/server/local-cvi-owned-replay.ts';
 const signal=()=>new AbortController().signal;
-it.each(['plain','copy'])('refuses a %s port before native admission',async mode=>{const f=await startupAdmissionFixture();try{
- const admit=vi.fn(async()=>null),resources={...f.resources,replay:mode==='plain'?f.rawReplay:{...f.resources.replay}};
- expect(()=>createLocalCviStartupOwner(f.expected,f.checkpoint,{admit},resources,()=>1000)).toThrow();expect(admit).not.toHaveBeenCalled();expect((await f.x.inspect()).revision).toBe(2);
- }finally{await f.close();}},30000);
-it.each(['native','cap','secret'])('refuses an owned port with a substituted %s scope before work',async mode=>{const f=await startupAdmissionFixture();try{
- const binding={...f.resources.binding};if(mode==='cap')binding.expiresAt=20000;if(mode==='secret')binding.secret='f'.repeat(64);
- const replay=createLocalOwnedReplayPort({storeId:f.journal.storeId,nativeStoreId:mode==='native'?f.resources.boot.storeId:f.x.pin.storeId,binding},{inspect:async()=>null,mutate:async()=>null},()=>1000),admit=vi.fn(async()=>null);
- expect(()=>createLocalCviStartupOwner(f.expected,f.checkpoint,{admit},{...f.resources,replay},()=>1000)).toThrow();expect(admit).not.toHaveBeenCalled();expect((await f.x.inspect()).revision).toBe(2);
- }finally{await f.close();}},30000);
-it('copying the committed public permit cannot bind or register an owner',async()=>{const f=await startupAdmissionFixture();try{
- const original=f.admission(),admission={admit:async(i:any,s:AbortSignal)=>structuredClone(await original.admit(i,s))};
- const c=createLocalCviStartupOwner(f.expected,f.checkpoint,admission,f.resources,()=>1000,8000);
- expect(await c.start(signal())).toBeNull();expect(c.isHeld()).toBe(true);expect(localOwnedReplayState(f.resources.replay)).toEqual({bound:false,held:true});expect((await f.x.inspect()).revision).toBe(4);
- }finally{await f.close();}},30000);
-it('End retires the private port and removes protected HTTP startup identity',async()=>{const f=await startupAdmissionFixture();try{
- const owner=await f.make().start(signal());expect(owner).not.toBeNull();expect(isLocalCviStartedOwner(owner!)).toBe(true);expect(localOwnedReplayState(f.resources.replay).bound).toBe(true);
- owner!.end();expect(isLocalCviStartedOwner(owner!)).toBe(false);expect(localOwnedReplayState(f.resources.replay)).toEqual({bound:false,held:true});
- expect(()=>createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>1000)).toThrow();expect(f.replayHooks.reserve).not.toHaveBeenCalled();expect((await f.x.inspect()).revision).toBe(4);
- }finally{await f.close();}},30000);
-it('credential failure retires a bound private handoff without undoing native COMMIT',async()=>{const f=await startupAdmissionFixture();try{
- f.resources.authority.activate=async()=>{throw Error('Simulated activation loss');};expect(await f.make().start(signal())).toBeNull();
- expect(localOwnedReplayState(f.resources.replay)).toEqual({bound:false,held:true});expect((await f.x.inspect()).revision).toBe(4);expect(f.replayHooks.reserve).not.toHaveBeenCalled();
- }finally{await f.close();}},30000);
-it('two controllers cannot claim one private port or retire the successful owner',async()=>{const f=await startupAdmissionFixture();try{
- const execute=vi.spyOn(f.ports,'execute'),one=createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>1000,8000),two=createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>1000,8000);
- const first=one.start(signal());expect(await two.start(signal())).toBeNull();const owner=await first;expect(owner).not.toBeNull();expect(execute).toHaveBeenCalledTimes(1);expect(isLocalCviStartedOwner(owner!)).toBe(true);expect(localOwnedReplayState(f.resources.replay)).toEqual({bound:true,held:false});owner!.end();
- }finally{await f.close();}},30000);
+it.each(['plain','copy'])('refuses a %s port before native admission',async mode=>{const x=await pairedOwnerFixture();try{
+ const replay=mode==='plain'?x.f.rawReplay:{...x.pair.replay};expect(()=>createLocalCviStartupOwner(x.f.expected,x.context.checkpoint,x.pair.admission,{...x.resources,replay},x.clock)).toThrow();expect(x.ports.planFull).not.toHaveBeenCalled();expect((await x.f.x.inspect()).revision).toBe(2);
+ }finally{await x.close();}},30000);
+it.each(['native','cap','secret'])('refuses a substituted %s scope before work',async mode=>{const x=await pairedOwnerFixture();try{
+ const binding={...x.resources.binding},expected={...x.f.expected};if(mode==='cap')binding.expiresAt=20000;if(mode==='secret')binding.secret='f'.repeat(64);if(mode==='native')expected.storeId=x.resources.boot.storeId;
+ expect(()=>createLocalCviStartupOwner(expected,x.context.checkpoint,x.pair.admission,{...x.resources,binding},x.clock)).toThrow();expect(x.ports.planFull).not.toHaveBeenCalled();expect((await x.f.x.inspect()).revision).toBe(2);
+ }finally{await x.close();}},30000);
+it('copying a committed public permit cannot bind or register an owner; retirement preserves COMMIT',async()=>{const x=await pairedOwnerFixture();try{
+ expect(claimLocalOwnerPair(x.pair.admission)).toBe(true);const input=x.f.input(),raw=await x.pair.admission.admit(input,signal());
+ expect(()=>bindLocalOwnerPair(x.pair.admission,structuredClone(raw),input)).toThrow();expect(isLocalCviStartedOwner(raw as object)).toBe(false);expect(localOwnedReplayState(x.pair.replay).bound).toBe(false);expect((await x.f.x.inspect()).revision).toBe(4);
+ await x.pair.close();expect(localOwnedReplayState(x.pair.replay)).toEqual({bound:false,held:true});expect((await x.f.x.inspect()).revision).toBe(4);
+ }finally{await x.close();}},30000);
+it('End retires the private port and removes protected HTTP startup identity',async()=>{const x=await pairedOwnerFixture();try{
+ const owner=await x.make().start(signal());expect(owner).not.toBeNull();expect(isLocalCviStartedOwner(owner!)).toBe(true);expect(localOwnedReplayState(x.pair.replay).bound).toBe(true);
+ owner!.end();expect(isLocalCviStartedOwner(owner!)).toBe(false);expect(localOwnedReplayState(x.pair.replay)).toEqual({bound:false,held:true});expect(()=>x.make()).toThrow();expect(x.f.replayHooks.reserve).not.toHaveBeenCalled();expect((await x.f.x.inspect()).revision).toBe(4);
+ }finally{await x.close();}},30000);
+it('credential failure retires a bound private handoff without undoing native COMMIT',async()=>{const x=await pairedOwnerFixture(ports=>{ports.credentials={...ports.credentials,activate:vi.fn(async()=>{throw Error('Simulated activation loss');})};});try{
+ expect(await x.make().start(signal())).toBeNull();expect(localOwnedReplayState(x.pair.replay)).toEqual({bound:false,held:true});expect((await x.f.x.inspect()).revision).toBe(4);expect(x.f.replayHooks.reserve).not.toHaveBeenCalled();expect(x.draft).not.toHaveBeenCalled();
+ }finally{await x.close();}},30000);
+it('two controllers cannot claim one pair or retire the successful owner',async()=>{const x=await pairedOwnerFixture();try{
+ const one=x.make(),two=x.make(),first=one.start(signal());expect(await two.start(signal())).toBeNull();const owner=await first;expect(owner).not.toBeNull();expect(x.ports.planFull).toHaveBeenCalledTimes(1);expect((await x.f.x.inspect()).revision).toBe(4);expect(isLocalCviStartedOwner(owner!)).toBe(true);expect(localOwnedReplayState(x.pair.replay)).toEqual({bound:true,held:false});owner!.end();
+ }finally{await x.close();}},30000);

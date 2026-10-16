@@ -46,7 +46,7 @@ export interface OwnerCheckpointTransition {
 export function createLocalDurableOwnerContinuation(
  pin:WitnessServicePin,initial:NativeLease,bindingDigest:string,applicationExpiresAt:number,
  actor:Readonly<{principalDigest:string;readerPrincipal:string}>,ports:Readonly<{
- plan(args:Readonly<{lease:NativeLease;ttl:number;token:string;issuedAt:number}>,signal:AbortSignal):Promise<MandatoryLeaseIntent>;
+ plan(args:Readonly<{lease:NativeLease;ttl:number;token:string;issuedAt:number;revision:number}>,signal:AbortSignal):Promise<MandatoryLeaseIntent>;
  execute(intent:MandatoryLeaseIntent,signal:AbortSignal):Promise<unknown>;
  read(nonce:string,signal:AbortSignal):Promise<AuthorityEvidence>;
  }>,clock=Date.now,requestedMs=8000,
@@ -71,7 +71,7 @@ export function createLocalDurableOwnerContinuation(
    };
    const work=async()=>{
     const baseline=await fresh(before.revision),issuedAt=now(),ttl=Math.min(requestedMs,applicationExpiresAt-issuedAt),token=randomBytes(32).toString('hex');
-    const p=structuredClone(await plan({lease:structuredClone(original),ttl,token,issuedAt},signal));now();
+    const p=structuredClone(await plan({lease:structuredClone(original),ttl,token,issuedAt,revision:before.revision},signal));now();
     if(!exact(p,['id','version','kind','args','actor','now','from','to'])||p.version!==1||p.kind!=='renew'||!hex(p.id)||p.actor.role!=='rotator'||p.actor.principalDigest!==principal.principalDigest||p.now!==issuedAt||!same(p.from,baseline.current)||!exact(p.args,['lease','ttl','token'])||!same(p.args.lease,original)||p.args.ttl!==ttl||p.args.token!==token||p.to.storeId!==scope.storeId||p.to.policyDigest!==scope.policyDigest||p.to.epochFloor!==original.generation)throw Error();
     const {id,...body}=p;if(witnessServiceDigest(body)!==id)throw Error();
     const originalExecution=await execute(structuredClone(p),signal),execution=isOriginalLocalGatedExecution(originalExecution)?claimLocalGatedExecution(originalExecution,p,now()):undefined;

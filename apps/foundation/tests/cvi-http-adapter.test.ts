@@ -1,7 +1,7 @@
 import {it,expect,vi} from 'vitest';
 vi.setConfig({testTimeout:20000}); // Actual startup fixture setup; wire deadlines are unchanged.
 import {cviHttpFixture} from './support/cvi-http-fixture.ts';
-import {createLocalCviHttpAdapter,localCviLlmConfiguration} from '../src/server/local-cvi-http-adapter.ts';
+import {createLocalCviHttpAdapter,localCviLlmConfiguration} from './support/cvi-http-contract.ts';
 import {createLocalCviEndpoint} from '../src/server/local-cvi-endpoint.ts';
 const signal=()=>new AbortController().signal;
 it('configures static authentication and disables speculation without assuming automatic headers',async()=>{const f=await cviHttpFixture();try{const c=localCviLlmConfiguration(f.binding,{temperature:0.2});expect(c.layers.llm.base_url).toBe(f.binding.origin+'/cvi/v1');expect(c.layers.llm.headers).toEqual({'X-AI-Stylist-Token':f.binding.secret});expect(c.layers.llm.speculative_inference).toBe(false);expect(c.layers.llm).not.toHaveProperty('default_query');expect(Object.isFrozen(c.layers.llm.headers)).toBe(true);}finally{await f.close();}});

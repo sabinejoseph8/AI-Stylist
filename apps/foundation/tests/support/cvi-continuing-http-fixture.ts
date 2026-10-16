@@ -1,10 +1,10 @@
 /** Actual local signed/native/journal composition; account/transport/model fixtures. */
 import {vi} from 'vitest';
 import {startupAdmissionFixture} from './cvi-startup-admission-fixture.ts';
-import {createLocalCviStartupOwner} from '../../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner} from './cvi-private-contract-owner.ts';
 import {createLocalCviNotebookContext} from '../../src/server/local-cvi-notebook-context.ts';
 import {createLocalCviTranscriptAdapter} from '../../src/server/local-cvi-transcript-adapter.ts';
-import {createLocalCviHttpAdapter} from '../../src/server/local-cvi-http-adapter.ts';
+import {createLocalCviHttpAdapter} from './cvi-http-contract.ts';
 import {createLocalDurableOwnerContinuation} from '../../src/server/local-cvi-owner-continuation.ts';
 import {cviCredentialDigests} from '../../src/server/local-cvi-credentials.ts';
 import {APPROVED_NOTES_RETENTION} from '../../src/session/notes-retention-policy.ts';
