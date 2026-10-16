@@ -845,7 +845,7 @@
       "mainFocusedFoundationFiles": 2,
       "completeGatedTwoTurnAuthorityRecords": 127,
       "authorityRecordCap": 128,
-      "foundationFullStatus": "running",
+      "foundationFullStatus": "passed",
       "foundationFullSession": 82115,
       "priorFullFoundationTests": 2545,
       "priorFullFoundationFiles": 185,
@@ -854,7 +854,10 @@
       "localMemoryChecks": 19,
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false,
-      "scope": "Original last signed inspections and awaited original gate completion in actual local startup/renewal and complete two-turn HTTP journey; mandatory original paired configuration remains open."
+      "scope": "Original last signed inspections and awaited original gate completion in actual local startup/renewal and complete two-turn HTTP journey; mandatory original paired configuration remains open.",
+      "foundationFullTests": 2551,
+      "foundationFullFiles": 186,
+      "foundationFullExitCode": 0
     }
   ]
 }

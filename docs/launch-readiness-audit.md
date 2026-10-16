@@ -1,6 +1,6 @@
 ## Original signed finish connection, 16 October 2026
 
-Actual local startup and renewal complete their original gates before publication, with a complete two-turn transcript/notebook/HTTP test using exactly 127 of 128 journal records. Fifty-nine focused isolated-source checks and 14 independent main-workspace checks pass. Full run 82115 is pending. Mandatory original pair configuration, independent hosted permissions and live/provider/device acceptance remain open. No production criterion closes. See docs/local-tavus-original-finish.md.
+Actual local startup and renewal complete their original gates before publication, with a complete two-turn transcript/notebook/HTTP test using exactly 127 of 128 journal records. Fifty-nine focused isolated-source checks and 14 independent main-workspace checks pass. Full run 82115 passes 2,551 tests across 186 files with terminal exit zero. Mandatory original pair configuration, independent hosted permissions and live/provider/device acceptance remain open. No production criterion closes. See docs/local-tavus-original-finish.md.
 
 ## Original handoff follow-up, 16 October 2026
 

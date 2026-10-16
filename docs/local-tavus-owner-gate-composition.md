@@ -1,6 +1,6 @@
 ## Original final inspection and finish connected, 16 October 2026
 
-The guard and notebook transition adapter now preserve the original last signed inspection and await verified original gate completion before startup registration or renewed acceptance. The complete local two-turn transcript/notebook/HTTP journey passes at exactly 127 of the fixed 128 records. Fifty-nine focused checks pass in the isolated source copy, and 14 publication/handoff checks pass independently in the main workspace. Full run 82115 is pending. Mandatory original paired construction and pre-work identity rejection remain next. See docs/local-tavus-original-finish.md. Earlier missing-finish descriptions below are historical.
+The guard and notebook transition adapter now preserve the original last signed inspection and await verified original gate completion before startup registration or renewed acceptance. The complete local two-turn transcript/notebook/HTTP journey passes at exactly 127 of the fixed 128 records. Fifty-nine focused checks pass in the isolated source copy, and 14 publication/handoff checks pass independently in the main workspace. Full run 82115 passes 2,551 tests across 186 files. Mandatory original paired construction and pre-work identity rejection remain next. See docs/local-tavus-original-finish.md. Earlier missing-finish descriptions below are historical.
 
 ## Original handoffs prepared, 16 October 2026
 
