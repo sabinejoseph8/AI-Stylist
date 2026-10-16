@@ -899,7 +899,10 @@
       "completeAuthorityRecords": 127,
       "authorityRecordCap": 128,
       "productionCriteriaClosed": 0,
-      "hostedChanges": false
+      "hostedChanges": false,
+      "evidenceMap": "docs/local-tavus-paired-evidence-map.md",
+      "genuinePairedCases": 38,
+      "lowerContractCases": 147
     }
   ]
 }
