@@ -27,3 +27,19 @@ it.each(['commit','claim','fence','release'])('captures and reconciles the compl
  const e=await f.port.claim(f.plan,'a'.repeat(64)),hash=witnessServiceDigest(e.request),o={snapshot:f.states.target,projection:f.command.target,operationId:f.command.operationId,transactionId:'40',claimHash:hash,consumed:true,protected:true};
  expect((await f.finalizer(hash,'40',async()=>o).finalize(signal())).status).toBe('reconciled');expect((await f.x.inspect()).pending).toBeNull();
  }finally{await f.close();}},60000);
+
+it('checks every full-state section even when the supplied reduced projection is unchanged',async()=>{
+ const f=await fullStateFixture();try{
+  const widths={history:4,projections:7,receipts:6,gate:5,grants:7,releases:5};
+  for(const [section,width] of Object.entries(widths)){
+   const o:any=observed(f);
+   // Preserve the reduced projection and execution markers while altering a
+   // logical section. No section may bypass exact committed-target comparison.
+   if(o.snapshot[section].length)o.snapshot[section][0][width-1]='altered';
+   else o.snapshot[section].push(Array(width).fill('altered'));
+   expect(o.projection).toEqual(f.command.target);
+   expect(()=>assertCommittedFullState(o,f.plan,f.states.target,f.command,'c'.repeat(64),'40'),section).toThrow();
+  }
+  expect((await f.x.inspect()).pending).toBe(f.plan.id);
+ }finally{await f.close();}
+},30000);

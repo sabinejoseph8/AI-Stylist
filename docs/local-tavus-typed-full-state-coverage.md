@@ -2,7 +2,7 @@
 
 On 16 October 2026, continued the authorized full-state reconciliation preparation under the active development goal. No spending, credentials, provider calls or hosted changes are included.
 
-Follow-up: [continuous state and restore rehearsal](local-tavus-continuous-state-rehearsal.md) now tests one five-step history, a competing connection and full native control-table restores. Fresh-process startup and independent restore protection remain open.
+Follow-up: [continuous state and restore rehearsal](local-tavus-continuous-state-rehearsal.md) now tests one five-step history, a competing connection and full native control-table restores. Fresh-process read-only inspection is also implemented; independently protected restore floors remain open.
 
 ## Coverage added
 
@@ -35,6 +35,6 @@ The goal's original /private/tmp/ai-stylist-phone-publish checkout remains at an
 
 ## Remaining work
 
-This covers each typed target in a separately prepared scenario. It does not yet prove a single continuous full-state PostgreSQL consultation sequence, competing full-state writers, fresh-process authority recovery or one-sided/coordinated restore behavior across that sequence. Native SQL domain enforcement, real all-writer fencing, independently administered authority/proof services, transport and production deadlines remain open. Existing earlier negative coordinated-restore limitations still apply.
+This document records separately prepared scenarios. Subsequent local work covers a continuous sequence, a competing connection, one-sided restore refusal and fresh-process read-only inspection. A coordinated restore of both stores can still pass an old consistent diagnostic, so independent restore protection and original-owner recovery remain unproven. Native SQL domain enforcement, real all-writer fencing, independently administered authority/proof services, transport and production deadlines remain open. Existing earlier negative coordinated-restore limitations still apply.
 
-Exact next local action: compose a continuous full-state PostgreSQL sequence and test competing writes, uncertain outcomes and restore boundaries while preserving one-use claims. Keep hosted publication, provider activation, privacy and financial gates unchanged. The $51 allocation and permanent backup runtime/scheduler remain untouched. The full development goal remains active and incomplete.
+Original next action, subsequently completed locally: compose the continuous PostgreSQL sequence and test competing writes, uncertain outcomes and restores while preserving one-use claims. Current follow-up is documented provider-interface compatibility and production lease-lifetime mapping. Keep hosted publication, provider activation, privacy and financial gates unchanged. The $51 allocation and permanent backup runtime/scheduler remain untouched. The full development goal remains active and incomplete.

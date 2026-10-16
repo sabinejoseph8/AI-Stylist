@@ -1,3 +1,11 @@
+## Reconciliation revalidation, 16 October 2026
+
+Rechecked the approved local full-state post-commit implementation. Added a regression case that alters each of the six logical sections while retaining the supplied reduced projection and execution markers; every altered target must be refused and authority must remain pending. Corrected outdated activation-only and separate-scenario descriptions in the original reconciliation documents. No production code or acceptance gate changed.
+
+Current evidence: 27 focused reconciliation/continuous-state tests, 503 disposable PostgreSQL checks with networking disabled, 475 operations tests with ResourceWarning as error, TypeScript checking and 16 local Memory checks pass. The earlier 2,181-test full-suite result remains historical; it was not rerun for this test/documentation-only change. No spending, provider calls, real credentials, hosted publication or permanent backup runtime changes. Allocation remains $51.
+
+Next local action: review documented Tavus request/transcript compatibility against the disabled adapter and record the consultation-lifetime/lease gap before any live proposal. Independent restore floors, universal writer fencing, native domain enforcement and real provider acceptance remain open. No action is required from Sabine for this local checkpoint.
+
 ## Follow-up evidence, 16 October 2026
 
 The activation-only limitation recorded below was followed by all five typed targets and a continuous PostgreSQL sequence. See [typed coverage](local-tavus-typed-full-state-coverage.md), [continuous state/restore checks](local-tavus-continuous-state-rehearsal.md) and [startup admission](local-tavus-durable-startup-admission.md). These are local rehearsals; native domain enforcement, independent administration and universal fencing remain open. Earlier test counts below describe the original checkpoint.
@@ -6,7 +14,7 @@ The activation-only limitation recorded below was followed by all five typed tar
 
 Sabine approved local preparation and tests on 16 October 2026, with no new spending or hosted changes. This extends the disposable PostgreSQL rehearsal to persist the complete logical CVI fixture state and reconcile its original signed authority target after commit. It does not deploy a production database adapter or activate live styling.
 
-Follow-up: [typed full-state coverage](local-tavus-typed-full-state-coverage.md) now includes domain commit, receipt claim, fencing and release targets as separate PostgreSQL scenarios. Continuous-sequence, concurrency and restore acceptance remain open.
+Follow-up: [typed full-state coverage](local-tavus-typed-full-state-coverage.md) now includes domain commit, receipt claim, fencing and release targets as separate PostgreSQL scenarios. The continuous local sequence, competing connection, checkpoint restore and fresh-process inspection checks are also implemented. Production acceptance remains open.
 
 ## Complete logical state
 
@@ -53,10 +61,10 @@ Recovery proof sources check the exact snapshot and aggregate against the origin
 
 ## Remaining gates
 
-The full signed integration currently exercises activation. Domain commits, receipt claims, fencing and release retain their earlier local contracts/tests, but their full PostgreSQL export/reconciliation sequences still need integration coverage. No original signing handoff is reconstructed, and this module does not release recommendation audio, sign an application receipt or activate another consultation.
+The full signed local integration covers activation, domain commits, receipt claims, fencing and release, both separately and in one continuous PostgreSQL sequence. Fresh-process inspection is implemented as a read-only diagnostic. These checks do not establish production recovery or independently protected restore floors. No original signing handoff is reconstructed, and this module does not release recommendation audio, sign an application receipt or activate another consultation.
 
 The authority, identity and recovery proof keys are distinct but colocated test keys. Independent service administration, protected transport and production connection-pool identity remain unproven. The fencing proof covers participating restricted fixture routes and the authority's pending-operation gate. It is not proof that every possible worker, administrator or previously issued production grant is fenced. PostgreSQL observation and authority reconciliation are separate operations; real all-writer fencing is needed to close their final-check gap.
 
 SQL stores a verifier-validated logical export atomically. It does not independently run the complete TypeScript domain validator or recreate native production tables. Superusers, owners, coordinated restores of both stores, instance/transaction identity rollback, operator recovery and full production retention policies remain outside this rehearsal. Clocks are synthetic in the signing fixture and real in PostgreSQL expiry checks; production deadline mapping remains open. No deletion, provider termination, output recall or final-billing guarantee is implied.
 
-Exact next local action: extend full-state PostgreSQL transaction and reconciliation coverage to domain commits, receipt claims, fencing and release, including competing writes and restore boundaries. Preserve independent administration, all-writer fencing, transport, privacy, financial and live-activation gates. No hosted changes, public push, real credentials, paid calls or permanent backup runtime/ledger/scheduler changes occurred. Allocation remains $51.
+Original next action, subsequently completed locally: extend full-state PostgreSQL coverage to all five transitions, a continuous sequence, competing writes and restore boundaries. Current follow-up is documented provider-interface compatibility and the consultation-lifetime/lease gap; the reconciliation rehearsal does not authorize live activation. Preserve independent administration, all-writer fencing, transport, privacy, financial and live-activation gates. No hosted changes, public push, real credentials, paid calls or permanent backup runtime/ledger/scheduler changes occurred. Allocation remains $51.

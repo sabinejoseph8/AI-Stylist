@@ -1,3 +1,11 @@
+## Reconciliation revalidation, 16 October 2026
+
+Rechecked the approved local full-state post-commit implementation. Added a regression case that alters each of the six logical sections while retaining the supplied reduced projection and execution markers; every altered target must be refused and authority must remain pending. Corrected outdated activation-only and separate-scenario descriptions in the original reconciliation documents. No production code or acceptance gate changed.
+
+Current evidence: 27 focused reconciliation/continuous-state tests, 503 disposable PostgreSQL checks with networking disabled, 475 operations tests with ResourceWarning as error, TypeScript checking and 16 local Memory checks pass. The earlier 2,181-test full-suite result remains historical; it was not rerun for this test/documentation-only change. No spending, provider calls, real credentials, hosted publication or permanent backup runtime changes. Allocation remains $51.
+
+Next local action: review documented Tavus request/transcript compatibility against the disabled adapter and record the consultation-lifetime/lease gap before any live proposal. Independent restore floors, universal writer fencing, native domain enforcement and real provider acceptance remain open. No action is required from Sabine for this local checkpoint.
+
 ## Local authenticated notebook-to-CVI context, 16 October 2026
 
 Continued authorized local preparation under the active goal. The disabled CVI flow now reads the existing authoritative StylingSession through a readonly projection instead of a second editable notebook. All seven fields, confirmation state, session/input revisions and the current native revision reach draft/check context. Explicit edits use the existing revision/sequence rules; structured proposals remain tentative and cannot override newer touch edits. Raw conversation messages retain no confirmation authority.
