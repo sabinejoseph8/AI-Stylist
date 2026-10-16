@@ -1,3 +1,7 @@
+## Shared coordinator notebook rehearsal, 16 October 2026
+
+Reuse the approved notebook disclosure, seven-field list, state badges, labelled editor and existing tokens in the explicitly injected local consultation view. Show only acknowledged values; keep uncertain budgets To confirm. Requested Save/Cancel returns to its Edit control, while background snapshots do not move focus. Clear hides temporary values immediately; explicit sample preferences and looks have separate scopes. Version metadata belongs in test attributes, not visible customer wording. No new palette or product design decision is made. Full integrated and real assistive-technology acceptance remain open.
+
 ## Volatile account/reset draft lifecycle, 15 October 2026
 
 Account and reset drafts clear on page exit and persisted cached-page return as well as their existing submit/cancel boundaries. Erase visible input values synchronously before rendering can pause, then clear React state and cancel pending local flows. A cached page must not restore filled drafts or accept late local completion. This does not imply hosted sign-out, credential revocation or forensic erasure. Sample controls remain explicitly simulated.

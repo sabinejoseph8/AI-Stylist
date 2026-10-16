@@ -11,7 +11,8 @@ def receive():
 def send(value):print(json.dumps(value),flush=True)
 try:
     x=receive()
-    if set(x)!={'root','scope','intent','context','now','node','verifier'}:raise ValueError()
+    if set(x) not in ({'root','scope','intent','context','now','node','verifier'},{'root','scope','intent','context','now','node','verifier','witness'}):raise ValueError()
+    if 'witness' in x and not isinstance(x['witness'],dict):raise ValueError()
     context=deepcopy(x['context']);at=x['now'];evidence=None
     if set(context)!={'pin','writerPrincipal','owner'}:raise ValueError()
     def source(marker,prepared):
@@ -22,7 +23,7 @@ try:
         checked=subprocess.run([x['node'],x['verifier']],input=json.dumps(dict(binding=binding,pack=pack,now=now)),text=True,capture_output=True,timeout=3)
         if checked.returncode:raise ValueError()
         return json.loads(checked.stdout)
-    with transition(x['root'],x['scope'],x['intent'],source,verify,lambda:at) as gate:
+    with transition(x['root'],x['scope'],x['intent'],source,verify,lambda:at,witness=x.get('witness')) as gate:
         send(dict(stage='ready',marker=gate.describe(),prepared=gate.prepare_finish()))
         while True:
             r=receive()

@@ -1,0 +1,3 @@
+/** Disabled pure pinned verifier. No network, key lookup or storage. */
+import {verifyLocalOwnerReplayProof} from '../../apps/foundation/src/server/local-cvi-owner-replay-proof.ts';
+let raw='';try{for await(const data of process.stdin){raw+=data.toString();if(Buffer.byteLength(raw)>1048576)throw Error();}const x=JSON.parse(raw);if(Object.keys(x).sort().join(',')!=='current,evidence,minimumRevision,nonce,now,pin,readerPrincipal')throw Error();process.stdout.write(JSON.stringify(verifyLocalOwnerReplayProof(x.pin,x.readerPrincipal,x.nonce,x.current,x.minimumRevision,x.now,x.evidence)));}catch{process.exitCode=2;}

@@ -1,3 +1,6 @@
+import {mkdir} from 'node:fs/promises';
+import {witnessedCall} from './cvi-witness-process.ts';
+import type {ReplayWitnessPin} from '../../src/server/local-cvi-replay-witness.ts';
 /** Actual local pair/transaction/signature/journal; account, model and wire simulated. */
 import {vi} from 'vitest';
 import {startupAdmissionFixture} from './cvi-startup-admission-fixture.ts';
@@ -15,12 +18,13 @@ import {call} from './cvi-replay-process.ts';
 const signal=()=>new AbortController().signal;
 export async function pairedOwnerFixture(configure?:(ports:any,f:Awaited<ReturnType<typeof startupAdmissionFixture>>,control:{clock:()=>number;at(n:number):void})=>void){
  let time=1000,ordinal=0,seq=0;const clock=()=>time;const f=await startupAdmissionFixture(()=>time,10000,true),m=f.gateMaterial(),key=m.databaseKey,authority=f.x.authorityPort('rotator'),rotator=f.x.actors.find(a=>a.role==='rotator')!,reader=f.x.actors.find(a=>a.role==='observer')!;
- const config={authority:f.x.pin,database:m.pin.database,principal:'fixture_rotator',actor:{principalDigest:rotator.principalDigest,readerPrincipal:reader.principalDigest,ownerDigest:f.ownerDigest},scope:f.scope,baseline:f.baseline,registry:m.registry,nativeRoot:f.x.root,replayRoot:f.replayRoot,physicalBindingDigest:m.physicalBindingDigest,binding:f.resources.binding};
+ const witnessRoot=f.root+'/replay-witness';await mkdir(witnessRoot,{mode:0o700});const witness=await witnessedCall(f.replayRoot,'prepareWitness',{witnessRoot,storeId:f.journal.storeId,kind:'replay'}) as ReplayWitnessPin;
+ const config={witness,authority:f.x.pin,database:m.pin.database,principal:'fixture_rotator',actor:{principalDigest:rotator.principalDigest,readerPrincipal:reader.principalDigest,ownerDigest:f.ownerDigest},scope:f.scope,baseline:f.baseline,registry:m.registry,nativeRoot:f.x.root,replayRoot:f.replayRoot,physicalBindingDigest:m.physicalBindingDigest,binding:f.resources.binding};
  const plans=new Map<string,any>();let nativeLease:any;
  const ports={authority,credentials:f.resources.authority,planFull:vi.fn(async(kind:'activate'|'renew',args:Record<string,unknown>,at:number,_s:AbortSignal)=>{const intent=await f.x.plan(kind,args);const full=await mandatoryCall({root:f.x.root,config:{...f.x.config,now:at},mode:'plan-full',actor:intent.actor,kind:intent.kind,args:intent.args});plans.set(intent.id.slice(0,32),intent);return {intent,previous:full.previous,target:full.target};}),
  identity:async(request:any,b:any)=>{const body={version:1,keyId:m.pin.database.keyId,...request,bindingDigest:witnessServiceDigest(b),issuedAt:time,expiresAt:time+3000};return {body,signature:key.sign(historyCanonical(body))};},
  observe:async(command:Record<string,unknown>)=>{const plan=plans.get(command.operationId as string);if(!plan)throw Error('Unknown original plan');const seen=await transactionCall({root:f.x.root,plan,command,config:f.x.config,principal:'fixture_rotator',mode:'observe'});const g=seen.snapshot.grants.find((r:any)=>r[6]==='active');nativeLease={storeId:f.x.pin.storeId,policyDigest:f.x.pin.policyDigest,generation:g[0],ownerDigest:g[1],bootDigest:g[2],token:plan.args.token,issuedAt:g[4],expiresAt:g[5]};f.restoreMarker({operationId:seen.operationId,transactionId:seen.transactionId,claimHash:seen.claimHash,consumed:true,protected:true});return seen;},
- references:()=>f.gateMaterial().registry,checkpoint:m.readPorts,replay:{inspect:(r:any,s:AbortSignal)=>f.replayHooks.inspect(r,s),mutate:(mode:'reserve'|'consume',lease:any,floor:number,r:any,s:AbortSignal)=>f.replayHooks[mode](lease,floor,r,s)}};
+ references:()=>f.gateMaterial().registry,checkpoint:m.readPorts};
  configure?.(ports,f,{clock,at:n=>time=n});
  const pair=createLocalGatedSqliteOwnerPair(config,ports,clock),identity={ownerId:'00000000-0000-4000-8000-000000000001',sessionId:'11111111-1111-4111-8111-111111111111',isCurrent:async()=>true},appRequest=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
  const draft=vi.fn(async(s:any)=>'Synthetic '+s.notes.coverage.text),check=vi.fn(async(text:string,s:any)=>({approved:true,text,revision:s.revision})),context=createLocalCviNotebookContext({simulation:true,identity,authorize:async r=>r.headers.get('authorization')==='Bearer fixture-customer'?identity:null,checkpoint:pair.checkpoint,ports:{draft,check},clock,policy:APPROVED_NOTES_RETENTION});

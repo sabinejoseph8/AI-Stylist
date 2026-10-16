@@ -2029,3 +2029,7 @@ I reviewed the sample app for browser storage, logs, images and exports. I found
 ## Separating preparation from launch readiness
 
 I mapped all 21 acceptance criteria to tests, reviews and the evidence still missing. I found that the displayed five completed items included three discovery entries, while the phased build itself had two of 38 tasks checked. I clarified that metric and ranked the remaining provider, product-access, account, privacy, recovery and integration blockers. I kept local preparation distinct from production acceptance and preserved the decisions to defer a domain and Rakuten. The audit gives me a concrete way to evaluate support replies without repeating paid tests or assuming the MVP is ready.
+
+## Connecting the sample notebook to one coordinator
+
+I approved a local integration rehearsal rather than treating separately passing browser and backend tests as a complete consultation. I connected the existing app layout to one authoritative notebook, kept edits unconfirmed until accepted, and preserved saved samples separately from temporary notes. Automated WebKit testing exposed a test route registered too late in the local host; I fixed its placement and verified the real disposable coordinator could drive all seven fields and Clear/End behavior. I also removed retained note text from consistency tracking and bounded uncertain waits. The rehearsal uses made-up data and no paid or hosted services; full reference, feedback and live-provider integration remain open.

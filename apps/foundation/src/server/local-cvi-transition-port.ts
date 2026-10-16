@@ -1,3 +1,5 @@
+import {captureReplayWitness} from './local-cvi-replay-witness.ts';
+import type {ReplayWitnessPin} from './local-cvi-replay-witness.ts';
 /** Disabled original, supervised local gate. A finish is not owner permission. */
 import {spawn} from 'node:child_process';
 import {fileURLToPath} from 'node:url';
@@ -10,7 +12,7 @@ import {claimOriginalDatabaseAdmission} from './local-cvi-database-authority-bri
 import type {GateFinishContext,GateFinishBinding} from './local-cvi-gate-finish-proof.ts';
 import type {ReplayInspectionRequest} from './local-cvi-replay-inspection.ts';
 type Scope=ReturnType<typeof gateFinishScope>;
-export type LocalTransitionSetup=Readonly<{root:string;scope:Scope;plan:GateFinishBinding['plan'];pin:GateFinishBinding['pin'];writerPrincipal:string;owner:GateFinishBinding['owner'];databasePrincipal:string}>;
+export type LocalTransitionSetup=Readonly<{root:string;scope:Scope;plan:GateFinishBinding['plan'];pin:GateFinishBinding['pin'];writerPrincipal:string;owner:GateFinishBinding['owner'];databasePrincipal:string;witness?:ReplayWitnessPin}>;
 export type LocalTransitionGate=Readonly<{status:'local-transition-gate'}>;
 type Control={binding():GateFinishBinding;bind(raw:unknown,s:AbortSignal):Promise<void>;inspect(r:ReplayInspectionRequest,s:AbortSignal):Promise<unknown>;finish(r:unknown,s:AbortSignal):Promise<void>;close():Promise<void>;held():boolean};
 const controls=new WeakMap<object,Control>();
@@ -20,8 +22,8 @@ const same=(a:any,b:any)=>historyCanonical(a)===historyCanonical(b);
 function freeze<T>(v:T):T{if(v&&typeof v==='object'){for(const x of Object.values(v))freeze(x);Object.freeze(v);}return v;}
 /** All setup fields come from captured server configuration, never HTTP. */
 export async function beginLocalTransitionGate(raw:LocalTransitionSetup,external:AbortSignal,clock=Date.now,deadlineMs=8000):Promise<LocalTransitionGate>{
- if(!gateFinishJson(raw)||!exact(raw,['root','scope','plan','pin','writerPrincipal','owner','databasePrincipal'])||typeof raw.databasePrincipal!=='string'||!/^[a-z][a-z0-9_]{0,62}$/.test(raw.databasePrincipal)||typeof raw.root!=='string'||!raw.root.startsWith('/')||Buffer.byteLength(historyCanonical(raw as any))>1048576||typeof clock!=='function'||!int(deadlineMs)||deadlineMs<1||deadlineMs>8000||external.aborted)throw Error('Local transition unavailable');
- const x=structuredClone(raw),started=clock(),scope=x.scope;
+ if(!gateFinishJson(raw)||!(exact(raw,['root','scope','plan','pin','writerPrincipal','owner','databasePrincipal'])||exact(raw,['root','scope','plan','pin','writerPrincipal','owner','databasePrincipal','witness']))||typeof raw.databasePrincipal!=='string'||!/^[a-z][a-z0-9_]{0,62}$/.test(raw.databasePrincipal)||typeof raw.root!=='string'||!raw.root.startsWith('/')||Buffer.byteLength(historyCanonical(raw as any))>1048576||typeof clock!=='function'||!int(deadlineMs)||deadlineMs<1||deadlineMs>8000||external.aborted)throw Error('Local transition unavailable');
+ const captured=structuredClone(raw),x={...captured,...('witness' in captured?{witness:captureReplayWitness(captured.witness!,captured.scope.storeId,captured.root)}:{})},started=clock(),scope=x.scope;
  // Validate the complete trusted context before spawning or creating a marker.
  const preliminary={version:1 as const,operationId:x.plan.id,intentDigest:witnessServiceDigest(x.plan),...scope,issuedAt:x.plan.now,expectedNativeDigest:witnessServiceDigest(x.plan.from),targetNativeDigest:witnessServiceDigest(x.plan.to),replayStateDigest:'0'.repeat(64),initialJournalDigest:'0'.repeat(64)};
  captureGateFinishContext({plan:x.plan,pin:x.pin,writerPrincipal:x.writerPrincipal,owner:x.owner,marker:preliminary,prepared:{status:'transition-finish-prepared',operationId:x.plan.id,scopeDigest:witnessServiceDigest(scope),targetDigest:preliminary.targetNativeDigest,challenge:randomBytes(32).toString('hex'),issuedAt:started,expiresAt:scope.expiresAt}});
@@ -57,7 +59,7 @@ async function open(x:LocalTransitionSetup,external:AbortSignal,clock:()=>number
  });
  const write=(v:unknown)=>{const encoded=JSON.stringify(v);if(Buffer.byteLength(encoded)>1048576)throw Error();child.stdin.write(encoded+'\n');};
  try{
-  write({root,scope,intent:plan,context:{pin,writerPrincipal,owner},now:started,node:process.execPath,verifier:fileURLToPath(new URL('../../../../tools/operations/local-cvi-gate-finish-verifier.ts',import.meta.url))});await ready;now();
+  write({root,scope,intent:plan,context:{pin,writerPrincipal,owner},...(x.witness?{witness:x.witness}:{}),now:started,node:process.execPath,verifier:fileURLToPath(new URL('../../../../tools/operations/local-cvi-gate-finish-verifier.ts',import.meta.url))});await ready;now();
   const port=Object.freeze({status:'local-transition-gate' as const});
   const request=async(stage:string,command:string,value:unknown,s:AbortSignal)=>{
    if(busy||requestedFinish||s.aborted)throw Error('Local transition held');busy=true;

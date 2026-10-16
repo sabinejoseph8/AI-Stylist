@@ -1,3 +1,5 @@
+import type {LocalConsultationView} from '../session/local-consultation-view.ts';
+import {CoordinatedNotebookPanel} from './coordinated-notebook-panel.tsx';
 import {navigationClearance} from './navigation-clearance.ts';
 import {LocalLookFeedback} from '../feedback/local-look-feedback.ts';
 import {LookFeedbackPanel} from './look-feedback-panel.tsx';
@@ -15,7 +17,7 @@ import React,{useEffect,useLayoutEffect,useRef,useState} from 'react';
 import {AccountPanel} from './account-panel.tsx';
 import {NotebookPanel} from './notebook-panel.tsx';
 const destinations=['Stylist','Wardrobe','Saved looks','Profile'] as const;
-export function App(){
+export function App({consultation}:{consultation?:LocalConsultationView}={}){
  const [draftActive,setDraftActive]=useState(true);
  const [feedback]=useState(()=>new LocalLookFeedback());
  const [draft]=useState(()=>new LocalDraftOutfit());
@@ -29,6 +31,12 @@ export function App(){
   const unsubscribe=[wardrobe.subscribe(()=>privacy.invalidate()),looks.subscribe(()=>privacy.invalidate()),shopping.subscribe(()=>privacy.invalidate())];
   return()=>{for(const stop of unsubscribe)stop();for(const stop of unbind)stop();privacy.cancel();};
  },[wardrobe,looks,shopping,privacy]);
+ // Only the isolated test entry injects this view. Default startup stays local.
+ useEffect(()=>{
+  if(!consultation)return;let previous='';
+  const update=()=>{const s=consultation.snapshot(),key=s.session?`${s.session.epoch}:${s.session.revision}`:'';setDraftActive(s.state==='ready'&&!s.busy);if(s.busy||key!==previous||s.state!=='ready'){draft.clear();feedback.clear();wardrobe.clearSelection();}previous=key;};
+  update();return consultation.subscribe(update);
+ },[consultation,draft,feedback,wardrobe]);
  const [page,setPage]=useState<typeof destinations[number]>('Stylist');
  const pageHeading=useRef<HTMLHeadingElement|null>(null),navigation=useRef<HTMLElement|null>(null),previousPage=useRef(page);
  useLayoutEffect(()=>{
@@ -45,6 +53,6 @@ export function App(){
  },[]);
  return <><a className="skip" href="#main">Skip to content</a><header><a className="wordmark" href="#main">AI Stylist<span>Your personal fashion journal</span></a><span className="badge">Local development preview</span></header>
  <main id="main" tabIndex={-1} aria-labelledby="page-heading"><p className="eyebrow">A foundation for your next look</p><h1 id="page-heading" ref={pageHeading} tabIndex={-1}>{page==='Stylist'?'Your style, thoughtfully considered.':page}</h1><p className="intro">This local preview uses sample content. It does not sign you in, connect to a stylist, save personal information, or offer products for purchase.</p>
- <div className="layout" hidden={page!=='Stylist'}><section className="card"><span className="badge">Stylist preparation</span><h2>A conversation shaped around you</h2><p>Your stylist will collect preferences naturally during your first conversation, then suggest one checked look at a time.</p><button onClick={()=>setPage('Profile')}>Preview account screens</button> <button disabled>Stylist unavailable in this preview</button><p className="muted">Accounts, avatar and microphone are not connected in this preview.</p></section><NotebookPanel visible={page==='Stylist'} wardrobe={wardrobe} privacy={privacy} draft={draft} feedback={feedback} onActiveChange={setDraftActive}/></div><div hidden={page!=='Stylist'}><SampleLookPreview model={looks} shopping={shopping}/></div><DraftOutfitPanel model={draft} visible={page==='Stylist'} active={draftActive}/><LookFeedbackPanel model={feedback} visible={page==='Stylist'} active={draftActive}/><SavedLooksPanel model={looks} shopping={shopping} visible={page==='Saved looks'}/><ShoppingListPanel model={shopping} visible={page==='Saved looks'}/><WardrobePanel model={wardrobe} visible={page==='Wardrobe'}/>{page==='Profile'?<AccountPanel/>:null}<PrivacyPanel model={privacy} visible={page==='Profile'}/>
+ <div className="layout" hidden={page!=='Stylist'}><section className="card"><span className="badge">Stylist preparation</span><h2>A conversation shaped around you</h2><p>Your stylist will collect preferences naturally during your first conversation, then suggest one checked look at a time.</p><button onClick={()=>setPage('Profile')}>Preview account screens</button> <button disabled>Stylist unavailable in this preview</button><p className="muted">Accounts, avatar and microphone are not connected in this preview.</p></section>{consultation?<CoordinatedNotebookPanel model={consultation} visible={page==='Stylist'}/>:<NotebookPanel visible={page==='Stylist'} wardrobe={wardrobe} privacy={privacy} draft={draft} feedback={feedback} onActiveChange={setDraftActive}/>}</div><div hidden={page!=='Stylist'}><SampleLookPreview model={looks} shopping={shopping}/></div><DraftOutfitPanel model={draft} visible={page==='Stylist'} active={draftActive}/><LookFeedbackPanel model={feedback} visible={page==='Stylist'} active={draftActive}/><SavedLooksPanel model={looks} shopping={shopping} visible={page==='Saved looks'}/><ShoppingListPanel model={shopping} visible={page==='Saved looks'}/><WardrobePanel model={wardrobe} visible={page==='Wardrobe'}/>{page==='Profile'?<AccountPanel/>:null}{consultation?<p hidden={page!=='Profile'}>Shared temporary notes use Clear or End on Stylist. Combined privacy export is not connected in this rehearsal.</p>:<PrivacyPanel model={privacy} visible={page==='Profile'}/>}
  </main><nav ref={navigation} aria-label="Primary navigation"><div className="navigation-items">{destinations.map(name=><button key={name} aria-current={page===name?'page':undefined} onClick={()=>setPage(name)}>{name}</button>)}</div></nav></>;
 }

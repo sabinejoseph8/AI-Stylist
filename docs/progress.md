@@ -1,3 +1,21 @@
+## Shared app notebook rehearsal, 16 October 2026
+
+Sabine approved local Task 8a preparation. The normal sample App now accepts an explicit, test-only consultation view instead of creating another notebook session. Default startup is unchanged. A captured application request binds the view port to the original coordinator. Only accepted seven-field snapshots appear; edits/confirmations carry original field revisions. Clear/End hide temporary notes immediately, cancel late updates and preserve separately selected sample preferences. Local sample drafts/feedback are invalidated when shared context changes; saved sample looks remain separate. Combined privacy export and full reference/draft/feedback generation are not connected yet and are not claimed complete.
+
+The view's 19 contract tests pass, including stale/changed snapshots, ambiguous budgets, lost acknowledgments, cancellation and bounded stalled ports. Old note text is not retained for consistency checks; only a digest and numeric version floor remain. Three genuine paired-coordinator tests pass in the final current-source regression. The WebKit walkthrough passes against the actual disposable SQLite/signature/witness coordinator: edit all seven fields, confirm scoped budget, save an explicit sample preference/look, clear temporary notes/draft/feedback, reopen the saved sample without restoring notes, End and enlarged narrow-screen layout. Browser access is loopback only, external requests are refused, media requests are forbidden and browser storage stays empty. The final current-source regression passes 113 tests across 11 suites, including edit-focus return and populated 320px doubled-root-text layout. Original session 38425 completed with exit zero; output is /private/tmp/ai-stylist-8a-final-focused.log.
+
+The first browser attempt stopped before opening because the automation package expected an absent engine; the explicit installed WebKit path solved that setup problem. Subsequent startup tracing exposed a test-host route placed after Vite's fallback. Registering it through configureServer fixed the route; no authentication or deadline protection was relaxed. The normal production build excludes the isolated browser entry and its local test API. Current TypeScript and client build pass.
+
+Before app mounting, the captured-witness candidate passed its complete isolated regression: 2,603 tests across 191 files, original session 37385, terminal exit zero. All 513 frozen source hashes matched the main workspace immediately after the exact 11-file merge. The current app/view additions postdate that full result; it is not a full regression of the newer app. The exact witness source also passed 570 staged operations tests, and two concrete-entry operations tests independently pass in main. SQL is unchanged and prior 638 PostgreSQL checks were not rerun. The complete paired renewal journey's fixed 127-of-128 record constraint is unchanged.
+
+No production criterion or full Task 8a is complete. Completion remains 5 of 41 and 0 of 21; allocation remains $51. No paid calls, real accounts, microphone/camera access, credentials, hosted changes, support messages or permanent backup-runtime changes. Product baseline is reviewed without scope changes; existing design tokens and native disclosures/forms are reused. Native/hosted clocks, actual provider/source access, independent administration and live/device acceptance remain open.
+
+Exact next action: commit the passing current source, refresh local Memory and verify source archives, then continue approved Task 8a by binding synthetic reference, candidate/check and item-feedback rounds to the same current coordinator context. Keep real release disabled, preserve separate saved-look scope and prevent delayed work from recreating Clear/End data. No new sequencing approval is needed. The development goal remains active and incomplete.
+
+## Approved local Task 8a preparation, 16 October 2026
+
+Sabine approved bringing forward the sample app integration rehearsal in docs/task-8a-local-integration-proposal.md. Connect one authoritative consultation context to the local sample view, corrections, feedback, Clear/End and explicit sample saving, then automate the walkthrough. Use made-up data only. No paid calls, real accounts, microphone/camera access, credentials, hosted changes or deployment. Preserve existing native/signature/deadline limits and permanent uncertain evidence. Task 8a and production acceptance remain open. The captured-witness source regression in original session 37385 remains an independent verification prerequisite for merging that candidate. No renewed sequencing approval is needed.
+
 ## Captured witness integration in isolated regression, 16 October 2026
 
 Prepared the captured witness integration in /private/tmp/ai-stylist-witness-pair-stage. The protected factory now requires a scoped, separate replay-witness reference and constructs its own fixed bounded replay driver. Caller-selected replay callbacks are refused before work. The original Node gate passes the same captured reference to the Python transition primitive; ordinary inspection and owner-fenced reserve/consume use that reference too. The driver uses captured clocks, an absolute wall deadline, strict frames, original native leases and three fresh signed checks per mutation, with no alternate script, fault flags or raw-write fallback.
@@ -1680,14 +1698,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: captured witness and concrete replay integration passes focused/operations checks in an isolated stage; its full regression is running. Main remains verified at 2,579 tests across 189 files; the new candidate is not merged.
+Current local focus: approved Task 8a shared-app notebook preparation. The captured-witness source is merged after 2,603 full tests across 191 files; newer app/view code passes 113 focused checks across 11 suites, including the automated browser journey. Full Task 8a remains open.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** collect full isolated regression session 37385, verify the frozen source, then merge only after a passing result and refresh local Memory.
+- **Next local action:** save verified source and refresh local Memory, then connect synthetic references, candidate/check and feedback rounds to the same coordinator context.
 
 ## Historical summary checkpoints
 
@@ -2122,9 +2140,9 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 ## Phase 8: Full consultation, accessibility and release readiness
 
 **Goal:** A working end-to-end phone experience that meets all 21 product acceptance scenarios.  
-**Dependencies:** Phases 1–7; approved local-only exceptions cover 8b accessibility, 8c failure/capacity and 8d operations preparation, not integration or launch; technical baseline approval, real source access, provider privacy agreement, host/domain configuration and agreed operating/spending limits.
+**Dependencies:** Phases 1–7; approved local-only exceptions cover 8a sample integration rehearsal (16 October), 8b accessibility, 8c failure/capacity and 8d operations preparation; customer integration and launch remain gated; technical baseline approval, real source access, provider privacy agreement, host/domain configuration and agreed operating/spending limits.
 **Product coverage:** A01–A21, with emphasis on A11/A12 and integrated timing/recovery.  
-**Status:** Local sequencing exceptions on 14 October cover 8b accessibility, 8c failure/capacity and 8d operations preparation. Accessibility browser evidence, synthetic restore evidence and isolated failure/capacity checks are recorded in their task documents. All 1,237 foundation tests, type checking and build pass. Real screen-reader/switch/device, hosted recovery, integrated journey, actual load/cost and release acceptance remain open. Phase 8 is not complete and no customer deployment or launch is authorized.
+**Status:** Sabine approved local 8a sample-app/coordinator preparation on 16 October, in addition to the earlier 8b/8c/8d exceptions. The typed authoritative view and isolated browser rehearsal are being implemented; they are not yet full application integration. Accessibility browser evidence, synthetic restore evidence and isolated failure/capacity checks remain recorded in their task documents. See the current evidence summary at the top for the latest verified source and test scope. Real screen-reader/switch/device, hosted recovery, integrated journey, actual load/cost and release acceptance remain open. Phase 8 is not complete and no customer deployment or launch is authorized.
 
 ### Task groups
 

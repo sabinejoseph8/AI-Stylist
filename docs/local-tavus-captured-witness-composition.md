@@ -1,3 +1,7 @@
+## Verified source merge, 16 October 2026
+
+The exact 11-file captured-witness candidate passed 2,603 tests across 191 files in original session 37385 with terminal exit zero. All 513 frozen hashes matched main at merge, before later Task 8a app changes. The source-only patch SHA is a5b0b8b7ab1db12b85c735162d911a56947d474dfef3a50ed29cfa90cd7e7381. The same staged source passed 570 operations tests; main independently passed its two concrete-entry operations cases. Prior 638 PostgreSQL checks were not rerun. Local folders still assume independent protection; coordinated privileged restoration and universal writer coverage are not solved. The original complete journey retains the fixed 127-of-128 authority budget. No live activation, spending or hosted change. Earlier preparation text below is historical.
+
 ## Captured witness integration in isolated regression, 16 October 2026
 
 Prepared the captured witness integration in /private/tmp/ai-stylist-witness-pair-stage. The protected factory now requires a scoped, separate replay-witness reference and constructs its own fixed bounded replay driver. Caller-selected replay callbacks are refused before work. The original Node gate passes the same captured reference to the Python transition primitive; ordinary inspection and owner-fenced reserve/consume use that reference too. The driver uses captured clocks, an absolute wall deadline, strict frames, original native leases and three fresh signed checks per mutation, with no alternate script, fault flags or raw-write fallback.

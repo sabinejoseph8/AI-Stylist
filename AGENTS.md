@@ -1,3 +1,7 @@
+# Current authorized local integration exception, 16 October 2026
+
+Sabine approved local Task 8a preparation under docs/task-8a-local-integration-proposal.md. This permits early sample-app/coordinator integration and automated tests with made-up data only. No paid calls, real accounts, microphone/camera access or hosted changes. Full Task 8a, customer activation and launch remain gated. Do not request the same sequencing approval again.
+
 # AI Stylist project
 
 ## Current MVP account scope, 14 October 2026
