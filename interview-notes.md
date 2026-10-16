@@ -1,3 +1,7 @@
+## Separating waiting time from permission to keep working
+
+I separated the startup timeout from the initial writer lease without raising its eight-second maximum. A longer requested bound never overrides a shorter verified grant or the consultation's absolute end. I also reproduced a bug where an overdue reply could escape before its timer callback ran. I added clock checks around waits and before writes or delivery, preserved uncertain reservations, and fixed an early cancellation error exposed by the new checks. These are local results, not a live consultation or a promise about provider cleanup.
+
 ## Keeping committed state when the caller disappears
 
 I added local checks for a customer connection ending after the durable reconciliation or after its final signed read. The result must stay recorded, but the caller must not receive success or retry the same mutation. I also checked that a canceled caller starts no reconciliation at all. This separates a lost acknowledgment from a failed commit without claiming production recovery or enabling any paid service.

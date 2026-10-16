@@ -88,3 +88,36 @@ describe('additional endpoint trust and cancellation boundaries',()=>{
  it('rejects invalid UTF-8 request bodies',async()=>{const s=setup();const r=new Request(origin+'/v1/chat/completions',{method:'POST',headers:Object.fromEntries(req().headers),body:new Uint8Array([0xff])});expect((await s.endpoint.handle(r)).status).toBe(409);expect(s.draft).not.toHaveBeenCalled();});
  it.each([0,8001,NaN])('refuses invalid local deadline %s',n=>{const s=setup();expect(()=>createLocalCviEndpoint(s.binding,s.flow,()=>1000,n)).toThrow();});
 });
+
+it('refuses output at the absolute request deadline before its timer fires',async()=>{
+ vi.useFakeTimers();const s=setup();try{
+  const r=await s.endpoint.handle(req());expect(r.status).toBe(200);s.at(1050);
+  await expect(r.text()).rejects.toThrow();
+  // A request deadline does not extend or replace the consultation boundary.
+  const fresh=await s.endpoint.handle(req('fixture-after-deadline'));expect(fresh.status).toBe(200);
+  expect(await fresh.text()).toContain('Checked sample outfit.');
+ }finally{s.endpoint.end();vi.useRealTimers();}
+});
+it.each(['reserve','consume'])('body admission crossing the deadline after %s never acknowledges success',async stage=>{
+ vi.useFakeTimers();let now=1000;const s=setup();try{
+  const replay={storeId:'00000000-0000-4000-8000-000000000001',reserve:vi.fn(async(r:any)=>{if(stage==='reserve')now=2000;return {...r,receipt:'fixture-receipt-'+'1'.repeat(32),status:'reserved' as const};}),consume:vi.fn(async(r:any)=>{now=2000;return {...r,status:'spent' as const};})};
+  const endpoint=createLocalCviEndpoint(s.binding,s.flow,()=>now,1000,replay,{check:async()=>true});
+  expect(await endpoint.spendAdmission('b'.repeat(64),new AbortController().signal)).toBeNull();
+  expect(replay.reserve).toHaveBeenCalledTimes(1);expect(replay.consume).toHaveBeenCalledTimes(stage==='consume'?1:0);
+  endpoint.end();
+ }finally{s.endpoint.end();vi.useRealTimers();}
+});
+it('body reads crossing the absolute deadline cannot reach draft work',async()=>{
+ vi.useFakeTimers();const s=setup();try{
+  const bytes=new TextEncoder().encode(JSON.stringify(body));
+  const request=new Request(origin+'/v1/chat/completions',{method:'POST',headers:req().headers,body:new ReadableStream<Uint8Array>({pull(controller){s.at(1050);controller.enqueue(bytes);controller.close();}},{highWaterMark:0}),duplex:'half'} as RequestInit);
+  expect((await s.endpoint.handle(request)).status).toBe(409);expect(s.draft).not.toHaveBeenCalled();
+ }finally{s.endpoint.end();vi.useRealTimers();}
+});
+it('a successful but overdue fence cannot reserve or draft',async()=>{
+ vi.useFakeTimers();const s=setup();let now=1000;try{
+  const replay={storeId:'00000000-0000-4000-8000-000000000001',reserve:vi.fn(async()=>{throw Error('Must not reserve');}),consume:vi.fn(async()=>{throw Error('Must not consume');})};
+  const endpoint=createLocalCviEndpoint(s.binding,s.flow,()=>now,50,replay,{check:async()=>{now=1050;return true;}});
+  expect((await endpoint.handle(req())).status).toBe(409);expect(replay.reserve).not.toHaveBeenCalled();expect(s.draft).not.toHaveBeenCalled();endpoint.end();
+ }finally{s.endpoint.end();vi.useRealTimers();}
+});

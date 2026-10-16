@@ -36,3 +36,13 @@ it('an advisory question cannot disagree with its protected internal request',as
 it('invalid UTF-8 and oversized transport bodies do not write replay evidence',async()=>{const f=await cviHttpFixture();try{for(const [bytes,status] of [[new Uint8Array([0xc3,0x28]),400],[new Uint8Array(65537),413]] as const){const req=new Request(f.binding.origin+'/cvi/v1/chat/completions',{method:'POST',headers:f.request().headers,body:bytes});expect((await f.wire.handle(req)).status).toBe(status);}expect(f.records.size).toBe(0);expect(f.draft).not.toHaveBeenCalled();}finally{f.close();}});
 
 it('the transcript getter observes local note expiry before exposing cached input',async()=>{const f=await cviHttpFixture();try{await f.say();expect(f.transcript.currentInput()).not.toBeNull();f.at(1000+30*60*1000);expect(f.transcript.currentInput()).toBeNull();expect(await f.context.snapshot(f.appRequest(),signal())).toBeNull();}finally{f.close();}});
+
+it('outer absolute deadline refuses upstream delivery before a delayed timer fires',async()=>{
+ const f=await cviHttpFixture();try{
+  await f.say();const wire=f.make(1000),response=await wire.handle(f.request());expect(response.status).toBe(200);
+  const before=structuredClone([...f.records.values()]);expect(before.map(v=>v.status)).toEqual(['spent','reserved']);
+  f.at(2000);await expect(response.text()).rejects.toThrow();
+  expect([...f.records.values()]).toEqual(before);expect(wire.isHeld()).toBe(true);expect(f.transcript.currentInput()).toBeNull();
+  expect(Object.values(f.context.flow.snapshot().notes).every(n=>n.text==='')).toBe(true);
+ }finally{f.close();}
+});

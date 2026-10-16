@@ -1,3 +1,13 @@
+## Local deadline and initial-lease separation, 16 October 2026
+
+Prepared an optional initial writer duration separately from the startup RPC deadline, bounded by the unchanged 8,000 ms native maximum and absolute consultation cap. Omitted configuration preserves the earlier behavior, and the actual verified backend grant can be shorter. Fresh signed inspection works after startup expiry; expired or replayed proofs and late startup acknowledgments stay held. This is not renewal or an 85-second consultation.
+
+Fixed a reproduced delayed-timer gap: native admission/reply and outer HTTP work now check absolute operation expiry around waits, body reads, ownership proofs and before writes/output. Overdue outer work cannot read and spend an unresolved upstream delivery. Unknown outcomes remain held without refund or handoff reconstruction. Added immediate cancellation rejection handling. See docs/local-tavus-lifetime-separation.md. Final regression passes 2,320 foundation tests across 169 files, including 184 cases in the five affected deadline/lifetime files, 475 operations tests with ResourceWarning as error, TypeScript checking/build, four encryption checks and 16 local Memory checks. The prior 556-check disposable PostgreSQL result is unchanged and was not rerun in this turn; no SQL contract changed.
+
+Product/design scope and all phase/launch gates remain unchanged; full completion remains 5 of 41 and allocation remains $51. No provider calls, real credentials, spending, hosted changes or permanent backup runtime/ledger/scheduler changes. Controlled local clocks and simulated account/transport/model outcomes do not establish production timing or Tavus acceptance.
+
+Exact next action: design bounded continued ownership through authenticated native transactions, fresh signed evidence, immutable consultation cap, fencing and one-use claims. Never rearm expired/unknown ownership or bypass body/turn replay guards. Keep real activation, independent administration/restore floors, all-writer coverage, financial/privacy and provider/device acceptance gated. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout; save tracked source only. The goal remains active and incomplete.
+
 ## Full-state reconciliation cancellation checks, 16 October 2026
 
 Revalidated the existing local post-commit reconciliation under Sabine's approval. Added four cases for cancellation after durable reconciliation, cancellation after the final signed read, loss of that read, and a caller canceled before work starts. A completed authority transition stays recorded when acknowledgment is withheld. The one-use finalizer cannot retry, replay the database mutation or reconstruct a signing handoff. No production code or SQL was changed for this follow-up.
@@ -1457,6 +1467,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Current local follow-up: startup RPC and initial writer duration are separate within the unchanged eight-second native limit. Native and HTTP request paths now enforce absolute deadlines even when timer callbacks are delayed. Full local regression passes 2,320 tests across 169 files; continued consultation ownership, real transport and provider acceptance remain open. Full completion stays 5 of 41. See docs/local-tavus-lifetime-separation.md.
 
 Current local follow-up: full-state post-commit reconciliation now passes 31 focused checks and 556 disposable PostgreSQL checks, including cancellation and lost-final-read tests. A durable transition must remain recorded even when acknowledgment is withheld. No production criterion closes; full completion remains 5 of 41. Separate lifetime changes remain uncommitted and are not part of this reconciliation checkpoint.
 

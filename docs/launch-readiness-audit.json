@@ -579,6 +579,16 @@
       "foundationTests": 2280,
       "foundationFiles": 167,
       "operationsTests": 475
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-lifetime-separation.md",
+      "foundationTests": 2320,
+      "foundationFiles": 169,
+      "operationsTests": 475,
+      "scope": "Disabled initial writer/RPC separation and absolute per-request deadline enforcement; no renewal or longer consultation activation",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

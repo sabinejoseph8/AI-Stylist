@@ -1,3 +1,7 @@
+## Deadline follow-up, 16 October 2026
+
+The native and outer HTTP operations now enforce absolute request expiry before upstream reads, reservation work and output, as well as canceling waits with timers. This closes a delayed-timer delivery gap. Startup RPC and initial writer duration are separately bounded, with the native eight-second maximum unchanged. See [lifetime limits](local-tavus-lifetime-separation.md). Continued consultation ownership and actual provider transport acceptance remain open.
+
 # Local Tavus custom-LLM HTTP candidate
 
 16 October 2026. Scope is disabled local preparation with simulated conversations. No listener, app route, PAL, account, provider call, real credentials, deployment or spending was activated. This is not verified live Tavus compatibility or launch acceptance. Allocation remains $51.

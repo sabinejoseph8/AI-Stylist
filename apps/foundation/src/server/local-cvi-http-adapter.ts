@@ -61,15 +61,16 @@ export function createLocalCviHttpAdapter(options:Readonly<{
   const supplied=Buffer.from(request.headers.get('x-ai-stylist-token')??'');if(supplied.length!==token.length||!timingSafeEqual(supplied,token))return deny(401);
   if(!/^application\/json(?:;\s*charset=utf-8)?$/i.test(request.headers.get('content-type')??'')||request.headers.has('content-encoding')||request.headers.has('x-cvi-request-id')||request.headers.has('x-cvi-conversation')||request.signal.aborted)return deny(400);
   if(active||attempts>=128)return deny(409);attempts++;
+  const operationExpiresAt=Math.min(binding.expiresAt,last+deadline);
   const abort=new AbortController(),signal=abort.signal;let timer:ReturnType<typeof setTimeout>|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined,internalRequest:Request|undefined,released=false;
   const terminal=()=>{if(operation.phase==='turn-started'&&internalRequest&&owner.deliveryState(internalRequest).status==='spent')operation.phase='turn-spent';};
   const operation:Operation={abort,phase:'none',release(){if(released)return;released=true;if(timer)clearTimeout(timer);request.signal.removeEventListener('abort',operation.stop);if(active===operation)active=undefined;},stop(){terminal();abort.abort();if(active===operation&&['body-started','turn-started'].includes(operation.phase))hold();void reader?.cancel().catch(()=>{});operation.release();}};
   active=operation;request.signal.addEventListener('abort',operation.stop,{once:true});timer=setTimeout(operation.stop,deadline);
   const canceled=new Promise<never>((_,reject)=>signal.addEventListener('abort',()=>reject(Error()),{once:true}));void canceled.catch(()=>{});
-  const live=()=>active===operation&&!signal.aborted&&current();
+  const live=()=>{if(active!==operation||signal.aborted)return false;if(!current()||last>=operationExpiresAt){operation.stop();return false;}return true;};
   try{
    if(!request.body)throw Error();reader=request.body.getReader();let size=0;const pieces:Uint8Array[]=[];
-   while(true){const next=await Promise.race([reader.read(),canceled]);if(next.done)break;size+=next.value.byteLength;if(size>65536){void reader.cancel().catch(()=>{});return deny(413);}pieces.push(next.value);}
+   while(true){if(!live())throw Error();const next=await Promise.race([reader.read(),canceled]);if(!live())throw Error();if(next.done)break;size+=next.value.byteLength;if(size>65536){void reader.cancel().catch(()=>{});return deny(413);}pieces.push(next.value);}
    reader.releaseLock();reader=undefined;
    let body:unknown;try{body=JSON.parse(new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(pieces)));}catch{return deny(400);}
    if(!exact(body,['model','stream','messages',...Object.keys(profile)])||body.model!=='local-simulation'||body.stream!==true||Object.entries(profile).some(([k,v])=>body[k]!==v)||!Array.isArray(body.messages)||!body.messages.length||body.messages.length>32||body.messages.some(m=>!exact(m,['role','content'])||!['user','assistant','system'].includes(String(m.role))||typeof m.content!=='string'||m.content.length>4000))return deny(400);
@@ -87,7 +88,7 @@ export function createLocalCviHttpAdapter(options:Readonly<{
    const upstream=response.body.getReader();reader=upstream;let sent=false;
    const stream=new ReadableStream<Uint8Array>({async pull(controller){if(sent)return;sent=true;try{
     let length=0;const chunks:Uint8Array[]=[];
-    while(true){const next=await Promise.race([upstream.read(),canceled]);if(next.done)break;operation.phase='turn-spent';length+=next.value.byteLength;if(length>32768)throw Error();chunks.push(next.value);}
+    while(true){if(!live())throw Error();const next=await Promise.race([upstream.read(),canceled]);if(!live())throw Error();if(next.done)break;operation.phase='turn-spent';length+=next.value.byteLength;if(length>32768)throw Error();chunks.push(next.value);}
     const latest=await Promise.race([match(lastMessage.content,signal),canceled]);if(!live()||!length||!latest||historyCanonical(pin)!==historyCanonical(latest))throw Error();
     controller.enqueue(Buffer.concat(chunks));controller.close();
    }catch{terminal();if(active===operation&&['body-started','turn-started'].includes(operation.phase))hold();void upstream.cancel().catch(()=>{});controller.error(Error('Styling delivery unavailable'));}finally{operation.release();}},cancel(){operation.stop();}},{highWaterMark:0});

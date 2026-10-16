@@ -54,17 +54,19 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
  async spendAdmission(bodyDigest:string,external:AbortSignal){
   if(!/^[a-f0-9]{64}$/.test(bodyDigest)||!fence||typeof fence.check!=='function'||!replay||external.aborted||!current()||active||!flow.available()||used.has('admission:'+bodyDigest)||used.size>=64)return null;
   used.add('admission:'+bodyDigest);
+  const operationExpiresAt=Math.min(expiresAt,lastClock+deadlineMs);
   const abort=new AbortController(),stop=()=>abort.abort();let timer:ReturnType<typeof setTimeout>|undefined,released=false;
   const operation={abort,release:()=>{if(released)return;released=true;if(timer)clearTimeout(timer);external.removeEventListener('abort',stop);if(active===operation)active=undefined;}};
   active=operation;external.addEventListener('abort',stop,{once:true});timer=setTimeout(stop,deadlineMs);
   const canceled=new Promise<never>((_,reject)=>abort.signal.addEventListener('abort',()=>reject(Error()),{once:true}));void canceled.catch(()=>{});
-  const checked=async()=>{if(abort.signal.aborted||!current()||await Promise.race([fence.check(abort.signal,lastClock),canceled])!==true||abort.signal.aborted||!current())throw Error();};
+  const live=()=>{if(active!==operation||abort.signal.aborted)return false;if(!current()||lastClock>=operationExpiresAt){stop();return false;}return true;};
+  const checked=async()=>{if(!live()||await Promise.race([fence.check(abort.signal,lastClock),canceled])!==true||!live())throw Error();};
   try{
    await checked();
    const input=Object.freeze({storeId:storeId!,bindingDigest,requestDigest:cviBodyAdmissionDigest(bodyDigest),now:lastClock});
-   const reserved=acknowledge(await Promise.race([Promise.resolve().then(()=>replay.reserve(input,abort.signal)),canceled]),input,'reserved');
+   const reserved=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.reserve(input,abort.signal);}),canceled]),input,'reserved');
    await checked();const spending=Object.freeze({...reserved,now:lastClock});
-   const spent=acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(spending,abort.signal)),canceled]),spending,'spent',reserved.receipt);
+   const spent=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(spending,abort.signal);}),canceled]),spending,'spent',reserved.receipt);
    await checked();
    return Object.freeze({status:'spent-admission',storeId:spent.storeId,bindingDigest:spent.bindingDigest,requestDigest:spent.requestDigest,receipt:spent.receipt,now:spent.now});
   }catch{stop();return null;}finally{operation.release();}
@@ -83,61 +85,66 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
   if(used.has(id)||used.size>=64)return deny(409);
   used.add(id); // Never refund an authenticated attempt, including busy/failed requests.
   if(active||!flow.available())return deny(409);
+  const operationExpiresAt=Math.min(expiresAt,lastClock+deadlineMs);
   const abort=new AbortController();let released=false,timer:ReturnType<typeof setTimeout>|undefined;
   const stop=()=>abort.abort();
   const operation={abort,release:()=>{if(released)return;released=true;if(timer)clearTimeout(timer);request.signal.removeEventListener('abort',stop);if(active===operation)active=undefined;}};
   active=operation;request.signal.addEventListener('abort',stop,{once:true});
   timer=setTimeout(stop,deadlineMs);
   let reader:ReadableStreamDefaultReader<Uint8Array>|undefined;
-  const canceled=new Promise<never>((_,reject)=>abort.signal.addEventListener('abort',()=>{void reader?.cancel().catch(()=>{});reject(Error('Stopped'));},{once:true}));
+  const canceled=new Promise<never>((_,reject)=>abort.signal.addEventListener('abort',()=>{void reader?.cancel().catch(()=>{});reject(Error('Stopped'));},{once:true}));void canceled.catch(()=>{});
+  const live=()=>{if(active!==operation||abort.signal.aborted)return false;if(!current()||lastClock>=operationExpiresAt){stop();return false;}return true;};
   try{
    let durable:CviReplayReceipt|undefined,consumed=false;
    const requireFence=async()=>{
-    if(!fence||await Promise.race([fence.check(abort.signal,lastClock),canceled])===true)return;
+    if(!live())throw Error();
+    const accepted=!fence||await Promise.race([fence.check(abort.signal,lastClock),canceled])===true;
+    if(!live())throw Error();if(accepted)return;
     // A still-live original reservation may be spent without output only after
     // an explicit verified same-owner stale refusal. Unknown/retired owners do
     // not use this path, and no old handoff is reconstructed from storage.
-    if(durable&&!consumed&&replay&&fence.stale?.(abort.signal)===true&&!abort.signal.aborted&&current()){
-     const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
+    if(durable&&!consumed&&replay&&fence.stale?.(abort.signal)===true&&live()){
+     const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
     }
     throw Error();
    };
    await requireFence();
-   if(abort.signal.aborted||!current())throw Error();
+   if(!live())throw Error();
    if(replay){
     const input=Object.freeze({storeId:storeId!,bindingDigest,requestDigest:hash(id),now:lastClock});
-    durable=acknowledge(await Promise.race([Promise.resolve().then(()=>replay.reserve(input,abort.signal)),canceled]),input,'reserved');deliveries.set(request,'reserved');
-    if(abort.signal.aborted||!current())throw Error();
+    durable=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.reserve(input,abort.signal);}),canceled]),input,'reserved');deliveries.set(request,'reserved');
+    if(!live())throw Error();
    }
    if(!request.body)throw Error();reader=request.body.getReader();let length=0;const chunks:Uint8Array[]=[];
-   while(true){const chunk=await Promise.race([reader.read(),canceled]);if(chunk.done)break;
+   while(true){if(!live())throw Error();const chunk=await Promise.race([reader.read(),canceled]);if(!live())throw Error();if(chunk.done)break;
     length+=chunk.value.byteLength;if(length>16384)throw Error();chunks.push(chunk.value);}
    reader.releaseLock();reader=undefined;
    const raw=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks)),parsed=JSON.parse(raw);if(!validBody(parsed))throw Error();
    if(capturedAdvisory){const question=capturedAdvisory.messages?.at(-1),last=parsed.messages.at(-1);if(question?.speaker!=='customer'||last.role!=='user'||question.text!==last.content)throw Error();}
    // Prompt content is deliberately not treated as authenticated notebook updates.
+   if(!live())throw Error();
    const reply=await Promise.race([flow.prepare(abort.signal,capturedAdvisory),canceled]);
    if(reply.status!=='prepared'){
-    if((reply.reason==='context-changed'||reply.reason==='context-pending')&&fence&&durable&&replay&&!abort.signal.aborted&&current()){
-     await requireFence();const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
+    if((reply.reason==='context-changed'||reply.reason==='context-pending')&&fence&&durable&&replay&&live()){
+     await requireFence();const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
     }
     throw Error();
    }
-   if(abort.signal.aborted||!current())throw Error();
+   if(!live())throw Error();
    let sent=false;
    const body=new ReadableStream<Uint8Array>({
     async pull(controller){
      if(sent)return;sent=true;
-     try{if(abort.signal.aborted||!current())throw Error();
+     try{if(!live())throw Error();
       await requireFence();
-      if(abort.signal.aborted||!current())throw Error();
+      if(!live())throw Error();
       if(replay&&durable){
        // Spend delivery permission durably BEFORE handing any bytes to a transport.
        const input=Object.freeze({...durable,now:lastClock});
-       acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
+       acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
       }
       await requireFence();
-      if(abort.signal.aborted||!current())throw Error();const wire=reply.takeSse();if(wire===null)throw Error();
+      if(!live())throw Error();const wire=reply.takeSse();if(wire===null)throw Error();
       controller.enqueue(new TextEncoder().encode(wire));controller.close();
      }catch{controller.error(Error('CVI delivery unavailable'));}
      finally{operation.release();}
