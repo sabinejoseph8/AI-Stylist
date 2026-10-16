@@ -1,6 +1,6 @@
 ## Original handoff follow-up, 16 October 2026
 
-136 focused checks across six suites pass for original startup/consumed-renewal contexts, held-gate replay inspection and unfinished-publication refusal. Full run 27313 is pending. The mandatory paired factory, final signed inspection/finish and complete protected before/after-renewal HTTP evidence remain open. No production criterion closes. See docs/local-tavus-original-handoff.md.
+136 focused checks across six suites pass for original startup/consumed-renewal contexts, held-gate replay inspection and unfinished-publication refusal. Full run 27313 passes 2,545 tests across 185 files with terminal exit zero. The mandatory paired factory, final signed inspection/finish and complete protected before/after-renewal HTTP evidence remain open. No production criterion closes. See docs/local-tavus-original-handoff.md.
 
 ## Original gated execution producer, 16 October 2026
 

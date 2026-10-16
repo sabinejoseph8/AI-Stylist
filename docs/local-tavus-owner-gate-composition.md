@@ -1,6 +1,6 @@
 ## Original handoffs prepared, 16 October 2026
 
-Startup and consumed-renewal handoffs now retain the original execution context before public lease cloning. Private replay routes transition inspection through that gate and blocks writes until finish; genuine unfinished contexts refuse owner registration/recognition. 136 focused checks pass; full run 27313 is pending. The private paired producer/checkpoint factory and final signed inspection/awaited finish connection remain incomplete. See docs/local-tavus-original-handoff.md. Earlier producer-only descriptions below are historical.
+Startup and consumed-renewal handoffs now retain the original execution context before public lease cloning. Private replay routes transition inspection through that gate and blocks writes until finish; genuine unfinished contexts refuse owner registration/recognition. 136 focused checks pass; full run 27313 passes 2,545 tests across 185 files. The private paired producer/checkpoint factory and final signed inspection/awaited finish connection remain incomplete. See docs/local-tavus-original-handoff.md. Earlier producer-only descriptions below are historical.
 
 ## Concrete producer prepared, 16 October 2026
 

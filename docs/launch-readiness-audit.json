@@ -822,7 +822,7 @@
       "focusedFoundationFiles": 6,
       "newOriginalHandoffTests": 8,
       "gatedProducerTests": 19,
-      "foundationFullStatus": "running",
+      "foundationFullStatus": "passed",
       "foundationFullSession": 27313,
       "priorFullFoundationTests": 2532,
       "priorFullFoundationFiles": 184,
@@ -831,7 +831,10 @@
       "localMemoryChecks": 19,
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false,
-      "scope": "Original execution contexts through private startup/consumed-renewal handoffs; held-gate replay inspection and unfinished-context publication refusal. Mandatory paired factory, original last inspection/awaited finish and complete protected HTTP flow remain open."
+      "scope": "Original execution contexts through private startup/consumed-renewal handoffs; held-gate replay inspection and unfinished-context publication refusal. Mandatory paired factory, original last inspection/awaited finish and complete protected HTTP flow remain open.",
+      "foundationFullTests": 2545,
+      "foundationFullFiles": 185,
+      "foundationFullExitCode": 0
     }
   ]
 }
