@@ -1,3 +1,4 @@
+import {LocalConsultationCandidate} from '../../src/session/local-consultation-candidate.ts';
 import {LocalConsultationReference} from '../../src/media/local-consultation-reference.ts';
 import {normalizeBrowserImage} from '../../src/media/browser-image.ts';
 /** Test-only Vite entry, excluded from production build inputs. */
@@ -15,5 +16,6 @@ const port:ConsultationViewPort={snapshot:s=>call('snapshot',s),edit:(c,s)=>call
 const model=new LocalConsultationView(port);
 document.addEventListener('fixture-shared-refresh',()=>void model.refresh());
 const reference=new LocalConsultationReference(model,{normalize:normalizeBrowserImage,createURL:blob=>URL.createObjectURL(blob),revokeURL:url=>URL.revokeObjectURL(url)});
-window.addEventListener('pagehide',()=>{reference.dispose();model.dispose();},{once:true});
-createRoot(document.getElementById('root')!).render(<App consultation={model} consultationReference={reference}/>);
+const candidate=location.search==='?candidate'?new LocalConsultationCandidate(model,{snapshot:s=>call('candidateSnapshot',s),prepare:(c,s)=>call('candidatePrepare',s,c),feedback:(c,s)=>call('candidateFeedback',s,c)},reference):undefined;
+window.addEventListener('pagehide',()=>{candidate?.dispose();reference.dispose();model.dispose();},{once:true});
+createRoot(document.getElementById('root')!).render(<App consultation={model} consultationReference={reference} consultationCandidate={candidate}/>);

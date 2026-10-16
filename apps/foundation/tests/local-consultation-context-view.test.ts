@@ -26,3 +26,7 @@ it('captures the application request rather than reading a later caller-selected
 it('cancellation before or during the admitted read cannot return a context version',async()=>{
  const x=fixture(),abort=new AbortController();abort.abort();expect(await x.port.contextSnapshot(abort.signal)).toBeNull();expect(x.snapshot).not.toHaveBeenCalled();const second=new AbortController();x.snapshot.mockImplementationOnce(async()=>{second.abort();return x.notes;});expect(await x.port.contextSnapshot(second.signal)).toBeNull();expect(x.flow).not.toHaveBeenCalled();
 });
+
+it('one admitted coherent read returns matching notes and complete version without a second read or proof cache',async()=>{
+ const x=fixture();const first=await x.port.consultationSnapshot(signal());expect(first).toEqual({notes:x.notes,version:{epoch:1,revision:0,nativeRevision:6,inputRevision:2}});expect(x.snapshot).toHaveBeenCalledTimes(1);expect(Object.isFrozen(first)).toBe(true);x.current.context.inputRevision++;const second=await x.port.consultationSnapshot(signal());expect(second!.version.inputRevision).toBe(3);expect(x.snapshot).toHaveBeenCalledTimes(2);
+});

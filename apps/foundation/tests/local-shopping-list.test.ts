@@ -20,3 +20,19 @@ it('saving, reopening or deleting a look never adds/removes shopping entries',()
 it('shopping addition/removal leaves notes, preferences, wardrobe and saved looks unchanged',()=>{const s=new LocalShoppingList(),notes=createNotebookPreview(),wardrobe=new LocalWardrobe({createURL:()=>'',revokeURL:()=>{}}),looks=new LocalSavedLooks();looks.save(SAMPLE_LOOKS[0]);const before=notes.snapshot(PREVIEW_OWNER);s.addPiece('sample_emerald','dress');s.remove(key);expect(notes.snapshot(PREVIEW_OWNER)).toEqual(before);expect(wardrobe.snapshot().items).toEqual([]);expect(looks.snapshot().looks).toHaveLength(1);});
 it('End/Clear session has no shopping ownership and refresh/new owner restores nothing',()=>{const s=new LocalShoppingList(),notes=createNotebookPreview();s.addPiece('sample_emerald','dress');notes.clear(PREVIEW_OWNER);notes.end(PREVIEW_OWNER);expect(s.snapshot().entries).toHaveLength(1);const pending=s.prepare('sample_blue','dress');s.clear();expect(s.add(pending)).toBe(false);expect(s.snapshot()).toMatchObject({entries:[],unavailable:[]});expect(new LocalShoppingList().snapshot().entries).toEqual([]);});
 it('refuses simulation for unknown and owned pieces',()=>{const s=new LocalShoppingList();expect(s.simulateAvailability('unknown',false)).toBe(false);expect(s.simulateAvailability('sample_emerald:jacket',false)).toBe(false);expect(s.snapshot().unavailable).toEqual([]);});
+
+it('explicit connected sample registration adds no item and preserves owned exclusion',()=>{
+ const s=new LocalShoppingList(),look={...SAMPLE_LOOKS[0],id:'sample_connected'};expect(s.registerSampleLook(look)).toBe(true);expect(s.snapshot().entries).toEqual([]);expect(s.addPiece(look.id,'jacket')).toBe(false);expect(s.addPiece(look.id,'dress')).toBe(true);expect(s.snapshot().subtotalCents).toBe(14000);
+});
+it('a registered key cannot be silently redefined and registration is atomic',()=>{
+ const s=new LocalShoppingList(),look={...SAMPLE_LOOKS[0],id:'sample_connected'};expect(s.registerSampleLook(look)).toBe(true);const altered={...look,items:look.items.map(p=>p.id==='dress'?{...p,priceCents:1}:p),estimate:{...look.estimate,subtotalCents:6501}};expect(s.registerSampleLook(altered)).toBe(false);expect(s.addPiece(look.id,'dress')).toBe(true);expect(s.snapshot().subtotalCents).toBe(14000);
+});
+it('new fixture registration retires old tickets, while exact repeat registration does not',()=>{
+ const s=new LocalShoppingList(),ticket=s.prepare('sample_emerald','dress')!;expect(s.registerSampleLook(SAMPLE_LOOKS[0])).toBe(true);expect(s.add(ticket)).toBe(true);const older=s.prepare('sample_blue','dress')!;expect(s.registerSampleLook({...SAMPLE_LOOKS[0],id:'sample_connected'})).toBe(true);expect(s.add(older)).toBe(false);
+});
+it('connected sample availability and recheck use the same registered projection',()=>{
+ const s=new LocalShoppingList(),look={...SAMPLE_LOOKS[0],id:'sample_connected'};s.registerSampleLook(look);s.addPiece(look.id,'dress');expect(s.simulateAvailability(look.id+':dress',false)).toBe(true);expect(s.snapshot().subtotalCents).toBeNull();s.simulateAvailability(look.id+':dress',true);expect(s.snapshot().subtotalCents).toBeNull();expect(s.recheck(look.id+':dress')).toBe(true);expect(s.snapshot().subtotalCents).toBe(14000);s.clear();expect(s.addPiece(look.id,'dress')).toBe(false);
+});
+it('registration refuses extra notes, real links and bounded catalog overflow',()=>{
+ const s=new LocalShoppingList();expect(s.registerSampleLook({...SAMPLE_LOOKS[0],notes:'Private'})).toBe(false);expect(s.registerSampleLook({...SAMPLE_LOOKS[0],link:'https://example.test/retailer'})).toBe(false);let refused=false;for(let i=0;i<30;i++)if(!s.registerSampleLook({...SAMPLE_LOOKS[0],id:'sample_extra_'+i}))refused=true;expect(refused).toBe(true);expect(s.snapshot().entries).toEqual([]);
+});
