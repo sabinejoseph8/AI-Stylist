@@ -43,3 +43,39 @@ it('checks every full-state section even when the supplied reduced projection is
   expect((await f.x.inspect()).pending).toBe(f.plan.id);
  }finally{await f.close();}
 },30000);
+
+it.each(['reconcile','read'])('cancellation after %s retains the durable result without releasing success',async stage=>{
+ const f=await fullStateFixture();try{
+  const e=await f.port.claim(f.plan,'a'.repeat(64)),hash=witnessServiceDigest(e.request),o=observed(f);o.claimHash=hash;
+  f.finalizer(hash,'40',async()=>o);
+  const port=f.x.authorityPort(f.plan.actor.role),controller=new AbortController();let recoveries=0,reads=0;
+  const r=createLocalFullStateReconciler(f.x.pin,f.plan,f.states.target,f.command,hash,'40',async()=>{
+   recoveries++;const result=await port.reconcile(f.plan);if(stage==='reconcile')controller.abort();return result;
+  },async nonce=>{reads++;const result=await port.read(nonce);controller.abort();return result;},()=>1000);
+  await expect(r.finalize(controller.signal)).rejects.toThrow();
+  const committed=await f.x.inspect();expect(committed.pending).toBeNull();expect(committed.current).toEqual(f.plan.to);
+  expect(recoveries).toBe(1);expect(reads).toBe(stage==='read'?1:0);
+  await expect(r.finalize(signal())).rejects.toThrow();expect(recoveries).toBe(1);
+ }finally{await f.close();}
+},30000);
+
+it('a lost final authority read cannot retry or undo completed reconciliation',async()=>{
+ const f=await fullStateFixture();try{
+  const e=await f.port.claim(f.plan,'a'.repeat(64)),hash=witnessServiceDigest(e.request),o=observed(f);o.claimHash=hash;
+  f.finalizer(hash,'40',async()=>o);const port=f.x.authorityPort(f.plan.actor.role);let reads=0;
+  const r=createLocalFullStateReconciler(f.x.pin,f.plan,f.states.target,f.command,hash,'40',()=>port.reconcile(f.plan),async()=>{reads++;throw Error('Simulated lost read');},()=>1000);
+  await expect(r.finalize(signal())).rejects.toThrow();const committed=await f.x.inspect();
+  expect(committed.pending).toBeNull();expect(committed.current).toEqual(f.plan.to);
+  await expect(r.finalize(signal())).rejects.toThrow();expect(reads).toBe(1);
+ }finally{await f.close();}
+},30000);
+
+it('an already canceled caller performs no reconciliation or observation',async()=>{
+ const f=await fullStateFixture();try{
+  let calls=0;const controller=new AbortController();controller.abort();
+  const unavailable=async()=>{calls++;throw Error('Must not run');};
+  const r=createLocalFullStateReconciler(f.x.pin,f.plan,f.states.target,f.command,'c'.repeat(64),'40',unavailable,unavailable,()=>1000);
+  await expect(r.finalize(controller.signal)).rejects.toThrow();expect(calls).toBe(0);
+  expect((await f.x.inspect()).pending).toBe(f.plan.id);
+ }finally{await f.close();}
+},30000);

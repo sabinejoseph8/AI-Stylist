@@ -1,3 +1,11 @@
+## Full-state reconciliation cancellation checks, 16 October 2026
+
+Revalidated the existing local post-commit reconciliation under Sabine's approval. Added four cases for cancellation after durable reconciliation, cancellation after the final signed read, loss of that read, and a caller canceled before work starts. A completed authority transition stays recorded when acknowledgment is withheld. The one-use finalizer cannot retry, replay the database mutation or reconstruct a signing handoff. No production code or SQL was changed for this follow-up.
+
+Verification: 31 focused foundation checks, 556 disposable PostgreSQL checks with networking disabled, 475 operations tests with ResourceWarning as error, TypeScript checking, build and four encryption checks pass. This test/documentation follow-up does not claim a fresh full foundation regression. All phase and launch acceptance gates remain open. This is the complete logical CVI fixture, not customer account or photo recovery. Independent restore floors, universal writer fencing, native domain enforcement and actual provider/device acceptance remain unresolved. Allocation remains $51. No spending, real credentials, provider calls, hosted changes or permanent backup runtime changes.
+
+Exact next action: retain the separate uncommitted lifetime work for its own review. That work also needs per-operation absolute deadline checks before output; timer callbacks alone are insufficient. Do not claim the lifetime changes are complete or extend the eight-second native lease. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout.
+
 ## Local guarded custom-LLM HTTP candidate, 16 October 2026
 
 Prepared a disabled HTTP boundary using documented static configuration, without provider-generated app IDs. Only a successful startup owner, its exact notebook flow and its bound completed-transcript source can be composed. A scoped canonical body HMAC is permanently spent through the existing protected owner before a separate customer-turn delivery. Modified bodies cannot obtain a second response for one turn, and identical bodies are not guessed to be fresh input. No direct journal-write or lower credential-only fallback was added.
@@ -1449,6 +1457,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Current local follow-up: full-state post-commit reconciliation now passes 31 focused checks and 556 disposable PostgreSQL checks, including cancellation and lost-final-read tests. A durable transition must remain recorded even when acknowledgment is withheld. No production criterion closes; full completion remains 5 of 41. Separate lifetime changes remain uncommitted and are not part of this reconciliation checkpoint.
 
 Latest local follow-up: a disabled static-header HTTP candidate now binds complete transcript input to the authenticated notebook, spends keyed body admission plus separate turn delivery, and passes immutable untrusted dialogue to draft/check. Clear removes cached transcript text and known spent stale replies preserve newer notes. Real Tavus wire/transport behavior and lease lifetime remain open; full task completion stays 5 of 41. See docs/local-tavus-http-adapter.md.
 

@@ -1,3 +1,7 @@
+## Keeping committed state when the caller disappears
+
+I added local checks for a customer connection ending after the durable reconciliation or after its final signed read. The result must stay recorded, but the caller must not receive success or retry the same mutation. I also checked that a canceled caller starts no reconciliation at all. This separates a lost acknowledgment from a failed commit without claiming production recovery or enabling any paid service.
+
 ## Connecting the conversation without trusting it as a command
 
 I prepared the HTTP path using a configurable static header instead of assuming the provider would create my app's request IDs. I added separate guards for repeated request bodies and repeated customer turns, storing keyed fingerprints rather than conversation text. The draft and checker can read the conversation as untrusted context while confirmed notebook requirements keep their authority. I also removed cached transcript text when a session clears and used the original request's spent status to stop an old reply without erasing newer notes. These are local tests; real provider timing and longer consultation ownership remain open.

@@ -1,3 +1,11 @@
+## Full-state reconciliation cancellation checks, 16 October 2026
+
+Revalidated the existing local post-commit reconciliation under Sabine's approval. Added four cases for cancellation after durable reconciliation, cancellation after the final signed read, loss of that read, and a caller canceled before work starts. A completed authority transition stays recorded when acknowledgment is withheld. The one-use finalizer cannot retry, replay the database mutation or reconstruct a signing handoff. No production code or SQL was changed for this follow-up.
+
+Verification: 31 focused foundation checks, 556 disposable PostgreSQL checks with networking disabled, 475 operations tests with ResourceWarning as error, TypeScript checking, build and four encryption checks pass. This test/documentation follow-up does not claim a fresh full foundation regression. All phase and launch acceptance gates remain open. This is the complete logical CVI fixture, not customer account or photo recovery. Independent restore floors, universal writer fencing, native domain enforcement and actual provider/device acceptance remain unresolved. Allocation remains $51. No spending, real credentials, provider calls, hosted changes or permanent backup runtime changes.
+
+Exact next action: retain the separate uncommitted lifetime work for its own review. That work also needs per-operation absolute deadline checks before output; timer callbacks alone are insufficient. Do not claim the lifetime changes are complete or extend the eight-second native lease. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout.
+
 ## Reconciliation revalidation, 16 October 2026
 
 Rechecked the approved local full-state post-commit implementation. Added a regression case that alters each of the six logical sections while retaining the supplied reduced projection and execution markers; every altered target must be refused and authority must remain pending. Corrected outdated activation-only and separate-scenario descriptions in the original reconciliation documents. No production code or acceptance gate changed.
