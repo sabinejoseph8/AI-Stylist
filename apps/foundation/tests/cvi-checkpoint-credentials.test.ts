@@ -18,7 +18,8 @@ it('unknown credential outcome holds without retry',async()=>{const f=simple();f
 it('captures ports and primitive scope before asynchronous requests',async()=>{const f=simple(),g=f.make();f.checkpoint.inspectFresh=vi.fn(async()=>{throw Error('Replaced');});f.authority.check=vi.fn(async()=>{throw Error('Replaced');});f.expected.revision=4;f.lease.generation=2;expect(await g.check({...f.input(),generation:1},signal())).not.toBeNull();});
 it('cancellation during inspection cannot return a credential proof',async()=>{const f=simple(),c=new AbortController();f.checkpoint.inspectFresh=vi.fn(async()=>{c.abort();return f.observation();});expect(await f.make().check(f.input(),c.signal)).toBeNull();expect(f.authority.check).not.toHaveBeenCalled();});
 
-function oldEndpoint(f:Awaited<ReturnType<typeof startupAdmissionFixture>>){const flow=f.resources.makeFlow(),endpoint=createLocalCviCheckpointEndpoint(credentialBinding(),flow,f.resources.replay,f.oldLease,f.expected,f.checkpoint,{check:(request)=>credentialCall(f.credential,'check',{request})},f.oldOwnerExpiresAt,()=>1000,8000);return {...endpoint,flow};}
+/** Historical pre-startup contract only; cannot register a protected HTTP owner. */
+function oldEndpoint(f:Awaited<ReturnType<typeof startupAdmissionFixture>>){const flow=f.resources.makeFlow(),endpoint=createLocalCviCheckpointEndpoint(credentialBinding(),flow,f.rawReplay,f.oldLease,f.expected,f.checkpoint,{check:(request)=>credentialCall(f.credential,'check',{request})},f.oldOwnerExpiresAt,()=>1000,8000);return {...endpoint,flow};}
 it('a previously constructed composed owner stops after admission even when credential rotation fails',async()=>{const f=await startupAdmissionFixture();try{
  const old=oldEndpoint(f);old.flow.note({id:'fixture-old-note',seq:1,field:'coverage',text:'Old sleeves',confirmed:true});const first=await old.handle(fixtureRequest(undefined,'fixture-before'));expect(first.status).toBe(200);expect(await first.text()).toContain('Synthetic checked output.');expect(f.drafts()).toBe(1);
  f.resources.authority.activate=async()=>{throw Error('Credential rotation unavailable');};expect(await f.make().start(signal())).toBeNull();expect((await f.x.inspect()).revision).toBe(4);
@@ -26,11 +27,11 @@ it('a previously constructed composed owner stops after admission even when cred
 }finally{await f.close();}},25000);
 it('committing admission while an old credential proof is awaited prevents body processing',async()=>{const f=await startupAdmissionFixture();try{
  let changed=false;const check=async(request:any)=>{const result=await credentialCall(f.credential,'check',{request});if(!changed){changed=true;await f.admission().admit(f.input(),signal());}return result;};
- const reserve=vi.spyOn(f.resources.replay,'reserve'),old=createLocalCviCheckpointEndpoint(credentialBinding(),f.resources.makeFlow(),f.resources.replay,f.oldLease,f.expected,f.checkpoint,{check},f.oldOwnerExpiresAt,()=>1000,8000);
+ const reserve=vi.spyOn(f.rawReplay,'reserve'),old=createLocalCviCheckpointEndpoint(credentialBinding(),f.resources.makeFlow(),f.rawReplay,f.oldLease,f.expected,f.checkpoint,{check},f.oldOwnerExpiresAt,()=>1000,8000);
  expect((await old.handle(fixtureRequest())).status).toBe(409);expect(reserve).not.toHaveBeenCalled();expect(f.drafts()).toBe(0);expect((await f.x.inspect()).revision).toBe(4);old.end();
 }finally{await f.close();}},25000);
 it('a transition after durable consume suppresses checked output without refunding the request',async()=>{const f=await startupAdmissionFixture();try{
- const consume=f.resources.replay.consume;let spent=false;f.resources.replay.consume=async(r,s)=>{const ack=await consume(r,s);spent=true;await f.admission().admit(f.input(),signal());return ack;};
+ const consume=f.rawReplay.consume;let spent=false;f.rawReplay.consume=async(r,s)=>{const ack=await consume(r,s);spent=true;await f.admission().admit(f.input(),signal());return ack;};
  const old=oldEndpoint(f),r=await old.handle(fixtureRequest());expect(r.status).toBe(200);await expect(r.text()).rejects.toThrow();expect(spent).toBe(true);expect(f.drafts()).toBe(1);expect((await f.x.inspect()).revision).toBe(4);
  expect((await old.handle(fixtureRequest(undefined,'fixture-later'))).status).toBe(409);expect(f.drafts()).toBe(1);old.end();
 }finally{await f.close();}},25000);

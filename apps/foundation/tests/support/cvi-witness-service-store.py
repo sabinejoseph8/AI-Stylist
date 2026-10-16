@@ -1,15 +1,9 @@
-"""Fresh synthetic witness service process. No real credentials or hosted role."""
-import json
-import os
-from pathlib import Path
-import sys
+"""Fresh synthetic service process. No credentials, caching or hosted role."""
+import json,os,sys
 os.umask(0o077)
-sys.path.insert(0,str(Path(__file__).resolve().parents[4]/'tools/operations'))
-import local_cvi_witness_service as service
-x=json.load(sys.stdin)
-try:
-    if x['mode']=='prepare':service.prepare(Path(x['root']),x['pin'],x['current'],x['now']);r={'status':'prepared'}
-    else:r=service.operate(Path(x['root']),x['pin'],x['actor'],x['mode'],x['args'],x['now'],x.get('crashAt'))
-    print(json.dumps(r))
+from importlib.util import spec_from_file_location,module_from_spec
+from pathlib import Path
+spec=spec_from_file_location('dispatch',Path(__file__).with_name('cvi-witness-store-dispatch.py'));module=module_from_spec(spec);spec.loader.exec_module(module)
+try:print(json.dumps(module.dispatch(json.load(sys.stdin))))
 except Exception:
     print('{"status":"unavailable"}');sys.exit(2)

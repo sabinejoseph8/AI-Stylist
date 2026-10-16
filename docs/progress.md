@@ -1,3 +1,13 @@
+## Mandatory private replay composition, 16 October 2026
+
+The disabled protected startup now requires the original private replay port and exact credential/native scope before privileged work. It claims one controller synchronously, retains the original successful permit across public cloning and binds its private claim after validation. It adopts only an original consumed renewal internally. Failure or End retires the private port and removes its protected HTTP identity. No plain-port or copied-handoff activation fallback is accepted. A shared source envelope keeps lifecycle contract tests on the real implementation; its disconnected test harness cannot register a protected HTTP owner.
+
+The native integration exposed a storage bug: with three authority transitions, permanent read tickets reached the 64 KiB file bound before the declared 128-row bound. The service now losslessly compacts large journals while retaining the same 64 KiB stored-file and 128-row limits. Decoding is bounded at 256 KiB and rejects trailing/concatenated/truncated streams. The checksum still covers the stored bytes, crash markers remain, capacity is checked before creating pending state and no admission is refunded. Small existing journals remain readable. A resident disposable transport reuses one process without caching proofs or state; every call still locks and reloads the durable journal. Unknown process outcomes hold without retries or fallback.
+
+Focused verification passes 26 new/migrated startup, unbound HTTP, resident transport and complete continuing-HTTP checks. A fresh full-state run passes 27 reconciliation tests and six continuous-state tests. Six new storage checks retain all 128 tickets, refuse replay/capacity/corruption/expansion and preserve prior evidence. All 524 operations tests pass with ResourceWarning as error; TypeScript checking/build and four encryption checks pass. Final foundation regression passes 2,447 tests across 179 files. Nineteen refreshed local Memory checks pass. No SQL contract changed; the prior 556-check isolated PostgreSQL result was not rerun.
+
+This remains local preparation with synthetic account/model/transport inputs. Arbitrary configured backends are not independently proven by object identity. Transition-wide replay/authority gating and durable original-operation markers, independent restore floors, universal writer coverage, production clocks and actual provider/device acceptance remain open. No phase or production criterion closes. Scope, 5-of-41 completion and the $51 allocation are unchanged. No provider calls, real credentials, hosted publication or permanent backup runtime/ledger/scheduler changes.
+
 ## Original private replay handoffs, 16 October 2026
 
 Original startup and consumed-renewal handoffs now support one-use private replay binding without publishing native tokens. Credential digest/cap share one captured binding; copied permits/ports, replayed claims, pending work and expiry refuse. The guarded endpoint exchange passes within the valid lease window, with limits unchanged. See docs/local-tavus-private-replay-binding.md and DEVELOPMENT_PROGRESS.md for exact verification.
@@ -1528,14 +1538,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: the original private replay handoff layer now binds startup permission once and adopts only an original consumed renewal, with credential-bound cap and native expiry checks. A guarded endpoint exchange passes in the valid window. Final regression passes 2,434 foundation tests across 176 files and 518 operations tests; TypeScript/build, four encryption checks and 19 local Memory checks pass. No production criterion closes. See docs/local-tavus-private-replay-binding.md.
+Current local focus: mandatory original private replay composition and bounded journal compaction are prepared. The full foundation regression passes 2,447 tests across 179 files; nineteen local Memory checks pass. All 524 operations tests, TypeScript/build and four encryption checks pass. No production criterion closes. See docs/local-tavus-mandatory-replay-composition.md.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** migrate every protected startup/HTTP path to require the prepared original private replay binding, retire it on failure/End and refuse plain ports before privileged work. Then add the transition-wide replay/authority gate and durable original-operation marker. Universal fencing and independent rollback protection remain open. See docs/local-tavus-owner-fenced-replay-contract.md.
+- **Next local action:** implement the transition-wide replay/authority gate and durable original-operation marker in docs/local-tavus-transition-gate-next.md. Universal fencing and independent rollback protection remain open.
 
 ## Historical summary checkpoints
 

@@ -13,7 +13,7 @@ export interface OwnedReplayBackend {
  inspect(input:ReplayInspectionRequest,signal:AbortSignal):Promise<unknown>;
  mutate(mode:'reserve'|'consume',lease:NativeLease,minimumRevision:number,input:CviReplayRequest|CviReplayReceipt,signal:AbortSignal):Promise<unknown>;
 }
-type Control={bind(raw:unknown,input:FreshOwnerAdmissionInput):void;adopt(raw:unknown,input:OwnerContinuationInput):void;hold():void;isBound():boolean;isHeld():boolean};
+type Control={bind(raw:unknown,input:FreshOwnerAdmissionInput):void;adopt(raw:unknown,input:OwnerContinuationInput):void;hold():void;isBound():boolean;isHeld():boolean;matches(scope:Record<string,unknown>):boolean;claimStartup():boolean};
 const controls=new WeakMap<object,Control>();
 const exact=(v:unknown,keys:string[]):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const int=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
@@ -25,7 +25,7 @@ export function createLocalOwnedReplayPort(rawScope:OwnedReplayScope,backend:Own
  if(!exact(rawScope,['storeId','nativeStoreId','binding'])||!uuid(rawScope.storeId)||!uuid(rawScope.nativeStoreId)||!exact(rawScope.binding,['origin','conversation','secret','expiresAt'])||typeof rawScope.binding.origin!=='string'||typeof rawScope.binding.conversation!=='string'||!hex(rawScope.binding.secret)||!int(rawScope.binding.expiresAt)||typeof backend?.inspect!=='function'||typeof backend.mutate!=='function'||typeof clock!=='function')throw Error('Private replay unavailable');
  const binding=Object.freeze({...rawScope.binding}),origin=new URL(binding.origin);if(origin.origin!==binding.origin||origin.protocol!=='https:'||!/^fixture-[a-z0-9-]{1,60}$/.test(binding.conversation))throw Error('Private replay unavailable');
  const scope=Object.freeze({storeId:rawScope.storeId,nativeStoreId:rawScope.nativeStoreId,...cviCredentialDigests(binding),applicationExpiresAt:binding.expiresAt}),inspect=backend.inspect.bind(backend),mutate=backend.mutate.bind(backend);
- let lease:NativeLease|undefined,minimumRevision=0,held=false,busy=false,last=-1,activeAbort:AbortController|undefined;
+ let lease:NativeLease|undefined,minimumRevision=0,held=false,busy=false,startupClaimed=false,last=-1,activeAbort:AbortController|undefined;
  const attempts=new Set<string>(),pending=new Map<string,CviReplayReceipt>();
  const retire=()=>{held=true;activeAbort?.abort();lease=undefined;};
  const now=()=>{const at=clock();if(held||!int(at)||at<last||at>=scope.applicationExpiresAt||lease&&at>=lease.expiresAt)throw Error();last=at;return at;};
@@ -45,12 +45,12 @@ export function createLocalOwnedReplayPort(rawScope:OwnedReplayScope,backend:Own
    const receipt=Object.freeze({...result}) as CviReplayReceipt;if(mode==='reserve')pending.set(request.requestDigest,receipt);else pending.delete(request.requestDigest);return receipt;
   }catch{retire();abort.abort();return null;}finally{busy=false;if(activeAbort===abort)activeAbort=undefined;if(timer)clearTimeout(timer);if(onAbort)signal.removeEventListener('abort',onAbort);}
  };
- const port=Object.freeze({storeId:scope.storeId,inspect:async(input:ReplayInspectionRequest,signal:AbortSignal)=>{
+ const port=Object.freeze({storeId:scope.storeId,close:retire,inspect:async(input:ReplayInspectionRequest,signal:AbortSignal)=>{
   if(signal.aborted||input.storeId!==scope.storeId||input.bindingDigest!==scope.bindingDigest)throw Error('Private replay unavailable');return inspect(Object.freeze({...input}),signal);
  },reserve:(r:CviReplayRequest,s:AbortSignal)=>operate('reserve',r,s),consume:(r:CviReplayReceipt,s:AbortSignal)=>operate('consume',r,s)});
- controls.set(port,{isBound:()=>!!lease&&!held,isHeld:()=>held,hold:retire,bind(raw,input){
+ controls.set(port,{matches:expected=>same(expected,scope),claimStartup:()=>{if(held||lease||startupClaimed)return false;startupClaimed=true;return true;},isBound:()=>!!lease&&!held,isHeld:()=>held,hold:retire,bind(raw,input){
   try{input=structuredClone(input);if(lease||held||busy||input.replayStoreId!==scope.storeId||input.bindingDigest!==scope.bindingDigest||input.scopeDigest!==scope.scopeDigest||input.checkpoint.storeId!==scope.nativeStoreId)throw Error();const at=now(),claimed=claimLocalStartupReplayLease(raw,input,at),permit=claimed.permit as any,next=claimed.lease;
-   if(!native(next)||next.storeId!==scope.nativeStoreId||next.expiresAt>scope.applicationExpiresAt||next.expiresAt!==permit.ownerExpiresAt||!int(permit.after?.revision)||permit.owner?.generation!==next.generation||permit.owner?.ownerDigest!==next.ownerDigest||permit.owner?.bootDigest!==next.bootDigest||next.expiresAt<=at)throw Error();lease=Object.freeze({...next});minimumRevision=permit.after.revision;
+   if(!native(next)||next.storeId!==scope.nativeStoreId||next.expiresAt>scope.applicationExpiresAt||next.expiresAt!==permit.ownerExpiresAt||!int(permit.after?.revision)||permit.owner?.generation!==next.generation||permit.owner?.ownerDigest!==next.ownerDigest||permit.owner?.bootDigest!==next.bootDigest||next.expiresAt<=at)throw Error();lease=Object.freeze({...next});minimumRevision=permit.after.revision;startupClaimed=true;
   }catch{retire();throw Error('Private replay bind unavailable');}
  },adopt(raw,input){
   try{input=structuredClone(input);if(!lease||held||busy||pending.size||input.bindingDigest!==scope.bindingDigest||input.applicationExpiresAt!==scope.applicationExpiresAt||input.revision<minimumRevision||['storeId','generation','ownerDigest','bootDigest','expiresAt'].some(k=>(input.owner as any)[k]!== (lease as any)[k]))throw Error();
@@ -65,3 +65,6 @@ export const localOwnedReplayState=(port:object)=>{const c=controls.get(port);re
 export function bindLocalOwnedReplay(port:object,raw:unknown,input:FreshOwnerAdmissionInput){const c=controls.get(port);if(!c)throw Error('Private replay port required');c.bind(raw,input);}
 export function adoptLocalOwnedReplay(port:object,raw:unknown,input:OwnerContinuationInput){const c=controls.get(port);if(!c)throw Error('Private replay port required');c.adopt(raw,input);}
 export function holdLocalOwnedReplay(port:object){const c=controls.get(port);if(!c)throw Error('Private replay port required');c.hold();}
+
+export const localOwnedReplayMatches=(port:object,scope:Record<string,unknown>)=>controls.get(port)?.matches(scope)===true;
+export const claimLocalOwnedReplayStartup=(port:object)=>controls.get(port)?.claimStartup()===true;

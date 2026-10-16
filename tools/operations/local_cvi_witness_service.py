@@ -3,12 +3,14 @@
 Roles here are service-owned fixture configuration, never incoming role claims.
 Cryptographic request/proof verification belongs to the disconnected TS service.
 """
+import os
+import zlib
 import hashlib
 import json
 import re
 import secrets
 from pathlib import Path
-from local_recovery_abuse import locked,save,sync_root,encoded,integer,RecoveryHeld
+from local_recovery_abuse import locked,sync_root,encoded,integer,RecoveryHeld
 from local_recovery_evidence import private_root,read_private,durable_create
 
 
@@ -30,11 +32,42 @@ def prepare(root,pin,current,now):
     (root/'pending').unlink();sync_root(root)
 
 
+# Compact only the physical representation. Logical rows and permanent tickets
+# remain unchanged, with the same 128-row and 64 KiB stored-file limits.
+_COMPACT=b'cvi-witness-zlib-v1\n'
+_MAX_LOGICAL=262144
+
+def _payload(state):
+    raw=encoded(state)
+    if len(raw)>_MAX_LOGICAL:raise RecoveryHeld('witness-service-unavailable')
+    result=raw if len(raw)<=65536 else _COMPACT+zlib.compress(raw,9)
+    if len(result)>65536:raise RecoveryHeld('witness-service-unavailable')
+    return result
+
+def _decode(data):
+    if not data.startswith(_COMPACT):return json.loads(data)
+    decoder=zlib.decompressobj()
+    raw=decoder.decompress(data[len(_COMPACT):],_MAX_LOGICAL+1)
+    if len(raw)>_MAX_LOGICAL or not decoder.eof or decoder.unconsumed_tail or decoder.unused_data:raise RecoveryHeld('witness-service-unavailable')
+    return json.loads(raw)
+
+def _save(root,state,crash_at=None):
+    # Validate capacity before beginning the durable pending transaction.
+    data=_payload(state)
+    durable_create(root/'pending',b'updating');sync_root(root)
+    if crash_at=='pending':os._exit(71)
+    durable_create(root/'ledger.next',data);os.replace(root/'ledger.next',root/'ledger.json');sync_root(root)
+    if crash_at=='ledger':os._exit(71)
+    durable_create(root/'checkpoint.next',encoded(dict(sha256=hashlib.sha256(data).hexdigest())));os.replace(root/'checkpoint.next',root/'checkpoint.json');sync_root(root)
+    if crash_at=='checkpoint':os._exit(71)
+    (root/'pending').unlink();sync_root(root)
+
+
 def load(root,pin):
     if any((root/n).exists() or (root/n).is_symlink() for n in ('pending','ledger.next','checkpoint.next')):raise RecoveryHeld('witness-service-unavailable')
     data=read_private(root/'ledger.json')
     if json.loads(read_private(root/'checkpoint.json'))!={'sha256':hashlib.sha256(data).hexdigest()}:raise RecoveryHeld('witness-service-unavailable')
-    s=json.loads(data)
+    s=_decode(data)
     if (not isinstance(s,dict) or set(s)!={'version','pin','current','clock','revision','pending','operations','requests'} or type(s['version']) is not int or s['version']!=1 or s['pin']!=pin or not valid_metadata(s['current']) or any(s['current'][k]!=pin[k] for k in ('storeId','policyDigest')) or not integer(s['clock']) or s['clock']<s['current']['observedClock'] or not integer(s['revision']) or not isinstance(s['operations'],list) or len(s['operations'])>128 or not isinstance(s['requests'],list) or len(s['requests'])>128):raise RecoveryHeld('witness-service-unavailable')
     ids=set();tokens=set();challenges=set()
     for r in s['requests']:
@@ -85,6 +118,6 @@ def operate(root,pin,actor,mode,args,now,crash_at=None):
                     o['status']='reconciled';s['pending']=None;s['revision']+=1;result=dict(status='reconciled',revision=s['revision'],current=s['current'],operationId=o['id'])
         s['clock']=now
         if crash_at=='before-save':raise RecoveryHeld('witness-service-unavailable')
-        save(root,s,crash_at=crash_at if crash_at in ('pending','ledger','checkpoint') else None)
+        _save(root,s,crash_at=crash_at if crash_at in ('pending','ledger','checkpoint') else None)
         if crash_at=='after-save':raise RecoveryHeld('witness-service-unavailable')
         return result

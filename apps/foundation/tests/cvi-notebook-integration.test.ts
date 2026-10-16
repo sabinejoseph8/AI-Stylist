@@ -17,7 +17,7 @@ async function fixture(ports?:CviSimulationPorts){
  const f=await startupAdmissionFixture();let active=true;const identity={ownerId:A,sessionId:S,isCurrent:async()=>active},seen:CviSnapshot[]=[],seenConversations:(CviConversationInput|undefined)[]=[],checkedConversations:(CviConversationInput|undefined)[]=[];
  const authorize=vi.fn(async(r:Request)=>r.headers.get('authorization')==='Bearer fixture-customer'?identity:null);
  const brain=ports??{draft:async(s:CviSnapshot,_signal?:AbortSignal,conversation?:CviConversationInput)=>{seen.push(s);seenConversations.push(conversation);return 'Synthetic context: '+JSON.stringify(s.notes);},check:async(text:string,s:CviSnapshot,_signal?:AbortSignal,conversation?:CviConversationInput)=>{checkedConversations.push(conversation);return {approved:true,text,revision:s.revision};}};
- let afterConsume:(()=>void)|undefined;const consume=f.resources.replay.consume;f.resources.replay.consume=async(r,s)=>{const ack=await consume(r,s);afterConsume?.();return ack;};
+ let afterConsume:(()=>void)|undefined;const consume=f.replayHooks.consume.getMockImplementation()!;f.replayHooks.consume.mockImplementation(async(lease,floor,r,s)=>{const ack=await consume(lease,floor,r,s);afterConsume?.();return ack;});
  const bridge=createLocalCviNotebookContext({simulation:true,identity,authorize,checkpoint:f.checkpoint,ports:brain,clock:()=>1000,policy:APPROVED_NOTES_RETENTION});
  f.resources.makeFlow=()=>bridge.flow;
  const e=await createLocalCviStartupOwner(f.expected,bridge.checkpoint,f.admission(),f.resources,()=>1000,8000).start(signal());if(!e){await f.close();throw Error('Context owner fixture held');}

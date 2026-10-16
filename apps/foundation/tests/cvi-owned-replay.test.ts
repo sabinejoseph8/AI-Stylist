@@ -20,7 +20,7 @@ it('JSON, cloned and altered public permits cannot reconstruct startup permissio
  expect(x.mutate).not.toHaveBeenCalled();bindLocalOwnedReplay(x.port,x.permit,x.input);expect(localOwnedReplayState(x.port).bound).toBe(true);
  }finally{await x.close();}},30000);
 it('plain or copied ports have no private binding identity',async()=>{const x=await ownedReplayFixture();try{
- expect(isLocalOwnedReplayPort(x.port)).toBe(true);for(const p of [{...x.port},x.f.resources.replay]){expect(isLocalOwnedReplayPort(p)).toBe(false);expect(()=>bindLocalOwnedReplay(p,x.permit,x.input)).toThrow();}
+ expect(isLocalOwnedReplayPort(x.port)).toBe(true);for(const p of [{...x.port},x.f.rawReplay]){expect(isLocalOwnedReplayPort(p)).toBe(false);expect(()=>bindLocalOwnedReplay(p,x.permit,x.input)).toThrow();}
  bindLocalOwnedReplay(x.port,x.permit,x.input);expect(x.mutate).not.toHaveBeenCalled();
  }finally{await x.close();}},30000);
 it('an expired original handoff cannot bind a newly constructed port',async()=>{const x=await ownedReplayFixture();try{x.at(10000);expect(()=>bindLocalOwnedReplay(x.port,x.permit,x.input)).toThrow();expect(localOwnedReplayState(x.port).held).toBe(true);expect(x.mutate).not.toHaveBeenCalled();}finally{await x.close();}},30000);
@@ -62,12 +62,12 @@ it('a different credential-bound session cap cannot adopt an original permit',as
 
 it('an actual endpoint retains private replay permission through original startup and renewal handoffs',async()=>{
  let time=1000;const f=await startupAdmissionFixture(()=>time),digests=cviCredentialDigests(f.resources.binding),original=f.resources.replay;let owner:any;
- const port=createLocalOwnedReplayPort({storeId:f.journal.storeId,nativeStoreId:f.x.pin.storeId,binding:f.resources.binding},{inspect:original.inspect,mutate:async(mode,lease,floor,input,s)=>{
+ const port=createLocalOwnedReplayPort({storeId:f.journal.storeId,nativeStoreId:f.x.pin.storeId,binding:f.resources.binding},{inspect:original.inspect!,mutate:async(mode,lease,floor,input,s)=>{
   const value=await ownerReplayCall(f,lease,mode,{...input,bindingDigest:digests.scopeDigest},{signal:s,config:{minimumRevision:floor}});return {...value,bindingDigest:input.bindingDigest};
  }},()=>time);
  try{
-  const realAdmission=f.admission(),admission={admit:async(input:any,s:AbortSignal)=>{const permit=await realAdmission.admit(input,s);bindLocalOwnedReplay(port,permit,input);return permit;}};
-  const checkpoint={...f.checkpoint,beginOwnerContinuation:()=>({inspect:async(raw:unknown,input:any,s:AbortSignal)=>f.checkpoint.inspectOwnerFresh(inspectOwnerContinuation(raw,input,time).owner,s),finish:(raw:unknown,input:any)=>adoptLocalOwnedReplay(port,raw,input),cancel:()=>holdLocalOwnedReplay(port)})};
+  const admission=f.admission();
+  const checkpoint={...f.checkpoint,beginOwnerContinuation:()=>({inspect:async(raw:unknown,input:any,s:AbortSignal)=>f.checkpoint.inspectOwnerFresh(inspectOwnerContinuation(raw,input,time).owner,s),finish:()=>{},cancel:()=>holdLocalOwnedReplay(port)})};
   f.resources.replay=port as any;owner=await createLocalCviStartupOwner(f.expected,checkpoint,admission,f.resources,()=>time,8000,8000).start(signal());expect(owner).not.toBeNull();
   const request=(id:string)=>new Request(f.resources.binding.origin+'/v1/chat/completions',{method:'POST',headers:{authorization:'Bearer '+f.resources.binding.secret,'x-cvi-conversation':f.resources.binding.conversation,'x-cvi-request-id':id,'content-type':'application/json'},body:JSON.stringify({model:'local-simulation',stream:true,messages:[{role:'user',content:'Synthetic sleeves'}]})});
   const first=await owner.handle(request('fixture-private-before'));expect(first.status).toBe(200);await first.text();

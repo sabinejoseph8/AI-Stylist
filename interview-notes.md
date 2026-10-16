@@ -1,3 +1,9 @@
+## Requiring the original permission throughout the local conversation
+
+I made the original private replay handoff mandatory in protected startup and HTTP composition. Copies and plain ports cannot activate that path, and ending or failing the session retires its private permission. I kept lifecycle contract tests on the shared implementation and distinguished simulated contracts from the native integration.
+
+The longer conversation test found that permanent evidence could fill the journal file before its row limit. I fixed the physical storage format with bounded lossless compaction rather than discarding records or increasing the existing limits. The complete local exchange now passes through renewal and a second reply. This is local evidence, with live integration and independent restore protection still open.
+
 ## Keeping private permission tied to the original handoff
 
 I kept the native lease behind the original startup permit rather than putting its token in public data. The replay layer accepts that permission once, and renewal needs the original handoff after the owner has consumed it. Copies and saved observations cannot recreate it. I also derive the session cap from the same credential binding so it cannot drift independently.

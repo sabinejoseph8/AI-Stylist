@@ -111,3 +111,53 @@ class WitnessServiceTests(unittest.TestCase):
         self.advance();args=dict(operationId=h(20),revision=1,challenge=h(800),issuedAt=1000,expiresAt=2000)
         with self.assertRaises(ValueError):self.op(self.writer,'claim-execution',args,crash='after-save')
         with self.assertRaises(ValueError):self.op(self.writer,'claim-execution',dict(args,challenge=h(801)))
+    def test_compact_journal_retains_all_128_permanent_read_tickets(self):
+        current=self.current
+        for step in range(3):
+            operation=h(20+step);target=dict(current,epochFloor=step+1,headFloor=h(400+step),historyDigest=h(500+step))
+            token=self.ticket(action='advance',operation=operation,revision=2*step)
+            self.op(self.writer,'advance',dict(token=token,**{'from':current},to=target))
+            token=self.ticket(self.reconciler,'reconcile',operation=operation,revision=2*step+1)
+            self.op(self.reconciler,'reconcile',dict(token=token,targetDigest=service.digest(target),ownerDigest=self.writer['principalDigest'],revision=2*step+1,validUntil=2000))
+            current=target
+        tokens=[]
+        for _ in range(122):
+            token=self.ticket(action='read');tokens.append(token)
+            self.assertEqual(self.op(self.writer,'read',dict(token=token))['status'],'read')
+        state=self.inspect()
+        self.assertEqual(len(state['requests']),128)
+        self.assertTrue(all(r['state']=='used' for r in state['requests']))
+        self.assertTrue((self.root/'ledger.json').read_bytes().startswith(service._COMPACT))
+        self.assertLessEqual((self.root/'ledger.json').stat().st_size,65536)
+        with self.assertRaises(ValueError):self.ticket(action='read')
+        for token in (tokens[0],tokens[-1]):
+            with self.assertRaises(ValueError):self.op(self.writer,'read',dict(token=token))
+        self.assertEqual(self.inspect(),state)
+    def test_compact_checksum_and_truncated_stream_are_refused(self):
+        import zlib
+        state=self.inspect();data=service._COMPACT+zlib.compress(encoded(state))[:-1]
+        (self.root/'ledger.json').write_bytes(data)
+        (self.root/'checkpoint.json').write_bytes(encoded(dict(sha256=hashlib.sha256(data).hexdigest())))
+        with self.assertRaises(ValueError):self.inspect()
+    def test_compact_extra_stream_or_trailing_bytes_are_refused(self):
+        import zlib
+        data=service._COMPACT+zlib.compress(encoded(self.inspect()))
+        for suffix in (b'extra',zlib.compress(b'{}')):
+            with self.assertRaises(ValueError):service._decode(data+suffix)
+    def test_compact_expansion_is_bounded(self):
+        import zlib
+        data=service._COMPACT+zlib.compress(b' '* (service._MAX_LOGICAL+1))
+        self.assertLess(len(data),65536)
+        with self.assertRaises(ValueError):service._decode(data)
+    def test_capacity_refusal_precedes_pending_file_and_preserves_prior_state(self):
+        import secrets
+        before=self.inspect()
+        with self.assertRaises(ValueError):service._save(self.root,dict(random=secrets.token_hex(60000)))
+        self.assertFalse((self.root/'pending').exists())
+        self.assertEqual(self.inspect(),before)
+    def test_compact_roundtrip_retains_complete_logical_state(self):
+        state=self.inspect();state['fixture']='x'*70000
+        payload=service._payload(state)
+        self.assertTrue(payload.startswith(service._COMPACT))
+        self.assertEqual(service._decode(payload),state)
+        with self.assertRaises(ValueError):service._payload(dict(fixture='x'*service._MAX_LOGICAL))

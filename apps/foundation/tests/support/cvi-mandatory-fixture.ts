@@ -20,7 +20,7 @@ export function mandatoryCall(input:Record<string,unknown>,authorize?:(m:unknown
  p.stdout.on('data',d=>{buffer+=d.toString();if(buffer.length>1048576)return fail();let at:number;while((at=buffer.indexOf('\n'))>=0){const line=buffer.slice(0,at);buffer=buffer.slice(at+1);let m:any;try{m=JSON.parse(line);}catch{return fail();}if(m.stage==='result')answer=m.result;else if(m.stage==='held')fail();else if(authorize)Promise.resolve().then(()=>authorize(m)).then(r=>{if(!settled)p.stdin.write(JSON.stringify(r)+'\n');},fail);else fail();}});
  p.stderr.resume();p.stdin.on('error',()=>{});p.on('error',fail);p.on('close',code=>{clearTimeout(timer);signal?.removeEventListener('abort',abort);if(!settled){settled=true;if(code!==0||answer===undefined)reject(Error('Mandatory fixture unavailable'));else resolve(answer);}});p.stdin.write(JSON.stringify(input)+'\n');
 });}
-export async function mandatoryFixture(seed?:Record<string,unknown>,clock:()=>number=()=>1000){
+export async function mandatoryFixture(seed?:Record<string,unknown>,clock:()=>number=()=>1000,transport:typeof serviceCall=serviceCall){
  const x=await writerLeaseFixture(),root=x.dbRoot,authorityRoot=await mkdtemp(join(tmpdir(),'stylist-monotonic-authority-')),authorityKey=fixtureKey(),database=fixtureKey(),fence=fixtureKey();
  const keys={rotator:fixtureKey(),fencer:fixtureKey(),writer:fixtureKey(),signer:fixtureKey(),observer:fixtureKey(),reconciler:fixtureKey()};
  const actors=Object.entries(keys).map(([role,key],i)=>({role:role as LeaseAuthorityRole|'observer'|'reconciler',principalDigest:D(90+i),keyId:'fixture-key-monotonic-'+role,publicKeyPem:key.pem}));
@@ -28,8 +28,8 @@ export async function mandatoryFixture(seed?:Record<string,unknown>,clock:()=>nu
  const observe=()=>mandatoryCall({root,mode:'observe',config:{...config,now:clock()}}),localInitial=await observe(),initial=seed?structuredClone(seed):localInitial;
  if(initial.storeId!==localInitial.storeId||initial.policyDigest!==localInitial.policyDigest)throw Error('Fixture seed scope unavailable');
  const pin={authorityId:'fixture-authority-monotonic',witnessId:'33333333-3333-4333-8333-333333333333',storeId:initial.storeId,policyDigest:initial.policyDigest,keyId:'fixture-key-monotonic-authority',publicKeyPem:authorityKey.pem},storePin={authorityId:pin.authorityId,witnessId:pin.witnessId,storeId:pin.storeId,policyDigest:pin.policyDigest};
- await serviceCall({root:authorityRoot,mode:'prepare',pin:storePin,current:initial,now:clock()});
- const invoke=(a:any,mode:string,args:Record<string,unknown>)=>serviceCall({root:authorityRoot,pin:storePin,actor:{principalDigest:a.principalDigest,role:a.role},mode,args,now:clock()});
+ await transport({root:authorityRoot,mode:'prepare',pin:storePin,current:initial,now:clock()});
+ const invoke=(a:any,mode:string,args:Record<string,unknown>)=>transport({root:authorityRoot,pin:storePin,actor:{principalDigest:a.principalDigest,role:a.role},mode,args,now:clock()});
  const store={admit:(a:any,r:WitnessServiceRequest,id:string)=>invoke(a,'admit',{id,challenge:r.challenge,action:r.action,operationId:r.operationId,expectedRevision:r.expectedRevision,issuedAt:r.issuedAt,expiresAt:r.expiresAt}),inspect:(a:any)=>invoke(a,'inspect',{}),apply:(a:any,mode:string,args:Record<string,unknown>)=>invoke(a,mode,args)};
  const plans=new Map<string,MandatoryLeaseIntent>(),proofPins={database:{keyId:'fixture-key-monotonic-database',publicKeyPem:database.pem},fence:{keyId:'fixture-key-monotonic-fence',publicKeyPem:fence.pem}};
  const inspect=()=>invoke({role:'observer',principalDigest:actors.find(a=>a.role==='observer')!.principalDigest},'inspect',{});

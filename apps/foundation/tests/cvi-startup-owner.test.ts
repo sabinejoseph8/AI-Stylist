@@ -1,10 +1,12 @@
+/** Disconnected envelope-contract tests; mandatory native/private startup is
+ * covered by the real admission, binding and HTTP integration suites. */
 import {replayInspectionFixture} from './support/cvi-replay-inspection-fixture.ts';
 import type {ReplayInspectionRequest} from '../src/server/local-cvi-replay-inspection.ts';
 import {it,expect,vi} from 'vitest';
 import {mkdtemp,mkdir,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
 import {join} from 'node:path';
-import {createLocalCviStartupOwner} from '../src/server/local-cvi-startup-owner.ts';
+import {createLocalCviStartupOwner} from './support/cvi-unbound-startup-contract.ts';
 import {createLocalCviStyling} from '../src/server/local-cvi-styling.ts';
 import {localStartupOwnerBoot} from '../src/server/local-cvi-startup-admission.ts';
 import {cviCredentialDigests} from '../src/server/local-cvi-credentials.ts';

@@ -663,6 +663,19 @@
       "scope": "Disabled original private startup/consumed-renewal replay handoffs and actual guarded endpoint exchange; limits unchanged. Mandatory general composition migration and transition-wide authority gating remain open.",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-mandatory-replay-composition.md",
+      "foundationTests": 2447,
+      "foundationFiles": 179,
+      "operationsTests": 524,
+      "localMemoryChecks": 19,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled mandatory original private startup/renewal replay composition, actual native HTTP exchanges and bounded lossless journal compaction. Transition-wide authority gating and independent restore protection remain open.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

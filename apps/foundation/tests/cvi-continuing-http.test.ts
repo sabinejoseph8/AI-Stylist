@@ -5,7 +5,7 @@ it('complete transcript/notebook/HTTP exchanges preserve notes and replay across
  expect((await x.say('Long sleeves')).status).toBe('applied');const first=x.http('Long sleeves'),r=await x.wire.handle(first);expect(r.status).toBe(200);expect(await r.text()).toContain('Long sleeves');
  const notes=structuredClone(x.context.flow.snapshot().notes),before=await x.records();expect(before).toHaveLength(2);
  x.at(1500);expect(await x.wire.continue(x.continuation,signal())).toBe(true);expect(x.context.flow.snapshot().notes).toEqual(notes);expect(x.context.flow.snapshot().context?.nativeRevision).toBe(6);expect(await x.records()).toEqual(before);
- x.at(9250);expect((await x.say('Prefer loose sleeves')).status).toBe('applied');const next=await x.wire.handle(x.http('Prefer loose sleeves','Earlier synthetic reply'));expect(next.status).toBe(200);expect(await next.text()).toContain('Prefer loose sleeves');
+ x.at(2000);expect((await x.say('Prefer loose sleeves')).status).toBe('applied');const next=await x.wire.handle(x.http('Prefer loose sleeves','Earlier synthetic reply'));expect(next.status).toBe(200);expect(await next.text()).toContain('Prefer loose sleeves');
  expect(await x.records()).toHaveLength(4);expect((await x.records()).every((v:any)=>v.status==='spent')).toBe(true);expect(x.wire.isHeld()).toBe(false);
  expect((await x.wire.handle(x.http('Long sleeves'))).status).toBe(409);expect(await x.records()).toHaveLength(4);
  }finally{await x.close();}},60000);

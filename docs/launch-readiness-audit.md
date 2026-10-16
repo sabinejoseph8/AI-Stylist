@@ -1,3 +1,7 @@
+## Mandatory replay composition, 16 October 2026
+
+Final verification passes 2,447 foundation tests across 179 files, 524 operations tests with ResourceWarning as error, TypeScript/build, four encryption checks and 19 local Memory checks. Protected startup/HTTP requires the original private handoff, adopts consumed renewals internally and retires on failure/End. Bounded lossless journal compaction fixes premature file exhaustion without removing evidence or increasing the existing row/file limits. Complete native HTTP exchanges pass through renewal. No SQL changed; the prior 556-check isolated PostgreSQL result was not rerun. Transition-wide authority gating, independent restore protection and live acceptance remain open. No criterion closes, completion stays 5 of 41 and allocation stays $51. See docs/local-tavus-mandatory-replay-composition.md.
+
 ## Original private replay handoff follow-up, 16 October 2026
 
 The original startup/consumed-renewal private handoff layer is prepared and tested with a guarded endpoint exchange. It derives digest/cap from one captured binding and refuses copies, replayed claims, pending work and expiry. A near-expiry exchange correctly refused; limits were unchanged and the verified exchange ran earlier with separate expiry checks.

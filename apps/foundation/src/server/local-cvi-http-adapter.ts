@@ -48,7 +48,7 @@ export function createLocalCviHttpAdapter(options:Readonly<{
  const bodySeen=new Set<string>(),turnSeen=new Set<string>();
  const hold=()=>{held=true;transcript.close();end();};
  const close=()=>{if(closed)return;closed=true;active?.stop();transcript.close();end();};
- const current=()=>{try{const at=clock();if(!int(at)||at<last||at>=binding.expiresAt){close();return false;}last=at;return !closed&&!held;}catch{close();return false;}};
+ const current=()=>{try{const at=clock();if(!isLocalCviStartedOwner(owner)||!int(at)||at<last||at>=binding.expiresAt){close();return false;}last=at;return !closed&&!held;}catch{close();return false;}};
  const match=async(text:string,signal:AbortSignal)=>{
   const input=localCviCompletedInput(transcript,context);if(!input||input.text!==text||!context.flow.available()||signal.aborted)return null;
   const snapshot=await context.snapshot(new Request(applicationRequest),signal),state=context.flow.snapshot(),again=localCviCompletedInput(transcript,context);

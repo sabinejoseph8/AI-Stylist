@@ -11,7 +11,7 @@ import {APPROVED_NOTES_RETENTION} from '../../src/session/notes-retention-policy
 import {call} from './cvi-replay-process.ts';
 const signal=()=>new AbortController().signal;
 export async function continuingHttpFixture(){
- let time=1000,live=true,ordinal=0,seq=0;const f=await startupAdmissionFixture(()=>time);
+ let time=1000,live=true,ordinal=0,seq=0;const f=await startupAdmissionFixture(()=>time,10000,true);
  const identity={ownerId:'00000000-0000-4000-8000-000000000001',sessionId:'11111111-1111-4111-8111-111111111111',isCurrent:async()=>live},request=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
  const draft=vi.fn(async(s:any)=>'Synthetic '+s.notes.coverage.text),check=vi.fn(async(text:string,s:any)=>({approved:true,text,revision:s.revision}));
  const context=createLocalCviNotebookContext({simulation:true,identity,authorize:async r=>r.headers.get('authorization')==='Bearer fixture-customer'?identity:null,checkpoint:f.checkpoint,ports:{draft,check},clock:()=>time,policy:APPROVED_NOTES_RETENTION});f.resources.makeFlow=()=>context.flow;

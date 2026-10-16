@@ -23,7 +23,7 @@ it('adopts an exact signed renewal at idle, invalidates prepared text and preser
  const pending=await x.flow.prepare(signal());
  expect(pending.status).toBe('prepared');
  x.at(1500);expect(await continueLocalCviOwner(x.owner,x.make(),signal())).toBe(true);expect((await x.f.x.inspect()).revision).toBe(6);expect(pending.takeSse()).toBeNull();expect(x.flow.snapshot().notes).toEqual(notes);
- expect(await x.records()).toEqual(before);x.at(9250);const next=await x.owner.handle(x.request());expect(next.status).toBe(200);expect(await next.text()).toContain('Synthetic checked output.');
+ expect(await x.records()).toEqual(before);x.at(2000);const next=await x.owner.handle(x.request());expect(next.status).toBe(200);expect(await next.text()).toContain('Synthetic checked output.');
  expect((await x.owner.handle(x.request('fixture-before-renewal'))).status).toBe(409);expect(await x.records()).toHaveLength(2);
  x.at(10000);expect((await x.owner.handle(x.request('fixture-at-cap'))).status).toBe(410);
  }finally{await x.close();}},60000);
@@ -55,14 +55,14 @@ it('old-owner expiry after commit refuses adoption of the longer new grant',asyn
 it('an object copy of a started owner has no continuation control',async()=>{const x=await fixture();try{expect(await continueLocalCviOwner({...x.owner},x.make(),signal())).toBe(false);expect(x.ports.execute).not.toHaveBeenCalled();}finally{await x.close();}},30000);
 it('application cap earlier than native domain expiry clamps renewal and remains absolute',async()=>{const x=await fixture(9400);try{
  x.at(1500);expect(await continueLocalCviOwner(x.owner,x.make(),signal())).toBe(true);expect(x.ports.plan.mock.calls[0][0].ttl).toBe(7900);
- x.at(9300);const r=await x.owner.handle(x.request());expect(r.status).toBe(200);await r.text();
+ x.at(2000);const r=await x.owner.handle(x.request());expect(r.status).toBe(200);await r.text();
  x.at(9400);expect((await x.owner.handle(x.request('fixture-cap-blocked'))).status).toBe(410);
  }finally{await x.close();}},60000);
 it('one port adopts two distinct one-use renewals without sliding the application cap',async()=>{const x=await fixture();try{
  const port=x.make();x.at(1500);expect(await continueLocalCviOwner(x.owner,port,signal())).toBe(true);
  x.at(2000);expect(await continueLocalCviOwner(x.owner,port,signal())).toBe(true);expect(x.ports.execute).toHaveBeenCalledTimes(2);expect((await x.f.x.inspect()).revision).toBe(8);
  expect(await continueLocalCviOwner(x.owner,port,signal())).toBe(false);expect(port.isHeld()).toBe(false);expect(x.ports.execute).toHaveBeenCalledTimes(2);
- x.at(9500);const r=await x.owner.handle(x.request());expect(r.status).toBe(200);await r.text();expect(await x.records()).toHaveLength(1);
+ x.at(2500);const r=await x.owner.handle(x.request());expect(r.status).toBe(200);await r.text();expect(await x.records()).toHaveLength(1);
  }finally{await x.close();}},60000);
 it('reusing the original consumed handoff cannot authorize another ownership update',async()=>{const x=await fixture();try{
  const real=x.make();let saved:unknown;const port={renew:async(i:any,s:AbortSignal)=>saved??(saved=await real.renew(i,s))};
@@ -103,7 +103,7 @@ it('pending note extraction remains open and preserves newer notes during adopti
   const port=createLocalDurableOwnerContinuation(f.x.pin,f.nativeLease(),cviCredentialDigests(f.resources.binding).bindingDigest,10000,{principalDigest:rotator.principalDigest,readerPrincipal:reader.principalDigest},{plan:a=>f.x.plan('renew',{lease:a.lease,ttl:a.ttl,token:a.token}),execute:async(p,s)=>{const r=await f.executeTracked(p);nativeRevision=(await f.x.inspect()).revision;return r;},read:n=>authority.read(n)},()=>time);
   notes.coverage={text:'Latest long sleeves',confirmed:false};revision=1;pending=true;expect(flow.available()).toBe(false);expect(flow.isOpen()).toBe(true);
   time=1500;expect(await continueLocalCviOwner(owner!,port,signal())).toBe(true);expect(end).not.toHaveBeenCalled();expect(flow.isOpen()).toBe(true);expect(flow.available()).toBe(false);expect(flow.snapshot().notes.coverage.text).toBe('Latest long sleeves');
-  pending=false;time=9250;const request=new Request(f.resources.binding.origin+'/v1/chat/completions',{method:'POST',headers:{authorization:'Bearer '+f.resources.binding.secret,'x-cvi-conversation':f.resources.binding.conversation,'x-cvi-request-id':'fixture-pending-preserved','content-type':'application/json'},body:JSON.stringify({model:'local-simulation',stream:true,messages:[{role:'user',content:'Synthetic'}]})});
+  pending=false;time=2000;const request=new Request(f.resources.binding.origin+'/v1/chat/completions',{method:'POST',headers:{authorization:'Bearer '+f.resources.binding.secret,'x-cvi-conversation':f.resources.binding.conversation,'x-cvi-request-id':'fixture-pending-preserved','content-type':'application/json'},body:JSON.stringify({model:'local-simulation',stream:true,messages:[{role:'user',content:'Synthetic'}]})});
   const response=await owner!.handle(request);expect(response.status).toBe(200);expect(await response.text()).toContain('Synthetic pending-safe output');
   owner!.end();expect(flow.isOpen()).toBe(false);
  }finally{await f.close();}

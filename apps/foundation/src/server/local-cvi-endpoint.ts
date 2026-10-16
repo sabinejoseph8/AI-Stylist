@@ -13,6 +13,7 @@ export type CviReplayReceipt=Readonly<CviReplayRequest & {receipt:string;status:
 /** Disconnected durable-admission port. A write must commit before acknowledgment. */
 export interface CviReplayPort {
  readonly storeId:string;
+ close?():void;
  inspect?(input:ReplayInspectionRequest,signal:AbortSignal):Promise<unknown>;
  reserve(input:CviReplayRequest,signal:AbortSignal):Promise<unknown>;
  consume(input:CviReplayReceipt,signal:AbortSignal):Promise<unknown>;
@@ -37,7 +38,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
  const origin=binding.origin,conversation=binding.conversation,secret=Buffer.from(`Bearer ${binding.secret}`),expiresAt=binding.expiresAt;
  let closed=false,unsettled=false,lastClock=-Infinity,active:{abort:AbortController;release:()=>void}|undefined;
  const used=new Set<string>(),deliveries=new WeakMap<Request,'reserved'|'spent'>();
- const storeId=replay?.storeId;
+ const storeId=replay?.storeId,closeReplay=typeof replay?.close==='function'?replay.close.bind(replay):undefined;
  if(replay&&(!/^[a-f0-9-]{36}$/.test(storeId??'')||typeof replay.reserve!=='function'||typeof replay.consume!=='function'))throw Error('Invalid local replay configuration');
  const bindingDigest=hash(JSON.stringify([origin,conversation,binding.secret,expiresAt]));
  const acknowledge=(raw:unknown,input:CviReplayRequest,status:'reserved'|'spent',receipt?:string):CviReplayReceipt=>{
@@ -47,7 +48,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
   return Object.freeze({...input,receipt:raw.receipt,status});
  };
  const current=()=>{try{const n=clock();if(!Number.isSafeInteger(n)||n<lastClock||n>=expiresAt){end();return false;}lastClock=n;return !closed;}catch{end();return false;}};
- function end(){if(closed)return;closed=true;active?.abort.abort();active?.release();flow.end();}
+ function end(){if(closed)return;closed=true;active?.abort.abort();active?.release();try{flow.end();}finally{try{closeReplay?.();}catch{}}}
  const endpoint=Object.freeze({end,
  /** Original in-memory request only. This is consumption evidence, never a
   * new output permission or a handoff reconstructed from stored records. */

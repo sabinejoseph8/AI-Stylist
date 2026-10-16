@@ -62,13 +62,6 @@ it.each(['pending','ledger','checkpoint'])('a %s crash preserves unknown write e
 
 it('the disabled endpoint uses the original private lease through a guarded replay port',async()=>{
  const f=await startupAdmissionFixture();let owner:any;try{
-  const original=f.resources.replay,execute=f.ports.execute,digests=cviCredentialDigests(f.resources.binding);let privateLease:any;
-  f.ports.execute=async(p,s)=>{const result=await execute(p,s);privateLease=structuredClone(result);return result;};
-  const mutate=async(mode:string,input:any,s:AbortSignal)=>{
-   if(!privateLease||input.bindingDigest!==digests.bindingDigest)throw Error('Original lease required');
-   const result=await ownerReplayCall(f,privateLease,mode,{...input,bindingDigest:digests.scopeDigest},{signal:s});return {...result,bindingDigest:input.bindingDigest};
-  };
-  f.resources.replay={storeId:original.storeId,inspect:original.inspect,reserve:(r,s)=>mutate('reserve',r,s),consume:(r,s)=>mutate('consume',r,s)};
   owner=await createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>1000,7000,8000).start(signal());expect(owner).not.toBeNull();
   const request=new Request(f.resources.binding.origin+'/v1/chat/completions',{method:'POST',headers:{authorization:'Bearer '+f.resources.binding.secret,'x-cvi-conversation':f.resources.binding.conversation,'x-cvi-request-id':'fixture-guarded-replay','content-type':'application/json'},body:JSON.stringify({model:'local-simulation',stream:true,messages:[{role:'user',content:'Synthetic long sleeves'}]})});
   const response=await owner.handle(request);expect(response.status).toBe(200);expect(await response.text()).toContain('Synthetic checked output.');

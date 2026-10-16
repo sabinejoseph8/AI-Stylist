@@ -45,7 +45,7 @@ it('a prepared reply cannot cross a native state write, but the same endpoint ca
  const next=await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-fresh-draft'));expect(next.status).toBe(200);expect(await next.text()).toContain('Synthetic checked output.');expect(f.drafts()).toBe(2);e!.end();
 }finally{await f.close();}},30000);
 it('a native update after durable consume suppresses old output without refunding or ending the owner',async()=>{const f=await startupAdmissionFixture();try{
- const consume=f.resources.replay.consume;let once=false;f.resources.replay.consume=async(r,s)=>{const ack=await consume(r,s);if(!once){once=true;await f.write();}return ack;};
+ const consume=f.replayHooks.consume.getMockImplementation()!;let once=false;f.replayHooks.consume.mockImplementation(async(lease,floor,r,s)=>{const ack=await consume(lease,floor,r,s);if(!once){once=true;await f.write();}return ack;});
  const e=await f.make().start(signal());expect(e).not.toBeNull();const pending=await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-spent-stale'));expect(pending.status).toBe(200);await expect(pending.text()).rejects.toThrow();expect(once).toBe(true);
  expect((await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-spent-stale'))).status).toBe(409);
  const next=await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-spent-fresh'));expect(next.status).toBe(200);expect(await next.text()).toContain('Synthetic checked output.');expect(f.drafts()).toBe(2);e!.end();
@@ -60,11 +60,11 @@ it('negative boundary: losing the newer public floor with a coordinated restore 
  expect((await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-guard-still-retains-six'))).status).toBe(409);e!.end();
 }finally{await f.close();}},30000);
 it.each(['replace','unavailable'])('a prepared reply losing %s ownership evidence cannot settle its reservation as stale',async mode=>{const f=await startupAdmissionFixture();try{
- const consume=vi.spyOn(f.resources.replay,'consume'),e=await f.make().start(signal());expect(e).not.toBeNull();const pending=await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-invalid-owner'));expect(pending.status).toBe(200);
+ const consume=f.replayHooks.consume,e=await f.make().start(signal());expect(e).not.toBeNull();const pending=await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-invalid-owner'));expect(pending.status).toBe(200);
  if(mode==='replace')await f.replace();else f.x.setUnavailable(true);await expect(pending.text()).rejects.toThrow();expect(consume).not.toHaveBeenCalled();expect(f.drafts()).toBe(1);e!.end();
 }finally{await f.close();}},30000);
 it('an unknown stale-settlement result keeps the reservation held and never retries it',async()=>{const f=await startupAdmissionFixture();try{
- const consume=vi.fn(async()=>{throw Error('Unknown settlement');});f.resources.replay.consume=consume;
+ const consume=vi.fn(async()=>{throw Error('Unknown settlement');});f.replayHooks.consume.mockImplementation(consume);
  const e=await f.make().start(signal());expect(e).not.toBeNull();const pending=await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-unknown-settlement'));expect(pending.status).toBe(200);await f.write();await expect(pending.text()).rejects.toThrow();expect(consume).toHaveBeenCalledTimes(1);
  expect((await e!.handle(fixtureRequest(f.resources.binding.secret,'fixture-new-but-held'))).status).toBe(409);expect(consume).toHaveBeenCalledTimes(1);expect(f.drafts()).toBe(1);e!.end();
 }finally{await f.close();}},30000);

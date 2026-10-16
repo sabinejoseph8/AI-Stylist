@@ -7,7 +7,7 @@ import {cviCredentialDigests} from '../src/server/local-cvi-credentials.ts';
 import {call} from './support/cvi-replay-process.ts';
 const signal=()=>new AbortController().signal;
 const rows=async(f:any)=>((await call(f.replayRoot,'inspect',{storeId:f.journal.storeId})) as any).records;
-const reserve=(f:any,now=1000)=>f.resources.replay.reserve({storeId:f.journal.storeId,bindingDigest:cviCredentialDigests(f.resources.binding).bindingDigest,requestDigest:'e'.repeat(64),now},signal());
+const reserve=(f:any,now=1000)=>f.rawReplay.reserve({storeId:f.journal.storeId,bindingDigest:cviCredentialDigests(f.resources.binding).bindingDigest,requestDigest:'e'.repeat(64),now},signal());
 it('fresh coordinators retain a pending reservation and refuse before native admission',async()=>{
  const f=await startupAdmissionFixture();try{
   await reserve(f);const before=await rows(f),execute=vi.spyOn(f.ports,'execute');
@@ -55,7 +55,7 @@ it('pending evidence after native renewal holds the adopted owner and preserves 
 },60000);
 it('spent-only history survives fresh process inspection and startup',async()=>{
  const f=await startupAdmissionFixture();let owner:any;try{
-  const receipt:any=await reserve(f);await f.resources.replay.consume(receipt,signal());const before=await rows(f);
+  const receipt:any=await reserve(f);await f.rawReplay.consume(receipt,signal());const before=await rows(f);
   owner=await f.make().start(signal());expect(owner).not.toBeNull();expect(await rows(f)).toEqual(before);
   await expect(reserve(f)).rejects.toThrow();expect(await rows(f)).toEqual(before);
  }finally{owner?.end();await f.close();}

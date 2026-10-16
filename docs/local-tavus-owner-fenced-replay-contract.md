@@ -1,3 +1,7 @@
+## Mandatory composition follow-up, 16 October 2026
+
+Protected startup/HTTP now requires original private replay binding and internally adopts original consumed renewals, with retirement on failure/End. See docs/local-tavus-mandatory-replay-composition.md for verification. The transition-wide replay/authority gate and persistent original-operation marker remain next; docs/local-tavus-transition-gate-next.md describes the local lock/capability sequence. Earlier sections below preserve the original contract and prior checkpoints. No universal fencing or production acceptance is claimed.
+
 ## Original private handoff follow-up, 16 October 2026
 
 The original startup/consumed-renewal private handoff layer is now prepared and tested with a guarded endpoint exchange. Credential digest and cap derive from one captured binding; copies and replayed claims cannot create another binding. See [private replay handoffs](local-tavus-private-replay-binding.md). Mandatory migration of every general startup/HTTP path, transition-wide authority gating and persistent operation markers remain open.

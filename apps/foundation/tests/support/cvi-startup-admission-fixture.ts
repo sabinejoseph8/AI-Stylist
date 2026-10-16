@@ -1,3 +1,7 @@
+import {residentWitnessTransport} from './cvi-resident-witness.ts';
+import {vi} from 'vitest';
+import {createLocalOwnedReplayPort,localOwnedReplayState} from '../../src/server/local-cvi-owned-replay.ts';
+import {ownerReplayCall} from './cvi-owner-replay-process.ts';
 /** Disposable composition. SQLite authority/lease transitions are actual.
  * Observer transaction labels are fixture markers, not native SQL commit IDs. */
 import {randomBytes} from 'node:crypto';
@@ -19,8 +23,9 @@ import {historyCanonical} from '../../src/server/local-cvi-history-authority.ts'
 import {witnessServiceDigest} from '../../src/server/local-cvi-witness-service.ts';
 import type {DurableStartupPorts} from '../../src/server/local-cvi-startup-admission.ts';
 import type {FreshOwnerAdmissionInput} from '../../src/server/local-cvi-startup-owner.ts';
-export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bindingExpiresAt=10000){
- const x=await mandatoryFixture(undefined,testClock),signal=()=>new AbortController().signal,first=await x.activation();
+export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bindingExpiresAt=10000,useResidentAuthority=false){
+ const resident=useResidentAuthority?residentWitnessTransport():undefined;
+ const x=await mandatoryFixture(undefined,testClock,resident?.call),signal=()=>new AbortController().signal,first=await x.activation();
  const firstLease:any=await x.adapter('rotator').execute(first,signal());
  const baseline=await x.observe(),snapshot=()=>mandatoryCall({root:x.root,config:x.config,mode:'full-observe'}),initialSnapshot=await snapshot();
  const root=await mkdtemp(join(tmpdir(),'stylist-startup-admission-')),credential=join(root,'credentials'),replayRoot=join(root,'replay');await mkdir(credential,{mode:0o700});await mkdir(replayRoot,{mode:0o700});
@@ -42,7 +47,13 @@ export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bind
  const inspector=(clock=testClock)=>createLocalStartupCheckpointInspector({authority:x.pin,database:{keyId:'fixture-key-startup-observer',publicKeyPem:key.pem},readerPrincipal:reader.principalDigest,registryDigest:witnessServiceDigest(registry),minimumRevision:2},registry,readPorts,clock);
  const checkpoint={inspectFresh:(s:AbortSignal)=>inspector().inspect(s),inspectOwnerFresh:(owner:any,s:AbortSignal)=>inspector().inspectOwner(owner,s)};
  const admission=(clock=testClock)=>createLocalDurableStartupAdmission(x.pin,scope,baseline,{principalDigest:rotator.principalDigest,readerPrincipal:reader.principalDigest,ownerDigest},ports,clock);
- const resources={binding,boot,replay:scopeReplay(replayRoot,journal.storeId,oldDigests.scopeDigest),authority:{activate:(i:any)=>credentialCall(credential,'activate',i),check:(request:any)=>credentialCall(credential,'check',{request})},makeFlow:()=>createLocalCviStyling({draft:async()=>{drafts++;return 'Synthetic checked output.';},check:async(text,s)=>({approved:true,text,revision:s.revision})})};
+ const rawReplay=scopeReplay(replayRoot,journal.storeId,oldDigests.scopeDigest),digests=cviCredentialDigests(binding);
+ const replayContext={x,ownerDigest,journal,replayRoot,resources:{binding:Object.freeze({...binding})}};
+ const backendWork=new Set<Promise<unknown>>(),privatePorts=new Set<ReturnType<typeof createLocalOwnedReplayPort>>();
+ const mutation=async(mode:'reserve'|'consume',lease:any,floor:number,r:any,signal:AbortSignal)=>{const task=ownerReplayCall(replayContext,lease,mode,{...r,bindingDigest:oldDigests.scopeDigest},{signal,config:{minimumRevision:floor}});backendWork.add(task);try{const value=await task;return {...value,bindingDigest:r.bindingDigest};}finally{backendWork.delete(task);}};
+ const replayHooks={inspect:vi.fn(rawReplay.inspect),reserve:vi.fn((lease:any,floor:number,r:any,s:AbortSignal)=>mutation('reserve',lease,floor,r,s)),consume:vi.fn((lease:any,floor:number,r:any,s:AbortSignal)=>mutation('consume',lease,floor,r,s))};
+ const newReplay=()=>{const port=createLocalOwnedReplayPort({storeId:journal.storeId,nativeStoreId:x.pin.storeId,binding},{inspect:(r,s)=>replayHooks.inspect(r,s),mutate:(mode,lease,floor,r,s)=>replayHooks[mode](lease,floor,r,s)},testClock);privatePorts.add(port);return port;};
+ const resources={binding,boot,replay:newReplay(),authority:{activate:(i:any)=>credentialCall(credential,'activate',i),check:(request:any)=>credentialCall(credential,'check',{request})},makeFlow:()=>createLocalCviStyling({draft:async()=>{drafts++;return 'Synthetic checked output.';},check:async(text,s)=>({approved:true,text,revision:s.revision})})};
  const tracked=async(p:any)=>{
   const a=x.authorityPort(p.actor.role),claim=a.claim;let hash='';a.claim=async(intent,n)=>{const e=await claim(intent,n);hash=witnessServiceDigest(e.request);return e;};
   const actor=x.actors.find(r=>r.role===p.actor.role)!;const result=await createLocalMandatoryLeaseAdapter(x.pin,{role:p.actor.role,principalDigest:actor.principalDigest},a,x.persistence,testClock,8000).execute(p,signal());
@@ -51,5 +62,5 @@ export async function startupAdmissionFixture(testClock:()=>number=()=>1000,bind
  const write=async()=>tracked(await x.commitPlan(nativeLease)),fence=async()=>tracked(await x.fencing(nativeLease.generation)),replace=async()=>tracked(await x.plan('activate',{previous:nativeLease.generation,owner:ownerDigest,boot:randomBytes(32).toString('hex'),ttl:1000,token:randomBytes(32).toString('hex')}));
  const oldOwner={storeId:x.pin.storeId,generation:firstLease.generation,ownerDigest:firstLease.ownerDigest,bootDigest:firstLease.bootDigest,expiresAt:firstLease.expiresAt,minimumRevision:2};
  const input=():FreshOwnerAdmissionInput=>({...structuredClone(scope),nonce:'4'.repeat(64),issuedAt:1000,expiresAt:8000});
- return {executeTracked:tracked,inspector,markerCopy:()=>structuredClone(marker),restoreMarker:(m:typeof marker)=>{marker=structuredClone(m);},oldOwner,write,fence,replace,ownerDigest,nativeLease:()=>nativeLease,oldOwnerExpiresAt:initialSnapshot.grants[0][5] as number,x,root,credential,replayRoot,journal,oldLease,scope,expected,baseline,ports,checkpoint,resources,admission,input,snapshot,lastPlan:()=>lastPlan,drafts:()=>drafts,make:()=>createLocalCviStartupOwner(expected,checkpoint,admission(),resources,testClock,7000),close:async()=>{await x.close();await rm(root,{recursive:true,force:true});}};
+ return {residentStats:()=>resident?.stats(),newReplay,rawReplay,replayHooks,executeTracked:tracked,inspector,markerCopy:()=>structuredClone(marker),restoreMarker:(m:typeof marker)=>{marker=structuredClone(m);},oldOwner,write,fence,replace,ownerDigest,nativeLease:()=>nativeLease,oldOwnerExpiresAt:initialSnapshot.grants[0][5] as number,x,root,credential,replayRoot,journal,oldLease,scope,expected,baseline,ports,checkpoint,resources,admission,input,snapshot,lastPlan:()=>lastPlan,drafts:()=>drafts,make:()=>{if(localOwnedReplayState(resources.replay).bound||localOwnedReplayState(resources.replay).held)resources.replay=newReplay();return createLocalCviStartupOwner(expected,checkpoint,admission(),resources,testClock,7000);},close:async()=>{for(const p of privatePorts)p.close?.();await Promise.allSettled([...backendWork]);await resident?.close();await x.close();await rm(root,{recursive:true,force:true});}};
 }
