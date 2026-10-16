@@ -1,3 +1,7 @@
+## Primitive checkpoint, 16 October 2026
+
+The original file-lock/marker primitive is prepared with actual process and SQLite checks. The configured witness now binds marker evidence, including interrupted updates and one-sided restoration. See docs/local-tavus-transition-gate-primitive.md. Signed finish/adoption integration, hard Node supervision, mandatory publication ordering and all-writer coverage remain unimplemented. The complete two-turn exchange uses 127 of 128 authority records, so prepare the original finish nonce early and retain its exact fresh signed final inspection through adoption rather than adding read rounds. The design below still governs those steps.
+
 # Next local step: retain the replay gate across owner transitions
 
 This is a local design, not implemented permission or a hosted change. Mandatory private startup and consumed-renewal binding are prepared. The separate authority can still advance after a signed snapshot unless participating transitions hold the same replay gate.

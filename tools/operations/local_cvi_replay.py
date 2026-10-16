@@ -9,7 +9,7 @@ import re
 import uuid
 from local_recovery_abuse import encoded, integer, sync_root, locked, save, RecoveryHeld
 from local_recovery_evidence import private_root, read_private, durable_create
-from local_cvi_witness import journal_locked, journal_save
+from local_cvi_witness import journal_locked, journal_save, assert_no_transition
 
 
 def digest(x):
@@ -29,6 +29,12 @@ def prepare(root,binding_digest,expires,now,limit=64):
 
 
 def load(root,store_id):
+    assert_no_transition(root)
+    return _load_locked(root,store_id)
+
+
+def _load_locked(root,store_id):
+    """Internal decoder only. The original transition gate owns any bypass."""
     if any((root/n).exists() or (root/n).is_symlink() for n in ('pending','ledger.next','checkpoint.next')):raise RecoveryHeld('cvi-unavailable')
     data=read_private(root/'ledger.json')
     if json.loads(read_private(root/'checkpoint.json'))!={'sha256':hashlib.sha256(data).hexdigest()}:raise RecoveryHeld('cvi-unavailable')

@@ -676,6 +676,24 @@
       "scope": "Disabled mandatory original private startup/renewal replay composition, actual native HTTP exchanges and bounded lossless journal compaction. Transition-wide authority gating and independent restore protection remain open.",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-transition-gate-primitive.md",
+      "focusedFoundationTests": 116,
+      "focusedFoundationFiles": 6,
+      "operationsTests": 559,
+      "newStructuralGateTests": 35,
+      "priorFullFoundationTests": 2447,
+      "priorFullFoundationCommit": "d60b8509d5d670fa6ed2e90713ef339b441a772b",
+      "foundationFullRerun": false,
+      "finishProofCrypto": "explicit fake verifier in structural gate tests; signed integration pending",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "authorityRequestCap": 128,
+      "twoTurnProbePassed": true,
+      "twoTurnAuthorityRequestRecords": 127,
+      "localMemoryChecks": 19
     }
   ]
 }

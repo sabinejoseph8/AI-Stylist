@@ -1,3 +1,15 @@
+## Local ownership-transition gate primitive, 16 October 2026
+
+Prepared an original context-owned replay/witness lock with a durable marker bound to the full native plan, replay scope, expected/target metadata and immutable replay records. Only that original live handle can inspect or finish. Copies, repeated finish, concurrent finish, cancellation, expiry, changed state and unknown proof results hold without refund or automatic repair. Ordinary replay reads/writes and witness bootstrap refuse a retained marker. Process loss releases the OS lock but preserves uncertainty.
+
+Review found that hashing only the journal would miss a restored-away marker. The configured witness now binds both journal and transition marker, advancing before marker creation/removal and clock writes. Interrupted splits remain held. Without that pin, or with coordinated privileged restoration, rollback protection is not established. A lost final sync can leave the marker absent while the original handle remains held; absence cannot reconstruct completion permission.
+
+Fresh verification passes 559 operations tests with ResourceWarning as error, including 35 new gate cases, and 116 foundation checks across six replay/witness suites. Native SQLite renewal and competing processes are actual; finish-proof cryptography is explicitly faked in these new structural tests. The previous full foundation result, 2,447 tests across 179 files at d60b850, predates this Python change and was not rerun. TypeScript/client files and SQL contracts are unchanged; the prior build/type and 556-check PostgreSQL results were not rerun for this primitive. Nineteen refreshed local Memory checks pass.
+
+A fresh complete two-turn/renewal probe passes and uses 127 request records in the fixed 128-row authority journal. Extra standalone finish reads would exhaust that budget. Next, prepare the gate's original finish nonce before the final signed inspection, preserve that exact fresh proof privately across adoption and verify it at finish within the held gate. Keep all existing before/after checks and deadlines; do not raise the cap, reset records or replace the complete exchange with a shorter test. The temporary probe instrumentation was restored after measurement.
+
+This is a lower-layer primitive, not mandatory startup/HTTP integration or protected publication. It still needs a supervised Node IPC port with a hard deadline, pinned signed complete-state finish verification, original consumed/adopted handoff binding and mandatory composition. An actual negative test shows an unfenced native writer can change state after verification; universal writer coverage remains required. Current backend clock checks do not terminate a stalled caller on their own. No phase or production criterion closes. Product/design scope, 5-of-41 completion and the $51 allocation are unchanged. No providers, real credentials, spending, hosted publication or permanent backup runtime changes.
+
 ## Mandatory private replay composition, 16 October 2026
 
 The disabled protected startup now requires the original private replay port and exact credential/native scope before privileged work. It claims one controller synchronously, retains the original successful permit across public cloning and binds its private claim after validation. It adopts only an original consumed renewal internally. Failure or End retires the private port and removes its protected HTTP identity. No plain-port or copied-handoff activation fallback is accepted. A shared source envelope keeps lifecycle contract tests on the real implementation; its disconnected test harness cannot register a protected HTTP owner.
@@ -1538,14 +1550,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: mandatory original private replay composition and bounded journal compaction are prepared. The full foundation regression passes 2,447 tests across 179 files; nineteen local Memory checks pass. All 524 operations tests, TypeScript/build and four encryption checks pass. No production criterion closes. See docs/local-tavus-mandatory-replay-composition.md.
+Current local focus: the context-owned replay/witness gate primitive and durable marker are prepared, with 559 operations tests and 116 focused foundation checks passing. Signed finish/adoption integration and mandatory publication ordering remain open. The prior 2,447-test full foundation result belongs to the earlier checkpoint. See docs/local-tavus-transition-gate-primitive.md.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** implement the transition-wide replay/authority gate and durable original-operation marker in docs/local-tavus-transition-gate-next.md. Universal fencing and independent rollback protection remain open.
+- **Next local action:** add supervised original Node gate IPC and signed full-state finish proof, then connect original startup/renewal adoption before protected publication. Universal fencing and independently protected restore floors remain open.
 
 ## Historical summary checkpoints
 

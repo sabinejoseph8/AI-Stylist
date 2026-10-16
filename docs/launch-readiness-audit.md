@@ -1,3 +1,7 @@
+## Local transition-gate primitive, 16 October 2026
+
+Fresh verification passes 559 operations tests and 116 focused foundation checks. Thirty-five new structural/process cases cover original handles, permanent markers, native SQLite renewal, concurrency and witness-bound restore evidence. Finish-proof crypto is faked in this layer; signed Node/adoption integration, hard process supervision and universal writer coverage remain open. The earlier full foundation result was not rerun. No production criterion closes and no spending/hosted change occurred. See docs/local-tavus-transition-gate-primitive.md.
+
 ## Mandatory replay composition, 16 October 2026
 
 Final verification passes 2,447 foundation tests across 179 files, 524 operations tests with ResourceWarning as error, TypeScript/build, four encryption checks and 19 local Memory checks. Protected startup/HTTP requires the original private handoff, adopts consumed renewals internally and retires on failure/End. Bounded lossless journal compaction fixes premature file exhaustion without removing evidence or increasing the existing row/file limits. Complete native HTTP exchanges pass through renewal. No SQL changed; the prior 556-check isolated PostgreSQL result was not rerun. Transition-wide authority gating, independent restore protection and live acceptance remain open. No criterion closes, completion stays 5 of 41 and allocation stays $51. See docs/local-tavus-mandatory-replay-composition.md.

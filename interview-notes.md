@@ -1,3 +1,9 @@
+## Keeping uncertain ownership changes visible after restart
+
+I added a local lock and durable marker around an ownership change. An old or copied handle cannot finish it, and a stopped process leaves evidence that blocks ordinary replay rather than silently reopening it.
+
+Review caught a restore gap: a witness that hashed only the journal could miss a removed marker. I included the marker in its hash and tested interrupted updates and one-sided restoration. I also kept the limits visible: these tests use fake finish-proof cryptography, and a writer that ignores the shared lock can still change native state after verification. Signed integration and coverage of every participating writer are still required.
+
 ## Requiring the original permission throughout the local conversation
 
 I made the original private replay handoff mandatory in protected startup and HTTP composition. Copies and plain ports cannot activate that path, and ending or failing the session retires its private permission. I kept lifecycle contract tests on the shared implementation and distinguished simulated contracts from the native integration.
