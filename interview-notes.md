@@ -1,3 +1,7 @@
+## Renewing ownership without reviving an old writer
+
+I added a local renewal transaction that requires the exact still-live lease, replaces its token and preserves its owner and generation. It keeps the eight-second bound and fixed native session cap. I tested wrong roles, stale tokens, concurrent plans, crashes and lost acknowledgments, so a failed response cannot revive the old token or replay the mutation. I also checked that an existing endpoint refuses the changed grant until an authenticated adoption step exists. This is local preparation, not a live conversation or completed hosted recovery.
+
 ## Separating waiting time from permission to keep working
 
 I separated the startup timeout from the initial writer lease without raising its eight-second maximum. A longer requested bound never overrides a shorter verified grant or the consultation's absolute end. I also reproduced a bug where an overdue reply could escape before its timer callback ran. I added clock checks around waits and before writes or delivery, preserved uncertain reservations, and fixed an early cancellation error exposed by the new checks. These are local results, not a live consultation or a promise about provider cleanup.

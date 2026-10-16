@@ -4,13 +4,13 @@ import type {WitnessServicePin,WitnessServiceRequest} from './local-cvi-witness-
 import {createPublicKey,verify} from 'node:crypto';
 import {historyCanonical} from './local-cvi-history-authority.ts';
 export type LeaseAuthorityRole='rotator'|'fencer'|'writer'|'signer';
-export type MandatoryLeaseIntent=Readonly<{id:string;version:1;kind:'activate'|'fence'|'apply'|'release';args:Record<string,unknown>;actor:Readonly<{principalDigest:string;role:LeaseAuthorityRole}>;now:number;from:Record<string,unknown>;to:Record<string,unknown>}>;
+export type MandatoryLeaseIntent=Readonly<{id:string;version:1;kind:'activate'|'renew'|'fence'|'apply'|'release';args:Record<string,unknown>;actor:Readonly<{principalDigest:string;role:LeaseAuthorityRole}>;now:number;from:Record<string,unknown>;to:Record<string,unknown>}>;
 export type AuthorityEvidence=Readonly<{request:Omit<WitnessServiceRequest,'action'>&{action:string};reply:unknown}>;
 export interface MonotonicLeaseAuthorityPort {advance(intent:MandatoryLeaseIntent,signal:AbortSignal):Promise<AuthorityEvidence>;claim(intent:MandatoryLeaseIntent,nonce:string,signal:AbortSignal):Promise<AuthorityEvidence>;read(nonce:string,signal:AbortSignal):Promise<AuthorityEvidence>;reconcile(intent:MandatoryLeaseIntent,signal:AbortSignal):Promise<AuthorityEvidence>}
 export interface MandatoryLeasePersistencePort {execute(intent:MandatoryLeaseIntent,approval:AuthorityEvidence,authorize:(message:unknown)=>Promise<unknown>,signal:AbortSignal):Promise<unknown>}
 const exact=(x:unknown,keys:string[]):x is Record<string,unknown>=>!!x&&typeof x==='object'&&!Array.isArray(x)&&Object.keys(x).sort().join(',')===[...keys].sort().join(',');
 const digest=(x:unknown):x is string=>typeof x==='string'&&/^[a-f0-9]{64}$/.test(x);
-const roles={activate:'rotator',fence:'fencer',apply:'writer',release:'signer'};
+const roles={activate:'rotator',renew:'rotator',fence:'fencer',apply:'writer',release:'signer'};
 function freeze<T>(v:T):T{if(v&&typeof v==='object'){for(const x of Object.values(v))freeze(x);Object.freeze(v);}return v;}
 export function createLocalMandatoryLeaseAdapter(pin:WitnessServicePin,actor:Readonly<{principalDigest:string;role:LeaseAuthorityRole}>,authority:MonotonicLeaseAuthorityPort,persistence:MandatoryLeasePersistencePort,clock=Date.now,deadlineMs=8000){
  if(!exact(pin,['authorityId','witnessId','storeId','policyDigest','keyId','publicKeyPem'])||!digest(pin.policyDigest)||createPublicKey(pin.publicKeyPem).asymmetricKeyType!=='ed25519'||!digest(actor.principalDigest)||!Object.values(roles).includes(actor.role)||!authority||!persistence||!['advance','claim','read','reconcile'].every(k=>typeof (authority as any)[k]==='function')||typeof persistence.execute!=='function'||!Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>30000)throw Error('Mandatory persistence configuration unavailable');

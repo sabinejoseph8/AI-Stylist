@@ -589,6 +589,17 @@
       "scope": "Disabled initial writer/RPC separation and absolute per-request deadline enforcement; no renewal or longer consultation activation",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-native-renewal.md",
+      "foundationTests": 2334,
+      "foundationFiles": 170,
+      "operationsTests": 489,
+      "isolatedPostgresChecks": 556,
+      "scope": "Disabled authenticated SQLite native renewal; PostgreSQL renewal and composed-owner adoption remain unsupported",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

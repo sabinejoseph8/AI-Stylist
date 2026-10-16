@@ -54,6 +54,32 @@ def activate(root,actor,previous,owner,boot,now,ttl=1000):
         return dict(storeId=g['storeId'],policyDigest=g['policyDigest'],generation=generation,ownerDigest=owner,bootDigest=boot,token=token,issuedAt=now,expiresAt=expires)
 
 
+def renew(root,actor,lease,ttl,clock):
+    """Local same-owner renewal. Old token is required and replaced atomically.
+
+    The native domain expiry is the fixed cap, not a caller-selected extension.
+    A lost result is not recoverable as a new writer capability by this API.
+    """
+    if not actor_ok(actor,'rotator') or not isinstance(lease,dict) or not integer(ttl) or not 1<=ttl<=8000:raise RecoveryHeld('lease-unavailable')
+    with transactions.connection(root) as db:
+        now=clock();g=assert_writer(db,lease,lease.get('ownerDigest'),now)
+        snapshot=json.loads(db.execute('SELECT payload FROM history WHERE id=1').fetchone()[0]);cap=snapshot['expiresAt']
+        if not integer(cap):raise RecoveryHeld('lease-unavailable')
+        expires=min(now+ttl,cap)
+        if not integer(expires) or expires<=lease['expiresAt']:raise RecoveryHeld('lease-unavailable')
+        token=secrets.token_hex(32)
+        if not hex64(token) or token==lease['token']:raise RecoveryHeld('lease-unavailable')
+        finished=clock()
+        if not integer(finished) or finished<now:raise RecoveryHeld('lease-unavailable')
+        assert_writer(db,lease,lease['ownerDigest'],finished)
+        if finished>=expires or finished>=cap:raise RecoveryHeld('lease-unavailable')
+        db.execute('UPDATE writer_grants SET token_hash=?,issued=?,expires=? WHERE generation=?',(hashlib.sha256(token.encode()).hexdigest(),now,expires,g['generation']))
+        db.execute('UPDATE writer_gate SET observed=? WHERE id=1',(finished,))
+        result=dict(lease,token=token,issuedAt=now,expiresAt=expires)
+        assert_writer(db,result,result['ownerDigest'],finished);db.commit()
+        return result
+
+
 def fence(root,actor,generation,now):
     if not actor_ok(actor,'fencer') or not integer(generation):raise RecoveryHeld('lease-unavailable')
     with transactions.connection(root) as db:

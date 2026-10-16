@@ -16,7 +16,7 @@ from local_cvi_receipts import canonical,digest
 from local_cvi_receipt_witness import metadata
 from local_recovery_abuse import integer,RecoveryHeld
 
-ROLES={'activate':'rotator','fence':'fencer','apply':'writer','release':'signer'}
+ROLES={'activate':'rotator','renew':'rotator','fence':'fencer','apply':'writer','release':'signer'}
 
 
 def control_metadata(db,now):
@@ -28,9 +28,10 @@ def control_metadata(db,now):
 
 
 def validate_command(kind,args):
-    fields={'activate':{'previous','owner','boot','ttl','token'},'fence':{'generation'},'apply':{'intent','lease'},'release':{'barrier','expectedDomain','record'}}
+    fields={'activate':{'previous','owner','boot','ttl','token'},'renew':{'lease','ttl','token'},'fence':{'generation'},'apply':{'intent','lease'},'release':{'barrier','expectedDomain','record'}}
     if kind not in fields or not isinstance(args,dict) or set(args)!=fields[kind]:raise RecoveryHeld('mandatory-adapter-unavailable')
     if kind=='activate' and (not integer(args['previous']) or not integer(args['ttl']) or not all(leases.hex64(args[k]) for k in ('owner','boot','token'))):raise RecoveryHeld('mandatory-adapter-unavailable')
+    if kind=='renew' and (not isinstance(args['lease'],dict) or not integer(args['ttl']) or not 1<=args['ttl']<=8000 or not leases.hex64(args['token'])):raise RecoveryHeld('mandatory-adapter-unavailable')
     if kind=='fence' and not integer(args['generation']):raise RecoveryHeld('mandatory-adapter-unavailable')
 
 
@@ -53,6 +54,9 @@ def mutation(root,config,actor,kind,args):
         # between preview and COMMIT. Existing stored-hash checks still apply.
         with patch.object(leases.secrets,'token_hex',lambda n:args['token'] if n==32 else (_ for _ in ()).throw(ValueError())):
             return leases.activate(root,actor,args['previous'],args['owner'],args['boot'],now,args['ttl'])
+    if kind=='renew':
+        with patch.object(leases.secrets,'token_hex',lambda n:args['token'] if n==32 else (_ for _ in ()).throw(ValueError())):
+            return leases.renew(root,actor,args['lease'],args['ttl'],lambda:now)
     if kind=='fence':return leases.fence(root,actor,args['generation'],now)
     if kind=='apply':return leases.apply(root,config,args['intent'],args['lease'],lambda:now)
     return release_admission(root,actor,args,now)
