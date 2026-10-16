@@ -41,3 +41,7 @@ The typed authoritative view, captured-request port and explicit App injection a
 ## Repeat the local checks
 
 In apps/foundation, run TypeScript checking and the normal client build. The browser test is explicitly opt-in: set AI_STYLIST_LOCAL_BROWSER_REHEARSAL=1 and WEBKIT_EXECUTABLE to an installed compatible WebKit engine, then run Vitest for tests/coordinated-notebook-browser.test.ts. The automation package must be available through the selected Node runtime. The test opens its own temporary loopback host, generates its own disposable stores and closes them afterward. It receives no customer account or provider credential. Without opt-in, the ordinary full suite skips this browser-only case; record the separate executed browser result honestly.
+
+## Reference increment pending integration verification
+
+The separate reference stage passes 12 synthetic reference checks plus the existing 19 view checks. It waits for the current original full regression to finish before running its generated-photo WebKit extension and actual paired-coordinator case. It is not merged or claimed as accepted UI. See DEVELOPMENT_PROGRESS.md for the exact patch, hashes and continuation. Candidate and item-feedback work must track the complete native/input/note version tuple; ordinary session-note revision alone is insufficient when an item-specific utterance changes input without changing notes.
