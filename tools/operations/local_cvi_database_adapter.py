@@ -21,7 +21,7 @@ class DatabaseHeld(Exception):
 class DatabaseTransactionAdapter:
     def __init__(self, principal, role, database, authority, clock):
         if (not isinstance(principal,str) or not re.fullmatch(r'[a-z][a-z0-9_]{0,62}',principal)
-            or role not in ('activate','fence','apply','release')
+            or role not in ('activate','renew','fence','apply','release')
             or not callable(getattr(database,'begin',None))
             or not all(callable(getattr(authority,k,None)) for k in ('admit','confirm'))
             or not callable(clock)):

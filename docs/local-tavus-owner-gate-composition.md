@@ -23,7 +23,7 @@ The producer must enter the gate before authority advancement, retain its origin
 
 ## Renewal prerequisite
 
-The signed database bridge and separate PostgreSQL permission contract currently refuse native renewal. Implement and test renewal in the isolated local SQL contract before claiming a complete gated renewal path. Restrict it to the rotator and full-state execution path; keep direct reduced writes revoked. Verify same owner/generation/boot, a new token hash, advancing expiry, unchanged domain content and the exact original connection/claim. Do not silently reuse the old lease or weaken the target to its reduced projection.
+Local renewal is now prepared and passes 638 isolated PostgreSQL checks, including the continuous six-step sequence. Its original gate-to-PostgreSQL-to-owner composition is still incomplete. Preserve the tested renewal restrictions when wiring that producer. Restrict it to the rotator and full-state execution path; keep direct reduced writes revoked. Verify same owner/generation/boot, a new token hash, advancing expiry, unchanged domain content and the exact original connection/claim. Do not silently reuse the old lease or weaken the target to its reduced projection.
 
 Use the existing reproducible local harness in `tools/operations/rehearse-cvi-transactions.py`, with its opt-in synthetic flags, pinned cached PostgreSQL image, `--pull=never`, `--network none`, temporary storage and cleanup. Do not touch hosted credentials, production containers or backup runtime/schedules. Current PostgreSQL evidence remains historical until an actual new run succeeds.
 

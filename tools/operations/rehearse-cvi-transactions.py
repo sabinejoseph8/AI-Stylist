@@ -1,4 +1,5 @@
 """Opt-in disposable PostgreSQL permission/transaction contract. Offline only."""
+import copy
 import argparse
 import json
 import os
@@ -257,6 +258,8 @@ def main():
         try:execute(command('activate',fenced,{**next_state,'boot':'5'*64}),'fixture_rotator');raise RuntimeError('unexpected stale write')
         except DatabaseHeld:checks+=1
         require(current()==next_state)
+        stage='renewal-before-full-refused'
+        denied("SET ROLE cvi_tx_verifier; SELECT cvi_tx_fixture.admit('"+str(uuid.uuid4())+"',repeat('9',64),'fixture_rotator','renew','123'::xid8,"+state(next_state)+','+state(next_state)+",NULL,clock_timestamp()+interval '7 seconds');",'fixture_verifier','55000')
         stage='metadata'
         require(good("SELECT count(*)=7 AND bool_and(NOT rolcanlogin AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolreplication) FROM pg_roles WHERE rolname LIKE 'cvi_tx_%';")=='t')
         require(good("SELECT count(*)=4 AND bool_and(relrowsecurity AND relforcerowsecurity) FROM pg_class WHERE relnamespace='cvi_tx_fixture'::regnamespace AND relkind='r';")=='t')
@@ -282,8 +285,8 @@ def main():
                     result=self.worker.call('confirm',binding=b,claimHash=claim)
                     if self.mode=='uncommitted':self.worker.call('finalize')
                     return result
-            for mode in ['normal','uncommitted','tampered-grant','missing-full','lost-commit','lost-reconcile','commit','claim','fence','release']:
-                stage='full-'+mode;typed=mode in ['commit','claim','fence','release'];w=BridgeWorker(True,mode if typed else 'activate');w.call('mode',mode='normal' if typed else mode)
+            for mode in ['normal','uncommitted','tampered-grant','missing-full','lost-commit','lost-reconcile','commit','claim','fence','release','renew']:
+                stage='full-'+mode;typed=mode in ['commit','claim','fence','release','renew'];w=BridgeWorker(True,mode if typed else 'activate');w.call('mode',mode='normal' if typed else mode)
                 good('TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(w.command['previous'])+'; INSERT INTO cvi_tx_fixture.full_states VALUES(true,'+state(w.prepared['states']['previous'])+',NULL);')
                 s=Session(w.prepared['principal']);w.active=s
                 def apply_full(op,claim):
@@ -311,11 +314,53 @@ def main():
                 try:wrapper.execute(w.command);raise RuntimeError('unexpected full retry')
                 except DatabaseHeld:checks+=1
                 w.close()
+        if options.full_state_reconciliation or options.continuous_full_state:
+            stage='renewal-shapes';w=BridgeWorker(True,'renew');old=w.prepared['states']['previous'];target=w.prepared['states']['target']
+            require(good('SET ROLE cvi_tx_owner; SELECT cvi_tx_fixture.valid_renewal('+state(old)+','+state(target)+');')=='t')
+            for label in ['owner','boot','generation','token','expiry','cap','issued','late','domain','receipt','retired','extra','null','boolean','fraction']:
+                changed=copy.deepcopy(target)
+                if label=='owner':changed['grants'][0][1]='f'*64
+                if label=='boot':changed['grants'][0][2]='f'*64
+                if label=='generation':changed['grants'][0][0]+=1
+                if label=='token':changed['grants'][0][3]=old['grants'][0][3]
+                if label=='expiry':changed['grants'][0][5]=old['grants'][0][5]
+                if label=='cap':changed['grants'][0][5]=10001
+                if label=='issued':changed['grants'][0][4]=999
+                if label=='late':changed['gate'][0][4]=old['grants'][0][5]
+                if label=='domain':changed['history'][0][1]='f'*64
+                if label=='receipt':changed['receipts'].append(['f'*64]*6)
+                if label=='retired':changed['grants'].append([2,'f'*64,'e'*64,'d'*64,1000,2000,'retired'])
+                if label=='extra':changed['resume']=True
+                if label=='null':changed['grants'][0][4]=None
+                if label=='boolean':changed['grants'][0][5]=True
+                if label=='fraction':changed['grants'][0][4]=1000.5
+                require(good('SET ROLE cvi_tx_owner; SELECT cvi_tx_fixture.valid_renewal('+state(old)+','+state(changed)+');')=='f')
+            small_old=copy.deepcopy(old);small_target=copy.deepcopy(target)
+            for snapshot in (small_old,small_target):
+                domain=json.loads(snapshot['history'][0][0]);domain['expiresAt']=5000;snapshot['history'][0][0]=json.dumps(domain)
+            small_target['grants'][0][5]=6000
+            require(good('SET ROLE cvi_tx_owner; SELECT cvi_tx_fixture.valid_renewal('+state(small_old)+','+state(small_target)+');')=='f')
+            require(good('SET ROLE cvi_tx_owner; SELECT cvi_tx_fixture.valid_renewal(NULL,'+state(target)+');')=='f')
+            for actor in ['fixture_writer','fixture_rotator','fixture_fencer','fixture_signer','fixture_observer','fixture_verifier','anon','authenticated','service_role']:
+                denied(('SET ROLE cvi_tx_'+actor.removeprefix('fixture_')+'; ' if actor.startswith('fixture_') else '')+'SELECT cvi_tx_fixture.valid_renewal('+state(old)+','+state(target)+');',actor)
+            # Invalid full renewal targets cannot enter the durable admission table.
+            good('TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(w.command['previous'])+'; INSERT INTO cvi_tx_fixture.full_states VALUES(true,'+state(old)+',NULL);')
+            for label in ['owner','token','domain']:
+                op=uuid.uuid4();claim=uuid.uuid4().hex*2;changed=copy.deepcopy(target);negative_session=Session('fixture_rotator')
+                if label=='owner':changed['grants'][0][1]='f'*64
+                if label=='token':changed['grants'][0][3]=old['grants'][0][3]
+                if label=='domain':changed['history'][0][1]='f'*64
+                good('SELECT cvi_tx_fixture.admit('+','.join([literal(op),literal(claim),"'fixture_rotator'","'renew'",literal(negative_session.xid)+'::xid8',state(w.command['previous']),state(w.command['target']),'NULL',"clock_timestamp()+interval '7 seconds'"])+');','fixture_verifier')
+                denied('SET ROLE cvi_tx_verifier; SELECT cvi_tx_fixture.admit_full('+literal(op)+','+state(old)+','+state(changed)+');','fixture_verifier','55000')
+                require(good('SELECT count(*) FROM cvi_tx_fixture.full_admissions WHERE operation_id='+literal(op)+';')=='0');negative_session.rollback();negative_session.close()
+            for actor in ['fixture_writer','fixture_fencer','fixture_signer','fixture_observer']:
+                denied('SET ROLE cvi_tx_verifier; SELECT cvi_tx_fixture.admit('+','.join([literal(uuid.uuid4()),literal(uuid.uuid4().hex*2),literal(actor),"'renew'","'123'::xid8",state(w.command['previous']),state(w.command['target']),'NULL',"clock_timestamp()+interval '7 seconds'"])+');','fixture_verifier','55000')
+            w.close()
         if options.continuous_full_state:
             stage='continuous-start';w=BridgeWorker(True,'sequence')
             good('TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(w.command['previous'])+'; INSERT INTO cvi_tx_fixture.full_states VALUES(true,'+state(w.prepared['states']['previous'])+',NULL);')
             saved=None
-            for n in range(5):
+            for n in range(6):
                 stage='continuous-step-'+str(n)
                 if n:
                     w.call('next',index=n);w.prepared=w.call('prepare');w.command=w.prepared['command']
@@ -326,7 +371,7 @@ def main():
                 def apply_continuous(op,claim):
                     result=json.loads(s.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');'));result['operationId']=uuid.UUID(result['operationId']).hex
                     # A competing connection cannot use the original admission.
-                    if n==1:
+                    if n in (1,2):
                         other=Session(w.prepared['principal'])
                         try:other.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');');raise RuntimeError('unexpected competing writer')
                         except DatabaseHeld:pass

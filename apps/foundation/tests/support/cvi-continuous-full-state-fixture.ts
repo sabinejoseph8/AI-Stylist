@@ -10,7 +10,8 @@ export async function continuousFullStateFixture(){
  const capture=async(p:any)=>{const states=await mandatoryCall({root:reference.root,config:reference.config,mode:'plan-full',actor:p.actor,kind:p.kind,args:p.args});references.push(states);return states;};
  const run=async(p:any)=>reference.adapter(p.actor.role).execute(p,new AbortController().signal) as Promise<any>;
  try{
-  const activate=await reference.activation();await capture(activate);const lease=await run(activate);
+  const activate=await reference.activation();await capture(activate);let lease=await run(activate);
+  const renew=await reference.plan('renew',{lease,ttl:8000,token:'d'.repeat(64)});await capture(renew);lease=await run(renew);
   const commit=await reference.commitPlan(lease);await capture(commit);await run(commit);
   const claim=await reference.claimPlan(lease);await capture(claim);const originalRecord=await run(claim);
   const fence=await reference.fencing(lease.generation);await capture(fence);const barrier=await run(fence);
@@ -23,7 +24,7 @@ export async function continuousFullStateFixture(){
   const states=structuredClone(references[next]),plan=states.intent,current=await x.inspect();
   if(current.pending!==null||historyCanonical(current.current)!==historyCanonical(plan.from))throw Error('Continuous baseline unavailable');
   x.registerReferencePlan(plan);const port=x.authorityPort(plan.actor.role),approval=await port.advance(plan);
-  const principal='fixture_'+plan.actor.role,command={operationId:plan.id.slice(0,32),kind:plan.kind,previous:fullStateProjection(states.previous),target:fullStateProjection(states.target),recordHash:plan.kind==='release'?witnessServiceDigest(plan.args.record):null,expiresAt:3000};
+  const principal='fixture_'+plan.actor.role,command={operationId:plan.id.slice(0,32),kind:plan.kind,previous:fullStateProjection(states.previous),target:fullStateProjection(states.target),recordHash:plan.kind==='release'?witnessServiceDigest(plan.args.record):null,expiresAt:plan.kind==='renew'?1800:3000};
   index=next;
   const makeBridge=(source:any)=>createLocalSignedDatabaseBridge(x.pin,identityPin,principal,plan,approval,command,port,source,()=>1000,30000);
   const finalizer=(hash:string,tx:string,observe:()=>Promise<any>)=>{

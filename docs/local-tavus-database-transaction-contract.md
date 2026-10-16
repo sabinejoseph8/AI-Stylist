@@ -1,3 +1,7 @@
+## Local renewal follow-up, 16 October 2026
+
+Renewal is now prepared in the signed bridge and restricted full-state SQL path. The isolated PostgreSQL rehearsal passes 638 checks and preserves one history through six transitions, including renewal. Nineteen earlier direct gate cases are now twenty with the real SQLite renewal check. Final full run 16796 is pending; actual gate/PostgreSQL/owner composition and hosted acceptance remain open. See local-tavus-postgres-renewal.md. Earlier five-transition, unsupported-renewal and test-count descriptions below are historical.
+
 # Local database permissions and transaction adapter contract
 
 Sabine approved local preparation and tests on 16 October 2026, with no new spending or hosted changes. The SQL is an opt-in disposable PostgreSQL contract, not a migration for Supabase. It uses made-up identities and data, a cached PostgreSQL 17 image, no published ports, no network, bounded resources and temporary storage. The rehearsal removes its container on exit.

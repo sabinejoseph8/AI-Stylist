@@ -90,4 +90,19 @@ class AdapterTests(unittest.TestCase):
     def test_port_capture(self):
         a=self.adapter();self.authority.admit=None;self.db.begin=None;self.assertEqual(a.execute(self.p)['status'],'applied')
 
+    def test_renewal_keeps_transaction_binding_and_commit_close(self):
+        self.p['kind']='renew';self.p['target']=deepcopy(self.p['previous']);self.identity['principal']='fixture_rotator'
+        adapter=DatabaseTransactionAdapter('fixture_rotator','renew',self.db,self.authority,lambda:self.now)
+        self.assertEqual(adapter.execute(self.p)['transactionId'],'40')
+        self.assertEqual(self.calls,['admit','apply','commit','close'])
+        with self.assertRaises(DatabaseHeld):adapter.execute(self.p)
+    def test_renewal_cannot_use_the_apply_contract(self):
+        self.p['kind']='renew';self.refused();self.assertEqual(self.calls,[])
+    def test_renewal_unknown_commit_is_not_retried(self):
+        self.p['kind']='renew';self.identity['principal']='fixture_rotator'
+        def commit():self.calls.append('unknown-commit');raise ValueError()
+        self.tx.commit=commit
+        adapter=DatabaseTransactionAdapter('fixture_rotator','renew',self.db,self.authority,lambda:self.now)
+        self.refused(adapter);self.assertEqual(self.calls.count('unknown-commit'),1)
+
 if __name__=='__main__':unittest.main()

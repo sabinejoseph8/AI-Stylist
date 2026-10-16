@@ -59,3 +59,7 @@ it('a second binding holds rather than replacing a committed transaction',async(
 it('canceling the original gate during confirmation prevents database commit',async()=>{const x=await deferredGateFixture();let p:LocalTransitionGate|undefined;try{
  const c=new AbortController();p=await beginLocalTransitionGate(x.setup,c.signal,x.clock);await expect(x.execute(p,{beforeBind:()=>c.abort()})).rejects.toThrow();expect(localTransitionIsHeld(p)).toBe(true);expect((await x.x.inspect()).pending).toBe(x.plan.id);await expect(x.observe()).rejects.toThrow();
  }finally{if(p)await closeLocalTransitionGate(p);await x.close();}},30000);
+
+it('the same original gate carries a same-owner renewal through commit and signed finish',async()=>{const x=await deferredGateFixture('renew');let p:LocalTransitionGate|undefined;try{
+ p=await beginLocalTransitionGate(x.setup,signal(),x.clock);expect((await x.x.inspect()).revision).toBe(2);const seen=await x.execute(p),binding=localTransitionFinishBinding(p);expect(binding.plan.kind).toBe('renew');expect(seen.snapshot.grants[0][0]).toBe(x.previousLease.generation);expect(seen.snapshot.grants[0][1]).toBe(x.previousLease.ownerDigest);expect(seen.snapshot.grants[0][5]).toBeGreaterThan(x.previousLease.expiresAt);const r=await x.inspector(p).inspectOwner(x.owner,signal());await finishLocalTransitionGate(p,r,signal());expect((await x.x.inspect()).revision).toBe(4);await expect(access(x.root+'/owner-transition.json')).rejects.toThrow();
+ }finally{if(p)await closeLocalTransitionGate(p);await x.close();}},30000);

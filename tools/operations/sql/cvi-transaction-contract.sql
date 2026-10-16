@@ -15,7 +15,7 @@ ALTER DEFAULT PRIVILEGES IN SCHEMA cvi_tx_fixture REVOKE EXECUTE ON FUNCTIONS FR
 CREATE TABLE cvi_tx_fixture.state(id boolean PRIMARY KEY CHECK(id), payload jsonb NOT NULL);
 CREATE TABLE cvi_tx_fixture.admissions(
  operation_id uuid PRIMARY KEY, claim_hash text UNIQUE NOT NULL CHECK(claim_hash ~ '^[a-f0-9]{64}$'),
- principal name NOT NULL, kind text NOT NULL CHECK(kind IN ('activate','fence','apply','release')),
+ principal name NOT NULL, kind text NOT NULL CHECK(kind IN ('activate','renew','fence','apply','release')),
  transaction_id xid8 NOT NULL UNIQUE, previous jsonb NOT NULL, target jsonb NOT NULL,
  record_hash text, deadline timestamptz NOT NULL, consumed boolean NOT NULL DEFAULT false);
 CREATE TABLE cvi_tx_fixture.executions(operation_id uuid PRIMARY KEY REFERENCES cvi_tx_fixture.admissions, transaction_id xid8 NOT NULL UNIQUE);
@@ -46,7 +46,7 @@ RETURNS void LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,cvi_tx
 DECLARE expected_role text; memberships integer;
 BEGIN
  IF NOT pg_has_role(session_user,'cvi_tx_verifier','MEMBER') THEN RAISE EXCEPTION 'transaction held' USING ERRCODE='42501'; END IF;
- expected_role:=CASE kind WHEN 'activate' THEN 'cvi_tx_rotator' WHEN 'fence' THEN 'cvi_tx_fencer' WHEN 'apply' THEN 'cvi_tx_writer' WHEN 'release' THEN 'cvi_tx_signer' END;
+ expected_role:=CASE kind WHEN 'activate' THEN 'cvi_tx_rotator' WHEN 'renew' THEN 'cvi_tx_rotator' WHEN 'fence' THEN 'cvi_tx_fencer' WHEN 'apply' THEN 'cvi_tx_writer' WHEN 'release' THEN 'cvi_tx_signer' END;
  SELECT count(*) INTO memberships FROM pg_roles WHERE rolname IN ('cvi_tx_rotator','cvi_tx_fencer','cvi_tx_writer','cvi_tx_signer','cvi_tx_verifier','cvi_tx_observer') AND pg_has_role(actor,oid,'MEMBER');
  IF expected_role IS NULL OR NOT pg_has_role(actor,expected_role,'MEMBER') OR memberships<>1
   OR NOT EXISTS(SELECT 1 FROM pg_roles WHERE rolname=actor AND rolcanlogin AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolreplication)
@@ -56,6 +56,7 @@ BEGIN
  THEN RAISE EXCEPTION 'transaction held' USING ERRCODE='55000'; END IF;
  IF NOT (CASE kind
  WHEN 'activate' THEN (target->>'generation')::bigint=(previous->>'generation')::bigint+1 AND target->>'fenced'='false' AND target->'head'=previous->'head' AND target->'boot'<>previous->'boot'
+ WHEN 'renew' THEN previous->>'fenced'='false' AND target=previous AND to_regclass('cvi_tx_fixture.full_states') IS NOT NULL AND NOT has_function_privilege('cvi_tx_rotator','cvi_tx_fixture.execute_admitted(uuid,text)','EXECUTE')
  WHEN 'fence' THEN previous->>'fenced'='false' AND target=previous||'{"fenced":true}'::jsonb
  WHEN 'apply' THEN previous->>'fenced'='false' AND (target->'head'<>previous->'head' OR (to_regclass('cvi_tx_fixture.full_states') IS NOT NULL AND NOT has_function_privilege('cvi_tx_writer','cvi_tx_fixture.execute_admitted(uuid,text)','EXECUTE'))) AND target-'head'=previous-'head'
  WHEN 'release' THEN previous->>'fenced'='true' AND target=previous
@@ -67,7 +68,7 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,cvi_tx_fixture AS $
 DECLARE a cvi_tx_fixture.admissions%ROWTYPE; current_state jsonb; expected_role text;
 BEGIN
  SELECT * INTO a FROM cvi_tx_fixture.admissions WHERE operation_id=op FOR UPDATE;
- expected_role:=CASE a.kind WHEN 'activate' THEN 'cvi_tx_rotator' WHEN 'fence' THEN 'cvi_tx_fencer' WHEN 'apply' THEN 'cvi_tx_writer' WHEN 'release' THEN 'cvi_tx_signer' END;
+ expected_role:=CASE a.kind WHEN 'activate' THEN 'cvi_tx_rotator' WHEN 'renew' THEN 'cvi_tx_rotator' WHEN 'fence' THEN 'cvi_tx_fencer' WHEN 'apply' THEN 'cvi_tx_writer' WHEN 'release' THEN 'cvi_tx_signer' END;
  IF NOT FOUND OR a.consumed OR a.claim_hash IS DISTINCT FROM claim OR a.principal<>session_user
   OR a.transaction_id<>pg_current_xact_id() OR clock_timestamp()>=a.deadline
   OR NOT pg_has_role(session_user,expected_role,'MEMBER') THEN RAISE EXCEPTION 'transaction held' USING ERRCODE='55000'; END IF;

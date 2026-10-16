@@ -771,6 +771,26 @@
       "localMemoryChecks": 19,
       "foundationTests": 2504,
       "foundationFiles": 182
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-postgres-renewal.md",
+      "focusedFoundationTests": 39,
+      "focusedFoundationFiles": 3,
+      "newSignedRenewalTests": 13,
+      "deferredGateTests": 20,
+      "operationsTests": 567,
+      "isolatedPostgresChecks": 638,
+      "isolatedPostgresRerun": true,
+      "postgresContinuousTransitions": 6,
+      "foundationFullStatus": "running",
+      "foundationFullSession": 16796,
+      "priorFullFoundationTests": 2504,
+      "priorFullFoundationFiles": 182,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "scope": "Disconnected local PostgreSQL renewal with actual roles/xids, full-state restrictions and a six-transition preserved history; separate original-gate SQLite renewal. Mandatory gate/PostgreSQL/owner handoff composition remains open.",
+      "localMemoryChecks": 19
     }
   ]
 }

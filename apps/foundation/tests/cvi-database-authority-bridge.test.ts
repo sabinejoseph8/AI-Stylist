@@ -19,7 +19,7 @@ it('confirmation is one-use and accepts only the original claim hash',async()=>{
 
 it('undefined properties cannot disappear from canonical binding checks',async()=>{const f=await databaseBridgeFixture();try{const b:any=f.binding();b.intent.extra=undefined;await expect(f.make().admit(b,signal())).rejects.toThrow();expect((await f.x.inspect()).requests).toHaveLength(1);}finally{await f.close();}},30000);
 it('command expiry is checked again after a valid execution claim',async()=>{const f=await databaseBridgeFixture();try{f.patchProof({expiresAt:3500});const claim=f.port.claim;f.port.claim=async(...a)=>{const e=await claim(...a);f.setTime(3000);return e;};await expect(f.make().admit(f.binding(),signal())).rejects.toThrow();}finally{await f.close();}},30000);
-it('unsupported native renewal refuses PostgreSQL composition before claiming',async()=>{
+it('malformed native renewal refuses PostgreSQL composition before claiming',async()=>{
  const f=await databaseBridgeFixture();try{
   const {witnessServiceDigest}=await import('../src/server/local-cvi-witness-service.ts');
   const {id,...body}=f.plan,changed={...body,kind:'renew' as const},plan={...changed,id:witnessServiceDigest(changed)},before=await f.x.inspect();

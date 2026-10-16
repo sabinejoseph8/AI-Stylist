@@ -1,3 +1,7 @@
+## Local PostgreSQL renewal follow-up, 16 October 2026
+
+The isolated network-disabled PostgreSQL rehearsal passes 638 checks, including restricted renewal, original transaction binding and six continuous transitions. The latest focused run passes 39 checks, operations pass 567 tests, and TypeScript/build plus four encryption checks pass. Full foundation run 16796 is pending. Two stopped SQL runs exposed test-role/unique-ID setup errors and are not counted as passed. Actual gate/PostgreSQL/owner composition, independent hosting and live acceptance remain open; no production criterion closes. See docs/local-tavus-postgres-renewal.md.
+
 ## Deferred original gate follow-up, 16 October 2026
 
 Nineteen migrated/expanded gate cases and 22 continuation checks pass. Gate entry precedes advancement and actual SQLite commit/close; original admission binding is mandatory for this Node port and raw pre-entry commit data refuses. Async finish is awaited before accepting renewed state. Final full regression passes 2,504 tests across 182 files, with 564 operations tests, TypeScript/build, four encryption checks and 19 local Memory checks passing. The earlier 107-check integrated run predates final gate/async-hook refinements. SQLite correlation rows/protected flags do not establish hosted SQL identity/grants. No production criterion closes. See docs/local-tavus-deferred-transaction-gate.md.

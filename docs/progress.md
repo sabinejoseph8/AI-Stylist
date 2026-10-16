@@ -1,3 +1,13 @@
+## Local PostgreSQL renewal in progress, 16 October 2026
+
+Prepared native renewal in the disconnected signed bridge, database adapter and isolated PostgreSQL contract. Only the rotator may admit it, and only the full-state execution path may apply it. SQL checks unchanged owner/generation/boot and domain/receipt history, a new token hash, advancing expiry within the native cap and eight-second limit, valid clocks, and matching full/reduced projections. Direct reduced execution stays revoked. Original transaction/claim binding, confirmation, COMMIT/close and full-state reconciliation remain required. This supersedes earlier descriptions of renewal as unsupported in the local contract; hosted renewal is not activated.
+
+The continuous rehearsal now keeps one history through activation, renewal, domain commit, receipt claim, fencing and release. It preserves every prior record and tests competing connections plus restored checkpoints. The isolated PostgreSQL run passes 638 checks with networking disabled and actual connection-derived xids. Two earlier runs stopped on test-setup errors: missing explicit test-role selection and a reused negative-case xid. Both were fixed without weakening role/uniqueness constraints; neither stopped run is counted as passed. The three latest foundation suites pass 39 checks, including 13 new signed renewal cases, six continuous cases and 20 gate cases, with a real gated SQLite renewal. An earlier 38-check renewal/legacy-bridge run also passed. All 567 operations tests pass with ResourceWarning as error, including three new adapter cases; TypeScript/build and four encryption checks pass.
+
+Full foundation regression session 16796 is live, log /private/tmp/ai-stylist-postgres-renewal-regression.log. Source is frozen; collect that same handle before claiming full totals. The previous full result, 2,504 tests across 182 files at cc34205, predates these renewal changes. PostgreSQL permission/transaction evidence and the separate gated SQLite path are distinct. The SQL targets still come from a trusted full-state verifier; this is not native SQL enforcement of every domain rule or proof of independently hosted administration. Synthetic clocks do not establish production timing.
+
+Next is the paired original gated execution/admission/replay producer and mandatory owner composition. Preserve the actual committed/reconciled receipt and original final signed inspection through startup and consumed-renewal handoffs, inspect under the held gate, and await verified finish before protected publication. Witness-pin composition, independent restore floors, universal writer coverage and live provider/device acceptance remain open. Scope, 5-of-41 completion, 0-of-21 production acceptance and the $51 allocation are unchanged. No providers, real credentials, spending, hosted publication, support messages or permanent backup runtime changes.
+
 ## Deferred original transaction binding, 16 October 2026
 
 The Node gate no longer accepts a pre-entry commit record. It captures only native plan, pins, principal, owner and replay scope, opens its original lock before authority advancement, and binds once from the original confirmed signed-bridge admission. Copied admissions, plain transaction fields, preallocated commit configuration and duplicate binding refuse. The backend acknowledges the exact bound record; finish requires the same original prepared signed inspection and clean process exit after lock release. No additional authority read round is introduced.
@@ -1590,14 +1600,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: deferred original admission binding and real local commit sequence are prepared; 19 gate and 22 continuation checks pass. Full regression passes 2,504 tests across 182 files; 564 operations tests and 19 local Memory checks also pass. Mandatory original committed-receipt/adoption/publication composition and hosted acceptance remain open.
+Current local focus: local PostgreSQL renewal and a continuous six-step history are prepared; 638 isolated PostgreSQL checks, 39 focused foundation checks and 567 operations tests pass. Full run 16796 is pending. Mandatory original receipt/adoption/publication composition and hosted acceptance remain open.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** implement/test isolated PostgreSQL renewal, then retain original committed receipts and final signed inspection through mandatory startup/renewal gate composition before publication.
+- **Next local action:** collect full run 16796, then connect paired original gated execution/admission/replay handoffs and final signed inspection before protected owner publication.
 
 ## Historical summary checkpoints
 

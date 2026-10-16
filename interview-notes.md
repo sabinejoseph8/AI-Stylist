@@ -1,3 +1,9 @@
+## Renewing ownership through the restricted database path
+
+I extended the local PostgreSQL contract to renew the same owner through the complete-state path. It keeps the owner and generation, rotates the token, advances expiry within the limit and preserves the domain and receipt history. Tests use real local database roles and transaction IDs, including concurrent attempts and malformed targets.
+
+The six-step rehearsal now includes renewal without resetting earlier records. Two test-setup errors exposed missing explicit role selection and a reused transaction ID; I fixed the tests while keeping the database constraints. I also verified renewal through the original local gate and SQLite commit path. The complete PostgreSQL-to-application owner handoff and hosted acceptance still need work.
+
 ## Opening the gate before the transaction exists
 
 I removed the gate's preallocated transaction record. It now opens first and binds once to the original confirmed admission. In the local rehearsal, SQLite allocates a correlation row on that connection and commits it with the native change. Checks compare the complete committed state and preserve uncertainty if failure happens before commit, after commit or after closing the connection.
