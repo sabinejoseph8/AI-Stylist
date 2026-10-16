@@ -1,3 +1,17 @@
+## Durable replay startup inspection, 16 October 2026
+
+Added a fresh scope/challenge-bound replay snapshot through the existing private journal lock and optional pinned witness. It persists observed clock advances without changing records, capacity or expiry. Pending, exhausted, unreadable, substituted, cached, late or canceled evidence holds progress without refunds or automatic repair. Strong startup requires inspection before admission, after native commit and after final credential/owner proof. Native renewal checks before and after adoption. A new coordinator detects retained pending rows even without a volatile unsettled flag.
+
+Fresh focused verification passes 131 startup/continuation/HTTP/integration checks and 29 inspector unit checks; all 499 operations tests pass with ResourceWarning as error, including ten new replay-inspection cases. TypeScript checking/build, four encryption checks and 19 local Memory checks pass. Final foundation regression passes 2,403 tests across 174 files. No SQL contract changed; the prior 556-check PostgreSQL result was not rerun in this turn.
+
+Review tightened store-ID validation and cancellation handling: completed reads remove abort listeners, and cancellation before deferred backend invocation starts no read. Actual file/process and native transaction tests retain pending/spent evidence before startup and after committed admission/renewal. Negative tests explicitly show that an idle snapshot cannot exclude a later writer and that restoring both colocated journal/witness records can reproduce old state. No global writer lock or independently protected restore floor is claimed.
+
+The Memory refresh now uses its containing repository by default, rebuilds the local served Worker automatically and derives the displayed date from the recorded source commit. New tests detected a stale generated Worker that the older self-consistency checks missed. Served JSON and Markdown are now compared to the actual imported/current source files. The plan Summary is concise, with earlier status paragraphs retained as historical evidence. Hosted Memory publication remains unchanged.
+
+No provider calls, real credentials, new spending, hosted changes or permanent backup runtime/ledger/scheduler changes. Product/design scope, 5-of-41 full completion and the $51 allocation are unchanged. No production acceptance criterion closes.
+
+Exact next action: implement the owner-fenced replay transaction contract in docs/local-tavus-owner-fenced-replay-contract.md. Hold one replay gate around protected native transitions; validate current native ownership inside replay mutations with a consistent replay-then-native lock order. Test old/competing writers, cancellation and unknown commit outcomes. Continue from /private/tmp/ai-stylist-recovered-20261014; preserve the older checkout. The goal remains active and incomplete.
+
 ## Post-commit reconciliation review, 16 October 2026
 
 Rechecked the approved full-state reconciliation and added two regression tests: simultaneous finalization permits only one result, and changes to caller-owned target/plan/command objects cannot replace the captured original transition. Both pass. The complete logical snapshot, original transaction and signed authority target remain required; unknown commit or reconciliation results never reapply the mutation or reconstruct permission.

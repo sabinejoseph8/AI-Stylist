@@ -71,3 +71,21 @@ def operate(root,request,mode,crash_at=None,*,witness=None,witness_crash_at=None
             r=rows[0];r['status']='spent';r['spentAt']=now
         s['clock']=now;journal_save(root,s,witness,crash_at=crash_at,witness_crash_at=witness_crash_at)
         return dict(storeId=s['storeId'],bindingDigest=s['bindingDigest'],requestDigest=r['requestDigest'],now=now,receipt=r['receipt'],status=r['status'])
+
+
+def inspect_boundary(root,request,*,witness=None):
+    """Scoped read-only evidence, not an activation or global-quiescence grant.
+
+    Observe time durably without changing records, capacity or expiry. A pinned
+    witness is checked when configured; coordinated rollback remains outside
+    this local fixture's guarantee.
+    """
+    if (not isinstance(request,dict) or set(request)!={'storeId','bindingDigest','challenge','now'} or
+        not digest(request['bindingDigest']) or not digest(request['challenge']) or not integer(request['now'])):raise RecoveryHeld('cvi-unavailable')
+    with journal_locked(root,request['storeId'],'replay',witness) as root:
+        s=load(root,request['storeId']);now=request['now']
+        if request['bindingDigest']!=s['bindingDigest'] or not s['clock']<=now<s['expires']:raise RecoveryHeld('cvi-unavailable')
+        if now>s['clock']:
+            s['clock']=now;journal_save(root,s,witness)
+        pending=sum(r['status']=='reserved' for r in s['records']);count=len(s['records'])
+        return dict(storeId=s['storeId'],bindingDigest=s['bindingDigest'],challenge=request['challenge'],now=now,clock=s['clock'],expiresAt=s['expires'],limit=s['limit'],recordCount=count,pendingCount=pending,spentCount=count-pending,journalDigest=hashlib.sha256(read_private(root/'ledger.json')).hexdigest(),status='replay-pending' if pending else ('replay-exhausted' if count>=s['limit'] else 'replay-idle'),permissions=dict(write=False,activate=False,renew=False,sign=False,resume=False))

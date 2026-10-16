@@ -14,7 +14,7 @@ export function call(root:string,mode:string,args:Record<string,unknown>={}):Pro
   child.stdin.on('error',()=>{});child.stdin.end(JSON.stringify({root,mode,...args}));
  });
 }
-export function port(root:string,storeId:string):CviReplayPort{return {storeId,reserve:async(request)=>call(root,'reserve',{request}),consume:async(request)=>call(root,'consume',{request})};}
+export function port(root:string,storeId:string):CviReplayPort{return {storeId,inspect:async(request)=>call(root,'boundary',{request}),reserve:async(request)=>call(root,'reserve',{request}),consume:async(request)=>call(root,'consume',{request})};}
 if(process.argv[2]==='probe'){
  let raw='';for await(const chunk of process.stdin)raw+=chunk;const x=JSON.parse(raw);let draftCalls=0;
  const flow=createLocalCviStyling({draft:async()=>{draftCalls++;return 'Synthetic checked jacket.';},check:async(text,s)=>({approved:true,text,revision:s.revision})},2000);

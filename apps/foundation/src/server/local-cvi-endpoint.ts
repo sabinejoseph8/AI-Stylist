@@ -1,3 +1,4 @@
+import type {ReplayInspectionRequest} from './local-cvi-replay-inspection.ts';
 import {createHash,timingSafeEqual} from 'node:crypto';
 import type {CviConversationInput,createLocalCviStyling} from './local-cvi-styling.ts';
 type Flow=ReturnType<typeof createLocalCviStyling>;
@@ -12,6 +13,7 @@ export type CviReplayReceipt=Readonly<CviReplayRequest & {receipt:string;status:
 /** Disconnected durable-admission port. A write must commit before acknowledgment. */
 export interface CviReplayPort {
  readonly storeId:string;
+ inspect?(input:ReplayInspectionRequest,signal:AbortSignal):Promise<unknown>;
  reserve(input:CviReplayRequest,signal:AbortSignal):Promise<unknown>;
  consume(input:CviReplayReceipt,signal:AbortSignal):Promise<unknown>;
 }

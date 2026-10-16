@@ -1,3 +1,9 @@
+## Replay restart evidence and remaining race, 16 October 2026
+
+Local startup and renewal now refuse retained pending replay reservations even after a new coordinator starts. This closes dependence on a process-local idle flag for that retained evidence, while preserving original records and limits. A fresh snapshot still cannot exclude a later writer; restoring both colocated records remains outside the protection. Owner-fenced replay mutations and independent restore floors are therefore still launch blockers, alongside real provider/account/sourcing/device acceptance.
+
+Memory-source checks also caught a stale generated local Worker. Refresh now rebuilds it and verifies served documents against actual sources, with a concise current plan Summary and clearly historical earlier entries. These are local evidence improvements, not hosted publication or production acceptance. Scope, 5-of-41 completion, deferred purchases and $51 allocation remain unchanged.
+
 ## Post-commit reconciliation review, 16 October 2026
 
 Rechecked the approved full-state reconciliation and added two regression tests: simultaneous finalization permits only one result, and changes to caller-owned target/plan/command objects cannot replace the captured original transition. Both pass. The complete logical snapshot, original transaction and signed authority target remain required; unknown commit or reconciliation results never reapply the mutation or reconstruct permission.

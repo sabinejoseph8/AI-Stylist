@@ -1,3 +1,6 @@
+import {readFileSync} from 'node:fs';
+import {execFileSync} from 'node:child_process';
+import {fileURLToPath} from 'node:url';
 import {test} from 'node:test';
 import assert from 'node:assert/strict';
 import {runInNewContext} from 'node:vm';
@@ -32,4 +35,24 @@ test('visible current evidence stays aligned with the imported plan summary',asy
  const marker='Updated evidence <script>unsafe</script>';
  const rendered=runInNewContext(source+';tech()', {docs:{currentCheckpoint:marker},hero:()=>'',heading:()=>'',banner:t=>t,table:()=>'',svgDiagram:()=>'',archive:()=>'',esc:t=>String(t).replaceAll('<','&lt;').replaceAll('>','&gt;')});
  assert.ok(rendered.includes('Updated evidence &lt;script&gt;unsafe&lt;/script&gt;'));assert.ok(!rendered.includes(marker));
+});
+
+test('snapshot date belongs to the imported source commit rather than a fixed old date',async()=>{
+ const d=await(await worker.fetch(req('/api/documents'))).json();
+ assert.match(d.sourceCommit,/^[a-f0-9]{40}$/);
+ const root=fileURLToPath(new URL('../../../',import.meta.url));
+ const expected=execFileSync('git',['show','-s','--format=%cs',d.sourceCommit],{cwd:root,encoding:'utf8'}).trim();
+ assert.equal(d.snapshot,expected);
+});
+
+test('served Memory documents exactly match the imported snapshot',async()=>{
+ const imported=JSON.parse(readFileSync(new URL('../content/documents.json',import.meta.url),'utf8'));
+ const served=await(await worker.fetch(req('/api/documents'))).json();
+ assert.deepEqual(served,imported);
+});
+
+test('imported Markdown matches the current workspace source files',async()=>{
+ const d=await(await worker.fetch(req('/api/documents'))).json();
+ const root=new URL('../../../',import.meta.url);
+ for(const entry of Object.values(d.docs))assert.equal(entry.markdown,readFileSync(new URL(entry.path,root),'utf8'));
 });

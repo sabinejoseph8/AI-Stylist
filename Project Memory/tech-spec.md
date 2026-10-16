@@ -1,3 +1,9 @@
+## Durable replay inspection pattern, 16 October 2026
+
+Require an exact scope-bound, nonce-bound replay snapshot at local startup and before/after native ownership adoption. Validate status, counts, fixed capacity, observed time and expiry; retain all pending/spent records. Backend inspection may persist an observed-clock advance through the existing journal/witness protocol, while the response grants no write, activation, renewal, signing or resume capability. Unknown results hold without bootstrap, repair, refund or reconstructed handoff.
+
+This detects retained pending work after ordinary process restart. It does not prevent a writer changing the journal after inspection, nor a coordinated restore of colocated witness and journal. The next local contract must gate participating native transitions and validate ownership inside replay mutations. See docs/local-tavus-replay-inspection.md and docs/local-tavus-owner-fenced-replay-contract.md. Production clocks, independent administration, universal fencing and provider/device acceptance remain open. No hosted/spending or product/design decision changed.
+
 ## Post-commit reconciliation review, 16 October 2026
 
 Rechecked the approved full-state reconciliation and added two regression tests: simultaneous finalization permits only one result, and changes to caller-owned target/plan/command objects cannot replace the captured original transition. Both pass. The complete logical snapshot, original transaction and signed authority target remain required; unknown commit or reconciliation results never reapply the mutation or reconstruct permission.

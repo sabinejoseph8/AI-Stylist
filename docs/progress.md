@@ -1,3 +1,9 @@
+## Durable replay startup inspection, 16 October 2026
+
+Retained pending replay rows now hold local startup and native continuation across new coordinators. Inspection is required before/after protected transitions and final startup proof; records, capacity and expiry are retained. Snapshot freshness does not establish all-writer quiescence or independent rollback protection. See docs/local-tavus-replay-inspection.md and DEVELOPMENT_PROGRESS.md for exact verification. No phase or launch gate closes.
+
+Local Memory refresh now rebuilds its served artifact and compares it to current source files. The Summary below separates current status from historical checkpoints. No spending or hosted change occurred.
+
 ## Post-commit reconciliation review, 16 October 2026
 
 Rechecked the approved full-state reconciliation and added two regression tests: simultaneous finalization permits only one result, and changes to caller-owned target/plan/command objects cannot replace the captured original transition. Both pass. The complete logical snapshot, original transaction and signed authority target remain required; unknown commit or reconciliation results never reapply the mutation or reconstruct permission.
@@ -1509,6 +1515,19 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Current local focus: durable replay inspection now detects retained pending reservations at startup and before/after authenticated native renewal. Focused verification passes 131 startup/continuation/HTTP/integration checks, 29 inspector unit checks and 499 operations tests. Final foundation regression passes 2,403 tests across 174 files; TypeScript/build, four encryption checks and 19 local Memory checks also pass. No production acceptance criterion closes. See docs/local-tavus-replay-inspection.md.
+
+- **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
+- **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
+- **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
+- **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
+- **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
+- **Next local action:** implement and test the owner-fenced replay transaction contract in docs/local-tavus-owner-fenced-replay-contract.md. A fresh idle snapshot alone does not exclude a later writer or prove independent rollback protection.
+
+## Historical summary checkpoints
+
+These entries preserve earlier evidence and limitations. Their original “current” and “latest” wording describes the checkpoint when written, not the present status. Use the Summary above and DEVELOPMENT_PROGRESS.md for the current next action.
 
 Latest local revalidation passes 33 full-state reconciliation/continuous-state checks and 497 operations tests. Two new tests verify single-use finalization under competition and captured-input integrity. No full task or launch criterion closes, and no hosted changes or new spending occurred. Separate replay-inspection work remains unfinished. See docs/local-tavus-full-state-reconciliation.md.
 

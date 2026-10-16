@@ -13,6 +13,7 @@ export function credentialCall(root:string,mode:string,args:Record<string,unknow
 /** TEST adapter normalizes only journal binding to stable scope; raw ack is rebound.
  * Current credential checks remain separate, so cross-store atomicity is unproven. */
 export function scopeReplay(root:string,storeId:string,scopeDigest:string){const raw=rawPort(root,storeId);return {storeId,
+ inspect:async(r:Parameters<NonNullable<typeof raw.inspect>>[0],s:AbortSignal)=>({...await raw.inspect!({...r,bindingDigest:scopeDigest},s) as object,bindingDigest:r.bindingDigest}),
  reserve:async(r:Parameters<typeof raw.reserve>[0],s:AbortSignal)=>({...await raw.reserve({...r,bindingDigest:scopeDigest},s) as object,bindingDigest:r.bindingDigest}),
  consume:async(r:Parameters<typeof raw.consume>[0],s:AbortSignal)=>({...await raw.consume({...r,bindingDigest:scopeDigest},s) as object,bindingDigest:r.bindingDigest})};}
 export function makeEndpoint(root:string,replayRoot:string,replayId:string,lease:CviCredentialLease,binding=credentialBinding(lease.generation),afterConsume?:()=>Promise<void>){

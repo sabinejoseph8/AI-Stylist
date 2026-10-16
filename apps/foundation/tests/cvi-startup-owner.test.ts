@@ -1,3 +1,5 @@
+import {replayInspectionFixture} from './support/cvi-replay-inspection-fixture.ts';
+import type {ReplayInspectionRequest} from '../src/server/local-cvi-replay-inspection.ts';
 import {it,expect,vi} from 'vitest';
 import {mkdtemp,mkdir,rm} from 'node:fs/promises';
 import {tmpdir} from 'node:os';
@@ -17,7 +19,7 @@ function setup(){
  const ownerObservation=(owner:any)=>({status:'owner-current',revision:owner.minimumRevision,operationId:expected.operationId,owner:((({minimumRevision,...v})=>v)(owner)),permissions:{write:false,reconcile:false,sign:false,resume:false}});
  const checkpoint={inspectFresh:vi.fn(async()=>observation()),inspectOwnerFresh:vi.fn(async(owner:any)=>ownerObservation(owner))};
  const admission={admit:vi.fn(async(input:any)=>({status:'authorized',ownerExpiresAt:input.expiresAt,authorizationId:'b'.repeat(64),input:structuredClone(input),after:{...expected},owner:{storeId:expected.storeId,generation:2,ownerDigest:'5'.repeat(64),bootDigest:localStartupOwnerBoot(input),expiresAt:input.expiresAt,minimumRevision:2}}))};
- const replay={storeId:'22222222-2222-4222-8222-222222222222',reserve:vi.fn(async()=>null),consume:vi.fn(async()=>null)};
+ const replay={storeId:'22222222-2222-4222-8222-222222222222',inspect:vi.fn(async(r:ReplayInspectionRequest)=>replayInspectionFixture(r)),reserve:vi.fn(async()=>null),consume:vi.fn(async()=>null)};
  const authority={activate:vi.fn(async(i:any)=>({storeId:i.storeId,scopeDigest:i.scopeDigest,bindingDigest:i.bindingDigest,bootDigest:i.bootDigest,generation:i.previous+1})),check:vi.fn(async(i:any)=>({...i,active:true}))};
  let flow:ReturnType<typeof createLocalCviStyling>|undefined;
  const makeFlow=vi.fn(()=>flow=createLocalCviStyling({draft:async()=>{drafts++;return 'Synthetic checked output.';},check:async(text,s)=>({approved:true,text,revision:s.revision})}));

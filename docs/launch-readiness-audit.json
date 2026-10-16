@@ -624,6 +624,19 @@
       "scope": "Disabled authenticated notebook/transcript/static-header HTTP exchanges across adoption, bounded waiting and immediate local Clear/End. Durable cross-store startup quiescence remains open.",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-replay-inspection.md",
+      "foundationTests": 2403,
+      "foundationFiles": 174,
+      "operationsTests": 499,
+      "localMemoryChecks": 19,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled durable replay snapshot at startup/renewal; retains pending/spent records across ordinary restarts. Later-writer and coordinated-restore negative boundaries remain. Memory source/served integrity strengthened.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

@@ -1,3 +1,9 @@
+## Finding unfinished requests after a restart
+
+I added durable checks so a restarted conversation cannot mistake an unfinished request for an idle session. I preserve the original reservation and stop startup or renewal when its outcome is uncertain. I also tested the limits: a later writer can still change state after a read, and restoring both local records can defeat the fixture. Those gaps remain open until ownership checks and storage protection cover the actual writes.
+
+I strengthened the project Memory checks and found that its generated local website copy was stale. Refresh now rebuilds that copy and checks it against the current source documents. I separated current plan status from historical updates so local preparation cannot be mistaken for launch acceptance.
+
 ## Checking the final step after a database commit
 
 I tested that two callers cannot finalize the same transition twice, and that changing the caller's objects cannot substitute a different saved state. Both tests pass. I keep the complete database state and signed authority evidence linked to the original transaction. If the final result is uncertain, I hold it rather than repeat the mutation. These local checks do not prove customer recovery or live provider compatibility.

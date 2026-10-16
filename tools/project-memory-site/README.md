@@ -41,3 +41,7 @@ Automated coverage: assets, complete sources, auth, same-origin writes, required
 Manual checks: switch all four tabs with mouse and keyboard; inspect all 13 swatches; verify table scrolling and both diagrams at phone/desktop widths; search/filter tasks; cancel a change; save a synthetic preview update and reload; verify the changed task and source difference are shown; inspect automated and manual phase checks. Synthetic preview updates are never copied into production.
 
 The Tech Spec current-evidence banner is imported from the first paragraph of the Plan Summary during snapshot synchronization. It does not maintain an independent hardcoded test count.
+
+## Local document refresh integrity
+
+Run `python3 scripts/sync-docs.py /absolute/path/to/the/current/workspace` from this directory. Omitting the workspace path uses the repository containing this script. Sync imports the documents and rebuilds the generated local Worker, without deploying it. The displayed snapshot date is the date of its recorded source commit. Run `node scripts/check.mjs` afterward; checks compare the served documents with the complete imported JSON, in addition to validating the visible Summary and task access rules. Restart an already-running local preview when needed so it loads the rebuilt Worker. Hosted publication remains a separate authorized action.

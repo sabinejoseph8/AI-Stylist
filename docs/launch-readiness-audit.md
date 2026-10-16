@@ -1,3 +1,9 @@
+## Durable replay inspection follow-up, 16 October 2026
+
+Local startup and renewal now inspect retained replay records across fresh coordinators and hold pending/unknown evidence without refund or repair. Final verification passes 2,403 foundation tests across 174 files, 499 operations tests and 19 local Memory checks. TypeScript/build and four encryption checks pass. No SQL changed; the prior 556-check PostgreSQL result was not rerun.
+
+Negative tests retain the later-writer and coordinated-restore limits. The next local owner-fenced replay contract is documented, not implemented. Memory refresh now checks the actual served/imported/current documents and uses a concise current Summary. No production acceptance criterion closes; completion stays 5 of 41 and allocation stays $51. No hosted/provider/device changes occurred. See docs/local-tavus-replay-inspection.md.
+
 ## Local conversation/HTTP continuation, 16 October 2026
 
 Connected authenticated transcript input, the real notebook session model, native owner continuation and the static-header HTTP adapter. The notebook changes its pinned expiry only after the original consumed handoff is verified and claimed once. The HTTP adapter checks application identity before continuation and refuses concurrent recommendation work before admission. Notebook commands wait through a bounded transition gate, then read the current pin; explicitly stale pin requests no longer close newer notes. Inspection capacity remains bounded with a coordinator slot reserved.

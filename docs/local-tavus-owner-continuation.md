@@ -1,3 +1,7 @@
+## Durable replay follow-up, 16 October 2026
+
+Startup and continuation now require fresh durable replay inspection, including retained pending evidence across new coordinators. This complements the volatile idle flag but does not establish all-writer quiescence. See [replay inspection](local-tavus-replay-inspection.md) and the next [owner-fenced mutation contract](local-tavus-owner-fenced-replay-contract.md). No production acceptance or hosted change is implied.
+
 ## Local HTTP composition follow-up, 16 October 2026
 
 The authenticated notebook/transcript and static-header HTTP path now coordinates idle adoption through a verified context transition. Incoming HTTP work is refused before replay admission; bounded notebook input resumes using the adopted pin. Authenticated Clear/End have a separate immediate cleanup path. See [continuing HTTP evidence](local-tavus-continuing-http.md). The original next-action and test-count sections below describe earlier checkpoints. Durable cross-store pending evidence, production clocks and real provider acceptance remain open.

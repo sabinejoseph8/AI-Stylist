@@ -2,7 +2,7 @@
 """Import a read-only Markdown snapshot. Does not change project documents."""
 from pathlib import Path
 import json,re,html,sys,hashlib,subprocess
-root=Path(sys.argv[1] if len(sys.argv)>1 else '/private/tmp/ai-stylist-phone-publish')
+root=Path(sys.argv[1]) if len(sys.argv)>1 else Path(__file__).resolve().parents[3]
 files={'product':'Project Memory/product-spec.md','design':'Project Memory/design.md','tech':'Project Memory/tech-spec.md','plan':'docs/progress.md'}
 def inline(t):
  t=html.escape(t)
@@ -79,6 +79,10 @@ for phase,chunk in zip(phases,phasechunks):
  phase['dependency']=next((l.split('**Dependencies:**',1)[1].strip() for l in text.splitlines() if '**Dependencies:**' in l),'Follow the preceding phase exit gate.')
 summary_match=re.search(r'^## Summary\s*\n+(.*?)(?=\n\s*\n|\Z)',plan,re.M|re.S)
 current_checkpoint=summary_match[1].strip() if summary_match else 'The plan summary is unavailable. Read the complete source plan for current evidence.'
-data={'currentCheckpoint':current_checkpoint,'snapshot':'11 October 2026','sourceCommit':subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip(),'docs':docs,'requirements':product,'principles':[{'title':a.rstrip('.'),'description':b} for a,b in principles],'palette':palette,'components':components,'phases':phases,'tasks':tasks}
+source_commit=subprocess.check_output(['git','rev-parse','HEAD'],cwd=root,text=True).strip()
+snapshot_date=subprocess.check_output(['git','show','-s','--format=%cs',source_commit],cwd=root,text=True).strip()
+data={'currentCheckpoint':current_checkpoint,'snapshot':snapshot_date,'sourceCommit':source_commit,'docs':docs,'requirements':product,'principles':[{'title':a.rstrip('.'),'description':b} for a,b in principles],'palette':palette,'components':components,'phases':phases,'tasks':tasks}
 Path('content/documents.json').write_text(json.dumps(data,ensure_ascii=False,indent=2))
+# Keep the local served artifact aligned; this does not deploy or publish.
+subprocess.run([sys.executable,str(Path(__file__).resolve().parent/'build-worker.py')],check=True)
 print(f'Imported 4 documents, {len(product)} requirements, {len(palette)} colors, {len(tasks)} tasks in {len(phases)} phases.')

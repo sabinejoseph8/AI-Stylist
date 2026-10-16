@@ -1,3 +1,7 @@
+## Durable replay follow-up, 16 October 2026
+
+Startup and continuation now require fresh durable replay inspection, including retained pending evidence across new coordinators. This complements the volatile idle flag but does not establish all-writer quiescence. See [replay inspection](local-tavus-replay-inspection.md) and the next [owner-fenced mutation contract](local-tavus-owner-fenced-replay-contract.md). No production acceptance or hosted change is implied.
+
 # Local conversation exchanges across renewal
 
 Disabled local composition only. No real voice/model/provider request, hosted change, credential lookup, deployment or spending.
