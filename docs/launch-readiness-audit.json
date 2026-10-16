@@ -547,6 +547,16 @@
       "scope": "Signed current-owner inspection across registered native writes; request-version stale-output suppression and original live reservation settlement; volatile floor limit retained",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-authenticated-notebook-context.md",
+      "foundationTests": 2181,
+      "foundationFiles": 165,
+      "operationsTests": 475,
+      "scope": "Authenticated simulated notebook-to-CVI projection, tentative proposal/explicit confirmation and context-change invalidation; no app/provider route",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

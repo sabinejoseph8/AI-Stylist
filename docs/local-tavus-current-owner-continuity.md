@@ -1,3 +1,7 @@
+## Notebook-context follow-up, 16 October 2026
+
+[Authenticated notebook context](local-tavus-authenticated-notebook-context.md) now propagates seven-field session state and confirmation into local draft/check snapshots, with customer/session gates and known-stale settlement. Actual React/customer-host/provider integration remains open; no live route or production criterion is activated.
+
 # Local current-owner continuity and stale-reply settlement
 
 Authorized local preparation only, 16 October 2026. No spending, real credentials, provider calls, hosted changes or live route.

@@ -1,3 +1,7 @@
+## Bringing the notebook into the protected styling context
+
+I reused the notebook's existing session model so the styling flow reads the same seven fields and confirmation states. Explicit edits and confirmations require the correct signed-in customer and session; incoming structured proposals stay tentative. Tests prove that a correction cancels old text, clears do not allow late updates to return, and a fresh turn sees the new context. I also separated client edit IDs from internal proposal IDs to prevent accidental collisions. This is local preparation, with no paid model or customer deployment.
+
 ## Continuing after a valid update without speaking an old reply
 
 I changed the local endpoint to recognize the same active owner across an authenticated state update. It can now serve another turn after that update, while still rejecting an expired, fenced or replaced owner. A test caught a practical bug: discarding an old reply left its reservation open and blocked the next turn. I fixed this by spending the original live attempt after verified staleness, without sending its text or refunding it. Unknown ownership still holds. The next integration is carrying actual notebook changes and confirmations into the styling context. No live or paid service was used.

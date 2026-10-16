@@ -88,7 +88,13 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
    const raw=new TextDecoder('utf-8',{fatal:true}).decode(Buffer.concat(chunks));if(!validBody(JSON.parse(raw)))throw Error();
    // Prompt content is deliberately not treated as authenticated notebook updates.
    const reply=await Promise.race([flow.prepare(abort.signal),canceled]);
-   if(reply.status!=='prepared'||abort.signal.aborted||!current())throw Error();
+   if(reply.status!=='prepared'){
+    if(reply.reason==='context-changed'&&fence&&durable&&replay&&!abort.signal.aborted&&current()){
+     await requireFence();const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;
+    }
+    throw Error();
+   }
+   if(abort.signal.aborted||!current())throw Error();
    let sent=false;
    const body=new ReadableStream<Uint8Array>({
     async pull(controller){

@@ -159,3 +159,7 @@ The adjacent [machine-readable matrix](launch-readiness-audit.json) retains each
 ## Same-owner continuity follow-up, 16 October 2026
 
 [Local continuity evidence](local-tavus-current-owner-continuity.md) verifies active ownership across registered native writes and invalidates prepared replies tied to old state. Known stale live attempts are spent without output or refund, permitting a new turn. Independent durable floors, actual notebook context and provider acceptance remain open. No production criterion or blocker closes.
+
+## Authenticated notebook-context follow-up, 16 October 2026
+
+[Local notebook-context evidence](local-tavus-authenticated-notebook-context.md) propagates authenticated simulated edits and tentative proposals into protected draft/check snapshots. It tests identity isolation, corrections, stale work and cleanup. Actual app/provider wiring, lease lifetime and production acceptance remain open. No production criterion or blocker closes.

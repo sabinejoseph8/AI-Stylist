@@ -1,3 +1,7 @@
+## Authenticated context follow-up, 16 October 2026
+
+[The local notebook bridge](local-tavus-authenticated-notebook-context.md) now reuses StylingSession for seven-field draft/check context. Raw conversation input still cannot confirm notes. The original standalone fixture below remains historical evidence; real transcript and provider compatibility remain unverified.
+
 # Local full-CVI styling experiment
 
 Status: local preparation and simulated tests only, approved by Sabine on 15 October 2026. No live room, new spending, hosted change, credential use, microphone or provider request.
