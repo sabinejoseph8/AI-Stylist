@@ -9,7 +9,7 @@ import type {StartupOwnerPin} from './local-cvi-startup-checkpoint.ts';
 export type OwnerContinuationInput=Readonly<{owner:StartupOwnerPin;operationId:string;revision:number;bindingDigest:string;applicationExpiresAt:number}>;
 export interface OwnerContinuationPort {renew(input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>}
 type NativeLease=Readonly<{storeId:string;policyDigest:string;generation:number;ownerDigest:string;bootDigest:string;token:string;issuedAt:number;expiresAt:number}>;
-type Result={before:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number};expiresAt:number;observedAt:number;used:boolean;contextClaimed?:boolean;valid():boolean;accept():void};
+type Result={before:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number};expiresAt:number;observedAt:number;used:boolean;contextClaimed?:boolean;replayClaimed?:boolean;replayLease:NativeLease;valid():boolean;accept():void};
 const handoffs=new WeakMap<object,Result>();
 const exact=(v:any,keys:string[])=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const int=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
@@ -27,6 +27,12 @@ export function claimOwnerContinuationContext(raw:unknown,input:OwnerContinuatio
  const r=raw&&typeof raw==='object'?handoffs.get(raw):undefined;
  if(!r||!r.used||r.contextClaimed||!r.valid()||!int(now)||now<r.observedAt||now>=r.expiresAt||!same(r.before,input))throw Error('Owner continuation unavailable');
  r.observedAt=now;r.contextClaimed=true;return {owner:structuredClone(r.owner),after:{...r.after}};
+}
+/** Private replay adoption requires the original already-consumed handoff. */
+export function claimLocalContinuationReplayLease(raw:unknown,input:OwnerContinuationInput,now:number){
+ const r=raw&&typeof raw==='object'?handoffs.get(raw):undefined;
+ if(!r||!r.used||r.replayClaimed||!r.valid()||!int(now)||now<r.observedAt||now>=r.expiresAt||!same(r.before,input))throw Error('Replay continuation unavailable');
+ r.replayClaimed=true;r.observedAt=now;return {lease:structuredClone(r.replayLease),owner:structuredClone(r.owner),after:{...r.after}};
 }
 export interface OwnerCheckpointTransition {
  inspect(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>;
@@ -68,7 +74,7 @@ export function createLocalDurableOwnerContinuation(
     if(!exact(next,['storeId','policyDigest','generation','ownerDigest','bootDigest','token','issuedAt','expiresAt'])||['storeId','policyDigest','generation','ownerDigest','bootDigest'].some(k=>(next as any)[k]!== (original as any)[k])||next.token!==token||next.token===original.token||next.issuedAt!==issuedAt||!int(next.expiresAt)||next.expiresAt<=original.expiresAt||next.expiresAt>issuedAt+ttl||next.expiresAt>applicationExpiresAt||next.expiresAt<=at)throw Error();
     const proof=await fresh(before.revision+2,p.to),finished=now(),expiresAt=Math.min(deadline,baseline.expiresAt,proof.expiresAt);if(finished>=expiresAt)throw Error();
     const owner={...before.owner,expiresAt:next.expiresAt,minimumRevision:before.revision+2},after={operationId:id,revision:before.revision+2},result=Object.freeze({status:'owner-continuation'});
-    handoffs.set(result,{before,owner,after,expiresAt,observedAt:finished,used:false,valid:()=>!signal.aborted&&!held,accept(){lease=structuredClone(next);busy=false;}});
+    handoffs.set(result,{before,owner,after,expiresAt,observedAt:finished,used:false,replayLease:structuredClone(next),valid:()=>!signal.aborted&&!held,accept(){lease=structuredClone(next);busy=false;}});
     return result;
    };
    return await Promise.race([work(),canceled]);

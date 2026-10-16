@@ -1,3 +1,9 @@
+## Original private replay handoffs, 16 October 2026
+
+Original startup and consumed-renewal handoffs now support one-use private replay binding without publishing native tokens. Credential digest/cap share one captured binding; copied permits/ports, replayed claims, pending work and expiry refuse. The guarded endpoint exchange passes within the valid lease window, with limits unchanged. See docs/local-tavus-private-replay-binding.md and DEVELOPMENT_PROGRESS.md for exact verification.
+
+Mandatory migration of every general startup/HTTP path and transition-wide authority gating remain open. No phase, launch, spending or hosted gate changed.
+
 ## Native-owner replay mutation, 16 October 2026
 
 Prepared locked replay writes that verify the original native lease and fresh signed complete-state evidence inside the replay/witness then SQLite locks. A guarded endpoint fixture completes synthetic reserve/consume; an old worker cannot write after native renewal. Unknown saved results remain recorded. See docs/local-tavus-native-owner-replay.md and DEVELOPMENT_PROGRESS.md for exact evidence and review fixes.
@@ -1522,14 +1528,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: native-owner replay mutations now validate the original lease and fresh signed complete-state evidence inside replay/witness and SQLite locks. A guarded endpoint fixture and old-worker rejection tests are prepared. Final regression passes 2,419 foundation tests across 175 files and 518 operations tests; TypeScript/build, four encryption checks and 19 local Memory checks pass. No production acceptance criterion closes. See docs/local-tavus-native-owner-replay.md.
+Current local focus: the original private replay handoff layer now binds startup permission once and adopts only an original consumed renewal, with credential-bound cap and native expiry checks. A guarded endpoint exchange passes in the valid window. Final regression passes 2,434 foundation tests across 176 files and 518 operations tests; TypeScript/build, four encryption checks and 19 local Memory checks pass. No production criterion closes. See docs/local-tavus-private-replay-binding.md.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** require original private-lease binding and authenticated handoff adoption, then add the transition-wide replay/authority gate and durable original-operation marker. The native mutation portion is prepared; universal fencing and independent rollback protection remain open. See docs/local-tavus-owner-fenced-replay-contract.md.
+- **Next local action:** migrate every protected startup/HTTP path to require the prepared original private replay binding, retire it on failure/End and refuse plain ports before privileged work. Then add the transition-wide replay/authority gate and durable original-operation marker. Universal fencing and independent rollback protection remain open. See docs/local-tavus-owner-fenced-replay-contract.md.
 
 ## Historical summary checkpoints
 

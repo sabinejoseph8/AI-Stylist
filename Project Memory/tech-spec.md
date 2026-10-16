@@ -1,3 +1,11 @@
+## Original private replay identity, 16 October 2026
+
+Retain the successful native startup execution lease behind the original public permit object, not on that permit. A one-use internal claim validates exact input/scope, proof expiry and cancellation. A separate private replay port identity derives digest and cap from one immutable credential binding. Consumption requires that instance's original reservation acknowledgment; persisted inspection cannot recreate a claim.
+
+Renewal replay adoption requires the original already-consumed continuation plus its separate one-use replay claim. Preserve native identity, rotate token, advance expiry within the unchanged cap and refuse busy/pending/held state. Hold aborts this port's active work and clears its private lease reference; it does not establish global native revocation or remote cleanup. See docs/local-tavus-private-replay-binding.md.
+
+The tested controller uses the actual guarded backend and original handoffs, but general startup/HTTP call sites are not yet migrated to require that identity. Default mandatory binding, failure/End retirement and plain-port refusal remain next, followed by transition-wide authority gating and durable operation evidence. Independent administration, universal fencing, production timing and provider/device acceptance stay open. No business, product/design, spending or hosted decision changed.
+
 ## Native-owner replay mutation pattern, 16 October 2026
 
 The local guarded mutation path holds replay/witness then SQLite locks, validates the original current native lease and verifies challenge-bound signed observer reads against the complete native aggregate. Check before preparation, immediately before saving and after saving; hold unknown results while retaining saved records. Capture configuration, requests and evidence before callbacks so later object mutation cannot widen the original scope or proof expiry. Public verification receives no private lease token.

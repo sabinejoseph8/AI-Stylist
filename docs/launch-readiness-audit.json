@@ -650,6 +650,19 @@
       "scope": "Disabled native-owner replay mutation and original-lease endpoint fixture; locked signed full-state checks, captured inputs and retained unknown writes. Mandatory binding, handoff adoption and transition-wide authority gate remain open.",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-private-replay-binding.md",
+      "foundationTests": 2434,
+      "foundationFiles": 176,
+      "operationsTests": 518,
+      "localMemoryChecks": 19,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled original private startup/consumed-renewal replay handoffs and actual guarded endpoint exchange; limits unchanged. Mandatory general composition migration and transition-wide authority gating remain open.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

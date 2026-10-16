@@ -1,3 +1,7 @@
+## Original private handoff follow-up, 16 October 2026
+
+The original startup/consumed-renewal private handoff layer is now prepared and tested with a guarded endpoint exchange. Credential digest and cap derive from one captured binding; copies and replayed claims cannot create another binding. See [private replay handoffs](local-tavus-private-replay-binding.md). Mandatory migration of every general startup/HTTP path, transition-wide authority gating and persistent operation markers remain open.
+
 ## Native mutation follow-up, 16 October 2026
 
 The native mutation portion is now implemented locally: replay/witness then SQLite locking, original lease validation and fresh signed aggregate proofs around saving. A guarded endpoint fixture uses that path. See [native-owner replay writes](local-tavus-native-owner-replay.md). Mandatory private-lease binding, original-handoff adoption, transition-wide authority gating and persistent transition markers remain unimplemented. This does not close the all-writer gap or authorize activation.

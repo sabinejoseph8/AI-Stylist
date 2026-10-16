@@ -1,3 +1,9 @@
+## Original private replay handoff follow-up, 16 October 2026
+
+The original startup/consumed-renewal private handoff layer is prepared and tested with a guarded endpoint exchange. It derives digest/cap from one captured binding and refuses copies, replayed claims, pending work and expiry. A near-expiry exchange correctly refused; limits were unchanged and the verified exchange ran earlier with separate expiry checks.
+
+Final verification passes 2,434 foundation tests across 176 files, 518 operations tests, TypeScript/build, four encryption checks and 19 local Memory checks. No SQL changed; the prior 556-check PostgreSQL result was not rerun. Mandatory migration of every general startup/HTTP path, transition-wide authority gating, independent restore protection and live acceptance remain open. No criterion closes, full completion stays 5 of 41, allocation stays $51 and no hosted changes occurred. See docs/local-tavus-private-replay-binding.md.
+
 ## Native-owner replay mutation follow-up, 16 October 2026
 
 The disabled guarded mutation path checks the original native lease and complete signed current state inside replay/witness then SQLite locks. A synthetic endpoint fixture uses that path, and old-worker reserve/consume is refused after native renewal. Review fixed mutable inputs/proof expiry and a disposable cancellation cleanup race.

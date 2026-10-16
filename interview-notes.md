@@ -1,3 +1,9 @@
+## Keeping private permission tied to the original handoff
+
+I kept the native lease behind the original startup permit rather than putting its token in public data. The replay layer accepts that permission once, and renewal needs the original handoff after the owner has consumed it. Copies and saved observations cannot recreate it. I also derive the session cap from the same credential binding so it cannot drift independently.
+
+The guarded exchange passes through native token renewal. A near-expiry test correctly refused because there was not enough time for signed checks, so I kept the limits and tested the exchange earlier with separate expiry checks. Requiring this private layer across every general entry point remains the next step before live activation.
+
 ## Checking ownership where the request is actually saved
 
 I moved ownership checks inside the local replay and database locks, then verified the complete signed state before and after saving. A worker that passed an earlier check can no longer write through this path after its native lease is renewed. If the final result is uncertain, I keep the original record and refuse a fresh attempt.

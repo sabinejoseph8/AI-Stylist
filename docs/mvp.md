@@ -1,3 +1,9 @@
+## Original replay handoff preparation, 16 October 2026
+
+Local original startup/consumed-renewal handoffs now transfer private replay permission once without placing tokens on public permits. JSON/port copies and observed state cannot reconstruct it. The credential binding fixes the application cap, native expiry remains separate, and pending/unknown work is retained. A guarded endpoint exchange passes through actual native token renewal within the valid window; a near-expiry attempt correctly refused without increasing any limit.
+
+General startup/HTTP paths still need mandatory migration to that binding and retirement on failure/End. Service-wide transition gating, persistent operation markers, independent restore protection and actual provider/account/sourcing/device acceptance remain open. This closes no production criterion. Scope, 5-of-41 completion, deferred purchases and $51 allocation are unchanged.
+
 ## Native replay write checks and remaining composition, 16 October 2026
 
 Local guarded writes now verify current native ownership inside the locks, closing the tested old-worker write after native renewal. Complete signed state is required even when generation and head appear unchanged. Unknown writes retain their reservation or consumption. Review also fixed mutable input/proof configuration and a cancellation cleanup race in the disposable fixture.
