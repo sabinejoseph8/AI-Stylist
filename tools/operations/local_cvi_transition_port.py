@@ -2,7 +2,7 @@
 import json,os,sys,subprocess
 from pathlib import Path
 from copy import deepcopy
-from local_cvi_transition_gate import transition
+from local_cvi_transition_gate import transition,sha
 os.umask(0o077)
 def receive():
     line=sys.stdin.readline(1048577)
@@ -13,6 +13,7 @@ try:
     x=receive()
     if set(x)!={'root','scope','intent','context','now','node','verifier'}:raise ValueError()
     context=deepcopy(x['context']);at=x['now'];evidence=None
+    if set(context)!={'pin','writerPrincipal','owner'}:raise ValueError()
     def source(marker,prepared):
         if evidence is None:raise ValueError()
         return deepcopy(evidence)
@@ -28,7 +29,12 @@ try:
             if set(r)!={'command','now','value'}:raise ValueError()
             at=r['now']
             if r['command']=='inspect':send(dict(stage='inspected',result=gate.inspect(r['value'])))
-            elif r['command']=='finish':evidence=deepcopy(r['value']);result=gate.finish();break
+            elif r['command']=='bind':
+                if 'commit' in context or not isinstance(r['value'],dict) or set(r['value'])!={'operationId','transactionId','claimHash'}:raise ValueError()
+                gate.describe();context['commit']=deepcopy(r['value']);send(dict(stage='bound',result=dict(operationId=x['intent']['id'],commitDigest=sha(context['commit']))))
+            elif r['command']=='finish':
+                if 'commit' not in context:raise ValueError()
+                evidence=deepcopy(r['value']);result=gate.finish();break
             else:raise ValueError()
     # Release the original lock before acknowledging success.
     send(dict(stage='finished',result=result))

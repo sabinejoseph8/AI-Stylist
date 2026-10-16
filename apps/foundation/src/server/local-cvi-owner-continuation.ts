@@ -36,7 +36,7 @@ export function claimLocalContinuationReplayLease(raw:unknown,input:OwnerContinu
 }
 export interface OwnerCheckpointTransition {
  inspect(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>;
- finish(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):void;
+ finish(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):void|Promise<void>;
  cancel():void;
 }
 export function createLocalDurableOwnerContinuation(

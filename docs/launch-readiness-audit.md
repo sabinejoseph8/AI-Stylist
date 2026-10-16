@@ -1,3 +1,7 @@
+## Deferred original gate follow-up, 16 October 2026
+
+Nineteen migrated/expanded gate cases and 22 continuation checks pass. Gate entry precedes advancement and actual SQLite commit/close; original admission binding is mandatory for this Node port and raw pre-entry commit data refuses. Async finish is awaited before accepting renewed state. The final full run 85326 is pending, with 564 operations tests, TypeScript/build and four encryption checks passing. The earlier 107-check integrated run predates final gate/async-hook refinements. SQLite correlation rows/protected flags do not establish hosted SQL identity/grants. No production criterion closes. See docs/local-tavus-deferred-transaction-gate.md.
+
 ## Original database admission follow-up, 16 October 2026
 
 Twenty new original-admission cases pass within 72 focused signed-bridge/reconciliation checks. All 564 operations tests, TypeScript/build and four encryption checks pass. The earlier 2,472-test full result predates this change. No SQL changed; prior 556-check PostgreSQL evidence was not rerun. Original identity, confirmation, exact operation, pins/principal/plan, expiry, cancellation and reentrancy are checked; deferred gate/actual committed-receipt/adoption/publication integration remains open. No criterion closes. See docs/local-tavus-original-database-admission.md.

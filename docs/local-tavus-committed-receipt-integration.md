@@ -1,3 +1,7 @@
+## Deferred binding follow-up, 16 October 2026
+
+The configured Node port now refuses the pre-entry commit shape and binds only its original confirmed admission once. Migrated process tests enter before authority advancement and execute a real SQLite commit with a connection-allocated correlation record. Nineteen gate cases and 22 continuation checks pass; final full run 85326 is pending. General startup/renewal handoff publication integration, PostgreSQL identity/renewal, witness-pin composition and hosted acceptance remain open. See local-tavus-deferred-transaction-gate.md. Earlier pre-entry-commit descriptions below are historical.
+
 ## Original admission follow-up, 16 October 2026
 
 The signed bridge now retains its original admission and exposes one private server-side claim after successful confirmation, with exact captured scope, clock/expiry/cancellation checks and reentrancy protection. Twenty new cases pass within 72 focused checks. This implements the original-reference part of step 4 only. Deferred gate binding, actual committed receipts, adoption/publication ordering and native PostgreSQL renewal remain open. See local-tavus-original-database-admission.md. No COMMIT or resume guarantee follows from the new claim.

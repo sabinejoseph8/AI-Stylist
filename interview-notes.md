@@ -1,3 +1,9 @@
+## Opening the gate before the transaction exists
+
+I removed the gate's preallocated transaction record. It now opens first and binds once to the original confirmed admission. In the local rehearsal, SQLite allocates a correlation row on that connection and commits it with the native change. Checks compare the complete committed state and preserve uncertainty if failure happens before commit, after commit or after closing the connection.
+
+I also found that renewal could ignore an asynchronous finish hook. It now waits and rechecks cancellation and expiry before accepting the renewed owner. I tested delayed, rejected and late finishes. These are local boundaries: hosted transaction identity, permissions and the complete startup/renewal publication composition still need verification.
+
 ## Keeping transaction identity through confirmation
 
 I found that the signed database bridge returned public admission data but did not retain its original server reference for the next step. I added one private claim that becomes available only after confirmation. Copying the data, changing the transaction or expected context, canceling or claiming twice cannot release it. Review also caught a possible reentrant callback and cancellation during a claim, which now refuse safely.

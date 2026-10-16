@@ -5,10 +5,11 @@ import {createLocalDurableOwnerContinuation} from '../src/server/local-cvi-owner
 import {cviCredentialDigests} from '../src/server/local-cvi-credentials.ts';
 import {call} from './support/cvi-replay-process.ts';
 const signal=()=>new AbortController().signal;
-async function fixture(cap=10000){
+async function fixture(cap=10000,finishHook?:()=>Promise<void>){
  let time=1000;const f=await startupAdmissionFixture(()=>time,cap);
  const makeFlow=f.resources.makeFlow;let flow!:ReturnType<typeof makeFlow>;f.resources.makeFlow=()=>flow=makeFlow();
- const owner=await createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>time,5000,8000).start(signal());
+ const checkpoint=finishHook?{...f.checkpoint,beginOwnerContinuation:()=>({inspect:async(raw:unknown,input:any,s:AbortSignal)=>{const {inspectOwnerContinuation}=await import('../src/server/local-cvi-owner-continuation.ts');return f.checkpoint.inspectOwnerFresh(inspectOwnerContinuation(raw,input,time).owner,s);},finish:finishHook,cancel:()=>{}})}:f.checkpoint;
+ const owner=await createLocalCviStartupOwner(f.expected,checkpoint,f.admission(),f.resources,()=>time,5000,8000).start(signal());
  if(!owner){await f.close();throw Error('Continuation fixture held');}
  const old=structuredClone(f.nativeLease()),rotator=f.x.actors.find(a=>a.role==='rotator')!,reader=f.x.actors.find(a=>a.role==='observer')!;
  const authority=f.x.authorityPort('rotator'),ports={plan:vi.fn(async(a:any)=>f.x.plan('renew',{lease:a.lease,ttl:a.ttl,token:a.token})),execute:vi.fn((p:any,s:AbortSignal)=>f.executeTracked(p)),read:vi.fn((n:string,s:AbortSignal)=>authority.read(n))};
@@ -107,4 +108,20 @@ it('pending note extraction remains open and preserves newer notes during adopti
   const response=await owner!.handle(request);expect(response.status).toBe(200);expect(await response.text()).toContain('Synthetic pending-safe output');
   owner!.end();expect(flow.isOpen()).toBe(false);
  }finally{await f.close();}
+},60000);
+
+it('renewal waits for asynchronous finish before adopting and accepting new work',async()=>{
+ let release!:()=>void,entered=false;const x=await fixture(10000,()=>{entered=true;return new Promise<void>(r=>release=r);});try{
+  x.at(1500);let done=false;const result=continueLocalCviOwner(x.owner,x.make(),signal()).then(v=>{done=true;return v;});await vi.waitFor(()=>expect(entered).toBe(true),{timeout:6000});expect(done).toBe(false);expect(await continueLocalCviOwner(x.owner,x.make(),signal())).toBe(false);release();expect(await result).toBe(true);x.at(2000);const response=await x.owner.handle(x.request());expect(response.status).toBe(200);await response.text();
+ }finally{release?.();await x.close();}
+},60000);
+it('a rejected asynchronous finish holds the owner after committed renewal without retry',async()=>{
+ const x=await fixture(10000,async()=>{throw Error('Lost finish reply');});try{
+  x.at(1500);expect(await continueLocalCviOwner(x.owner,x.make(),signal())).toBe(false);expect((await x.f.x.inspect()).revision).toBe(6);expect((await x.owner.handle(x.request())).status).toBe(410);expect(x.ports.execute).toHaveBeenCalledTimes(1);expect(await continueLocalCviOwner(x.owner,x.make(),signal())).toBe(false);expect(x.ports.execute).toHaveBeenCalledTimes(1);
+ }finally{await x.close();}
+},60000);
+it.each(['cancel','expire'])('a late async finish cannot adopt after %s',async mode=>{
+ let release!:()=>void,entered=false;const x=await fixture(10000,()=>{entered=true;return new Promise<void>(r=>release=r);});try{
+  x.at(1500);const controller=new AbortController(),result=continueLocalCviOwner(x.owner,x.make(),controller.signal);await vi.waitFor(()=>expect(entered).toBe(true),{timeout:6000});if(mode==='cancel')controller.abort();else x.at(9000);release();expect(await result).toBe(false);expect((await x.owner.handle(x.request())).status).toBe(410);expect(x.ports.execute).toHaveBeenCalledTimes(1);
+ }finally{release?.();await x.close();}
 },60000);

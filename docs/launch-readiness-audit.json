@@ -749,6 +749,27 @@
       "extraClaimAuthorityReads": 0,
       "scope": "Disabled original confirmed database admission claim only; no COMMIT or publication permission. Deferred gate/committed-receipt/adoption integration remains open. Fixture SQL connection IDs are synthetic.",
       "localMemoryChecks": 19
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-deferred-transaction-gate.md",
+      "deferredGateTests": 19,
+      "continuationTests": 22,
+      "newAsyncFinishTests": 4,
+      "earlierIntegratedFocusedTests": 107,
+      "earlierIntegratedFocusedFiles": 6,
+      "operationsTests": 564,
+      "foundationFullStatus": "running",
+      "foundationFullSession": 85326,
+      "priorFullFoundationTests": 2472,
+      "priorFullFoundationFiles": 181,
+      "isolatedPostgresRerun": false,
+      "priorIsolatedPostgresChecks": 556,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "extraFinishAuthorityReads": 0,
+      "scope": "Disabled deferred original admission binding; actual SQLite commit/close, full-state check and signed finish. SQLite markers and protected flag are fixture evidence; general handoff/publication composition and actual PG renewal/identity remain open.",
+      "localMemoryChecks": 19
     }
   ]
 }

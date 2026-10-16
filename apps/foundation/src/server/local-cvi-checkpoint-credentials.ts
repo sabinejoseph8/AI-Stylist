@@ -79,7 +79,7 @@ export function createLocalCurrentOwnerCredentialAuthority(
     await fresh();const at=current(started);const proof=structuredClone(await check(Object.freeze({...credential,now:at}),signal));
     if(signal.aborted||!exact(proof,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||proof.active!==true||proof.now!==at||Object.entries(credential).some(([k,v])=>proof[k]!==v))throw Error();
     await fresh();current(at);if(!alive())throw Error();invalidate();if(signal.aborted||held||!alive())throw Error();
-    const accepted=consumeOwnerContinuation(raw,input,current(at));adoptReplay?.(raw,input,current(at));transition?.finish(raw,input,signal);adopted=true;want=Object.freeze({...accepted.owner});floor=accepted.after.revision;operation=accepted.after.operationId;return true;
+    const accepted=consumeOwnerContinuation(raw,input,current(at));adoptReplay?.(raw,input,current(at));await transition?.finish(raw,input,signal);current(at);if(signal.aborted||!alive())throw Error();adopted=true;want=Object.freeze({...accepted.owner});floor=accepted.after.revision;operation=accepted.after.operationId;return true;
    };
    return await Promise.race([work(),canceled]);
   }catch{held=true;abort.abort();return false;}finally{if(timer)clearTimeout(timer);if(!adopted&&typeof transition?.cancel==='function'){try{transition.cancel();}catch{held=true;}}continuing=false;}
