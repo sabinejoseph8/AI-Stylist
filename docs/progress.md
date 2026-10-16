@@ -1,3 +1,15 @@
+## Local authenticated owner adoption, 16 October 2026
+
+Connected the started-owner guard to a separate authenticated native continuation port. The port binds the original live lease, credential binding and immutable application cap, verifies signed baseline/target reads and carries the next private lease only inside a one-use transient handoff. The guard independently checks the new full owner checkpoint around a fresh credential proof before adopting expiry/revision. Old prepared text is invalidated and the same endpoint, notes and replay records are retained. JSON copies, consumed handoffs, altered scopes, cancellation and late results cannot adopt ownership.
+
+Review added a stricter idle boundary: a canceled or uncertain reservation remains unsettled and blocks continuation, even when no request is active. Active checks/requests and concurrent continuation calls refuse before mutation. At the application cap no further renewal is attempted. This is an idle-boundary path, not transparent in-flight renewal. See docs/local-tavus-owner-continuation.md.
+
+Final regression passes 2,352 foundation tests across 171 files, 489 operations tests with ResourceWarning as error, TypeScript checking/build, four encryption checks and 16 local Memory checks. The final focused run passes 79 checks across adoption, current-owner and notebook context. Review separated open-session lifetime from draft readiness so pending extraction cannot close the owner or clear newer notes. The earlier full run was stopped for that fix and is not counted as passed. Controlled clocks and synthetic model/identity inputs do not establish production timing. Observer transaction markers and independent administration remain unproven. No SQL contract changed; the prior 556-check PostgreSQL result was not rerun in this turn.
+
+Product/design scope and all phase/launch gates remain unchanged; full completion stays 5 of 41 and allocation stays $51. No provider calls, real account credentials, spending, hosted publication or permanent backup runtime/ledger/scheduler changes. The live provider, production-clock, restore-floor and all-writer gates remain open.
+
+Exact next action: connect continuation to the actual authenticated notebook/transcript and static-header HTTP composition. Test full exchanges across adoption, retain both body/turn replay guards and notes, and classify concurrent HTTP work and durable pending-reservation evidence without reconstructing permission or clearing newer input. Continue from /private/tmp/ai-stylist-recovered-20261014; preserve the older checkout and save tracked source only. The goal remains active and incomplete.
+
 ## Local authenticated native renewal, 16 October 2026
 
 Added a distinct local `renew` intent through the mandatory signed authority adapter. It requires the exact current unexpired native lease under the SQLite write lock, rotates its token and updates issue/expiry atomically while preserving owner, boot and generation. Renewal remains bounded to eight seconds from issue and the existing native domain cap, must strictly advance expiry, and refuses expiry or backward time during locked work. The full aggregate changes even at the same generation. The older token immediately stops working; no original plan or unknown acknowledgment is retried.
@@ -1477,6 +1489,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Current local follow-up: a started owner can adopt an exact authenticated native renewal at an idle boundary while preserving notes and replay records. Unknown reservations, copied handoffs, altered scope, late results and credential replacement remain held. Final regression passes 2,352 foundation tests across 171 files and 489 operations tests, with 79 focused checks covering adoption, current-owner and notebook context. Notebook/transcript/HTTP coordination and live acceptance remain open, so full completion stays 5 of 41. See docs/local-tavus-owner-continuation.md.
 
 Current local follow-up: authenticated native renewal rotates a current token within the unchanged eight-second/domain-cap limits, with 70 focused foundation and 489 operations checks passing. The old endpoint refuses implicit adoption; guard integration and live consultation acceptance remain open. Full regression passes 2,334 foundation tests across 170 files, and the disposable PostgreSQL rehearsal passes 556 checks. Full completion stays 5 of 41. See docs/local-tavus-native-renewal.md.
 

@@ -1,3 +1,7 @@
+## Explicit adoption follow-up, 16 October 2026
+
+The isolated native renewal is now followed by a disabled authenticated idle-boundary adoption path for successfully started owners. It preserves the same endpoint, notes, credential binding and replay history, requires exact signed state and credential checks, and consumes an original transient handoff once. Unrequested native renewal still cannot be adopted implicitly. See [owner continuation](local-tavus-owner-continuation.md). Actual notebook/transcript/HTTP coordination, production clocks and live acceptance remain open.
+
 # Local native writer renewal
 
 Disabled local preparation only. No provider calls, hosted changes, real credentials, deployment, spending or production duration decision.

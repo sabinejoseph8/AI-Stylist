@@ -1,3 +1,5 @@
+import {localCviOwnerIsIdle} from './local-cvi-endpoint.ts';
+import type {OwnerContinuationPort} from './local-cvi-owner-continuation.ts';
 import {planLocalCviLifetimes} from './local-cvi-lifetime.ts';
 import {historyCanonical} from './local-cvi-history-authority.ts';
 /** Disabled local composition. No listener, provider, secrets lookup or paid work. */
@@ -11,6 +13,9 @@ import type {CviReplayPort} from './local-cvi-endpoint.ts';
 import {CVI_FIELDS} from './local-cvi-styling.ts';
 import type {createLocalCviStyling} from './local-cvi-styling.ts';
 const startedOwners=new WeakSet<object>();
+const continuations=new WeakMap<object,(port:OwnerContinuationPort,signal:AbortSignal)=>Promise<boolean>>();
+/** Trusted local server control only. No HTTP route or credential fallback. */
+export async function continueLocalCviOwner(owner:object,port:OwnerContinuationPort,signal:AbortSignal){const renew=continuations.get(owner);return renew&&localCviOwnerIsIdle(owner)?renew(port,signal):false;}
 /** Only successful full-checkpoint startup can register this owner. */
 export const isLocalCviStartedOwner=(owner:object)=>startedOwners.has(owner);
 export type CviCheckpointIdentity=Readonly<{storeId:string;operationId:string;revision:number}>;
@@ -61,9 +66,10 @@ export function createLocalCviStartupOwner(
     const authority:CviCredentialBootAuthority={stale:s=>guard?.isStale(s)===true,activate:async(i,s)=>{const raw=structuredClone(await activate(i,AbortSignal.any([s,signal])));current();lease=raw as CviCredentialLease;return raw;},check:async(i,s)=>{if(!guard)throw Error();const proof=await guard.check(i,s);if(proof===null){if(guard.isHeld())flow?.end();else flow?.interrupt();}return proof;}};
     const prepared=await startLocalCviCredentialEndpoint(binding,flow,replay,boot,authority,now,Math.max(1,Math.min(deadlineMs,end-current())),deadlineMs);
     endpoint=prepared;if(signal.aborted||held){endpoint?.end();throw Error();}current();if(!endpoint||!lease)throw Error();
-    guard=createLocalCurrentOwnerCredentialAuthority(nativeOwner,lease,{inspectOwnerFresh:inspectOwner},{check},now);
+    guard=createLocalCurrentOwnerCredentialAuthority(nativeOwner,lease,{inspectOwnerFresh:inspectOwner},{check},now,binding.expiresAt);
     const at=current(),proof=structuredClone(await guard.check(Object.freeze({...lease,now:at}),signal));current();
     if(!exact(proof,['storeId','scopeDigest','bindingDigest','bootDigest','generation','now','active'])||proof.active!==true||proof.now!==at||Object.entries(lease).some(([k,v])=>proof[k]!==v))throw Error();
+    const owner=endpoint,currentGuard=guard,currentFlow=flow;continuations.set(owner,async(port,s)=>{const ok=await currentGuard.continue(port,s,()=>currentFlow.interrupt(),()=>currentFlow.isOpen());if(!ok&&currentGuard.isHeld())owner.end();return ok;});
     startedOwners.add(endpoint);return endpoint;
    };
    return await Promise.race([work(),canceled]);

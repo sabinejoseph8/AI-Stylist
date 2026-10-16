@@ -1,3 +1,7 @@
+## Continuation follow-up, 16 October 2026
+
+Local native renewal and explicit authenticated idle adoption are now implemented separately from startup/request deadlines. Neither chooses a production duration nor raises the eight-second grant maximum or original application cap. Busy/unsettled responses do not renew, and pending note extraction is distinct from an ended session. See [owner continuation](local-tavus-owner-continuation.md). HTTP coordination, restart-wide replay quiescence and real provider acceptance remain open; the original evidence below is historical.
+
 # Local CVI deadlines and initial writer lifetime
 
 This is disabled local preparation using synthetic data. No provider call, hosted change, spending, credential lookup or production duration decision is included.

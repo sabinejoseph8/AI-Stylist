@@ -600,6 +600,18 @@
       "scope": "Disabled authenticated SQLite native renewal; PostgreSQL renewal and composed-owner adoption remain unsupported",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-owner-continuation.md",
+      "foundationTests": 2352,
+      "foundationFiles": 171,
+      "operationsTests": 489,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled authenticated idle-boundary owner adoption; preserves notes/replay and distinguishes pending extraction from session closure. Full notebook/transcript/HTTP coordination remains open.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

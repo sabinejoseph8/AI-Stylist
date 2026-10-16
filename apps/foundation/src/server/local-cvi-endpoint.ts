@@ -2,9 +2,10 @@ import {createHash,timingSafeEqual} from 'node:crypto';
 import type {CviConversationInput,createLocalCviStyling} from './local-cvi-styling.ts';
 type Flow=ReturnType<typeof createLocalCviStyling>;
 type Binding=Readonly<{origin:string;conversation:string;secret:string;expiresAt:number}>;
-const owners=new WeakMap<object,{flow:Flow;bindingDigest:string;storeId:string;guarded:boolean}>();
+const owners=new WeakMap<object,{flow:Flow;bindingDigest:string;storeId:string;guarded:boolean;isIdle():boolean}>();
 /** Server composition check, not an HTTP-supplied permission or key lookup. */
 export function localCviOwnerBoundary(owner:object,flow:Flow,bindingDigest:string){const pin=owners.get(owner);return pin?.guarded&&pin.flow===flow&&pin.bindingDigest===bindingDigest?Object.freeze({storeId:pin.storeId,bindingDigest:pin.bindingDigest}):null;}
+export const localCviOwnerIsIdle=(owner:object)=>owners.get(owner)?.isIdle()===true;
 export const cviBodyAdmissionDigest=(digest:string)=>createHash('sha256').update('local-cvi-body-admission-v1:'+digest).digest('hex');
 export type CviReplayRequest=Readonly<{storeId:string;bindingDigest:string;requestDigest:string;now:number}>;
 export type CviReplayReceipt=Readonly<CviReplayRequest & {receipt:string;status:'reserved'|'spent'}>;
@@ -32,7 +33,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
   !Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Invalid local CVI configuration');
  // Capture immutable primitive configuration, including if caller mutates its object.
  const origin=binding.origin,conversation=binding.conversation,secret=Buffer.from(`Bearer ${binding.secret}`),expiresAt=binding.expiresAt;
- let closed=false,lastClock=-Infinity,active:{abort:AbortController;release:()=>void}|undefined;
+ let closed=false,unsettled=false,lastClock=-Infinity,active:{abort:AbortController;release:()=>void}|undefined;
  const used=new Set<string>(),deliveries=new WeakMap<Request,'reserved'|'spent'>();
  const storeId=replay?.storeId;
  if(replay&&(!/^[a-f0-9-]{36}$/.test(storeId??'')||typeof replay.reserve!=='function'||typeof replay.consume!=='function'))throw Error('Invalid local replay configuration');
@@ -64,10 +65,10 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
   try{
    await checked();
    const input=Object.freeze({storeId:storeId!,bindingDigest,requestDigest:cviBodyAdmissionDigest(bodyDigest),now:lastClock});
-   const reserved=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.reserve(input,abort.signal);}),canceled]),input,'reserved');
+   unsettled=true;const reserved=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.reserve(input,abort.signal);}),canceled]),input,'reserved');
    await checked();const spending=Object.freeze({...reserved,now:lastClock});
    const spent=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(spending,abort.signal);}),canceled]),spending,'spent',reserved.receipt);
-   await checked();
+   unsettled=false;await checked();
    return Object.freeze({status:'spent-admission',storeId:spent.storeId,bindingDigest:spent.bindingDigest,requestDigest:spent.requestDigest,receipt:spent.receipt,now:spent.now});
   }catch{stop();return null;}finally{operation.release();}
  },async handle(request:Request,advisory?:CviConversationInput):Promise<Response>{
@@ -104,7 +105,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
     // an explicit verified same-owner stale refusal. Unknown/retired owners do
     // not use this path, and no old handoff is reconstructed from storage.
     if(durable&&!consumed&&replay&&fence.stale?.(abort.signal)===true&&live()){
-     const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
+     const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;unsettled=false;deliveries.set(request,'spent');
     }
     throw Error();
    };
@@ -112,7 +113,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
    if(!live())throw Error();
    if(replay){
     const input=Object.freeze({storeId:storeId!,bindingDigest,requestDigest:hash(id),now:lastClock});
-    durable=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.reserve(input,abort.signal);}),canceled]),input,'reserved');deliveries.set(request,'reserved');
+    unsettled=true;durable=acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.reserve(input,abort.signal);}),canceled]),input,'reserved');deliveries.set(request,'reserved');
     if(!live())throw Error();
    }
    if(!request.body)throw Error();reader=request.body.getReader();let length=0;const chunks:Uint8Array[]=[];
@@ -126,7 +127,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
    const reply=await Promise.race([flow.prepare(abort.signal,capturedAdvisory),canceled]);
    if(reply.status!=='prepared'){
     if((reply.reason==='context-changed'||reply.reason==='context-pending')&&fence&&durable&&replay&&live()){
-     await requireFence();const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
+     await requireFence();const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;unsettled=false;deliveries.set(request,'spent');
     }
     throw Error();
    }
@@ -141,7 +142,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
       if(replay&&durable){
        // Spend delivery permission durably BEFORE handing any bytes to a transport.
        const input=Object.freeze({...durable,now:lastClock});
-       acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;deliveries.set(request,'spent');
+       acknowledge(await Promise.race([Promise.resolve().then(()=>{if(!live())throw Error();return replay.consume(input,abort.signal);}),canceled]),input,'spent',durable.receipt);consumed=true;unsettled=false;deliveries.set(request,'spent');
       }
       await requireFence();
       if(!live())throw Error();const wire=reply.takeSse();if(wire===null)throw Error();
@@ -156,7 +157,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
    return new Response(body,{status:200,headers:{...fixedHeaders,'Content-Type':'text/event-stream'}});
   }catch{void reader?.cancel().catch(()=>{});stop();operation.release();return deny(409);}
  }});
- owners.set(endpoint,{flow,bindingDigest,storeId:storeId??'',guarded:!!replay&&typeof fence?.check==='function'});return endpoint;
+ owners.set(endpoint,{flow,bindingDigest,storeId:storeId??'',guarded:!!replay&&typeof fence?.check==='function',isIdle:()=>!closed&&!active&&!unsettled});return endpoint;
 }
 
 /** Restart-protection experiment requires a port; missing storage never falls back. */

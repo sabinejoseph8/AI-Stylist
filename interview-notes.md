@@ -1,3 +1,7 @@
+## Adopting renewed ownership without restarting the notebook
+
+I connected the renewal result to the existing owner through a one-use authenticated handoff. I verify the new complete checkpoint and the unchanged endpoint credential before adopting it, then keep the same notebook and replay history. Tests preserve notes, invalidate old prepared text and refuse copied, late or consumed handoffs. Review also found that a quiet endpoint can still have an unresolved reservation, so I block continuation in that state. I then separated session lifetime from draft readiness, so waiting for note extraction cannot close the owner or erase newer notes. This local path works only at a safe idle boundary; real provider scheduling and restart-wide coordination remain open.
+
 ## Renewing ownership without reviving an old writer
 
 I added a local renewal transaction that requires the exact still-live lease, replaces its token and preserves its owner and generation. It keeps the eight-second bound and fixed native session cap. I tested wrong roles, stale tokens, concurrent plans, crashes and lost acknowledgments, so a failed response cannot revive the old token or replay the mutation. I also checked that an existing endpoint refuses the changed grant until an authenticated adoption step exists. This is local preparation, not a live conversation or completed hosted recovery.

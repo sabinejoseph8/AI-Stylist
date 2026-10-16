@@ -37,7 +37,7 @@ export function createLocalCviStyling(ports:CviSimulationPorts, deadlineMs=1000,
   const readiness=()=>{if(closed)return 'unavailable';try{const state=isReady?isReady():true;return state===true?'ready':state===false?'pending':'unavailable';}catch{return 'unavailable';}};
   const available=()=>readiness()==='ready';
   return Object.freeze({
-    snapshot,available,
+    snapshot,available,isOpen:()=>!closed,
     /** Real transcript extraction/confirmation authority is deliberately not wired. */
     note(input:{id:string;seq:number;field:CviField;text:string;confirmed:boolean}):boolean{
       if(read||closed||!input||typeof input.id!=='string'||!/^fixture-[a-z0-9-]{1,60}$/.test(input.id)||
