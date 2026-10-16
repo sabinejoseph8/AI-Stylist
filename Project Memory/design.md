@@ -1,3 +1,7 @@
+## Shared reference behavior and browser fallback, 16 October 2026
+
+The explicitly injected local notebook shows a generated reference thumbnail only after its description and Owned/Inspiration choice are accepted by the shared coordinator. Replacement retains the previous confirmed photo until acceptance; Clear/End removes it. Reuse the existing disclosure, photo styles and contained native enlargement dialog. Background reads leave that dialog open and do not deliberately move focus. WebKit's freshly rasterized PNG fallback is displayed normally and identified honestly in sample exports, with no palette or customer product change. Local browser checks pass; real assistive-technology/device acceptance remains open.
+
 ## Shared coordinator notebook rehearsal, 16 October 2026
 
 Reuse the approved notebook disclosure, seven-field list, state badges, labelled editor and existing tokens in the explicitly injected local consultation view. Show only acknowledged values; keep uncertain budgets To confirm. Requested Save/Cancel returns to its Edit control, while background snapshots do not move focus. Clear hides temporary values immediately; explicit sample preferences and looks have separate scopes. Version metadata belongs in test attributes, not visible customer wording. No new palette or product design decision is made. Full integrated and real assistive-technology acceptance remain open.

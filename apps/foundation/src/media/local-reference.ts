@@ -1,3 +1,4 @@
+import {isNormalizedPreviewPhoto} from './normalized-preview-photo.ts';
 export type Ownership='owned'|'inspiration';
 export type LocalPhoto=Readonly<{id:number;url:string}>;
 export type LocalReference=Readonly<{photo:LocalPhoto;description:string;ownership:Ownership}>;
@@ -36,7 +37,7 @@ export class LocalReferenceStore {
     let timer:ReturnType<typeof setTimeout>|undefined;
     const normalized=await Promise.race([this.ports.normalize(file),new Promise<never>((_resolve,reject)=>{timer=setTimeout(()=>reject(Error('Photo unavailable')),8000);})]).finally(()=>{if(timer!==undefined)clearTimeout(timer);});
     if(generation!==this.generation)return false;
-    if(!(normalized instanceof Blob)||normalized.type!=='image/webp'||normalized.size<1||normalized.size>8*1024*1024)throw Error('Photo unavailable');
+    if(!isNormalizedPreviewPhoto(normalized))throw Error('Photo unavailable');
     const url=this.ports.createURL(normalized);this.urls.add(url);this.blobs.set(url,normalized);prepared.push(Object.freeze({id:++this.serial,url}));
    }
    if(generation!==this.generation)return false;

@@ -30,3 +30,10 @@ it('exports normalized copies and clears Wardrobe separately from a confirmed se
  expect(media.exportPhotos()).toEqual([]);
  expect(sourceRevoke).toHaveBeenCalledWith('blob:synthetic-session');
 });
+it('preserves the actual normalized PNG type through explicit wardrobe saving and sample export',async()=>{
+ let serial=0;const ports={createURL:()=>`blob:png_${++serial}`,revokeURL:vi.fn()},pixels=new Blob(['fresh canvas PNG fixture'],{type:'image/png'});
+ const reference=new LocalReferenceStore({...ports,normalize:async()=>pixels}),wardrobe=new LocalWardrobe(ports),privacy=new LocalPrivacy();
+ await reference.choose([new Blob(['generated input'],{type:'image/png'})]);reference.confirm('Sample blazer','owned');expect(wardrobe.save(reference.exportOwned())).toBe(true);
+ privacy.bind('wardrobe',{read:()=>({data:{items:wardrobe.snapshot().items.map(item=>({id:item.id,description:item.description}))},photos:wardrobe.exportItems().map(item=>({id:'wardrobe_photo_'+item.id,blob:item.blob}))}),clear:()=>wardrobe.clear()});
+ expect(await privacy.prepare(['wardrobe'])).toBe(true);const result=JSON.parse(privacy.snapshot().ready!.json);expect(result.categories.wardrobe.photos[0].type).toBe('image/png');expect(result.categories.wardrobe.photos[0].base64).toBe(Buffer.from(await pixels.arrayBuffer()).toString('base64'));expect(privacy.snapshot().ready!.json).not.toContain('blob:');privacy.cancel();reference.clear();wardrobe.clear();
+});

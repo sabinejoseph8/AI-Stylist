@@ -1,3 +1,5 @@
+import {LocalConsultationReference} from '../../src/media/local-consultation-reference.ts';
+import {normalizeBrowserImage} from '../../src/media/browser-image.ts';
 /** Test-only Vite entry, excluded from production build inputs. */
 import React from 'react';
 import {createRoot} from 'react-dom/client';
@@ -11,5 +13,7 @@ const call=async(action:string,signal:AbortSignal,command?:unknown)=>{
 };
 const port:ConsultationViewPort={snapshot:s=>call('snapshot',s),edit:(c,s)=>call('edit',s,c),clear:s=>call('clear',s),end:s=>call('end',s),onReset:()=>()=>{}};
 const model=new LocalConsultationView(port);
-window.addEventListener('pagehide',()=>model.dispose(),{once:true});
-createRoot(document.getElementById('root')!).render(<App consultation={model}/>);
+document.addEventListener('fixture-shared-refresh',()=>void model.refresh());
+const reference=new LocalConsultationReference(model,{normalize:normalizeBrowserImage,createURL:blob=>URL.createObjectURL(blob),revokeURL:url=>URL.revokeObjectURL(url)});
+window.addEventListener('pagehide',()=>{reference.dispose();model.dispose();},{once:true});
+createRoot(document.getElementById('root')!).render(<App consultation={model} consultationReference={reference}/>);

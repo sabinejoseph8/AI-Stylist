@@ -1,3 +1,4 @@
+import {LocalConsultationReference} from '../src/media/local-consultation-reference.ts';
 import {expect,it,vi} from 'vitest';
 import {pairedOwnerFixture} from './support/cvi-paired-owner-fixture.ts';
 import {createLocalCviViewPort} from '../src/server/local-cvi-view-port.ts';
@@ -25,4 +26,16 @@ it('a request for another synthetic customer cannot read or edit the captured co
  const x=await pairedOwnerFixture();let view:LocalConsultationView|undefined;
  try{await x.start();view=new LocalConsultationView(createLocalCviViewPort(x.context,new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer other-customer'}})));expect(await view.refresh()).toBe(false);expect(view.snapshot().session).toBeNull();expect(view.beginEdit('budget')).toBeNull();expect(x.draft).not.toHaveBeenCalled();
  }finally{view?.dispose();await x.close();}
+},60000);
+
+it('the actual paired coordinator and local photo retain the same accepted wardrobe revision',async()=>{
+ const x=await pairedOwnerFixture();let view:LocalConsultationView|undefined,reference:LocalConsultationReference|undefined;
+ try{await x.start();const appPort=createLocalCviViewPort(x.context,request());view=new LocalConsultationView(appPort);await view.refresh();let serial=0;
+ reference=new LocalConsultationReference(view,{normalize:async()=>new Blob(['generated pixels'],{type:'image/webp'}),createURL:()=>`blob:generated_${++serial}`,revokeURL:()=>{}});
+ await reference.choose([new Blob(['generated test image'],{type:'image/png'})]);expect(await reference.confirm('Navy blazer','owned')).toBe(true);const first=reference.snapshot().reference;
+ expect((await x.context.snapshot(request(),signal()))!.notes.wardrobe.value).toBe('Owned: Navy blazer');await view.save(view.beginEdit('budget')!,'USD 350 maximum (items only)');expect(reference.snapshot().reference).toEqual(first);
+ const oldRevision=view.snapshot().session!.notes.wardrobe.revision;await reference.choose([new Blob(['second generated image'],{type:'image/png'})]);expect(await reference.confirm('Navy blazer','owned')).toBe(true);expect(view.snapshot().session!.notes.wardrobe.revision).toBe(oldRevision+1);expect(reference.snapshot().reference!.photo.id).not.toBe(first!.photo.id);
+ const initial=await appPort.contextSnapshot(signal());expect(initial).not.toBeNull();const turn=await x.context.beginProposal(request(),'fixture-item-feedback',signal());expect(turn).not.toBeNull();expect((await x.context.acceptProposal(request(),turn!,0,[],true,signal()))?.status).toBe('accepted');const changed=await appPort.contextSnapshot(signal());expect(changed!.revision).toBe(initial!.revision);expect(changed!.inputRevision).toBeGreaterThan(initial!.inputRevision);expect(reference.snapshot().reference).not.toBeNull();
+ const before=await x.records();await view.clear();expect(reference.snapshot().photos).toEqual([]);expect(reference.snapshot().reference).toBeNull();expect(await x.records()).toEqual(before);
+ }finally{reference?.dispose();view?.dispose();await x.close();}
 },60000);

@@ -52,7 +52,9 @@ it('altering a planned renewal token refuses before authority admission',async()
  }finally{await f.x.close();}},30000);
 it('an existing composed owner cannot silently adopt a renewed native grant',async()=>{
  let time=1000;const {startupAdmissionFixture}=await import('./support/cvi-startup-admission-fixture.ts'),{createLocalCviStartupOwner}=await import('./support/cvi-private-contract-owner.ts');
- const f=await startupAdmissionFixture(()=>time);try{
+ // Fresh signed operations over one resident test transport, without proof
+ // caching or changes to the original five-second startup/eight-second lease.
+ const f=await startupAdmissionFixture(()=>time,10000,true);try{
   const owner=await createLocalCviStartupOwner(f.expected,f.checkpoint,f.admission(),f.resources,()=>time,5000,8000).start(signal());expect(owner).not.toBeNull();
   const old=f.nativeLease();time=8500;const p=await f.x.plan('renew',{lease:old,ttl:8000,token:randomBytes(32).toString('hex')}),updated:any=await f.x.adapter('rotator').execute(p,signal());
   expect(updated.expiresAt).toBe(10000);expect(updated.generation).toBe(old.generation);

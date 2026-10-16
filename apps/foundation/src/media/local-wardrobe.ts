@@ -1,3 +1,4 @@
+import {isNormalizedPreviewPhoto} from './normalized-preview-photo.ts';
 import type {LocalPhoto} from './local-reference.ts';
 export type WardrobeItem=Readonly<{id:number;url:string;description:string}>;
 export type OwnedExport=Readonly<{photo:LocalPhoto;description:string;ownership:'owned';blob:Blob}>;
@@ -17,7 +18,7 @@ export class LocalWardrobe {
  snapshot():WardrobeSnapshot{return Object.freeze({items:Object.freeze([...this.items]),selected:Object.freeze([...this.selected]),message:this.message});}
  private publish(message:string){this.message=message;for(const listener of [...this.listeners])try{listener();}catch{}}
  save(source:OwnedExport|null){
-  if(!source||source.ownership!=='owned'||!source.description.trim()||source.description.length>160||!(source.blob instanceof Blob)||source.blob.type!=='image/webp'||source.blob.size<1||source.blob.size>8*1024*1024){this.publish('Confirm an owned garment before saving it.');return false;}
+  if(!source||source.ownership!=='owned'||!source.description.trim()||source.description.length>160||!isNormalizedPreviewPhoto(source.blob)){this.publish('Confirm an owned garment before saving it.');return false;}
   const existing=this.sources.get(source.photo);if(existing&&this.blobs.has(existing)){this.publish('This photo is already in the sample wardrobe. Edit its description in Wardrobe.');return false;}
   if(this.items.length>=24||[...this.blobs.values()].reduce((total,blob)=>total+blob.size,source.blob.size)>32*1024*1024){this.publish('Sample wardrobe limit reached: 24 items or 32 MB. Remove an item first.');return false;}
   let url:string;try{url=this.ports.createURL(source.blob);}catch{this.publish('The sample copy could not be created. Your session reference is unchanged.');return false;}

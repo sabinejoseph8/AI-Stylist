@@ -1,3 +1,4 @@
+import {isNormalizedPreviewPhoto} from './normalized-preview-photo.ts';
 const MAX_PIXELS=16_000_000;
 const u24=(v:DataView,offset:number)=>v.getUint8(offset)+(v.getUint8(offset+1)<<8)+(v.getUint8(offset+2)<<16);
 /** Reject large declared dimensions before invoking the browser decoder. A
@@ -30,7 +31,7 @@ export async function normalizeBrowserImage(file:Blob):Promise<Blob>{
   if(retired||bitmap.width<1||bitmap.height<1||bitmap.width*bitmap.height>MAX_PIXELS){releaseBitmap();throw Error('Photo unavailable');}
   const scale=Math.min(1,1280/bitmap.width,1280/bitmap.height);canvas=document.createElement('canvas');canvas.width=Math.max(1,Math.round(bitmap.width*scale));canvas.height=Math.max(1,Math.round(bitmap.height*scale));
   const context=canvas.getContext('2d');if(!context)throw Error('Photo unavailable');context.drawImage(bitmap,0,0,canvas.width,canvas.height);releaseBitmap();
-  return await new Promise<Blob>((resolve,reject)=>canvas!.toBlob(blob=>!retired&&blob?.type==='image/webp'&&blob.size<=8*1024*1024?resolve(blob):reject(Error('Photo unavailable')),'image/webp',0.85));
+  return await new Promise<Blob>((resolve,reject)=>canvas!.toBlob(blob=>!retired&&isNormalizedPreviewPhoto(blob)?resolve(blob):reject(Error('Photo unavailable')),'image/webp',0.85));
  })();
  try{return await Promise.race([work,deadline]);}
  catch{throw Error('Photo unavailable');}

@@ -1,3 +1,4 @@
+import {isNormalizedPreviewPhoto} from '../media/normalized-preview-photo.ts';
 export const PRIVACY_CATEGORIES=['session','preferences','wardrobe','looks','shopping'] as const;
 export type PrivacyCategory=typeof PRIVACY_CATEGORIES[number];
 export type ExportPhoto=Readonly<{id:string;blob:Blob}>;
@@ -32,16 +33,16 @@ export class LocalPrivacy {
   const deadline=setTimeout(()=>{if(generation===this.generation){this.cancel();this.publish('Export preparation expired. Prepare a smaller selection again.');}},30000);
   try{
    const sources=selected.map(category=>({category,source:this.ports.get(category)!.read()}));
-   let bytes=0;const fingerprints=sources.map(({source})=>{const encoded=JSON.stringify(source.data);if(typeof encoded!=='string'||new TextEncoder().encode(encoded).byteLength>1024*1024)throw Error();for(const photo of source.photos){if(!(photo.blob instanceof Blob)||photo.blob.type!=='image/webp'||photo.blob.size<1||photo.blob.size>8*1024*1024||!/^[-a-z0-9_]{1,80}$/.test(photo.id))throw Error();bytes+=photo.blob.size;}return encoded;});
+   let bytes=0;const fingerprints=sources.map(({source})=>{const encoded=JSON.stringify(source.data);if(typeof encoded!=='string'||new TextEncoder().encode(encoded).byteLength>1024*1024)throw Error();for(const photo of source.photos){if(!isNormalizedPreviewPhoto(photo.blob)||!/^[-a-z0-9_]{1,80}$/.test(photo.id))throw Error();bytes+=photo.blob.size;}return encoded;});
    if(bytes>32*1024*1024||generation!==this.generation)throw Error();
    const exported:Partial<Record<PrivacyCategory,unknown>>={};
-   for(const {category,source} of sources){const photos=[];for(const photo of source.photos){if(generation!==this.generation)return false;let timer:ReturnType<typeof setTimeout>|undefined;const base64=await Promise.race([this.encode(photo.blob),new Promise<never>((_resolve,reject)=>{timer=setTimeout(()=>reject(Error()),8000);})]).finally(()=>{if(timer!==undefined)clearTimeout(timer);});if(generation!==this.generation)return false;if(typeof base64!=='string'||base64.length!==4*Math.ceil(photo.blob.size/3)||!/^[A-Za-z0-9+/]*={0,2}$/.test(base64))throw Error();photos.push({id:photo.id,type:'image/webp',base64});}exported[category]={data:source.data,photos};}
+   for(const {category,source} of sources){const photos=[];for(const photo of source.photos){if(generation!==this.generation)return false;let timer:ReturnType<typeof setTimeout>|undefined;const base64=await Promise.race([this.encode(photo.blob),new Promise<never>((_resolve,reject)=>{timer=setTimeout(()=>reject(Error()),8000);})]).finally(()=>{if(timer!==undefined)clearTimeout(timer);});if(generation!==this.generation)return false;if(typeof base64!=='string'||base64.length!==4*Math.ceil(photo.blob.size/3)||!/^[A-Za-z0-9+/]*={0,2}$/.test(base64))throw Error();photos.push({id:photo.id,type:photo.blob.type,base64});}exported[category]={data:source.data,photos};}
    if(generation!==this.generation)return false;
    const unchanged=()=>sources.every(({category,source},index)=>{const latest=this.ports.get(category)?.read();return !!latest&&JSON.stringify(latest.data)===fingerprints[index]&&latest.photos.length===source.photos.length&&latest.photos.every((photo,i)=>photo.id===source.photos[i].id&&photo.blob===source.photos[i].blob);});
    if(!unchanged())throw Error();
    const json=JSON.stringify({version:1,scope:'local-sample-only',categories:exported,limitations:['No real account or provider data.','Only selected current sample data is included.','Downloaded files are separate copies and are not deleted by clearing the app.']},null,2);
    if(new TextEncoder().encode(json).byteLength>48*1024*1024||generation!==this.generation)throw Error();
-   this.verify=unchanged;this.ready=Object.freeze({generation,categories:Object.freeze(selected),json});this.busy=false;this.publish('Sample export ready. Review the selected categories, then download explicitly. Photos, if selected, are normalized WebP copies.');return true;
+   this.verify=unchanged;this.ready=Object.freeze({generation,categories:Object.freeze(selected),json});this.busy=false;this.publish('Sample export ready. Review the selected categories, then download explicitly. Photos, if selected, are newly rasterized WebP or PNG copies.');return true;
   }catch{if(generation===this.generation){this.busy=false;this.ready=null;this.verify=null;this.publish('Export unavailable, changed or too large. Choose fewer categories and prepare again. No download was started.');}return false;}finally{clearTimeout(deadline);}
  }
  current(prepared:PreparedExport){if(this.ready!==prepared||prepared.generation!==this.generation)return false;try{if(this.verify?.()&&this.ready===prepared&&prepared.generation===this.generation)return true;}catch{}this.invalidate();return false;}
