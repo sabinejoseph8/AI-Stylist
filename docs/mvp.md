@@ -1,3 +1,13 @@
+## Local restricted CVI history updates, 15 October 2026
+
+Sabine approved local preparation/tests without new spending or hosted changes. Added a disconnected domain validator and signed authority model allowing only request append, same-principal/current-generation consumption and rotator-only credential retirement/append. The server derives the next history and rejects arbitrary hash replacement, stale projections, resets, refunds, cap/expiry changes and command-supplied roles. Old records/limits and unresolved holds survive credential rotation.
+
+59 new foundation tests cover actor/role/scope ownership, request/receipt uniqueness, one-use consumption, caps, stale credentials, concurrent updates, target mismatch, clock/schema bounds, immutable grants, lost acknowledgments and six endpoint compositions. All 1,685 foundation tests across 144 files, 331 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks pass. See docs/local-tavus-restricted-history.md.
+
+Limits: role grants, signer and aggregate state are local simulations, not real authenticated principals, durable transactions or independently protected storage. Trusted snapshot projection/time and a real least-privilege persistence adapter remain unimplemented. Domain rules do not recall delivered audio or reconcile old unresolved requests. Existing generic comparison fixtures retain their negative limitations. No provider/account/hosted changes, real credentials, spending, permanent backup runtime/ledger or scheduler changes. Local Memory/interview records updated without publication, production architecture approval or task completion changes.
+
+Exact next action: specify the disabled persistence/transaction adapter, role mapping and authoritative projection/time contract under existing hosting/spending limits. Preserve independent-history, provider, privacy, financial and live-activation gates. No user action is needed for the completed local domain tests.
+
 ## Local independent CVI history authority contract, 15 October 2026
 
 Sabine approved local preparation/tests without new spending or hosted changes. Added a disconnected authority client requiring pinned Ed25519 identity, fresh challenges, exact signed scope/request binding, preserved epoch floors, immutable one-use read capabilities and conditional head advancement. Unavailable/unknown/stale/lost acknowledgments hold the client without retry, reset or fallback. Endpoint composition tests verify refusal before drafting and delivery.

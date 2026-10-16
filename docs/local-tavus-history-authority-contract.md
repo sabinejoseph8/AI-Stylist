@@ -1,3 +1,7 @@
+## Later restricted-update model
+
+See docs/local-tavus-restricted-history.md for strict domain commands and simulated role enforcement. The signed protocol now binds an optional flat command with recursive canonical key ordering. The earlier generic model remains a comparison fixture; its malicious generic-writer limitation still applies. No real role grants, durable backend or hosted authority are activated.
+
 # Local independent CVI history authority contract
 
 Status: local preparation and simulated tests, approved by Sabine on 15 October 2026. No external authority, account, credential provisioning, provider call, hosted change or spending is activated. This contract is a technical experiment, not an approved production architecture or complete Tavus integration.

@@ -1,3 +1,7 @@
+## Restricting history updates to valid operations
+
+I replaced arbitrary hash updates in the local authority experiment with specific operations. A replay writer can append a request and consume only its own current-generation reservation. A separate rotator can retire credentials while preserving request history, limits and unresolved holds. I tested stale projections, unauthorized roles, wrong receipts and attempts to reset counters, including through the speech endpoint. These are local rules and simulated roles, so I kept real authentication, durable storage and live-provider acceptance open.
+
 ## Defining an independent history authority contract
 
 I prepared a local contract for fresh signed history reads and conditional updates. It pins the authority identity, rejects replayed replies and keeps uncertain updates held. I tested the contract with my speech endpoint so failures prevent draft work or text delivery. The review also showed that signatures do not make storage independent and cannot stop an authorized writer from submitting an invalid future history. I documented those limits and the need for restricted, validated domain operations before any real deployment.
