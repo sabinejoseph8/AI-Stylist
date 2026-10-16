@@ -1,3 +1,7 @@
+## Binding a signed authority claim to the actual database transaction
+
+I connected the one-use authority claim to a separately signed observation of the live database connection, transaction and exact command. A caller cannot replace the transaction or reuse an old proof. I tested the bridge with real test signatures and an isolated PostgreSQL instance, including lost claim, admission and commit replies. When a commit reply is lost, I hold the outcome even if the database changed. I kept full-state reconciliation separate: the local SQL model still stores a reduced projection, so its success does not prove the complete signed target committed or enable live styling. No paid call or hosted database changed.
+
 ## Moving write protection into the database permission boundary
 
 I tested separate database roles and restricted transaction functions in an isolated PostgreSQL instance. Runtime writers cannot edit the protected tables directly. Each verifier-approved operation binds to one authenticated connection and transaction, so a rolled-back operation cannot reuse its admission through a replacement transaction. I tested wrong identities, expired approvals, concurrent writes and duplicate releases. My adapter treats SQL results as provisional until commit and holds lost or expired replies. Review also corrected a race-sensitive test that confused a signed refusal with a successful history advance. I kept the simulated verifier and incomplete full-domain integration explicit. No paid service or hosted database changed.

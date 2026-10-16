@@ -18,11 +18,11 @@ def literal(x):return "'"+str(x).replace("'","''")+"'"
 def state(x):return literal(json.dumps(x,separators=(',',':')))+'::jsonb'
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local-synthetic',action='store_true',required=True);parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local-synthetic',action='store_true',required=True);parser.add_argument('--signed-authority-bridge',action='store_true');options=parser.parse_args()
     socket=Path.home()/'.docker/run/docker.sock';binary=Path.home()/'.docker/bin/docker'
     if not stat.S_ISSOCK(socket.stat().st_mode):raise RuntimeError('local Docker unavailable')
     docker=[str(binary),'--host','unix://'+str(socket)]
-    name='stylist-cvi-transactions-'+uuid.uuid4().hex[:12];created=False;checks=0;stage='startup';sessions=[]
+    name='stylist-cvi-transactions-'+uuid.uuid4().hex[:12];created=False;checks=0;stage='startup';sessions=[];workers=[]
     def run(args,data=None):return subprocess.run(docker+args,input=data,text=True,capture_output=True,timeout=30)
     def require(ok):
         nonlocal checks
@@ -56,7 +56,7 @@ def main():
                 if not chunk:raise DatabaseHeld('local fixture held')
                 self.buffer+=chunk.decode()
             raise DatabaseHeld('local fixture held')
-        def identity(self):return dict(principal=self.principal,transactionId=self.xid)
+        def identity(self):return json.loads(self.query("SELECT jsonb_build_object('principal',session_user,'transactionId',pg_current_xact_id()::text);"))
         def execute_admitted(self,op,claim):
             result=json.loads(self.query('SELECT cvi_tx_fixture.execute_admitted('+literal(str(uuid.UUID(op)))+','+literal(claim)+');'))
             result['operationId']=uuid.UUID(result['operationId']).hex
@@ -68,6 +68,36 @@ def main():
             if self.p.poll() is None:
                 try:self.p.stdin.close();self.p.wait(timeout=3)
                 except Exception:self.p.kill();self.p.wait(timeout=3)
+            self.sel.close();self.p.stdout.close()
+    class BridgeWorker:
+        def __init__(self):
+            node=Path.home()/'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node'
+            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
+            self.buffer='';self.sel=selectors.DefaultSelector();self.sel.register(self.p.stdout,selectors.EVENT_READ);self.active=None;workers.append(self)
+            self.command=self.call('prepare')['command']
+        def call(self,method,**args):
+            self.p.stdin.write(json.dumps(dict(method=method,**args))+'\n');self.p.stdin.flush();limit=time.monotonic()+12
+            while time.monotonic()<limit:
+                while '\n' in self.buffer:
+                    line,self.buffer=self.buffer.split('\n',1);message=json.loads(line)
+                    if message['stage']=='result':return message['result']
+                    if message['stage']=='held':raise DatabaseHeld('signed bridge held')
+                    if message['stage']!='observe' or self.active is None:raise DatabaseHeld('signed bridge held')
+                    # Observe this real database connection, not the submitted binding.
+                    observed=dict(intent=self.command,connection=self.active.identity())
+                    self.p.stdin.write(json.dumps(dict(binding=observed))+'\n');self.p.stdin.flush()
+                if not self.sel.select(.1):continue
+                chunk=os.read(self.p.stdout.fileno(),65536)
+                if not chunk:raise DatabaseHeld('signed bridge held')
+                self.buffer+=chunk.decode()
+            raise DatabaseHeld('signed bridge held')
+        def close(self):
+            if self.p.poll() is None:
+                try:self.call('close')
+                except Exception:pass
+            self.p.stdin.close()
+            try:self.p.wait(timeout=3)
+            except Exception:self.p.kill();self.p.wait(timeout=3)
             self.sel.close();self.p.stdout.close()
     initial=dict(generation=0,fenced=True,owner='0'*64,boot='0'*64,head='a'*64)
     class Verifier:
@@ -120,6 +150,43 @@ def main():
         def good(query,principal='postgres'):
             if principal.startswith('fixture_'):query='SET ROLE cvi_tx_'+principal.removeprefix('fixture_')+'; '+query
             return original_good(query,principal)
+        if options.signed_authority_bridge:
+            class SignedVerifier:
+                def __init__(self,worker,fail=False):self.worker=worker;self.fail=fail
+                def admit(self,b):
+                    result=self.worker.call('admit',binding=b);p=b['intent'];c=b['connection'];record='NULL' if p['recordHash'] is None else literal(p['recordHash'])
+                    good('SELECT cvi_tx_fixture.admit('+','.join([literal(str(uuid.UUID(p['operationId']))),literal(result['claimHash']),literal(c['principal']),literal(p['kind']),literal(c['transactionId'])+'::xid8',state(p['previous']),state(p['target']),record,"clock_timestamp()+interval '7 seconds'"])+');','fixture_verifier')
+                    if self.fail:raise DatabaseHeld('lost admission reply')
+                    return result
+                def confirm(self,b,claim):return self.worker.call('confirm',binding=b,claimHash=claim)
+            for mode in ['normal','bad-proof','bad-claim','lost-claim','replayed-proof','lost-admission','lost-commit']:
+                stage='signed-'+mode
+                # Each synthetic scenario has a fresh authority journal. Only
+                # this disposable database is reset, never a real history store.
+                good('TRUNCATE cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(initial)+';')
+                w=BridgeWorker();w.call('mode',mode=mode);s=Session('fixture_rotator');w.active=s
+                if mode=='lost-commit':
+                    original_commit=s.commit
+                    def lost_commit():original_commit();raise DatabaseHeld('lost commit reply')
+                    s.commit=lost_commit
+                port=type('Port',(),{'begin':lambda _:s})()
+                a=DatabaseTransactionAdapter('fixture_rotator','activate',port,SignedVerifier(w,mode=='lost-admission'),lambda:1000)
+                if mode=='normal':
+                    require(a.execute(w.command)['target']==w.command['target']);require(current()==w.command['target'])
+                else:
+                    try:a.execute(w.command);raise RuntimeError('unexpected signed success')
+                    except DatabaseHeld:checks+=1
+                    require(current()==(w.command['target'] if mode=='lost-commit' else initial))
+                evidence=w.call('inspect');require(evidence['claimed']==(mode!='bad-proof'))
+                # Successful SQL still leaves full-state authority reconciliation open.
+                require(evidence['operations']==1 and evidence['pending'] is not None)
+                if evidence['claimed']:
+                    w.call('fresh-bridge');retry=Session('fixture_rotator');w.active=retry
+                    try:w.call('admit',binding=dict(intent=w.command,connection=retry.identity()));raise RuntimeError('unexpected fresh replay')
+                    except DatabaseHeld:checks+=1
+                    finally:retry.close()
+                w.close()
+            good('TRUNCATE cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(initial)+';')
         stage='full-sequence'
         active={**initial,'generation':1,'fenced':False,'owner':'1'*64,'boot':'2'*64}
         execute(command('activate',initial,active),'fixture_rotator');require(current()==active)
@@ -189,10 +256,13 @@ def main():
         require(good("SELECT count(*)=7 AND bool_and(NOT rolcanlogin AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolreplication) FROM pg_roles WHERE rolname LIKE 'cvi_tx_%';")=='t')
         require(good("SELECT count(*)=4 AND bool_and(relrowsecurity AND relforcerowsecurity) FROM pg_class WHERE relnamespace='cvi_tx_fixture'::regnamespace AND relkind='r';")=='t')
         require(good("SELECT count(*)=0 FROM pg_auth_members WHERE roleid='cvi_tx_owner'::regrole;")=='t')
-        print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='simulated',network='none')))
+        print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='signed-bridge' if options.signed_authority_bridge else 'simulated',network='none')))
     except Exception:
         print(json.dumps(dict(status='held',stage=stage,checks=checks)));raise SystemExit(1)
     finally:
+        for w in workers:
+            try:w.close()
+            except Exception:pass
         for s in sessions:
             try:s.close()
             except Exception:pass

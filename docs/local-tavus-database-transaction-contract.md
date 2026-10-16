@@ -2,6 +2,8 @@
 
 Sabine approved local preparation and tests on 16 October 2026, with no new spending or hosted changes. The SQL is an opt-in disposable PostgreSQL contract, not a migration for Supabase. It uses made-up identities and data, a cached PostgreSQL 17 image, no published ports, no network, bounded resources and temporary storage. The rehearsal removes its container on exit.
 
+Follow-up: [local signed-authority database bridge](local-tavus-signed-database-bridge.md) now tests real execution-claim signatures against live local transaction observations. The complete PostgreSQL domain port and committed-target reconciliation remain open.
+
 ## Permission boundary
 
 `tools/operations/sql/cvi-transaction-contract.sql` separates a non-login owner, verifier, rotator, fencer, writer, signer and observer. Runtime identities have one granted role and no superuser, role-creation, database-creation, replication or RLS-bypass privileges. The owner has no runtime membership. All four tables force RLS, with owner-only policies. Runtime roles cannot select or mutate the tables, truncate history, disable RLS, create objects in the private schema or assume the owner role.
