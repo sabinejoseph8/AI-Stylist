@@ -44,9 +44,11 @@ def append_committed(db,config,domain_input,result,context):
     db.execute('INSERT INTO committed_receipts VALUES(?,?,?,?,?,?)',(identity,r['challenge'],r['principalDigest'],canonical(record),'pending',now))
 
 
-def claim(root,identity,principal,now,crash_at=None):
+def claim(root,identity,principal,now,crash_at=None,witness=None,witness_crash_at=None):
     if not isinstance(identity,str) or not re.fullmatch(r'[a-f0-9]{64}',identity) or not integer(now):raise RecoveryHeld('receipt-unavailable')
-    with connection(root) as db:
+    if witness is not None:
+        from local_cvi_receipt_witness import protected_connection
+    with (protected_connection(root,witness,witness_crash_at) if witness is not None else connection(root)) as db:
         history=db.execute('SELECT observed FROM history WHERE id=1').fetchall()
         if len(history)!=1 or now<history[0][0]:raise RecoveryHeld('receipt-unavailable')
         row=db.execute('SELECT principal,record,state,observed FROM committed_receipts WHERE id=?',(identity,)).fetchone()
@@ -62,6 +64,8 @@ def claim(root,identity,principal,now,crash_at=None):
         return record
 
 
-def inspect(root):
-    with connection(root) as db:
+def inspect(root,witness=None):
+    if witness is not None:
+        from local_cvi_receipt_witness import protected_connection
+    with (protected_connection(root,witness) if witness is not None else connection(root)) as db:
         return [dict(id=r[0],state=r[1]) for r in db.execute('SELECT id,state FROM committed_receipts ORDER BY id')]

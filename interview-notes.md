@@ -1,3 +1,7 @@
+## Checking signing permission against a separate restore witness
+
+I extended my local receipt rehearsal with a witness that tracks exact domain history, projection use, receipt claims and time. Restoring only the database or only the witness is refused, including a claim rollback that leaves the domain epoch unchanged. I tested interrupted writes between the two commits and deliberately kept mismatched state held. I also preserved a negative test showing that restoring both stores can restore old signing permission. That keeps actual independent administration, authenticated grants and operator recovery explicit before deployment. No provider calls, hosted changes or new spending were involved.
+
 ## Making a committed receipt survive a signer crash
 
 I separated a committed history change from permission to sign its acknowledgment. My local transaction saves the receipt with the history, and the signer must permanently claim it before cryptography. I tested crashes before and after both commits and an actual signer process exiting after signing without returning a reply. Competing workers and new signers cannot reuse a claimed receipt, but uncertain delivery remains held instead of being refunded. I also kept a negative restore test showing that rolling back the entire local database can restore permission. That makes independent claim and epoch protection an explicit deployment requirement. No real keys, provider calls or hosted settings changed.

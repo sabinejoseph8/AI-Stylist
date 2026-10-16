@@ -1,5 +1,7 @@
 # Local committed-receipt-to-signer interface
 
+Follow-up: [local receipt witness rehearsal](local-tavus-receipt-witness.md) detects database-only and witness-only restores under an explicit independent-protection assumption. Coordinated rollback of both still defeats the local model.
+
 Sabine approved local preparation and tests on 15 October 2026, including crash and replay protection, with no new spending or hosted changes. All databases and keys used here are disposable synthetic fixtures. The interface is disconnected from application routes and providers.
 
 ## Transaction and signing sequence

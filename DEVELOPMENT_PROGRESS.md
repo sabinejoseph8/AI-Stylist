@@ -1,3 +1,13 @@
+## Local receipt-claim and epoch-floor witness across restores, 15 October 2026
+
+Sabine approved local preparation/tests with no new spending or hosted changes. Added a separately protected witness model for exact domain history, projection tokens, committed receipts and observed time. Protected operations compare pinned witness identity and current metadata, enforce nondecreasing floors and one-use history, advance the witness before database commit and hold on unknown/mismatched state. The existing signer receives records only through the protected claim port in the new composition tests.
+
+24 new foundation cases use fresh processes for database-only, witness-only, same-epoch claim and projection rollback, competing signers, missing/substituted authority, clocks, crash boundaries and interrupted witness files. 24 operations cases cover append-only records, floor/identity checks, disk uncertainty and no-op behavior. Full regression: 1,833 foundation tests across 151 files, 355 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks. See docs/local-tavus-receipt-witness.md.
+
+Limits: separate folders simulate independent protection. A negative test confirms that restoring both database and witness can still restore signing permission. Cross-store commits are not atomic; witness-ahead failures hold without automatic rebase/refund. Real authenticated authority, grants, protected identity/floors, reconciliation and hosted mutations/claims remain open. No real keys/credentials, provider calls, spending, hosted changes, public push, permanent backup runtime/ledgers or scheduler changes. Local Memory/interview records updated without hosted publication or task/phase completion changes; allocation remains $51.
+
+Exact next local action: review the authenticated witness service and least-privilege contract within approved Supabase/Render hosting, including split-commit refusal and operator recovery. Existing real security, privacy, financial and live-activation gates remain. No user action is needed for the completed local restore rehearsal.
+
 ## Local durable CVI committed receipts and signer, 15 October 2026
 
 Sabine approved local preparation/tests, including crash and replay protection, with no new spending or hosted changes. Added a disconnected receipt signer and disposable SQLite outbox. Validated domain history, one-use token consumption and a server-constructed receipt commit atomically. A permanent claim commits before signing; unknown outcomes, signing failure, cancellation and lost delivery release no success or refund. Requests bind exact principal/scope/challenge/digest and deadlines, with immutable captured records and observed database time.

@@ -50,8 +50,10 @@ def prepare(root,snapshot,config):
     return {'storeId':snapshot['storeId'],'policyDigest':checked['policyDigest']}
 
 
-def operation(root,mode,config,request=None,crash_at=None, receipt_context=None):
-    with connection(root) as db:
+def operation(root,mode,config,request=None,crash_at=None, receipt_context=None, witness=None, witness_crash_at=None):
+    if witness is not None:
+        from local_cvi_receipt_witness import protected_connection
+    with (protected_connection(root,witness,witness_crash_at) if witness is not None else connection(root)) as db:
         rows=db.execute('SELECT payload,head,policy,observed FROM history WHERE id=1').fetchall()
         if len(rows)!=1:raise RecoveryHeld('transaction-unavailable')
         payload,head,policy,observed=rows[0];snapshot=json.loads(payload)
