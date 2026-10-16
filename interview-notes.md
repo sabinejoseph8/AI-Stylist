@@ -1,3 +1,9 @@
+## Checking the complete committed state before access
+
+I expanded the local verification to cover the actual protected startup path. A successful database commit alone cannot activate access: the complete state, original transaction and claim must match, followed by fresh signed reconciliation and gate completion. When the post-commit check fails, the committed record stays intact and the app refuses another attempt.
+
+I also checked late results, notebook corrections, Clear and End. Two new test assertions initially rejected a valid reserved-to-spent transition during cancellation. I corrected them to require intact, unusable records while still blocking stale output. Another test initially tried to inspect through a deliberately held gate; I changed it to verify that refusal and the unchanged disposable ledger. The final focused checks pass; I kept the candidate separate while its full regression runs.
+
 ## Prototyping original paired configuration
 
 I prepared a separate local version that constructs admission, replay, checkpoint and continuation together and captures the credential service and clock before work starts. Copies, mismatched objects and direct admission without the original claim refuse before planning. Its focused checks include the complete local two-turn journey within the unchanged journal limit.

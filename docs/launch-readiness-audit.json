@@ -879,6 +879,27 @@
       "localMemoryChecks": 19,
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-isolated-owner-pair.md",
+      "focusedTests": 40,
+      "focusedFiles": 4,
+      "existingBroadContractTestsPassed": 138,
+      "finalGenuineNotebookTests": 4,
+      "finalGenuineReconciliationTests": 3,
+      "fullCandidateRegressionStatus": "running",
+      "fullCandidateRegressionSession": 79137,
+      "fullCandidateRegressionLog": "/private/tmp/ai-stylist-pair-full-regression.log",
+      "sourcePatchSha256": "a41c342a3194b10e00293c6471c79fa3e9c1d40c3bdd1ae70e341aef93773b45",
+      "sourcePatchName": "prepared-owner-pair-a41c342a3194.patch",
+      "notMerged": true,
+      "mainFoundationTests": 2551,
+      "mainFoundationFiles": 186,
+      "completeAuthorityRecords": 127,
+      "authorityRecordCap": 128,
+      "productionCriteriaClosed": 0,
+      "hostedChanges": false
     }
   ]
 }
