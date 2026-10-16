@@ -1,3 +1,13 @@
+## Original authenticated transaction admission, 16 October 2026
+
+The existing signed database bridge now retains its original returned admission privately. One server-only claim becomes available after the same bridge successfully confirms the original connection and authority execution claim. It checks exact original result, authority/database pins, SQL principal, immutable native plan, original SQL operation, both operation signals, trusted bridge clock and earliest proof/command expiry. Copies, reconstructed JSON, substituted contexts, failed confirmation, reentrant getters, mid-claim cancellation and repeated claims refuse. The returned transaction/claim fields are admission identity only, not proof of COMMIT, a native lease or publication permission. No additional authority read is made.
+
+Review also fixed a configuration gap: the SQL command operation must equal the original native plan's operation prefix. Twenty new cases and the existing signed bridge/full-state reconciliation suites pass, 72 focused checks across three files. TypeScript checking/build and four encryption checks pass. All 564 operations tests pass with ResourceWarning as error. No SQL contract changed and the prior 556-check isolated PostgreSQL result was not rerun. The previous full foundation result, 2,472 tests across 181 files at 9219017, predates this bridge change and is not claimed as a current full regression.
+
+The Node gate still uses its earlier pre-entry expected commit configuration. The new original claim is not yet connected to a deferred gate binding, post-commit receipt protocol, original handoff adoption or protected owner publication. Existing signature tests use synthetic connection IDs from the local fixture, not verified hosted SQL identities. Do not infer commit or publication from this one-use admission. Next, replace the pre-entry commit path with a mandatory deferred claim from this original bridge and migrate the process tests to gate entry before authority/transaction work, preserving complete-state reconciliation and original receipt provenance.
+
+Product/design requirements, 5-of-41 full completion, 0-of-21 production acceptance and the $51 allocation are unchanged. No providers, real credentials, new spending, hosted publication, support messages or permanent backup runtime changes. Universal writer coverage, independent restore floors, production clock mapping and actual provider/device acceptance remain open.
+
 ## Original supervised Node transition gate, 16 October 2026
 
 Prepared a disabled original Node gate port backed by the actual Python lock process and pinned signed finish verifier. Trusted setup is captured before the process starts. Only the original opaque handle can obtain its frozen finish binding, inspect under its lock, finish from the exact original signed inspection, or close it. Finish consumes the original proof once and waits for the matching acknowledgment plus clean process exit after lock release. Copies, ordinary summaries, cancellation, expiry, clock rollback, competing finishes and unknown outcomes hold without retry or publication permission. A hard wall timer stops an idle process even when a fixture logical clock is frozen.
@@ -1570,14 +1580,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: original supervised Node gate port prepared; 2,472 foundation tests across 181 files, 564 operations checks and 19 local Memory checks pass. Original committed-receipt provenance, before-commit sequencing, handoff adoption and protected publication integration remain open.
+Current local focus: original authenticated transaction-admission retention is prepared, with 72 focused checks, 564 operations tests and TypeScript/build passing. Deferred gate binding, original committed receipts and startup/renewal publication integration remain open. The previous full regression predates this latest bridge change.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** bind original committed receipts and startup/renewal handoffs to the gate before protected publication, retaining the fixed 128-record limit.
+- **Next local action:** bind the already-open Node gate to the original confirmed admission, migrate its native process fixture before authority advancement, and retain actual committed-receipt provenance through adoption before publication.
 
 ## Historical summary checkpoints
 

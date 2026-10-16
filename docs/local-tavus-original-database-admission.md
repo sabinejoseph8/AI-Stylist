@@ -1,0 +1,17 @@
+# Local original database admission
+
+## Original authenticated transaction admission, 16 October 2026
+
+The existing signed database bridge now retains its original returned admission privately. One server-only claim becomes available after the same bridge successfully confirms the original connection and authority execution claim. It checks exact original result, authority/database pins, SQL principal, immutable native plan, original SQL operation, both operation signals, trusted bridge clock and earliest proof/command expiry. Copies, reconstructed JSON, substituted contexts, failed confirmation, reentrant getters, mid-claim cancellation and repeated claims refuse. The returned transaction/claim fields are admission identity only, not proof of COMMIT, a native lease or publication permission. No additional authority read is made.
+
+Review also fixed a configuration gap: the SQL command operation must equal the original native plan's operation prefix. Twenty new cases and the existing signed bridge/full-state reconciliation suites pass, 72 focused checks across three files. TypeScript checking/build and four encryption checks pass. All 564 operations tests pass with ResourceWarning as error. No SQL contract changed and the prior 556-check isolated PostgreSQL result was not rerun. The previous full foundation result, 2,472 tests across 181 files at 9219017, predates this bridge change and is not claimed as a current full regression.
+
+The Node gate still uses its earlier pre-entry expected commit configuration. The new original claim is not yet connected to a deferred gate binding, post-commit receipt protocol, original handoff adoption or protected owner publication. Existing signature tests use synthetic connection IDs from the local fixture, not verified hosted SQL identities. Do not infer commit or publication from this one-use admission. Next, replace the pre-entry commit path with a mandatory deferred claim from this original bridge and migrate the process tests to gate entry before authority/transaction work, preserving complete-state reconciliation and original receipt provenance.
+
+Product/design requirements, 5-of-41 full completion, 0-of-21 production acceptance and the $51 allocation are unchanged. No providers, real credentials, new spending, hosted publication, support messages or permanent backup runtime changes. Universal writer coverage, independent restore floors, production clock mapping and actual provider/device acceptance remain open.
+
+## IPC and commit boundary
+
+The authenticated server must keep the original admission object when sending its public fields over IPC. JSON data returned by another process does not recreate that reference. The existing server worker already retains its original lastGrant; future gate wiring must claim that original value after confirmation, with the captured expected scope. No original reference or private lease is serialized.
+
+This claim verifies admission, not transaction completion. The physical adapter must still commit and close its exact connection, reconcile the full target and preserve the original committed receipt. The prepared final signed inspection must match that original operation, transaction and claim. A later fresh generic observer result cannot choose a different transaction. See local-tavus-committed-receipt-integration.md for the remaining ordering and acceptance checks.

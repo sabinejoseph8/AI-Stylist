@@ -1,3 +1,7 @@
+## Original admission follow-up, 16 October 2026
+
+The signed bridge now retains its original admission and exposes one private server-side claim after successful confirmation, with exact captured scope, clock/expiry/cancellation checks and reentrancy protection. Twenty new cases pass within 72 focused checks. This implements the original-reference part of step 4 only. Deferred gate binding, actual committed receipts, adoption/publication ordering and native PostgreSQL renewal remain open. See local-tavus-original-database-admission.md. No COMMIT or resume guarantee follows from the new claim.
+
 # Next integration: bind the actual transaction to the already-open gate
 
 Local implementation notes, 16 October 2026. This is a continuation of the approved disabled local preparation. It authorizes no provider calls, hosted changes, spending or activation. The current Node gate tests do not yet establish this sequence.

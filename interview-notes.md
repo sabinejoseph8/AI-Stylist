@@ -1,3 +1,9 @@
+## Keeping transaction identity through confirmation
+
+I found that the signed database bridge returned public admission data but did not retain its original server reference for the next step. I added one private claim that becomes available only after confirmation. Copying the data, changing the transaction or expected context, canceling or claiming twice cannot release it. Review also caught a possible reentrant callback and cancellation during a claim, which now refuse safely.
+
+I tightened a configuration check so a SQL command cannot name a different operation from its original native plan. I kept admission separate from commit: this work does not claim that the database committed or that the stylist may resume. The deferred gate and actual committed receipt still need integration.
+
 ## Keeping a local lock tied to its original server operation
 
 I prepared an original server handle for the transition lock, so copying its visible status or a signed-check summary cannot finish the operation. The server waits for both lock release and clean process exit. Tests cover cancellation, expiry, clock rollback, competing finishes and a stalled process.

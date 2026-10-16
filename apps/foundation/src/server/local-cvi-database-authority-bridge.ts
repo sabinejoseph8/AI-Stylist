@@ -7,6 +7,14 @@ import type {AuthorityEvidence,MandatoryLeaseIntent,MonotonicLeaseAuthorityPort}
 export type DatabaseBinding=Readonly<{intent:Record<string,unknown>;connection:Readonly<{principal:string;transactionId:string}>}>;
 export type DatabaseIdentityPin=Readonly<{keyId:string;publicKeyPem:string}>;
 export type DatabaseProofRequest=Readonly<{operationId:string;storeId:string;policyDigest:string;bindingDigest:string;nonce:string}>;
+export type OriginalDatabaseAdmissionScope=Readonly<{authority:WitnessServicePin;database:DatabaseIdentityPin;principal:string;plan:MandatoryLeaseIntent}>;
+const originalAdmissions=new WeakMap<object,{claim(raw:unknown,scope:OriginalDatabaseAdmissionScope,at:number):Readonly<{operationId:string;transactionId:string;claimHash:string}>}>();
+/** Server-only original admission. This is not proof of commit or publication. */
+export function claimOriginalDatabaseAdmission(raw:unknown,scope:OriginalDatabaseAdmissionScope,at:number){
+ const r=raw&&typeof raw==='object'?originalAdmissions.get(raw):undefined;
+ if(!r)throw Error('Original database admission unavailable');return r.claim(raw,scope,at);
+}
+
 const exact=(v:unknown,keys:string[]):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const hex=(v:unknown):v is string=>typeof v==='string'&&/^[a-f0-9]{64}$/.test(v);
 const integer=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
@@ -27,8 +35,9 @@ export function createLocalSignedDatabaseBridge(
  const scope=clone(pin),dbPin=clone(identityPin),plan=clone(intent),grant=clone(approval),expectedCommand=clone(command),claim=authority.claim.bind(authority),read=authority.read.bind(authority),proofSource=observe;
  const {id,...body}=plan;
  // Native renewal is not yet implemented by the separate PostgreSQL contract.
- if(!['activate','apply','fence','release'].includes(plan.kind)||!jsonValue(plan)||!jsonValue(expectedCommand)||!hex(id)||witnessServiceDigest(body)!==id||!exact(expectedCommand,['operationId','kind','previous','target','recordHash','expiresAt'])||expectedCommand.kind!==plan.kind||typeof expectedCommand.operationId!=='string'||!/^[a-f0-9]{32}$/.test(expectedCommand.operationId)||!integer(expectedCommand.expiresAt)||Buffer.byteLength(historyCanonical({plan,command:expectedCommand}))>65536||plan.from.storeId!==scope.storeId||plan.to.storeId!==scope.storeId||plan.from.policyDigest!==scope.policyDigest||plan.to.policyDigest!==scope.policyDigest)throw Error('Signed database bridge unavailable');
+ if(!['activate','apply','fence','release'].includes(plan.kind)||!jsonValue(plan)||!jsonValue(expectedCommand)||!hex(id)||witnessServiceDigest(body)!==id||!exact(expectedCommand,['operationId','kind','previous','target','recordHash','expiresAt'])||expectedCommand.kind!==plan.kind||typeof expectedCommand.operationId!=='string'||!/^[a-f0-9]{32}$/.test(expectedCommand.operationId)||expectedCommand.operationId!==id.slice(0,32)||!integer(expectedCommand.expiresAt)||Buffer.byteLength(historyCanonical({plan,command:expectedCommand}))>65536||plan.from.storeId!==scope.storeId||plan.to.storeId!==scope.storeId||plan.from.policyDigest!==scope.policyDigest||plan.to.policyDigest!==scope.policyDigest)throw Error('Signed database bridge unavailable');
  let held=false,busy=false,attempted=false,confirmed=false,last=-1,bound:DatabaseBinding|undefined,claimHash:string|undefined;
+ let originalRecord:undefined|{confirmedAt:number;expiresAt:number;used:boolean;valid():boolean};
  const now=()=>{const n=clock();if(!integer(n)||n<last)throw Error();last=n;return n;};
  const advanced=()=>{const result=verifyLocalWitnessReply(scope,grant.request,grant.reply,now()) as any;
   if(grant.request.action!=='advance'||grant.request.operationId!==id||grant.request.principalDigest!==plan.actor.principalDigest||result.status!=='advanced'||result.operationId!==id||result.revision!==grant.request.expectedRevision+1||!equal(result.current,plan.to))throw Error();return result;};
@@ -55,11 +64,23 @@ export function createLocalSignedDatabaseBridge(
    if(attempted)throw Error();attempted=true;const b=binding(raw),a=advanced();if(now()>=Number(expectedCommand.expiresAt))throw Error();
    const observed=await proof(b,s),e=clone(await claim(clone(plan),observed.challenge,s)),result=verifyLocalWitnessReply(scope,e.request,e.reply,now()) as any;
    if(s.aborted||now()>=observed.expiresAt||now()>=Number(expectedCommand.expiresAt)||e.request.action!=='claim-execution'||e.request.challenge!==observed.challenge||e.request.operationId!==id||e.request.principalDigest!==plan.actor.principalDigest||result.status!=='execution-claimed'||result.operationId!==id||result.revision!==a.revision||result.targetDigest!==witnessServiceDigest(plan.to)||result.grantHash!==witnessServiceDigest(grant.request))throw Error();
-   bound=clone(b);claimHash=witnessServiceDigest(e.request);return {binding:clone(b),claimHash};
+   bound=clone(b);claimHash=witnessServiceDigest(e.request);
+   const admittedAt=now(),admission={binding:clone(b),claimHash},fingerprint=historyCanonical(admission),expectedScope={authority:scope,database:dbPin,principal,plan},originalBinding=clone(b),originalHash=claimHash;
+   let claiming=false;
+   const record={confirmedAt:-1,expiresAt:Math.min(observed.expiresAt,e.request.expiresAt,Number(expectedCommand.expiresAt)),used:false,valid:()=>!held&&!s.aborted&&!busy};originalRecord=record;
+   originalAdmissions.set(admission,{claim(raw,want,at){
+    if(claiming||record.used)throw Error('Original database admission unavailable');claiming=true;
+    try{
+    if(record.used||record.confirmedAt<admittedAt||!record.valid()||!jsonValue(want)||!exact(want,['authority','database','principal','plan'])||!equal(want,expectedScope)||!jsonValue(raw)||historyCanonical(raw as any)!==fingerprint||!integer(at)||at<record.confirmedAt)throw Error('Original database admission unavailable');
+    const actual=now();if(actual<at||actual>=record.expiresAt||!record.valid())throw Error('Original database admission unavailable');
+    record.used=true;return Object.freeze({operationId:String(expectedCommand.operationId),transactionId:originalBinding.connection.transactionId,claimHash:originalHash});
+    }finally{claiming=false;}
+   }});return admission;
   }),
   confirm:(raw:unknown,hash:unknown,signal:AbortSignal)=>bounded(signal,async s=>{
    const b=binding(raw);if(!bound||!claimHash||hash!==claimHash||confirmed||!equal(bound,b))throw Error();confirmed=true;const a=advanced(),observed=await proof(b,s),e=clone(await read(observed.challenge,s)),result=verifyLocalWitnessReply(scope,e.request,e.reply,now()) as any;
-   if(s.aborted||now()>=observed.expiresAt||now()>=Number(expectedCommand.expiresAt)||e.request.action!=='read'||e.request.challenge!==observed.challenge||result.status!=='read'||result.revision!==a.revision||result.pending!==id||!equal(result.current,plan.to))throw Error();return true;
+   if(s.aborted||now()>=observed.expiresAt||now()>=Number(expectedCommand.expiresAt)||e.request.action!=='read'||e.request.challenge!==observed.challenge||result.status!=='read'||result.revision!==a.revision||result.pending!==id||!equal(result.current,plan.to))throw Error();
+   if(!originalRecord)throw Error();const priorValid=originalRecord.valid;originalRecord.valid=()=>priorValid()&&!s.aborted;originalRecord.confirmedAt=now();originalRecord.expiresAt=Math.min(originalRecord.expiresAt,observed.expiresAt,e.request.expiresAt);return true;
   })
  });
 }

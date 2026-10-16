@@ -730,6 +730,25 @@
       "foundationFiles": 181,
       "isolatedPostgresRerun": false,
       "priorIsolatedPostgresChecks": 556
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-original-database-admission.md",
+      "focusedFoundationTests": 72,
+      "focusedFoundationFiles": 3,
+      "newOriginalAdmissionTests": 20,
+      "operationsTests": 564,
+      "foundationFullRerun": false,
+      "priorFullFoundationTests": 2472,
+      "priorFullFoundationFiles": 181,
+      "priorFullFoundationCommit": "92190177fe4af3283ec72dd869abd8ea33becf67",
+      "isolatedPostgresRerun": false,
+      "priorIsolatedPostgresChecks": 556,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "extraClaimAuthorityReads": 0,
+      "scope": "Disabled original confirmed database admission claim only; no COMMIT or publication permission. Deferred gate/committed-receipt/adoption integration remains open. Fixture SQL connection IDs are synthetic.",
+      "localMemoryChecks": 19
     }
   ]
 }
