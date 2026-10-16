@@ -79,3 +79,27 @@ it('an already canceled caller performs no reconciliation or observation',async(
   expect((await f.x.inspect()).pending).toBe(f.plan.id);
  }finally{await f.close();}
 },30000);
+
+it('simultaneous finalization reconciles once and refuses the competing caller',async()=>{
+ const f=await fullStateFixture();try{
+  const e=await f.port.claim(f.plan,'a'.repeat(64)),hash=witnessServiceDigest(e.request),o=observed(f);o.claimHash=hash;
+  const r=f.finalizer(hash,'40',async()=>o);
+  const outcomes=await Promise.allSettled([r.finalize(signal()),r.finalize(signal())]);
+  expect(outcomes.filter(x=>x.status==='fulfilled')).toHaveLength(1);
+  expect(outcomes.filter(x=>x.status==='rejected')).toHaveLength(1);
+  const state=await f.x.inspect();expect(state.pending).toBeNull();expect(state.current).toEqual(f.plan.to);
+  await expect(r.finalize(signal())).rejects.toThrow();
+ }finally{await f.close();}
+},30000);
+
+it('captures original full-state inputs before the caller can alter them',async()=>{
+ const f=await fullStateFixture();try{
+  const e=await f.port.claim(f.plan,'a'.repeat(64)),hash=witnessServiceDigest(e.request),o=observed(f);o.claimHash=hash;
+  f.finalizer(hash,'40',async()=>o);const port=f.x.authorityPort(f.plan.actor.role);
+  const plan=structuredClone(f.plan),target=structuredClone(f.states.target),command=structuredClone(f.command),pin=structuredClone(f.x.pin);
+  const r=createLocalFullStateReconciler(pin,plan,target,command,hash,'40',()=>port.reconcile(f.plan),n=>port.read(n),()=>1000);
+  plan.to.historyDigest='0'.repeat(64);target.grants[0][3]='0'.repeat(64);command.operationId='0'.repeat(32);
+  expect((await r.finalize(signal())).operationId).toBe(f.command.operationId);
+  expect((await f.x.inspect()).current).toEqual(f.plan.to);
+ }finally{await f.close();}
+},30000);

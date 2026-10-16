@@ -1,3 +1,13 @@
+## Post-commit reconciliation review, 16 October 2026
+
+Rechecked the approved full-state reconciliation and added two regression tests: simultaneous finalization permits only one result, and changes to caller-owned target/plan/command objects cannot replace the captured original transition. Both pass. The complete logical snapshot, original transaction and signed authority target remain required; unknown commit or reconciliation results never reapply the mutation or reconstruct permission.
+
+Fresh verification passes 33 focused foundation tests across the reconciliation and continuous-state suites, 13 post-commit adapter checks, all 497 current operations tests with ResourceWarning as error, TypeScript checking and the client build. The operations total includes eight tests belonging to separate unfinished replay-inspection work. This follow-up does not claim a new full foundation regression. The disposable PostgreSQL rehearsal passes 556 checks with networking disabled; four encryption checks also pass.
+
+No production code, SQL contract, spending, hosted service or permanent backup runtime was changed for this follow-up. Product/design requirements, 5-of-41 completion and the $51 allocation are unchanged. Independent restore floors, all-writer fencing, production clock mapping and provider/device acceptance remain open. Separate replay-inspection edits stay uncommitted and are not part of this completed test checkpoint.
+
+Exact next action: finish focused restart/startup/renewal tests for the existing uncommitted replay-inspection work, including pending records and unreadable evidence. A fresh idle snapshot must not be described as a global writer lock or restore guarantee. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout. The development goal remains active and incomplete.
+
 ## Local conversation/HTTP continuation, 16 October 2026
 
 Connected authenticated transcript input, the real notebook session model, native owner continuation and the static-header HTTP adapter. The notebook changes its pinned expiry only after the original consumed handoff is verified and claimed once. The HTTP adapter checks application identity before continuation and refuses concurrent recommendation work before admission. Notebook commands wait through a bounded transition gate, then read the current pin; explicitly stale pin requests no longer close newer notes. Inspection capacity remains bounded with a coordinator slot reserved.
@@ -1499,6 +1509,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Latest local revalidation passes 33 full-state reconciliation/continuous-state checks and 497 operations tests. Two new tests verify single-use finalization under competition and captured-input integrity. No full task or launch criterion closes, and no hosted changes or new spending occurred. Separate replay-inspection work remains unfinished. See docs/local-tavus-full-state-reconciliation.md.
 
 Current local work connects transcript/notebook/HTTP exchanges across verified owner continuation, with a bounded context gate and pre-admission HTTP busy handling. Final regression passes 2,365 foundation tests across 172 files and 489 operations checks; the 13 continuing-HTTP cases and immediate cleanup behavior are verified locally. Volatile gates do not prove durable startup quiescence or live provider acceptance. Full completion remains 5 of 41. See docs/local-tavus-continuing-http.md.
 

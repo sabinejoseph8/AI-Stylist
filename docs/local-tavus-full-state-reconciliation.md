@@ -1,3 +1,13 @@
+## Post-commit reconciliation review, 16 October 2026
+
+Rechecked the approved full-state reconciliation and added two regression tests: simultaneous finalization permits only one result, and changes to caller-owned target/plan/command objects cannot replace the captured original transition. Both pass. The complete logical snapshot, original transaction and signed authority target remain required; unknown commit or reconciliation results never reapply the mutation or reconstruct permission.
+
+Fresh verification passes 33 focused foundation tests across the reconciliation and continuous-state suites, 13 post-commit adapter checks, all 497 current operations tests with ResourceWarning as error, TypeScript checking and the client build. The operations total includes eight tests belonging to separate unfinished replay-inspection work. This follow-up does not claim a new full foundation regression. The disposable PostgreSQL rehearsal passes 556 checks with networking disabled; four encryption checks also pass.
+
+No production code, SQL contract, spending, hosted service or permanent backup runtime was changed for this follow-up. Product/design requirements, 5-of-41 completion and the $51 allocation are unchanged. Independent restore floors, all-writer fencing, production clock mapping and provider/device acceptance remain open. Separate replay-inspection edits stay uncommitted and are not part of this completed test checkpoint.
+
+Exact next action: finish focused restart/startup/renewal tests for the existing uncommitted replay-inspection work, including pending records and unreadable evidence. A fresh idle snapshot must not be described as a global writer lock or restore guarantee. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout. The development goal remains active and incomplete.
+
 ## Full-state reconciliation cancellation checks, 16 October 2026
 
 Revalidated the existing local post-commit reconciliation under Sabine's approval. Added four cases for cancellation after durable reconciliation, cancellation after the final signed read, loss of that read, and a caller canceled before work starts. A completed authority transition stays recorded when acknowledgment is withheld. The one-use finalizer cannot retry, replay the database mutation or reconstruct a signing handoff. No production code or SQL was changed for this follow-up.

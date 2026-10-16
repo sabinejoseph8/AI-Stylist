@@ -1,3 +1,7 @@
+## Checking the final step after a database commit
+
+I tested that two callers cannot finalize the same transition twice, and that changing the caller's objects cannot substitute a different saved state. Both tests pass. I keep the complete database state and signed authority evidence linked to the original transaction. If the final result is uncertain, I hold it rather than repeat the mutation. These local checks do not prove customer recovery or live provider compatibility.
+
 ## Keeping the conversation coherent across renewal
 
 I connected the renewal handoff to the notebook's actual ownership pin, then kept the same transcript and HTTP replay history across complete local exchanges. New recommendation requests are refused before admission during adoption, while bounded notebook input waits and resumes against the adopted pin. I also gave authenticated Clear and End their own cleanup slot, so native renewal or a full command queue cannot delay removing temporary notes. I also separated an explicitly stale requested pin from a changed backend proof, so an old read cannot erase newer notes. These are local tests; durable startup coordination and actual provider acceptance remain open.
