@@ -1,7 +1,7 @@
 {
   "version": 1,
   "asOf": "2026-10-16",
-  "evidenceCommit": "ac5c92a85815a021c4f6c1e5c5b8a367af760e40",
+  "evidenceCommit": "d6e1b4815753147f6e03696b1a303a402f7f8235",
   "scope": "Repository evidence audit only; no fresh hosted/provider/device checks",
   "acceptedProductionCriteria": 0,
   "criteriaCount": 21,
