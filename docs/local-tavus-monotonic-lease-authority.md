@@ -2,6 +2,8 @@
 
 Sabine approved local preparation and tests on 16 October 2026, with a mandatory persistence adapter, no raw write fallback, no new spending and no hosted changes. This is a disconnected contract rehearsal with disposable SQLite databases and ephemeral signing keys. It does not activate Tavus or protect a production database.
 
+Follow-up: [local database permissions and transaction adapter](local-tavus-database-transaction-contract.md) tests restricted PostgreSQL roles and transaction-bound admission. Its authority verifier remains simulated; full-state signed integration is still open.
+
 ## Authenticated ownership and exact state
 
 The authority authenticates signed callers and distinguishes rotator, fencer, writer, signer, observer and reconciler. Typed operation ownership is checked before durable admission and again when resolving the trusted intent. Callers cannot select a replacement target. Intents bind the exact actor, time, arguments, prior state and target.
