@@ -505,6 +505,17 @@
       "scope": "Fresh-process read-only checkpoint inspection; all write/sign/reconcile/resume permissions remain false",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-startup-owner.md",
+      "foundationTests": 2066,
+      "foundationFiles": 160,
+      "operationsTests": 475,
+      "isolatedPostgresChecks": 503,
+      "scope": "Disabled startup coordinator with simulated privileged admission and durable local credential/replay fixtures; no live readiness",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

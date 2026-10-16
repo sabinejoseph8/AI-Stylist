@@ -143,3 +143,7 @@ This is a proposed order within the existing plan, not authorization for new acc
 ## Audit maintenance
 
 The adjacent [machine-readable matrix](launch-readiness-audit.json) retains each exact approved criterion, evidence paths, open status, blocker mapping and source commit. Update it when genuinely new evidence arrives. Do not mark a criterion accepted because its sample UI, isolated database test or support explanation alone passed. The hosted Memory site stays unchanged under this audit's no-hosted-changes scope.
+
+## Disabled startup composition follow-up, 16 October 2026
+
+[Local startup-owner evidence](local-tavus-startup-owner.md) adds 32 focused cases for fresh credential rotation after inspection, unknown outcomes and retained replay history. Privileged admission is simulated, and production admission/independent floors/atomicity remain open. No production criterion or blocker closes; no hosted change is included.

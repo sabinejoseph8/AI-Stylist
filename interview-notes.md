@@ -1,3 +1,7 @@
+## Keeping restart checks separate from permission to start again
+
+I added a local startup rehearsal that checks the complete committed state, requires a separate admission and rotates the credential before returning a new owner. If a reply is lost or the state changes, the app stays blocked and the old credential remains retired. I tested the real local credential and replay files, while clearly recording that admission itself is simulated. This helps me distinguish a consistent backup from permission to restart a customer consultation. No hosted or paid service was activated.
+
 ## Checking a restart without recreating the previous owner's permission
 
 I built a read-only startup check that runs in a new process using public verification pins. It compares signed authority and database evidence against a trusted registry and retained revision minimum. Even a consistent checkpoint returns no write, sign, reconcile or resume permission. I tested missing journals, stale registries, lost floors and a real transition during observation. Review caught a timing gap where a port could mutate a signed proof's expiry, so I copied replies before checking signatures. A matching restored checkpoint still needs a new authorized owner; it does not recreate a lost signing handoff. No paid service or hosted setting changed.

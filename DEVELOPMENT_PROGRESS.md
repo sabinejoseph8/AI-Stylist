@@ -1,3 +1,15 @@
+## Disabled fresh-owner startup composition, 16 October 2026
+
+Continued authorized local preparation after full-state reconciliation. A disconnected coordinator now requires read-only checkpoint inspection, a separately privileged admission, fresh credential activation, another checkpoint inspection and a current-credential proof before returning a local owner. It refuses checkpoint-only readiness and reused notebook state. Cancellation, changed state and unknown activation remain held without replaying activation or restoring an old credential.
+
+32 focused cases pass, including four compositions using actual signed checkpoint inspection and durable credential/replay fixtures. Admission authorization remains simulated; no independent production admission or cross-store atomicity is claimed. The unchanged PostgreSQL full-state rehearsal passes 503 checks. Type checking/build, 475 operations tests and four encryption checks pass. See docs/local-tavus-startup-owner.md. Full regression passes 2,066 foundation tests across 160 files and 16 local Memory checks.
+
+Review separated the startup deadline from owner lifetime and checked late callbacks, exact admission/lease fields, captured ports and fresh empty notes. Product/design scope and phase/launch completion remain unchanged. No real credentials, spending, provider calls, hosted publication or permanent backup runtime/ledger/scheduler changes. Allocation remains $51; the goal remains active and incomplete.
+
+Current verified work remains /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout. Refresh only its tracked-source archive/current-workspace pointer after committing.
+
+Exact next local action: connect fresh-owner admission to the existing authenticated authority and durable transaction boundary in a disposable fixture, proving unknown acknowledgments remain spent and the final checkpoint includes that transition. Preserve real activation, independent floors/administration, account/source/privacy, spending and hosted gates. No action is required from Sabine for this local checkpoint.
+
 ## Fresh-process startup checkpoint inspection, 16 October 2026
 
 Continued authorized local preparation under the active goal. Added a read-only startup inspector requiring signed authority/database evidence, a pinned sanitized registry and a minimum revision. It checks the complete current target and another fresh authority read, but always returns write/reconcile/sign/resume permissions false. Missing journal, pending work, stale registry, invalid proof and uncertain outcomes stay held without reseeding, reapplication or handoff reconstruction. A new Node client process receives public pins only; private test keys stay in the original services.
