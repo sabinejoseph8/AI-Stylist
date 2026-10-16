@@ -1,3 +1,4 @@
+import {createLocalCviTranscriptAdapter} from '../src/server/local-cvi-transcript-adapter.ts';
 import {it,expect,vi} from 'vitest';
 import {generateKeyPair,SignJWT,exportJWK,createLocalJWKSet} from 'jose';
 import {startupAdmissionFixture} from './support/cvi-startup-admission-fixture.ts';
@@ -58,7 +59,22 @@ it('the existing cryptographic identity gate denies forged tokens and another si
 });
 it('an admitted new input supersedes pending speech before any proposal arrives and the next turn remains available',async()=>{
  let resolve!:(s:string)=>void,first=true;const f=await fixture({draft:async s=>{if(first)return new Promise(r=>resolve=r);return 'Fresh input '+s.context!.inputRevision;},check:async(text,s)=>({approved:true,text,revision:s.revision})});try{
-  const pending=f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-old-input'));await vi.waitFor(()=>expect(typeof resolve).toBe('function'),{timeout:8000});expect(await f.bridge.beginProposal(f.request(),'fixture-next-input',signal())).not.toBeNull();expect((await pending).status).toBe(409);
+  const pending=f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-old-input'));await vi.waitFor(()=>expect(typeof resolve).toBe('function'),{timeout:8000});const turn=await f.bridge.beginProposal(f.request(),'fixture-next-input',signal());expect(turn).not.toBeNull();expect((await pending).status).toBe(409);expect((await f.bridge.flow.prepare()).status).toBe('blocked');expect((await f.bridge.acceptProposal(f.request(),turn!,0,[],true,signal()))?.status).toBe('accepted');
   first=false;resolve('Old superseded speech');await new Promise(r=>setTimeout(r,10));const next=await f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-current-input'));expect(next.status).toBe(200);expect(await next.text()).toContain('Fresh input 1');
  }finally{await f.close();}
 },30000);
+
+it('documented transcript frames reach the signed-owner protected context as tentative notes',async()=>{const f=await fixture();try{
+ const adapter=createLocalCviTranscriptAdapter({simulation:true,conversation:'c_fixture',participantId:'h_fixture',context:f.bridge,admit:async d=>d.room==='fixture-room'&&d.sender==='fixture-pal'?{request:f.request(),turnId:'fixture-wire-turn',turnOrdinal:1}:null,extract:async()=>[{field:'style',value:'Long sleeves'},{field:'season',value:'November'},{field:'budget',value:'$500'}]});
+ const event={message_type:'conversation',event_type:'conversation.utterance',timestamp:1746000000.123,seq:1,conversation_id:'c_fixture',properties:{role:'user',speech:'I prefer long sleeves in November. My budget is $500.',participant_id:'h_fixture'}};
+ expect((await adapter.ingest('fixture-room','fixture-pal',event,signal())).status).toBe('applied');
+ const response=await f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-wire-context'));expect(response.status).toBe(200);const text=await response.text();expect(text).toContain('Long sleeves');expect(text).toContain('November');expect(text).toContain('$500');expect(f.seen[0].notes.budget.confirmed).toBe(false);expect(f.seen[0].context?.nativeRevision).toBe(4);
+ adapter.close();expect(Object.values(f.bridge.flow.snapshot().notes).every(n=>n.text==='')).toBe(true);
+}finally{await f.close();}},30000);
+
+it('a verified transcript can finish while an older protected reply is being canceled',async()=>{let resolve!:(v:string)=>void,first=true;const f=await fixture({draft:async s=>first?new Promise(r=>resolve=r):'Current '+s.notes.coverage.text,check:async(text,s)=>({approved:true,text,revision:s.revision})});try{
+ const old=f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-wire-old'));await vi.waitFor(()=>expect(resolve).toBeTypeOf('function'),{timeout:8000});
+ const adapter=createLocalCviTranscriptAdapter({simulation:true,conversation:'c_fixture',participantId:'h_fixture',context:f.bridge,admit:async()=>({request:f.request(),turnId:'fixture-wire-concurrent',turnOrdinal:1}),extract:async()=>[{field:'style',value:'Long sleeves'}],deadlineMs:8000});
+ const result=await adapter.ingest('fixture-room','fixture-pal',{message_type:'conversation',event_type:'conversation.utterance',timestamp:1746000000.123,seq:1,conversation_id:'c_fixture',properties:{role:'user',speech:'Long sleeves',participant_id:'h_fixture'}},signal());
+ expect(result.status).toBe('applied');expect((await old).status).toBe(409);first=false;resolve('Old');const fresh=await f.e.handle(fixtureRequest(f.f.resources.binding.secret,'fixture-wire-fresh'));expect(fresh.status).toBe(200);expect(await fresh.text()).toContain('Long sleeves');adapter.close();
+}finally{await f.close();}},30000);

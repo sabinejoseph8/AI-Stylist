@@ -3,21 +3,21 @@ export const CVI_FIELDS = ['occasion','timing','color','coverage','budget','look
 export type CviField = typeof CVI_FIELDS[number];
 export type CviNotes = Readonly<Record<CviField, Readonly<{text:string;confirmed:boolean}>>>;
 export type CviSnapshot = Readonly<{revision:number;notes:CviNotes;context?:Readonly<{epoch:number;nativeRevision:number;inputRevision:number}>}>;
-export interface CviContextPort {snapshot():CviSnapshot|null;subscribe(change:()=>void):()=>void;end():void}
+export interface CviContextPort {snapshot():CviSnapshot|null;subscribe(change:()=>void):()=>void;end():void;ready?():boolean}
 export type CviCheck = Readonly<{approved:boolean;revision:number;text:string}>;
 export interface CviSimulationPorts {
   draft(snapshot:CviSnapshot, signal:AbortSignal):Promise<string>;
   check(text:string, snapshot:CviSnapshot, signal:AbortSignal):Promise<CviCheck>;
 }
-export type CviPrepared = Readonly<{status:'prepared'|'blocked';reason?:'context-changed';takeSse():string|null}>;
+export type CviPrepared = Readonly<{status:'prepared'|'blocked';reason?:'context-changed'|'context-pending';takeSse():string|null}>;
 const empty = ():CviNotes=>Object.freeze(Object.fromEntries(CVI_FIELDS.map(k=>[k,Object.freeze({text:'',confirmed:false})])) as Record<CviField,{text:string;confirmed:boolean}>);
 const textOk=(x:unknown):x is string=>typeof x==='string'&&x.trim().length>0&&x.length<=4000;
 
 /** Normalized inputs are trusted server/test commands, never raw Tavus messages. */
 export function createLocalCviStyling(ports:CviSimulationPorts, deadlineMs=1000,context?:CviContextPort){
   if(!Number.isInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)throw Error('Invalid local deadline');
-  if(context&&(typeof context.snapshot!=='function'||typeof context.subscribe!=='function'||typeof context.end!=='function'))throw Error('Invalid local context');
-  const read=context?.snapshot.bind(context),subscribe=context?.subscribe.bind(context),endContext=context?.end.bind(context);let unsubscribe:(()=>void)|undefined;
+  if(context&&(typeof context.snapshot!=='function'||typeof context.subscribe!=='function'||typeof context.end!=='function'||context.ready!==undefined&&typeof context.ready!=='function'))throw Error('Invalid local context');
+  const read=context?.snapshot.bind(context),subscribe=context?.subscribe.bind(context),endContext=context?.end.bind(context),isReady=context?.ready?.bind(context);let unsubscribe:(()=>void)|undefined;
   let notes=empty(),revision=0,epoch=0,closed=false,lastSeq=-1;
   const seen=new Set<string>();
   let pending:AbortController|undefined;
@@ -33,8 +33,10 @@ export function createLocalCviStyling(ports:CviSimulationPorts, deadlineMs=1000,
   const stale=():CviPrepared=>Object.freeze({status:'blocked',reason:'context-changed',takeSse:()=>null});
   if(read)snapshot();if(subscribe){unsubscribe=subscribe(invalidate);if(typeof unsubscribe!=='function')throw Error('Context unavailable');}
   const blocked=():CviPrepared=>Object.freeze({status:'blocked',takeSse:()=>null});
+  const readiness=()=>{if(closed)return 'unavailable';try{const state=isReady?isReady():true;return state===true?'ready':state===false?'pending':'unavailable';}catch{return 'unavailable';}};
+  const available=()=>readiness()==='ready';
   return Object.freeze({
-    snapshot,
+    snapshot,available,
     /** Real transcript extraction/confirmation authority is deliberately not wired. */
     note(input:{id:string;seq:number;field:CviField;text:string;confirmed:boolean}):boolean{
       if(read||closed||!input||typeof input.id!=='string'||!/^fixture-[a-z0-9-]{1,60}$/.test(input.id)||
@@ -48,6 +50,8 @@ export function createLocalCviStyling(ports:CviSimulationPorts, deadlineMs=1000,
     end(){invalidate();closed=true;notes=empty();revision++;seen.clear();unsubscribe?.();unsubscribe=undefined;try{endContext?.();}catch{/* Closed locally; no remote deletion claim. */}},
     async prepare(signal?:AbortSignal):Promise<CviPrepared>{
       if(closed||signal?.aborted)return blocked();
+      const state=readiness();if(state==='unavailable')return blocked();
+      if(state==='pending')return Object.freeze({status:'blocked',reason:'context-pending',takeSse:()=>null});
       invalidate();let snap:CviSnapshot;try{snap=snapshot();}catch{return blocked();}const mine=epoch,controller=new AbortController();pending=controller;
       let timer:ReturnType<typeof setTimeout>|undefined;
       let onAbort:()=>void=()=>{};

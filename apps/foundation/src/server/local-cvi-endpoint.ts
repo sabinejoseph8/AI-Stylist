@@ -54,7 +54,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
     request.headers.has('content-encoding')||request.signal.aborted)return deny(400);
   if(used.has(id)||used.size>=64)return deny(409);
   used.add(id); // Never refund an authenticated attempt, including busy/failed requests.
-  if(active)return deny(409);
+  if(active||!flow.available())return deny(409);
   const abort=new AbortController();let released=false,timer:ReturnType<typeof setTimeout>|undefined;
   const stop=()=>abort.abort();
   const operation={abort,release:()=>{if(released)return;released=true;if(timer)clearTimeout(timer);request.signal.removeEventListener('abort',stop);if(active===operation)active=undefined;}};
@@ -89,7 +89,7 @@ export function createLocalCviEndpoint(binding:Binding,flow:Flow,clock=Date.now,
    // Prompt content is deliberately not treated as authenticated notebook updates.
    const reply=await Promise.race([flow.prepare(abort.signal),canceled]);
    if(reply.status!=='prepared'){
-    if(reply.reason==='context-changed'&&fence&&durable&&replay&&!abort.signal.aborted&&current()){
+    if((reply.reason==='context-changed'||reply.reason==='context-pending')&&fence&&durable&&replay&&!abort.signal.aborted&&current()){
      await requireFence();const input=Object.freeze({...durable,now:lastClock});acknowledge(await Promise.race([Promise.resolve().then(()=>replay.consume(input,abort.signal)),canceled]),input,'spent',durable.receipt);consumed=true;
     }
     throw Error();

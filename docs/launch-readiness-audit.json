@@ -557,6 +557,17 @@
       "scope": "Authenticated simulated notebook-to-CVI projection, tentative proposal/explicit confirmation and context-change invalidation; no app/provider route",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-wire-compatibility.md",
+      "foundationTests": 2226,
+      "foundationFiles": 166,
+      "operationsTests": 475,
+      "scope": "Disabled documented transcript parser, simulated authenticated notebook integration, pending-context guard and bounded serialized native inspections",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "limitations": "Transport admission and extraction are simulated. Native request/retry matching, room correlation, writer lease lifetime and provider/device acceptance remain open."
     }
   ]
 }

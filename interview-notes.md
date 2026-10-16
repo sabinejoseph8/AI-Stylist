@@ -1,3 +1,7 @@
+## Checking the provider contract before connecting it
+
+I compared Tavus's public transcript formats with my local app instead of assuming the old test headers were real provider behavior. I connected simulated streaming and completed customer utterances to the existing notebook, keeping extracted facts tentative and preserving later customer edits. I found a timing gap where a new reply could use old notes while extraction was still waiting. I added a hold for the current input revision, blocked late work after Clear, and tested the path through the protected signed-owner endpoint. A concurrent integration test also exposed contention in the local authority journal, so I serialized its reads without retrying unknown results. This is local evidence only. Actual room authentication, request matching and the consultation lease still need integration before a live trial.
+
 ## Bringing the notebook into the protected styling context
 
 I reused the notebook's existing session model so the styling flow reads the same seven fields and confirmation states. Explicit edits and confirmations require the correct signed-in customer and session; incoming structured proposals stay tentative. Tests prove that a correction cancels old text, clears do not allow late updates to return, and a fresh turn sees the new context. I also separated client edit IDs from internal proposal IDs to prevent accidental collisions. This is local preparation, with no paid model or customer deployment.

@@ -1,3 +1,15 @@
+## Local documented transcript adapter, 16 October 2026
+
+Reviewed current public Tavus LLM and transcript documentation. Static custom headers and accumulated streaming text are documented; automatic app request IDs and exact native request/retry correlation remain unverified. Added a disabled parser and simulated transport-admission/extraction composition into the authenticated notebook. PAL/legacy replica output and optional visual/audio analyses never become customer preferences. Streaming proposals remain tentative, preserve original touch-edit baselines and close on a complete utterance.
+
+New input/chunk revisions hold fresh output while extraction waits. Fixed delayed begin work reopening a cleared session or superseding newer input, prevented old extraction from unpausing new work, and restricted the admission ordering floor to authenticated callers. A concurrent signed-owner test exposed nonblocking journal read-admission locks; this context now serializes at most eight unsettled inspections without retrying unknown results. Known pending context refuses delivery before reservation; a race after reservation may spend only its known original attempt under a verified current-owner fence. Unknown readiness/ownership stays held. See docs/local-tavus-wire-compatibility.md.
+
+Final regression passes 2,226 foundation tests across 166 files, 475 operations tests with ResourceWarning as error, TypeScript checking/build, four encryption checks and 16 local Memory checks. The three affected test files contain 70 cases, including actual signed authority/SQLite/credential/replay composition and simultaneous old-reply cancellation/new transcript completion. Public documentation and simulated inputs do not establish live provider behavior. The prior 503-check PostgreSQL rehearsal is unchanged and was not rerun in this turn.
+
+Real room/sender admission, customer-turn correlation, provider request authentication/body/retry format, native writer lease lifetime/renewal, independent restore floors and actual provider/device/semantic acceptance remain open. The local eight-second writer lease is not the private trial or customer consultation lifetime. No allowance or lifetime was extended. Product/design baselines were reviewed and need no scope change. No phase/launch completion, real credential use, provider calls, spending, hosted publication or permanent backup runtime changes; allocation remains $51.
+
+Next local action: prepare native HTTP compatibility using documented static configuration without inventing dynamic provider headers or weakening replay checks. Keep all real activation, independent administration, privacy, financial and source-account gates. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older modified checkout. Refresh tracked-source-only checkpoints in the original folder and the AI Stylist outputs folder after commit. The goal remains active and incomplete; no action is required from Sabine for this local checkpoint.
+
 ## Reconciliation revalidation, 16 October 2026
 
 Rechecked the approved local full-state post-commit implementation. Added a regression case that alters each of the six logical sections while retaining the supplied reduced projection and execution markers; every altered target must be refused and authority must remain pending. Corrected outdated activation-only and separate-scenario descriptions in the original reconciliation documents. No production code or acceptance gate changed.
@@ -1426,7 +1438,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Latest local follow-up: authenticated simulated edits and tentative proposals now propagate from the existing notebook model into protected CVI draft/check context. Raw conversation messages cannot confirm notes. Actual app/provider wiring and production gates remain open; full task completion stays 5 of 41. See docs/local-tavus-authenticated-notebook-context.md.
+Latest local follow-up: documented Tavus streaming/full text frames now feed tentative proposals into the authenticated notebook through simulated transport admission and extraction. Pending input holds output, native inspections are serialized, and stale/canceled work is refused. Full regression passes 2,226 foundation tests. Real room/request matching, lease lifetime and provider acceptance remain open; full task completion stays 5 of 41. See docs/local-tavus-wire-compatibility.md.
 
 Previous local checkpoint: the composed endpoint now continues through registered same-owner state writes, while stale prepared replies are suppressed and their known live reservations are spent without refund. Authenticated notebook/context propagation and production gates remain open; full task completion stays 5 of 41. See docs/local-tavus-current-owner-continuity.md.
 

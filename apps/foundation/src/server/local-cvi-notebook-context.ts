@@ -27,7 +27,7 @@ export function createLocalCviNotebookContext(options:Readonly<{
  if(options?.simulation!==true||!uuid(options.identity?.ownerId)||!uuid(options.identity.sessionId)||typeof options.identity.isCurrent!=='function'||typeof options.authorize!=='function'||typeof options.checkpoint?.inspectFresh!=='function'||typeof options.checkpoint.inspectOwnerFresh!=='function'||typeof options.ports?.draft!=='function'||typeof options.ports.check!=='function'||typeof options.clock!=='function'||!int(deadline)||deadline<1||deadline>8000)throw Error('Local notebook context unavailable');
  const owner=options.identity.ownerId,authSession=options.identity.sessionId,currentIdentity=options.identity.isCurrent.bind(options.identity),authorize=options.authorize.bind(options),inspect=options.checkpoint.inspectFresh.bind(options.checkpoint),inspectOwner=options.checkpoint.inspectOwnerFresh.bind(options.checkpoint),draft=options.ports.draft.bind(options.ports),check=options.ports.check.bind(options.ports);
  const session=new StylingSession({simulation:true,owner,clock:options.clock,policy:options.policy}),proposals=new NotebookProposalStream(session,owner);
- let flow:ReturnType<typeof createLocalCviStyling>|undefined,closed=false,admitted=0,native:StartupOwnerPin|undefined,nativeRevision=0,operation:string|undefined,inputRevision=0;
+ let flow:ReturnType<typeof createLocalCviStyling>|undefined,closed=false,admitted=0,native:StartupOwnerPin|undefined,nativeRevision=0,operation:string|undefined,inputRevision=0,proposalPending=false,proposalRevision=0,currentProposal:ProposalTurn|null=null,proposalAdmission=0,latestAuthorizedProposal=0;
  const close=()=>{if(closed)return;closed=true;if(flow)flow.end();else session.end(owner);};
  const active=()=>!closed&&session.snapshot(owner)?.state==='active';
  const liveIdentity=async(signal:AbortSignal)=>{if(signal.aborted)return false;try{if(!active()){close();return false;}const live=await currentIdentity(signal);if(signal.aborted)return false;if(live!==true){close();return false;}return true;}catch{if(!signal.aborted)close();return false;}};
@@ -38,17 +38,27 @@ export function createLocalCviNotebookContext(options:Readonly<{
   const pending=Promise.resolve().then(()=>work(signal)).finally(()=>{admitted--;});
   try{return await Promise.race([pending,new Promise<never>((_,reject)=>{onAbort=()=>reject(Error());signal.addEventListener('abort',onAbort,{once:true});timer=setTimeout(()=>abort.abort(),deadline);})]);}catch{return null;}finally{if(timer)clearTimeout(timer);if(onAbort)signal.removeEventListener('abort',onAbort);}
  };
+ // The local authority journal uses nonblocking exclusive locks even for
+ // authenticated read admissions. Serialize this context's inspections rather
+ // than retrying unknown outcomes or racing its endpoint and transcript reads.
+ let inspections=0,inspectionTail:Promise<void>=Promise.resolve();
+ const inspectSerial=async<T>(signal:AbortSignal,work:()=>Promise<T>):Promise<T>=>{
+  if(signal.aborted||inspections>=8)throw Error('Context unavailable');inspections++;
+  const previous=inspectionTail;let release!:()=>void;inspectionTail=new Promise(r=>{release=r;});
+  try{await previous;if(signal.aborted)throw Error('Context unavailable');return await work();}
+  finally{inspections--;release();}
+ };
  const checkpoint:CurrentOwnerCheckpointPort={
-  inspectFresh:async signal=>{if(!await liveIdentity(signal))throw Error('Context unavailable');const r=structuredClone(await inspect(signal));if(!await liveIdentity(signal))throw Error('Context unavailable');return r;},
+  inspectFresh:signal=>inspectSerial(signal,async()=>{if(!await liveIdentity(signal))throw Error('Context unavailable');const r=structuredClone(await inspect(signal));if(!await liveIdentity(signal))throw Error('Context unavailable');return r;}),
   inspectOwnerFresh:async(wanted,signal)=>{
-   try{
-    const pin=structuredClone(wanted);if(!await liveIdentity(signal))throw Error();
+   const pin=structuredClone(wanted);return inspectSerial(signal,async()=>{try{
+    if(!await liveIdentity(signal))throw Error();
     const r=structuredClone(await inspectOwner(pin,signal));if(!await liveIdentity(signal))throw Error();
     if(!exact(r,['status','revision','operationId','owner','permissions'])||r.status!=='owner-current'||!int(r.revision)||r.revision<pin.minimumRevision||r.revision<nativeRevision||!hex(r.operationId)||!exact(r.owner,['storeId','generation','ownerDigest','bootDigest','expiresAt'])||Object.entries(pin).some(([k,v])=>k!=='minimumRevision'&&(r.owner as Record<string,unknown>)[k]!==v)||!exact(r.permissions,['write','reconcile','sign','resume'])||Object.values(r.permissions).some(v=>v!==false))throw Error();
     if(native&&Object.entries(native).some(([k,v])=>k!=='minimumRevision'&&(pin as any)[k]!==v))throw Error();
     if(operation!==undefined&&r.revision===nativeRevision&&r.operationId!==operation)throw Error();
     const changed=r.revision!==nativeRevision||r.operationId!==operation;native=Object.freeze({...pin,minimumRevision:r.revision});nativeRevision=r.revision;operation=r.operationId;if(changed)flow?.interrupt();return r;
-   }catch{if(!signal.aborted)close();throw Error('Context unavailable');}
+   }catch{if(!signal.aborted)close();throw Error('Context unavailable');}});
   },
  };
  const project=():CviSnapshot|null=>{
@@ -56,8 +66,8 @@ export function createLocalCviNotebookContext(options:Readonly<{
   return Object.freeze({revision:s.revision,context:Object.freeze({epoch:s.epoch,nativeRevision,inputRevision}),notes:Object.freeze(Object.fromEntries(FIELDS.map(([field])=>[map[field],Object.freeze({text:s.notes[field].value,confirmed:s.notes[field].status==='confirmed'})])) as CviSnapshot['notes'])});
  };
  const same=(a:CviSnapshot,b:CviSnapshot|null)=>!!b&&JSON.stringify(a)===JSON.stringify(b);
- const validContext=async(s:CviSnapshot,signal:AbortSignal)=>!!native&&await liveIdentity(signal)&&same(s,project());
- flow=createLocalCviStyling({draft:async(s,signal)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const text=await draft(s,signal);if(!await validContext(s,signal))throw Error('Context changed');return text;},check:async(text,s,signal)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const result=await check(text,s,signal);if(!await validContext(s,signal))throw Error('Context changed');return result;}},deadline,{snapshot:project,subscribe:change=>session.subscribe(change),end:()=>{session.end(owner);}});
+ const validContext=async(s:CviSnapshot,signal:AbortSignal)=>!proposalPending&&!!native&&await liveIdentity(signal)&&same(s,project());
+ flow=createLocalCviStyling({draft:async(s,signal)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const text=await draft(s,signal);if(!await validContext(s,signal))throw Error('Context changed');return text;},check:async(text,s,signal)=>{if(!await validContext(s,signal))throw Error('Context unavailable');const result=await check(text,s,signal);if(!await validContext(s,signal))throw Error('Context changed');return result;}},deadline,{snapshot:project,subscribe:change=>session.subscribe(change),ready:()=>!proposalPending&&!!native&&active(),end:()=>{session.end(owner);}});
  const ready=async(signal:AbortSignal)=>{if(!native||!await liveIdentity(signal))return false;await checkpoint.inspectOwnerFresh({...native,minimumRevision:nativeRevision},signal);return active()&&!signal.aborted;};
  const admittedCaller=async(request:Request,signal:AbortSignal)=>await caller(request,signal)&&await ready(signal);
  return Object.freeze({flow,checkpoint,
@@ -73,13 +83,19 @@ export function createLocalCviNotebookContext(options:Readonly<{
     const normalized=previewValue(field,value);return session.update(owner,{id:'edit_'+createHash('sha256').update('local-cvi-notebook-edit-v1:'+c.id).digest('hex'),epoch:c.epoch,field,baseRevision:c.baseRevision,sequence:c.sequence,...normalized,origin:'touch',activity:'customer'} as SessionUpdate);
    });return result??'unavailable';
   },
-  async beginProposal(request:Request,id:string,signal:AbortSignal):Promise<ProposalTurn|null>{return bounded(signal,async s=>{if(!await admittedCaller(request,s)||!Number.isSafeInteger(inputRevision+1))return null;const turn=proposals.begin(id);if(turn){inputRevision++;flow?.interrupt();}return turn;});},
+  async beginProposal(request:Request,id:string,signal:AbortSignal):Promise<ProposalTurn|null>{if(!Number.isSafeInteger(proposalAdmission+1))return null;const ticket=session.ticket(owner),admission=++proposalAdmission;return bounded(signal,async s=>{if(!ticket||!await caller(request,s)||admission<latestAuthorizedProposal)return null;latestAuthorizedProposal=admission;if(!await ready(s)||admission!==latestAuthorizedProposal||!session.isCurrent(owner,ticket)||!Number.isSafeInteger(inputRevision+1))return null;const turn=proposals.begin(id);if(turn){currentProposal=turn;proposalRevision=0;proposalPending=true;inputRevision++;flow?.interrupt();}return turn;});},
+  async refreshProposal(request:Request,handle:ProposalTurn,revision:number,signal:AbortSignal){
+   return await bounded(signal,async s=>{
+    if(!await admittedCaller(request,s)||handle!==currentProposal||handle.signal.aborted||!int(revision)||revision<=proposalRevision||!Number.isSafeInteger(inputRevision+1))return false;
+    proposalRevision=revision;proposalPending=true;inputRevision++;flow?.interrupt();return true;
+   })===true;
+  },
   async acceptProposal(request:Request,handle:ProposalTurn,revision:number,values:readonly Proposal[],final:boolean,signal:AbortSignal){
    let captured:readonly Proposal[];try{captured=structuredClone(values);}catch{return null;}
    const ticket=session.ticket(owner);if(!ticket)return null;
-   return bounded(signal,async s=>{if(!await admittedCaller(request,s)||!session.isCurrent(owner,ticket)||!Array.isArray(captured)||captured.some(v=>!exact(v,['field','value'])))return null;return proposals.accept(handle,revision,captured,final);});
+   return bounded(signal,async s=>{if(!await admittedCaller(request,s)||!session.isCurrent(owner,ticket)||handle!==currentProposal||revision!==proposalRevision||!Array.isArray(captured)||captured.some(v=>!exact(v,['field','value'])))return null;const result=proposals.accept(handle,revision,captured,final);if(result.status==='accepted'){proposalPending=false;if(final)currentProposal=null;}return result;});
   },
-  async clear(request:Request,signal:AbortSignal){return await bounded(signal,async s=>await admittedCaller(request,s)&&session.clear(owner))===true;},
+  async clear(request:Request,signal:AbortSignal){return await bounded(signal,async s=>{if(!await admittedCaller(request,s)||!session.clear(owner))return false;proposalPending=false;return true;})===true;},
   async end(request:Request,signal:AbortSignal){return await bounded(signal,async s=>{if(!await admittedCaller(request,s))return false;close();return true;})===true;},
  });
 }
