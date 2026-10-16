@@ -1,3 +1,13 @@
+## Local durable CVI committed receipts and signer, 15 October 2026
+
+Sabine approved local preparation/tests, including crash and replay protection, with no new spending or hosted changes. Added a disconnected receipt signer and disposable SQLite outbox. Validated domain history, one-use token consumption and a server-constructed receipt commit atomically. A permanent claim commits before signing; unknown outcomes, signing failure, cancellation and lost delivery release no success or refund. Requests bind exact principal/scope/challenge/digest and deadlines, with immutable captured records and observed database time.
+
+36 new foundation tests cover fresh-process crashes around both commits, actual signer-process exit after crypto, competing claims, repeated commands/challenges, restart refusal, ownership/schema/key substitution, floors, clocks and signed-client composition. Review added exact JSON input comparison to distinguish booleans from numbers, a database-wide clock check and retained a negative whole-database-restore test: local rollback can still restore signing permission. Final regression: 1,809 foundation tests across 150 files, 331 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks. See docs/local-tavus-durable-receipts.md.
+
+Limits: the claim port is trusted, not proof of real principal authentication or grant separation. Hosted PostgreSQL mutations/claims remain disabled; its prior permission rehearsal is separate. Independently protected claims, epoch/identity floors, current credential authority and hosted reconciliation remain open. No real credentials/keys, provider calls, spending, hosted changes, public push, permanent backup runtime/ledger or scheduler changes. Local Memory/interview records updated without hosted publication or task/phase completion changes; allocation remains $51.
+
+Exact next local action: specify a separately protected receipt-claim/floor witness and restore checks, preserving all independent-authority, provider, privacy, financial and live-activation gates. No user action is needed for the completed local receipt rehearsal.
+
 ## Local Tavus hosted history adapter proposal, 15 October 2026
 
 Sabine approved local preparation/tests, including permissions and signed acknowledgments, with no new spending or hosted changes. Added a disconnected pinned Ed25519 transaction port and gateway that signs only validated server results after commit. Exact request/challenge/principal binding, immutable request capture, bounded resources, monotonic clocks and conservative cancellation/replay/lost-ack behavior prevent unknown results from releasing text.

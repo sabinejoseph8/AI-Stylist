@@ -1,3 +1,7 @@
+## Making a committed receipt survive a signer crash
+
+I separated a committed history change from permission to sign its acknowledgment. My local transaction saves the receipt with the history, and the signer must permanently claim it before cryptography. I tested crashes before and after both commits and an actual signer process exiting after signing without returning a reply. Competing workers and new signers cannot reuse a claimed receipt, but uncertain delivery remains held instead of being refunded. I also kept a negative restore test showing that rolling back the entire local database can restore permission. That makes independent claim and epoch protection an explicit deployment requirement. No real keys, provider calls or hosted settings changed.
+
 ## Separating history permissions from signed success
 
 I prepared a local hosted-adapter proposal that pins a signing identity and binds each reply to the exact request and principal. I verified that a backend commit happens before a signed success, and that losing the signature does not roll the committed history back. Review added protection against request mutation during asynchronous work and a backward clock before signing. I also rehearsed PostgreSQL role restrictions in a disposable isolated container, with every mutation procedure deliberately disabled. I kept those permission checks separate from SQLite transaction evidence and documented the missing receipt-to-signer integration, real authentication and independent rollback protection. No hosted change or paid call was made.

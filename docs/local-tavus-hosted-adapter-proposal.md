@@ -1,5 +1,7 @@
 # Local Tavus hosted history adapter proposal
 
+Follow-up: [local durable receipt rehearsal](local-tavus-durable-receipts.md) tests atomic SQLite receipts and one-use signer claims. Hosted PostgreSQL mutation/claim and independent protection remain unimplemented.
+
 Sabine approved local preparation and tests on 15 October 2026, including permissions and signed acknowledgments, with no new spending or hosted changes. Nothing here is mounted in the application or applied to Supabase. This proposes boundaries within the existing Supabase and Render hosting choice, not a new hosting decision or approval to activate them.
 
 ## Proposed boundaries

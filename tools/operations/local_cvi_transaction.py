@@ -50,7 +50,7 @@ def prepare(root,snapshot,config):
     return {'storeId':snapshot['storeId'],'policyDigest':checked['policyDigest']}
 
 
-def operation(root,mode,config,request=None,crash_at=None):
+def operation(root,mode,config,request=None,crash_at=None, receipt_context=None):
     with connection(root) as db:
         rows=db.execute('SELECT payload,head,policy,observed FROM history WHERE id=1').fetchall()
         if len(rows)!=1:raise RecoveryHeld('transaction-unavailable')
@@ -81,6 +81,10 @@ def operation(root,mode,config,request=None,crash_at=None):
             except (ValueError,RecoveryHeld):result={'status':'denied'}
         elif mode=='inspect':return dict(snapshot=snapshot,head=head,policyDigest=policy,projections=db.execute('SELECT count(*) FROM projections').fetchone()[0])
         else:raise RecoveryHeld('transaction-unavailable')
+        if receipt_context is not None:
+            if mode!='commit' or result.get('status')!='committed':raise RecoveryHeld('transaction-unavailable')
+            from local_cvi_receipts import append_committed
+            append_committed(db,config,request,result,receipt_context)
         db.execute('UPDATE history SET observed=? WHERE id=1',(now,))
         if crash_at=='before-commit':os._exit(71)
         db.commit()
