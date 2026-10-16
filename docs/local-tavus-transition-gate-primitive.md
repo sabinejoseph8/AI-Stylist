@@ -1,3 +1,7 @@
+## Prepared signed-proof follow-up, 16 October 2026
+
+The current primitive requires one explicit `prepare_finish()` before `finish()`; it no longer creates an implicit nonce while finishing. Original gate inspection remains available between those steps. Signed inspection retention and an actual signed process-verifier boundary are prepared in docs/local-tavus-prepared-finish-proof.md. Original adoption, mandatory protected publication and production Node integration remain open. Verification below preserves the earlier marker checkpoint.
+
 # Local original transition-gate primitive
 
 This is disabled lower-layer preparation. It creates no listener, account grant, provider call, spending, hosted change or production permission. The protected startup/HTTP candidate is not yet connected to this primitive.
@@ -16,11 +20,11 @@ With the preserved pin, restoring only the replay folder cannot silently remove 
 
 ## Original completion
 
-The original handle calls a captured proof source with a fresh nonce. A separate mandatory configured verifier receives copies of the original descriptor, plan and evidence. Its result must match the exact operation, target and challenge; a boolean, altered result or missing verifier cannot release the gate. Check monotonic time, original marker and complete replay state around callbacks. Concurrent/reentrant calls refuse before starting another proof. Hold during a pending proof prevents late completion.
+The original handle prepares a one-use nonce first, then calls its captured proof source at finish with that same prepared record. Finish without preparation and duplicate preparation hold the handle. A separate mandatory configured verifier receives copies of the original descriptor, plan and evidence. Its result must match the exact operation, target and challenge; a boolean, altered result or missing verifier cannot release the gate. Check monotonic time, original marker and complete replay state around callbacks. Concurrent/reentrant calls refuse before starting another proof. Hold during a pending proof prevents late completion.
 
 Known verified completion advances the configured witness, removes the marker and syncs the directory. Unknown removal/sync outcomes hold the original handle even when the marker is already absent. No missing file or stored description reconstructs its finish permission. A process bridge must exit the context and release the lock before emitting a successful finish acknowledgment.
 
-## Verified local evidence
+## Earlier verified marker checkpoint
 
 - 35 new operations cases cover original/copy identities, read-only inspection, clocks, capacity, cancellation, concurrent finish, malformed proof results, partial writes, witness splits and one-sided restore.
 - Separate processes compete for the real file lock. Killing a holder releases the OS lock while leaving its marker. Native SQLite renewal commits while the replay/witness gate is held; the old native token cannot subsequently reserve replay.

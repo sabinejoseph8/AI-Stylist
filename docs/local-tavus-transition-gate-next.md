@@ -1,3 +1,7 @@
+## Prepared proof follow-up, 16 October 2026
+
+The early nonce, original signed-inspection claim and pinned finish verifier are prepared. Actual process tests exercise this signed boundary without adding authority reads. See docs/local-tavus-prepared-finish-proof.md. The next integration is the private supervised Node port, original consumed/adopted handoff binding and mandatory publication ordering; all-writer/restore/production-clock acceptance remains open.
+
 ## Primitive checkpoint, 16 October 2026
 
 The original file-lock/marker primitive is prepared with actual process and SQLite checks. The configured witness now binds marker evidence, including interrupted updates and one-sided restoration. See docs/local-tavus-transition-gate-primitive.md. Signed finish/adoption integration, hard Node supervision, mandatory publication ordering and all-writer coverage remain unimplemented. The complete two-turn exchange uses 127 of 128 authority records, so prepare the original finish nonce early and retain its exact fresh signed final inspection through adoption rather than adding read rounds. The design below still governs those steps.

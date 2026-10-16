@@ -27,11 +27,12 @@ def canonical_uuid(value):
 
 
 class _OriginalGate:
-    __slots__=('_describe','_inspect','_finish','_hold')
-    def __init__(self,describe,inspect,finish,hold):
-        self._describe=describe;self._inspect=inspect;self._finish=finish;self._hold=hold
+    __slots__=('_describe','_inspect','_prepare','_finish','_hold')
+    def __init__(self,describe,inspect,prepare,finish,hold):
+        self._describe=describe;self._inspect=inspect;self._prepare=prepare;self._finish=finish;self._hold=hold
     def describe(self):return self._describe(self)
     def inspect(self,request):return self._inspect(self,request)
+    def prepare_finish(self):return self._prepare(self)
     def finish(self):return self._finish(self)
     def hold(self):return self._hold(self)
 
@@ -65,7 +66,7 @@ def transition(root,scope,intent,proof_source,verify,clock,*,witness=None):
     if intent['kind']=='renew':
         expiry=intent['args']['lease'].get('expiresAt')
         if not integer(expiry) or scope['expiresAt']>expiry:raise RecoveryHeld('owner-transition-unavailable')
-    last=intent['now'];active=True;held=False;finished=False;finishing=False;original=None;challenges=set();operation_lock=threading.Lock()
+    last=intent['now'];active=True;held=False;finished=False;finishing=False;original=None;prepared=None;challenges=set();operation_lock=threading.Lock()
     def observe_time():
         nonlocal last
         at=clock()
@@ -117,18 +118,29 @@ def transition(root,scope,intent,proof_source,verify,clock,*,witness=None):
                 return dict(operationId=intent['id'],scopeDigest=sha(scope),snapshot=snapshot)
             except Exception:
                 held=True;raise
+        def prepare(caller):
+            nonlocal held,prepared
+            _,at=require(caller)
+            try:
+                if prepared is not None:raise RecoveryHeld('owner-transition-unavailable')
+                prepared=dict(status='transition-finish-prepared',operationId=intent['id'],scopeDigest=sha(scope),
+                              targetDigest=sha(intent['to']),challenge=secrets.token_hex(32),issuedAt=at,expiresAt=scope['expiresAt'])
+                require(caller)
+                return deepcopy(prepared)
+            except Exception:
+                held=True;raise
         def finish(caller):
             nonlocal held,finished,finishing
             require(caller)
             if finishing:raise RecoveryHeld('owner-transition-unavailable')
             finishing=True
             try:
-                nonce=secrets.token_hex(32)
-                evidence=deepcopy(proof_source(deepcopy(marker),nonce))
+                if prepared is None:raise RecoveryHeld('owner-transition-unavailable')
+                evidence=deepcopy(proof_source(deepcopy(marker),deepcopy(prepared)))
                 _,now=require(caller)
-                checked=deepcopy(verify(deepcopy(marker),deepcopy(intent),nonce,evidence,now))
+                checked=deepcopy(verify(deepcopy(marker),deepcopy(intent),deepcopy(prepared),evidence,now))
                 require(caller)
-                expected=dict(status='transition-finish-verified',operationId=intent['id'],targetDigest=sha(intent['to']),challenge=nonce)
+                expected=dict(status='transition-finish-verified',operationId=intent['id'],targetDigest=sha(intent['to']),challenge=prepared['challenge'])
                 if not isinstance(checked,dict) or checked!=expected:raise RecoveryHeld('owner-transition-unavailable')
                 # No user callback follows deletion. Unknown unlink/fsync results
                 # hold this original handle, even when the file is already gone.
@@ -148,6 +160,6 @@ def transition(root,scope,intent,proof_source,verify,clock,*,witness=None):
                 try:return action(caller,*args)
                 finally:operation_lock.release()
             return invoke
-        original=_OriginalGate(exclusive(describe),exclusive(inspect),exclusive(finish),hold)
+        original=_OriginalGate(exclusive(describe),exclusive(inspect),exclusive(prepare),exclusive(finish),hold)
         try:yield original
         finally:active=False

@@ -4,6 +4,7 @@ Separate processes and SQLite are actual; signed native/adoption integration
 remains required before this primitive can complete protected publication.
 """
 import copy
+from contextlib import contextmanager
 import hashlib
 import json
 import os
@@ -28,9 +29,10 @@ if x['mode']=='reserve':
  try:r.operate(x['root'],x['request'],'reserve');print('unexpected',flush=True)
  except ValueError:print('held',flush=True)
 else:
- source=lambda m,n:dict(nonce=n)
- verify=lambda m,p,n,e,at:dict(status='transition-finish-verified',operationId=p['id'],targetDigest=g.sha(p['to']),challenge=n)
+ source=lambda m,n:dict(nonce=n['challenge'])
+ verify=lambda m,p,n,e,at:dict(status='transition-finish-verified',operationId=p['id'],targetDigest=g.sha(p['to']),challenge=n['challenge'])
  with g.transition(x['root'],x['scope'],x['intent'],source,verify,lambda:x['intent']['now']) as gate:
+  gate.prepare_finish()
   print('locked',flush=True)
   sys.stdin.readline()
   if x['mode']=='finish':gate.finish();print('finished',flush=True)
@@ -47,15 +49,19 @@ class TransitionGateTests(unittest.TestCase):
         self.intent=dict(id=gates.sha(body),**body)
         self.scope=dict(storeId=self.store,bindingDigest=H(1),nativeStoreId=native,applicationExpiresAt=10000,expiresAt=8000)
         self.time=1000;self.proofs=[];self.checks=[]
-        self.source=lambda m,n:self.proofs.append((copy.deepcopy(m),n)) or dict(nonce=n)
+        self.source=lambda m,n:self.proofs.append((copy.deepcopy(m),n)) or dict(nonce=n['challenge'])
         def verify(m,p,n,e,at):
             self.checks.append((copy.deepcopy(m),copy.deepcopy(p),n,copy.deepcopy(e),at))
-            if e!=dict(nonce=n):raise ValueError('fake-proof-held')
-            return dict(status='transition-finish-verified',operationId=p['id'],targetDigest=gates.sha(p['to']),challenge=n)
+            if e!=dict(nonce=n['challenge']):raise ValueError('fake-proof-held')
+            return dict(status='transition-finish-verified',operationId=p['id'],targetDigest=gates.sha(p['to']),challenge=n['challenge'])
         self.verify=verify
+    @contextmanager
     def enter(self,**patches):
         args=dict(root=self.root,scope=self.scope,intent=self.intent,proof_source=self.source,verify=self.verify,clock=lambda:self.time)
-        args.update(patches);return gates.transition(**args)
+        args.update(patches)
+        with gates.transition(**args) as gate:
+            gate.prepare_finish()
+            yield gate
     def request(self,now=None,challenge=None):return dict(storeId=self.store,bindingDigest=H(1),challenge=challenge or H(30),now=self.time if now is None else now)
     def reserve(self):return replay.operate(self.root,dict(storeId=self.store,bindingDigest=H(1),requestDigest=H(40),now=self.time),'reserve')
     def state(self):return json.loads((self.root/'ledger.json').read_text())
@@ -94,7 +100,7 @@ class TransitionGateTests(unittest.TestCase):
     def test_copied_handles_cannot_inspect_finish_or_retire_original(self):
         with self.enter() as g:
             for copied in (copy.copy(g),copy.deepcopy(g)):
-                for call in (lambda:copied.inspect(self.request()),copied.finish,copied.hold,copied.describe):
+                for call in (lambda:copied.inspect(self.request()),copied.finish,copied.hold,copied.describe,copied.prepare_finish):
                     with self.assertRaises(ValueError):call()
             self.assertEqual(g.finish()['status'],'transition-finished')
     def test_gate_inspection_is_read_only_and_advances_only_clock(self):
@@ -325,7 +331,7 @@ class TransitionGateTests(unittest.TestCase):
     def test_verifier_cannot_replace_private_target_by_mutating_its_copies(self):
         def altered(m,p,n,e,at):
             p['to']['historyDigest']=H(901);m['targetNativeDigest']=gates.sha(p['to'])
-            return dict(status='transition-finish-verified',operationId=p['id'],targetDigest=m['targetNativeDigest'],challenge=n)
+            return dict(status='transition-finish-verified',operationId=p['id'],targetDigest=m['targetNativeDigest'],challenge=n['challenge'])
         with self.enter(verify=altered) as g:
             with self.assertRaises(ValueError):g.finish()
         self.assertTrue(self.marker().exists());self.assertEqual(self.state()['records'],[])
@@ -333,6 +339,34 @@ class TransitionGateTests(unittest.TestCase):
         self.time=1500;replay.inspect_boundary(self.root,self.request())
         with self.assertRaises(ValueError),self.enter():pass
         self.assertFalse(self.marker().exists());self.assertEqual(self.state()['clock'],1500)
+
+    def test_finish_without_preparation_has_no_implicit_nonce_or_fallback(self):
+        with gates.transition(self.root,self.scope,self.intent,self.source,self.verify,lambda:self.time) as g:
+            with self.assertRaises(ValueError):g.finish()
+            with self.assertRaises(ValueError):g.prepare_finish()
+        self.assertTrue(self.marker().exists());self.assertEqual(self.proofs,[])
+    def test_prepared_nonce_is_one_use_and_duplicate_prepare_holds(self):
+        with self.enter() as g:
+            with self.assertRaises(ValueError):g.prepare_finish()
+            with self.assertRaises(ValueError):g.finish()
+        self.assertTrue(self.marker().exists());self.assertEqual(self.proofs,[])
+    def test_prepared_nonce_survives_original_read_only_inspections(self):
+        with gates.transition(self.root,self.scope,self.intent,self.source,self.verify,lambda:self.time) as g:
+            prepared=g.prepare_finish();g.inspect(self.request());self.time=1500;g.inspect(self.request(challenge=H(88)))
+            original=copy.deepcopy(prepared);prepared['expiresAt']=10000;prepared['challenge']=H(89);g.finish()
+        self.assertEqual(self.proofs[0][1],original);self.assertEqual(original['issuedAt'],1000);self.assertEqual(original['expiresAt'],8000)
+        self.assertNotIn('challenge',self.proofs[0][0])
+    def test_prepared_nonce_expiry_during_generation_is_held(self):
+        def late(n):self.time=8000;return H(88)
+        with gates.transition(self.root,self.scope,self.intent,self.source,self.verify,lambda:self.time) as g:
+            with patch.object(gates.secrets,'token_hex',late),self.assertRaises(ValueError):g.prepare_finish()
+            with self.assertRaises(ValueError):g.finish()
+        self.assertTrue(self.marker().exists());self.assertEqual(self.proofs,[])
+    def test_proof_callback_cannot_replace_private_prepared_nonce(self):
+        def changed(m,n):n['challenge']=H(88);n['expiresAt']=10000;return dict(nonce=n['challenge'])
+        with self.enter(proof_source=changed) as g:
+            with self.assertRaises(ValueError):g.finish()
+        self.assertTrue(self.marker().exists())
 
 class NativeTransitionGateTests(unittest.TestCase):
     def setUp(self):
@@ -346,10 +380,10 @@ class NativeTransitionGateTests(unittest.TestCase):
         self.config=dict(now=1500,actor={'fixture':'domain'},node='unused',verifier='unused',authorityPin={},readPrincipal='unused')
         self.plan=adapter.plan(self.n.root,self.config,self.n.rotator,'renew',dict(lease=self.old,ttl=8000,token=H(101)))
         self.g.intent=self.plan;self.g.scope.update(nativeStoreId=self.plan['from']['storeId'],expiresAt=9000);self.g.time=1500
-        self.g.source=lambda m,n:dict(nonce=n,current=self.observe())
+        self.g.source=lambda m,n:dict(nonce=n['challenge'],current=self.observe())
         def verify(m,p,n,e,at):
-            if e!=dict(nonce=n,current=p['to']):raise ValueError('actual-native-target-held')
-            return dict(status='transition-finish-verified',operationId=p['id'],targetDigest=gates.sha(p['to']),challenge=n)
+            if e!=dict(nonce=n['challenge'],current=p['to']):raise ValueError('actual-native-target-held')
+            return dict(status='transition-finish-verified',operationId=p['id'],targetDigest=gates.sha(p['to']),challenge=n['challenge'])
         self.g.verify=verify
     def observe(self):
         from local_cvi_transaction import connection

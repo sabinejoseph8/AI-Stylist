@@ -1,3 +1,13 @@
+## Prepared signed finish proof, 16 October 2026
+
+The original Python gate now requires a one-use prepared finish nonce; there is no implicit finish nonce fallback. Gate-aware read-only inspection remains available between preparation and finish. The final native inspection derives three distinct challenge domains from that nonce, retains its exact signed authority-before/database/authority-after packet privately and allows one claim only from the original inspection and unchanged original binding. Copies, canceled/expired results and ordinary summaries cannot reconstruct it.
+
+A public-key verifier checks the original plan, writer/reader pins, exact committed transaction/claim, complete native target, active grant/token hash, revision and timestamps. It adds no authority read round. Real process integration uses the original Python lock and this actual signed verifier, exits its lock context before acknowledgment, and holds on wrong-nonce proof, lost reply or timeout. Native SQLite/signatures are actual; observer transaction labels are still fixture markers rather than proven hosted SQL identities. This does not yet connect the gate from before native commit through private adoption and protected publication.
+
+Final foundation regression passes 2,461 tests across 180 files, including 14 new signed finish-proof cases. All 564 operations tests pass with ResourceWarning as error, including 40 gate cases. TypeScript checking, client build, four encryption checks and 19 refreshed local Memory checks pass. The earlier focused run also passed 42 new/legacy checkpoint cases before the final metadata-clock refinement; the full result covers that final source. No SQL contract changed; the prior 556-check isolated PostgreSQL result was not rerun. Neither broad phase acceptance nor actual provider/device behavior is established.
+
+The fixed 128-request cap and complete two-turn exchange remain required. Do not add standalone finish reads, omit existing before/after checks, reset retained records or shorten the tested exchange. Mandatory Node gate identity/adoption wiring, universal writer coverage, independent administration/restore floors and production clock mapping remain open. Scope, 5-of-41 completion and the $51 allocation are unchanged. No providers, real credentials, spending, hosted publication or permanent backup runtime changes.
+
 ## Local ownership-transition gate primitive, 16 October 2026
 
 Prepared an original context-owned replay/witness lock with a durable marker bound to the full native plan, replay scope, expected/target metadata and immutable replay records. Only that original live handle can inspect or finish. Copies, repeated finish, concurrent finish, cancellation, expiry, changed state and unknown proof results hold without refund or automatic repair. Ordinary replay reads/writes and witness bootstrap refuse a retained marker. Process loss releases the OS lock but preserves uncertainty.
@@ -1550,14 +1560,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: the context-owned replay/witness gate primitive and durable marker are prepared, with 559 operations tests and 116 focused foundation checks passing. Signed finish/adoption integration and mandatory publication ordering remain open. The prior 2,447-test full foundation result belongs to the earlier checkpoint. See docs/local-tavus-transition-gate-primitive.md.
+Current local focus: prepared signed finish proof and original inspection retention are implemented locally. Full regression passes 2,461 foundation tests across 180 files, with 564 operations tests, TypeScript/build and encryption checks passing. Original private adoption and protected publication wiring remain open. See DEVELOPMENT_PROGRESS.md.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** add supervised original Node gate IPC and signed full-state finish proof, then connect original startup/renewal adoption before protected publication. Universal fencing and independently protected restore floors remain open.
+- **Next local action:** connect the supervised private Node gate to original startup/renewal adoption before protected publication. Preserve the 127-of-128 read budget and all existing checks.
 
 ## Historical summary checkpoints
 

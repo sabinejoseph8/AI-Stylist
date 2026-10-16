@@ -694,6 +694,23 @@
       "twoTurnProbePassed": true,
       "twoTurnAuthorityRequestRecords": 127,
       "localMemoryChecks": 19
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-prepared-finish-proof.md",
+      "foundationTests": 2461,
+      "foundationFiles": 180,
+      "newSignedFinishTests": 14,
+      "operationsTests": 564,
+      "structuralGateTests": 40,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled prepared original nonce, retained original signed full-state packet and offline pinned finish verification; actual lock-process boundary with lost-reply/timeout refusal. Mandatory before-commit/adoption/publication integration remains open. Observer transaction labels remain fixture markers.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false,
+      "authorityRequestCap": 128,
+      "extraFinishAuthorityReads": 0,
+      "localMemoryChecks": 19
     }
   ]
 }

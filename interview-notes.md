@@ -1,3 +1,9 @@
+## Reusing an original signed check without weakening it
+
+The two-turn local flow already used 127 of its 128 verification records, so adding another finish-check round would exceed the limit. I prepared the finish challenge early and retained the exact original signed final inspection. It can be claimed once through its original object and unchanged binding; a copied summary cannot replace it.
+
+I tested actual signatures through the lock process, including validly signed receipts for the wrong transaction, altered state, old challenges and lost replies. I kept adoption and publication as separate unfinished integration steps. A verified proof does not itself grant permission to resume the stylist.
+
 ## Keeping uncertain ownership changes visible after restart
 
 I added a local lock and durable marker around an ownership change. An old or copied handle cannot finish it, and a stopped process leaves evidence that blocks ordinary replay rather than silently reopening it.
