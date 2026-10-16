@@ -1,3 +1,7 @@
+## Follow-up evidence, 16 October 2026
+
+A separate [durable admission composition](local-tavus-durable-startup-admission.md) now uses the authenticated authority and mandatory SQLite adapter. The original fixtures below still use simulated admission. New tests expose the split-store request-fencing gap rather than closing live readiness. No hosted activation or production security guarantee is established.
+
 # Disabled fresh-owner startup composition
 
 Local preparation only, 16 October 2026. No spending, real credentials, provider requests, listener, hosted changes or activation are included.

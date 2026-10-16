@@ -16,6 +16,9 @@ def rpc(message):
 try:
     if x['mode']=='observe':
         with transactions.connection(Path(x['root'])) as db:result=adapter.control_metadata(db,x['config']['now'])
+    elif x['mode']=='full-observe':
+        from local_cvi_full_state import full_state
+        with transactions.connection(Path(x['root'])) as db:result=full_state(db)
     elif x['mode']=='plan':result=adapter.plan(Path(x['root']),x['config'],x['actor'],x['kind'],x['args'])
     elif x['mode']=='plan-full':
         capture={};intent=adapter.plan(Path(x['root']),x['config'],x['actor'],x['kind'],x['args'],capture)

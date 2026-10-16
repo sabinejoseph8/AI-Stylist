@@ -147,3 +147,7 @@ The adjacent [machine-readable matrix](launch-readiness-audit.json) retains each
 ## Disabled startup composition follow-up, 16 October 2026
 
 [Local startup-owner evidence](local-tavus-startup-owner.md) adds 32 focused cases for fresh credential rotation after inspection, unknown outcomes and retained replay history. Privileged admission is simulated, and production admission/independent floors/atomicity remain open. No production criterion or blocker closes; no hosted change is included.
+
+## Durable startup-admission follow-up, 16 October 2026
+
+[Local admission evidence](local-tavus-durable-startup-admission.md) binds the complete startup request into an authenticated SQLite transition and verifies fresh completed authority state. Nineteen focused cases include committed-but-unacknowledged results and the explicit separate-store negative boundary. The old credential-only path can still respond when admission commits but credential rotation fails, so request fencing remains open. No production criterion or blocker closes.

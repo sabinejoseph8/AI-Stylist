@@ -516,6 +516,16 @@
       "scope": "Disabled startup coordinator with simulated privileged admission and durable local credential/replay fixtures; no live readiness",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-durable-startup-admission.md",
+      "foundationTests": 2085,
+      "foundationFiles": 161,
+      "operationsTests": 475,
+      "scope": "Actual local signed-authority/SQLite startup admission, with explicit separate credential-store gap and simulated observer transaction labels",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

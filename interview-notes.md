@@ -1,3 +1,7 @@
+## Testing the gap between two durable stores
+
+I connected startup admission to the local signed authority and actual database transaction. A lost reply no longer allows the same admission to run again. The tests also exposed a separate-store gap: if admission commits but credential rotation fails, an older credential-only path can still respond. I kept that negative test visible and made checking the full-state owner on every request the next fix. This remains local preparation, with no live service or spending.
+
 ## Keeping restart checks separate from permission to start again
 
 I added a local startup rehearsal that checks the complete committed state, requires a separate admission and rotates the credential before returning a new owner. If a reply is lost or the state changes, the app stays blocked and the old credential remains retired. I tested the real local credential and replay files, while clearly recording that admission itself is simulated. This helps me distinguish a consistent backup from permission to restart a customer consultation. No hosted or paid service was activated.

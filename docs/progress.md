@@ -1,3 +1,13 @@
+## Local authenticated durable startup admission, 16 October 2026
+
+Continued authorized local preparation under the active goal. Connected startup admission to the existing signed monotonic authority and mandatory SQLite adapter. An exact baseline read precedes planning, the complete request is bound into committed owner history, execution is durably claimed before COMMIT, and a fresh signed completed-target read precedes acknowledgment. The final inspector reads actual full SQLite state. No original notebook or handoff is reconstructed.
+
+19 focused cases cover real local service/transaction composition, lost replies, before/after-COMMIT crashes, cancellation, replay, altered plans/proofs and missing mandatory execution. Type checking/build and 475 operations tests pass. Full regression passes 2,085 foundation tests across 161 files, 475 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks. Review added a final signed-proof/lease expiry check; the new expiry case preserves the committed transition while refusing acknowledgment. See docs/local-tavus-durable-startup-admission.md.
+
+A negative test identifies the remaining split-store gap: if admission commits but credential rotation fails, the coordinator returns no new owner, while the older disconnected credential-only helper can still respond. This is not production-safe all-writer fencing. Native observer transaction markers, independent service administration/restore floors and hosted acceptance remain unproven. Product/design scope, phase/launch criteria and allocation ($51) are unchanged. No spending, real credentials, provider calls, hosted publication or permanent backup runtime/ledger/scheduler changes.
+
+Exact next local action: require full-state checkpoint/owner checks at every request fence in the disabled composed endpoint, including after credential work. Test that an old constructed owner refuses output after admission commits even when credential rotation fails. Preserve legacy disconnection and all real activation/privacy/financial/hosted gates. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout; refresh its tracked-source-only archive/pointer after commit.
+
 ## Disabled fresh-owner startup composition, 16 October 2026
 
 Continued authorized local preparation after full-state reconciliation. A disconnected coordinator now requires read-only checkpoint inspection, a separately privileged admission, fresh credential activation, another checkpoint inspection and a current-credential proof before returning a local owner. It refuses checkpoint-only readiness and reused notebook state. Cancellation, changed state and unknown activation remain held without replaying activation or restoring an old credential.
@@ -1377,6 +1387,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+Latest local follow-up: authenticated startup admission now commits through the mandatory SQLite adapter and verifies signed completed state. The separate-store request-fencing gap is explicitly reproduced and remains the next local fix. No launch criterion closes; full task completion remains 5 of 41. See docs/local-tavus-durable-startup-admission.md.
 
 Latest local preparation, 16 October 2026: full-state post-commit reconciliation and the 503-check PostgreSQL rehearsal remain passing. Disabled fresh-owner startup adds 32 focused checks and requires separate admission plus fresh credential activation after checkpoint inspection. Privileged admission remains simulated; full task completion stays 5 of 41. See docs/local-tavus-startup-owner.md. No hosted change or spending occurred.
 

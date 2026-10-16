@@ -1,3 +1,7 @@
+## Follow-up evidence, 16 October 2026
+
+The activation-only limitation recorded below was followed by all five typed targets and a continuous PostgreSQL sequence. See [typed coverage](local-tavus-typed-full-state-coverage.md), [continuous state/restore checks](local-tavus-continuous-state-rehearsal.md) and [startup admission](local-tavus-durable-startup-admission.md). These are local rehearsals; native domain enforcement, independent administration and universal fencing remain open. Earlier test counts below describe the original checkpoint.
+
 # Local full-state reconciliation after database commit
 
 Sabine approved local preparation and tests on 16 October 2026, with no new spending or hosted changes. This extends the disposable PostgreSQL rehearsal to persist the complete logical CVI fixture state and reconcile its original signed authority target after commit. It does not deploy a production database adapter or activate live styling.
