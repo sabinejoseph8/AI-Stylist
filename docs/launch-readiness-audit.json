@@ -783,14 +783,17 @@
       "isolatedPostgresChecks": 638,
       "isolatedPostgresRerun": true,
       "postgresContinuousTransitions": 6,
-      "foundationFullStatus": "running",
+      "foundationFullStatus": "passed",
       "foundationFullSession": 16796,
       "priorFullFoundationTests": 2504,
       "priorFullFoundationFiles": 182,
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false,
       "scope": "Disconnected local PostgreSQL renewal with actual roles/xids, full-state restrictions and a six-transition preserved history; separate original-gate SQLite renewal. Mandatory gate/PostgreSQL/owner handoff composition remains open.",
-      "localMemoryChecks": 19
+      "localMemoryChecks": 19,
+      "foundationFullTests": 2518,
+      "foundationFullFiles": 183,
+      "foundationFullExitCode": 0
     }
   ]
 }

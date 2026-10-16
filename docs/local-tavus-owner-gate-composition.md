@@ -21,11 +21,21 @@ Only the final inspection uses the gate's prepared challenge domains. Earlier in
 
 The producer must enter the gate before authority advancement, retain its original confirmed admission, commit and close the same connection, and preserve the original committed receipt. A generic observation or public success record does not recreate that producer context. Final signed verification must still match the exact original transaction, claim and complete target.
 
+## Paired producer boundary
+
+Configure the producer with the immutable native/replay/application scope, authority and database pins, actor/principal, physical transaction transport and clock before any callback. Pair its admission and replay objects privately; a copied or mismatched pair must refuse before privileged work. An HTTP body may not select roots, pins, principals or an alternate driver.
+
+For each original plan, enter the gate before authority advancement. Bind the confirmed original admission once, commit and close the same connection, retain its original receipt and verify the reconciled target. Capture the original native execution result before cloning its public lease. The private record must link that result to the same plan, scope, gate, transaction/claim, expected owner/revision, deadline and cancellation state. A public success record or later observer snapshot cannot recreate the record.
+
+Carry that original context through the existing private startup permit or consumed-renewal handoff. Validate the public lease separately and keep its original context one-use. Route replay idle checks through the held original gate, preserving captured logical/physical scope. Retain the original last signed inspection before public cloning, then consume it at gate finish. Await verified acknowledgment and context exit before protected registration or returning the renewed state. Failure must retire the paired context and temporary flow without deleting permanent/uncertain evidence.
+
+This is the required producer/consumer connection, not an additional permission callback that can be faked with a structural object. The lower contract harness may still simulate hooks, but the protected owner registry must require the genuine paired producer and original finish. Continue to distinguish actual signed/native integration from configured callback assumptions and hosted isolation.
+
 ## Renewal prerequisite
 
 Local renewal is now prepared and passes 638 isolated PostgreSQL checks, including the continuous six-step sequence. Its original gate-to-PostgreSQL-to-owner composition is still incomplete. Preserve the tested renewal restrictions when wiring that producer. Restrict it to the rotator and full-state execution path; keep direct reduced writes revoked. Verify same owner/generation/boot, a new token hash, advancing expiry, unchanged domain content and the exact original connection/claim. Do not silently reuse the old lease or weaken the target to its reduced projection.
 
-Use the existing reproducible local harness in `tools/operations/rehearse-cvi-transactions.py`, with its opt-in synthetic flags, pinned cached PostgreSQL image, `--pull=never`, `--network none`, temporary storage and cleanup. Do not touch hosted credentials, production containers or backup runtime/schedules. Current PostgreSQL evidence remains historical until an actual new run succeeds.
+Use the existing reproducible local harness in `tools/operations/rehearse-cvi-transactions.py`, with its opt-in synthetic flags, pinned cached PostgreSQL image, `--pull=never`, `--network none`, temporary storage and cleanup. Do not touch hosted credentials, production containers or backup runtime/schedules. The 638-check run is current local evidence for the restricted SQL contract. Any subsequent SQL change needs a new actual rehearsal; this result does not establish hosted behavior.
 
 ## Required evidence
 

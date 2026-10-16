@@ -1,6 +1,6 @@
 ## Local renewal follow-up, 16 October 2026
 
-Renewal is now prepared in the signed bridge and restricted full-state SQL path. The isolated PostgreSQL rehearsal passes 638 checks and preserves one history through six transitions, including renewal. Nineteen earlier direct gate cases are now twenty with the real SQLite renewal check. Final full run 16796 is pending; actual gate/PostgreSQL/owner composition and hosted acceptance remain open. See local-tavus-postgres-renewal.md. Earlier five-transition, unsupported-renewal and test-count descriptions below are historical.
+Renewal is now prepared in the signed bridge and restricted full-state SQL path. The isolated PostgreSQL rehearsal passes 638 checks and preserves one history through six transitions, including renewal. Nineteen earlier direct gate cases are now twenty with the real SQLite renewal check. Final full run 16796 passes 2,518 tests across 183 files; actual gate/PostgreSQL/owner composition and hosted acceptance remain open. See local-tavus-postgres-renewal.md. Earlier five-transition, unsupported-renewal and test-count descriptions below are historical.
 
 # Local deferred transaction gate
 
