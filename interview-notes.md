@@ -1,3 +1,9 @@
+## Keeping a local lock tied to its original server operation
+
+I prepared an original server handle for the transition lock, so copying its visible status or a signed-check summary cannot finish the operation. The server waits for both lock release and clean process exit. Tests cover cancellation, expiry, clock rollback, competing finishes and a stalled process.
+
+Review found a cleanup edge when a message was too large to send. I stopped the new regression run, fixed the unhandled promise and added a passing oversized-message test. I kept this boundary separate from unfinished startup and renewal integration; the fixture transaction labels still do not prove hosted SQL behavior.
+
 ## Reusing an original signed check without weakening it
 
 The two-turn local flow already used 127 of its 128 verification records, so adding another finish-check round would exceed the limit. I prepared the finish challenge early and retained the exact original signed final inspection. It can be claimed once through its original object and unchanged binding; a copied summary cannot replace it.

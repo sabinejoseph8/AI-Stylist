@@ -1,3 +1,13 @@
+## Original supervised Node transition gate in progress, 16 October 2026
+
+Prepared a disabled original Node gate port backed by the actual Python lock process and pinned signed finish verifier. Trusted setup is captured before the process starts. Only the original opaque handle can obtain its frozen finish binding, inspect under its lock, finish from the exact original signed inspection, or close it. Finish consumes the original proof once and waits for the matching acknowledgment plus clean process exit after lock release. Copies, ordinary summaries, cancellation, expiry, clock rollback, competing finishes and unknown outcomes hold without retry or publication permission. A hard wall timer stops an idle process even when a fixture logical clock is frozen.
+
+Eleven new Node port tests pass. The earlier combined signed-proof/port run passed 24 cases before the IPC cleanup refinement. Review fixed an unhandled-promise edge when the encoded setup or command exceeds its bound; the new oversized setup case passes. All 564 operations tests, TypeScript checking/build and four encryption checks pass. The first newly started full run was stopped for that actual cleanup fix and is not counted as passed. Final full foundation run is live at exec session 3650, log /private/tmp/ai-stylist-node-gate-final-regression.log. Source is frozen; collect that same handle before claiming final totals. The previous complete result, 2,461 tests across 180 files, belongs to d102ec0 and predates this port.
+
+This port currently captures an expected commit identity before entry. Its actual process tests begin after an existing synthetic startup, so they do not establish before-commit sequencing or real SQL transaction provenance. Next, carry authenticated original committed-receipt identity into the original gate without allowing a caller-selected replacement, then retain it through original consumed/adopted handoffs and require verified gate completion before protected owner publication. Do not infer that wiring from the new port alone. No additional authority read rounds are introduced; the prior complete flow's 127-of-128 budget remains the constraint.
+
+Product/design scope and phase/production acceptance are unchanged: 5 of 41 full tasks, 0 of 21 production criteria, $51 allocation. No providers, real credentials, new spending, hosted publication, support messages or permanent backup runtime changes. All-writer fencing, independently protected restore floors and production clock mapping remain open.
+
 ## Prepared signed finish proof, 16 October 2026
 
 The original Python gate now requires a one-use prepared finish nonce; there is no implicit finish nonce fallback. Gate-aware read-only inspection remains available between preparation and finish. The final native inspection derives three distinct challenge domains from that nonce, retains its exact signed authority-before/database/authority-after packet privately and allows one claim only from the original inspection and unchanged original binding. Copies, canceled/expired results and ordinary summaries cannot reconstruct it.
@@ -1560,14 +1570,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: prepared signed finish proof and original inspection retention are implemented locally. Full regression passes 2,461 foundation tests across 180 files, with 564 operations tests, TypeScript/build and encryption checks passing. Original private adoption and protected publication wiring remain open. See DEVELOPMENT_PROGRESS.md.
+Current local focus: original supervised Node gate port prepared; 11 new cases and 564 operations checks pass. Final full regression session 3650 is running. Original committed-receipt provenance, before-commit sequencing, handoff adoption and protected publication integration remain open.
 
 - **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
 - **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
 - **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
 - **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
 - **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** connect the supervised private Node gate to original startup/renewal adoption before protected publication. Preserve the 127-of-128 read budget and all existing checks.
+- **Next local action:** collect full run 3650, then bind original committed receipts and startup/renewal handoffs to the gate before protected publication, retaining the fixed 128-record limit.
 
 ## Historical summary checkpoints
 
