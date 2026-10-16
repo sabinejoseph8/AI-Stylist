@@ -1,3 +1,7 @@
+## Original pair isolated migration, 16 October 2026
+
+The isolated factory now constructs original admission, replay, checkpoint, credential/clock and continuation objects with a concrete transaction driver. Fifteen final focused checks pass, including the 127-of-128 complete journey and pre-work copied/mismatched/generic-port refusal. Broader fixture migration and the isolated full regression remain open; this source is not merged. Main signed-finish source passes 2,551 tests across 186 files. See docs/local-tavus-isolated-owner-pair.md. Earlier missing-pair descriptions below refer to the verified main source.
+
 ## Original final inspection and finish connected, 16 October 2026
 
 The guard and notebook transition adapter now preserve the original last signed inspection and await verified original gate completion before startup registration or renewed acceptance. The complete local two-turn transcript/notebook/HTTP journey passes at exactly 127 of the fixed 128 records. Fifty-nine focused checks pass in the isolated source copy, and 14 publication/handoff checks pass independently in the main workspace. Full run 82115 passes 2,551 tests across 186 files. Mandatory original paired construction and pre-work identity rejection remain next. See docs/local-tavus-original-finish.md. Earlier missing-finish descriptions below are historical.

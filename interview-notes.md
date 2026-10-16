@@ -1,3 +1,9 @@
+## Prototyping original paired configuration
+
+I prepared a separate local version that constructs admission, replay, checkpoint and continuation together and captures the credential service and clock before work starts. Copies, mismatched objects and direct admission without the original claim refuse before planning. Its focused checks include the complete local two-turn journey within the unchanged journal limit.
+
+I kept this version out of the main application while separating test-only protocol harnesses from genuine protected integration fixtures. The main version remains fully verified; the isolated version still needs its broader fixture migration and regression before merging.
+
 ## Completing the original gate before publishing a session
 
 I connected the original final signed inspection to verified gate completion before startup or renewed output becomes available. I reused the existing last inspection instead of adding another round of authority reads. The complete local transcript, notebook and HTTP journey now works before and after renewal while using 127 of the fixed 128 journal records.

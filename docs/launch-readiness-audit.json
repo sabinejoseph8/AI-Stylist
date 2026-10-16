@@ -858,6 +858,27 @@
       "foundationFullTests": 2551,
       "foundationFullFiles": 186,
       "foundationFullExitCode": 0
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-isolated-owner-pair.md",
+      "isolatedPairTests": 15,
+      "isolatedPairFiles": 1,
+      "earlierCombinedTests": 66,
+      "earlierCombinedFiles": 2,
+      "earlierCombinedScope": "12 prior pair checks and 54 HTTP-envelope contract checks before final clock/credential refinements; final 15 pair checks cover those refinements.",
+      "mainFoundationTests": 2551,
+      "mainFoundationFiles": 186,
+      "completeGatedTwoTurnAuthorityRecords": 127,
+      "authorityRecordCap": 128,
+      "sourcePatchSha256": "51f8e4994ef533a7ed5d741f2c3b3178b0fcd9439c97f42037380ba79b2ede13",
+      "sourcePatchName": "prepared-owner-pair-51f8e4994ef5.patch",
+      "notMerged": true,
+      "fullStageRegressionRun": false,
+      "fixtureMigrationComplete": false,
+      "localMemoryChecks": 19,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

@@ -1,3 +1,7 @@
+## Isolated original pair preparation, 16 October 2026
+
+The main workspace has a verified 2,551-test/186-file signed-finish result. A separate isolated pair migration passes 15 final focused checks and the 127-of-128 full local journey, but legacy fixture migration and its full regression are unfinished. The source-only patch is not merged, no production criterion closes and no hosted behavior is established. See docs/local-tavus-isolated-owner-pair.md.
+
 ## Original signed finish connection, 16 October 2026
 
 Actual local startup and renewal complete their original gates before publication, with a complete two-turn transcript/notebook/HTTP test using exactly 127 of 128 journal records. Fifty-nine focused isolated-source checks and 14 independent main-workspace checks pass. Full run 82115 passes 2,551 tests across 186 files with terminal exit zero. Mandatory original pair configuration, independent hosted permissions and live/provider/device acceptance remain open. No production criterion closes. See docs/local-tavus-original-finish.md.
