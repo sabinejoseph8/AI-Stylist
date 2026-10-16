@@ -1,5 +1,7 @@
 # Local authenticated witness service and restricted recovery contract
 
+Follow-up: [local SQLite and receipt integration](local-tavus-integrated-witness.md) tests actual database targets and refusals. Fencing remains simulated and no hosted backend is enabled.
+
 Sabine approved local preparation/tests on 15 October 2026, including split-commit recovery, with no new spending or hosted changes. The service is disconnected from application routes. It uses actual ephemeral Ed25519 signatures and a durable synthetic journal, with simulated transition and evidence issuers. No hosted service, real identity, credential or account grant was configured.
 
 ## Authentication and role boundaries

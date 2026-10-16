@@ -1,3 +1,7 @@
+## Proving the target committed before recovery and signing
+
+I connected the authenticated witness contract to disposable SQLite transactions and receipt claims. The planner runs the actual domain validator but rolls back, and apply checks the exact baseline and target before committing. Recovery now observes the real test database instead of accepting a preset successful assertion. I verified that an uncommitted claim is refused even when its domain epoch and head match, and that a crash after claiming cannot recreate a lost signing record. I kept simulated fencing and the gap after the last database observation explicit. No paid calls or hosted changes were made.
+
 ## Restricting witness recovery to authenticated evidence
 
 I prepared a local witness-service contract with separate signed caller roles, durable replay records and restricted advances. Recovery cannot choose a new target or erase uncertain work. It requires independently signed evidence that the database matches the recorded target and that old writers are fenced. Review caught a timing gap where evidence could expire before the journal commit, so I added an expiry check inside that commit as well. I tested interrupted writes, lost replies and coordinated restore, while keeping real fencing, database grants and independent storage unproven. No hosted setting, real credential or paid service was changed.
