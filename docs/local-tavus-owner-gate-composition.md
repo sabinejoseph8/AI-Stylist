@@ -1,6 +1,6 @@
 ## Concrete producer prepared, 16 October 2026
 
-The fixed local SQLite producer in local-cvi-gated-execution.ts now enters its original gate before advancement, retains authenticated original transaction/claim evidence through actual COMMIT/close and complete-state reconciliation, and creates a private one-use execution context. Fourteen final focused checks pass; full run 10384 is pending. It does not yet connect to startup/renewal handoffs or protected publication. See docs/local-tavus-gated-execution-producer.md. Preserve the remaining integrations and complete-flow budget below.
+The fixed local SQLite producer in local-cvi-gated-execution.ts now enters its original gate before advancement, retains authenticated original transaction/claim evidence through actual COMMIT/close and complete-state reconciliation, and creates a private one-use execution context. Fourteen final focused checks pass; full run 10384 passes 2,532 tests across 184 files. It does not yet connect to startup/renewal handoffs or protected publication. See docs/local-tavus-gated-execution-producer.md. Preserve the remaining integrations and complete-flow budget below.
 
 # Next local integration: original gate through owner publication
 
