@@ -70,9 +70,9 @@ def main():
                 except Exception:self.p.kill();self.p.wait(timeout=3)
             self.sel.close();self.p.stdout.close()
     class BridgeWorker:
-        def __init__(self,full=False):
+        def __init__(self,full=False,operation='activate'):
             node=Path.home()/'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node'
-            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')]+(['--full-state'] if full else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
+            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')]+(['--full-state','--stage='+operation] if full else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
             self.buffer='';self.sel=selectors.DefaultSelector();self.sel.register(self.p.stdout,selectors.EVENT_READ);self.active=None;workers.append(self)
             self.prepared=self.call('prepare');self.command=self.prepared['command']
         def call(self,method,**args):
@@ -224,8 +224,8 @@ def main():
             if actor not in ['fixture_writer','fixture_rotator','fixture_fencer','fixture_signer']:
                 denied(prefix+"SELECT cvi_tx_fixture.execute_admitted('"+str(uuid.uuid4())+"',repeat('a',64));",actor)
         stage='closed-mutation-shapes'
-        for kind,target,actor in [('apply',{**fenced,'head':'d'*64},'fixture_writer'),('activate',{**next_state,'extra':True},'fixture_rotator'),('activate',{**next_state,'generation':True},'fixture_rotator'),('activate',next_state,'fixture_writer')]:
-            p=command(kind,fenced,target);s=Session(actor)
+        for kind,target,actor in [('apply',{**fenced,'head':'d'*64},'fixture_writer'),('activate',{**next_state,'extra':True},'fixture_rotator'),('activate',{**next_state,'generation':True},'fixture_rotator'),('activate',next_state,'fixture_writer'),('apply',{**fenced,'fenced':False},'fixture_writer')]:
+            p=command(kind,target if kind=='apply' and target.get('fenced') is False else fenced,target);s=Session(actor)
             try:Verifier().admit(dict(intent=p,connection=s.identity()));raise RuntimeError('unexpected invalid admission')
             except RuntimeError as e:
                 if str(e)=='unexpected invalid admission':raise
@@ -275,17 +275,17 @@ def main():
                 def __init__(self,w,mode):self.worker=w;self.mode=mode
                 def admit(self,b):
                     result=self.worker.call('admit',binding=b);p=b['intent'];c=b['connection']
-                    query='BEGIN; SELECT cvi_tx_fixture.admit('+','.join([literal(str(uuid.UUID(p['operationId']))),literal(result['claimHash']),literal(c['principal']),literal(p['kind']),literal(c['transactionId'])+'::xid8',state(p['previous']),state(p['target']),'NULL',"clock_timestamp()+interval '7 seconds'"])+');'
+                    query='BEGIN; SELECT cvi_tx_fixture.admit('+','.join([literal(str(uuid.UUID(p['operationId']))),literal(result['claimHash']),literal(c['principal']),literal(p['kind']),literal(c['transactionId'])+'::xid8',state(p['previous']),state(p['target']),'NULL' if p['recordHash'] is None else literal(p['recordHash']),"clock_timestamp()+interval '7 seconds'"])+');'
                     if self.mode!='missing-full':query+=' SELECT cvi_tx_fixture.admit_full('+literal(str(uuid.UUID(p['operationId'])))+','+state(self.worker.prepared['states']['previous'])+','+state(self.worker.prepared['states']['target'])+');'
                     good(query+' COMMIT;','fixture_verifier');return result
                 def confirm(self,b,claim):
                     result=self.worker.call('confirm',binding=b,claimHash=claim)
                     if self.mode=='uncommitted':self.worker.call('finalize')
                     return result
-            for mode in ['normal','uncommitted','tampered-grant','missing-full','lost-commit','lost-reconcile']:
-                stage='full-'+mode;w=BridgeWorker(True);w.call('mode',mode=mode)
+            for mode in ['normal','uncommitted','tampered-grant','missing-full','lost-commit','lost-reconcile','commit','claim','fence','release']:
+                stage='full-'+mode;typed=mode in ['commit','claim','fence','release'];w=BridgeWorker(True,mode if typed else 'activate');w.call('mode',mode='normal' if typed else mode)
                 good('TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(w.command['previous'])+'; INSERT INTO cvi_tx_fixture.full_states VALUES(true,'+state(w.prepared['states']['previous'])+',NULL);')
-                s=Session('fixture_rotator');w.active=s
+                s=Session(w.prepared['principal']);w.active=s
                 def apply_full(op,claim):
                     result=json.loads(s.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');'));result['operationId']=uuid.UUID(result['operationId']).hex;return result
                 s.execute_admitted=apply_full
@@ -293,13 +293,13 @@ def main():
                     commit=s.commit
                     def unknown_commit():commit();raise DatabaseHeld('lost commit reply')
                     s.commit=unknown_commit
-                base=DatabaseTransactionAdapter('fixture_rotator','activate',type('Port',(),{'begin':lambda _:s})(),FullVerifier(w,mode),lambda:1000)
+                base=DatabaseTransactionAdapter(w.prepared['principal'],w.command['kind'],type('Port',(),{'begin':lambda _:s})(),FullVerifier(w,mode),lambda:1000)
                 class Finalizer:
                     def finalize(self,p,result):
                         if mode=='tampered-grant':good("UPDATE cvi_tx_fixture.full_states SET snapshot=jsonb_set(snapshot,'{grants,0,3}',to_jsonb(repeat('0',64)));")
                         return w.call('finalize')
                 wrapper=ReconciledDatabaseAdapter(base,Finalizer(),w.prepared['targetDigest'],lambda:1000)
-                if mode=='normal':
+                if mode=='normal' or typed:
                     require(wrapper.execute(w.command)['reconciliation']['status']=='reconciled')
                     require(w.call('inspect')['pending'] is None)
                 else:
@@ -307,7 +307,7 @@ def main():
                     except DatabaseHeld:checks+=1
                     require((w.call('inspect')['pending'] is None)==(mode=='lost-reconcile'))
                 if mode in ['uncommitted','missing-full']:require(current()==w.command['previous'])
-                if mode in ['normal','lost-commit','lost-reconcile']:require(current()==w.command['target'])
+                if mode in ['normal','lost-commit','lost-reconcile'] or typed:require(current()==w.command['target'])
                 try:wrapper.execute(w.command);raise RuntimeError('unexpected full retry')
                 except DatabaseHeld:checks+=1
                 w.close()

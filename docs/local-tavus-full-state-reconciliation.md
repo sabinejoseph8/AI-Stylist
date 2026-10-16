@@ -2,6 +2,8 @@
 
 Sabine approved local preparation and tests on 16 October 2026, with no new spending or hosted changes. This extends the disposable PostgreSQL rehearsal to persist the complete logical CVI fixture state and reconcile its original signed authority target after commit. It does not deploy a production database adapter or activate live styling.
 
+Follow-up: [typed full-state coverage](local-tavus-typed-full-state-coverage.md) now includes domain commit, receipt claim, fencing and release targets as separate PostgreSQL scenarios. Continuous-sequence, concurrency and restore acceptance remain open.
+
 ## Complete logical state
 
 `tools/operations/local_cvi_full_state.py` exports the existing model's complete logical rows: domain history and its payload, projections, committed receipts, writer gate, retained grants and release tombstones. An optional rollback-only planner capture records both the exact baseline and exact target while the actual existing validator and lease mutation run. Capture does not commit SQLite or change the original signed intent ID.

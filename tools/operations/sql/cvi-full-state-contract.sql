@@ -13,7 +13,7 @@ LANGUAGE plpgsql SECURITY DEFINER SET search_path=pg_catalog,cvi_tx_fixture AS $
 BEGIN
  IF NOT pg_has_role(session_user,'cvi_tx_verifier','MEMBER') THEN RAISE EXCEPTION 'full state held' USING ERRCODE='42501'; END IF;
  IF NOT EXISTS(SELECT 1 FROM cvi_tx_fixture.admissions WHERE operation_id=op AND NOT consumed)
-  OR previous IS NULL OR target IS NULL OR NOT (target ?& ARRAY['version','history','projections','receipts','gate','grants','releases'])
+  OR previous IS NULL OR target IS NULL OR previous=target OR NOT (target ?& ARRAY['version','history','projections','receipts','gate','grants','releases'])
  THEN RAISE EXCEPTION 'full state held' USING ERRCODE='55000'; END IF;
  INSERT INTO cvi_tx_fixture.full_admissions VALUES(op,previous,target);
 END $$;

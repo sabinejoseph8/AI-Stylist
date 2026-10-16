@@ -1,3 +1,15 @@
+## Local typed full-state reconciliation coverage, 16 October 2026
+
+Continued authorized local full-state preparation under the active goal. Added actual validator/authority-backed domain commit, receipt claim, fencing and release target scenarios to the disposable PostgreSQL rehearsal. Each persists the complete logical export and original execution marker, then reconciles the exact signed target. Same-head receipt claims are allowed only through the full-only admission boundary; the reduced path still refuses them and full admission rejects unchanged snapshots. Release persists its tombstone without invoking an application signing handoff or audio.
+
+Four new foundation cases pass. Final regression: 2,000 foundation tests across 157 files, 475 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks. The isolated PostgreSQL run passes 412 checks including the original permissions, failure cases, same-head guard and all five typed target scenarios. See docs/local-tavus-typed-full-state-coverage.md.
+
+Workspace audit found the original goal checkout at /private/tmp/ai-stylist-phone-publish is older with extensive local changes/missing tracked files. Current verified work is /private/tmp/ai-stylist-recovered-20261014. Preserve the older tree; save a tracked-source-only Git archive and a current-workspace pointer there after committing this checkpoint. Do not transfer credentials, private ledgers, dependencies or backup material. No public push or hosted Memory update is authorized by this local-only work.
+
+Limits: separately prepared targets do not yet prove one continuous PostgreSQL consultation sequence, competing full-state writers or restore recovery across it. Native SQL domain enforcement, independently administered authority/proofs, universal fencing and production deadline mapping remain open. Phase completion/product/design scope is unchanged. No spending, provider calls, hosted changes or permanent backup runtime/ledger/scheduler changes; allocation remains $51. Goal remains active and incomplete.
+
+Exact next local action: compose the continuous full-state PostgreSQL sequence, then test competing writes, uncertain results and restore boundaries without refunding one-use claims. Preserve all hosted, privacy, financial and live-activation gates.
+
 ## Local full-state post-commit reconciliation, 16 October 2026
 
 Sabine approved local preparation/tests with no new spending or hosted changes. Added rollback-only capture of the complete logical CVI state, including domain history, projections, receipts, gate, grants and release tombstones. The PostgreSQL supplement atomically persists the full export and original execution marker, requires full admission and revokes runtime access to the reduced-state route. A separate committed observer must match the complete signed target and original transaction/claim before authenticated authority reconciliation. A required finalizer verifies the signed acknowledgment and fresh completed read before returning a one-use result.

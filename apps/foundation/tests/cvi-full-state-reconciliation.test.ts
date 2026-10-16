@@ -18,3 +18,12 @@ it.each(['reconcile','read','expired'])('a %s failure after durable reconciliati
  const r=createLocalFullStateReconciler(f.x.pin,f.plan,f.states.target,f.command,hash,'40',async()=>{const e=await port.reconcile(f.plan);if(mode==='expired')time=3000;return mode==='reconcile'?corrupt(e):e;},async n=>{const e=await port.read(n);return mode==='read'?corrupt(e):e;},()=>time);
  await expect(r.finalize(signal())).rejects.toThrow();expect((await f.x.inspect()).pending).toBeNull();await expect(r.finalize(signal())).rejects.toThrow();
  }finally{await f.close();}},30000);
+it.each(['commit','claim','fence','release'])('captures and reconciles the complete %s transition without reducing history',async stage=>{const f=await fullStateFixture(stage);try{
+ expect(fullStateMetadata(f.states.previous)).toEqual(f.plan.from);expect(fullStateMetadata(f.states.target)).toEqual(f.plan.to);
+ expect(f.states.target).not.toEqual(f.states.previous);
+ if(stage==='claim'){expect(f.command.target).toEqual(f.command.previous);expect(f.states.previous.receipts[0][4]).toBe('pending');expect(f.states.target.receipts[0][4]).toBe('claimed');}
+ if(stage==='fence')expect(f.states.target.grants[0][6]).toBe('retired');
+ if(stage==='release'){expect(f.states.target.releases).toHaveLength(1);expect(f.command.recordHash).toMatch(/^[a-f0-9]{64}$/);}
+ const e=await f.port.claim(f.plan,'a'.repeat(64)),hash=witnessServiceDigest(e.request),o={snapshot:f.states.target,projection:f.command.target,operationId:f.command.operationId,transactionId:'40',claimHash:hash,consumed:true,protected:true};
+ expect((await f.finalizer(hash,'40',async()=>o).finalize(signal())).status).toBe('reconciled');expect((await f.x.inspect()).pending).toBeNull();
+ }finally{await f.close();}},60000);

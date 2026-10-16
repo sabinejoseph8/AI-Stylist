@@ -57,7 +57,7 @@ BEGIN
  IF NOT (CASE kind
  WHEN 'activate' THEN (target->>'generation')::bigint=(previous->>'generation')::bigint+1 AND target->>'fenced'='false' AND target->'head'=previous->'head' AND target->'boot'<>previous->'boot'
  WHEN 'fence' THEN previous->>'fenced'='false' AND target=previous||'{"fenced":true}'::jsonb
- WHEN 'apply' THEN previous->>'fenced'='false' AND target->'head'<>previous->'head' AND target-'head'=previous-'head'
+ WHEN 'apply' THEN previous->>'fenced'='false' AND (target->'head'<>previous->'head' OR (to_regclass('cvi_tx_fixture.full_states') IS NOT NULL AND NOT has_function_privilege('cvi_tx_writer','cvi_tx_fixture.execute_admitted(uuid,text)','EXECUTE'))) AND target-'head'=previous-'head'
  WHEN 'release' THEN previous->>'fenced'='true' AND target=previous
  ELSE false END) THEN RAISE EXCEPTION 'transaction held' USING ERRCODE='55000'; END IF;
  INSERT INTO cvi_tx_fixture.admissions VALUES(op,claim,actor,kind,tx,previous,target,record,expires,false);

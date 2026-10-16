@@ -4,7 +4,7 @@ import {createInterface} from 'node:readline';
 import {databaseBridgeFixture} from './cvi-database-bridge-fixture.ts';
 import {historyCanonical} from '../../src/server/local-cvi-history-authority.ts';
 import {witnessServiceDigest} from '../../src/server/local-cvi-witness-service.ts';
-const full=process.argv.includes('--full-state'),f:any=full?await fullStateFixture():await databaseBridgeFixture(),lines=createInterface({input:process.stdin,crlfDelay:Infinity}),iterator=lines[Symbol.asyncIterator]();
+const full=process.argv.includes('--full-state'),f:any=full?await fullStateFixture(process.argv.find(v=>v.startsWith('--stage='))?.slice(8)??'activate'):await databaseBridgeFixture(),lines=createInterface({input:process.stdin,crlfDelay:Infinity}),iterator=lines[Symbol.asyncIterator]();
 const receive=async()=>{const n=await iterator.next();if(n.done)throw Error();return JSON.parse(n.value);};
 const send=(x:unknown)=>process.stdout.write(JSON.stringify(x)+'\n');
 let mode='normal',oldProof:any,lastGrant:any,lastBinding:any,finalizer:any;
@@ -20,7 +20,7 @@ f.port.claim=async(...args:any[])=>{const e=await originalClaim(...args);if(mode
 const make=()=>full?f.makeBridge(source):f.make(source);let bridge=make();
 try{
  while(true){const x=await receive();try{
-  if(x.method==='prepare'){send({stage:'result',result:{command:f.command,...(full?{states:f.states,targetDigest:witnessServiceDigest(f.metadata)}:{})}});}
+  if(x.method==='prepare'){send({stage:'result',result:{principal:f.principal,command:f.command,...(full?{states:f.states,targetDigest:witnessServiceDigest(f.metadata)}:{})}});}
   else if(x.method==='mode'){mode=x.mode;send({stage:'result',result:true});}
   else if(x.method==='admit'){lastBinding=x.binding;lastGrant=await bridge.admit(x.binding,new AbortController().signal);send({stage:'result',result:lastGrant});}
   else if(x.method==='confirm'){send({stage:'result',result:await bridge.confirm(x.binding,x.claimHash,new AbortController().signal)});}

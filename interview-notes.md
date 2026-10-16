@@ -1,3 +1,7 @@
+## Preserving receipt changes when the visible state stays the same
+
+I extended the full-state database rehearsal to domain commits, receipt claims, fencing and release records. A receipt claim changes protected history without changing the visible head or generation, so I kept the reduced write path disabled and required the complete validated snapshot. I checked each target through the signed authority and a separate committed database reader. I also found an older checkout with missing files and preserved it as a recovery source instead of overwriting it. Continuous consultation, concurrency and restore acceptance remain separate work. No paid service or hosted setting changed.
+
 ## Proving the complete state committed before acknowledging recovery
 
 I extended my local transaction rehearsal to save the complete logical styling-control state, including grants and receipt records. A separate database reader must see the committed snapshot and original execution marker before the authority can reconcile it. Matching a generation or a small projection is no longer enough. I tested attempted reconciliation before commit, altered grant history, missing admission and lost replies. A lost commit or reconciliation response does not trigger another write. I kept the limits explicit: the full integration currently covers activation, and real independent administration and universal writer fencing still need proof. No paid service or hosted database changed.
