@@ -9,7 +9,7 @@ import type {StartupOwnerPin} from './local-cvi-startup-checkpoint.ts';
 export type OwnerContinuationInput=Readonly<{owner:StartupOwnerPin;operationId:string;revision:number;bindingDigest:string;applicationExpiresAt:number}>;
 export interface OwnerContinuationPort {renew(input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>}
 type NativeLease=Readonly<{storeId:string;policyDigest:string;generation:number;ownerDigest:string;bootDigest:string;token:string;issuedAt:number;expiresAt:number}>;
-type Result={before:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number};expiresAt:number;observedAt:number;used:boolean;valid():boolean;accept():void};
+type Result={before:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number};expiresAt:number;observedAt:number;used:boolean;contextClaimed?:boolean;valid():boolean;accept():void};
 const handoffs=new WeakMap<object,Result>();
 const exact=(v:any,keys:string[])=>!!v&&typeof v==='object'&&!Array.isArray(v)&&Object.keys(v).sort().join(',')===[...keys].sort().join(',');
 const int=(v:unknown):v is number=>Number.isSafeInteger(v)&&Number(v)>=0;
@@ -22,6 +22,17 @@ export function inspectOwnerContinuation(raw:unknown,input:OwnerContinuationInpu
  r.observedAt=now;return {owner:structuredClone(r.owner),after:{...r.after}};
 }
 export function consumeOwnerContinuation(raw:unknown,input:OwnerContinuationInput,now:number){const result=inspectOwnerContinuation(raw,input,now),r=handoffs.get(raw as object)!;r.used=true;r.accept();return result;}
+/** Complete one notebook adoption only after the original guard consumed it. */
+export function claimOwnerContinuationContext(raw:unknown,input:OwnerContinuationInput,now:number){
+ const r=raw&&typeof raw==='object'?handoffs.get(raw):undefined;
+ if(!r||!r.used||r.contextClaimed||!r.valid()||!int(now)||now<r.observedAt||now>=r.expiresAt||!same(r.before,input))throw Error('Owner continuation unavailable');
+ r.observedAt=now;r.contextClaimed=true;return {owner:structuredClone(r.owner),after:{...r.after}};
+}
+export interface OwnerCheckpointTransition {
+ inspect(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):Promise<unknown>;
+ finish(raw:unknown,input:OwnerContinuationInput,signal:AbortSignal):void;
+ cancel():void;
+}
 export function createLocalDurableOwnerContinuation(
  pin:WitnessServicePin,initial:NativeLease,bindingDigest:string,applicationExpiresAt:number,
  actor:Readonly<{principalDigest:string;readerPrincipal:string}>,ports:Readonly<{

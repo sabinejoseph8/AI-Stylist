@@ -1,3 +1,7 @@
+## Local HTTP composition follow-up, 16 October 2026
+
+The authenticated notebook/transcript and static-header HTTP path now coordinates idle adoption through a verified context transition. Incoming HTTP work is refused before replay admission; bounded notebook input resumes using the adopted pin. Authenticated Clear/End have a separate immediate cleanup path. See [continuing HTTP evidence](local-tavus-continuing-http.md). The original next-action and test-count sections below describe earlier checkpoints. Durable cross-store pending evidence, production clocks and real provider acceptance remain open.
+
 # Local authenticated owner continuation
 
 Disabled local server composition only. No route, scheduler, provider call, account credential, deployment or spending is activated.

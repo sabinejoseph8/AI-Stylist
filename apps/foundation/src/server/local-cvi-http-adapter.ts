@@ -1,3 +1,4 @@
+import type {OwnerContinuationPort} from './local-cvi-owner-continuation.ts';
 /** Disabled custom-LLM HTTP candidate. No listener, provider, environment or SDK.
  * Uses documented static configuration, not automatic Tavus request-ID headers.
  * Exact native payload/ordering/retry behavior still requires live verification. */
@@ -6,7 +7,7 @@ import {historyCanonical} from './local-cvi-history-authority.ts';
 import {cviCredentialDigests} from './local-cvi-credentials.ts';
 import {cviBodyAdmissionDigest,localCviOwnerBoundary} from './local-cvi-endpoint.ts';
 import type {createLocalCviEndpoint} from './local-cvi-endpoint.ts';
-import {isLocalCviStartedOwner} from './local-cvi-startup-owner.ts';
+import {continueLocalCviOwner,isLocalCviStartedOwner} from './local-cvi-startup-owner.ts';
 import type {createLocalCviNotebookContext} from './local-cvi-notebook-context.ts';
 import {localCviCompletedInput,localCviTranscriptSourceMatches} from './local-cvi-transcript-adapter.ts';
 import type {createLocalCviTranscriptAdapter} from './local-cvi-transcript-adapter.ts';
@@ -41,7 +42,7 @@ export function createLocalCviHttpAdapter(options:Readonly<{
  const digest=cviCredentialDigests(binding).bindingDigest,boundary=localCviOwnerBoundary(owner,context.flow,digest);
  if(options.simulation!==true||!isLocalCviStartedOwner(owner)||!boundary||!localCviTranscriptSourceMatches(transcript,context)||!(options.applicationRequest instanceof Request)||typeof clock!=='function'||!int(deadline)||deadline<1||deadline>8000)throw Error('Local HTTP adapter unavailable');
  const applicationRequest=new Request(options.applicationRequest),handle=owner.handle.bind(owner),spend=owner.spendAdmission.bind(owner),end=owner.end.bind(owner),origin=new URL(binding.origin),token=Buffer.from(binding.secret);
- let closed=false,held=false,last=-1,attempts=0;
+ let closed=false,held=false,transitioning=false,last=-1,attempts=0;
  type Operation={abort:AbortController;phase:'none'|'body-started'|'body-spent'|'turn-started'|'turn-spent';release():void;stop():void};
  let active:Operation|undefined;
  const bodySeen=new Set<string>(),turnSeen=new Set<string>();
@@ -54,13 +55,24 @@ export function createLocalCviHttpAdapter(options:Readonly<{
   if(signal.aborted||!snapshot||snapshot.state!=='active'||!state.context||!again||historyCanonical(input)!==historyCanonical(again)||input.epoch!==snapshot.epoch||input.inputRevision!==state.context.inputRevision||state.context.epoch!==snapshot.epoch||state.revision!==snapshot.revision||!context.flow.available())return null;
   return Object.freeze({input,version:Object.freeze({...state.context,revision:state.revision})});
  };
- return Object.freeze({close,isHeld:()=>held,async handle(request:Request):Promise<Response>{
+ return Object.freeze({close,isHeld:()=>held,async continue(port:OwnerContinuationPort,external:AbortSignal){
+  if(!current()||active||transitioning||external.aborted||!context.flow.isOpen())return false;transitioning=true;
+  const abort=new AbortController(),signal=AbortSignal.any([external,abort.signal]),until=Math.min(binding.expiresAt,last+deadline);let timer:ReturnType<typeof setTimeout>|undefined,started=false;
+  const live=()=>!signal.aborted&&current()&&last<until;
+  try{
+   const canceled=new Promise<never>((_,reject)=>{signal.addEventListener('abort',()=>reject(Error()),{once:true});timer=setTimeout(()=>abort.abort(),deadline);});void canceled.catch(()=>{});
+   const work=async()=>{const before=await context.snapshot(new Request(applicationRequest),signal);if(!before||!live())return false;
+    started=true;const ok=await continueLocalCviOwner(owner,port,signal);if(!live())throw Error();if(!ok){if(!context.flow.isOpen())hold();return false;}
+    if(!live()||!context.flow.isOpen())throw Error();return true;};
+   return await Promise.race([work(),canceled]);
+  }catch{abort.abort();if(started)hold();return false;}finally{if(timer)clearTimeout(timer);transitioning=false;}
+ },async handle(request:Request):Promise<Response>{
   if(!current())return deny(410);const url=new URL(request.url);
   if(url.origin!==binding.origin||url.pathname!=='/cvi/v1/chat/completions'||url.search||request.method!=='POST'||request.headers.has('host')&&request.headers.get('host')!==origin.host)return deny(404);
   if(request.headers.has('origin')||request.headers.has('cookie'))return deny(403);
   const supplied=Buffer.from(request.headers.get('x-ai-stylist-token')??'');if(supplied.length!==token.length||!timingSafeEqual(supplied,token))return deny(401);
   if(!/^application\/json(?:;\s*charset=utf-8)?$/i.test(request.headers.get('content-type')??'')||request.headers.has('content-encoding')||request.headers.has('x-cvi-request-id')||request.headers.has('x-cvi-conversation')||request.signal.aborted)return deny(400);
-  if(active||attempts>=128)return deny(409);attempts++;
+  if(active||transitioning||attempts>=128)return deny(409);attempts++;
   const operationExpiresAt=Math.min(binding.expiresAt,last+deadline);
   const abort=new AbortController(),signal=abort.signal;let timer:ReturnType<typeof setTimeout>|undefined,reader:ReadableStreamDefaultReader<Uint8Array>|undefined,internalRequest:Request|undefined,released=false;
   const terminal=()=>{if(operation.phase==='turn-started'&&internalRequest&&owner.deliveryState(internalRequest).status==='spent')operation.phase='turn-spent';};

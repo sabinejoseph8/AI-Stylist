@@ -1,3 +1,7 @@
+## Keeping the conversation coherent across renewal
+
+I connected the renewal handoff to the notebook's actual ownership pin, then kept the same transcript and HTTP replay history across complete local exchanges. New recommendation requests are refused before admission during adoption, while bounded notebook input waits and resumes against the adopted pin. I also gave authenticated Clear and End their own cleanup slot, so native renewal or a full command queue cannot delay removing temporary notes. I also separated an explicitly stale requested pin from a changed backend proof, so an old read cannot erase newer notes. These are local tests; durable startup coordination and actual provider acceptance remain open.
+
 ## Adopting renewed ownership without restarting the notebook
 
 I connected the renewal result to the existing owner through a one-use authenticated handoff. I verify the new complete checkpoint and the unchanged endpoint credential before adopting it, then keep the same notebook and replay history. Tests preserve notes, invalidate old prepared text and refuse copied, late or consumed handoffs. Review also found that a quiet endpoint can still have an unresolved reservation, so I block continuation in that state. I then separated session lifetime from draft readiness, so waiting for note extraction cannot close the owner or erase newer notes. This local path works only at a safe idle boundary; real provider scheduling and restart-wide coordination remain open.

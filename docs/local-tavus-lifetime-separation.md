@@ -1,3 +1,7 @@
+## Local HTTP composition follow-up, 16 October 2026
+
+The authenticated notebook/transcript and static-header HTTP path now coordinates idle adoption through a verified context transition. Incoming HTTP work is refused before replay admission; bounded notebook input resumes using the adopted pin. Authenticated Clear/End have a separate immediate cleanup path. See [continuing HTTP evidence](local-tavus-continuing-http.md). The original next-action and test-count sections below describe earlier checkpoints. Durable cross-store pending evidence, production clocks and real provider acceptance remain open.
+
 ## Continuation follow-up, 16 October 2026
 
 Local native renewal and explicit authenticated idle adoption are now implemented separately from startup/request deadlines. Neither chooses a production duration nor raises the eight-second grant maximum or original application cap. Busy/unsettled responses do not renew, and pending note extraction is distinct from an ended session. See [owner continuation](local-tavus-owner-continuation.md). HTTP coordination, restart-wide replay quiescence and real provider acceptance remain open; the original evidence below is historical.

@@ -1,3 +1,13 @@
+## Local conversation/HTTP continuation, 16 October 2026
+
+Connected authenticated transcript input, the real notebook session model, native owner continuation and the static-header HTTP adapter. The notebook changes its pinned expiry only after the original consumed handoff is verified and claimed once. The HTTP adapter checks application identity before continuation and refuses concurrent recommendation work before admission. Notebook commands wait through a bounded transition gate, then read the current pin; explicitly stale pin requests no longer close newer notes. Inspection capacity remains bounded with a coordinator slot reserved.
+
+Final regression passes 2,365 foundation tests across 172 files, 489 operations tests with ResourceWarning as error, TypeScript checking/build, four encryption checks and 16 local Memory checks. Thirteen new continuing-HTTP cases cover complete exchanges, queued input, busy HTTP, stale pins, pending extraction, cleanup, revocation, expiry, authorization and inspection capacity. The updated notebook suite passes 25 cases with immediate Clear. The fixture uses the existing eight-second transcript option for native process/signature work; production defaults are unchanged. See docs/local-tavus-continuing-http.md. No production acceptance criterion closes.
+
+The gate and idle flag remain volatile; restart-wide pending replay evidence, independent restore floors, production clocks and all-writer fencing are open. Observer labels and account/transport/model outcomes remain fixtures. No customer/provider activation, spending, real credentials, hosted publication or permanent backup runtime/ledger/scheduler changes. Product/design scope, full completion (5 of 41) and allocation ($51) are unchanged.
+
+Exact next action: implement durable pending-reservation inspection for startup/adoption while retaining every original claim and financial record. Continue from /private/tmp/ai-stylist-recovered-20261014 and preserve the older checkout. The goal remains active and incomplete.
+
 ## Local authenticated owner adoption, 16 October 2026
 
 Connected the started-owner guard to a separate authenticated native continuation port. The port binds the original live lease, credential binding and immutable application cap, verifies signed baseline/target reads and carries the next private lease only inside a one-use transient handoff. The guard independently checks the new full owner checkpoint around a fresh credential proof before adopting expiry/revision. Old prepared text is invalidated and the same endpoint, notes and replay records are retained. JSON copies, consumed handoffs, altered scopes, cancellation and late results cannot adopt ownership.

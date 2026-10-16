@@ -612,6 +612,18 @@
       "scope": "Disabled authenticated idle-boundary owner adoption; preserves notes/replay and distinguishes pending extraction from session closure. Full notebook/transcript/HTTP coordination remains open.",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-continuing-http.md",
+      "foundationTests": 2365,
+      "foundationFiles": 172,
+      "operationsTests": 489,
+      "priorIsolatedPostgresChecks": 556,
+      "isolatedPostgresRerun": false,
+      "scope": "Disabled authenticated notebook/transcript/static-header HTTP exchanges across adoption, bounded waiting and immediate local Clear/End. Durable cross-store startup quiescence remains open.",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }
