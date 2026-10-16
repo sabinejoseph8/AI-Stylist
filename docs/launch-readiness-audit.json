@@ -494,6 +494,17 @@
       "scope": "Continuous reference-state persistence/reconciliation, competing connection and synthetic control-table restores only",
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-16",
+      "evidence": "docs/local-tavus-fresh-startup-checkpoint.md",
+      "foundationTests": 2034,
+      "foundationFiles": 159,
+      "operationsTests": 475,
+      "isolatedPostgresChecks": 503,
+      "scope": "Fresh-process read-only checkpoint inspection; all write/sign/reconcile/resume permissions remain false",
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ]
 }

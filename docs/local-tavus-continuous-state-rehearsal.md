@@ -2,6 +2,8 @@
 
 Continued authorized local full-state preparation under the active goal on 16 October 2026. No paid/provider requests, real credentials or hosted changes are included.
 
+Follow-up: [fresh-process startup inspection](local-tavus-fresh-startup-checkpoint.md) now checks the committed continuous state using public-pin clients. It returns diagnostic consistency only, with all permissions disabled; original owner/key recovery and independent floors remain open.
+
 ## One history across five transitions
 
 The previous rehearsal tested each target in a separately prepared scenario. The new continuous mode keeps one PostgreSQL history and one authority journal through activation, domain commit, receipt claim, fencing and release. It preserves prior admissions, execution records, projections, receipts, grants and release tombstones between steps. Each step must commit, close and reconcile before the next phase can begin. A pending phase refuses the next request before admitting another authority operation.

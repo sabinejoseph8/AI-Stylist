@@ -1,3 +1,7 @@
+## Checking a restart without recreating the previous owner's permission
+
+I built a read-only startup check that runs in a new process using public verification pins. It compares signed authority and database evidence against a trusted registry and retained revision minimum. Even a consistent checkpoint returns no write, sign, reconcile or resume permission. I tested missing journals, stale registries, lost floors and a real transition during observation. Review caught a timing gap where a port could mutate a signed proof's expiry, so I copied replies before checking signatures. A matching restored checkpoint still needs a new authorized owner; it does not recreate a lost signing handoff. No paid service or hosted setting changed.
+
 ## Keeping one state history through concurrency and recovery checks
 
 I connected the local full-state targets into one continuous database and authority history. The next step cannot begin while the previous one is pending, and another database connection cannot reuse the original transaction's admission. I restored complete local control-table checkpoints and tested each side against the other. One-sided rollback is refused, while rolling back both stores still passes the state comparison. I kept that limitation visible instead of claiming independent restore protection. The reference release target does not recreate an application signing handoff or emit audio. No paid service or hosted setting changed.

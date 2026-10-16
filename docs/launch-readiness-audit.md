@@ -8,6 +8,8 @@ The continuous full-state rehearsal now records 2,006 foundation tests across 15
 
 This adds local engineering evidence for B01/B06/B07 preparation only. It does not resolve a provider contract, deploy the account app, provide real product access, accept customer/photo recovery or close any A01–A21 criterion. The original production-evidence snapshot below remains historical; no hosted/provider/device state was rechecked. All nine ranked blockers and both completion counts remain unchanged.
 
+Fresh-startup follow-up: [public-pin inspection evidence](local-tavus-fresh-startup-checkpoint.md) records 2,034 foundation tests, 475 operations tests and 503 isolated PostgreSQL checks. The result is diagnostic only and grants no write, sign, reconcile or resume permission. No production criterion or blocker is closed.
+
 ## Current conclusion
 
 **Public launch is not ready. None of A01–A21 has complete production acceptance evidence recorded.** Local preparation, simulations, accepted user reviews and a bounded private avatar-recovery test establish useful parts of the requirements. They do not close the combined live criteria.

@@ -319,6 +319,9 @@ def main():
                 stage='continuous-step-'+str(n)
                 if n:
                     w.call('next',index=n);w.prepared=w.call('prepare');w.command=w.prepared['command']
+                if n==0:
+                    try:w.call('startup');raise RuntimeError('unexpected pending startup')
+                    except DatabaseHeld:checks+=1
                 s=Session(w.prepared['principal']);w.active=s
                 def apply_continuous(op,claim):
                     result=json.loads(s.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');'));result['operationId']=uuid.UUID(result['operationId']).hex
@@ -335,11 +338,17 @@ def main():
                 wrapper=ReconciledDatabaseAdapter(base,final,w.prepared['targetDigest'],lambda:1000)
                 require(wrapper.execute(w.command)['reconciliation']['status']=='reconciled')
                 require(w.call('verify-current') is True)
+                startup=w.call('startup');require(startup['status']=='checkpoint-consistent' and all(v is False for v in startup['permissions'].values()))
                 require(good('SELECT count(*) FROM cvi_tx_fixture.executions;')==str(n+1))
                 if n==1:
                     require(True);w.call('checkpoint-authority')
                     saved={table:json.loads(good('SELECT coalesce(jsonb_agg(to_jsonb(t)),\'[]\'::jsonb) FROM cvi_tx_fixture.'+table+' t;')) for table in ['state','admissions','full_admissions','executions','releases','full_states']}
             require(good('SELECT count(*) FROM cvi_tx_fixture.releases;')=='1')
+            stage='continuous-startup-refusals'
+            for bad in ['missing-registry','stale-registry','authority-unavailable','bad-signature']:
+                try:w.call('startup',mode=bad);raise RuntimeError('unexpected startup acceptance')
+                except DatabaseHeld:checks+=1
+            require(w.call('startup',mode='missing-handoff')['permissions']['sign'] is False)
             stage='continuous-database-restore'
             latest={table:json.loads(good('SELECT coalesce(jsonb_agg(to_jsonb(t)),\'[]\'::jsonb) FROM cvi_tx_fixture.'+table+' t;')) for table in ['state','admissions','full_admissions','executions','releases','full_states']}
             def restore_view(checkpoint):
@@ -350,13 +359,19 @@ def main():
             restore_view(saved)
             try:w.call('verify-current');raise RuntimeError('unexpected database restore acceptance')
             except DatabaseHeld:checks+=1
+            try:w.call('startup');raise RuntimeError('unexpected restored database startup')
+            except DatabaseHeld:checks+=1
             restore_view(latest);require(w.call('verify-current') is True)
             stage='continuous-authority-restore';w.call('restore-authority')
             try:w.call('verify-current');raise RuntimeError('unexpected authority restore acceptance')
             except DatabaseHeld:checks+=1
             stage='continuous-coordinated-restore';restore_view(saved)
             # Negative boundary: matching rollback of both stores still passes a current-state comparison.
-            require(w.call('verify-current') is True);w.close()
+            require(w.call('verify-current') is True)
+            try:w.call('startup');raise RuntimeError('unexpected startup below retained floor')
+            except DatabaseHeld:checks+=1
+            diagnostic=w.call('startup',mode='lost-minimum');require(diagnostic['status']=='checkpoint-consistent' and diagnostic['permissions']['resume'] is False)
+            w.close()
         print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='continuous-full-state' if options.continuous_full_state else ('full-reconciliation' if options.full_state_reconciliation else ('signed-bridge' if options.signed_authority_bridge else 'simulated')),network='none')))
     except Exception:
         print(json.dumps(dict(status='held',stage=stage,checks=checks)));raise SystemExit(1)

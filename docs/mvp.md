@@ -1,3 +1,15 @@
+## Fresh-process startup checkpoint inspection, 16 October 2026
+
+Continued authorized local preparation under the active goal. Added a read-only startup inspector requiring signed authority/database evidence, a pinned sanitized registry and a minimum revision. It checks the complete current target and another fresh authority read, but always returns write/reconcile/sign/resume permissions false. Missing journal, pending work, stale registry, invalid proof and uncertain outcomes stay held without reseeding, reapplication or handoff reconstruction. A new Node client process receives public pins only; private test keys stay in the original services.
+
+28 new foundation cases pass. Full regression: 2,034 foundation tests across 159 files, 475 operations tests with ResourceWarning as error, type checking/build, four encryption checks and 16 local Memory checks. The combined PostgreSQL run passes 503 checks including fresh startup after all five transitions, refusal cases and the retained-minimum restore check. Review fixed a mutable signed-proof expiry gap by copying port replies before verification. See docs/local-tavus-fresh-startup-checkpoint.md.
+
+Limits: inspection is not endpoint readiness, original application restart or recoverable production key evidence. The minimum revision remains in the original test parent; losing it with both restored stores can yield an old consistent diagnostic, with every permission still false. Services/keys remain colocated and production floors, native handoffs, universal fencing and transport remain open. No phase or production criterion closes. No spending, real credentials, provider calls, hosted publication or permanent backup runtime/ledger/scheduler changes; allocation remains $51. Goal remains active and incomplete.
+
+Current work remains /private/tmp/ai-stylist-recovered-20261014. After committing, refresh the tracked-source-only archive and pointer in the older /private/tmp/ai-stylist-phone-publish folder without overwriting its modified working tree or transferring private material.
+
+Exact next local action: compose the inspector with the existing disabled credential-start path, requiring separate privileged fresh-owner activation and refusing checkpoint-only readiness, stale callbacks or reconstructed original handoffs. Preserve all actual activation, independent-floor, privacy, financial and hosted gates.
+
 ## Continuous local full-state sequence and restore checks, 16 October 2026
 
 Continued authorized local preparation under the active goal. Added one PostgreSQL history/authority journal across activation, domain commit, receipt claim, fencing and release without resetting prior records. Targets come from the actual validator and guarded reference adapter. Each phase must reconcile before the next can begin; the application signing handoff remains disabled and is not reconstructed from an observer snapshot. A competing connection cannot use the original transaction's admission.

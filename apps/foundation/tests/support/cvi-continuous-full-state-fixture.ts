@@ -34,5 +34,6 @@ export async function continuousFullStateFixture(){
   return {x,key,identityPin,states,plan,port,principal,command,approval,makeBridge,finalizer,metadata:fullStateMetadata(states.target),close:x.close};
  };
  const verifyCurrent=async(observed:any)=>{const current=await x.inspect(),last=current.operations[current.operations.length-1];if(!observed||!last||last.status!=='reconciled'||observed.operationId!==last.id.slice(0,32)||current.pending!==null||observed.consumed!==true||observed.protected!==true||historyCanonical(fullStateMetadata(observed.snapshot))!==historyCanonical(current.current)||historyCanonical(fullStateProjection(observed.snapshot))!==historyCanonical(observed.projection))throw Error('Continuous current state unavailable');return true;};
- return {x,references,phase,verifyCurrent,close:x.close};
+ const startupRegistry=()=>({version:1 as const,entries:references.map(s=>({operationId:s.intent.id,target:fullStateMetadata(s.target),projection:fullStateProjection(s.target)}))});
+ return {x,references,phase,verifyCurrent,startupRegistry,close:x.close};
 }

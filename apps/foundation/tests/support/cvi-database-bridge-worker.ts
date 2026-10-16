@@ -1,3 +1,4 @@
+import {freshStartup} from './cvi-startup-fixture.ts';
 import {continuousFullStateFixture} from './cvi-continuous-full-state-fixture.ts';
 /** Test-only parent: ephemeral private keys never cross the JSON-lines pipe. */
 import {fullStateFixture} from './cvi-full-state-fixture.ts';
@@ -10,7 +11,7 @@ let f:any=sequence?await sequence.phase(0):(full?await fullStateFixture(process.
 const lines=createInterface({input:process.stdin,crlfDelay:Infinity}),iterator=lines[Symbol.asyncIterator]();
 const receive=async()=>{const n=await iterator.next();if(n.done)throw Error();return JSON.parse(n.value);};
 const send=(x:unknown)=>process.stdout.write(JSON.stringify(x)+'\n');
-let mode='normal',oldProof:any,lastGrant:any,lastBinding:any,finalizer:any,finalized=false,checkpoint:any;
+let mode='normal',oldProof:any,lastGrant:any,lastBinding:any,finalizer:any,finalized=false,checkpoint:any,startupMinimum=0;
 const source=async(request:any)=>{
  send({stage:'observe',request});const observed=await receive();
  const body={version:1,keyId:f.identityPin.keyId,...request,bindingDigest:witnessServiceDigest(observed.binding),issuedAt:1000,expiresAt:2000};
@@ -30,9 +31,19 @@ try{
   else if(x.method==='finalize'&&full){
    if(!lastGrant||!lastBinding)throw Error();
    finalizer??=f.finalizer(lastGrant.claimHash,lastBinding.connection.transactionId,async()=>{send({stage:'committed'});return (await receive()).observed;});
-   const result=await finalizer.finalize(new AbortController().signal);if(mode==='lost-reconcile')throw Error('Lost finalized reply');finalized=true;send({stage:'result',result});
+   const result=await finalizer.finalize(new AbortController().signal);if(mode==='lost-reconcile')throw Error('Lost finalized reply');finalized=true;startupMinimum=Math.max(startupMinimum,f.approval.reply.body.result.revision+1);send({stage:'result',result});
   }
   else if(x.method==='next'&&sequence){if(!finalized)throw Error();f=await sequence.phase(x.index);configure();bridge=make();oldProof=lastGrant=lastBinding=finalizer=undefined;finalized=false;send({stage:'result',result:true});}
+  else if(x.method==='startup'&&sequence){
+   const registry=sequence.startupRegistry(),known=structuredClone(registry),pin={authority:f.x.pin,database:f.identityPin,readerPrincipal:f.x.actors.find((a:any)=>a.role==='observer').principalDigest,registryDigest:witnessServiceDigest(registry),minimumRevision:startupMinimum};
+   if(x.mode==='missing-registry')known.entries=[];if(x.mode==='stale-registry'){known.entries=known.entries.slice(0,1);pin.registryDigest=witnessServiceDigest(known);}
+   if(x.mode==='lost-minimum')pin.minimumRevision=0;
+   const ports={authority:async(nonce:string)=>{if(x.mode==='authority-unavailable')throw Error();return f.port.read(nonce);},database:async(nonce:string)=>{
+    send({stage:'committed'});const observed=(await receive()).observed,body={version:1,keyId:f.identityPin.keyId,storeId:f.x.pin.storeId,policyDigest:f.x.pin.policyDigest,nonce,issuedAt:1000,expiresAt:2000,checkpoint:observed};
+    return {body,signature:x.mode==='bad-signature'?'0'.repeat(128):f.key.sign(historyCanonical(body))};
+   }};
+   send({stage:'result',result:await freshStartup(pin,known,ports)});
+  }
   else if(x.method==='verify-current'&&sequence){send({stage:'committed'});const seen=(await receive()).observed;send({stage:'result',result:await sequence.verifyCurrent(seen)});}
   else if(x.method==='checkpoint-authority'&&sequence){checkpoint=await f.x.authoritySnapshot();send({stage:'result',result:true});}
   else if(x.method==='restore-authority'&&sequence){if(!checkpoint)throw Error();await f.x.authorityRestore(checkpoint);send({stage:'result',result:true});}
