@@ -8,7 +8,7 @@ import stat
 import subprocess
 import time
 import uuid
-from local_cvi_database_adapter import DatabaseTransactionAdapter,DatabaseHeld
+from local_cvi_database_adapter import DatabaseTransactionAdapter,ReconciledDatabaseAdapter,DatabaseHeld
 
 ROOT=Path(__file__).resolve().parents[2]
 IMAGE='postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
@@ -18,7 +18,7 @@ def literal(x):return "'"+str(x).replace("'","''")+"'"
 def state(x):return literal(json.dumps(x,separators=(',',':')))+'::jsonb'
 
 def main():
-    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local-synthetic',action='store_true',required=True);parser.add_argument('--signed-authority-bridge',action='store_true');options=parser.parse_args()
+    parser=argparse.ArgumentParser(description=__doc__);parser.add_argument('--run-local-synthetic',action='store_true',required=True);parser.add_argument('--signed-authority-bridge',action='store_true');parser.add_argument('--full-state-reconciliation',action='store_true');options=parser.parse_args()
     socket=Path.home()/'.docker/run/docker.sock';binary=Path.home()/'.docker/bin/docker'
     if not stat.S_ISSOCK(socket.stat().st_mode):raise RuntimeError('local Docker unavailable')
     docker=[str(binary),'--host','unix://'+str(socket)]
@@ -70,11 +70,11 @@ def main():
                 except Exception:self.p.kill();self.p.wait(timeout=3)
             self.sel.close();self.p.stdout.close()
     class BridgeWorker:
-        def __init__(self):
+        def __init__(self,full=False):
             node=Path.home()/'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node'
-            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')],stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
+            self.p=subprocess.Popen([str(node),str(ROOT/'apps/foundation/tests/support/cvi-database-bridge-worker.ts')]+(['--full-state'] if full else []),stdin=subprocess.PIPE,stdout=subprocess.PIPE,stderr=subprocess.DEVNULL,text=True,bufsize=1)
             self.buffer='';self.sel=selectors.DefaultSelector();self.sel.register(self.p.stdout,selectors.EVENT_READ);self.active=None;workers.append(self)
-            self.command=self.call('prepare')['command']
+            self.prepared=self.call('prepare');self.command=self.prepared['command']
         def call(self,method,**args):
             self.p.stdin.write(json.dumps(dict(method=method,**args))+'\n');self.p.stdin.flush();limit=time.monotonic()+12
             while time.monotonic()<limit:
@@ -82,8 +82,13 @@ def main():
                     line,self.buffer=self.buffer.split('\n',1);message=json.loads(line)
                     if message['stage']=='result':return message['result']
                     if message['stage']=='held':raise DatabaseHeld('signed bridge held')
+                    if message['stage']=='committed':
+                        # A separate observer connection sees only committed MVCC state.
+                        raw=good('SELECT row_to_json(v) FROM cvi_tx_fixture.committed_full v;','fixture_observer')
+                        observed=json.loads(raw) if raw else None
+                        if observed:observed['operationId']=uuid.UUID(observed['operationId']).hex
+                        self.p.stdin.write(json.dumps(dict(observed=observed))+'\n');self.p.stdin.flush();continue
                     if message['stage']!='observe' or self.active is None:raise DatabaseHeld('signed bridge held')
-                    # Observe this real database connection, not the submitted binding.
                     observed=dict(intent=self.command,connection=self.active.identity())
                     self.p.stdin.write(json.dumps(dict(binding=observed))+'\n');self.p.stdin.flush()
                 if not self.sel.select(.1):continue
@@ -256,7 +261,57 @@ def main():
         require(good("SELECT count(*)=7 AND bool_and(NOT rolcanlogin AND NOT rolsuper AND NOT rolbypassrls AND NOT rolcreaterole AND NOT rolcreatedb AND NOT rolreplication) FROM pg_roles WHERE rolname LIKE 'cvi_tx_%';")=='t')
         require(good("SELECT count(*)=4 AND bool_and(relrowsecurity AND relforcerowsecurity) FROM pg_class WHERE relnamespace='cvi_tx_fixture'::regnamespace AND relkind='r';")=='t')
         require(good("SELECT count(*)=0 FROM pg_auth_members WHERE roleid='cvi_tx_owner'::regrole;")=='t')
-        print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='signed-bridge' if options.signed_authority_bridge else 'simulated',network='none')))
+        if options.full_state_reconciliation:
+            stage='full-schema';good((ROOT/'tools/operations/sql/cvi-full-state-contract.sql').read_text())
+            for role in ROLES:
+                for table in ['full_states','full_admissions']:
+                    prefix='SET ROLE cvi_tx_'+role+'; '
+                    denied(prefix+'SELECT * FROM cvi_tx_fixture.'+table+';','fixture_'+role)
+                    denied(prefix+'DELETE FROM cvi_tx_fixture.'+table+';','fixture_'+role)
+                    denied(prefix+'TRUNCATE cvi_tx_fixture.'+table+';','fixture_'+role)
+            for role in ['writer','rotator','fencer','signer']:
+                denied('SET ROLE cvi_tx_'+role+"; SELECT cvi_tx_fixture.execute_admitted('"+str(uuid.uuid4())+"',repeat('a',64));",'fixture_'+role)
+            class FullVerifier:
+                def __init__(self,w,mode):self.worker=w;self.mode=mode
+                def admit(self,b):
+                    result=self.worker.call('admit',binding=b);p=b['intent'];c=b['connection']
+                    query='BEGIN; SELECT cvi_tx_fixture.admit('+','.join([literal(str(uuid.UUID(p['operationId']))),literal(result['claimHash']),literal(c['principal']),literal(p['kind']),literal(c['transactionId'])+'::xid8',state(p['previous']),state(p['target']),'NULL',"clock_timestamp()+interval '7 seconds'"])+');'
+                    if self.mode!='missing-full':query+=' SELECT cvi_tx_fixture.admit_full('+literal(str(uuid.UUID(p['operationId'])))+','+state(self.worker.prepared['states']['previous'])+','+state(self.worker.prepared['states']['target'])+');'
+                    good(query+' COMMIT;','fixture_verifier');return result
+                def confirm(self,b,claim):
+                    result=self.worker.call('confirm',binding=b,claimHash=claim)
+                    if self.mode=='uncommitted':self.worker.call('finalize')
+                    return result
+            for mode in ['normal','uncommitted','tampered-grant','missing-full','lost-commit','lost-reconcile']:
+                stage='full-'+mode;w=BridgeWorker(True);w.call('mode',mode=mode)
+                good('TRUNCATE cvi_tx_fixture.full_states,cvi_tx_fixture.full_admissions,cvi_tx_fixture.releases,cvi_tx_fixture.executions,cvi_tx_fixture.admissions; UPDATE cvi_tx_fixture.state SET payload='+state(w.command['previous'])+'; INSERT INTO cvi_tx_fixture.full_states VALUES(true,'+state(w.prepared['states']['previous'])+',NULL);')
+                s=Session('fixture_rotator');w.active=s
+                def apply_full(op,claim):
+                    result=json.loads(s.query('SELECT cvi_tx_fixture.execute_full('+literal(str(uuid.UUID(op)))+','+literal(claim)+');'));result['operationId']=uuid.UUID(result['operationId']).hex;return result
+                s.execute_admitted=apply_full
+                if mode=='lost-commit':
+                    commit=s.commit
+                    def unknown_commit():commit();raise DatabaseHeld('lost commit reply')
+                    s.commit=unknown_commit
+                base=DatabaseTransactionAdapter('fixture_rotator','activate',type('Port',(),{'begin':lambda _:s})(),FullVerifier(w,mode),lambda:1000)
+                class Finalizer:
+                    def finalize(self,p,result):
+                        if mode=='tampered-grant':good("UPDATE cvi_tx_fixture.full_states SET snapshot=jsonb_set(snapshot,'{grants,0,3}',to_jsonb(repeat('0',64)));")
+                        return w.call('finalize')
+                wrapper=ReconciledDatabaseAdapter(base,Finalizer(),w.prepared['targetDigest'],lambda:1000)
+                if mode=='normal':
+                    require(wrapper.execute(w.command)['reconciliation']['status']=='reconciled')
+                    require(w.call('inspect')['pending'] is None)
+                else:
+                    try:wrapper.execute(w.command);raise RuntimeError('unexpected full reconciliation')
+                    except DatabaseHeld:checks+=1
+                    require((w.call('inspect')['pending'] is None)==(mode=='lost-reconcile'))
+                if mode in ['uncommitted','missing-full']:require(current()==w.command['previous'])
+                if mode in ['normal','lost-commit','lost-reconcile']:require(current()==w.command['target'])
+                try:wrapper.execute(w.command);raise RuntimeError('unexpected full retry')
+                except DatabaseHeld:checks+=1
+                w.close()
+        print(json.dumps(dict(status='passed',checks=checks,hostedChanges=False,authorityVerification='full-reconciliation' if options.full_state_reconciliation else ('signed-bridge' if options.signed_authority_bridge else 'simulated'),network='none')))
     except Exception:
         print(json.dumps(dict(status='held',stage=stage,checks=checks)));raise SystemExit(1)
     finally:

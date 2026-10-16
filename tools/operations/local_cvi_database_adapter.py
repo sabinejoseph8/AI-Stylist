@@ -87,3 +87,27 @@ class DatabaseTransactionAdapter:
                 except Exception:self.held=True
             self.busy=False
             self.gate.release()
+
+
+class ReconciledDatabaseAdapter:
+    """Require post-commit verified reconciliation. No resume/reapply method."""
+    def __init__(self,base,finalizer,target_digest,clock):
+        if (not callable(getattr(base,'execute',None)) or not callable(getattr(finalizer,'finalize',None))
+            or not isinstance(target_digest,str) or not re.fullmatch(r'[a-f0-9]{64}',target_digest) or not callable(clock)):
+            raise DatabaseHeld('full reconciliation unavailable')
+        self.execute_base=base.execute;self.finalize=finalizer.finalize;self.target_digest=target_digest;self.clock=clock
+        self.gate=Lock();self.attempted=False
+    def execute(self,intent):
+        if not self.gate.acquire(blocking=False):raise DatabaseHeld('full reconciliation unavailable')
+        try:
+            if self.attempted:raise DatabaseHeld()
+            self.attempted=True;p=deepcopy(intent);before=self.clock()
+            if type(before) is not int or before<0 or type(p.get('expiresAt')) is not int or before>=p['expiresAt']:raise DatabaseHeld()
+            result=self.execute_base(deepcopy(p))
+            final=self.finalize(deepcopy(p),deepcopy(result))
+            expected=dict(status='reconciled',operationId=p['operationId'],targetDigest=self.target_digest)
+            at=self.clock()
+            if canonical(final)!=canonical(expected) or type(at) is not int or at<before or at>=p['expiresAt']:raise DatabaseHeld()
+            return dict(transaction=deepcopy(result),reconciliation=deepcopy(final))
+        except Exception:raise DatabaseHeld('full reconciliation unavailable') from None
+        finally:self.gate.release()

@@ -1,3 +1,7 @@
+## Proving the complete state committed before acknowledging recovery
+
+I extended my local transaction rehearsal to save the complete logical styling-control state, including grants and receipt records. A separate database reader must see the committed snapshot and original execution marker before the authority can reconcile it. Matching a generation or a small projection is no longer enough. I tested attempted reconciliation before commit, altered grant history, missing admission and lost replies. A lost commit or reconciliation response does not trigger another write. I kept the limits explicit: the full integration currently covers activation, and real independent administration and universal writer fencing still need proof. No paid service or hosted database changed.
+
 ## Binding a signed authority claim to the actual database transaction
 
 I connected the one-use authority claim to a separately signed observation of the live database connection, transaction and exact command. A caller cannot replace the transaction or reuse an old proof. I tested the bridge with real test signatures and an isolated PostgreSQL instance, including lost claim, admission and commit replies. When a commit reply is lost, I hold the outcome even if the database changed. I kept full-state reconciliation separate: the local SQL model still stores a reduced projection, so its success does not prove the complete signed target committed or enable live styling. No paid call or hosted database changed.

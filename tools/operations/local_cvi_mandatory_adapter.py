@@ -61,7 +61,7 @@ def mutation(root,config,actor,kind,args):
 class PreviewComplete(Exception):pass
 
 
-def plan(root,config,actor,kind,args):
+def plan(root,config,actor,kind,args,capture=None):
     validate_command(kind,args)
     if not leases.actor_ok(actor,ROLES[kind]):raise RecoveryHeld('mandatory-adapter-unavailable')
     base=transactions.connection;captured={}
@@ -69,9 +69,15 @@ def plan(root,config,actor,kind,args):
     def preview(path):
         with base(path) as db:
             before=control_metadata(db,config['now'])
+            if capture is not None:
+                from local_cvi_full_state import full_state
+                capture['previous']=full_state(db)
             class Commit:
                 def execute(self,*a):return db.execute(*a)
-                def commit(self):captured.update({'from':before,'to':control_metadata(db,config['now'])});raise PreviewComplete()
+                def commit(self):
+                    captured.update({'from':before,'to':control_metadata(db,config['now'])})
+                    if capture is not None:capture['target']=full_state(db)
+                    raise PreviewComplete()
             yield Commit()
     try:
         with patch.object(transactions,'connection',preview),patch.object(receipts,'connection',preview):mutation(root,config,actor,kind,args)

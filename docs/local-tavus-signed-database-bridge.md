@@ -2,6 +2,8 @@
 
 Sabine approved local preparation and tests on 16 October 2026, with no new spending or hosted changes. This joins the existing signed execution-claim service to the local PostgreSQL transaction adapter using ephemeral keys and disposable data. It is not a production deployment or a completed full-state PostgreSQL port.
 
+Follow-up: [local full-state post-commit reconciliation](local-tavus-full-state-reconciliation.md) persists the complete logical fixture export and verifies committed-state evidence for activation. Other typed operations, independent administration and universal fencing remain open.
+
 ## Signed binding
 
 `apps/foundation/src/server/local-cvi-database-authority-bridge.ts` pins the authority key, a distinct database-observation key, the trusted database principal, the complete validated lease intent, its signed advance acknowledgment and an exact service-owned database command projection. Command and connection values are copied across boundaries. Missing dependencies, mismatched scope, invalid signatures and non-JSON values fail closed. No unsigned admission fallback is added.

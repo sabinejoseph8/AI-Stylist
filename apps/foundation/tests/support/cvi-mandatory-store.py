@@ -17,6 +17,9 @@ try:
     if x['mode']=='observe':
         with transactions.connection(Path(x['root'])) as db:result=adapter.control_metadata(db,x['config']['now'])
     elif x['mode']=='plan':result=adapter.plan(Path(x['root']),x['config'],x['actor'],x['kind'],x['args'])
+    elif x['mode']=='plan-full':
+        capture={};intent=adapter.plan(Path(x['root']),x['config'],x['actor'],x['kind'],x['args'],capture)
+        result=dict(intent=intent,**capture)
     elif x['mode']=='execute':result=adapter.execute(Path(x['root']),x['config'],x['intent'],x['approval'],rpc,x.get('crashAt'))
     else:raise ValueError()
     print(json.dumps({'stage':'result','result':result}),flush=True)

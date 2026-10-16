@@ -47,7 +47,7 @@ export async function mandatoryFixture(){
  const claimPlan=async(lease:any)=>{const intent=await x.plan('claim');return plan('apply',{intent,lease});};
  const releasePlan=async(barrier:any,record:any)=>plan('release',{barrier,expectedDomain:await x.observe(),record});
  const recover=async(p:MandatoryLeaseIntent)=>{const e=await evidence(request('reconciler','reconcile',p.id,(await inspect()).revision));return verifyLocalWitnessReply(pin,e.request,e.reply,1000);};
- return {root,authorityRoot,pin,actors,initial,config,observe,inspect,plan,activation,fencing,commitPlan,claimPlan,releasePlan,adapter,persistence,authorityPort,service,request,evidence,recover,receiptId:x.receiptId,domainObserve:x.observe,
+ return {setRecoverySources:(patch:Partial<typeof sources>)=>Object.assign(sources,patch),sourceProof:proof,root,authorityRoot,pin,actors,initial,config,observe,inspect,plan,activation,fencing,commitPlan,claimPlan,releasePlan,adapter,persistence,authorityPort,service,request,evidence,recover,receiptId:x.receiptId,domainObserve:x.observe,
  setUnavailable:(v:boolean)=>{unavailable=v;},setTamperRead:(v:boolean)=>{tamperRead=v;},setReplayRead:(v:boolean)=>{replayRead=v;},setCrash:(v:string|undefined)=>{crashAt=v;},setDenyReconcile:(v:boolean)=>{denyReconcile=v;},
  dbSnapshot:()=>readFile(join(root,'history.sqlite')),dbRestore:(b:Buffer)=>writeFile(join(root,'history.sqlite'),b),authoritySnapshot:()=>Promise.all(['ledger.json','checkpoint.json'].map(n=>readFile(join(authorityRoot,n)))),authorityRestore:async(b:Buffer[])=>{for(let i=0;i<2;i++)await writeFile(join(authorityRoot,['ledger.json','checkpoint.json'][i]),b[i]);},close:async()=>{await x.close();await rm(authorityRoot,{recursive:true,force:true});}};
 }
