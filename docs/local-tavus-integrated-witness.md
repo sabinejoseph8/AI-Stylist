@@ -1,5 +1,7 @@
 # Local authenticated witness, SQLite and receipt-claim integration
 
+Follow-up: [local writer lease contract](local-tavus-writer-lease.md) guards participating SQLite writers and receipt signing. Raw-helper bypass and whole-control-store rollback remain explicit negative boundaries.
+
 Sabine approved local integration tests on 15 October 2026, including refusal of uncommitted targets, with no new spending or hosted changes. This composition is test-only. It uses disposable SQLite databases, a separate synthetic witness-service journal, ephemeral signing keys and simulated writer fencing. It is not mounted in the application or configured in Supabase/Render.
 
 ## Validated transaction intents

@@ -1,3 +1,7 @@
+## Fencing participating writers during receipt signing
+
+I prepared a local lease contract that binds each writer to a startup generation, owner, boot and expiry. A retired generation cannot commit through the guarded transaction path. I also added permanent receipt-release admission and held the SQLite write lock while the existing signer runs, testing that even a privileged concurrent activation is blocked until the critical section ends. I tested crashes, expired replies and retained-record replay without refunding permission. Negative tests show why real grants and independent control history are still necessary: a raw helper can bypass the cooperative guard, and a full database restore can restore an old lease. No real key, paid call or hosted setting changed.
+
 ## Proving the target committed before recovery and signing
 
 I connected the authenticated witness contract to disposable SQLite transactions and receipt claims. The planner runs the actual domain validator but rolls back, and apply checks the exact baseline and target before committing. Recovery now observes the real test database instead of accepting a preset successful assertion. I verified that an uncommitted claim is refused even when its domain epoch and head match, and that a crash after claiming cannot recreate a lost signing record. I kept simulated fencing and the gap after the last database observation explicit. No paid calls or hosted changes were made.
