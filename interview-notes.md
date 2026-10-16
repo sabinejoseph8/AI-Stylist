@@ -1,3 +1,7 @@
+## Rehearsing durable history transactions
+
+I prepared a service-only projection and commit contract, then exercised it with temporary SQLite databases and fresh processes. The backend reruns the actual history validator inside the transaction and acknowledges only after state and token use commit together. I tested crashes on both sides of commit, competing writers and lost acknowledgments, including through the speech endpoint. I kept independent rollback protection, real role grants and hosted durability open, because local transaction evidence does not establish those capabilities.
+
 ## Restricting history updates to valid operations
 
 I replaced arbitrary hash updates in the local authority experiment with specific operations. A replay writer can append a request and consume only its own current-generation reservation. A separate rotator can retire credentials while preserving request history, limits and unresolved holds. I tested stale projections, unauthorized roles, wrong receipts and attempts to reset counters, including through the speech endpoint. These are local rules and simulated roles, so I kept real authentication, durable storage and live-provider acceptance open.

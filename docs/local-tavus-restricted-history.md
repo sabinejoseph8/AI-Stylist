@@ -1,3 +1,7 @@
+## Later local persistence rehearsal
+
+See docs/local-tavus-transaction-contract.md for one-use service projections, validated atomic commits and disposable SQLite/fresh-process evidence. The SQLite bridge is test-only; real authenticated grants, signed transport, hosted persistence and independent rollback protection remain unimplemented. No production database choice or hosted change follows.
+
 # Local restricted CVI history updates
 
 Sabine approved local preparation/tests on 15 October 2026, with no new spending or hosted changes. This is a disconnected signed in-memory authority and pure transition validator. It is not a hosted service, database migration, production role grant or actual Tavus integration.

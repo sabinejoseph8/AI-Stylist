@@ -25,7 +25,7 @@ export function createDomainHistory(config:{storeId:string;scopeDigest:string;ex
   !integer(config.requestLimit)||config.requestLimit<1||config.requestLimit>64||!integer(config.generationLimit)||config.generationLimit<1||config.generationLimit>16)throw Error('Local domain history unavailable');
  return freeze({version:1,storeId:config.storeId,scopeDigest:config.scopeDigest,expiresAt:config.expiresAt,clock:config.now,epoch:0,requestLimit:config.requestLimit,generationLimit:config.generationLimit,credentials:[],requests:[]});
 }
-function validState(s:DomainHistory):boolean{
+export function validState(s:DomainHistory):boolean{
  if(!exact(s,['version','storeId','scopeDigest','expiresAt','clock','epoch','requestLimit','generationLimit','credentials','requests'])||s.version!==1||!uuid(s.storeId)||!digest(s.scopeDigest)||
   !integer(s.expiresAt)||!integer(s.clock)||s.clock>=s.expiresAt||!integer(s.epoch)||!integer(s.requestLimit)||s.requestLimit<1||s.requestLimit>64||
   !integer(s.generationLimit)||s.generationLimit<1||s.generationLimit>16||!Array.isArray(s.credentials)||!Array.isArray(s.requests)||s.credentials.length>s.generationLimit||s.requests.length>s.requestLimit)return false;
@@ -43,7 +43,7 @@ function validState(s:DomainHistory):boolean{
  }
  return unresolved<=1&&(!unresolved||s.requests.at(-1)?.state==='reserved')&&s.epoch===s.credentials.length+s.requests.reduce((n,r)=>n+(r.state==='spent'?2:1),0);
 }
-function actorValid(s:DomainHistory,a:DomainActor):boolean{
+export function actorValid(s:DomainHistory,a:DomainActor):boolean{
  if(!a||!/^fixture-principal-[a-z0-9-]{1,40}$/.test(a.principalId)||a.storeId!==s.storeId||a.scopeDigest!==s.scopeDigest)return false;
  if(a.role==='observer'||a.role==='rotator')return exact(a,['principalId','storeId','scopeDigest','role']);
  const current=s.credentials.at(-1);
@@ -102,3 +102,5 @@ export function createLocalCviDomainAuthority(initial:DomainHistory,pin:Omit<His
   }});
  }});
 }
+
+export const domainPolicyHash=(s:DomainHistory)=>createHash('sha256').update(canonical({version:s.version,storeId:s.storeId,scopeDigest:s.scopeDigest,expiresAt:s.expiresAt,requestLimit:s.requestLimit,generationLimit:s.generationLimit})).digest('hex');
