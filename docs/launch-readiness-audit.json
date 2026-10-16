@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "asOf": "2026-10-15",
+  "asOf": "2026-10-16",
   "evidenceCommit": "dc2d44504a04cbb7a8500957d757626a4e876778",
   "scope": "Repository evidence audit only; no fresh hosted/provider/device checks",
   "acceptedProductionCriteria": 0,
@@ -717,8 +717,7 @@
       "evidence": "docs/local-tavus-node-transition-port.md",
       "newOriginalNodeGateTests": 11,
       "operationsTests": 564,
-      "foundationFullStatus": "running",
-      "foundationFullSession": 3650,
+      "foundationFullStatus": "passed",
       "priorFullFoundationTests": 2461,
       "priorFullFoundationFiles": 180,
       "priorFullFoundationCommit": "d102ec0a12290eba8d0861d2ae27ccc8c16f346d",
@@ -726,7 +725,11 @@
       "hostedProviderDeviceChecks": false,
       "extraFinishAuthorityReads": 0,
       "scope": "Disabled original supervised Node gate and real process finish; expected commit captured before entry, actual fixture begins after startup. Before-commit original receipt/adoption/publication integration remains open.",
-      "localMemoryChecks": 19
+      "localMemoryChecks": 19,
+      "foundationTests": 2472,
+      "foundationFiles": 181,
+      "isolatedPostgresRerun": false,
+      "priorIsolatedPostgresChecks": 556
     }
   ]
 }

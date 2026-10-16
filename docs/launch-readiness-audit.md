@@ -1,6 +1,6 @@
 ## Original supervised Node gate follow-up, 16 October 2026
 
-Eleven new port tests, 564 operations tests, TypeScript/build and four encryption checks pass. Final full regression session 3650 is running after a stopped run for the fixed oversized-message cleanup bug. The previous 2,461-test result predates this port. Original signed proofs, actual locks and clean process exit are checked; before-commit receipt provenance, adoption/publication ordering, witness-pin composition and universal writer coverage remain open. No criterion closes. See docs/local-tavus-node-transition-port.md.
+Final full foundation regression passes 2,472 tests across 181 files, including 11 new original Node port cases. All 564 operations tests pass with ResourceWarning as error. TypeScript checking/build, four encryption checks and 19 local Memory checks pass. Review fixed an unhandled-promise edge when the encoded setup or command exceeds its bound; the new oversized setup case passes. The first newly started full run was stopped for that actual cleanup fix and is not counted as passed. No SQL contract changed; the prior 556-check isolated PostgreSQL result was not rerun. Original signed proofs, actual locks and clean process exit are checked; before-commit receipt provenance, adoption/publication ordering, witness-pin composition and universal writer coverage remain open. No criterion closes. See docs/local-tavus-node-transition-port.md and docs/local-tavus-committed-receipt-integration.md.
 
 ## Prepared signed finish proof, 16 October 2026
 
