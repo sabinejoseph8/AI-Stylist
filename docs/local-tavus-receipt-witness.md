@@ -1,5 +1,7 @@
 # Local receipt-claim and epoch-floor witness across restores
 
+Follow-up: [authenticated service contract](local-tavus-authenticated-witness-service.md) adds signed roles and evidence-gated split-commit reconciliation. Its sources/fencing remain simulations; real storage independence and grants are still open.
+
 Sabine approved local preparation/tests on 15 October 2026 with no new spending or hosted changes. This is a disconnected model using separate disposable SQLite and witness folders. The witness is assumed separately protected. Separate folders on one Mac do not establish that protection.
 
 ## What the witness covers

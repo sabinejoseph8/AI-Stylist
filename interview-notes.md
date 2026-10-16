@@ -1,3 +1,7 @@
+## Restricting witness recovery to authenticated evidence
+
+I prepared a local witness-service contract with separate signed caller roles, durable replay records and restricted advances. Recovery cannot choose a new target or erase uncertain work. It requires independently signed evidence that the database matches the recorded target and that old writers are fenced. Review caught a timing gap where evidence could expire before the journal commit, so I added an expiry check inside that commit as well. I tested interrupted writes, lost replies and coordinated restore, while keeping real fencing, database grants and independent storage unproven. No hosted setting, real credential or paid service was changed.
+
 ## Checking signing permission against a separate restore witness
 
 I extended my local receipt rehearsal with a witness that tracks exact domain history, projection use, receipt claims and time. Restoring only the database or only the witness is refused, including a claim rollback that leaves the domain epoch unchanged. I tested interrupted writes between the two commits and deliberately kept mismatched state held. I also preserved a negative test showing that restoring both stores can restore old signing permission. That keeps actual independent administration, authenticated grants and operator recovery explicit before deployment. No provider calls, hosted changes or new spending were involved.
