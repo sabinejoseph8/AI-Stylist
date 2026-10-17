@@ -12,14 +12,14 @@ export const sampleAccountProvider:AccountProvider={
  },
  async signOut(signal){if(signal.aborted)throw Error();},
 };
-type AccountPanelProps={provider?:AccountProvider;connected?:boolean};
+type AccountPanelProps={provider?:AccountProvider;connected?:boolean;onSampleSignOut?:()=>void};
 /** Configuration changes remount presentation state and cancel the old flow. */
-export function AccountPanel({provider=sampleAccountProvider,connected=false}:AccountPanelProps){
+export function AccountPanel({provider=sampleAccountProvider,connected=false,onSampleSignOut}:AccountPanelProps){
  const [boundary,setBoundary]=useState({provider,connected,generation:0});
  if(boundary.provider!==provider||boundary.connected!==connected)setBoundary({provider,connected,generation:boundary.generation+1});
- return <AccountPanelSession key={boundary.generation} provider={provider} connected={connected}/>;
+ return <AccountPanelSession key={boundary.generation} provider={provider} connected={connected} onSampleSignOut={onSampleSignOut}/>;
 }
-function AccountPanelSession({provider=sampleAccountProvider,connected=false}:AccountPanelProps){
+function AccountPanelSession({provider=sampleAccountProvider,connected=false,onSampleSignOut}:AccountPanelProps){
  if(connected&&provider===sampleAccountProvider)throw Error("Connected account configuration unavailable");
  const preview=!connected;
  const flow=useMemo(()=>createAccountFlow(provider),[provider]);
@@ -42,7 +42,7 @@ function AccountPanelSession({provider=sampleAccountProvider,connected=false}:Ac
   <span className="badge">{preview?"Simulated account preview":"Account access"}</span><h2 id="account-heading">{mode==='signUp'?'Create your account':mode==='recover'?'Recover access':'Welcome to your style journal'}</h2>
   <p id="account-preview-note">{preview?"Use made-up details only. This preview creates no account, sends no email and opens no provider. Simulated sign-in does not unlock the stylist.":"Sign in to your account. Account status on this screen does not replace server access checks."}</p>
   <div className="account-modes" aria-label="Account options">{(['signIn','signUp','recover'] as const).map(value=><button key={value} type="button" aria-pressed={mode===value} onClick={()=>change(value)}>{value==='signIn'?'Sign in':value==='signUp'?'Create account':'Recover access'}</button>)}</div>
-  {resetPreview?<RecoveryPanel onClose={()=>{setResetPreview(false);change('signIn');}}/>:state.status==='signedIn'?<><p>{preview?"Sample account connected on this page only. Your stylist remains unavailable.":"Sign-in completed. Protected features verify your session on the server."}</p><button type="button" onClick={async()=>{const work=flow.signOut();setEmail('');setPassword('');setState(flow.snapshot());await work;setState(flow.snapshot());}}>{preview?"Sign out of sample account":"Sign out"}</button></>:<>
+  {resetPreview?<RecoveryPanel onClose={()=>{setResetPreview(false);change('signIn');}}/>:state.status==='signedIn'?<><p>{preview?"Sample account connected on this page only. Your stylist remains unavailable.":"Sign-in completed. Protected features verify your session on the server."}</p><button type="button" onClick={async()=>{if(preview)onSampleSignOut?.();const work=flow.signOut();setEmail('');setPassword('');setState(flow.snapshot());await work;setState(flow.snapshot());}}>{preview?"Sign out of sample account":"Sign out"}</button></>:<>
    <form aria-describedby="account-preview-note" onSubmit={event=>{event.preventDefault();void submit(mode==='recover'?{method:'recover',email}:{method:mode,email,password});}}>
     <label htmlFor="account-email">{preview?"Email address (made-up)":"Email address"}</label><input ref={emailField} id="account-email" type="email" autoComplete={preview?"off":"email"} maxLength={254} required value={email} onChange={event=>setEmail(event.target.value)} disabled={pending}/>
     {mode!=='recover'&&<><label htmlFor="account-password">{preview?"Password (made-up)":"Password"}</label><input ref={passwordField} id="account-password" type="password" autoComplete={preview?"off":mode==="signUp"?"new-password":"current-password"} maxLength={4096} required value={password} onChange={event=>setPassword(event.target.value)} disabled={pending}/></>}

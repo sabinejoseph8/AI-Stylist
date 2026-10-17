@@ -96,6 +96,8 @@ export class LocalConsultationView {
   const selected:readonly Field[]=fields;if(new Set(selected).size!==selected.length||selected.some(f=>!(['color','style','budget','lookType'] as Field[]).includes(f)||s.notes[f].status!=='confirmed'))return false;
   for(const f of selected)this.saved[f]=s.notes[f].value;this.message='Selected preferences copied to separate sample memory only.';this.publish();return true;
  }
+ /** Explicit sample-account boundary, never a remote profile deletion. */
+ clearSavedPreferences(){this.saved={};this.publish();}
  private async cleanupCall(work:(signal:AbortSignal)=>Promise<boolean>){
   const abort=new AbortController();this.cleanup.add(abort);
   try{return await this.wait(abort.signal,work)===true;}finally{this.cleanup.delete(abort);}

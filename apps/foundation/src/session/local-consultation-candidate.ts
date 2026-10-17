@@ -16,11 +16,11 @@ export class LocalConsultationCandidate {
  constructor(view:LocalConsultationView,port:CandidatePort,reference?:LocalConsultationReference){
   this.view=view;this.reference=reference;
   this.port=Object.freeze({snapshot:port.snapshot.bind(port),prepare:port.prepare.bind(port),feedback:port.feedback.bind(port)});
-  this.stop=view.subscribe(()=>{const s=view.snapshot();if(s.busy||s.state!=='ready'||this.value&&(s.session?.epoch!==this.value.version.epoch||s.session.revision!==this.value.version.revision))this.invalidate();});
+  this.stop=view.subscribe(()=>{const s=view.snapshot();if(s.busy||s.state!=='ready'||this.value&&(s.session?.epoch!==this.value.version.epoch||s.session.revision!==this.value.version.revision))this.invalidate();else this.publish();});
  }
  matches(view:LocalConsultationView){return view===this.view;}
  subscribe(fn:()=>void){this.listeners.add(fn);return()=>{this.listeners.delete(fn);};}
- snapshot(){return Object.freeze({value:this.value,busy:this.busy});}
+ snapshot(){const s=this.view.snapshot();return Object.freeze({value:this.value,busy:this.busy,available:!this.disposed&&s.state==='ready'&&!s.busy});}
  private publish(){for(const f of [...this.listeners])try{f();}catch{}}
  private invalidate(){this.generation++;this.abort?.abort();this.abort=null;this.busy=false;this.value=null;this.publish();}
  private accept(raw:any){
@@ -56,6 +56,6 @@ export class LocalConsultationCandidate {
   }catch{if(mine===this.generation)this.value=null;return false;}
   finally{clearTimeout(timer);if(mine===this.generation){this.busy=false;this.abort=null;this.publish();}}
  }
- savedProjection(){const s=this.view.snapshot(),v=this.value;if(this.busy||s.busy||s.state!=='ready'||!v?.look||v.version.epoch!==s.session?.epoch||v.version.revision!==s.session.revision)return null;return projectSampleLook({...v.look,id:`sample_${this.namespace}_${v.sampleRevision}`});}
+ savedProjection(){const s=this.view.snapshot(),v=this.value;if(this.busy||s.busy||s.state!=='ready'||!v?.look||v.version.epoch!==s.session?.epoch||v.version.revision!==s.session.revision)return null;const suffix=` (sample ${v.sampleRevision})`;return projectSampleLook({...v.look,id:`sample_${this.namespace}_${v.sampleRevision}`,title:v.look.title.slice(0,80-suffix.length)+suffix});}
  dispose(){if(this.disposed)return;this.disposed=true;this.stop();this.invalidate();this.listeners.clear();}
 }

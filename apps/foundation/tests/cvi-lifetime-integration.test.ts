@@ -10,7 +10,9 @@ import {credentialCall} from './support/cvi-credential-process.ts';
 import {call} from './support/cvi-replay-process.ts';
 const signal=()=>new AbortController().signal;
 it.each(['next-request','prepared-output'])('fresh signed proof works after RPC expiry and refuses lease expiry at %s',async stage=>{
- let time=1000;const f=await startupAdmissionFixture(()=>time);let wire:ReturnType<typeof createLocalCviHttpAdapter>|undefined;
+ // Reuse the existing uncached witness IPC transport; every admission still
+ // obtains a fresh signed observation under the same startup/lease deadlines.
+ let time=1000;const f=await startupAdmissionFixture(()=>time,10000,true);let wire:ReturnType<typeof createLocalCviHttpAdapter>|undefined;
  try{
   const identity={ownerId:'00000000-0000-4000-8000-000000000001',sessionId:'11111111-1111-4111-8111-111111111111',isCurrent:async()=>true},request=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
   const context=createLocalCviNotebookContext({simulation:true,identity,authorize:async r=>r.headers.get('authorization')==='Bearer fixture-customer'?identity:null,checkpoint:f.checkpoint,ports:{draft:async s=>'Synthetic '+s.notes.coverage.text,check:async(text,s)=>({approved:true,text,revision:s.revision})},clock:()=>time,policy:APPROVED_NOTES_RETENTION});
@@ -25,7 +27,7 @@ it.each(['next-request','prepared-output'])('fresh signed proof works after RPC 
   const before:any=await call(f.replayRoot,'inspect',{storeId:f.journal.storeId});expect(before.records).toHaveLength(2);expect(before.records[0].status).toBe('spent');expect(before.records[1].status).toBe(stage==='next-request'?'spent':'reserved');
   time=9000;if(stage==='next-request')expect((await wire.handle(http('Fresh body to require current-owner inspection'))).status).toBe(409);else await expect(response.text()).rejects.toThrow();
   expect(transcript.currentInput()).toBeNull();expect(Object.values(context.flow.snapshot().notes).every(n=>n.text==='')).toBe(true);
-  const after:any=await call(f.replayRoot,'inspect',{storeId:f.journal.storeId});expect(after.records).toEqual(before.records);expect(f.nativeLease().expiresAt).toBe(9000);expect(f.resources.binding.expiresAt).toBe(10000);
+  const after:any=await call(f.replayRoot,'inspect',{storeId:f.journal.storeId});expect(after.records).toEqual(before.records);expect(f.nativeLease().expiresAt).toBe(9000);expect(f.resources.binding.expiresAt).toBe(10000);expect(f.residentStats()?.processStarts).toBe(1);expect(f.residentStats()!.calls).toBeGreaterThan(1);
  }finally{wire?.close();await f.close();}
 },60000);
 it('a post-RPC committed grant stays spent without activating credentials or returning an owner',async()=>{let time=1000;const f=await startupAdmissionFixture(()=>time);try{

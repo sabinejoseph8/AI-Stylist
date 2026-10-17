@@ -59,3 +59,5 @@ it.each(['clear','end'] as const)('a stalled %s acknowledgment is bounded and ne
 it('browser cancellation does not require AbortSignal.any',async()=>{
  const any=vi.spyOn(AbortSignal,'any').mockImplementation(()=>{throw Error('Browser feature unavailable');});const x=fixture();try{expect(await x.view.refresh()).toBe(true);expect(await x.view.save(x.view.beginEdit('style')!,'Long sleeves')).toBe('applied');expect(any).not.toHaveBeenCalled();}finally{x.view.dispose();any.mockRestore();}
 });
+
+it('explicit sample sign-out clears saved preferences while ordinary End preserves them',async()=>{const x=fixture();await x.view.refresh();await x.view.save(x.view.beginEdit('budget')!,'USD 350 maximum (items only)');expect(x.view.savePreferences(['budget'])).toBe(true);await x.view.end();expect(x.view.snapshot().saved.budget).toContain('350');x.view.clearSavedPreferences();expect(x.view.snapshot().saved).toEqual({});expect(x.view.snapshot().state).toBe('ended');x.view.dispose();});
