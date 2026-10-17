@@ -1,3 +1,17 @@
+## Project memory review, 16 October 2026
+
+Reviewed all five canonical memory documents. Approved product and design baselines remain v1.0, with the later email/password-only MVP decision retained. Full completion remains **5 of 41** and production acceptance **0 of 21**. The experiment allocation remains **$51**. Task 8a is authorized local preparation, not completed integration or launch acceptance.
+
+The latest full regression has finished with **2,711 passed, three failed and two intentional browser skips**, across 198 passed, two failed and two skipped files. The terminal report is retained in /private/tmp/ai-stylist-8a-lifecycle-full-regression.log. The failed cases are the two-renewal owner continuation, tentative transcript delivery, and composed HTTP startup/replay. The failures show held admission or unavailable delivery; their causes remain unproven. Do not describe this run as green or still running. The original process handle is no longer available, so its numeric exit code is not claimed.
+
+The merged lifecycle increment still has separate verified evidence: 268 composed checks across 20 suites, including both local WebKit journeys, plus 111 independent main checks across eight suites, TypeScript and build. The browser journey uses 126 of the unchanged 128 authority records and releases zero protected outputs. Earlier passing and failed full runs remain historical evidence, not substitutes for the latest failed regression.
+
+External simulated transcript invalidation is prepared separately in /private/tmp/ai-stylist-8a-input-stage. Its 132 focused checks across five suites, TypeScript and build pass. A new browser journey is prepared but has not run. This work is unmerged and does not establish actual provider transcription, customer-host acceptance or permission to release recommendations. The prepared guard keeps accepted partial input provisional until completion, invalidates old samples immediately and retains confirmed references; it still needs integration verification.
+
+**Exact next action:** reproduce the three unchanged failing cases individually from the frozen regression source, diagnose their actual failure boundaries without widening security deadlines, then verify the staged transcript/browser integration before merging. Keep original proof identities, replay records, fixed authority limits and separate saved-data scopes. No renewed sequencing approval is needed for this local work.
+
+Open gates remain provider startup/conversation acceptance, customer account and recovery-host security, approved retailer sourcing, full recovery/fencing acceptance and representative device/accessibility checks. Google and Apple remain outside the MVP; domain purchase and Rakuten remain deferred. This memory update authorizes no provider calls, new spending, real accounts or customer-host changes. Earlier dated checkpoint wording below is historical.
+
 ## Verified shared lifecycle increment, 16 October 2026
 
 Local source checkpoint c7750cd594a0083102e00bb5668941a329239515 merges ten verified source/test files from verified-shared-candidate-lifecycle-2aa26aee4ddd.patch, SHA-256 2aa26aee4ddd4016711cb1ebec3a96cdc701949e059b174b539363e4961441ab. The final composed run passes 268 tests across 20 suites, including both loopback WebKit journeys and all four actual-pair lifecycle cases; original session 95902, terminal exit zero, log /private/tmp/ai-stylist-8a-lifecycle-final-composed.log. Main independently passes 111 tests across eight suites (session 77851, exit zero), TypeScript and build. Product scope is unchanged and existing design tokens are reused.
@@ -10,9 +24,9 @@ The previous complete run 69254 is preserved as FAILED: 2,703 passed, one respon
 
 One permission review timed out BEFORE creating the broad test process; the allowed single retry started successfully and produced the verified 268-pass result. The initial keyboard test used pointer activation, so it was corrected to test keyboard focus explicitly. The duplicate-startup test was corrected to assert the actual constructor-level refusal rather than an imagined null startup result. Neither adjustment bypasses the original guard.
 
-A NEW complete regression is RUNNING in original session 11963 from /private/tmp/ai-stylist-8a-lifecycle-regression-stage; log /private/tmp/ai-stylist-8a-lifecycle-full-regression.log and metadata /private/tmp/ai-stylist-8a-lifecycle-full-regression.json. Its 548 source/test/operations hashes are frozen. Collect the actual terminal exit; do not duplicate or edit a healthy run. The two opt-in browser cases pass separately in the composed run and are intentionally skipped by ordinary full regression.
+The complete regression associated with original session 11963 has finished with 2,711 passed, three failed and two skipped tests. Its terminal report is /private/tmp/ai-stylist-8a-lifecycle-full-regression.log and its frozen metadata is /private/tmp/ai-stylist-8a-lifecycle-full-regression.json. The original process handle is no longer available; no numeric exit code is claimed. Investigate the failures before claiming a full green result. The two opt-in browser cases pass separately in the composed run and are intentionally skipped by ordinary full regression.
 
-Exact next action: collect original session 11963, verify all 548 hashes against main and fix any actual failure at its boundary. Continue approved local Task 8a with external simulated transcript/input invalidation and simulated source/semantic outage paths through the shared view; preserve original proof objects, counters, deadlines and separate saved scopes. Use a separate source stage while regression source is frozen, never copy stale staged docs, and save verified local source/Memory. Full Task 8a, live media/accounts/sources/privacy/host/device acceptance and the goal remain open. Completion stays 5/41, production acceptance 0/21, experiment allocation $51. No provider call, real account, camera/microphone permission, credential access, new spending, hosted publication, support message or backup-runtime change. No renewed sequencing approval or Sabine action is needed.
+Exact next action: verify all 548 frozen hashes and reproduce the three failed cases individually without weakening admission or timing guards. Continue approved local Task 8a with external simulated transcript/input invalidation and simulated source/semantic outage paths through the shared view; preserve original proof objects, counters, deadlines and separate saved scopes. Use a separate source stage while regression source is frozen, never copy stale staged docs, and save verified local source/Memory. Full Task 8a, live media/accounts/sources/privacy/host/device acceptance and the goal remain open. Completion stays 5/41, production acceptance 0/21, experiment allocation $51. No provider call, real account, camera/microphone permission, credential access, new spending, hosted publication, support message or backup-runtime change. No renewed sequencing approval or Sabine action is needed.
 
 ## Staged lifecycle integration and verified wait, 16 October 2026
 
@@ -1792,14 +1806,14 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current local focus: approved Task 8a shared notebook/reference integration is merged and passes 233 focused checks across 20 suites plus 61 independent main checks, TypeScript and client build. The new complete regression passed 2,656 tests with one intentional browser-only skip; the earlier 2,624-pass run retains its failed startup fixture and intentional browser skip. Full Task 8a and all production acceptance remain open.
+Current focus: approved local Task 8a preparation. The merged lifecycle increment passes 268 composed checks and 111 independent main checks, TypeScript and build. Its latest full regression finished with 2,711 passed, three failed and two intentional browser skips. The failures are under investigation; full Task 8a remains open.
 
-- **Full completion:** 5 of 41 combined Memory items; 0 of 21 production acceptance criteria. Prepared local features and simulations do not close integrated phase acceptance.
-- **Working app:** the reviewed browser-memory sample app remains prepared locally. The protected conversation candidate remains disabled; no provider, customer account or real shopping activation is implied.
-- **Remaining integration gates:** supported provider startup/conversation behavior, actual customer-host/account recovery acceptance, retailer sourcing, independent restore floors, all-writer fencing and representative phone/network tests. Google and Apple remain outside the MVP. Domain purchase and Rakuten remain deferred.
-- **Limits:** experiment allocation remains $51. Original reservations and financial evidence are preserved. This checkpoint permits no new spending, hosted changes or permanent backup runtime changes.
-- **Workspace:** continue from /private/tmp/ai-stylist-recovered-20261014. Preserve the older /private/tmp/ai-stylist-phone-publish checkout and its local changes.
-- **Next local action:** freeze and run the complete merged-source regression while preparing context-bound candidate/check and item-feedback composition separately.
+- **Full completion:** 5 of 41 Memory items; 0 of 21 production acceptance criteria. Local preparation does not close integrated acceptance.
+- **Unmerged preparation:** external transcript invalidation passes 132 focused checks, TypeScript and build; its new browser journey has not run.
+- **Remaining gates:** provider conversation/startup, customer account and recovery-host security, approved retailer sourcing, recovery/fencing acceptance and physical-device/accessibility checks.
+- **Limits and decisions:** $51 experiment allocation; no new spending or customer-host changes. Email/password with recovery only. Domain purchase and Rakuten remain deferred.
+- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout and isolated stages.
+- **Next action:** reproduce each of the three full-regression failures, then verify staged transcript integration before merging it.
 
 ## Historical summary checkpoints
 

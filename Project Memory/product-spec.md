@@ -2,7 +2,7 @@
 
 Status: Approved product baseline, v1.0  
 Approved by Sabine: 8 October 2026  
-Updated: 10 October 2026\
+Updated: 16 October 2026\
 Basis: AI Personal Stylist retailer-independent PRD and prioritized backlog v1.8, plus Sabine's subsequent instructions.  
 Related document: [Approved design specification](design.md)
 
@@ -266,3 +266,7 @@ Sabine accepted the original local notebook review and seven-step local connecti
 - 14 October 2026: Sabine explicitly removed Apple sign-in from the MVP and declined Apple Developer membership. Email/password with recovery and Google remain required. Earlier Apple scope/approval entries are historical.
 
 - 14 October 2026: Sabine removed Google sign-in from the MVP. PS-01 and A18 now require email/password with recovery only. Earlier social-sign-in decisions are superseded; no customer activation or spending is implied.
+
+## Product memory review, 16 October 2026
+
+Reviewed PS-01 through PS-09 and all 21 acceptance scenarios against the latest plan. The approved baseline remains v1.0 with email/password and recovery only. Shared local notebook, reference and sample-feedback evidence does not establish live styling, real shopping or production acceptance. Full completion remains 5/41 and production acceptance 0/21. No product requirement changed in this review; current implementation evidence and three full-regression failures are recorded in docs/progress.md.

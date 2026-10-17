@@ -1,3 +1,7 @@
+## Keeping test evidence honest, 16 October 2026
+
+I reviewed all five project-memory documents and separated the local work that had passed focused checks from the latest complete test run, which had three failures. I kept those failures visible instead of treating passing sample walkthroughs as launch readiness. I also kept the new transcript changes labelled as unmerged preparation until their integration checks run. My next step is to reproduce the failures without weakening the protection limits.
+
 ## Closing the sample session on sign-out
 
 I found that signing out of the sample account left separately saved sample records behind. I connected that explicit sign-out to ending the shared consultation and clearing its local sample memory. Ordinary End still preserves deliberately saved samples. My automated browser walkthrough now checks this distinction, keyboard focus after an item changes, clear revision labels and owned-item cost exclusion.

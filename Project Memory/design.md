@@ -1,3 +1,7 @@
+## Design memory review, 16 October 2026
+
+Reviewed principles, palette, typography, spacing, component behavior and accessibility requirements. Approved design v1.0 and all tokens remain unchanged. The shared local sample journey verifies keyboard focus, stable confirmed references, explicit saving and sign-out cleanup; this is not real-device or assistive-technology acceptance. Prepared transcript pending/unavailable wording is unmerged and its new browser check has not run. Current full-regression failures remain open in docs/progress.md.
+
 ## Shared reference behavior and browser fallback, 16 October 2026
 
 The explicitly injected local notebook shows a generated reference thumbnail only after its description and Owned/Inspiration choice are accepted by the shared coordinator. Replacement retains the previous confirmed photo until acceptance; Clear/End removes it. Reuse the existing disclosure, photo styles and contained native enlargement dialog. Background reads leave that dialog open and do not deliberately move focus. WebKit's freshly rasterized PNG fallback is displayed normally and identified honestly in sample exports, with no palette or customer product change. Local browser checks pass; real assistive-technology/device acceptance remains open.
