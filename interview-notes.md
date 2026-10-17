@@ -1,3 +1,9 @@
+## Closing the sample session on sign-out
+
+I found that signing out of the sample account left separately saved sample records behind. I connected that explicit sign-out to ending the shared consultation and clearing its local sample memory. Ordinary End still preserves deliberately saved samples. My automated browser walkthrough now checks this distinction, keyboard focus after an item changes, clear revision labels and owned-item cost exclusion.
+
+I also tested corrections during an unfinished check, expired consultation access and another sample customer's attempts to read or edit the session. A broader regression caught a response-stream failure in an older lifetime fixture. I retained that failed result, verified the unchanged case separately, and reused an existing uncached witness process while keeping the original security assertions and deadlines. The affected checks pass; complete regression and live acceptance remain separate gates.
+
 ## Connecting sample outfits to one shared consultation
 
 I connected the sample outfit, item feedback and explicit saving flow to the same notebook coordinator. Separate simulated catalog facts and a second check keep an attractive illustration from being treated as a real product recommendation. My browser rehearsal keeps the dress and owned reference through three shoe changes, excludes the owned piece from purchase costs, and reopens a saved sample without restoring old notes.
