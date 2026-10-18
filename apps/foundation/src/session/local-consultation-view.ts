@@ -11,9 +11,10 @@ export type ConsultationViewPort=Readonly<{
  end(signal:AbortSignal):Promise<boolean>;
  onReset(listener:()=>void):()=>void;
 }>;
+export type ConsultationInputNotice=Readonly<{serial:number;phase:'pending'|'partial'|'settled'}>;
 export type ConsultationViewSnapshot=Readonly<{
  state:'loading'|'ready'|'held'|'ended';session:SessionSnapshot|null;
- message:string;busy:boolean;saved:Readonly<Partial<Record<Field,string>>>;
+ message:string;busy:boolean;inputPending:boolean;inputAvailable:boolean;saved:Readonly<Partial<Record<Field,string>>>;
  releaseEnabled:false;
 }>;
 const integer=(v:unknown)=>Number.isSafeInteger(v)&&Number(v)>=0;
@@ -35,6 +36,8 @@ export class LocalConsultationView {
  private message='Loading the shared sample notebook.';
  private saved:Partial<Record<Field,string>>={};
  private floor:{epoch:number;revision:number;fingerprint:string}|null=null;
+ private inputRequired=false;private inputConnected=false;
+ private inputSerial=-1;private inputPending=false;private inputRefresh=false;
  private generation=0;private operation=0;private busy=false;private disposed=false;
  private cleanup=new Set<AbortController>();
  private lifetime=new AbortController();private listeners=new Set<()=>void>();
@@ -44,9 +47,9 @@ export class LocalConsultationView {
   this.unsubscribe=this.port.onReset(()=>this.invalidate('Shared session changed. Refresh its current notes.'));
  }
  subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
- snapshot():ConsultationViewSnapshot{return Object.freeze({state:this.state,session:this.current,message:this.message,busy:this.busy,saved:Object.freeze({...this.saved}),releaseEnabled:false});}
+ snapshot():ConsultationViewSnapshot{return Object.freeze({state:this.state,session:this.current,message:this.message,busy:this.busy,inputPending:this.inputPending,inputAvailable:!this.inputRequired||this.inputConnected,saved:Object.freeze({...this.saved}),releaseEnabled:false});}
  private publish(){for(const listener of [...this.listeners])try{listener();}catch{/* Observers cannot veto cleanup. */}}
- private invalidate(message:string,ended=false){if(this.state==='ended'&&!ended)return;this.generation++;this.lifetime.abort();this.lifetime=new AbortController();this.current=null;this.busy=false;this.state=ended?'ended':'held';this.message=message;this.publish();}
+ private invalidate(message:string,ended=false){if(this.state==='ended'&&!ended)return;this.generation++;this.lifetime.abort();this.lifetime=new AbortController();this.current=null;this.busy=false;this.inputPending=false;this.inputRefresh=false;this.state=ended?'ended':'held';this.message=message;this.publish();}
  private async wait<T>(external:AbortSignal,work:(signal:AbortSignal)=>Promise<T>):Promise<T>{
   if(external.aborted)throw Error('Local view canceled');
   const abort=new AbortController(),signal=abort.signal,relay=()=>abort.abort();
@@ -66,12 +69,24 @@ export class LocalConsultationView {
   this.floor={epoch:next.epoch,revision:next.revision,fingerprint};
   this.current=next.state==='active'?next:null;this.state=next.state==='active'?'ready':next.state==='ended'?'ended':'held';return true;
  }
+ requireInputTransport(){if(this.disposed||this.state==='ended'||this.inputRequired)return false;this.inputRequired=true;this.inputConnected=false;this.publish();return true;}
+ loseInputTransport(){this.inputConnected=false;this.transportLost();}
+ /** A transcript transport may invalidate a view, never confirm notes or grant output. */
+ observeInput(raw:unknown){
+  if(this.disposed||this.state==='ended')return false;
+  if(!exact(raw,['serial','phase'])||!integer(raw.serial)||!['pending','partial','settled'].includes(String(raw.phase))){if(this.inputRequired)this.loseInputTransport();else this.transportLost();return false;}
+  if(Number(raw.serial)<=this.inputSerial)return false;
+  const initial=this.inputSerial<0;this.inputConnected=true;this.inputSerial=Number(raw.serial);this.inputPending=raw.phase!=='settled';this.publish();
+  if(raw.phase!=='pending'){if(this.busy)this.inputRefresh=true;else if(!initial&&this.state==='ready')void this.refresh();}
+  return true;
+ }
+ private finishOperation(generation:number){if(generation!==this.generation)return;this.busy=false;this.publish();if(this.inputRefresh){this.inputRefresh=false;void this.refresh();}}
  async refresh(){
   if(this.disposed||this.state==='ended'||this.busy)return false;
   const generation=this.generation,signal=this.lifetime.signal;this.busy=true;this.publish();
   try{const raw=await this.wait(signal,s=>this.port.snapshot(s));if(this.disposed||generation!==this.generation||signal.aborted)return false;if(!await this.accept(raw,generation,signal)){if(generation!==this.generation||signal.aborted)return false;this.invalidate('Shared notes could not be verified. No old notes are displayed.');return false;}this.message=this.state==='ready'?'Shared sample notes are current.':'Shared sample session is unavailable.';return this.state==='ready';}
   catch{if(generation===this.generation)this.invalidate('Connection unavailable. Temporary notes are hidden.');return false;}
-  finally{if(generation===this.generation){this.busy=false;this.publish();}}
+  finally{this.finishOperation(generation);}
  }
  beginEdit(field:Field):ConsultationEdit|null{const s=this.current;if(this.disposed||this.busy||this.state!=='ready'||!s||!FIELDS.some(([f])=>f===field))return null;const n=s.notes[field];return Object.freeze({field,epoch:s.epoch,baseRevision:n.revision,sequence:n.sequence+1,value:n.value});}
  async save(draft:ConsultationEdit,value:string,confirm=false):Promise<UpdateResult>{
@@ -87,7 +102,7 @@ export class LocalConsultationView {
    const raw=await this.wait(signal,s=>this.port.snapshot(s));if(this.disposed||generation!==this.generation||signal.aborted)return 'unavailable';
    if(!await this.accept(raw,generation,signal))throw Error();this.message=result==='applied'?'Shared notebook updated. Ambiguous budgets remain To confirm.':'This detail was not accepted. Review the current notes.';return result;
   }catch{if(generation===this.generation)this.invalidate('The edit could not be verified. No optimistic notes are displayed.');return 'unavailable';}
-  finally{if(generation===this.generation){this.busy=false;this.publish();}}
+  finally{this.finishOperation(generation);}
  }
  async confirm(field:Field){const draft=this.beginEdit(field);return draft?this.save(draft,draft.value,true):'unavailable' as const;}
  /** Explicit sample-only projection. Never an account/profile write. */

@@ -16,16 +16,16 @@ export class LocalConsultationCandidate {
  constructor(view:LocalConsultationView,port:CandidatePort,reference?:LocalConsultationReference){
   this.view=view;this.reference=reference;
   this.port=Object.freeze({snapshot:port.snapshot.bind(port),prepare:port.prepare.bind(port),feedback:port.feedback.bind(port)});
-  this.stop=view.subscribe(()=>{const s=view.snapshot();if(s.busy||s.state!=='ready'||this.value&&(s.session?.epoch!==this.value.version.epoch||s.session.revision!==this.value.version.revision))this.invalidate();else this.publish();});
+  this.stop=view.subscribe(()=>{const s=view.snapshot();if(s.busy||s.inputPending||!s.inputAvailable||s.state!=='ready'||this.value&&(s.session?.epoch!==this.value.version.epoch||s.session.revision!==this.value.version.revision))this.invalidate();else this.publish();});
  }
  matches(view:LocalConsultationView){return view===this.view;}
  subscribe(fn:()=>void){this.listeners.add(fn);return()=>{this.listeners.delete(fn);};}
- snapshot(){const s=this.view.snapshot();return Object.freeze({value:this.value,busy:this.busy,available:!this.disposed&&s.state==='ready'&&!s.busy});}
+ snapshot(){const s=this.view.snapshot();return Object.freeze({value:this.value,busy:this.busy,available:!this.disposed&&s.state==='ready'&&!s.busy&&!s.inputPending&&s.inputAvailable});}
  private publish(){for(const f of [...this.listeners])try{f();}catch{}}
  private invalidate(){this.generation++;this.abort?.abort();this.abort=null;this.busy=false;this.value=null;this.publish();}
  private accept(raw:any){
   const s=this.view.snapshot(),v=raw?.version;
-  if(s.state!=='ready'||s.busy||!s.session||!v||Object.keys(v).sort().join(',')!=='epoch,inputRevision,nativeRevision,revision'||!Object.values(v).every(n=>Number.isSafeInteger(n)&&Number(n)>=0)||v.epoch!==s.session.epoch||v.revision!==s.session.revision||raw.releaseEnabled!==false||raw.audioEnabled!==false||raw.shoppingEnabled!==false||!['idle','checking','sample','held','ended'].includes(raw.state))return false;
+  if(s.state!=='ready'||s.busy||s.inputPending||!s.inputAvailable||!s.session||!v||Object.keys(v).sort().join(',')!=='epoch,inputRevision,nativeRevision,revision'||!Object.values(v).every(n=>Number.isSafeInteger(n)&&Number(n)>=0)||v.epoch!==s.session.epoch||v.revision!==s.session.revision||raw.releaseEnabled!==false||raw.audioEnabled!==false||raw.shoppingEnabled!==false||!['idle','checking','sample','held','ended'].includes(raw.state))return false;
   if(this.floor&&Object.keys(v).some(k=>v[k]<this.floor![k as keyof Version]))return false;
   let look:SampleLook|null=null;
   if(raw.state==='sample'){
@@ -38,7 +38,7 @@ export class LocalConsultationCandidate {
   this.floor=Object.freeze({...v});this.value=Object.freeze({version:this.floor!,look,sampleRevision:look?raw.sampleRevision:null,history:Object.freeze(history),keptIds:Object.freeze([...raw.feedback.keptIds]),message:look?'Checked illustrated sample only. Real recommendations, audio and shopping are unavailable.':'Shared sample needs fresh checks.'});return true;
  }
  async run(feedback?:CandidateFeedback){
-  const s=this.view.snapshot();if(this.disposed||this.busy||s.state!=='ready'||s.busy)return false;
+  const s=this.view.snapshot();if(this.disposed||this.busy||s.state!=='ready'||s.busy||s.inputPending||!s.inputAvailable)return false;
   const previous=this.value;
   const mine=this.generation,abort=new AbortController();this.abort=abort;this.busy=true;this.value=null;this.publish();
   const wait=(work:Promise<unknown>)=>Promise.race([work,new Promise<never>((_,reject)=>{const fn=()=>reject(Error());abort.signal.addEventListener('abort',fn,{once:true});if(abort.signal.aborted)fn();})]);
@@ -56,6 +56,6 @@ export class LocalConsultationCandidate {
   }catch{if(mine===this.generation)this.value=null;return false;}
   finally{clearTimeout(timer);if(mine===this.generation){this.busy=false;this.abort=null;this.publish();}}
  }
- savedProjection(){const s=this.view.snapshot(),v=this.value;if(this.busy||s.busy||s.state!=='ready'||!v?.look||v.version.epoch!==s.session?.epoch||v.version.revision!==s.session.revision)return null;const suffix=` (sample ${v.sampleRevision})`;return projectSampleLook({...v.look,id:`sample_${this.namespace}_${v.sampleRevision}`,title:v.look.title.slice(0,80-suffix.length)+suffix});}
+ savedProjection(){const s=this.view.snapshot(),v=this.value;if(this.busy||s.busy||s.inputPending||!s.inputAvailable||s.state!=='ready'||!v?.look||v.version.epoch!==s.session?.epoch||v.version.revision!==s.session.revision)return null;const suffix=` (sample ${v.sampleRevision})`;return projectSampleLook({...v.look,id:`sample_${this.namespace}_${v.sampleRevision}`,title:v.look.title.slice(0,80-suffix.length)+suffix});}
  dispose(){if(this.disposed)return;this.disposed=true;this.stop();this.invalidate();this.listeners.clear();}
 }

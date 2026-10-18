@@ -42,8 +42,8 @@ export function createLocalCviCandidateRehearsal(options:Readonly<{
  facts(look:SampleLook,signal:AbortSignal):Promise<readonly ValidationPiece[]>;
  semantic(look:SampleLook,input:CandidateBuildInput,signal:AbortSignal):Promise<SemanticOutcome>;
 }>){
- if(options?.simulation!==true||typeof options.clock!=='function'||['build','facts','semantic'].some(k=>typeof(options as any)[k]!=='function'))throw Error('Local candidate rehearsal unavailable');
- const context=options.context,request=new Request(options.request),view=createLocalCviViewPort(context,request),clock=options.clock,build=options.build.bind(options),facts=options.facts.bind(options),semantic=options.semantic.bind(options),feedback=new LocalLookFeedback({clock});
+ if(options?.simulation!==true||typeof options.context?.sampleInputReady!=='function'||typeof options.clock!=='function'||['build','facts','semantic'].some(k=>typeof(options as any)[k]!=='function'))throw Error('Local candidate rehearsal unavailable');
+ const context=options.context,inputReady=options.context.sampleInputReady.bind(options.context),request=new Request(options.request),view=createLocalCviViewPort(context,request),clock=options.clock,build=options.build.bind(options),facts=options.facts.bind(options),semantic=options.semantic.bind(options),feedback=new LocalLookFeedback({clock});
  let state:'idle'|'checking'|'sample'|'held'|'ended'='idle',message='No shared sample prepared.',accepted:LocalConsultationVersion|null=null,observed:LocalConsultationVersion|null=null,reference:SampleReference|null=null,wardrobeRevision=-1,changeTarget:string|null=null,serial=0,inputSerial=0,generation=0,busy=false,closed=false,observedTime=-1;
  let operation:AbortController|undefined,hard:HardCheck|null=null,verdict:SemanticOutcome|'pending'='unknown',validation:ValidationFixture|null=null;
  const reset=()=>{generation++;operation?.abort();operation=undefined;accepted=null;observed=null;reference=null;wardrobeRevision=-1;changeTarget=null;hard=null;validation=null;verdict='unknown';feedback.clear();state=closed?'ended':'idle';message='Shared temporary sample and feedback cleared.';};
@@ -52,8 +52,8 @@ export function createLocalCviCandidateRehearsal(options:Readonly<{
  const held=(text='Shared sample could not be verified.')=>{if(closed)return;feedback.invalidateContext();state='held';hard=null;validation=null;verdict='unknown';message=text;};
  const snapshot=()=>Object.freeze({state,version:observed?Object.freeze({...observed}):null,look:state==='sample'?feedback.snapshot().look:null,sampleRevision:state==='sample'&&validation?validation.candidateRevision:null,feedback:feedback.snapshot(),reference,hard,semantic:verdict,message,releaseEnabled:false as const,audioEnabled:false as const,shoppingEnabled:false as const});
  const read=async(signal:AbortSignal)=>{
-  if(signal.aborted||closed)return null;
-  const envelope=await view.consultationSnapshot(signal);if(signal.aborted||!envelope)return null;
+  if(signal.aborted||closed||!inputReady())return null;
+  const envelope=await view.consultationSnapshot(signal);if(signal.aborted||!envelope||!inputReady())return null;
   const {notes,version}=envelope;if(notes.state!=='active'||!versionOk(version)||notes.epoch!==version.epoch||notes.revision!==version.revision)return null;
   if(observed&&(version.epoch<observed.epoch||version.revision<observed.revision||version.nativeRevision<observed.nativeRevision||version.inputRevision<observed.inputRevision))return null;
   if(observed&&!same(observed,version)){
@@ -112,7 +112,7 @@ export function createLocalCviCandidateRehearsal(options:Readonly<{
     if(inputSerial>=64){held('Local feedback input limit reached.');return snapshot();}
     const turn=await context.beginProposal(new Request(request),'sample_item_feedback_'+(++inputSerial),s);if(!current())return null;if(!turn){held();return null;}
     const applied=await context.acceptProposal(new Request(request),turn,0,[],true,s);if(!current())return null;if(applied?.status!=='accepted'){held();return null;}
-    const final=await read(s);if(!current())return null;if(!final||final.version.epoch!==live.version.epoch||final.version.revision!==live.version.revision||final.version.nativeRevision!==live.version.nativeRevision||final.version.inputRevision<=live.version.inputRevision||!feedback.add(input)){held();return null;}
+    const final=await read(s);if(!current())return null;if(!final||final.version.epoch!==live.version.epoch||final.version.revision!==live.version.revision||final.version.nativeRevision!==live.version.nativeRevision||final.version.inputRevision!==live.version.inputRevision+1||!feedback.add(input)){held();return null;}
     accepted=final.version;wardrobeRevision=final.notes.notes.wardrobe.revision;validation=null;hard=null;verdict='unknown';changeTarget=input.kind==='change'&&(input.target.kind==='item'||input.target.kind==='attribute')?input.target.itemId:null;state='held';message='Item-scoped feedback accepted. Fresh sample checks are required.';return snapshot();
    });
   },

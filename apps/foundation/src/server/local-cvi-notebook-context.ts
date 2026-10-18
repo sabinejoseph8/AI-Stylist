@@ -36,7 +36,7 @@ export function createLocalCviNotebookContext(options:Readonly<{
  const capturedCheckpoint=options.checkpoint,capturedClock=options.clock;
  const owner=options.identity.ownerId,authSession=options.identity.sessionId,currentIdentity=options.identity.isCurrent.bind(options.identity),authorize=options.authorize.bind(options),inspect=capturedCheckpoint.inspectFresh.bind(capturedCheckpoint),inspectOwner=capturedCheckpoint.inspectOwnerFresh.bind(capturedCheckpoint),inspectOwnerGated=capturedCheckpoint.inspectOwnerGatedFresh?.bind(capturedCheckpoint),draft=options.ports.draft.bind(options.ports),check=options.ports.check.bind(options.ports);
  const session=new StylingSession({simulation:true,owner,clock:capturedClock,policy:options.policy}),proposals=new NotebookProposalStream(session,owner);
- let flow:ReturnType<typeof createLocalCviStyling>|undefined,closed=false,admitted=0,cleanupAdmitted=0,native:StartupOwnerPin|undefined,nativeRevision=0,operation:string|undefined,inputRevision=0,proposalPending=false,proposalRevision=0,currentProposal:ProposalTurn|null=null,proposalAdmission=0,latestAuthorizedProposal=0;
+ let flow:ReturnType<typeof createLocalCviStyling>|undefined,closed=false,admitted=0,cleanupAdmitted=0,native:StartupOwnerPin|undefined,nativeRevision=0,operation:string|undefined,inputRevision=0,proposalPending=false,proposalRevision=0,currentProposal:ProposalTurn|null=null,proposalAdmission=0,latestAuthorizedProposal=0,proposalBegins=0;
  let transition:{signal:AbortSignal;done:Promise<boolean>;release(ok:boolean):void;candidate?:{raw:unknown;input:OwnerContinuationInput;owner:StartupOwnerPin;after:{operationId:string;revision:number}}}|undefined;
  const waitTransition=async(signal:AbortSignal)=>{if(!transition||signal===transition.signal)return true;const waiting=transition;let listener:(()=>void)|undefined;try{return await Promise.race([waiting.done,new Promise<boolean>(resolve=>{listener=()=>resolve(false);signal.addEventListener('abort',listener,{once:true});if(signal.aborted)resolve(false);})]);}finally{if(listener)signal.removeEventListener('abort',listener);}};
  const close=()=>{if(closed)return;closed=true;const ending=transition;transition=undefined;ending?.release(false);if(flow)flow.end();else session.end(owner);};
@@ -99,6 +99,8 @@ export function createLocalCviNotebookContext(options:Readonly<{
  const ready=async(signal:AbortSignal)=>{if(!native||!await liveIdentity(signal))return false;await inspectSerial(signal,async()=>{if(!native)throw Error('Context unavailable');await observeNative({...native,minimumRevision:nativeRevision},signal);});return active()&&!signal.aborted;};
  const admittedCaller=async(request:Request,signal:AbortSignal)=>await caller(request,signal)&&await ready(signal);
  return Object.freeze({flow,checkpoint,
+  /** Sample rendering waits for the entire current input, including partial turns. */
+  sampleInputReady:()=>active()&&proposalBegins===0&&!proposalPending&&(!currentProposal||currentProposal.signal.aborted),
   /** Internal cleanup observer. It cannot authorize a note update. */
   onReset(listener:()=>void){
    if(typeof listener!=='function')throw Error('Context observer unavailable');
@@ -117,7 +119,7 @@ export function createLocalCviNotebookContext(options:Readonly<{
     const normalized=previewValue(field,value);return session.update(owner,{id:'edit_'+createHash('sha256').update('local-cvi-notebook-edit-v1:'+c.id).digest('hex'),epoch:c.epoch,field,baseRevision:c.baseRevision,sequence:c.sequence,...normalized,origin:'touch',activity:'customer'} as SessionUpdate);
    });return result??'unavailable';
   },
-  async beginProposal(request:Request,id:string,signal:AbortSignal):Promise<ProposalTurn|null>{if(!Number.isSafeInteger(proposalAdmission+1))return null;const ticket=session.ticket(owner),admission=++proposalAdmission;return bounded(signal,async s=>{if(!ticket||!await caller(request,s)||admission<latestAuthorizedProposal)return null;latestAuthorizedProposal=admission;if(!await ready(s)||admission!==latestAuthorizedProposal||!session.isCurrent(owner,ticket)||!Number.isSafeInteger(inputRevision+1))return null;const turn=proposals.begin(id);if(turn){currentProposal=turn;proposalRevision=0;proposalPending=true;inputRevision++;flow?.interrupt();}return turn;});},
+  async beginProposal(request:Request,id:string,signal:AbortSignal):Promise<ProposalTurn|null>{if(!Number.isSafeInteger(proposalAdmission+1))return null;const ticket=session.ticket(owner),admission=++proposalAdmission;proposalBegins++;try{return await bounded(signal,async s=>{if(!ticket||!await caller(request,s)||admission<latestAuthorizedProposal)return null;latestAuthorizedProposal=admission;if(!await ready(s)||admission!==latestAuthorizedProposal||!session.isCurrent(owner,ticket)||!Number.isSafeInteger(inputRevision+1))return null;const turn=proposals.begin(id);if(turn){currentProposal=turn;proposalRevision=0;proposalPending=true;inputRevision++;flow?.interrupt();}return turn;});}finally{proposalBegins--;}},
   async refreshProposal(request:Request,handle:ProposalTurn,revision:number,signal:AbortSignal){
    return await bounded(signal,async s=>{
     if(!await admittedCaller(request,s)||handle!==currentProposal||handle.signal.aborted||!int(revision)||revision<=proposalRevision||!Number.isSafeInteger(inputRevision+1))return false;
