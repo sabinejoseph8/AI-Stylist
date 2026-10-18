@@ -1,3 +1,17 @@
+## Repaired probe deployed with Start disabled, 18 October 2026
+
+The separately approved repaired runtime is Live on tested source 7394dd4. Saved readback verifies the repaired-only approval, zero headroom, false quota/concurrency flags and expired 1970 preflight. Normal clicks, typing and blur were required; the first edit did not persist and was corrected before deployment. The existing Cartesia/custom fixed-reply configuration passed startup readback; no room has started. Health is 200 and unauthenticated page/status access is 401. No new credentials, resource upgrade or added spending.
+
+Fresh Tavus billing currently shows Starter, 4/120 included CVI minutes and no pay-as-you-go overage. The setup did not change its plan/payment. These observations must be refreshed with no competing room immediately before activation. Sabine has been asked once to open the protected page without Start. After she confirms, refresh the evidence, enable the bounded five-minute window using real input and verify saved values. Sabine alone starts once; no retries or upgrades. Keep both durable records, backup proof/history/caps and $51 historical allocation. Full completion remains 5/41 and production criteria 0/21.
+
+## Repaired guard applied and backup proof verified, 18 October 2026
+
+Applied the separately approved restricted guard once. Live readback confirms the original record is byte-for-byte unchanged and ended, the separate repaired record is unused at $0, customer access is denied, and server access is restricted to the two RPCs without raw table updates.
+
+Captured one encrypted 506,736-byte schema candidate within the existing cumulative source-read cap. The actual local restore passed 43 checks, removed its isolated container and verified both guards. Published the matching backup schema proof while preserving the old proof, all prior reservations, counters, expiry and schedule. No B2 request/upload or backup attempt was made. Readiness remains waiting for the existing due time. The first local invocation held before decryption because it ran outside the runtime directory; that receipt is preserved separately. The same candidate then restored from the correct directory without another source read. This does not prove hosted restoration, customer/photo recovery or managed-role equivalence.
+
+Repaired source deployment is being prepared with a separate approval binding and disabled preflight. No new trial reservation or room has started. Next: verify the disabled deployment and exact saved values, refresh current included headroom/no-overage/no active room, then enable only after Sabine has the protected page open. Preserve the one-room/start, five-included-minute, $0-additional-charge limit, no retries or upgrades. Completion remains 5/41 tasks and 0/21 production criteria; historical experiment allocation remains $51.
+
 ## Repaired one-room trial approved; separate guard setup authorized, 18 October 2026
 
 Sabine no longer has the screenshot; that handoff is resolved and must not be requested again. She approved one new live repaired connection probe: one room/start, five included minutes, $0 additional charges, no retries or upgrades. She separately approved applying the prepared restricted guard and verified backup schema proof update within existing free caps. Preserve both approvals; do not ask again. The original ended record is never reopened/reset/refunded. The exact first failure remains unconfirmed.

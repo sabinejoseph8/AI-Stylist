@@ -1,3 +1,7 @@
+## Repaired probe setup approval, 18 October 2026
+
+I approved one separate repaired connection-only trial with one room/start, five included minutes, $0 additional charges and no retries or upgrades. I also approved its new restricted guard and verified backup schema-proof update. My previous ended trial stays intact. I no longer have the old screenshot. I will start the new room myself after the protected setup is verified; no new credential or paid OpenAI call is authorized.
+
 ## Separating configuration proof from a live call, 18 October 2026
 
 I created a separate fixed-reply persona with explicit Cartesia after obtaining permission for its new endpoint credential. I saved the matching secret only in Tavus and the existing protected preview, and kept Start disabled while checking actual saved settings. I verified included hosting headroom and that no card was on file. I added boolean-only readback diagnostics so configuration failures could be investigated without exposing keys or spending the sole live room. A saved persona still is not proof that streaming, interruption or playback works.

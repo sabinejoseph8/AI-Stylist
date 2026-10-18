@@ -27,3 +27,9 @@ Repaired client deduplicates repeated Daily tracks, ignores superseded playback 
 7. Sabine opens the page first; only then set a fresh bounded five-minute preflight. She presses Start once after complete instructions and consent. Never start for her while she locates the page. Preserve any failed reservation; do not retry.
 
 Full styling integration, production acceptance and backups for customer/photos remain open. Completion stays 5/41 and 0/21 production criteria; historical experiment allocation stays $51. This new test permits $0 additional charges only.
+
+## Applied guard and matching backup evidence
+
+The approved guard is applied. Live readback verifies original equality/ended state, repaired unused $0 state and the restricted permissions. One encrypted schema capture consumed its distinct cumulative source-read purpose; no object transfer occurred. Its local restore passed 43 checks and removed the container. The matching proof was published with the old proof preserved; schedule readiness remains waiting, with no schedule or allowance change.
+
+Run local rehearsal commands from the permanent backup runtime directory because the envelope module resolves there. The first invocation from a different working directory held before decryption; its receipt is preserved. The same encrypted candidate passed from the correct directory, without a repeated source read or provider request.

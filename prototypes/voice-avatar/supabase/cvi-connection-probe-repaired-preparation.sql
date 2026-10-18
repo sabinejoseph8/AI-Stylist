@@ -1,4 +1,4 @@
--- Prepared for the separately approved repaired trial, 18 October 2026. Not applied.
+-- Applied once after separate approval, 18 October 2026; original ended record preserved.
 -- Review only; do not rerun or use as an automatic initializer.
 -- Review backup schema proof before applying. No runtime seed/reset capability.
 begin;
