@@ -1,7 +1,7 @@
 {
   "version": 1,
   "asOf": "2026-10-17",
-  "evidenceCommit": "5f0794ed2106528712a86fb2cdf0f408f6f2228b",
+  "evidenceCommit": "bdf0881deb62ffef792769c89c7f6466412e3a1e",
   "scope": "Current repository evidence map; local original-coordinator/browser and disposable SQL checks only. No fresh hosted/provider/device acceptance.",
   "acceptedProductionCriteria": 0,
   "criteriaCount": 21,
@@ -247,10 +247,14 @@
       "requirement": "Session clearing and authorized export/deletion cover notes, feedback, wardrobe images, saved preferences, looks, and associated records as applicable. Permanent saving of profiles, wardrobe items, and looks requires explicit consent and a save action; notebook notes and session feedback are not saved with a look.",
       "summary": "Explicit saving, scoped export/clear/deletion",
       "acceptance": "open",
-      "evidenceLevel": "Local five-category exports, SQL lifecycle and recovery/deletion rehearsals",
+      "evidenceLevel": "Shared original-coordinator sample export/clear, actual normalized-photo browser download, independent privacy and local recovery/SQL evidence",
       "evidence": [
         "docs/local-sample-privacy-security-review.md",
-        "apps/foundation/tests/privacy-media-integration.test.ts"
+        "apps/foundation/tests/privacy-media-integration.test.ts",
+        "docs/task-8a-shared-privacy.md",
+        "apps/foundation/tests/coordinated-privacy.test.ts",
+        "apps/foundation/tests/local-consultation-privacy.test.ts",
+        "apps/foundation/tests/coordinated-notebook-browser.test.ts"
       ],
       "remaining": "Authorized hosted export/deletion, permanent data/reference cleanup, current independent deletion evidence and provider limits.",
       "blockers": [
@@ -469,7 +473,7 @@
       "name": "Connect and verify the actual current-context consultation",
       "owner": "Engineering after prerequisite contracts",
       "gate": "One authoritative authenticated session across live notes, recognition, current requirements, generation, independent checking, display/speech, camera, feedback, saving and shopping.",
-      "state": "The local original pair now shares notes, generated reference, illustrated checks/feedback and explicit sample saving, including actual global SQL admission and late-result expiry. Profile privacy export remains disconnected. Actual authenticated live media/generation/recognition/speech/source/persistence and customer acceptance remain unverified; all real release flags remain false.",
+      "state": "The original local coordinator now shares notebook, generated reference, illustrated checks/feedback, saving and Profile privacy with the app. Global SQL admission and late expiry are executed locally. Complete current-source regression is pending. Shared Wardrobe save/reuse is the next local gap; actual authenticated live media, product sources, persistence, speech and customer acceptance remain open.",
       "dependsOn": [
         "B01",
         "B02",
@@ -1049,22 +1053,48 @@
       "protectedOutputs": 0,
       "productionCriteriaClosed": 0,
       "hostedProviderDeviceChecks": false
+    },
+    {
+      "asOf": "2026-10-17",
+      "sourceCommit": "bdf0881deb62ffef792769c89c7f6466412e3a1e",
+      "evidence": "docs/task-8a-shared-privacy.md",
+      "focusedTests": 91,
+      "focusedFiles": 11,
+      "mainTests": 87,
+      "mainFiles": 7,
+      "actualSqlBrowserPassed": true,
+      "fullStatus": "running",
+      "fullSession": 64418,
+      "frozenFiles": 580,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
   ],
   "historicalEntryStatusMeaning": "localPreparationUpdates preserves statuses as recorded at those checkpoints. A recorded running status is not a live process assertion; use latestLocalEvidence for current state.",
   "latestLocalEvidence": {
-    "sourceCommit": "5f0794ed2106528712a86fb2cdf0f408f6f2228b",
-    "localRunStatus": "passed",
-    "session": 97793,
-    "exitCode": 0,
-    "authorityRecords": 84,
+    "sourceCommit": "bdf0881deb62ffef792769c89c7f6466412e3a1e",
+    "focusedTests": 91,
+    "focusedFiles": 11,
+    "focusedSession": 52993,
+    "focusedExitCode": 0,
+    "mainTests": 87,
+    "mainFiles": 7,
+    "mainSession": 54877,
+    "mainExitCode": 0,
+    "sqlBrowserSession": 24832,
+    "sqlBrowserExitCode": 0,
+    "authorityRecords": {
+      "privacyBrowser": 70,
+      "privacyOriginalPair": 40,
+      "candidateBrowser": 126,
+      "inputBrowser": 88,
+      "globalSqlBrowser": 84
+    },
     "authorityRecordCap": 128,
-    "sqlCalls": 45,
-    "firstFactories": 1,
-    "secondFactories": 0,
-    "latePublicationDenied": true,
     "protectedOutputs": 0,
-    "newCompleteFoundationRun": false,
-    "nextAction": "Bind existing sample privacy controls to the shared coordinator view, with current-only exports and truthful async clearing."
+    "fullStatus": "running",
+    "fullSession": 64418,
+    "frozenFiles": 580,
+    "nextAction": "Prepare explicit sample Wardrobe copy/reuse in separate stage; collect original full regression before heavy checks."
   }
 }

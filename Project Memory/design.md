@@ -1,3 +1,7 @@
+## Local shared Profile behavior checkpoint, 17 October 2026
+
+The existing sample privacy layout is reused in the injected shared-consultation preview. Category choices stay explicit; prepared downloads invalidate when their current source changes. Clear confirmation remains visible and disabled while acknowledgment is pending, with an accurate waiting status and focus returned after completion. Session clearing preserves separate saved categories. This is verified local behavior; the full current-source regression is pending. Approved palette, typography, spacing and product baseline are unchanged.
+
 ## Input connection failure behavior verified, 17 October 2026
 
 The local WebKit journey now verifies actual loopback input-channel closure. Earlier samples stay hidden and checking stays disabled after refreshing accepted notes; no automatic input reconnection occurs. Separately saved sample looks remain separate from temporary notes. All three local browser journeys pass in the composed run; approved tokens and live/device/accessibility acceptance remain unchanged.

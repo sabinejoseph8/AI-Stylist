@@ -1,3 +1,7 @@
+## Current shared privacy and verification state, 17 October 2026
+
+Shared Profile sample privacy is now connected and passes the original-pair, browser and independent main checks. The previous disconnected-export gap is resolved locally. Complete current-source regression 64418 remains active with 580 frozen hashes; no final result is claimed. The next independent local implementation is explicit Wardrobe copy/reuse through the shared notebook. All 21 production criteria remain open and full completion stays 5/41. Real provider/account/source/hosted recovery/device/launch gates and the $51 allocation remain unchanged. Older disconnected/running statements below describe their dated checkpoint.
+
 # Current evidence reconciliation, 17 October 2026
 
 All 21 original acceptance criteria remain open; none is completed by local preparation. The JSON audit now points to source 5f0794e and verifies every referenced evidence file exists. It distinguishes current local evidence from historical recorded running states, which are not live process assertions.

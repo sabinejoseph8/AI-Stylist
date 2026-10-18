@@ -1,3 +1,7 @@
+## Connecting privacy to the shared consultation, 17 October 2026
+
+I replaced the disconnected Profile message with explicit selected-category export and confirmed clearing against the original shared notebook. The browser downloaded the actual normalized photo, waited for the clear acknowledgment, returned keyboard focus and retained separately saved data. A source update during clearing initially risked replacing the waiting message, so that state now remains visible. All 91 composed checks and 87 independent main checks pass, and the SQL/browser checks remain valid. I started a complete frozen-source regression and kept its result pending. Review identified the next practical gap: saving and reusing Wardrobe items through the shared reference instead of only the ordinary preview.
+
 ## Checking the last admission boundary, 17 October 2026
 
 I delayed sample facts after the first SQL admission, expired the lease, and then allowed the candidate to finish internally. The final check still returned only null and kept the sample unsaveable, without releasing the provider hold or starting a competing coordinator. I retained the failed WebKit response-body attempt and changed the observer to capture the exact serialized reply plus browser state. The passing run uses 84 of 128 authority records. Reviewing the complete sample app also exposed a practical remaining gap: Profile privacy export is still disconnected from the shared coordinator. That is the next implementation task, rather than claiming local checks complete the live product.

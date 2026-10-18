@@ -1,3 +1,7 @@
+## Current shared privacy and verification state, 17 October 2026
+
+Shared Profile sample privacy is now connected and passes the original-pair, browser and independent main checks. The previous disconnected-export gap is resolved locally. Complete current-source regression 64418 remains active with 580 frozen hashes; no final result is claimed. The next independent local implementation is explicit Wardrobe copy/reuse through the shared notebook. All 21 production criteria remain open and full completion stays 5/41. Real provider/account/source/hosted recovery/device/launch gates and the $51 allocation remain unchanged. Older disconnected/running statements below describe their dated checkpoint.
+
 # Current local integration update, 17 October 2026
 
 The original coordinator is now composed locally with the browser notebook, generated owned reference, illustrated checks/feedback, explicit sample saving and actual global SQL admission. Pending input invalidates earlier samples; a candidate completing after SQL lease expiry serializes only null. These portions are no longer merely separate module tests. See task-8a-global-admission-rehearsal.md and task-8a-local-integration-proposal.md for exact evidence and limits.
