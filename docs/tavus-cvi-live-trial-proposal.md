@@ -1,3 +1,7 @@
+## Replacement approved, 18 October 2026
+
+Sabine explicitly replaced the unused full styling trial with a connection-only probe. This is the same one-room/start, five-included-minute, $0-additional-charge allowance, not an extra trial. Fixed neutral replies only; no notebook updates, extraction, outfits, shopping or recommendation-validation claims. Preserve all earlier records. No room or quota reservation has started. Current implementation and deployment gates are tracked in docs/tavus-connection-probe-setup.md. Earlier scope-choice and full-trial passages below are historical.
+
 ## Approval received; preflight held, 18 October 2026
 
 Sabine approved **capped private setup and one trial**. The one-room/start, five-included-minute and $0-additional-charge limits are authorized, with no retries/upgrades/paid OpenAI calls. Do not request this approval again. No trial has started and no room/reservation was created. Integration inspection found the separately protected history/receipt authority still exists as local test infrastructure, not an available hosted service. The proposal's explicit new-hosting/security hold therefore applies. See [the concrete preflight report](tavus-cvi-live-preflight-hold.md). Historical proposed wording below does not override this approval or hold.

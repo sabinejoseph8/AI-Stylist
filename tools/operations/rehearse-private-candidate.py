@@ -4,6 +4,7 @@ No hosted connection, source credential, object upload, live account sign-in or
 provider call. Managed owner equivalence and hosted recovery remain unproven.
 """
 import argparse
+import hashlib
 import importlib.util
 import json
 from pathlib import Path
@@ -40,9 +41,13 @@ def main():
     modes=parser.add_mutually_exclusive_group(required=True)
     modes.add_argument('--run-approved-local-candidate-drill',action='store_true')
     modes.add_argument('--run-approved-initial-automatic-candidate-drill',action='store_true')
+    modes.add_argument('--run-approved-probe-schema-drill',action='store_true')
     options=parser.parse_args()
-    private_root=DESTINATION/'tools/operations/.private' if options.run_approved_initial_automatic_candidate_drill else PRIVATE
+    probe=options.run_approved_probe_schema_drill
+    schemas=SCHEMAS+(['stylist_connection_probe_private'] if probe else [])
+    private_root=DESTINATION/'tools/operations/.private' if options.run_approved_initial_automatic_candidate_drill or probe else PRIVATE
     archive_name='automatic-initial-candidate.asb' if options.run_approved_initial_automatic_candidate_drill else 'database-candidate.asb'
+    if probe:archive_name='cvi-probe-schema-candidate.asb'
     name='stylist-candidate-drill-'+uuid.uuid4().hex[:12]
     created=False;stage='private-input';checks=0;result=None
     def run(args,data=None,timeout=30):
@@ -75,7 +80,7 @@ def main():
             '--tmpfs','/tmp:rw,size=16m,uid=999,gid=999','-e','POSTGRES_HOST_AUTH_METHOD=trust',IMAGE])
         require(value.returncode==0);created=True
         for _ in range(50):
-            if run(['docker','exec',name,'pg_isready','-U','postgres']).returncode==0:break
+            if run(['docker','exec',name,'pg_isready','-h','127.0.0.1','-U','postgres']).returncode==0:break
             time.sleep(.2)
         else:raise DrillHeld('local-startup-held')
         stage='local-role-bootstrap'
@@ -83,16 +88,16 @@ def main():
         if value.returncode!=0:
             message=value.stderr.lower()
             category='local-role-bootstrap-held'
-            for token,label in [(b'already exists','local-role-duplicate'),(b'permission denied','local-role-permission'),(b'syntax error','local-role-syntax'),(b'unrecognized configuration parameter','local-role-setting'),(b'does not exist','local-role-reference'),(b'invalid command','local-role-client'),(b'cannot be granted','local-role-grant')]:
+            for token,label in [(b'connection to server','local-role-connection'),(b'database system is','local-role-startup'),(b'connection unexpectedly','local-role-startup'),(b'already exists','local-role-duplicate'),(b'permission denied','local-role-permission'),(b'syntax error','local-role-syntax'),(b'unrecognized configuration parameter','local-role-setting'),(b'does not exist','local-role-reference'),(b'invalid command','local-role-client'),(b'cannot be granted','local-role-grant')]:
                 if token in message:category=label;break
             if b'grant' in message and b'permission denied' in message:category='local-explicit-grantor-permission'
             raise DrillHeld(category)
         checks+=1
         stage='local-schema-restore'
-        sql(''.join('CREATE SCHEMA IF NOT EXISTS "'+schema+'";' for schema in SCHEMAS))
+        sql(''.join('CREATE SCHEMA IF NOT EXISTS "'+schema+'";' for schema in schemas))
         args=['docker','exec','-i',name,'pg_restore','-U','postgres','--dbname','postgres',
               '--single-transaction','--exit-on-error','--no-owner']
-        for schema in SCHEMAS:args+=['--schema',schema]
+        for schema in schemas:args+=['--schema',schema]
         value=run(args,parts['database'],timeout=60)
         if value.returncode!=0:
             category='restore-held'
@@ -121,7 +126,16 @@ def main():
         sql('set role anon;select * from public.stylist_profiles;',refused=True)
         require(sql("select has_function_privilege('anon','public.stylist_save_profile(jsonb,bigint,boolean)','EXECUTE');")=='f')
         require(sql("select bool_and(relrowsecurity) from pg_class where oid in ('public.stylist_profiles'::regclass,'public.stylist_wardrobe_items'::regclass,'public.stylist_saved_looks'::regclass);")=='t')
-        result={'local_customer_schema_drill_passed':True,'checks':checks,'hosted_restore':False,
+        if probe:
+            stage='local-probe-guard'
+            record=json.loads(sql('select public.stylist_connection_probe_read();'))
+            require(record['purpose']=='cvi-connection-only' and record['additionalCents']==0 and record['reservation'] is None)
+            for role in ['anon','authenticated','service_role']:
+                sql('set role '+role+';select * from stylist_connection_probe_private.allowance;',refused=True)
+            for role in ['anon','authenticated']:
+                require(sql("select has_function_privilege('"+role+"','public.stylist_connection_probe_change(jsonb,jsonb)','EXECUTE');")=='f')
+            require(sql("select has_function_privilege('service_role','public.stylist_connection_probe_change(jsonb,jsonb)','EXECUTE');")=='t')
+        result={'candidate_sha256':hashlib.sha256((private_root/archive_name).read_bytes()).hexdigest(), 'local_customer_schema_drill_passed':True,'checks':checks,'hosted_restore':False,
                 'managed_owner_equivalence_verified':False,'managed_grantor_equivalence_verified':False,'photo_recovery_verified':False,
                 'customer_data_transferred':False,'schedule_active':False,'complete_backup_verified':False}
     except (DrillHeld,OSError,ValueError,RuntimeError,subprocess.SubprocessError) as error:

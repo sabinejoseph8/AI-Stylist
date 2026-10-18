@@ -1,3 +1,11 @@
+## Keeping backups valid while changing the probe schema, 18 October 2026
+
+I verified the new one-use guard on the actual project, then reserved a bounded source read without uploading another backup. The first local restore exposed a startup race: PostgreSQL's temporary initialization socket could appear ready before its final server. I changed the rehearsal to wait for TCP readiness, reused the same encrypted candidate, and passed 32 restore checks. I kept the failed result and original proof, updated only the verified schema fingerprint, and preserved all backup attempts and financial limits. This still does not prove hosted or customer-photo recovery.
+
+## Scoping an empirical connection check, 18 October 2026
+
+I replaced an unused full styling experiment with a narrower connection-only probe under the same one-room, five-minute and zero-additional-charge cap. The external endpoint returns fixed neutral text, so this test cannot accidentally become evidence of notebook updates or recommendation safety. I kept every old attempt intact, tested restart and late-room races, and added a separate one-use database guard. I also found that a database schema change affects the automatic backup proof, so I obtained approval to verify a fresh local restore before updating that proof. The live media result remains unverified.
+
 ## Replacing the support wait with verified account facts, 18 October 2026
 
 When further support replies were no longer expected, I inspected the actual Tavus account instead of treating public documentation as proof of account access. I verified explicit Cartesia on an existing full-conversation stock persona and custom endpoint/model choices in an unsaved form, then discarded it. I prepared one five-minute, no-additional-charge trial with independent checks and no retry. I kept the difference between an available provider, a documented voice candidate and an actually verified live configuration explicit. No room or new charge was started.
