@@ -1,3 +1,7 @@
+## Keeping checks current under global admission, 17 October 2026
+
+I extended the actual global-slot browser rehearsal to the original transcript and illustrated candidate. Pending speech hid the earlier sample, confirmation stayed explicit, and a conflict with fixed catalog facts remained blocked until a correction passed fresh checks. A separate customer still could not start. The run used 80 of 128 authority records and released no protected output. I preserved the initial failed locator test instead of replacing its evidence. The next boundary is expiry during an already pending candidate operation, rather than only between operations.
+
 ## Joining admission to the original notebook, 17 October 2026
 
 I tested the previously separate global SQL slot and original coordinator together through the browser host. I paused the first start before its coordinator factory and confirmed a second synthetic customer was refused before any second factory ran. The first notebook stayed editable; when I expired its SQL lease, the browser hid the notes and retained the provider hold. I kept the original proof objects and 128-record cap, used 26 records, and released no protected output. The actual database/browser rehearsal and 83 affected checks pass. This is local composition evidence, not hosted account or provider acceptance; the globally admitted transcript/candidate combination is the next gap to check.

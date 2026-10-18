@@ -30,3 +30,11 @@ Use the installed bundled Node runtime on PATH and existing WebKit executable. S
 The unchanged three-file increment passes 83 checks across nine affected suites, including all three existing WebKit journeys (original session 61825, exit zero, 68.50 seconds). TypeScript and client build pass. Candidate browser records remain 126/128 and input browser records 88/128, both with zero protected outputs. No full current-source regression is claimed for this test-only increment. Source checkpoint: 87360bd.
 
 After merge, main independently passes 75 checks across four suites (43094, exit zero, 17.29 seconds), and TypeScript passes.
+
+## Combined transcript and candidate extension
+
+Source 7c7d6bf adds the original input notification channel, seven fixed setup notes, generated owned reference and illustrated candidate to the same globally admitted pair. Pending extraction hides the old sample and prevents saving. The competing customer remains Busy. Completed speech needs explicit confirmation; a literal mismatch against the unchanged sample facts remains blocked, and an explicit correction passes fresh checks. SQL expiry hides both notes and sample without releasing the provider hold.
+
+The complete disposable runner passes in session 46459, exit zero; the browser test takes 14.74 seconds, makes 42 SQL calls and uses 80/128 original authority records with zero protected outputs. Its one-file hash is frozen and matches the merged increment. TypeScript also passes on main. The initial failed locator assertion is retained separately (13925, exit one); it did not reach candidate assertions. No full current-source regression is claimed.
+
+Remaining local composition check: SQL expiry during a delayed candidate request, after its first admission but before response publication. Current coverage expires the lease between completed operations.
