@@ -16,6 +16,8 @@ import {witnessServiceDigest} from '../../src/server/local-cvi-witness-service.t
 import {historyCanonical} from '../../src/server/local-cvi-history-authority.ts';
 import {APPROVED_NOTES_RETENTION} from '../../src/session/notes-retention-policy.ts';
 import {call} from './cvi-replay-process.ts';
+/** Fixed synthetic identity metadata shared before factory construction. */
+export const PAIRED_FIXTURE_SCOPE=Object.freeze({ownerId:'00000000-0000-4000-8000-000000000001',sessionId:'11111111-1111-4111-8111-111111111111'});
 const signal=()=>new AbortController().signal;
 export async function pairedOwnerFixture(configure?:(ports:any,f:Awaited<ReturnType<typeof startupAdmissionFixture>>,control:{clock:()=>number;at(n:number):void})=>void,options:Readonly<{extract?:(input:Readonly<{text:string;complete:boolean}>,signal:AbortSignal)=>Promise<readonly Proposal[]>}>={}){
  const extract=options.extract??(async({text}:Readonly<{text:string;complete:boolean}>)=>[{field:'style' as const,value:text}]);if(typeof extract!=='function')throw Error('Synthetic extractor required');
@@ -28,7 +30,7 @@ export async function pairedOwnerFixture(configure?:(ports:any,f:Awaited<ReturnT
  observe:async(command:Record<string,unknown>)=>{const plan=plans.get(command.operationId as string);if(!plan)throw Error('Unknown original plan');const seen=await transactionCall({root:f.x.root,plan,command,config:f.x.config,principal:'fixture_rotator',mode:'observe'});const g=seen.snapshot.grants.find((r:any)=>r[6]==='active');nativeLease={storeId:f.x.pin.storeId,policyDigest:f.x.pin.policyDigest,generation:g[0],ownerDigest:g[1],bootDigest:g[2],token:plan.args.token,issuedAt:g[4],expiresAt:g[5]};f.restoreMarker({operationId:seen.operationId,transactionId:seen.transactionId,claimHash:seen.claimHash,consumed:true,protected:true});return seen;},
  references:()=>f.gateMaterial().registry,checkpoint:m.readPorts};
  configure?.(ports,f,{clock,at:n=>time=n});
- const pair=createLocalGatedSqliteOwnerPair(config,ports,clock),identity={ownerId:'00000000-0000-4000-8000-000000000001',sessionId:'11111111-1111-4111-8111-111111111111',isCurrent:async()=>true},appRequest=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
+ const pair=createLocalGatedSqliteOwnerPair(config,ports,clock),identity={...PAIRED_FIXTURE_SCOPE,isCurrent:async()=>true},appRequest=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
  const draft=vi.fn(async(s:any)=>'Synthetic '+s.notes.coverage.text),check=vi.fn(async(text:string,s:any)=>({approved:true,text,revision:s.revision})),context=createLocalCviNotebookContext({simulation:true,identity,authorize:async r=>r.headers.get('authorization')==='Bearer fixture-customer'?identity:null,checkpoint:pair.checkpoint,ports:{draft,check},clock,policy:APPROVED_NOTES_RETENTION});
  const resources={...f.resources,replay:pair.replay,authority:pair.credentials,makeFlow:()=>context.flow},make=()=>createLocalCviStartupOwner(f.expected,context.checkpoint,pair.admission,resources,clock,5000,8000);
  let wire:ReturnType<typeof createLocalCviHttpAdapter>|undefined;

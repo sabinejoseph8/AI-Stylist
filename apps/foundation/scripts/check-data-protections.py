@@ -1,6 +1,6 @@
 """Isolated PostgreSQL rehearsal, with synthetic Supabase identity roles only."""
 from pathlib import Path
-import subprocess, time, uuid, json
+import subprocess, time, uuid, json, os
 from concurrent.futures import ThreadPoolExecutor
 name='stylist-data-'+uuid.uuid4().hex[:10]
 image='postgres:17@sha256:2d2b8998d31037bf721cfdf764d76ba74171b4fab3431b7f72c27c56ddbdf9e3'
@@ -364,6 +364,12 @@ try:
  sql(f"delete from auth.users where id='{a}';")
  assert sql(f"select count(*) from stylist_private.retired_media_ids where user_id='{a}';")=='0'
  print('Approved receipt retention passes cutoff, authorization, idempotency, retired-ID protection and account cascade checks')
+ if os.environ.get('AI_STYLIST_LOCAL_GLOBAL_ADMISSION')=='1':
+  assert os.environ.get('AI_STYLIST_LOCAL_BROWSER_REHEARSAL')=='1', 'Explicit local browser opt-in required'
+  checked=run(['node',str(Path(__file__).resolve().parents[1]/'node_modules/vitest/vitest.mjs'),'run','tests/coordinated-global-admission-browser.test.ts','--maxWorkers=1'],cwd=str(Path(__file__).resolve().parents[1]),env={**os.environ,'AI_STYLIST_GLOBAL_SQL_CONTAINER':name},timeout=180)
+  assert checked.returncode==0, checked.stdout+'\n'+checked.stderr
+  assert 'global-sql-original-pair-browser' in checked.stdout, 'Actual global browser evidence required, not a skipped test'
+  print(checked.stdout.strip())
  print('All local data-protection scenarios passed. PostgreSQL plus simulated Storage schema; no hosted or signed-URL acceptance.')
 finally:
  if created: run(['docker','rm','-f',name])
