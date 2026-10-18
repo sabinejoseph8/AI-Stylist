@@ -1,3 +1,7 @@
+## Finding a missed first-channel update, 17 October 2026
+
+While the complete privacy regression ran, I reproduced a separate race: the first input notification could arrive after the initial notebook read, leaving an old value visible. I prepared a small view repair and tested both first partial and settled notices, export freshness, and the zero-serial baseline that must avoid an unnecessary signed read. The 49 focused cases and TypeScript pass; original coordinator/browser validation must wait until the frozen full run finishes. I preserved the failing case and did not edit the source under regression or claim the follow-up is merged.
+
 ## Connecting privacy to the shared consultation, 17 October 2026
 
 I replaced the disconnected Profile message with explicit selected-category export and confirmed clearing against the original shared notebook. The browser downloaded the actual normalized photo, waited for the clear acknowledgment, returned keyboard focus and retained separately saved data. A source update during clearing initially risked replacing the waiting message, so that state now remains visible. All 91 composed checks and 87 independent main checks pass, and the SQL/browser checks remain valid. I started a complete frozen-source regression and kept its result pending. Review identified the next practical gap: saving and reusing Wardrobe items through the shared reference instead of only the ordinary preview.

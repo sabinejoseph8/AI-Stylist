@@ -1095,6 +1095,23 @@
     "fullStatus": "running",
     "fullSession": 64418,
     "frozenFiles": 580,
-    "nextAction": "Prepare explicit sample Wardrobe copy/reuse in separate stage; collect original full regression before heavy checks."
-  }
+    "nextAction": "Collect original full regression 64418; verify the separately prepared first-channel race repair against the original pair/browser before merging, then continue shared Wardrobe preparation."
+  },
+  "localKnownIssues": [
+    {
+      "id": "L8A-01",
+      "scope": "Local shared view, first positive channel notice after completed initial read",
+      "status": "reproduced; repair prepared, not merged",
+      "stage": "/private/tmp/ai-stylist-8a-first-channel-stage",
+      "reproSession": 80828,
+      "reproExitCode": 1,
+      "focusedTests": 49,
+      "focusedFiles": 3,
+      "focusedSession": 24276,
+      "focusedExitCode": 0,
+      "typecheckPassed": true,
+      "actualPairBrowserRun": false,
+      "fixInRunningFullRegression": false
+    }
+  ]
 }
