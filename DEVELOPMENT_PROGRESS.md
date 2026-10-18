@@ -1,3 +1,9 @@
+## Preflight hold publication verified, 18 October 2026
+
+Source/docs are published through 346ebfc with two verified 1,067-file tracked-source archives. Owner-private Memory deployment appgdep_6ad479dd3d348191b76604d28236bec2 succeeded from Site source b175ae5dcc26fe97c4b0b24eca6fff1e84c56b19; all 19 Site checks pass. No application runtime or provider was changed. Native publication receipt is source-checkpoints/memory-cvi-preflight-held-20261018.json.
+
+The approved one-room/five-included-minute/$0 trial remains unused and held at its new-security prerequisite. One asynchronous scope choice is pending; do not duplicate it or request the original trial approval again. **Next action:** collect that choice, preserve all old approvals/ledgers and follow the concrete full-path or replacement-probe scope. Do not start a room, mount a fixture, create credentials or expand spending while it is pending. The previous goal remains blocked; this report does not mark it complete or authorize a narrower app.
+
 ## Approved CVI trial held at a concrete security prerequisite, 18 October 2026
 
 Sabine approved capped private setup and one trial. Preserve that decision: one room/start, five included minutes, $0 additional charges, no retries/upgrades/paid OpenAI calls. No room, quota reservation, PAL, credential, provider setting or hosted change was created. Approval is unused, not pending or rejected.
