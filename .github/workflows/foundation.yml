@@ -1,9 +1,9 @@
 name: Foundation checks
 on:
   push:
-    paths: ['apps/foundation/**', 'packages/style-contracts/**', 'packages/catalog-contracts/**', 'supabase/**', '.github/workflows/foundation.yml']
+    paths: ['apps/foundation/**', 'tools/operations/**', 'prototypes/voice-avatar/**', 'packages/style-contracts/**', 'packages/catalog-contracts/**', 'supabase/**', '.github/workflows/foundation.yml']
   pull_request:
-    paths: ['apps/foundation/**', 'packages/style-contracts/**', 'packages/catalog-contracts/**', 'supabase/**', '.github/workflows/foundation.yml']
+    paths: ['apps/foundation/**', 'tools/operations/**', 'prototypes/voice-avatar/**', 'packages/style-contracts/**', 'packages/catalog-contracts/**', 'supabase/**', '.github/workflows/foundation.yml']
 permissions:
   contents: read
 jobs:
