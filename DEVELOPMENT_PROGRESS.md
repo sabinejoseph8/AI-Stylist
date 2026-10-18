@@ -1,3 +1,9 @@
+## GitHub app checkpoint verified green, 17 October 2026
+
+GitHub workflow 39089632154 at published app checkpoint 2d17ea7e0b59b52b92b9ac5dd34ee5eab1a47ed7 has completed successfully. Foundation, prototype-regressions and data-protections all report success. This result applies to that source; newer SQL-rehearsal-only pushes have their own workflow state and are not automatically covered by this status. The separately collected current local foundation result remains 2,741 passing tests with three intentional browser skips, and the extended actual PostgreSQL rehearsal passes. Retain earlier failed runs as separate evidence. Current CI proof: https://github.com/sabinejoseph8/AI-Stylist/actions/runs/39089632154.
+
+No local complete regression remains running. Continue the remaining approved local Task 8a global-admission composition described below, preserving disabled customer/provider routes and all current security/spending gates. Memory access remains verified owner-only; the checked snapshot is ready for private publication. Completion stays 5/41, production acceptance 0/21 and allocation $51. The overall goal remains active and incomplete.
+
 ## Final local regression and actual SQL collected, 17 October 2026
 
 The complete foundation regression PASSED at source 08d1e01b455a740f39d5c62e8e2721a6144d3fea: **2,741 tests across 200 files**, three intentional opt-in browser skips, original session **77149**, terminal exit zero, duration 1,941.92 seconds. All **574 frozen source/test/script/contract/dependency hashes** matched before the subsequent SQL-test-script merge. Evidence: /private/tmp/ai-stylist-slot-channel-final-full-20261017.log and adjacent JSON, also preserved in source-checkpoint outputs. No local full regression remains running. Earlier failed local runs remain failed; serialization does not establish live performance or a definitive cause for those failures.
