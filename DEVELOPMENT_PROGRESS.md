@@ -6,6 +6,8 @@ The prior goal turn made concrete progress: installed the approved backup repair
 
 Reviewed the original five approved Task 8a local-scope items against the current adapter, original-pair loopback hosts and browser/lifecycle/SQL evidence. The sample integration is implemented with scoped evidence; full Task 8a remains gated on actual media, accounts, sources, persistence and hosted/device acceptance. Reconciled authoritative Phase 8 status, current issue rows, shared-privacy documentation and the proposal coverage matrix. Older diary statements are historical. Do not invent additional sample preparation merely to avoid reporting the external gates.
 
+Read-only native blame confirms the backup job is not running; the pending spawn listing is not a live provider process. Ledger remains two attempts with none active. Keep the uncertainty hold. Source fb4ecc8 and its two tracked-source archives are saved; native Memory currently serves Site source 92564fd. The newer exact-source CI evidence is synchronized in the repository and can be published with the pending current-CI result, rather than republishing unchanged snapshots while waiting.
+
 **Exact next action:** collect already-running current-source CI 39098253367 (watch session 83897, /private/tmp/ai-stylist-ci-current-39098253367.log). Its terminal result is not yet known. Earlier CI 39095919723 succeeded on 1428d5c; 39097344195 is still running on ee74c06. Do not restart or duplicate these runs. Reconcile native scheduler status read-only after its scheduled spawn, keeping holds intact. No new paid/provider or hosted customer work is authorized. Completion remains 5/41 and 0/21; allocation $51 and owner-only Memory remain.
 
 ## Combined Wardrobe and Session privacy verified, 18 October 2026
