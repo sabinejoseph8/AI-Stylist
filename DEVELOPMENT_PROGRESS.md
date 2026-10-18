@@ -1,3 +1,11 @@
+## Corrected persisted preflight, 18 October 2026
+
+Sabine still saw unavailable within the claimed window. Read-only saved-value inspection proved the earlier native setValue edits did not persist: Render still held zero minutes, false flags and the 1970 timestamp. The previous activation claim was therefore premature; its deployment/record are preserved. No trial start or reservation occurred in that disabled window.
+
+Re-entered only the same four approved non-sensitive values using normal typing and blur, then Save and deploy. Post-save readback independently confirms five conservative included minutes, both flags true and timestamp 2026-10-18T09:28:09.907Z. Current account Starter 4/120, no overage; freshly filtered active rooms zero. Deployment dep-dba92cdg1s2s73b866tg is Live on source 5d1ae30 with passing configuration readback, no hold and no room started. The corrected admission window expires 09:33:09.907 UTC / 04:33:09 Cayman. No new allowance, room, retry, credential, plan, backup or spending change.
+
+Next action: Sabine refreshes the protected page once and accepts consent. Only an actual available message permits her sole Start; do not start for her or infer end-to-end readiness from deployment. If still unavailable, collect bounded authenticated status diagnostics rather than repeatedly asserting readiness. Preserve the unused/consumed guard exactly as found. Private Memory retains the preceding deployed checkpoint; reconcile it after the actual trial outcome.
+
 ## Sole probe activation window opened, 18 October 2026
 
 Sabine reached the protected page and reported Start unavailable, confirming the sign-in handoff is resolved. Refreshed account evidence: Starter 4/120 included CVI minutes, no pay-as-you-go overage, maximum five minutes; current in-progress filter zero. Changed only the four non-sensitive preflight values on the existing Render service: conservative included headroom five, both verification flags true, timestamp 2026-10-18T09:25:26.615Z. Environment-only deployment dep-dba912m1egvs739qlsag is Live on tested source 5d1ae30. Startup configuration passed, no hold, listening; logs state no room started. No credential, code, guard, backup, spending or plan change.
