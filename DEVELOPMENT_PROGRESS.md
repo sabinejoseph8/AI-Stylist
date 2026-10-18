@@ -1,3 +1,13 @@
+## Prepared slot uncertainty and channel-loss checks, 17 October 2026
+
+The running full regression remains frozen at source c895346 in original session 52085. Direct process inspection confirms an active test worker and native child process. No replacement run was started. Preserve its 549 hashes and collect the original terminal result.
+
+Separate unmerged preparation in /private/tmp/ai-stylist-8a-channel-stage fixes a reviewed prepared-adapter bug: consultation-slot.ts previously allowed further database calls after an uncertain response. The staged adapter captures its original RPC function and holds this instance after timeout, transport error or malformed claim/update acknowledgment. Late success does not unhold it. Known null/false results and competing-call refusal do not poison valid subsequent operations; invalid input sends no RPC. This is not durable restart admission or whole-host capacity acceptance. No route, hosted permission, credential or provider is connected.
+
+The staged slot/view/candidate tests pass **62 checks across three suites**, original session 74299, exit zero, /private/tmp/ai-stylist-slot-channel-final2-focused-20261017.log; TypeScript passes. Initial tests exposed three extra-RPC failures and one timeout-test synchronization issue, which was corrected without changing production deadlines. The extended actual browser channel-close journey remains unrun while full regression executes. Four-file source patch prepared-slot-channel-06518d683211.patch (SHA-256 06518d68321103b3e19739aa499e44c96a00f047e04bfe19285180e4a3fdf3f3) is preserved in the source-checkpoints output folder; nothing in this stage is merged.
+
+Exact next action: collect original 52085; after it is terminal, run the channel-stage coordinated-input-browser.test.ts with existing WebKit opt-in, then affected composed checks. Merge verified files only, preserve all failed evidence and run the required complete current-source checks before claiming health. Keep Task 8a and all production gates open. No new spending, hosted changes or Sabine action is needed for this local continuation.
+
 ## Prepared input-channel loss follow-up, 17 October 2026
 
 Previous goal turn made concrete progress: merged transcript safeguards and the first-load race fix, collected 171 composed and 134 independent passing checks, preserved the newer remote README edit, pushed merge checkpoint 403f1fd and saved two verified source archives. Current complete regression remains confirmed LIVE through original session 52085, with 549 source hashes matching main. Do not restart it while healthy.

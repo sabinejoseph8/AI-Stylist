@@ -1,3 +1,7 @@
+## Refusing retries after uncertain database work, 17 October 2026
+
+While the full regression ran, I found that the prepared consultation-slot adapter could accept another operation after an uncertain database result. I prepared a fix that holds that adapter instance instead of assuming a timeout canceled the database work. Focused tests cover late success, malformed acknowledgments, known refusals and competing calls. The fix is still staged pending the remaining integration checks; it does not establish recovery across a restart or activate customer consultations.
+
 ## Catching a first-load race, 17 October 2026
 
 I connected simulated transcript progress to the same notebook and sample checks used by the app rehearsal. New speech hides the earlier sample while preserving the confirmed clothing reference. I kept extracted notes tentative until explicit confirmation. A targeted test exposed a first-load race where completed input could arrive before the notebook's first read finished, leaving old values visible. I fixed it by queuing a fresh authoritative read and verified both early and late notification connections. The affected 171-check integration run and independent main checks pass; I am keeping the full regression and live acceptance gates open until their evidence is available.
