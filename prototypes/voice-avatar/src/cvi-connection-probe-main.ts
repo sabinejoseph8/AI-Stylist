@@ -23,11 +23,12 @@ const preflightValid=()=>{
 const port=Number(process.env.PORT??'10000');if(!Number.isSafeInteger(port)||port<1||port>65535)throw Error('Connection probe port unavailable.');
 const store=prepareProbePersistence({url:required('SUPABASE_URL'),headers:{apikey:supabaseKey,Authorization:'Bearer '+supabaseKey},fetch});
 const provider=prepareProbeProvider({fetch,apiKey:tavusKey,palId,configuration:probePalConfiguration(origin,callbackKey),diagnostic:report=>console.log('Probe PAL readback:',JSON.stringify(report))});
-await provider.verifyConfiguration();
+let configurationVerified=false;
+try{await provider.verifyConfiguration();configurationVerified=true;}catch{console.log('Probe configuration held; Start remains unavailable.');}
 const session=new ConnectionProbeSession({admission:new ConnectionProbeAdmission(store),provider,monotonicNow:()=>performance.now()});
 const assets=await loadConnectionProbeAssets(fileURLToPath(new URL('../dist',import.meta.url)));
 const cache=new Map<string,Uint8Array>();for(const path of assets.paths()){const value=await assets.getAsset(path,new AbortController().signal);if(value)cache.set(path,value);}
-const owner=connectionProbeHost({preview:{origin,password},credential:callbackKey,session,available:async()=>(await store.read() as {reservation:unknown}).reservation===null,operatorPreflightValid:preflightValid,asset:path=>cache.get(path)??null});
+const owner=connectionProbeHost({preview:{origin,password},credential:callbackKey,session,available:async()=>(await store.read() as {reservation:unknown}).reservation===null,operatorPreflightValid:()=>configurationVerified&&preflightValid(),asset:path=>cache.get(path)??null});
 const server=createServer((req,res)=>{void owner.handle(req,res).catch(()=>{if(!res.headersSent){res.statusCode=503;res.end();}else res.destroy();});});
 server.requestTimeout=5000;server.headersTimeout=5000;server.keepAliveTimeout=5000;server.maxHeadersCount=32;
 const timer=setInterval(()=>owner.tick(),1000);let closing=false;
