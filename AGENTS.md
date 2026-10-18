@@ -1,3 +1,7 @@
+# Approved private connection-only probe, 18 October 2026
+
+Sabine replaced the unused full styling experiment with one fixed-neutral-reply connection probe under the same one-room/start, five-included-minute and $0-additional-charge cap. No retries, upgrades, paid OpenAI calls, notebook updates or styling/recommendation acceptance. She separately approved the dedicated guard and verified backup-proof update, and the fresh endpoint credential stored only in Tavus and the existing Render environment. Do not request these approvals again or export that credential into chat/source. Sabine starts the sole room only after exact disabled deployment/readback and fresh quota checks; do not start it while she locates the page. Preserve every old record, backup setting and $51 historical allocation. Read DEVELOPMENT_PROGRESS.md for actual current state and remaining gates.
+
 # Current authorized local integration exception, 16 October 2026
 
 Sabine approved local Task 8a preparation under docs/task-8a-local-integration-proposal.md. This permits early sample-app/coordinator integration and automated tests with made-up data only. No paid calls, real accounts, microphone/camera access or hosted changes. Full Task 8a, customer activation and launch remain gated. Do not request the same sequencing approval again.

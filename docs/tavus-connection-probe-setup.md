@@ -2,7 +2,7 @@
 
 ## Approved scope
 
-18 October 2026: Sabine replaced the unused full styling trial. One room/start, five included minutes, $0 additional charges. Fixed neutral replies only. No retry, upgrade, paid OpenAI request, notebook extraction/confirmation, outfits, shopping or recommendation release. Original reservations and $51 historical allocation remain unchanged. No room, provider configuration, credential or new reservation has been created.
+18 October 2026: Sabine replaced the unused full styling trial. One room/start, five included minutes, $0 additional charges. Fixed neutral replies only. No retry, upgrade, paid OpenAI request, notebook extraction/confirmation, outfits, shopping or recommendation release. Original reservations and $51 historical allocation remain unchanged. A separate private Cartesia/custom-endpoint persona and matching probe-only credential are now saved in Tavus and the existing Render environment under explicit approval. The old personal persona remains. No room or trial reservation has been created.
 
 ## Implemented locally
 
@@ -22,7 +22,7 @@ Local SQL checks passed using isolated PostgreSQL 17 with networking disabled: r
 
 ## Remaining implementation and preflight
 
-1. Local provider/HTTP/page/Daily implementation, 1,763-test prototype regression, typecheck and build pass. Built browser page verified unavailable with Start still disabled after consent; no microphone. Active media/device behavior and hosted runtime/configuration readback remain open.
+1. Local provider/HTTP/page/Daily implementation, 1,767-test prototype regression, typecheck and build pass. Built browser page verified unavailable with Start still disabled after consent; no microphone. Active media/device behavior and hosted runtime/configuration readback remain open.
 2. Complete: guard applied/read back; fresh 498,998-byte encrypted candidate captured under a separate nonrefundable source-egress reservation, 32 actual local restore checks passed with container cleanup, matching schema fingerprint published and original proof preserved. No B2 transfer, scheduled attempt or schedule change. The failed first local startup receipt is retained; waiting for final TCP readiness fixed the rehearsal.
 3. Use existing protected preview and existing server credentials only. Fresh callback credential, operator-controlled PAL provisioning, no automatic room. Configure and read back explicit Cartesia/model/voice/custom endpoint; no auto/fallback provider, tools, perception, recording or persistent memory. Any incompatible readback holds.
 4. Refresh actual Free-account quota/concurrency and $0 conditions before enabling Start. Account display may lag, so refuse insufficient or uncertain headroom. No additional charge is authorized merely because a card exists.
@@ -33,3 +33,9 @@ References: [custom LLM contract](https://docs.tavus.io/sections/conversational-
 ## Backup readiness after proof refresh
 
 Read-only readiness returned waiting, empty-source-database scope, unchanged next-due and expiry, with no operator hold. The scheduled job was not run or rearmed. Operations regression: 596 tests pass.
+
+## Provider setup and disabled deployment, 18 October 2026
+
+Classic sign-in confirmed. Created only the persona, never Create and Start Conversation. UI details verify the selected stock face, constant-endpoint model/base URL, speculative inference No, Cartesia engine, public voice and emotion control No. The form selected sonic-3.5 and perception Off. API readback must still independently verify exact settings and the matching endpoint credential before a room can be reserved. The secret was saved only in the approved Tavus/Render locations, with no existing credential changed or exported.
+
+Render Save only preserved all existing variables. Its preflight timestamp is deliberately expired, free-minutes value zero and verification flags false, so the new deployment cannot expose Start. Read-only billing evidence: Hobby, Free service, no card, 5/500 included build minutes, 18 MB/5 GB bandwidth, no unbilled charge. Configuration/readback requests create no media room. The Get PAL reference omits languages, so returned conflicting languages are refused and English is fixed in our response and per-conversation override; no unobserved PAL language setting is claimed.

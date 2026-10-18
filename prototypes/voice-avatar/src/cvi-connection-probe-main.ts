@@ -22,7 +22,7 @@ const preflightValid=()=>{
 };
 const port=Number(process.env.PORT??'10000');if(!Number.isSafeInteger(port)||port<1||port>65535)throw Error('Connection probe port unavailable.');
 const store=prepareProbePersistence({url:required('SUPABASE_URL'),headers:{apikey:supabaseKey,Authorization:'Bearer '+supabaseKey},fetch});
-const provider=prepareProbeProvider({fetch,apiKey:tavusKey,palId,configuration:probePalConfiguration(origin,callbackKey)});
+const provider=prepareProbeProvider({fetch,apiKey:tavusKey,palId,configuration:probePalConfiguration(origin,callbackKey),diagnostic:report=>console.log('Probe PAL readback:',JSON.stringify(report))});
 await provider.verifyConfiguration();
 const session=new ConnectionProbeSession({admission:new ConnectionProbeAdmission(store),provider,monotonicNow:()=>performance.now()});
 const assets=await loadConnectionProbeAssets(fileURLToPath(new URL('../dist',import.meta.url)));

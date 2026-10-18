@@ -38,7 +38,7 @@ describe('neutral request envelope',()=>{
 });
 
 import {vi} from 'vitest';
-import {probeJson,probePalConfiguration,verifyProbePal,prepareProbeProvider,prepareProbePersistence} from '../src/cvi-connection-probe-provider.ts';
+import {probeJson,probePalConfiguration,probePalReadbackSummary,verifyProbePal,prepareProbeProvider,prepareProbePersistence} from '../src/cvi-connection-probe-provider.ts';
 const credential='a'.repeat(43),config=()=>probePalConfiguration('https://preview.onrender.com',credential);
 const json=(value:unknown)=>new Response(JSON.stringify(value),{headers:{'Content-Type':'application/json'}});
 describe('scoped provider and persistence adapters',()=>{
@@ -76,3 +76,10 @@ describe('owner HTTP composition',()=>{
  it('starts once and binds End to the returned owner token',async()=>{const f=fixture();const headers={host:'preview.onrender.com',authorization:auth,origin:'https://preview.onrender.com','content-type':'application/json','content-length':'2'};const out=response();await f.host.handle(request('/api/connection-probe/start',headers,'{}'),out.res);expect(out.res.statusCode).toBe(200);const token=JSON.parse(out.body()).ownerToken;const wrong=response();await f.host.handle(request('/api/connection-probe/end',headers,'{}'),wrong.res);expect(wrong.res.statusCode).toBe(403);const done=response();await f.host.handle(request('/api/connection-probe/end',{...headers,'x-probe-owner':token},'{}'),done.res);expect(JSON.parse(done.body()).state).toBe('ended');const again=response();await f.host.handle(request('/api/connection-probe/start',headers,'{}'),again.res);expect(again.res.statusCode).toBe(409);expect(f.counts().created).toBe(1);});
  it('serves no secret/config path and does not expose a join token in status',async()=>{const f=fixture();const out=response();await f.host.handle(request('/.env',{host:'preview.onrender.com',authorization:auth},'','GET'),out.res);expect(out.res.statusCode).not.toBe(200);const status=response();await f.host.handle(request('/api/connection-probe/status',{host:'preview.onrender.com',authorization:auth},'','GET'),status.res);expect(JSON.parse(status.body())).toEqual({available:true,state:'unused'});expect(status.body()).not.toContain('token');});
 });
+
+it('readback diagnostics contain only fixed boolean fields, never provider values',()=>{const report=probePalReadbackSummary({pal_id:'private-id',greeting:'private greeting',layers:{llm:{api_key:'private-key'}}},config(),'private-id');expect(Object.values(report).every(value=>typeof value==='boolean')).toBe(true);expect(JSON.stringify(report)).not.toMatch(/private-id|private greeting|private-key/);expect(report.identityMatch).toBe(true);expect(report.cartesiaExplicit).toBe(false);});
+
+it('accepts the documented Get PAL language omission while the conversation pins English',()=>{const value={...config(),pal_id:'pal'} as Record<string,unknown>;delete value.languages;expect(verifyProbePal(value,config(),'pal')).toBe(true);expect(verifyProbePal({...value,languages:null},config(),'pal')).toBe(true);});
+it('refuses an explicit conflicting PAL language list',()=>expect(()=>verifyProbePal({...config(),pal_id:'pal',languages:['es']},config(),'pal')).toThrow());
+
+it('refuses a substituted custom-endpoint credential before room creation',()=>{const c=config();expect(()=>verifyProbePal({...c,pal_id:'pal',layers:{...c.layers,llm:{...c.layers.llm,api_key:'other-secret'}}},c,'pal')).toThrow();});

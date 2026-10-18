@@ -35,10 +35,18 @@ export function probePalConfiguration(previewOrigin:string,callbackCredential:st
  const base=origin(previewOrigin,'onrender.com');if(!/^[A-Za-z0-9_-]{43,128}$/.test(callbackCredential))throw fail();
  return{pal_name:'AI Stylist private connection probe',pipeline_mode:'full',default_face_id:PROBE_FACE,system_prompt:'Connection test only. The external endpoint supplies fixed neutral replies. Do not provide styling advice, use tools or retain memories.',greeting:'',dynamic_greeting:false,languages:['en'],document_ids:[],document_tags:[],layers:{llm:{model:'connection-probe-fixed-v1',base_url:base+'/api/connection-probe/v1',api_key:callbackCredential,speculative_inference:false},tts:{tts_engine:'cartesia',tts_model_name:PROBE_TTS_MODEL,external_voice_id:PROBE_VOICE},perception:{perception_model:'off'}}};
 }
+/** Fixed boolean diagnostics only. Never emit provider values, IDs, messages or keys. */
+export function probePalReadbackSummary(value:unknown,expected:ReturnType<typeof probePalConfiguration>,palId:string){
+ const v=object(value)?value:{},layers=object(v.layers)?v.layers:{},llm=object(layers.llm)?layers.llm:{},tts=object(layers.tts)?layers.tts:{},perception=object(layers.perception)?layers.perception:{};
+ return Object.freeze({identityMatch:v.pal_id===palId,legacyIdentityPresent:typeof v.persona_id==='string',pipelineFull:v.pipeline_mode==='full',faceMatches:v.default_face_id===PROBE_FACE,legacyFacePresent:typeof v.default_replica_id==='string',emptyGreeting:v.greeting==='',greetingAbsent:v.greeting===undefined||v.greeting===null,dynamicGreetingOff:v.dynamic_greeting===false,dynamicGreetingAbsent:v.dynamic_greeting===undefined||v.dynamic_greeting===null,englishOnly:isDeepStrictEqual(v.languages,['en']),languagesAbsent:v.languages===undefined||v.languages===null,credentialMatches:llm.api_key===expected.layers.llm.api_key,customModelMatches:llm.model===expected.layers.llm.model,endpointMatches:llm.base_url===expected.layers.llm.base_url,speculationOff:llm.speculative_inference===false,cartesiaExplicit:tts.tts_engine==='cartesia',ttsModelMatches:tts.tts_model_name===PROBE_TTS_MODEL,voiceMatches:tts.external_voice_id===PROBE_VOICE,perceptionOff:perception.perception_model==='off'});
+}
+/** Get PAL does not document a languages response field. When omitted, English
+ * is still fixed by our constant reply and Create Conversation override. An
+ * explicitly conflicting PAL language list is refused, never silently accepted. */
 export function verifyProbePal(value:unknown,expected:ReturnType<typeof probePalConfiguration>,palId:string){
- if(!object(value)||value.pal_id!==palId||value.pipeline_mode!=='full'||value.default_face_id!==PROBE_FACE||value.greeting!==''||value.dynamic_greeting!==false||!isDeepStrictEqual(value.languages,['en'])||!object(value.layers))throw fail();
+ if(!object(value)||value.pal_id!==palId||value.pipeline_mode!=='full'||value.default_face_id!==PROBE_FACE||value.greeting!==''||value.dynamic_greeting!==false||(value.languages!==undefined&&value.languages!==null&&!isDeepStrictEqual(value.languages,['en']))||!object(value.layers))throw fail();
  const layers=value.layers,llm=layers.llm,tts=layers.tts,perception=layers.perception;
- if(!object(llm)||llm.model!==expected.layers.llm.model||llm.base_url!==expected.layers.llm.base_url||llm.speculative_inference!==false||!object(tts)||tts.tts_engine!=='cartesia'||tts.tts_model_name!==PROBE_TTS_MODEL||tts.external_voice_id!==PROBE_VOICE||tts.voice_id||tts.api_key||!object(perception)||perception.perception_model!=='off')throw fail();
+ if(!object(llm)||llm.api_key!==expected.layers.llm.api_key||llm.model!==expected.layers.llm.model||llm.base_url!==expected.layers.llm.base_url||llm.speculative_inference!==false||!object(tts)||tts.tts_engine!=='cartesia'||tts.tts_model_name!==PROBE_TTS_MODEL||tts.external_voice_id!==PROBE_VOICE||tts.voice_id||tts.api_key||!object(perception)||perception.perception_model!=='off')throw fail();
  for(const field of ['tools','skills','document_ids','document_tags','guardrail_ids','guardrail_tags'])if(value[field]!==undefined&&!isDeepStrictEqual(value[field],[]))throw fail();
  for(const field of ['tools','headers','extra_body','default_query'])if(llm[field]!==undefined&&!isDeepStrictEqual(llm[field],{})&&!isDeepStrictEqual(llm[field],[]))throw fail();
  if(layers.conferencing||value.objectives_id||value.objectives||value.memory_stores)throw fail();
@@ -51,15 +59,15 @@ export function prepareProbePersistence(options:{url:string;fetch:Fetch;headers:
 }
 /** Dormant adapter: constructing it makes no requests or rooms. Configure and
  * independently read back the new PAL before supplying this to an active owner. */
-export function prepareProbeProvider(options:{fetch:Fetch;apiKey:string;palId:string;configuration:ReturnType<typeof probePalConfiguration>}):ConnectionProbeProvider & {verifyConfiguration:()=>Promise<void>}{
+export function prepareProbeProvider(options:{fetch:Fetch;apiKey:string;palId:string;configuration:ReturnType<typeof probePalConfiguration>;diagnostic?:(report:ReturnType<typeof probePalReadbackSummary>)=>void}):ConnectionProbeProvider & {verifyConfiguration:()=>Promise<void>}{
  if(!id(options.palId)||typeof options.apiKey!=='string'||options.apiKey.length<16||/[\r\n]/.test(options.apiKey))throw fail();
  const request=(path:string,body?:object)=>probeJson(options.fetch,'https://tavusapi.com'+path,{method:body?'POST':'GET',headers:{'x-api-key':options.apiKey,'Content-Type':'application/json'},...(body?{body:JSON.stringify(body)}:{})},path.endsWith('/end'));
  const end=async(roomId:string)=>{if(!id(roomId))throw fail();await request('/v2/conversations/'+roomId+'/end',{});};
- const verifyConfiguration=async()=>{verifyProbePal(await request('/v2/pals/'+options.palId),options.configuration,options.palId);};
+ const verifyConfiguration=async()=>{const value=await request('/v2/pals/'+options.palId);options.diagnostic?.(probePalReadbackSummary(value,options.configuration,options.palId));verifyProbePal(value,options.configuration,options.palId);};
  return{
   verifyConfiguration,
   create:async()=>{
-   verifyProbePal(await request('/v2/pals/'+options.palId),options.configuration,options.palId);
+   await verifyConfiguration();
    const response=await request('/v2/conversations',{pal_id:options.palId,face_id:PROBE_FACE,require_auth:true,max_participants:2,dynamic_greeting:false,participant_tags:[],conversation_name:'Private connection-only probe',properties:{max_call_duration:300,participant_absent_timeout:10,participant_left_timeout:5,enable_recording:false,auto_start_recording:false,enable_closed_captions:false,languages:['en']}});
    if(!object(response)||!id(response.conversation_id))throw fail();
    try{

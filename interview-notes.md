@@ -1,3 +1,7 @@
+## Separating configuration proof from a live call, 18 October 2026
+
+I created a separate fixed-reply persona with explicit Cartesia after obtaining permission for its new endpoint credential. I saved the matching secret only in Tavus and the existing protected preview, and kept Start disabled while checking actual saved settings. I verified included hosting headroom and that no card was on file. I added boolean-only readback diagnostics so configuration failures could be investigated without exposing keys or spending the sole live room. A saved persona still is not proof that streaming, interruption or playback works.
+
 ## Keeping backups valid while changing the probe schema, 18 October 2026
 
 I verified the new one-use guard on the actual project, then reserved a bounded source read without uploading another backup. The first local restore exposed a startup race: PostgreSQL's temporary initialization socket could appear ready before its final server. I changed the rehearsal to wait for TCP readiness, reused the same encrypted candidate, and passed 32 restore checks. I kept the failed result and original proof, updated only the verified schema fingerprint, and preserved all backup attempts and financial limits. This still does not prove hosted or customer-photo recovery.
