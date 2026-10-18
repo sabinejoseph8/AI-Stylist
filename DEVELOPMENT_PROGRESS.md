@@ -1,3 +1,11 @@
+## Local rehearsal scope reconciled, 18 October 2026
+
+The prior goal turn made concrete progress: installed the approved backup repair, preserved an uncertain native start with no new financial attempt, merged the verified combined privacy journey, and published source/private Memory. Current read-only native status remains spawn scheduled, with no process ID, two old financial attempts, no active attempt and no new receipt. A state file alone is not a running provider process. Keep the uncertainty hold and consumed marker; do not retry.
+
+Reviewed the original five approved Task 8a local-scope items against the current adapter, original-pair loopback hosts and browser/lifecycle/SQL evidence. The sample integration is implemented with scoped evidence; full Task 8a remains gated on actual media, accounts, sources, persistence and hosted/device acceptance. Reconciled authoritative Phase 8 status, current issue rows, shared-privacy documentation and the proposal coverage matrix. Older diary statements are historical. Do not invent additional sample preparation merely to avoid reporting the external gates.
+
+**Exact next action:** collect already-running current-source CI 39098253367 (watch session 83897, /private/tmp/ai-stylist-ci-current-39098253367.log). Its terminal result is not yet known. Earlier CI 39095919723 succeeded on 1428d5c; 39097344195 is still running on ee74c06. Do not restart or duplicate these runs. Reconcile native scheduler status read-only after its scheduled spawn, keeping holds intact. No new paid/provider or hosted customer work is authorized. Completion remains 5/41 and 0/21; allocation $51 and owner-only Memory remain.
+
 ## Combined Wardrobe and Session privacy verified, 18 October 2026
 
 The actual shared-app browser now verifies one selected export containing Session, saved preferences and Wardrobe, distinct photo IDs with equal normalized pixels, cancellation before clearing, Wardrobe-only clearing that preserves the accepted Session reference, and Session-only clearing that preserves an independently exportable saved copy. The completed download consumes its one-use export; cancellation is tested on a freshly prepared export. The initial fixture incorrectly tried to cancel a consumed download; that failure is preserved and only the fixture was corrected. No application guard changed.

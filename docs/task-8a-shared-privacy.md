@@ -26,6 +26,14 @@ The confirmation stays visible with disabled actions until completion; focus ret
 
 ## Verification
 
+### Current combined scope, 18 October 2026
+
+Source 574bb96 adds the actual three-category Session/preferences/Wardrobe download and independent clearing in both directions. Original 59144 exited zero: 56 checks/seven suites; shared browser 72/128 and original pair 40/128 authority records, zero protected outputs. Main independently passes 56 checks/six suites (92137, exit zero), plus TypeScript. Generated normalized pixels are equal between distinct Session and Wardrobe photo IDs. A download consumes its one-use export; cancellation is verified after explicitly preparing a fresh one. The first fixture failure is retained, and no runtime protection changed.
+
+Evidence: source-checkpoints/shared-wardrobe-privacy-browser-passed-20261018.json and .log; shared-wardrobe-privacy-main-passed-20261018.log.
+
+### Earlier shared privacy checkpoint
+
 Source checkpoint: bdf0881.
 
 - Final composed run: 91 tests across 11 suites, original session 52993, exit zero, 38.47 seconds. It includes all three WebKit journeys and the ordinary preview regression.
@@ -42,4 +50,4 @@ Evidence is preserved in source-checkpoints/shared-privacy-final2-composed-20261
 
 The complete regression for source bdf0881 passed in original session 64418: exit zero, 2,760 tests / 203 suites passed, four intentional browser skips, 1,959.06 seconds. All 580 frozen inputs match the executed stage and main at collection. Evidence: source-checkpoints/shared-privacy-full-bdf0881.json and .log. Later source increments have separate verification; this result is scoped to bdf0881.
 
-The next independent local integration is explicitly saving a shared owned reference to sample Wardrobe, then retrieving and confirming its photo through the same original context. Shared controls currently lack that bridge. Preparation must use the separate Wardrobe stage; original-pair/browser checks wait until the active full regression is terminal. All real identity/media/source/persistence/privacy/device and launch criteria stay open. Completion remains 5/41, production acceptance 0/21 and allocation $51.
+Explicitly saving a shared owned reference to sample Wardrobe and retrieving it through fresh normalization and confirmation is implemented at 8697f9e. The combined Session/Wardrobe privacy follow-up is verified at 574bb96 as recorded above. These local gaps are no longer pending. The existing current-source GitHub regression is still running and must be collected; do not duplicate it. Actual identity/media/source/persistence/privacy/device and launch criteria stay open. Completion remains 5/41, production acceptance 0/21 and allocation $51.

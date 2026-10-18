@@ -1,3 +1,11 @@
+## Current approved rehearsal status, 18 October 2026
+
+The five approved local scope items below are implemented and have scoped executed evidence: the typed original-session view, loopback original-owner host, current-context sample reference/candidate/feedback/save/list flow, lifecycle cancellation with separate saved scopes, and automated browser/backend/accessibility checks. The combined Session/Wardrobe privacy follow-up is merged at 574bb96 after 56 checks/seven suites (exit zero), including actual browser and original pair. Main independently passes 56 checks/six suites and TypeScript.
+
+The earlier frozen 8697f9e full runner reports 2,777 tests/203 suites passed and four skips; its process handle expired before numeric exit collection. Do not claim exit zero for that run. The existing current-source GitHub run 39098253367 is active; collect its actual terminal result rather than starting a duplicate full run.
+
+This is the authorized sample rehearsal. Full Task 8a remains incomplete because actual media, identity, sources, persistence, provider cleanup and launch acceptance are not established. Additional arbitrary sample scenarios do not close those gates. No paid call, customer activation or broader scope follows from these local results. Historical checkpoint paragraphs below retain their original wording.
+
 ## Frozen current-source full regression active, 17 October 2026
 
 The new complete regression is **RUNNING in original session 39391**, frozen source **8697f9e**, /private/tmp/ai-stylist-8a-wardrobe-stage. Its 580 source/test/operations/dependency hashes match main. Metadata/log: /private/tmp/ai-stylist-shared-wardrobe-full-20261017.json and .log. Do not duplicate it, mutate that stage or run competing heavy native/browser/SQL jobs. Four browser opt-ins have separate executed evidence. No new complete result is claimed.
@@ -66,7 +74,7 @@ This maps the approved rehearsal to executed source evidence. It does not replac
 | Second start refused and foreign customer denied | Actual global SQL/browser case creates one primary/zero competing factories before startup; foreign synthetic context refusal is separately covered by lifecycle tests | Fixed identities in test host are not hosted authorization or a general customer router |
 | No real side effects | Loopback external-request denial, media API refusal, generated assets, empty browser storage, zero protected outputs and all real release flags false | No customer route, device, provider, retailer, hosted data or launch accepted |
 | Whole sample Profile privacy flow | Shared and ordinary preview WebKit download/clear/cancel/focus; original-pair export and clear; pending-input/photo invalidation and failed cleanup tests | Complete bdf0881 run passed 2,760 tests; newer increments have separate evidence. Actual account/provider export/deletion remains unaccepted |
-| Explicit Wardrobe save/reuse in the shared notebook | 8697f9e: actual original-pair browser save, selected-photo normalization, explicit confirmation and saved-copy preservation after Clear, 102/128 records | Browser-memory sample only; combined Session/Wardrobe privacy scope review remains |
+| Explicit Wardrobe save/reuse in the shared notebook | 8697f9e: actual save/reuse, normalization and confirmation; 574bb96 combined export and independent clearing at 72/128 records, original pair 40/128 | Browser-memory sample only; actual customer persistence and photo privacy remain open |
 
 ## Globally admitted transcript and candidate flow verified, 17 October 2026
 
@@ -179,7 +187,7 @@ The 2,732-pass complete run covers source c895346. The merged slot/channel incre
 | Current-context candidate, independent checks and three changes | Paired candidate rehearsal and browser journey, kept/owned reference, comparison and separate sample saving | Illustrated sample only; no recommendation/audio/shopping release |
 | Correction and delayed result cancellation | Pending/partial/completed input, source/semantic failure and Clear rejecting late extraction | Provider timing and live event contracts remain unverified |
 | End, sign-out, expiry and input transport loss | Lifecycle and browser checks, including note refresh remaining unable to re-enable samples after channel loss | Logical-clock expiry and simulated accounts, not real sessions/devices |
-| Customer isolation and one active consultation | Foreign synthetic customer refused; already-bound startup resources cannot be reused; SQL-level global-slot tests exist separately | Now composed for shared notebook read/edit/expiry in the opt-in actual SQL browser rehearsal; transcript/candidate journeys still use separate native-pair hosts |
+| Customer isolation and one active consultation | Foreign synthetic customer refused; already-bound startup resources cannot be reused; SQL-level global-slot tests exist separately | Composed for shared notebook, pending/completed transcript, generated reference, candidate checks and late-result refusal after SQL expiry; three feedback rounds also have separate original-pair/browser evidence |
 | No real side effects | Test-only loopback host, generated image, external request/device denial, all release flags false and zero protected outputs | No production route or deployment accepted |
 
 The actual SQL follow-up in /private/tmp/ai-stylist-slot-db-stage is prepared but unmerged and unrun. After the current full regression is terminal, run the disposable PostgreSQL checks for the uncertainty fix. Keep the remaining global admission composition distinct from already-bound-resource refusal. Do not tick Task 8a or any launch criterion based on the sample evidence alone.
