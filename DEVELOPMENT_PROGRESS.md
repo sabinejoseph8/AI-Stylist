@@ -1,3 +1,13 @@
+## Tavus account inspection and capped proposal, 18 October 2026
+
+Sabine authorized read-only account/voice verification and preparation of one capped trial for a later approval, with no new spending or activation. The signed-in Maker account is Free; its current displayed allowance can cover one five-minute reservation. Its account table lists one concurrent session, five-minute conversation maximum and custom LLM features. Public pricing differs; the actual account limits govern. No PAL, room, credential, plan, provider setting or deployment was changed.
+
+Exact non-ElevenLabs voice verification is pending the separate classic-viewer sign-in. A single asynchronous handoff asks Sabine to sign in and leave that tab open; do not ask again or infer success. Public TTS documentation permits explicit Cartesia but warns that tavus-auto can change providers. A public example is not account-level verification.
+
+Prepared docs/tavus-cvi-live-trial-proposal.md: one conversation/start, at most five included minutes, $0 additional charges, no upgrades/retries/paid OpenAI calls, original history preserved, app/provider deadlines, synthetic styling data, validation-failure observation and honest interruption/cleanup limits. This is not an activated or ready trial. Exact voice, native request/admission, private endpoint setup, usage/privacy and disabled implementation review remain preflight gates. Do not mount an old fixture or convert preparation approval into activation. Existing $51 allocation, backups and deferred business decisions remain unchanged.
+
+**Next action:** collect the pending classic sign-in response, inspect exact available voice/provider/model read-only, and finalize the proposal's verified versus unresolved fields. Request the concrete activation/quota decision only after the preparation is reviewable. No support reply is required.
+
 ## Support-wait dependency retired, 18 October 2026
 
 Sabine confirms no further OpenAI or Tavus replies will be received. Do not wait for, request, or send more replies as the next action. The failed OpenAI startup remains unresolved; silence from support is not technical acceptance. No paid retry, provider switch, customer activation or relaxation of recommendation checks follows from this update.
