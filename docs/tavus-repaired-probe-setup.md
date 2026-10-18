@@ -1,3 +1,7 @@
+## Completed and consumed, 18 October 2026
+
+Sabine confirmed all four requested observations: avatar visible, neutral reply audible, observed interruption and microphone indicator off after End. The fixed server diagnostic is user-ended/ended with four callbacks. Tavus shows Ended and endpoint shutdown; current active filter zero. Both durable records are ended, repaired room matches, limits $0/one room/300 seconds unchanged. Do not repeat or re-enable this trial. Full styling and history-service deployment acceptance are still open. No exact downstream flush, provider deletion or billing-finalization claim is made.
+
 # Separately approved repaired connection probe
 
 ## Approved scope

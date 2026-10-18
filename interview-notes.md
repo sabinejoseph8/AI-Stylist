@@ -1,3 +1,7 @@
+## Repaired connection check result, 18 October 2026
+
+I completed the repaired connection test. I saw the avatar, heard its neutral reply, heard it stop when I spoke over it, and confirmed the microphone indicator went off after End. This accepts the connection check; I have not approved another room or accepted the full styling integration through this result.
+
 ## Repaired probe setup approval, 18 October 2026
 
 I approved one separate repaired connection-only trial with one room/start, five included minutes, $0 additional charges and no retries or upgrades. I also approved its new restricted guard and verified backup schema-proof update. My previous ended trial stays intact. I no longer have the old screenshot. I will start the new room myself after the protected setup is verified; no new credential or paid OpenAI call is authorized.

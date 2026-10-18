@@ -1,3 +1,9 @@
+## Connection-only replacement completed; full styling remains unapproved, 18 October 2026
+
+The replacement connection-only probe and its separately approved repaired follow-up are both consumed and verified ended. Sabine accepted avatar visibility, audible fixed neutral reply, observed interruption and microphone off after End in the repaired check. Four callback requests and matching provider/durable closure support connectivity only. No full-styling trial, recommendation release or notebook integration was tested, and no new room is approved.
+
+The next reviewable dependency is a concrete deployment/access plan for the independent protected history service described in tavus-cvi-live-preflight-hold.md, followed by integrating the actual app-owned notebook and approval gate with the native endpoint. Existing local contracts/tests can be reused; hosted access/credentials and a later live trial require their own concrete decisions. Preserve current provider exclusion, caps and old records. Earlier account/approval wording below is historical and does not authorize another activation or treat the connection probe as full-flow acceptance.
+
 ## Replacement approved, 18 October 2026
 
 Sabine explicitly replaced the unused full styling trial with a connection-only probe. This is the same one-room/start, five-included-minute, $0-additional-charge allowance, not an extra trial. Fixed neutral replies only; no notebook updates, extraction, outfits, shopping or recommendation-validation claims. Preserve all earlier records. No room or quota reservation has started. Current implementation and deployment gates are tracked in docs/tavus-connection-probe-setup.md. Earlier scope-choice and full-trial passages below are historical.

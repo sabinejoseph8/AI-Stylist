@@ -1,3 +1,7 @@
+# Repaired connection trial consumed successfully, 18 October 2026
+
+Sabine confirmed avatar, audible neutral reply, observed interruption and microphone off after End. Both original and repaired records are verified ended; repaired room matches and caps remain $0, one room, 300 seconds. No further Start, activation refresh, reset/refund or retry is authorized. Record this as connection-only evidence; full styling/history deployment and production acceptance remain gated. See the latest DEVELOPMENT_PROGRESS.md. No further screenshot or outcome question is needed for this completed check.
+
 # Approved repaired private probe, 18 October 2026
 
 Sabine approved one new repaired connection-only trial: one room/start, five included minutes, $0 additional charges, no retries/upgrades. She separately approved the prepared restricted guard and verified backup-proof refresh. Do not request these approvals again. Preserve the original ended record and every prior allowance; no reset/refund. Use the separate repaired approval/RPCs, preserve backup history/caps/schedule and follow docs/tavus-repaired-probe-setup.md. She no longer has the screenshot, so stop asking for it. Sabine alone starts after verified preparation. No new credential or paid OpenAI call is authorized. Read DEVELOPMENT_PROGRESS.md for actual state.
