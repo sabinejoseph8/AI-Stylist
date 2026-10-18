@@ -77,3 +77,19 @@ One permission review timed out BEFORE creating the broad test process; the allo
 A NEW complete regression is RUNNING in original session 11963 from /private/tmp/ai-stylist-8a-lifecycle-regression-stage; log /private/tmp/ai-stylist-8a-lifecycle-full-regression.log and metadata /private/tmp/ai-stylist-8a-lifecycle-full-regression.json. Its 548 source/test/operations hashes are frozen. Collect the actual terminal exit; do not duplicate or edit a healthy run. The two opt-in browser cases pass separately in the composed run and are intentionally skipped by ordinary full regression.
 
 Exact next action: collect original session 11963, verify all 548 hashes against main and fix any actual failure at its boundary. Continue approved local Task 8a with external simulated transcript/input invalidation and simulated source/semantic outage paths through the shared view; preserve original proof objects, counters, deadlines and separate saved scopes. Use a separate source stage while regression source is frozen, never copy stale staged docs, and save verified local source/Memory. Full Task 8a, live media/accounts/sources/privacy/host/device acceptance and the goal remain open. Completion stays 5/41, production acceptance 0/21, experiment allocation $51. No provider call, real account, camera/microphone permission, credential access, new spending, hosted publication, support message or backup-runtime change. No renewed sequencing approval or Sabine action is needed.
+
+## Current local coverage and remaining gap, 17 October 2026
+
+The 2,732-pass complete run covers source c895346. The merged slot/channel increment at 08d1e01 has 186 composed checks across 13 suites, including all three opt-in browser journeys, and 62 independent main checks. A new complete run for that final source is active in original session 77149. Earlier dated running/preparation statements in this proposal are historical.
+
+| Local requirement | Current evidence | Remaining limit |
+| --- | --- | --- |
+| Shared seven-field notebook and explicit confirmation | Coordinated notebook/browser and transcript suites | Synthetic identity and extraction only |
+| Stable confirmed reference | Generated-image browser preview, replacement, enlargement and Clear/End cases | No real upload, camera, recognition or hosted media |
+| Current-context candidate, independent checks and three changes | Paired candidate rehearsal and browser journey, kept/owned reference, comparison and separate sample saving | Illustrated sample only; no recommendation/audio/shopping release |
+| Correction and delayed result cancellation | Pending/partial/completed input, source/semantic failure and Clear rejecting late extraction | Provider timing and live event contracts remain unverified |
+| End, sign-out, expiry and input transport loss | Lifecycle and browser checks, including note refresh remaining unable to re-enable samples after channel loss | Logical-clock expiry and simulated accounts, not real sessions/devices |
+| Customer isolation and one active consultation | Foreign synthetic customer refused; already-bound startup resources cannot be reused; SQL-level global-slot tests exist separately | Separate globally admitted consultations are not yet composed through this browser host; constructor refusal is not that proof |
+| No real side effects | Test-only loopback host, generated image, external request/device denial, all release flags false and zero protected outputs | No production route or deployment accepted |
+
+The actual SQL follow-up in /private/tmp/ai-stylist-slot-db-stage is prepared but unmerged and unrun. After the current full regression is terminal, run the disposable PostgreSQL checks for the uncertainty fix. Keep the remaining global admission composition distinct from already-bound-resource refusal. Do not tick Task 8a or any launch criterion based on the sample evidence alone.
