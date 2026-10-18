@@ -1,3 +1,11 @@
+## Trial scope decision pending; preparation published, 18 October 2026
+
+The read-only Cartesia/custom-endpoint findings and concrete proposal are saved in GitHub through 7e52047, two 1,066-file tracked-source archives and owner-private Memory. Site source ec81dd40a207465e173fb21c0ca0ba45fa4aede0 deployed successfully as appgdep_6ad46ce1e0f081919d0857cc0fc331e4; 19 Site checks pass and owner-only revision-three access is preserved. Screenshot and bounded account/voice evidence receipts are in source-checkpoints. Existing full CI evidence is unchanged; no runtime app code changed.
+
+One asynchronous decision is pending: approve capped private configuration and a single five-included-minute/$0-additional-charge trial, or keep inactive. Do not ask it again, infer approval or start work requiring that decision. Exact new voice readback/local/security/entitlement/privacy gates still precede the visible user Start. No persona, room, credential, upgrade, paid request or provider setting was saved. The proposed Skylar voice is a public documentation candidate, not an authenticated live synthesis result. No stock prompt is accepted as the recommendation validator.
+
+**Exact next action:** read the pending owner's scope decision. If approved, perform only its bounded private setup and disabled implementation verification; stop for an uncovered resource/security/fee dependency, and never start the room while Sabine locates the page. If declined, preserve inactive state. No further support reply is expected. Original ledgers, $51 allocation, database-only backups and other launch blockers remain.
+
 ## Cartesia and custom endpoint availability verified, 18 October 2026
 
 Sabine completed classic Tavus sign-in. Read-only stock details show Cartesia on both pipecat-stream and Margo (pe95f57e3ba3); Margo has ordinary full-conversation LLM/flow layers. The unsaved form exposes custom LLM model/base URL/API key/speculation controls and explicit Cartesia with sonic-3.5 plus other model choices. External voice ID/key fields were blank. No persona, credential, room or setting was saved. The form was discarded.
