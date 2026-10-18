@@ -1,6 +1,6 @@
 # One regular scheduled recovery check
 
-Status: prepared locally; not armed or activated. A new operator decision is required by the accepted stop-on-failure policy. The previous one-use start marker remains consumed.
+Status: approved, applied and verified for the initial empty-source database scope. Regular scheduled attempt 3 completed authenticated readback and exited zero on 18 October. The previous schedule may continue under its original caps and expiry. Both one-use markers remain consumed; do not ask for this approval again or re-arm. The procedure below is retained as the reviewed implementation record, with actual results at the end.
 
 ## Observed outcome
 
@@ -33,3 +33,11 @@ If approved, re-read all actual state before creating the fresh approval record,
 The complete local operations regression also passes: **587 checks**, original session 28582, exit zero, 18.102 seconds. The CI workflow now declares a credential-free operations unit job; its new regression test failed against the previous workflow and passes after correction. Hosted CI execution of that new job is still pending.
 
 The initial operations CI job exposed a desktop-only Node-path assumption in the separate synthetic package rehearsal. That helper now uses the installed CI runtime when the desktop cache is absent. Four added cases include an actual fallback encryption round-trip. The final complete local suite passes **591 checks** (5638, exit zero), with 98 source/test hashes verified. Corrected CI execution is still pending; the earlier failure remains evidence. This does not change the rearm helper or the permanent runtime.
+
+## Recorded decision and arming
+
+Sabine approved one regular scheduled recovery attempt on 18 October. The fresh local preflight passed and the one-use regular-check approval was consumed. The current hold is archived intact; previous markers and financial history are preserved. The ledger still had two attempts and none active at arming. No process was forced and no native setting/runtime file changed. This is awaiting actual scheduled execution, not a verified backup success. Do not ask for this approval again or repeat the arm.
+
+## Verified outcome
+
+The existing native schedule ran attempt 3 and verified the encrypted 491,691-byte empty-source database recovery point at 05:13:22 UTC on 18 October. Authenticated readback passed, the financial callback completed, native exit was zero and no hold remains. Normal previously approved database-only scheduling may continue within the original caps/expiry. Preserve the consumed markers/history; do not re-arm. Full customer/photo recovery and production recovery targets are still unverified.

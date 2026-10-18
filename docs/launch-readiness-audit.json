@@ -463,7 +463,7 @@
       "name": "Complete customer/photo recovery and independent reconciliation",
       "owner": "Operations design and authorized hosted acceptance",
       "gate": "Off-Mac recoverable object inventory/latest deletion and spending authority, coordinated customer/photo snapshots, actual managed restore and deletion/financial reconciliation.",
-      "state": "Initial empty-source database scope only. The approved dependency repair is installed; seven operator-driver checks and 42 affected job checks pass. The one-use native start timed out without confirmation. Old hold is archived intact, consumed marker retained and a new uncertainty hold is active. Ledger remains at two attempts, none active, with no new provider receipt observed. Scheduling has not resumed. No retry or budget reset is authorized. Full customer/photo recovery and recovery targets remain unverified.",
+      "state": "Initial empty-source database-only recovery succeeded in scheduled attempt 3: authenticated 491691-byte encrypted roundtrip, scope-recovery-point-verified receipt, callback-completed financial state, native exit zero, no active attempt or hold. Previous history and caps remain. Normal approved database-only scheduling may continue until original policy expiry; Mac availability/Docker is required. Full customer/photo recovery, independent restored deletion/spending authority and production recovery targets remain unverified.",
       "dependsOn": []
     },
     {
@@ -473,7 +473,7 @@
       "name": "Connect and verify the actual current-context consultation",
       "owner": "Engineering after prerequisite contracts",
       "gate": "One authoritative authenticated session across live notes, recognition, current requirements, generation, independent checking, display/speech, camera, feedback, saving and shopping.",
-      "state": "The local original coordinator shares notebook, generated reference, illustrated checks/feedback, explicit saving, Profile privacy and Wardrobe save/reuse with the app. Combined Session/Wardrobe privacy passes 56 checks/seven suites, including actual browser and original paired coordinator, at 72/128 and 40/128 authority records with zero protected outputs. Frozen 8697f9e full runner reports 2777 passed tests/203 suites and four skips; its expired process handle leaves numeric exit unavailable. Authenticated live media, real products, persistence, speech and customer acceptance remain open.",
+      "state": "Approved local sample integration and combined Session/Wardrobe privacy are implemented. Full CI 39098253367 on 3a2d3f1 succeeded: 2,784 foundation tests / 205 suites, four intentional skips, 1,706 prototype tests, database protections, typechecks and builds. Later operations preparation has separate 591-check successful CI evidence at 1bb8755; its full foundation job remains running. Actual media, identity, products, persistence, speech and customer acceptance remain open.",
       "dependsOn": [
         "B01",
         "B02",
@@ -1179,17 +1179,31 @@
     "unchangedMemoryCompletion": 5
   },
   "backupLocalInspection": {
-    "state": "held-after-unconfirmed-native-start",
-    "repairSourceCommit": "28ef0fd",
-    "approvedStartRequested": true,
-    "nativeStartConfirmed": false,
-    "oldHoldArchived": true,
-    "consumptionMarkerRetained": true,
-    "financialAttempts": 2,
-    "activeFinancialAttempt": null,
-    "newProviderReceiptObserved": false,
-    "scheduleResumed": false,
-    "retryAuthorized": false,
+    "state": "verified-database-only-scheduled-recovery",
+    "attempt": 3,
+    "encryptedBytes": 491691,
+    "authenticatedRoundTrip": true,
+    "financialOutcome": "callback-completed",
+    "nativeExit": 0,
+    "activeAttempt": null,
+    "holdPresent": false,
+    "previousHistoryPreserved": true,
+    "normalDatabaseOnlySchedulePermitted": true,
+    "nextEligibleCayman": "2026-10-18T12:12:26-05:00",
+    "originalExpiryUtc": "2026-11-14T07:06:52+00:00",
+    "fullCustomerPhotoRecoveryAccepted": false,
     "newSpending": false
+  },
+  "latestIntegrationCi": {
+    "run": 39098253367,
+    "source": "3a2d3f1d6790cd1af1f3bd981c49f9a127409fd3",
+    "allJobsAndSteps": "success",
+    "foundationTests": 2784,
+    "foundationSuites": 205,
+    "intentionalSkips": 4,
+    "prototypeTests": 1706,
+    "laterOperationsCi": 39099380066,
+    "laterOperationsTests": 591,
+    "laterFullWorkflowComplete": false
   }
 }

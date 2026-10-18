@@ -1,3 +1,7 @@
+## Current outcome, 18 October 2026
+
+The dependency repair remains installed at 28ef0fd. Its original forced start settled at the restored safety hold without another financial attempt. Sabine then separately approved the regular-check recovery in backup-regular-schedule-recovery-proposal.md; scheduled attempt 3 verified the encrypted empty-source database recovery point and exited zero. Normal previously approved database-only scheduling may continue under the original caps and expiry. Preserve all earlier markers, archived holds and failed evidence. Do not repeat either consumed recovery authorization. Full customer/photo recovery remains unaccepted.
+
 # Recovery proposal for the held initial backup job
 
 Prepared and approved 17 October 2026. The local repair is now installed and the LaunchAgent PATH reloaded; the operator hold and all private/budget records remain intact. No provider attempt or hold removal has occurred.

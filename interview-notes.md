@@ -1,3 +1,7 @@
+## Recovering the automatic backup schedule, 18 October 2026
+
+After the Mac delayed a forced start, I kept the financial history intact and prepared a single-use recovery through the regular schedule. Once approved, the native job ran without a forced restart, authenticated the encrypted snapshot after upload and readback, and completed with no active reservation or hold left. I restored only the previously approved empty-source database coverage, preserving the free-budget caps and expiry. Full customer/photo recovery still needs separate acceptance.
+
 ## Finding a desktop-only assumption through CI, 18 October 2026
 
 The new operations job immediately caught a test helper that assumed my desktop’s Node cache path existed everywhere. I kept that failed run, added an installed-runtime fallback and tested the actual encrypted round-trip with the desktop cache absent. All 591 local operations checks passed. I left the real backup runtime and its pending approval untouched while verifying the fix in CI.
