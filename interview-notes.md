@@ -1,3 +1,7 @@
+## Finding a desktop-only assumption through CI, 18 October 2026
+
+The new operations job immediately caught a test helper that assumed my desktop’s Node cache path existed everywhere. I kept that failed run, added an installed-runtime fallback and tested the actual encrypted round-trip with the desktop cache absent. All 591 local operations checks passed. I left the real backup runtime and its pending approval untouched while verifying the fix in CI.
+
 ## Testing the backup operations in CI, 18 October 2026
 
 I confirmed the delayed Mac start ended at its safety hold without reserving another backup. I prepared a recovery path that uses the existing scheduled check and preserves a consumed authorization through crashes, then left it inactive pending the required decision. I also found that operations changes triggered CI without actually running the Python unit suite. I added a separate credential-free job after reproducing that gap; all 587 local operations checks passed.

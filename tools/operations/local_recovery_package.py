@@ -1,12 +1,33 @@
 """Synthetic local rehearsal composition only. No credential or network access."""
 import base64
 import json
+import os
+import shutil
 import subprocess
 from pathlib import Path
 from backup_bundle import build_candidate, read_candidate
 
 NODE = Path.home()/'.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node'
 ROOT = Path(__file__).resolve().parents[2]
+
+
+def node_runtime(*, bundled=None, which=shutil.which):
+    """Prefer the existing desktop runtime; use CI's installed Node otherwise.
+
+    This helper handles synthetic data only. It does not download a runtime,
+    change the permanent backup job, or inspect provider credentials.
+    """
+    bundled = Path(NODE if bundled is None else bundled)
+    if bundled.is_absolute() and bundled.is_file() and os.access(bundled, os.X_OK):
+        return bundled
+    installed = which('node')
+    if installed:
+        installed = Path(installed)
+        if installed.is_absolute() and installed.is_file() and os.access(installed, os.X_OK):
+            return installed
+    raise ValueError('local-package-node-unavailable')
+
+
 SCRIPT = r'''
 const fs=require('node:fs');
 const assert=require('node:assert/strict');
@@ -38,7 +59,7 @@ def round_trip(database, roles, rows, photos):
     or changes the active job. Rejects any child failure without raw diagnostics.
     """
     payload=build_candidate(database,roles,rows,photos,source_commit='a'*40,captured_at=100)
-    value=subprocess.run([str(NODE),'-e',SCRIPT],input=payload,capture_output=True,
+    value=subprocess.run([str(node_runtime()),'-e',SCRIPT],input=payload,capture_output=True,
                          timeout=15,cwd=ROOT)
     if value.returncode!=0:raise ValueError('local-package-round-trip-held')
     result=json.loads(value.stdout)

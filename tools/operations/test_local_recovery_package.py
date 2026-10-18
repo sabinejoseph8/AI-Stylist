@@ -3,8 +3,9 @@ import hashlib
 import importlib.util
 from pathlib import Path
 import unittest
-from unittest.mock import patch
-from local_recovery_package import round_trip
+import tempfile
+from unittest.mock import Mock, patch
+from local_recovery_package import round_trip, node_runtime
 from backup_bundle import BundleHeld
 from recovery_objects import manifest, restore_objects
 
@@ -24,6 +25,14 @@ class LocalCustomerPhotoTests(unittest.TestCase):
         self.assertEqual(result['photos'],self.photos)
         self.assertFalse(result['production_restore_authorized'])
         self.assertTrue(self.photo.startswith(b'\x89PNG\r\n\x1a\n'))
+
+    def test_real_encrypted_package_without_desktop_cache(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            with patch('local_recovery_package.NODE',Path(tmp).resolve()/'absent-desktop-runtime'):
+                result,checks=round_trip(b'PGDMPsynthetic',b'-- synthetic roles',[self.row],self.photos)
+        self.assertEqual(checks,8)
+        self.assertEqual(result['photos'],self.photos)
+        self.assertFalse(result['production_restore_authorized'])
 
     def test_missing_photo_holds_before_encryption(self):
         with patch('local_recovery_package.subprocess.run') as child:
@@ -52,5 +61,28 @@ class LocalCustomerPhotoTests(unittest.TestCase):
         restored=restore_objects(photos,body,signature,b'fixture','database',101,
                                  frozenset({drill.DELETED_OWNER+'/account.png'}))
         self.assertEqual(restored,self.photos)
+
+class LocalRuntimeTests(unittest.TestCase):
+    def test_existing_bundled_runtime_is_preferred(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            binary=Path(tmp).resolve()/'node';binary.write_text('# fixture');binary.chmod(0o700)
+            locate=Mock(side_effect=AssertionError('no fallback needed'))
+            self.assertEqual(node_runtime(bundled=binary,which=locate),binary)
+            locate.assert_not_called()
+
+    def test_ci_node_is_used_when_desktop_runtime_is_absent(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp).resolve();binary=root/'node';binary.write_text('# fixture');binary.chmod(0o700)
+            locate=Mock(return_value=str(binary))
+            self.assertEqual(node_runtime(bundled=root/'missing-desktop-runtime',which=locate),binary)
+            locate.assert_called_once_with('node')
+
+    def test_missing_relative_and_nonexecutable_fallbacks_are_refused(self):
+        with tempfile.TemporaryDirectory() as tmp:
+            root=Path(tmp).resolve();binary=root/'node';binary.write_text('# fixture');binary.chmod(0o600)
+            for installed in (None,'node',str(root/'missing'),str(binary)):
+                with self.assertRaisesRegex(ValueError,'local-package-node-unavailable'):
+                    node_runtime(bundled=root/'missing-desktop-runtime',which=lambda _name:installed)
+
 
 if __name__=='__main__':unittest.main()

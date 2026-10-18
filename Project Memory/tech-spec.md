@@ -1,3 +1,11 @@
+## CI operations portability repaired locally, 18 October 2026
+
+The new operations job in CI 39099183822 exposed one real failure: the synthetic encrypted-package helper assumed a desktop-only Node cache path. The other 586 operations checks passed. The original failed job log is retained. The helper now prefers the existing bundled executable and falls back only to an installed absolute executable from PATH, without downloading anything or changing encryption. Four new cases cover preferred/fallback/missing runtime and an actual synthetic encrypted round-trip with no desktop cache. This helper is not part of the installed permanent backup package.
+
+The final complete operations run passes **591 checks**, original **5638, exit zero**, 14.470 seconds. All **98** executed operations source/test hashes remain unchanged. The preceding 590-pass run is separate evidence. Workflow guards pass three tests; main TypeScript passed. CI execution of this portability correction remains pending after publication; do not claim the failed job is green. Evidence: source-checkpoints/operations-portability-fixed-20261018.json and log, plus the original failed CI log.
+
+Regular-schedule backup rearm is still only prepared. The single owner decision is pending; no fresh approval file exists, no hold was removed, no runtime file installed, no provider attempt made and no budget changed. Preserve the consumed earlier marker and both old financial attempts. The prior Site publication succeeded privately with source 557c672; synchronize the newer portability evidence after its actual CI result. Exact next action: publish this correction, inspect the newly triggered operations job, and collect existing full CI 39098253367/watch 83897 without restarting it. Do not arm recovery unless the pending owner decision approves it.
+
 ## Regular scheduled recovery prepared; decision pending, 18 October 2026
 
 The previous goal turn made progress by matching all 580 frozen inputs to completed CI evidence. This turn observed the formerly uncertain native start terminate: macOS reports three executions, not running, latest exit one. It exited at the restored safety hold. Financial history remains two old attempts, none active, with no new backup receipt. Do not treat the consumed forced-start authorization as a new allowance.
