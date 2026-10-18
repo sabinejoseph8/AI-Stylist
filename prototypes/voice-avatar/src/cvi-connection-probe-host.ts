@@ -4,9 +4,10 @@ import {validatePreview} from './preview-gate.ts';
 import {PrivatePreviewAccess} from './private-preview-access.ts';
 import {connectionProbeCallback} from './cvi-connection-probe-http.ts';
 import type {ConnectionProbeSession} from './cvi-connection-probe-session.ts';
+import {probeStopReason} from './cvi-probe-diagnostics.ts';
 /** Dormant composition. Explicit attachment, current operator preflight and durable
  * admission are required; there is no provisioning or customer route here. */
-export function connectionProbeHost(options:{preview:{origin:string;password:string};credential:string;session:ConnectionProbeSession;available:()=>Promise<boolean>;operatorPreflightValid:()=>boolean;asset:(path:string)=>Uint8Array|null}){
+export function connectionProbeHost(options:{preview:{origin:string;password:string};credential:string;session:ConnectionProbeSession;available:()=>Promise<boolean>;operatorPreflightValid:()=>boolean;asset:(path:string)=>Uint8Array|null;diagnostic?:(value:{reason:ReturnType<typeof probeStopReason>;state:string;callbackCount:number})=>void}){
  const target=validatePreview(options.preview),access=new PrivatePreviewAccess(options.preview);
  const callback=connectionProbeCallback({host:target.host,credential:options.credential,session:options.session});
  const ownerToken=randomBytes(32).toString('base64url');let started=false,closed=false;
@@ -46,7 +47,7 @@ export function connectionProbeHost(options:{preview:{origin:string;password:str
    }
    if(!started||req.headers['x-probe-owner']!==ownerToken){send(res,403,{});return;}
    if(req.url==='/api/connection-probe/heartbeat'){send(res,options.session.heartbeat()?200:409,options.session.snapshot());return;}
-   if(req.url==='/api/connection-probe/end'){await options.session.stop();send(res,200,options.session.snapshot());return;}
+   if(req.url==='/api/connection-probe/end'){await options.session.stop();const snapshot=options.session.snapshot();try{options.diagnostic?.({reason:probeStopReason(req.headers['x-probe-stop-reason']),state:snapshot.state,callbackCount:snapshot.callbackCount});}catch{/* diagnostics never interfere with cleanup */}send(res,200,snapshot);return;}
    send(res,404,{});
   },
  };

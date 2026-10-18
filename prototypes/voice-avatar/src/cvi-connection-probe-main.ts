@@ -28,7 +28,7 @@ try{await provider.verifyConfiguration();configurationVerified=true;}catch{conso
 const session=new ConnectionProbeSession({admission:new ConnectionProbeAdmission(store),provider,monotonicNow:()=>performance.now()});
 const assets=await loadConnectionProbeAssets(fileURLToPath(new URL('../dist',import.meta.url)));
 const cache=new Map<string,Uint8Array>();for(const path of assets.paths()){const value=await assets.getAsset(path,new AbortController().signal);if(value)cache.set(path,value);}
-const owner=connectionProbeHost({preview:{origin,password},credential:callbackKey,session,available:async()=>(await store.read() as {reservation:unknown}).reservation===null,operatorPreflightValid:()=>configurationVerified&&preflightValid(),asset:path=>cache.get(path)??null});
+const owner=connectionProbeHost({preview:{origin,password},credential:callbackKey,session,available:async()=>(await store.read() as {reservation:unknown}).reservation===null,operatorPreflightValid:()=>configurationVerified&&preflightValid(),asset:path=>cache.get(path)??null,diagnostic:report=>console.log('Probe stop category:',JSON.stringify(report))});
 const server=createServer((req,res)=>{void owner.handle(req,res).catch(()=>{if(!res.headersSent){res.statusCode=503;res.end();}else res.destroy();});});
 server.requestTimeout=5000;server.headersTimeout=5000;server.keepAliveTimeout=5000;server.maxHeadersCount=32;
 const timer=setInterval(()=>owner.tick(),1000);let closing=false;
