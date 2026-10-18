@@ -38,3 +38,9 @@ Source 7c7d6bf adds the original input notification channel, seven fixed setup n
 The complete disposable runner passes in session 46459, exit zero; the browser test takes 14.74 seconds, makes 42 SQL calls and uses 80/128 original authority records with zero protected outputs. Its one-file hash is frozen and matches the merged increment. TypeScript also passes on main. The initial failed locator assertion is retained separately (13925, exit one); it did not reach candidate assertions. No full current-source regression is claimed.
 
 Remaining local composition check: SQL expiry during a delayed candidate request, after its first admission but before response publication. Current coverage expires the lease between completed operations.
+
+## Expiry while a candidate is pending
+
+Source 5f0794e adds a controlled pause inside the unchanged synthetic facts implementation after the request's first SQL check. The trusted fixture expires the SQL lease, releases the facts and verifies the candidate reaches internal sample state. The final SQL check nevertheless emits exactly the serialized null response and ends the original context. No browser save action returns and no competing factory runs. The provider hold is not released.
+
+Original session 97793 passes the entire disposable runner, with one browser test, terminal exit zero and 15.55 seconds browser duration. It records 84/128 authority entries, 45 SQL calls and zero protected outputs. TypeScript passes on merged main. The first attempt (92395, exit one) failed retrieving an aborted WebKit response body and remains recorded separately. The final observer reads the exact serialized server reply and visible browser state; it does not depend on WebKit retaining an aborted resource. No real provider or customer timing guarantee follows.

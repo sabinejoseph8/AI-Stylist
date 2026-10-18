@@ -1,8 +1,8 @@
 {
   "version": 1,
-  "asOf": "2026-10-16",
-  "evidenceCommit": "1f7c46861be5a9497bc15ec7e6a828101dd84abc",
-  "scope": "Repository evidence audit only; no fresh hosted/provider/device checks",
+  "asOf": "2026-10-17",
+  "evidenceCommit": "5f0794ed2106528712a86fb2cdf0f408f6f2228b",
+  "scope": "Current repository evidence map; local original-coordinator/browser and disposable SQL checks only. No fresh hosted/provider/device acceptance.",
   "acceptedProductionCriteria": 0,
   "criteriaCount": 21,
   "phaseTasks": {
@@ -27,14 +27,17 @@
       "evidenceLevel": "Local sample, controller and user review",
       "evidence": [
         "docs/task-3-local-notebook.md",
-        "apps/foundation/tests/notebook-preview.test.ts"
+        "apps/foundation/tests/notebook-preview.test.ts",
+        "docs/task-8a-global-admission-rehearsal.md",
+        "apps/foundation/tests/coordinated-global-admission-browser.test.ts"
       ],
       "remaining": "Actual live transcription/extraction with representative speech; complete confirmations in the active customer context.",
       "blockers": [
         "B01",
         "B03",
         "B06"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A02",
@@ -61,14 +64,17 @@
       "evidenceLevel": "Local revisions, stale-event rejection and browser edits",
       "evidence": [
         "docs/local-sample-journey-review.md",
-        "apps/foundation/tests/proposal-stream.test.ts"
+        "apps/foundation/tests/proposal-stream.test.ts",
+        "docs/task-8a-global-admission-rehearsal.md",
+        "apps/foundation/tests/coordinated-global-admission-browser.test.ts"
       ],
       "remaining": "Live voice correction, active recommendation refresh and measured one-/two-second targets.",
       "blockers": [
         "B01",
         "B06",
         "B08"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A04",
@@ -78,14 +84,16 @@
       "evidenceLevel": "Generated-image walkthrough; user photo/camera review; simulated anchor protection",
       "evidence": [
         "docs/task-4-local-media.md",
-        "apps/foundation/tests/local-reference.test.ts"
+        "apps/foundation/tests/local-reference.test.ts",
+        "docs/task-8a-local-integration-proposal.md"
       ],
       "remaining": "Actual customer photo persists through three integrated checked rounds, with ownership and cost exclusion verified.",
       "blockers": [
         "B03",
         "B06",
         "B07"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A05",
@@ -111,14 +119,16 @@
       "evidenceLevel": "Illustrated draft plus independent deterministic simulated validation",
       "evidence": [
         "docs/task-6b-local-validation.md",
-        "apps/foundation/tests/local-outfit-validation.test.ts"
+        "apps/foundation/tests/local-outfit-validation.test.ts",
+        "docs/task-8a-local-integration-proposal.md"
       ],
       "remaining": "Real generator/semantic checker, authorized catalog and enforced pre-display/pre-speech release.",
       "blockers": [
         "B01",
         "B02",
         "B06"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A07",
@@ -128,14 +138,16 @@
       "evidenceLevel": "Local item-scoped feedback, fixed owned anchors and bounded changes",
       "evidence": [
         "docs/task-6c-local-feedback.md",
-        "apps/foundation/tests/local-look-feedback.test.ts"
+        "apps/foundation/tests/local-look-feedback.test.ts",
+        "docs/task-8a-local-integration-proposal.md"
       ],
       "remaining": "Live understanding of named items and three real checked revisions with explanations/current totals.",
       "blockers": [
         "B01",
         "B02",
         "B06"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A08",
@@ -161,14 +173,17 @@
       "evidenceLevel": "Revision-bound authorization, validation/restore/list and cancellation fixtures",
       "evidence": [
         "docs/task-6d-local-revisions.md",
-        "prototypes/voice-avatar/tests/look-release.test.ts"
+        "prototypes/voice-avatar/tests/look-release.test.ts",
+        "docs/task-8a-global-admission-rehearsal.md",
+        "apps/foundation/tests/coordinated-global-admission-browser.test.ts"
       ],
       "remaining": "Same revision authority across actual generator, renderer, speech, restored look and shopping addition.",
       "blockers": [
         "B01",
         "B02",
         "B06"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A10",
@@ -178,7 +193,8 @@
       "evidenceLevel": "Local revisions, saved-look/list controls and complete sample walkthrough",
       "evidence": [
         "docs/local-sample-journey-review.md",
-        "apps/foundation/tests/local-look-revisions.test.ts"
+        "apps/foundation/tests/local-look-revisions.test.ts",
+        "docs/task-8a-local-integration-proposal.md"
       ],
       "remaining": "Authenticated persistence and real matching retailer navigation through fresh checks; no cart automation.",
       "blockers": [
@@ -186,7 +202,8 @@
         "B03",
         "B06",
         "B07"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A11",
@@ -197,14 +214,17 @@
       "evidence": [
         "docs/task-8c-local-failure-capacity.md",
         "apps/foundation/tests/local-outfit-validation.test.ts",
-        "docs/progress.md"
+        "docs/progress.md",
+        "docs/task-8a-global-admission-rehearsal.md",
+        "apps/foundation/tests/coordinated-global-admission-browser.test.ts"
       ],
       "remaining": "Integrated device denial, actual recognition/provider/feed failures and reliable cleanup/recovery.",
       "blockers": [
         "B01",
         "B06",
         "B08"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A12",
@@ -329,7 +349,8 @@
       "evidenceLevel": "No-questionnaire sample UI, progressive notes and explicit Budget save/return",
       "evidence": [
         "docs/task-3-local-notebook.md",
-        "apps/foundation/tests/local-sample-journey.test.ts"
+        "apps/foundation/tests/local-sample-journey.test.ts",
+        "docs/task-8a-local-integration-proposal.md"
       ],
       "remaining": "Authenticated first/returning live conversation, focused follow-ups and persisted consented profile reuse.",
       "blockers": [
@@ -337,7 +358,8 @@
         "B03",
         "B04",
         "B06"
-      ]
+      ],
+      "localIntegrationUpdate": "Original shared-coordinator sample evidence is available; exact live/timing/persistence acceptance remains open. See the scoped Task 8a coverage matrix."
     },
     {
       "id": "A20",
@@ -447,7 +469,7 @@
       "name": "Connect and verify the actual current-context consultation",
       "owner": "Engineering after prerequisite contracts",
       "gate": "One authoritative authenticated session across live notes, recognition, current requirements, generation, independent checking, display/speech, camera, feedback, saving and shopping.",
-      "state": "Prepared modules and fixed local rehearsals remain separate. Neither simulated semantic pass nor illustrated draft permits real recommendation release.",
+      "state": "The local original pair now shares notes, generated reference, illustrated checks/feedback and explicit sample saving, including actual global SQL admission and late-result expiry. Profile privacy export remains disconnected. Actual authenticated live media/generation/recognition/speech/source/persistence and customer acceptance remain unverified; all real release flags remain false.",
       "dependsOn": [
         "B01",
         "B02",
@@ -1013,6 +1035,36 @@
       "newFullRegressionLog": "/private/tmp/ai-stylist-8a-reference-full-regression.log",
       "newFullRegressionSourceCommit": "1f7c46861be5a9497bc15ec7e6a828101dd84abc",
       "frozenSourceFiles": 539
+    },
+    {
+      "asOf": "2026-10-17",
+      "evidence": "docs/task-8a-global-admission-rehearsal.md",
+      "sourceCommit": "5f0794ed2106528712a86fb2cdf0f408f6f2228b",
+      "scope": "Same actual SQL slot, original coordinator, WebKit app, simulated transcripts, owned reference, independent illustrated checks and final-postcheck expiry refusal",
+      "session": 97793,
+      "terminalExit": 0,
+      "authorityRecords": 84,
+      "authorityRecordCap": 128,
+      "sqlCalls": 45,
+      "protectedOutputs": 0,
+      "productionCriteriaClosed": 0,
+      "hostedProviderDeviceChecks": false
     }
-  ]
+  ],
+  "historicalEntryStatusMeaning": "localPreparationUpdates preserves statuses as recorded at those checkpoints. A recorded running status is not a live process assertion; use latestLocalEvidence for current state.",
+  "latestLocalEvidence": {
+    "sourceCommit": "5f0794ed2106528712a86fb2cdf0f408f6f2228b",
+    "localRunStatus": "passed",
+    "session": 97793,
+    "exitCode": 0,
+    "authorityRecords": 84,
+    "authorityRecordCap": 128,
+    "sqlCalls": 45,
+    "firstFactories": 1,
+    "secondFactories": 0,
+    "latePublicationDenied": true,
+    "protectedOutputs": 0,
+    "newCompleteFoundationRun": false,
+    "nextAction": "Bind existing sample privacy controls to the shared coordinator view, with current-only exports and truthful async clearing."
+  }
 }

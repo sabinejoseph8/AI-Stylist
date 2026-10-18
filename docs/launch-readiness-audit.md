@@ -1,3 +1,15 @@
+# Current evidence reconciliation, 17 October 2026
+
+All 21 original acceptance criteria remain open; none is completed by local preparation. The JSON audit now points to source 5f0794e and verifies every referenced evidence file exists. It distinguishes current local evidence from historical recorded running states, which are not live process assertions.
+
+The shared-coordinator sample now connects notebook, generated reference, illustrated checks/feedback and separate saving, with actual SQL admission before factory work and final rejection after in-flight expiry. Latest executed SQL/browser session 97793 passes, using 84/128 authority records, 45 SQL calls, one primary/zero competing factories and zero protected outputs. The 2,741-pass complete foundation result still applies to source 08d1e01; subsequent test-only increments have their own scoped checks. No fresh full current-source or hosted/provider/device result is claimed.
+
+Next local implementation: connect Profile sample privacy exports and scoped clear controls to the shared coordinator. B01–B09 retain their real-media, source, customer identity/email, privacy, hosted recovery, integration, device/cost and launch requirements. Synthetic identities, catalog outcomes, logical native clocks and private preview evidence cannot close those gates. Full completion remains 5/41, production acceptance 0/21 and allocation $51.
+
+## Historical audit checkpoint diary
+
+The following dated checkpoint descriptions preserve evidence as recorded. Current state is above and in launch-readiness-audit.json; historical running/staged wording is not a present-tense process claim.
+
 ## Captured witness integration in isolated regression, 16 October 2026
 
 Prepared the captured witness integration in /private/tmp/ai-stylist-witness-pair-stage. The protected factory now requires a scoped, separate replay-witness reference and constructs its own fixed bounded replay driver. Caller-selected replay callbacks are refused before work. The original Node gate passes the same captured reference to the Python transition primitive; ordinary inspection and owner-fenced reserve/consume use that reference too. The driver uses captured clocks, an absolute wall deadline, strict frames, original native leases and three fresh signed checks per mutation, with no alternate script, fault flags or raw-write fallback.

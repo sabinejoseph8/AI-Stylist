@@ -1,3 +1,7 @@
+## Checking the last admission boundary, 17 October 2026
+
+I delayed sample facts after the first SQL admission, expired the lease, and then allowed the candidate to finish internally. The final check still returned only null and kept the sample unsaveable, without releasing the provider hold or starting a competing coordinator. I retained the failed WebKit response-body attempt and changed the observer to capture the exact serialized reply plus browser state. The passing run uses 84 of 128 authority records. Reviewing the complete sample app also exposed a practical remaining gap: Profile privacy export is still disconnected from the shared coordinator. That is the next implementation task, rather than claiming local checks complete the live product.
+
 ## Keeping checks current under global admission, 17 October 2026
 
 I extended the actual global-slot browser rehearsal to the original transcript and illustrated candidate. Pending speech hid the earlier sample, confirmation stayed explicit, and a conflict with fixed catalog facts remained blocked until a correction passed fresh checks. A separate customer still could not start. The run used 80 of 128 authority records and released no protected output. I preserved the initial failed locator test instead of replacing its evidence. The next boundary is expiry during an already pending candidate operation, rather than only between operations.

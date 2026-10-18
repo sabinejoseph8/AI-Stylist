@@ -1,3 +1,26 @@
+## Delayed candidate refused after SQL expiry, 17 October 2026
+
+Source 5f0794e extends the actual SQL/browser rehearsal: a candidate passes initial admission, pauses during synthetic fact lookup, and finishes preparing a sample only after trusted SQL expires its lease. The final SQL check serializes **null**, the browser exposes no save action, the original context ends, and the competing factory remains refused. The provider hold is preserved. This specifically tests expiry during an operation rather than between completed operations.
+
+The complete disposable data-protection runner passes (97793, exit zero); its browser case takes 15.55 seconds, uses **84/128 authority records** and **45 SQL calls**, creates one primary/zero competing factories and releases zero protected outputs. Its exact one-file hash matches the merged source; main TypeScript passes. Retain the initial failed WebKit response-body observation separately (92395, exit one). The final test captures the exact serialized server reply and verifies the browser state, and also proves the internally prepared state was sample before final refusal. No application deadline, signature, source fact, authority limit or production module changed. Logs/hashes are preserved in source-checkpoints/global-late-final-sql-browser-20261017.*.
+
+The plan Summary and Phase 8 status now reflect these executed paths. The launch audit maps all 21 unchanged criteria to existing files, with no production criterion accepted. Shared Profile privacy export/clear binding is the next concrete local app gap. Full completion remains 5/41, production acceptance 0/21 and allocation $51; all real-media, account, source, hosted recovery, device and launch gates remain open.
+
+## Current authorized local coverage matrix
+
+This maps the approved rehearsal to executed source evidence. It does not replace the full Task 8a description or the 21 production criteria.
+
+| Approved local requirement | Executed evidence | Remaining boundary |
+| --- | --- | --- |
+| One shared seven-field view, versions and explicit confirmation | coordinated-notebook-browser.test.ts, coordinated-notebook-view.test.ts and cvi-notebook-context.test.ts; 83 affected and 75 independent checks at the recorded scope | Synthetic identity/extraction and no live timing acceptance |
+| Original native/replay coordinator, no substitute notebook | All coordinated browser hosts use pairedOwnerFixture and the captured original ports; private proof/deadline/cap assertions remain | Independent hosted administration and production clock/transaction acceptance |
+| Stable owned reference, current candidate and three changes | coordinated-candidate-browser.test.ts uses 126/128 records; lower paired candidate uses 90/128; generated reference, cost exclusion, kept pieces and item-only feedback | Real recognition/catalog/checker and release remain disabled; global SQL case does not repeat all three feedback rounds |
+| Pending input, correction, checks and late cancellation | coordinated-input-browser.test.ts uses 88/128; global SQL case uses 84/128, including internal prepared sample withheld after SQL expiry | Actual media events, representative latency and real speech suppression |
+| Clear/End/sign-out and separate explicit sample scopes | Three original WebKit journeys, cvi-paired-candidate-lifecycle.test.ts and view tests cover delayed work, saved looks/shopping, simulated sign-out and channel loss | Actual accounts, persistence and provider cleanup |
+| Second start refused and foreign customer denied | Actual global SQL/browser case creates one primary/zero competing factories before startup; foreign synthetic context refusal is separately covered by lifecycle tests | Fixed identities in test host are not hosted authorization or a general customer router |
+| No real side effects | Loopback external-request denial, media API refusal, generated assets, empty browser storage, zero protected outputs and all real release flags false | No customer route, device, provider, retailer, hosted data or launch accepted |
+| Whole sample Profile privacy flow | Existing LocalPrivacy/PrivacyPanel supports the ordinary sample app; shared App explicitly displays the disconnected-export message | **Next implementation:** current-only shared notes/reference export and truthful async scoped clear, preserving separate saved categories |
+
 ## Globally admitted transcript and candidate flow verified, 17 October 2026
 
 Source 7c7d6bf extends the same actual SQL/browser rehearsal to the original transcript adapter, generated owned-reference preview and illustrated sample checks. Pending speech hides the earlier sample and disables saving, while the independent competing customer remains Busy with zero second factories. Completed speech stays tentative until explicit confirmation. Changed wording that conflicts with the fixed synthetic catalog stays blocked; an explicit correction and fresh checks restore the sample. The confirmed photo remains stable. Expiring the SQL lease then hides notes and the sample while retaining the provider hold.

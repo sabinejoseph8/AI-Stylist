@@ -1,3 +1,11 @@
+## Delayed candidate refused after SQL expiry, 17 October 2026
+
+Source 5f0794e extends the actual SQL/browser rehearsal: a candidate passes initial admission, pauses during synthetic fact lookup, and finishes preparing a sample only after trusted SQL expires its lease. The final SQL check serializes **null**, the browser exposes no save action, the original context ends, and the competing factory remains refused. The provider hold is preserved. This specifically tests expiry during an operation rather than between completed operations.
+
+The complete disposable data-protection runner passes (97793, exit zero); its browser case takes 15.55 seconds, uses **84/128 authority records** and **45 SQL calls**, creates one primary/zero competing factories and releases zero protected outputs. Its exact one-file hash matches the merged source; main TypeScript passes. Retain the initial failed WebKit response-body observation separately (92395, exit one). The final test captures the exact serialized server reply and verifies the browser state, and also proves the internally prepared state was sample before final refusal. No application deadline, signature, source fact, authority limit or production module changed. Logs/hashes are preserved in source-checkpoints/global-late-final-sql-browser-20261017.*.
+
+The plan Summary and Phase 8 status now reflect these executed paths. The launch audit maps all 21 unchanged criteria to existing files, with no production criterion accepted. Shared Profile privacy export/clear binding is the next concrete local app gap. Full completion remains 5/41, production acceptance 0/21 and allocation $51; all real-media, account, source, hosted recovery, device and launch gates remain open.
+
 ## Globally admitted transcript and candidate flow verified, 17 October 2026
 
 Source 7c7d6bf extends the same actual SQL/browser rehearsal to the original transcript adapter, generated owned-reference preview and illustrated sample checks. Pending speech hides the earlier sample and disables saving, while the independent competing customer remains Busy with zero second factories. Completed speech stays tentative until explicit confirmation. Changed wording that conflicts with the fixed synthetic catalog stays blocked; an explicit correction and fresh checks restore the sample. The confirmed photo remains stable. Expiring the SQL lease then hides notes and the sample while retaining the provider hold.
@@ -1878,16 +1886,17 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current focus: approved local Task 8a preparation. The complete foundation regression passes 2,741 tests across 200 files, with three intentional browser skips and exit zero. The actual disposable PostgreSQL follow-up also passes and its single verified test-script change is merged; foundation runtime/test inputs are unchanged. Composed browser evidence passes 186 checks across 13 suites. No local full regression remains active.
+Current focus: approved local Task 8a preparation. The original coordinator now shares notes, generated owned reference, illustrated candidate, item feedback and sample-save controls with the browser rehearsal. Actual PostgreSQL admission is composed before factory work; competing starts are refused. The latest SQL/browser run also withholds a delayed prepared sample after lease expiry. No customer integration or launch is accepted.
 
 - **Full completion:** 5 of 41 Memory items; 0 of 21 production acceptance criteria. Local preparation does not close integrated acceptance.
-- **Verified local behavior:** transcript invalidation/confirmation, stable reference, feedback/save scopes, first-read refresh race protection, input-channel-loss refusal and uncertain database holds, including actual SQL lost acknowledgments.
-- **Next local work:** compose global consultation admission with the original app/coordinator flow. Separate SQL-level admission and constructor resource refusal do not yet prove that combined path.
-- **Remaining gates:** provider startup/conversation, customer account and recovery-host security, approved retailer sourcing, recovery/fencing acceptance and physical-device/accessibility checks.
+- **Latest local evidence:** source 5f0794e, disposable PostgreSQL plus WebKit, original session 97793, exit zero. One primary factory, zero competing factories, 45 SQL calls, 84/128 authority records and zero protected outputs. Internally prepared late sample serializes only null after the final expired-lease check.
+- **Regression scope:** the complete 2,741-test pass applies to source 08d1e01, with three intentional browser skips. Later test-only increments have separate executed SQL/browser evidence, 83 affected checks, 75 independent main checks and TypeScript/build. No full current-source run is claimed. Current ordinary runs skip four opt-in browser cases.
+- **Next local work:** connect the existing sample privacy export and scoped-clear controls to the shared coordinator view. Profile currently reports that combined privacy export is not connected. Preserve explicit saved scopes, current-only export and truthful asynchronous clearing.
+- **Remaining gates:** live media and enforced release, actual account/recovery-host security and sender, approved retailer sourcing, hosted recovery/fencing, physical-device/accessibility and launch reviews.
 - **Limits and decisions:** $51 experiment allocation; no new spending or customer-host changes. Email/password with recovery only. Domain purchase and Rakuten remain deferred.
-- **Memory audience:** owner-only access is restored and verified. Preserve that audience and existing task records when publishing.
-- **GitHub:** workflow 39089632154 at app checkpoint 2d17ea7 passed foundation, prototype-regressions and data-protections. Newer test-script-only pushes have separate workflow status.
-- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout, test stages and failed evidence.
+- **Memory audience:** owner-only. Preserve the owner allowlist and existing task records when publishing.
+- **GitHub:** the verified green app workflow remains 39089632154 at 2d17ea7. Later source pushes have separate workflow status; do not infer success.
+- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout, stages and all failed evidence.
 
 ## Historical summary checkpoints
 
@@ -2324,7 +2333,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** A working end-to-end phone experience that meets all 21 product acceptance scenarios.  
 **Dependencies:** Phases 1–7; approved local-only exceptions cover 8a sample integration rehearsal (16 October), 8b accessibility, 8c failure/capacity and 8d operations preparation; customer integration and launch remain gated; technical baseline approval, real source access, provider privacy agreement, host/domain configuration and agreed operating/spending limits.
 **Product coverage:** A01–A21, with emphasis on A11/A12 and integrated timing/recovery.  
-**Status:** Sabine approved local 8a sample-app/coordinator preparation on 16 October, in addition to the earlier 8b/8c/8d exceptions. The shared view, reference, illustrated candidate, feedback and sample lifecycle increments are merged with 268 affected passing tests. The new complete regression remains running; this is local preparation, not full application integration. Accessibility browser evidence, synthetic restore evidence and isolated failure/capacity checks remain recorded in their task documents. See the current evidence summary at the top for the latest verified source and test scope. Real screen-reader/switch/device, hosted recovery, integrated journey, actual load/cost and release acceptance remain open. Phase 8 is not complete and no customer deployment or launch is authorized.
+**Status:** Local Task 8a now connects the original coordinator to notes, generated reference, illustrated candidate, feedback, comparison and explicit saving. Actual global SQL admission and late-result expiry have separate executed browser evidence; sample privacy export/clear binding is the next local gap. The earlier 2,741-pass complete regression covers its own source, with later test-only increments checked separately. Local 8b/8c/8d evidence remains scoped to its task documents. Real media, accounts, sources, clocks, screen-reader/switch/device, hosted recovery and launch acceptance remain open. No current complete local run is active and no customer deployment is authorized.
 
 ### Task groups
 
