@@ -32,17 +32,24 @@ console.log('Prepared consultation adapter passes actual local SQL reservation, 
 // Lost replies occur after the database commits. The adapter must not retry.
 let submitted=0;
 const lost={async call(name:string,p:Record<string,unknown>){submitted++;await rpc.call(name,p);throw Error('simulated lost acknowledgment');}};
-await assert.rejects(createConsultationSlot(owner,lost).claim(session),/uncertain/);
+const lostClaim=createConsultationSlot(owner,lost);await assert.rejects(lostClaim.claim(session),/uncertain/);
+await assert.rejects(lostClaim.claim(session),/uncertain/);await assert.rejects(lostClaim.update(lease,'check'),/uncertain/);
 assert.equal(submitted,1);assert.equal(await slot.claim(session),null);
 // No token was received: retain the unused reservation until its safe expiry.
 sql("update stylist_private.consultation_slot set expires_at=now()-interval '1 second';");
 const resumed=await slot.claim(session);assert.ok(resumed);
-await assert.rejects(createConsultationSlot(owner,lost).update(resumed,'provider'),/uncertain/);
+await assert.rejects(lostClaim.claim(session),/uncertain/);assert.equal(submitted,1);
+const lostStart=createConsultationSlot(owner,lost);await assert.rejects(lostStart.update(resumed,'provider'),/uncertain/);
+await assert.rejects(lostStart.update(resumed,'provider'),/uncertain/);await assert.rejects(lostStart.claim(session,resumed.token),/uncertain/);
 assert.equal(submitted,2);
 const afterLostStart=await slot.claim(session,resumed.token);assert.equal(afterLostStart?.state,'provider');
 assert.equal(await slot.update(resumed,'provider'),false);assert.equal(await foreign.claim(session),null);
-await assert.rejects(createConsultationSlot(owner,lost).update(resumed,'end',true),/uncertain/);
+const lostEnd=createConsultationSlot(owner,lost);await assert.rejects(lostEnd.update(resumed,'end',true),/uncertain/);
+await assert.rejects(lostEnd.update(resumed,'end',true),/uncertain/);assert.equal(submitted,3);
 assert.equal(await slot.claim(session,resumed.token),null);
 const next=await foreign.claim(session);assert.ok(next);assert.ok(next.fence>resumed.fence);
 assert.equal(await slot.update(resumed,'end',true),false);assert.equal(await foreign.update(next,'end'),true);
 console.log('Lost reservation/start/end acknowledgments retain safe state without duplicate provider permission');
+
+await assert.rejects(lostEnd.claim(session),/uncertain/);assert.equal(submitted,3);
+console.log('Uncertain adapter instances refuse repeat SQL calls after lost claim/start/end replies, expiry and external cleanup');
