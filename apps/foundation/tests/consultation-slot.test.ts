@@ -48,3 +48,18 @@ describe('prepared consultation slot',()=>{
   await new Promise(resolve=>setTimeout(resolve,0));expect(call).toHaveBeenCalledTimes(1);
  });
 });
+
+it.each(['timeout','transport','claim-shape','update-shape'] as const)('holds the slot after an uncertain %s outcome, including late success',async mode=>{
+ vi.useFakeTimers();try{
+  let finish!:(raw:unknown)=>void;
+  const call=vi.fn(async()=>{if(mode==='timeout')return new Promise(resolve=>{finish=resolve;});if(mode==='transport')throw Error('Synthetic transport error');return {unexpected:true};});
+  const slot=createConsultationSlot(owner,{call},5),first=mode==='update-shape'?slot.update(record,'provider'):slot.claim(session);
+  const rejected=expect(first).rejects.toThrow('Consultation operation uncertain');await vi.advanceTimersByTimeAsync(5);await rejected;
+  if(mode==='timeout'){finish(record);await Promise.resolve();}
+  const nextClaim=expect(slot.claim(session)).rejects.toThrow('Consultation operation uncertain');await vi.advanceTimersByTimeAsync(5);await nextClaim;const nextUpdate=expect(slot.update(record,'check')).rejects.toThrow('Consultation operation uncertain');await vi.advanceTimersByTimeAsync(5);await nextUpdate;expect(call).toHaveBeenCalledTimes(1);
+ }finally{vi.useRealTimers();}
+});
+it('known refusal and busy responses do not poison subsequent explicit operations',async()=>{const call=vi.fn().mockResolvedValueOnce(null).mockResolvedValueOnce(false).mockResolvedValueOnce(record);const slot=createConsultationSlot(owner,{call});expect(await slot.claim(session)).toBeNull();expect(await slot.update(record,'check')).toBe(false);expect(await slot.claim(session)).toEqual(record);expect(call).toHaveBeenCalledTimes(3);});
+it('a competing call cannot poison the original successful operation',async()=>{let finish!:(raw:unknown)=>void;const call=vi.fn(()=>new Promise(resolve=>{finish=resolve;}));const slot=createConsultationSlot(owner,{call});const first=slot.claim(session);await vi.waitFor(()=>expect(finish).toBeTypeOf('function'));await expect(slot.claim(session)).rejects.toThrow('uncertain');finish(record);expect(await first).toEqual(record);call.mockResolvedValueOnce(true);expect(await slot.update(record,'check')).toBe(true);expect(call).toHaveBeenCalledTimes(2);});
+it('captures the RPC function so later caller mutation cannot replace the transport',async()=>{const original=vi.fn(async()=>record),replacement=vi.fn(async()=>null),rpc:{call:()=>Promise<unknown>}={call:original};const slot=createConsultationSlot(owner,rpc);rpc.call=replacement;expect(await slot.claim(session)).toEqual(record);expect(original).toHaveBeenCalledTimes(1);expect(replacement).not.toHaveBeenCalled();});
+it('invalid local input never submits a mutation or creates an uncertain outcome',async()=>{const call=vi.fn(async()=>record),slot=createConsultationSlot(owner,{call});await expect(slot.claim('invalid')).rejects.toThrow('input unavailable');expect(call).not.toHaveBeenCalled();expect(await slot.claim(session)).toEqual(record);expect(call).toHaveBeenCalledTimes(1);});

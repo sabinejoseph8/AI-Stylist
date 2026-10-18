@@ -1,4 +1,5 @@
-/** Prepared service-only database port. No route, Auth or provider is connected. */
+/** Prepared service-only database port. No route, Auth or provider is connected.
+ * Unknown outcomes hold this instance; this is not durable restart admission. */
 export interface ConsultationRpc {call(name:string,payload:Record<string,unknown>):Promise<unknown>}
 export type ConsultationLease=Readonly<{sessionId:string;token:string;fence:number;state:'reserved'|'provider';expiresAt:string}>;
 const uuid=/^[a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12}$/;
@@ -14,14 +15,14 @@ function lease(value:unknown):ConsultationLease{
 export function createConsultationSlot(ownerId:string,rpc:ConsultationRpc,deadlineMs=8000){
  if(!validId(ownerId)||typeof rpc?.call!=='function'||!Number.isSafeInteger(deadlineMs)||deadlineMs<1||deadlineMs>8000)
  throw Error('Consultation configuration unavailable');
- let inFlight=false;
+ let inFlight=false,uncertain=false;const invoke=rpc.call.bind(rpc);
  async function call(name:string,payload:Record<string,unknown>){
-  if(inFlight)throw Error('Consultation operation uncertain');
+  if(inFlight||uncertain)throw Error('Consultation operation uncertain');
   inFlight=true;let timer:ReturnType<typeof setTimeout>|undefined;
   // A timeout does not cancel an already submitted database mutation. Do not retry.
-  try{return await Promise.race([Promise.resolve().then(()=>rpc.call(name,payload)),new Promise<never>((_,reject)=>{
+  try{return await Promise.race([Promise.resolve().then(()=>invoke(name,payload)),new Promise<never>((_,reject)=>{
    timer=setTimeout(()=>reject(Error()),deadlineMs);
-  })]);}catch{throw Error('Consultation operation uncertain');}
+  })]);}catch{uncertain=true;throw Error('Consultation operation uncertain');}
   finally{if(timer)clearTimeout(timer);inFlight=false;}
  }
  return Object.freeze({
@@ -34,7 +35,7 @@ export function createConsultationSlot(ownerId:string,rpc:ConsultationRpc,deadli
     if(result.sessionId!==sessionId||(reconnectToken!==null&&result.token!==reconnectToken)||
       (reconnectToken===null&&result.state!=='reserved'))throw Error();
     return result;
-   }catch{throw Error('Consultation operation uncertain');}
+   }catch{uncertain=true;throw Error('Consultation operation uncertain');}
   },
   async update(value:ConsultationLease,action:'provider'|'heartbeat'|'check'|'end',cleanupVerified=false):Promise<boolean>{
    let record:ConsultationLease;
@@ -42,7 +43,7 @@ export function createConsultationSlot(ownerId:string,rpc:ConsultationRpc,deadli
     (cleanupVerified&&action!=='end'))throw Error();}catch{throw Error('Consultation input unavailable');}
    const result=await call('stylist_update_consultation',{p_owner:ownerId,p_session:record.sessionId,p_token:record.token,
     p_fence:record.fence,p_action:action,p_cleanup_verified:cleanupVerified});
-   if(typeof result!=='boolean')throw Error('Consultation operation uncertain');
+   if(typeof result!=='boolean'){uncertain=true;throw Error('Consultation operation uncertain');}
    return result;
   },
  });
