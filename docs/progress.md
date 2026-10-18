@@ -1,3 +1,9 @@
+## Memory owner-only access restored, 17 October 2026
+
+Sabine explicitly chose “Restore owner-only access.” The existing Memory site is now verified in custom access mode with only the owner allowed, zero groups and zero external visitors. Publish the prepared document snapshot using the owner-private operation and preserve this audience. The previous public-access publication hold is resolved; earlier dated descriptions of that hold are historical. No customer application, credentials, provider or spending configuration changed.
+
+The final-source regression remains in original session 77149. Keep its frozen source untouched and collect its terminal result. The one-script actual SQL follow-up remains prepared and unmerged in /private/tmp/ai-stylist-slot-db-stage, with syntax checking only; run its disposable PostgreSQL checks after the complete regression is terminal. Completion remains 5/41, production acceptance 0/21 and allocation $51. The goal remains active and incomplete.
+
 ## Collected full regression and final local increment, 17 October 2026
 
 The complete frozen-source regression at c895346ea773c6338ca9a88654ab32e58293b970 PASSED: **2,732 tests across 200 files**, with three intentional opt-in browser skips, original session **52085**, terminal exit zero, duration 1,877.41 seconds. All 549 frozen source/test/operations hashes matched main and the isolated run. Evidence is /private/tmp/ai-stylist-input-serial-full-20261017.log and its adjacent JSON, also saved in source-checkpoint outputs. The earlier 2,711-pass/three-failure run remains failed; isolated passes and this serialized run do not establish a definitive cause or live performance acceptance.
@@ -1842,9 +1848,9 @@ Current focus: approved local Task 8a preparation. The preceding complete source
 - **Verified local behavior:** shared transcript invalidation and confirmation, stable reference, feedback/save scopes, first-read refresh race protection, channel-loss refusal and per-instance uncertain database holds.
 - **Remaining gates:** provider conversation/startup, customer account and recovery-host security, approved retailer sourcing, recovery/fencing acceptance and physical-device/accessibility checks.
 - **Limits and decisions:** $51 experiment allocation; no new spending or customer-host changes. Email/password with recovery only. Domain purchase and Rakuten remain deferred.
-- **Memory publication:** held for audience confirmation because current site access conflicts with the private-site instruction.
+- **Memory audience:** owner-only access was explicitly restored and verified. Publish updates privately and preserve that audience.
 - **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout and isolated regression stages.
-- **Next action:** collect original full-regression session 77149, verify all 574 frozen hashes, then continue authorized local Task 8a work and publish Memory only to the agreed audience.
+- **Next action:** collect original full-regression session 77149, verify all 574 frozen hashes, then run the queued local SQL verification and continue authorized Task 8a work. Preserve owner-only Memory access.
 
 ## Historical summary checkpoints
 

@@ -1,3 +1,9 @@
+## Memory owner-only access restored, 17 October 2026
+
+Sabine explicitly chose “Restore owner-only access.” The existing Memory site is now verified in custom access mode with only the owner allowed, zero groups and zero external visitors. Publish the prepared document snapshot using the owner-private operation and preserve this audience. The previous public-access publication hold is resolved; earlier dated descriptions of that hold are historical. No customer application, credentials, provider or spending configuration changed.
+
+The final-source regression remains in original session 77149. Keep its frozen source untouched and collect its terminal result. The one-script actual SQL follow-up remains prepared and unmerged in /private/tmp/ai-stylist-slot-db-stage, with syntax checking only; run its disposable PostgreSQL checks after the complete regression is terminal. Completion remains 5/41, production acceptance 0/21 and allocation $51. The goal remains active and incomplete.
+
 ## Prepared actual SQL uncertainty follow-up, 17 October 2026
 
 Previous goal turn collected the actual 2,732-pass full result, verified all 549 baseline hashes, merged the five-file slot/channel increment after 186 composed checks, saved and pushed source/document checkpoint 2d17ea7, and started original final-source regression session 77149. That regression remains confirmed live; do not duplicate it. Its 574 frozen hashes include scripts, shared contracts and dependency inputs.
