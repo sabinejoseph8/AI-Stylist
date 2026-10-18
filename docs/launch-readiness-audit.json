@@ -463,7 +463,7 @@
       "name": "Complete customer/photo recovery and independent reconciliation",
       "owner": "Operations design and authorized hosted acceptance",
       "gate": "Off-Mac recoverable object inventory/latest deletion and spending authority, coordinated customer/photo snapshots, actual managed restore and deletion/financial reconciliation.",
-      "state": "Only initial empty-source database automation is accepted. Its first scheduled attempt remains held with no completed scheduled receipt observed. Sabine approved the tested local dependency repair and one new bounded attempt within existing caps. Source 28ef0fd is installed in the permanent runtime with exactly one public file changed and corrected scheduler PATH; old hold, private records and budgets remain intact. The unused provider attempt waits for original full regression 39391 to finish. Verify success before normal scheduling; hold again on any failure. Full customer/photo recovery and recovery targets remain unverified.",
+      "state": "Initial empty-source database scope only. The approved dependency repair is installed; seven operator-driver checks and 42 affected job checks pass. The one-use native start timed out without confirmation. Old hold is archived intact, consumed marker retained and a new uncertainty hold is active. Ledger remains at two attempts, none active, with no new provider receipt observed. Scheduling has not resumed. No retry or budget reset is authorized. Full customer/photo recovery and recovery targets remain unverified.",
       "dependsOn": []
     },
     {
@@ -473,7 +473,7 @@
       "name": "Connect and verify the actual current-context consultation",
       "owner": "Engineering after prerequisite contracts",
       "gate": "One authoritative authenticated session across live notes, recognition, current requirements, generation, independent checking, display/speech, camera, feedback, saving and shopping.",
-      "state": "The original local coordinator shares notebook, generated reference, illustrated checks/feedback, explicit saving, Profile privacy and selected Wardrobe save/reuse with the app. Latest source 8697f9e passes 98 composed and 94 independent checks. Global SQL admission and late expiry are executed locally. Original full session 39391 is running. Combined Session/Wardrobe privacy is staged with 69 focused checks and TypeScript passing, with actual browser execution pending. Authenticated live media, real products, persistence, speech and customer acceptance remain open.",
+      "state": "The local original coordinator shares notebook, generated reference, illustrated checks/feedback, explicit saving, Profile privacy and Wardrobe save/reuse with the app. Combined Session/Wardrobe privacy passes 56 checks/seven suites, including actual browser and original paired coordinator, at 72/128 and 40/128 authority records with zero protected outputs. Frozen 8697f9e full runner reports 2777 passed tests/203 suites and four skips; its expired process handle leaves numeric exit unavailable. Authenticated live media, real products, persistence, speech and customer acceptance remain open.",
       "dependsOn": [
         "B01",
         "B02",
@@ -1160,17 +1160,16 @@
     "composedSuites": 9
   },
   "pendingCombinedWardrobePrivacy": {
-    "status": "two-file preparation unmerged",
-    "stage": "/private/tmp/ai-stylist-8a-wardrobe-privacy-stage",
-    "focusedTests": 69,
-    "focusedFiles": 5,
-    "focusedSession": 84347,
-    "focusedExitCode": 0,
-    "typecheckSession": 80913,
-    "typecheckExitCode": 0,
-    "browserExecuted": false,
-    "artifact": "source-checkpoints/shared-wardrobe-privacy-final-prepared-20261017.json",
-    "waitForFullSession": 39391
+    "state": "verified-local",
+    "sourceCommit": "574bb96",
+    "testsPassed": 56,
+    "suitesPassed": 7,
+    "exitCode": 0,
+    "authorityRecords": 72,
+    "authorityCap": 128,
+    "originalPairRecords": 40,
+    "protectedOutputs": 0,
+    "productionAcceptance": false
   },
   "currentPlanIssuesReconciled": {
     "asOf": "2026-10-17",
@@ -1180,22 +1179,17 @@
     "unchangedMemoryCompletion": 5
   },
   "backupLocalInspection": {
-    "asOf": "2026-10-17",
-    "state": "operator-held",
-    "completedScheduledReceiptObserved": false,
-    "localDependencyDefectConfirmed": true,
-    "historicalExceptionRetained": false,
-    "repairChecksPassed": 42,
-    "repairInstalled": true,
-    "providerAttemptStarted": false,
-    "proposal": "docs/backup-held-job-recovery-proposal.md",
-    "artifact": "source-checkpoints/backup-local-dependency-repair-prepared-20261017.json",
-    "approvalNeededBeforeRetry": false,
-    "repairSourceCommit": "28ef0fdd2cf2ca722d236bbd1199b9162ef06a2d",
-    "approvedNewAttempts": 1,
-    "approvedAttemptUsed": false,
-    "operatorHoldPreserved": true,
-    "budgetPreserved": true,
-    "installationArtifact": "source-checkpoints/backup-local-dependency-installed-held-20261017.json"
+    "state": "held-after-unconfirmed-native-start",
+    "repairSourceCommit": "28ef0fd",
+    "approvedStartRequested": true,
+    "nativeStartConfirmed": false,
+    "oldHoldArchived": true,
+    "consumptionMarkerRetained": true,
+    "financialAttempts": 2,
+    "activeFinancialAttempt": null,
+    "newProviderReceiptObserved": false,
+    "scheduleResumed": false,
+    "retryAuthorized": false,
+    "newSpending": false
   }
 }
