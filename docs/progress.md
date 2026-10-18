@@ -1,3 +1,17 @@
+## Final local regression and actual SQL collected, 17 October 2026
+
+The complete foundation regression PASSED at source 08d1e01b455a740f39d5c62e8e2721a6144d3fea: **2,741 tests across 200 files**, three intentional opt-in browser skips, original session **77149**, terminal exit zero, duration 1,941.92 seconds. All **574 frozen source/test/script/contract/dependency hashes** matched before the subsequent SQL-test-script merge. Evidence: /private/tmp/ai-stylist-slot-channel-final-full-20261017.log and adjacent JSON, also preserved in source-checkpoint outputs. No local full regression remains running. Earlier failed local runs remain failed; serialization does not establish live performance or a definitive cause for those failures.
+
+The prepared actual SQL follow-up then PASSED in a disposable pinned PostgreSQL container with networking disabled and image pulling refused, original session **22226**, exit zero, /private/tmp/ai-stylist-slot-sql-data-protections-20261017.log. It verifies that the same uncertain adapter refuses further RPC submissions after lost claim/start/end acknowledgments, including after expiry or separate cleanup. The full local data-protection rehearsal also passes owner isolation, media lifecycle, catalog/saved-history protection, bounded receipt cleanup, concurrent global admission, fencing, cleanup holds, signed JWT session invalidation and approved retention. Storage HTTP and Auth schemas remain simulated; this is not hosted acceptance.
+
+Source **de37679** merges only the verified SQL rehearsal script, patch SHA-256 b72b66c31e9b3e335357f32446631ca34152880cfbf5fa24688aa4e7d507bb37. Compared with the full run, that separately executed script is the sole changed frozen file. Foundation runtime, tests, shared contracts and dependency inputs are unchanged. Prior composed evidence remains **186 checks/13 suites**, including all three WebKit journeys, and **62 independent main checks**, plus TypeScript/build. The input-channel browser uses 88/128 authority records; the earlier candidate browser uses 126/128; both release zero protected outputs. No deadline, signature, identity or authority limit was relaxed.
+
+GitHub run 39089632154 at published source 2d17ea7 has passed prototype-regressions and data-protections; its foundation job was still in progress when inspected. No GitHub run was started, restarted or changed by that read. Earlier run 39087652273 failed with 2,731 passes, one HTTP delivery failure and three browser skips; retain that evidence separately. Do not describe the whole remote workflow as green until its actual final result is collected.
+
+Owner-only Memory access is restored and verified following Sabine's explicit decision; the preceding snapshot published successfully through the private operation. Keep one owner, zero groups and zero external visitors when updating this newer evidence. Plan records remain revision 2 with **5/41 complete**; production acceptance remains **0/21** and allocation **$51**. No paid calls, real accounts, customer-host changes, credential access or backup-runtime changes occurred. The goal remains active and incomplete.
+
+**Next local action:** continue the remaining approved Task 8a global-admission composition identified in docs/task-8a-local-integration-proposal.md. The SQL global slot and original coordinator are verified separately, but refusal to reuse already-bound startup resources is not proof of two separate consultations competing through the same app host. Compose the existing admission before coordinator/provider-factory work, preserving original captured identities, proof objects, deadlines and saved scopes; use synthetic identities and local disposable stores only. Do not activate customer routes or providers. Collect the existing remote workflow's terminal result and preserve source/Memory. No additional local sequencing approval is required. All live/provider/account/source/recovery/device/launch gates remain open. Earlier dated running/preparation statements below are historical.
+
 ## Memory owner-only access restored, 17 October 2026
 
 Sabine explicitly chose “Restore owner-only access.” The existing Memory site is now verified in custom access mode with only the owner allowed, zero groups and zero external visitors. Publish the prepared document snapshot using the owner-private operation and preserve this audience. The previous public-access publication hold is resolved; earlier dated descriptions of that hold are historical. No customer application, credentials, provider or spending configuration changed.
@@ -1842,15 +1856,16 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current focus: approved local Task 8a preparation. The preceding complete source passes 2,732 tests across 200 files, with three intentional browser skips and terminal exit zero. The final slot/channel increment is merged with 186 composed checks, 62 independent main checks, TypeScript and build passing. Its new complete regression runs in original session 77149; no final result is claimed yet.
+Current focus: approved local Task 8a preparation. The complete foundation regression passes 2,741 tests across 200 files, with three intentional browser skips and exit zero. The actual disposable PostgreSQL follow-up also passes and its single verified test-script change is merged; foundation runtime/test inputs are unchanged. Composed browser evidence passes 186 checks across 13 suites. No local full regression remains active.
 
 - **Full completion:** 5 of 41 Memory items; 0 of 21 production acceptance criteria. Local preparation does not close integrated acceptance.
-- **Verified local behavior:** shared transcript invalidation and confirmation, stable reference, feedback/save scopes, first-read refresh race protection, channel-loss refusal and per-instance uncertain database holds.
-- **Remaining gates:** provider conversation/startup, customer account and recovery-host security, approved retailer sourcing, recovery/fencing acceptance and physical-device/accessibility checks.
+- **Verified local behavior:** transcript invalidation/confirmation, stable reference, feedback/save scopes, first-read refresh race protection, input-channel-loss refusal and uncertain database holds, including actual SQL lost acknowledgments.
+- **Next local work:** compose global consultation admission with the original app/coordinator flow. Separate SQL-level admission and constructor resource refusal do not yet prove that combined path.
+- **Remaining gates:** provider startup/conversation, customer account and recovery-host security, approved retailer sourcing, recovery/fencing acceptance and physical-device/accessibility checks.
 - **Limits and decisions:** $51 experiment allocation; no new spending or customer-host changes. Email/password with recovery only. Domain purchase and Rakuten remain deferred.
-- **Memory audience:** owner-only access was explicitly restored and verified. Publish updates privately and preserve that audience.
-- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout and isolated regression stages.
-- **Next action:** collect original full-regression session 77149, verify all 574 frozen hashes, then run the queued local SQL verification and continue authorized Task 8a work. Preserve owner-only Memory access.
+- **Memory audience:** owner-only access is restored and verified. Preserve that audience and existing task records when publishing.
+- **GitHub:** current prototype/data-protection jobs pass; collect the existing foundation job's terminal result before claiming whole-workflow success.
+- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout, test stages and failed evidence.
 
 ## Historical summary checkpoints
 

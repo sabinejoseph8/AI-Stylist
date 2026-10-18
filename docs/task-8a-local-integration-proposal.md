@@ -1,3 +1,7 @@
+## Current verified checkpoint, 17 October 2026
+
+The final foundation run passes 2,741 tests across 200 files with three intentional browser skips and exit zero (original session 77149). All 574 frozen hashes matched before merging the separately verified actual PostgreSQL test script. The complete disposable data-protection rehearsal passes, including same-instance refusal after actual lost claim/start/end acknowledgments. No local full regression is still running. The remaining local coverage gap is global SQL admission composed through the original app/coordinator startup, distinct from refusing already-bound resources. Full Task 8a and production acceptance remain open; see docs/progress.md for the current next action. Earlier checkpoint wording below is historical.
+
 # Proposed local Task 8a rehearsal
 
 Status: Sabine approved local Task 8a preparation on 16 October 2026. This adds a local integration rehearsal to the earlier Phase 8 preparation exceptions. It does not complete Task 8a or authorize customer integration or launch.

@@ -1,3 +1,7 @@
+## Verifying uncertain outcomes against a real local database, 17 October 2026
+
+I collected the final 2,741-test foundation pass, then ran the uncertainty checks against a disposable local PostgreSQL database. The same adapter stayed held after lost reservation, start and end replies, even after separate cleanup, and it submitted no duplicate mutations. I kept the real database evidence distinct from simulated storage/authentication and live account acceptance. I also recorded the remaining gap between a global database slot and admission through the complete app startup, rather than treating separate passing tests as proof of the combined flow.
+
 ## Collecting the full result and closing uncertain retries, 17 October 2026
 
 I collected a complete local regression with 2,732 passing tests, while retaining the earlier failed run as separate evidence. I then merged the checked consultation-slot fix and tested actual loss of the simulated browser input channel. Refreshing notes cannot restore permission to show a sample after that loss. The new increment passes 186 integration checks and independent main checks, and its complete regression is running. I kept local evidence separate from live acceptance and held the Memory update when its access setting conflicted with the private-site instruction.
