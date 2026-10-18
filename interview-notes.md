@@ -1,3 +1,7 @@
+## 17 October 2026: combined privacy contracts prepared
+
+Five added synthetic Session/Wardrobe tests pass, including separate photo identities, scoped clearing, source-edit invalidation during encoding and refusing late canceled exports. The affected five-suite run passes 69 tests and TypeScript. I corrected the unexecuted browser scenario to reselect a category after returning to Profile; the actual panel intentionally clears selections when hidden. Original full regression 39391 remains live, so the prepared browser has not run and these tests are not merged. No production feature, task completion state, spending or customer-host setting changed. The exact two-file continuation is preserved in source-checkpoints/shared-wardrobe-privacy-final-prepared-20261017.json.
+
 ## 17 October 2026: shared sample Wardrobe verified
 
 I connected explicit sample Wardrobe saving and reuse to the original shared notebook. The generated-photo browser confirms the saved photo is a separate copy, reuse does not replace the existing reference before explicit confirmation, and session Clear leaves the saved copy intact. All 98 affected checks and 94 independent main checks pass, with TypeScript/build. The main source is 8697f9e, following first-channel repair 6aed2a0. The earlier 2,760-pass full result covers bdf0881 only. The next local check combines session and Wardrobe privacy export/clearing through the same App. There were no provider calls, real accounts, customer hosting or new charges; full acceptance remains open.

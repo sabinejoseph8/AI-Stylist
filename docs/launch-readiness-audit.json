@@ -1095,7 +1095,7 @@
     "fullStatus": "running",
     "fullSession": 39391,
     "frozenFiles": 580,
-    "nextAction": "Preserve original full regression 39391; prepare combined Session/Wardrobe privacy tests separately, then run heavy checks after terminal.",
+    "nextAction": "Collect original full 39391; run the two-file prepared combined privacy scenario and affected suites after terminal, preserving the 128-record cap.",
     "fullExitCode": null,
     "fullTests": null,
     "fullSuites": null,
@@ -1150,5 +1150,18 @@
     "browserExitCode": 0,
     "composedTests": 98,
     "composedSuites": 9
+  },
+  "pendingCombinedWardrobePrivacy": {
+    "status": "two-file preparation unmerged",
+    "stage": "/private/tmp/ai-stylist-8a-wardrobe-privacy-stage",
+    "focusedTests": 69,
+    "focusedFiles": 5,
+    "focusedSession": 84347,
+    "focusedExitCode": 0,
+    "typecheckSession": 80913,
+    "typecheckExitCode": 0,
+    "browserExecuted": false,
+    "artifact": "source-checkpoints/shared-wardrobe-privacy-final-prepared-20261017.json",
+    "waitForFullSession": 39391
   }
 }
