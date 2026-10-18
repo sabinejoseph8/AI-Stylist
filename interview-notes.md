@@ -1,3 +1,7 @@
+## Joining admission to the original notebook, 17 October 2026
+
+I tested the previously separate global SQL slot and original coordinator together through the browser host. I paused the first start before its coordinator factory and confirmed a second synthetic customer was refused before any second factory ran. The first notebook stayed editable; when I expired its SQL lease, the browser hid the notes and retained the provider hold. I kept the original proof objects and 128-record cap, used 26 records, and released no protected output. The actual database/browser rehearsal and 83 affected checks pass. This is local composition evidence, not hosted account or provider acceptance; the globally admitted transcript/candidate combination is the next gap to check.
+
 ## Verifying uncertain outcomes against a real local database, 17 October 2026
 
 I collected the final 2,741-test foundation pass, then ran the uncertainty checks against a disposable local PostgreSQL database. The same adapter stayed held after lost reservation, start and end replies, even after separate cleanup, and it submitted no duplicate mutations. I kept the real database evidence distinct from simulated storage/authentication and live account acceptance. I also recorded the remaining gap between a global database slot and admission through the complete app startup, rather than treating separate passing tests as proof of the combined flow.
