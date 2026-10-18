@@ -7,6 +7,10 @@ import {existsSync} from 'node:fs';
 import {createServer} from 'vite';
 import type {AddressInfo} from 'node:net';
 import type {ServerResponse} from 'node:http';
+import {observeLocalCviInput} from '../src/server/local-cvi-transcript-adapter.ts';
+import {FIELDS} from '../../../packages/style-contracts/src/index.ts';
+import {candidateNoteFixture,candidateIllustrationPorts} from './support/cvi-candidate-illustrations.ts';
+import {createLocalCviCandidateRehearsal} from '../src/server/local-cvi-candidate-rehearsal.ts';
 import {createConsultationSlot} from '../src/server/consultation-slot.ts';
 import type {ConsultationLease} from '../src/server/consultation-slot.ts';
 import {createLocalCviViewPort} from '../src/server/local-cvi-view-port.ts';
@@ -33,6 +37,9 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
  const firstSlot=createConsultationSlot(primary.ownerId,rpc),secondSlot=createConsultationSlot(other.ownerId,rpc);
  let lease:ConsultationLease|null=null,x:Awaited<ReturnType<typeof pairedOwnerFixture>>|undefined,port:ReturnType<typeof createLocalCviViewPort>|undefined;
  let firstFactories=0,secondFactories=0,reserved=false,closed=false,origin='';
+ let holdInput=false,inputStarted=false,finishInput=()=>{};
+ let run:Awaited<ReturnType<Awaited<ReturnType<typeof pairedOwnerFixture>>['start']>>|undefined,candidate:ReturnType<typeof createLocalCviCandidateRehearsal>|undefined;
+ const inputStreams=new Set<ServerResponse>();
  let release=()=>{};const barrier=new Promise<void>(r=>{release=r;});
  const tasks=new Set<Promise<void>>();let server:Awaited<ReturnType<typeof createServer>>|undefined,browser:any;
  const request=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
@@ -40,6 +47,11 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
  const reply=(res:ServerResponse,status:number,value:unknown)=>{res.statusCode=status;res.setHeader('content-type','application/json');res.setHeader('cache-control','no-store');res.end(JSON.stringify(value));};
  try{
   server=await createServer({configFile:false,root:process.cwd(),server:{host:'127.0.0.1',port:0,strictPort:false},logLevel:'error',plugins:[{name:'global-consultation-fixture',configureServer(s){
+   s.middlewares.use('/__consultation_events',(req,res)=>{
+    if(req.method!=='GET'||req.headers.host!==new URL(origin).host||(req.headers.origin&&req.headers.origin!==origin)||req.socket.remoteAddress!=='127.0.0.1'||!run||!x){res.statusCode=403;res.end();return;}
+    inputStreams.add(res);res.writeHead(200,{'content-type':'text/event-stream','cache-control':'no-store','x-content-type-options':'nosniff'});
+    const off=observeLocalCviInput(run.transcript,x.context,notice=>res.write('data: '+JSON.stringify(notice)+'\n\n'));res.on('close',()=>{inputStreams.delete(res);off();});
+   });
    s.middlewares.use('/__global_landing',(_req,res)=>{res.setHeader('content-type','text/html');res.end('<!doctype html><main>Local admission rehearsal</main>');});
    s.middlewares.use((req,res,next)=>{
     if(!['/__global_start','/__consultation_fixture'].includes(req.url??'')){next();return;}
@@ -58,8 +70,9 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
       if(c.action==='competitor'){secondFactories++;throw Error('Competing factory must not run');}
       lease=claim;reserved=true;await barrier;
       if(closed){reply(res,503,{state:'held'});return;}
-      firstFactories++;x=await pairedOwnerFixture();await x.start();
-      port=createLocalCviViewPort(x.context,request());reply(res,200,{state:'ready'});return;
+      firstFactories++;x=await pairedOwnerFixture(undefined,{extract:async({text},s)=>{if(holdInput){inputStarted=true;await new Promise<void>(r=>{finishInput=r;});if(s.aborted)throw Error('Synthetic input canceled');}return[{field:'style',value:text}];}});run=await x.start();
+      for(const [field] of FIELDS)expect(await x.context.edit(request(),{action:'edit',id:'global_setup_'+field,epoch:1,field,baseRevision:0,sequence:0,value:candidateNoteFixture[field]},signal())).toBe('applied');
+      port=createLocalCviViewPort(x.context,request());candidate=createLocalCviCandidateRehearsal({simulation:true,context:x.context,request:request(),clock:x.clock,...candidateIllustrationPorts(x.clock)});reply(res,200,{state:'ready'});return;
      }
      if((keys!=='action'&&keys!=='action,command')||!port||!lease){reply(res,400,{});return;}
      const current=()=>firstSlot.update(lease!,'check');
@@ -69,6 +82,9 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
      else if(c.action==='edit'&&keys==='action,command')value=await port.edit(c.command,signal());
      else if(c.action==='clear'&&keys==='action')value=await port.clear(signal());
      else if(c.action==='end'&&keys==='action')value=await port.end(signal());
+     else if(c.action==='candidateSnapshot'&&keys==='action')value=await candidate!.snapshot(signal());
+     else if(c.action==='candidatePrepare'&&keys==='action,command')value=await candidate!.prepare(c.command,signal());
+     else if(c.action==='candidateFeedback'&&keys==='action,command')value=await candidate!.feedback(c.command,signal());
      else throw Error('Unsupported fixture action');
      if(!await current()){await port.end(signal());reply(res,200,null);return;}
      reply(res,200,value);
@@ -88,22 +104,40 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
   expect(sql('select state from stylist_private.consultation_slot where slot=1;')).toBe('provider');
   release();expect(await pending).toEqual({status:200,body:{state:'ready'}});expect(firstFactories).toBe(1);
   expect(await start('primary')).toEqual({status:409,body:{state:'busy'}});expect(firstFactories).toBe(1);
-  await page.goto(origin+'/tests/browser/coordinated-notebook.html');await page.getByText('Shared sample notes are current.',{exact:true}).waitFor();
+  await page.goto(origin+'/tests/browser/coordinated-notebook.html?input');await page.getByText('Shared sample notes are current.',{exact:true}).waitFor();
   await page.locator('section[aria-label="Shared sample notebook"] summary').click();
   await page.getByRole('button',{name:'Edit style',exact:true}).click();await page.getByLabel('Edit Style',{exact:true}).fill('Long sleeves');await page.getByRole('button',{name:'Save',exact:true}).click();
   await page.getByText('Shared notebook updated. Ambiguous budgets remain To confirm.',{exact:true}).waitFor();
   expect((await port!.snapshot(signal()))!.notes.style.value).toBe('Long sleeves');expect(firstFactories).toBe(1);expect(secondFactories).toBe(0);
   expect(await start('competitor')).toEqual({status:409,body:{state:'busy'}});
-  expect(await page.getByText('Long sleeves',{exact:true}).isVisible()).toBe(true);
+  expect(await page.locator('section[aria-label="Shared sample notebook"] dd').filter({hasText:'Long sleeves'}).isVisible()).toBe(true);
+  const generated=Buffer.from('iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mP8/x8AAwMCAO+ip1sAAAAASUVORK5CYII=','base64');
+  await page.getByLabel('Choose sample clothing photos',{exact:true}).setInputFiles({name:'generated-global.png',mimeType:'image/png',buffer:generated});
+  await page.getByLabel('Describe the sample garment',{exact:true}).fill('Navy blazer');await page.getByLabel('Owned',{exact:true}).check();await page.getByRole('button',{name:'Confirm shared session reference',exact:true}).click();await page.getByRole('heading',{name:'Confirmed shared session reference',exact:true}).waitFor();
+  const confirmedURL=await page.locator('.confirmed-reference img').getAttribute('src');expect(confirmedURL).toMatch(/^blob:/);
+  const check=page.getByRole('button',{name:'Check shared illustrated sample',exact:true});await check.click();await page.getByRole('button',{name:'Save shared sample look',exact:true}).waitFor();
+  holdInput=true;inputStarted=false;const partial=run!.stream('Prefer long sleeves');void partial.catch(()=>{});await vi.waitFor(()=>expect(inputStarted).toBe(true));
+  await page.getByText('Simulated speech is being checked. The earlier sample is hidden; you can edit notes or clear this session.',{exact:true}).waitFor();expect(await check.isDisabled()).toBe(true);expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);expect(await candidate!.snapshot(signal())).toBeNull();expect(await page.locator('.confirmed-reference img').getAttribute('src')).toBe(confirmedURL);
+  expect(await start('competitor')).toEqual({status:409,body:{state:'busy'}});expect(secondFactories).toBe(0);
+  finishInput();expect((await partial).status).toBe('applied');holdInput=false;
+  const panel=page.locator('section[aria-label="Shared sample notebook"]');await panel.locator('dd').filter({hasText:'Prefer long sleeves'}).getByText('To confirm',{exact:true}).waitFor();expect(await check.isDisabled()).toBe(true);
+  expect((await run!.stream('Prefer long sleeves',true)).status).toBe('applied');await panel.locator('dd').filter({hasText:'Prefer long sleeves'}).getByText('To confirm',{exact:true}).waitFor();expect(x!.context.sampleInputReady()).toBe(true);
+  await page.getByRole('button',{name:'Confirm style',exact:true}).click();await panel.locator('dd').filter({hasText:'Prefer long sleeves'}).getByText('Confirmed',{exact:true}).waitFor();
+  await page.waitForFunction(()=>Array.from(document.querySelectorAll('button')).some(b=>b.textContent==='Check shared illustrated sample'&&!b.disabled));expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);
+  await check.click();await page.getByText('Shared sample needs fresh checks.',{exact:true}).waitFor();expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);
+  // The synthetic catalog still verifies Long sleeves, not the changed wording.
+  // Preserve the failed check, then explicitly correct the note and check again.
+  await page.getByRole('button',{name:'Edit style',exact:true}).click();await page.getByLabel('Edit Style',{exact:true}).fill('Long sleeves');await page.getByRole('button',{name:'Save',exact:true}).click();await page.getByText('Shared notebook updated. Ambiguous budgets remain To confirm.',{exact:true}).waitFor();
+  await check.click();await page.getByRole('button',{name:'Save shared sample look',exact:true}).waitFor();expect(await page.locator('.confirmed-reference img').getAttribute('src')).toBe(confirmedURL);
   // Trusted fixture SQL, never a browser-selected clock or cleanup flag.
   sql("update stylist_private.consultation_slot set expires_at=clock_timestamp()-interval '1 second' where slot=1;");
   await page.getByRole('button',{name:'Refresh shared notes',exact:true}).click();await page.getByText('Shared notes could not be verified. No old notes are displayed.',{exact:true}).waitFor();
-  expect(await page.getByText('Long sleeves',{exact:true}).count()).toBe(0);expect(await start('competitor')).toEqual({status:409,body:{state:'busy'}});expect(secondFactories).toBe(0);
+  expect(await panel.locator('dd').filter({hasText:'Long sleeves'}).count()).toBe(0);expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);expect(await start('competitor')).toEqual({status:409,body:{state:'busy'}});expect(secondFactories).toBe(0);
   expect(sql('select state from stylist_private.consultation_slot where slot=1;')).toBe('provider');
   const records=(await x!.f.x.inspect()).requests.length;expect(records).toBeLessThanOrEqual(128);expect(await x!.records()).toHaveLength(0);expect(x!.draft).not.toHaveBeenCalled();expect(errors).toEqual([]);expect(external).toEqual([]);expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
   process.stdout.write(JSON.stringify({scope:'global-sql-original-pair-browser',firstFactories,secondFactories,sqlCalls,authorityRecords:records,authorityRecordCap:128,protectedOutputs:0})+'\n');await context.close();
  }finally{
-  closed=true;release();await browser?.close();await Promise.allSettled([...tasks]);await x?.close();await server?.close();
+  closed=true;release();finishInput();for(const stream of inputStreams)stream.end();await browser?.close();candidate?.close();await Promise.allSettled([...tasks]);await x?.close();await server?.close();
   // Fixture-only cleanup after every local resource closes; no real provider exists.
   if(lease)await firstSlot.update(lease,'end',true);
  }
