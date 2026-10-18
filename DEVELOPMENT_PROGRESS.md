@@ -1,3 +1,9 @@
+## Owner-private Memory publication verified, 17 October 2026
+
+Sabine approved restoring owner-only access. The backend verified custom access with one owner, zero groups and zero external visitors. The updated Memory snapshot then deployed successfully through the owner-private operation, site source commit 38bd7d372ce4de98a96c7151d8eae6a00d33d87c, deployment appgdep_6ad430a176b48191bffceb89c8553695. Authenticated plan read confirms revision 2, storage ready and 5/41 completed; no checkbox was changed. The token-free receipt is saved in source-checkpoints/memory-owner-only-publication-20261017.json. The previous audience publication hold is resolved.
+
+Original final-source regression 77149 remains active, with the frozen 574-file scope unchanged. Exact next action: collect that original terminal result, compare hashes, then run the prepared actual PostgreSQL checks from /private/tmp/ai-stylist-slot-db-stage. No additional approval or Sabine action is needed for those local checks. Do not start another full run or competing native/database work while this process is healthy. Keep all remaining integration/launch gates and the development goal open.
+
 ## Memory owner-only access restored, 17 October 2026
 
 Sabine explicitly chose “Restore owner-only access.” The existing Memory site is now verified in custom access mode with only the owner allowed, zero groups and zero external visitors. Publish the prepared document snapshot using the owner-private operation and preserve this audience. The previous public-access publication hold is resolved; earlier dated descriptions of that hold are historical. No customer application, credentials, provider or spending configuration changed.
