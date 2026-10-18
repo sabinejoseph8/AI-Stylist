@@ -1,3 +1,7 @@
+## 17 October 2026: current plan issues reconciled
+
+I replaced the plan's current Known issues table because it still called the Memory site and GitHub connection missing, treated the initial $25 as current, and described approved retention limits as undecided. The table now preserves the actual $51 allocation, owner-only Memory, email/password-only MVP, deferred domain/Rakuten decisions, approved retention/recovery policies and limited database-backup scope. The integration blocker now records verified Wardrobe save/reuse and separates its running complete regression from the unexecuted combined-privacy browser. This is a reconciliation of existing decisions and evidence, not a new policy or launch approval. Dated historical results remain intact.
+
 ## 17 October 2026: combined privacy contracts prepared
 
 Five added synthetic Session/Wardrobe tests pass, including separate photo identities, scoped clearing, source-edit invalidation during encoding and refusing late canceled exports. The affected five-suite run passes 69 tests and TypeScript. I corrected the unexecuted browser scenario to reselect a category after returning to Profile; the actual panel intentionally clears selections when hidden. Original full regression 39391 remains live, so the prepared browser has not run and these tests are not merged. No production feature, task completion state, spending or customer-host setting changed. The exact two-file continuation is preserved in source-checkpoints/shared-wardrobe-privacy-final-prepared-20261017.json.

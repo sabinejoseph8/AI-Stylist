@@ -1,3 +1,9 @@
+## Current unresolved-plan table reconciled, 17 October 2026
+
+The authoritative Known issues table in docs/progress.md now reflects established GitHub/owner-private Memory, the $51 allocation and held records, approved retention/session/recovery policies, email/password-only MVP, domain/Rakuten deferrals and accepted initial empty-source backup scope. The audit's B06 integration blocker now records merged shared Wardrobe work and the separate 69-check combined-privacy preparation. No approval, task checkbox, spending, hosted setting or production criterion changed; historical diaries remain untouched.
+
+**Next action remains unchanged:** collect live original full session 39391 and verify 580 frozen hashes; after its actual terminal result, execute the two-file combined Session/Wardrobe privacy stage and affected original-pair/browser checks at the original 128-record cap. Artifacts: source-checkpoints/shared-wardrobe-privacy-final-prepared-20261017.json. Browser execution is still pending. Do not edit the full-run stage or start competing heavy native/browser/SQL work.
+
 ## Combined Wardrobe privacy preparation expanded, 17 October 2026
 
 The separate /private/tmp/ai-stylist-8a-wardrobe-privacy-stage now contains two unmerged test files. Five new synthetic cross-scope cases verify distinct Session/Wardrobe photo identities with equal normalized pixels, Wardrobe-only clear retaining the accepted Session reference, Session-only clear preserving an exportable saved photo, saved-copy edits invalidating delayed combined export, and cancellation refusing a late encoder result. All **69 focused tests/five suites** pass (**84347, exit zero**) and TypeScript passes (**80913, exit zero**). These are controller contracts, not original-pair/browser acceptance. The earlier fixture type-check error is preserved and fixed only in the synthetic command typing.
