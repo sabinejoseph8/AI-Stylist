@@ -1,3 +1,7 @@
+## Shared privacy preparation checkpoint, 17 October 2026
+
+A separate local source stage prepares confirmed asynchronous sample clearing, with 32 focused passing checks and TypeScript. It is not merged and combined Profile privacy export remains disconnected. The next app work binds current shared notes/reference and separate preferences, then verifies export invalidation, truthful cleanup and saved-scope preservation. See DEVELOPMENT_PROGRESS.md for the exact stage, patch and next action. This closes no production criterion and changes no customer route, provider or spending limit.
+
 ## Delayed candidate refused after SQL expiry, 17 October 2026
 
 Source 5f0794e extends the actual SQL/browser rehearsal: a candidate passes initial admission, pauses during synthetic fact lookup, and finishes preparing a sample only after trusted SQL expires its lease. The final SQL check serializes **null**, the browser exposes no save action, the original context ends, and the competing factory remains refused. The provider hold is preserved. This specifically tests expiry during an operation rather than between completed operations.
