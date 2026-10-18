@@ -77,7 +77,7 @@ export class LocalConsultationView {
   if(!exact(raw,['serial','phase'])||!integer(raw.serial)||!['pending','partial','settled'].includes(String(raw.phase))){if(this.inputRequired)this.loseInputTransport();else this.transportLost();return false;}
   if(Number(raw.serial)<=this.inputSerial)return false;
   const initial=this.inputSerial<0;this.inputConnected=true;this.inputSerial=Number(raw.serial);this.inputPending=raw.phase!=='settled';this.publish();
-  if(raw.phase!=='pending'){if(this.busy)this.inputRefresh=true;else if(!initial&&this.state==='ready')void this.refresh();}
+  if(raw.phase!=='pending'){if(this.busy)this.inputRefresh=true;else if(this.state==='ready'&&(!initial||Number(raw.serial)>0))void this.refresh();}
   return true;
  }
  private finishOperation(generation:number){if(generation!==this.generation)return;this.busy=false;this.publish();if(this.inputRefresh){this.inputRefresh=false;void this.refresh();}}
