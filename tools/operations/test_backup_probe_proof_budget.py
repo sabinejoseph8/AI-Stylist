@@ -27,3 +27,15 @@ class ProofBudgetTests(unittest.TestCase):
  def test_no_cap_bypass(self):
   with sqlite3.connect(self.path) as db:db.execute('update policy set source_bytes=?',(MAX_SOURCE_TOTAL,))
   with self.assertRaises(ProofHeld):reserve_source(self.path,now=101,approved=True)
+
+ def test_repaired_purpose_preserves_first_read_and_all_other_counters(self):
+  from backup_probe_proof_budget import REPAIRED_PURPOSE
+  reserve_source(self.path,now=101,approved=True);before=self.row()
+  reserve_source(self.path,now=102,approved=True,purpose=REPAIRED_PURPOSE);after=self.row()
+  self.assertEqual(after[:8],before[:8]);self.assertEqual(after[9:],before[9:]);self.assertEqual(after[8],before[8]+SOURCE_PER_RUN)
+  with sqlite3.connect(self.path) as db:self.assertEqual(db.execute('select count(*) from schema_proof_reads').fetchone()[0],2)
+  with self.assertRaises(ProofHeld):reserve_source(self.path,now=103,approved=True,purpose=REPAIRED_PURPOSE)
+ def test_unknown_purpose_cannot_mint_source_budget(self):
+  before=self.row()
+  with self.assertRaises(ProofHeld):reserve_source(self.path,now=101,approved=True,purpose='new-unapproved-purpose')
+  self.assertEqual(self.row(),before)

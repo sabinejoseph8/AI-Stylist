@@ -34,6 +34,8 @@ services:
         sync: false
       - key: PREVIEW_ORIGIN
         value: https://ai-stylist-private-preview.onrender.com
+      - key: CVI_PROBE_APPROVAL_ID
+        sync: false
       - key: CVI_PROBE_CALLBACK_KEY
         sync: false
       - key: CVI_PROBE_PAL_ID

@@ -1,6 +1,6 @@
 import {isDeepStrictEqual} from 'node:util';
-import {validateConnectionProbeRecord,validateConnectionProbeTransition} from './cvi-connection-probe-contract.ts';
-import type {ConnectionProbePersistence} from './cvi-connection-probe-contract.ts';
+import {CONNECTION_PROBE_APPROVAL,CONNECTION_PROBE_REPAIRED_APPROVAL,validateConnectionProbeRecord,validateConnectionProbeTransition} from './cvi-connection-probe-contract.ts';
+import type {ConnectionProbeApproval,ConnectionProbePersistence} from './cvi-connection-probe-contract.ts';
 import type {ConnectionProbeProvider} from './cvi-connection-probe-session.ts';
 export const PROBE_FACE='r78c9b897fbc';
 export const PROBE_VOICE='db6b0ed5-d5d3-463d-ae85-518a07d3c2b4';
@@ -57,10 +57,13 @@ export function verifyProbePal(value:unknown,expected:ReturnType<typeof probePal
  if(layers.conferencing||value.objectives_id||value.objectives||value.memory_stores)throw fail();
  return true;
 }
-export function prepareProbePersistence(options:{url:string;fetch:Fetch;headers:Record<string,string>}):ConnectionProbePersistence{
+export function prepareProbePersistence(options:{url:string;fetch:Fetch;headers:Record<string,string>;approvalId?:ConnectionProbeApproval}):ConnectionProbePersistence{
  const base=origin(options.url,'supabase.co')+'/rest/v1/rpc/';
+ const approval=options.approvalId??CONNECTION_PROBE_APPROVAL;
+ if(![CONNECTION_PROBE_APPROVAL,CONNECTION_PROBE_REPAIRED_APPROVAL].includes(approval))throw fail();
+ const prefix=approval===CONNECTION_PROBE_REPAIRED_APPROVAL?'stylist_connection_probe_repaired':'stylist_connection_probe';
  const rpc=(name:string,body:object)=>probeJson(options.fetch,base+name,{method:'POST',headers:{...options.headers,'Content-Type':'application/json'},body:JSON.stringify(body)});
- return{read:async()=>validateConnectionProbeRecord(await rpc('stylist_connection_probe_read',{})),compareAndSwap:async(expected,replacement)=>{validateConnectionProbeTransition(expected,replacement);const result=await rpc('stylist_connection_probe_change',{expected,replacement});if(typeof result!=='boolean')throw fail();return result;}};
+ return{read:async()=>validateConnectionProbeRecord(await rpc(prefix+'_read',{}),approval),compareAndSwap:async(expected,replacement)=>{validateConnectionProbeTransition(expected,replacement,approval);const result=await rpc(prefix+'_change',{expected,replacement});if(typeof result!=='boolean')throw fail();return result;}};
 }
 /** Dormant adapter: constructing it makes no requests or rooms. Configure and
  * independently read back the new PAL before supplying this to an active owner. */

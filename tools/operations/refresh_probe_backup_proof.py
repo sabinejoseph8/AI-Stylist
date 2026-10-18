@@ -7,7 +7,7 @@ old proof remain intact; an operator hold is never cleared here.
 import argparse,json,time,hashlib,os
 from pathlib import Path
 from backup_runtime import DESTINATION,private_directory,read_file,write_exclusive,verify_public,source_commit
-from backup_probe_proof_budget import reserve_source
+from backup_probe_proof_budget import reserve_source,PURPOSE,REPAIRED_PURPOSE
 import backup_empty_snapshot as snapshot
 from backup_bundle import read_candidate
 PRIVATE=DESTINATION/'tools/operations/.private'
@@ -20,12 +20,13 @@ def check_hold():
 
 def main():
  parser=argparse.ArgumentParser(description=__doc__);modes=parser.add_mutually_exclusive_group(required=True)
- modes.add_argument('--capture-approved-probe-schema',action='store_true');modes.add_argument('--publish-verified-probe-proof',action='store_true');options=parser.parse_args()
+ modes.add_argument('--capture-approved-probe-schema',action='store_true');modes.add_argument('--publish-verified-probe-proof',action='store_true');parser.add_argument('--repaired-trial',action='store_true');options=parser.parse_args()
  try:
-  check_hold();key=PRIVATE/'backup-recovery-key.json';archive=PRIVATE/'cvi-probe-schema-candidate.asb';meta=PRIVATE/'cvi-probe-schema-candidate.json'
+  stem='cvi-probe-repaired-schema' if options.repaired_trial else 'cvi-probe-schema'
+  check_hold();key=PRIVATE/'backup-recovery-key.json';archive=PRIVATE/(stem+'-candidate.asb');meta=PRIVATE/(stem+'-candidate.json')
   if options.capture_approved_probe_schema:
    if archive.exists() or meta.exists():raise RefreshHeld('capture-already-recorded')
-   reserve_source(PRIVATE/'automatic-budget.sqlite',now=int(time.time()),approved=True)
+   reserve_source(PRIVATE/'automatic-budget.sqlite',now=int(time.time()),approved=True,purpose=REPAIRED_PURPOSE if options.repaired_trial else PURPOSE)
    config=read_json(PRIVATE/'supabase-connection.json');password=read_file(PRIVATE/'supabase-password.txt',private=True).decode().removesuffix('\n')
    snapshot.legacy.db.PRIVATE=PRIVATE;snapshot.legacy.db.validate_certificate(PRIVATE/'supabase-ca.crt')
    value=snapshot.capture_current(config,password,source_commit(Path(__file__).resolve().parents[2]),key)
@@ -34,14 +35,14 @@ def main():
    fingerprint=snapshot.schema_fingerprint(parts['database'],parts['roles'])
    write_exclusive(archive,value);write_exclusive(meta,json.dumps({'sha256':hashlib.sha256(value).hexdigest(),'schema_fingerprint':fingerprint,'captured_at':int(time.time()),'bytes':len(value),'uploads':0}).encode())
    print(json.dumps({'captured':True,'encrypted_bytes':len(value),'uploads':0}));return 0
-  proof=read_json(PRIVATE/'automatic-restore-proof.json');drill=read_json(PRIVATE/'cvi-probe-schema-drill-r2.json');metadata=read_json(meta)
+  proof=read_json(PRIVATE/'automatic-restore-proof.json');drill=read_json(PRIVATE/(stem+'-drill.json' if options.repaired_trial else 'cvi-probe-schema-drill-r2.json'));metadata=read_json(meta)
   value=read_file(archive,private=True,limit=4*1024*1024)
   if (drill.get('local_customer_schema_drill_passed') is not True or drill.get('local_container_removed') is not True or drill.get('hosted_restore') is not False or drill.get('checks',0)<28 or drill.get('candidate_sha256')!=hashlib.sha256(value).hexdigest() or metadata['sha256']!=drill['candidate_sha256']):raise RefreshHeld('restore-evidence-held')
   snapshot.verify(value,key,expected_fingerprint=metadata['schema_fingerprint'])
   check_hold()
-  old_path=PRIVATE/'automatic-restore-proof.before-cvi-probe-20261018.json'
+  old_path=PRIVATE/('automatic-restore-proof.before-cvi-probe-repaired-20261018.json' if options.repaired_trial else 'automatic-restore-proof.before-cvi-probe-20261018.json')
   write_exclusive(old_path,read_file(PRIVATE/'automatic-restore-proof.json',private=True))
-  result={**proof,**drill,'schema_fingerprint':metadata['schema_fingerprint'],'refresh_purpose':'approved-cvi-connection-probe-schema','verified_at':int(time.time())}
+  result={**proof,**drill,'schema_fingerprint':metadata['schema_fingerprint'],'refresh_purpose':'approved-cvi-repaired-probe-schema' if options.repaired_trial else 'approved-cvi-connection-probe-schema','verified_at':int(time.time())}
   temporary=PRIVATE/'.cvi-probe-restore-proof.tmp';write_exclusive(temporary,json.dumps(result,sort_keys=True).encode());os.replace(temporary,PRIVATE/'automatic-restore-proof.json')
   print(json.dumps({'proof_updated':True,'local_checks':drill['checks'],'old_proof_preserved':True,'uploads':0,'schedule_changed':False}));return 0
  except Exception:

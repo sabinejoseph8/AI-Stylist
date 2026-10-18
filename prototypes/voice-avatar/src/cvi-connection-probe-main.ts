@@ -1,7 +1,7 @@
 import {createServer} from 'node:http';
 import {fileURLToPath} from 'node:url';
 import {performance} from 'node:perf_hooks';
-import {ConnectionProbeAdmission} from './cvi-connection-probe-contract.ts';
+import {CONNECTION_PROBE_REPAIRED_APPROVAL,ConnectionProbeAdmission} from './cvi-connection-probe-contract.ts';
 import {ConnectionProbeSession} from './cvi-connection-probe-session.ts';
 import {prepareProbePersistence,prepareProbeProvider,probePalConfiguration} from './cvi-connection-probe-provider.ts';
 import {connectionProbeHost} from './cvi-connection-probe-host.ts';
@@ -21,11 +21,12 @@ const preflightValid=()=>{
  return Number.isFinite(preflightAt)&&Number.isFinite(freeMinutes)&&freeMinutes>=5&&freeMinutes<=20&&process.env.CVI_PROBE_FREE_NO_OVERAGE_VERIFIED==='true'&&process.env.CVI_PROBE_NO_OTHER_ROOMS_VERIFIED==='true'&&wall>=preflightAt&&wall-preflightAt<300000&&elapsed>=0&&Math.abs(wall-wallAtBoot-elapsed)<5000;
 };
 const port=Number(process.env.PORT??'10000');if(!Number.isSafeInteger(port)||port<1||port>65535)throw Error('Connection probe port unavailable.');
-const store=prepareProbePersistence({url:required('SUPABASE_URL'),headers:{apikey:supabaseKey,Authorization:'Bearer '+supabaseKey},fetch});
+if(required('CVI_PROBE_APPROVAL_ID')!==CONNECTION_PROBE_REPAIRED_APPROVAL)throw Error('Repaired probe approval requires review.');
+const store=prepareProbePersistence({approvalId:CONNECTION_PROBE_REPAIRED_APPROVAL,url:required('SUPABASE_URL'),headers:{apikey:supabaseKey,Authorization:'Bearer '+supabaseKey},fetch});
 const provider=prepareProbeProvider({fetch,apiKey:tavusKey,palId,configuration:probePalConfiguration(origin,callbackKey),diagnostic:report=>console.log('Probe PAL readback:',JSON.stringify(report))});
 let configurationVerified=false;
 try{await provider.verifyConfiguration();configurationVerified=true;}catch{console.log('Probe configuration held; Start remains unavailable.');}
-const session=new ConnectionProbeSession({admission:new ConnectionProbeAdmission(store),provider,monotonicNow:()=>performance.now()});
+const session=new ConnectionProbeSession({admission:new ConnectionProbeAdmission(store,CONNECTION_PROBE_REPAIRED_APPROVAL),provider,monotonicNow:()=>performance.now()});
 const assets=await loadConnectionProbeAssets(fileURLToPath(new URL('../dist',import.meta.url)));
 const cache=new Map<string,Uint8Array>();for(const path of assets.paths()){const value=await assets.getAsset(path,new AbortController().signal);if(value)cache.set(path,value);}
 const owner=connectionProbeHost({preview:{origin,password},credential:callbackKey,session,available:async()=>(await store.read() as {reservation:unknown}).reservation===null,operatorPreflightValid:()=>configurationVerified&&preflightValid(),asset:path=>cache.get(path)??null,diagnostic:report=>console.log('Probe stop category:',JSON.stringify(report))});

@@ -1,20 +1,22 @@
 import {randomUUID} from 'node:crypto';
 import {isDeepStrictEqual} from 'node:util';
 export const CONNECTION_PROBE_APPROVAL='cvi-connection-only-replacement-20261018' as const;
+export const CONNECTION_PROBE_REPAIRED_APPROVAL='cvi-connection-only-repaired-20261018' as const;
+export type ConnectionProbeApproval=typeof CONNECTION_PROBE_APPROVAL|typeof CONNECTION_PROBE_REPAIRED_APPROVAL;
 export const CONNECTION_PROBE_REPLY='This is a connection test. I can hear you. No styling advice or notes are being created.';
-export type ConnectionProbeRecord={version:1;purpose:'cvi-connection-only';approvalId:typeof CONNECTION_PROBE_APPROVAL;additionalCents:0;maxRooms:1;maxSeconds:300;reservation:null|{id:string;state:'reserved'|'held'|'ended';roomId:string|null}};
+export type ConnectionProbeRecord={version:1;purpose:'cvi-connection-only';approvalId:ConnectionProbeApproval;additionalCents:0;maxRooms:1;maxSeconds:300;reservation:null|{id:string;state:'reserved'|'held'|'ended';roomId:string|null}};
 const fail=()=>Error('Connection probe admission requires review.');
 const object=(x:unknown):x is Record<string,unknown>=>!!x&&typeof x==='object'&&!Array.isArray(x);
 const exact=(x:Record<string,unknown>,keys:string[])=>Object.keys(x).sort().join(',')===[...keys].sort().join(',');
 const id=(x:unknown):x is string=>typeof x==='string'&&/^[A-Za-z0-9_-]{1,100}$/.test(x);
-export function validateConnectionProbeRecord(x:unknown):ConnectionProbeRecord{
- if(!object(x)||!exact(x,['version','purpose','approvalId','additionalCents','maxRooms','maxSeconds','reservation'])||x.version!==1||x.purpose!=='cvi-connection-only'||x.approvalId!==CONNECTION_PROBE_APPROVAL||x.additionalCents!==0||x.maxRooms!==1||x.maxSeconds!==300)throw fail();
+export function validateConnectionProbeRecord(x:unknown,approval:ConnectionProbeApproval=CONNECTION_PROBE_APPROVAL):ConnectionProbeRecord{
+ if(!object(x)||!exact(x,['version','purpose','approvalId','additionalCents','maxRooms','maxSeconds','reservation'])||x.version!==1||x.purpose!=='cvi-connection-only'||x.approvalId!==approval||![CONNECTION_PROBE_APPROVAL,CONNECTION_PROBE_REPAIRED_APPROVAL].includes(approval)||x.additionalCents!==0||x.maxRooms!==1||x.maxSeconds!==300)throw fail();
  const r=x.reservation;
  if(r!==null&&(!object(r)||!exact(r,['id','state','roomId'])||!id(r.id)||!['reserved','held','ended'].includes(String(r.state))||!(r.roomId===null||id(r.roomId))||(r.state==='ended'&&r.roomId===null)))throw fail();
  return structuredClone(x) as ConnectionProbeRecord;
 }
-export function validateConnectionProbeTransition(before:unknown,after:unknown){
- const a=validateConnectionProbeRecord(before),b=validateConnectionProbeRecord(after);
+export function validateConnectionProbeTransition(before:unknown,after:unknown,approval:ConnectionProbeApproval=CONNECTION_PROBE_APPROVAL){
+ const a=validateConnectionProbeRecord(before,approval),b=validateConnectionProbeRecord(after,approval);
  if(!isDeepStrictEqual({...a,reservation:null},{...b,reservation:null}))throw fail();
  const r=a.reservation,s=b.reservation;
  if(!s)throw fail();
@@ -32,10 +34,11 @@ export type ConnectionProbePersistence={read:()=>Promise<unknown>;compareAndSwap
 export class ConnectionProbeAdmission{
  private held=false;
  private readonly store:ConnectionProbePersistence;
- constructor(store:ConnectionProbePersistence){this.store=store;}
+ private readonly approval:ConnectionProbeApproval;
+ constructor(store:ConnectionProbePersistence,approval:ConnectionProbeApproval=CONNECTION_PROBE_APPROVAL){this.store=store;this.approval=approval;}
  private async change(update:(r:ConnectionProbeRecord)=>void){
   if(this.held)throw fail();
-  try{const before=validateConnectionProbeRecord(await this.store.read()),after=structuredClone(before);update(after);validateConnectionProbeTransition(before,after);if(await this.store.compareAndSwap(before,after)!==true)throw fail();}
+  try{const before=validateConnectionProbeRecord(await this.store.read(),this.approval),after=structuredClone(before);update(after);validateConnectionProbeTransition(before,after,this.approval);if(await this.store.compareAndSwap(before,after)!==true)throw fail();}
   catch{this.held=true;throw fail();}
  }
  async reserve(){const reservationId=randomUUID();await this.change(r=>{if(r.reservation!==null)throw fail();r.reservation={id:reservationId,state:'reserved',roomId:null};});return reservationId;}

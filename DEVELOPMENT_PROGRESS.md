@@ -1,3 +1,11 @@
+## Repaired one-room trial approved; separate guard setup authorized, 18 October 2026
+
+Sabine no longer has the screenshot; that handoff is resolved and must not be requested again. She approved one new live repaired connection probe: one room/start, five included minutes, $0 additional charges, no retries or upgrades. She separately approved applying the prepared restricted guard and verified backup schema proof update within existing free caps. Preserve both approvals; do not ask again. The original ended record is never reopened/reset/refunded. The exact first failure remains unconfirmed.
+
+Prepared an isolated repaired-only allowance and two restricted RPCs, explicit runtime approval/RPC binding, no automatic seed/reset and old-record preservation checks. A local PostgreSQL rehearsal passed 23 checks including old/new consumed-state dump/restore; the original rehearsal still passes 21. Prototype 1,796 tests /120 suites, focused probe/media 90, operations 598, typecheck and production build pass. New backup source purpose/candidate/drill/proof names preserve original reads, attempts, policy and files. Only one nonrefundable bounded source read may be used, no B2 upload or schedule change.
+
+**Next action:** apply the separately approved guard once, verify the old ended row unchanged and new unused row/permissions, refresh matching backup proof only after actual encrypted local restore, then deploy repaired code with preflight disabled. Refresh actual account quota/no-overage/no active room and read saved activation settings back before enabling Sabine's sole Start. Reuse existing callback credentials/Cartesia configuration. Never start the room while she locates the page. See docs/tavus-repaired-probe-setup.md. No new reservation or room has started. Completion remains 5/41 and production 0/21; historical allocation stays $51.
+
 ## Sole connection probe used and ended; startup failure under investigation, 18 October 2026
 
 Publication verified: source de230e0, two verified 1,087-file tracked archives; owner-private Memory deployment appgdep_6ad4931d88b081918f924d0f3ac169fe succeeded from Site source eea68aa69cb0c2659115d90484ea0b8bfd656d66, all 19 checks. Ended-room screenshot and sanitized receipt are saved in mirror source-checkpoints. No hosted repair or replacement allowance is enabled.

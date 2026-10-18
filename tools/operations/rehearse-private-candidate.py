@@ -42,12 +42,14 @@ def main():
     modes.add_argument('--run-approved-local-candidate-drill',action='store_true')
     modes.add_argument('--run-approved-initial-automatic-candidate-drill',action='store_true')
     modes.add_argument('--run-approved-probe-schema-drill',action='store_true')
+    modes.add_argument('--run-approved-repaired-probe-schema-drill',action='store_true')
     options=parser.parse_args()
-    probe=options.run_approved_probe_schema_drill
-    schemas=SCHEMAS+(['stylist_connection_probe_private'] if probe else [])
+    repaired=options.run_approved_repaired_probe_schema_drill
+    probe=options.run_approved_probe_schema_drill or repaired
+    schemas=SCHEMAS+(['stylist_connection_probe_private'] if probe else [])+(['stylist_connection_probe_repaired_private'] if repaired else [])
     private_root=DESTINATION/'tools/operations/.private' if options.run_approved_initial_automatic_candidate_drill or probe else PRIVATE
     archive_name='automatic-initial-candidate.asb' if options.run_approved_initial_automatic_candidate_drill else 'database-candidate.asb'
-    if probe:archive_name='cvi-probe-schema-candidate.asb'
+    if probe:archive_name='cvi-probe-repaired-schema-candidate.asb' if repaired else 'cvi-probe-schema-candidate.asb'
     name='stylist-candidate-drill-'+uuid.uuid4().hex[:12]
     created=False;stage='private-input';checks=0;result=None
     def run(args,data=None,timeout=30):
@@ -129,12 +131,21 @@ def main():
         if probe:
             stage='local-probe-guard'
             record=json.loads(sql('select public.stylist_connection_probe_read();'))
-            require(record['purpose']=='cvi-connection-only' and record['additionalCents']==0 and record['reservation'] is None)
+            require(record['purpose']=='cvi-connection-only' and record['additionalCents']==0 and (record['reservation']['state']=='ended' if repaired else record['reservation'] is None))
             for role in ['anon','authenticated','service_role']:
                 sql('set role '+role+';select * from stylist_connection_probe_private.allowance;',refused=True)
             for role in ['anon','authenticated']:
                 require(sql("select has_function_privilege('"+role+"','public.stylist_connection_probe_change(jsonb,jsonb)','EXECUTE');")=='f')
             require(sql("select has_function_privilege('service_role','public.stylist_connection_probe_change(jsonb,jsonb)','EXECUTE');")=='t')
+        if repaired:
+            stage='local-repaired-probe-guard'
+            record=json.loads(sql('select public.stylist_connection_probe_repaired_read();'))
+            require(record['approvalId']=='cvi-connection-only-repaired-20261018' and record['reservation'] is None and record['maxRooms']==1 and record['additionalCents']==0)
+            for role in ['anon','authenticated','service_role']:
+                sql('set role '+role+';select * from stylist_connection_probe_repaired_private.allowance;',refused=True)
+            for role in ['anon','authenticated']:
+                require(sql("select has_function_privilege('"+role+"','public.stylist_connection_probe_repaired_change(jsonb,jsonb)','EXECUTE');")=='f')
+            require(sql("select has_function_privilege('service_role','public.stylist_connection_probe_repaired_change(jsonb,jsonb)','EXECUTE');")=='t')
         result={'candidate_sha256':hashlib.sha256((private_root/archive_name).read_bytes()).hexdigest(), 'local_customer_schema_drill_passed':True,'checks':checks,'hosted_restore':False,
                 'managed_owner_equivalence_verified':False,'managed_grantor_equivalence_verified':False,'photo_recovery_verified':False,
                 'customer_data_transferred':False,'schedule_active':False,'complete_backup_verified':False}
