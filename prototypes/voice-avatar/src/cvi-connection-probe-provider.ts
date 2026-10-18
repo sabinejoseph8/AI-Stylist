@@ -8,6 +8,9 @@ export const PROBE_TTS_MODEL='sonic-3.5';
 type Fetch=(url:string,init:RequestInit)=>Promise<Response>;
 const fail=()=>Error('Connection probe provider unavailable.');
 const object=(v:unknown):v is Record<string,unknown>=>!!v&&typeof v==='object'&&!Array.isArray(v);
+// Tavus Get PAL returns this literal in place of a saved custom LLM secret.
+// It is never a valid callback credential; callback authentication remains exact.
+const redactedCredential=(v:unknown)=>v==='<redacted>';
 const id=(v:unknown):v is string=>typeof v==='string'&&/^[A-Za-z0-9_-]{1,100}$/.test(v);
 /** Absolute request+body bound, no redirects/retries/default fetch or raw errors. */
 export async function probeJson(fetch:Fetch,url:string,init:RequestInit,emptySuccess=false){
@@ -40,13 +43,15 @@ export function probePalReadbackSummary(value:unknown,expected:ReturnType<typeof
  const v=object(value)?value:{},layers=object(v.layers)?v.layers:{},llm=object(layers.llm)?layers.llm:{},tts=object(layers.tts)?layers.tts:{},perception=object(layers.perception)?layers.perception:{};
  return Object.freeze({identityMatch:v.pal_id===palId,legacyIdentityPresent:typeof v.persona_id==='string',pipelineFull:v.pipeline_mode==='full',faceMatches:v.default_face_id===PROBE_FACE,legacyFacePresent:typeof v.default_replica_id==='string',emptyGreeting:v.greeting==='',greetingAbsent:v.greeting===undefined||v.greeting===null,dynamicGreetingOff:v.dynamic_greeting===false,dynamicGreetingAbsent:v.dynamic_greeting===undefined||v.dynamic_greeting===null,englishOnly:isDeepStrictEqual(v.languages,['en']),languagesAbsent:v.languages===undefined||v.languages===null,languagesEmpty:isDeepStrictEqual(v.languages,[]),credentialAbsent:llm.api_key===undefined||llm.api_key===null||llm.api_key==='',credentialRedacted:typeof llm.api_key==='string'&&/^(?:<redacted>|\*+|\[redacted\])$/i.test(llm.api_key),credentialMatches:llm.api_key===expected.layers.llm.api_key,customModelMatches:llm.model===expected.layers.llm.model,endpointMatches:llm.base_url===expected.layers.llm.base_url,speculationOff:llm.speculative_inference===false,cartesiaExplicit:tts.tts_engine==='cartesia',ttsModelMatches:tts.tts_model_name===PROBE_TTS_MODEL,voiceMatches:tts.external_voice_id===PROBE_VOICE,perceptionOff:perception.perception_model==='off'});
 }
-/** Get PAL does not document a languages response field. When omitted, English
- * is still fixed by our constant reply and Create Conversation override. An
- * explicitly conflicting PAL language list is refused, never silently accepted. */
+/** Observed Get PAL returns an empty language list and a literal redacted key.
+ * Operator setup writes the same generated key into both approved services.
+ * Redaction is presence evidence only, not equality evidence. The first native
+ * callback must authenticate the exact shared key; no alternate/bypass exists.
+ * English remains pinned by our constant reply and conversation override. */
 export function verifyProbePal(value:unknown,expected:ReturnType<typeof probePalConfiguration>,palId:string){
- if(!object(value)||value.pal_id!==palId||value.pipeline_mode!=='full'||value.default_face_id!==PROBE_FACE||value.greeting!==''||value.dynamic_greeting!==false||(value.languages!==undefined&&value.languages!==null&&!isDeepStrictEqual(value.languages,['en']))||!object(value.layers))throw fail();
+ if(!object(value)||value.pal_id!==palId||value.pipeline_mode!=='full'||value.default_face_id!==PROBE_FACE||value.greeting!==''||value.dynamic_greeting!==false||(value.languages!==undefined&&value.languages!==null&&!isDeepStrictEqual(value.languages,[])&&!isDeepStrictEqual(value.languages,['en']))||!object(value.layers))throw fail();
  const layers=value.layers,llm=layers.llm,tts=layers.tts,perception=layers.perception;
- if(!object(llm)||llm.api_key!==expected.layers.llm.api_key||llm.model!==expected.layers.llm.model||llm.base_url!==expected.layers.llm.base_url||llm.speculative_inference!==false||!object(tts)||tts.tts_engine!=='cartesia'||tts.tts_model_name!==PROBE_TTS_MODEL||tts.external_voice_id!==PROBE_VOICE||tts.voice_id||tts.api_key||!object(perception)||perception.perception_model!=='off')throw fail();
+ if(!object(llm)||(llm.api_key!==expected.layers.llm.api_key&&!redactedCredential(llm.api_key))||llm.model!==expected.layers.llm.model||llm.base_url!==expected.layers.llm.base_url||llm.speculative_inference!==false||!object(tts)||tts.tts_engine!=='cartesia'||tts.tts_model_name!==PROBE_TTS_MODEL||tts.external_voice_id!==PROBE_VOICE||tts.voice_id||tts.api_key||!object(perception)||perception.perception_model!=='off')throw fail();
  for(const field of ['tools','skills','document_ids','document_tags','guardrail_ids','guardrail_tags'])if(value[field]!==undefined&&!isDeepStrictEqual(value[field],[]))throw fail();
  for(const field of ['tools','headers','extra_body','default_query'])if(llm[field]!==undefined&&!isDeepStrictEqual(llm[field],{})&&!isDeepStrictEqual(llm[field],[]))throw fail();
  if(layers.conferencing||value.objectives_id||value.objectives||value.memory_stores)throw fail();

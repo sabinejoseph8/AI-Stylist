@@ -2161,3 +2161,7 @@ I approved a local integration rehearsal rather than treating separately passing
 ## Finding a phone-browser photo compatibility gap
 
 I connected a generated clothing reference to the same local coordinator as the notebook, so confirmation waits for an accepted description, ownership choice and new reference revision. The automated WebKit journey exposed that the browser returned PNG when asked to encode WebP, causing the old preview guard to reject a safe newly rasterized image. I added a bounded PNG fallback and preserved the actual format in sample Wardrobe copies and privacy exports. The reference now stays intact during unrelated edits and background reads, and clears with its session. The combined local checks pass, while real recognition, hosted storage, provider integration and launch acceptance remain open.
+
+## Distinguishing a hidden credential from a mismatch
+
+I deployed the connection probe with Start disabled. Its strict readback stopped because Tavus returned a redaction marker instead of the saved key and an empty language list. I kept the failed deployment evidence, added fixed boolean diagnostics and verified that voice, endpoint and safety settings matched. I adapted only those observed formats, kept exact callback authentication, and documented that a redacted configuration response cannot prove secret equality. English remains explicit in the room request and constant reply. No room was consumed during setup.

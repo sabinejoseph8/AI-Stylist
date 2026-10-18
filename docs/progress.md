@@ -1,3 +1,11 @@
+## Observed Tavus readback formats, 18 October 2026
+
+The first disabled Render deployment held before listening: all identity/face/full-pipeline/custom-model/endpoint/speculation/Cartesia/model/voice/perception/greeting comparisons passed, but Get PAL returned an empty language list and the literal `<redacted>` for its saved LLM key. No room or trial reservation was created. Reapplying the approved shared key did not change that redaction. This is not evidence of a mismatching key.
+
+The adapter now handles only that observed redaction marker, while refusing absent keys, other masking formats and actual substituted keys. It never treats the marker as an authentication credential. Exact callback authentication remains mandatory, so the native Tavus callback will establish delivery with the shared secret during the sole trial. Saved-secret equality cannot be proved by this redacted GET response. Empty/default languages are accepted because the room request explicitly pins English and the endpoint emits only the fixed English reply. No account, notes or recommendation path is exposed. Focused probe tests: 69 passed; typecheck passed before the final response-format adjustment, with fresh regression pending.
+
+**Next action:** deploy the tested response-format handling with preflight still disabled, verify protected page/configuration and unused durable guard, then refresh actual account entitlements before making the sole user-started probe available. No spending, retry or room start is added.
+
 ## Private probe configuration saved; disabled deployment being prepared, 18 October 2026
 
 Sabine completed classic sign-in and explicitly approved creating a fresh probe-only endpoint credential in the new Tavus configuration and existing Render environment. A separate connection-only persona is saved with the verified stock face, custom fixed-reply endpoint, speculation Off, explicit Cartesia/public voice/sonic-3.5 and emotion control Off. The previous personal Phase 0 persona is preserved. The matching new credential and non-sensitive probe settings are saved in Render using Save only. The credential exists only in the approved services and transient setup memory; no secret is in source, documentation or chat. No room or trial reservation has started.
