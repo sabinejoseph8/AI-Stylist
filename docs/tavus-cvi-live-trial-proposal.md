@@ -1,6 +1,6 @@
 # Proposed one-attempt Tavus full-CVI feasibility trial
 
-Prepared 18 October 2026. **Not approved, activated or ready to start.** Sabine approved read-only account/voice verification and preparation of this proposal only. Exact voice verification requires the separately signed-in classic configuration viewer. No PAL, credential, room, deployment, reservation or provider setting was created or changed.
+Prepared 18 October 2026. **Ready for scope review; not approved, activated or ready to start.** Sabine approved read-only account/voice verification and preparation of this proposal only. Classic sign-in is complete. Cartesia availability is verified in an existing stock persona; a newly created trial configuration still requires its own exact readback before start. No PAL, credential, room, deployment, reservation or provider setting was created or changed.
 
 ## Decision proposed after verification
 
@@ -11,10 +11,17 @@ This is a proposal for a later decision. It does not authorize hosted preparatio
 ## Read-only findings
 
 - The signed-in developer billing page identifies the current plan as Free. Its displayed usage leaves more than one five-minute trial available; the exact usage observation is retained in a local evidence receipt, without publishing account identifiers.
-- The account table lists one concurrent session, a five-minute maximum conversation, audio/video modes and a bring-your-own LLM surface. The account has no owned PALs in the current Maker list. Stock Echo access observed in earlier experiments does not prove a newly configured full-CVI PAL will work.
+- The account table lists one concurrent session, a five-minute maximum conversation, audio/video modes and a bring-your-own LLM surface. The unsaved classic form exposes `custom` with model/base URL/API key and speculative-inference controls. No persona was saved. The account has no owned PALs in the current Maker list; existing stock personas are separate.
 - Account limits differ from the public marketing pricing page. Use the actual account's lower limits and recheck immediately before admission. Displayed usage may lag; require no competing use or active room.
 - The [custom LLM guide](https://docs.tavus.io/sections/conversational-video-interface/pal/llm) documents SSE `/chat/completions`, an API key, configurable static headers and disabling speculative inference. It does not prove this application's native request/event admission or fallback behavior.
-- The [TTS guide](https://docs.tavus.io/sections/conversational-video-interface/pal/tts) documents explicit Cartesia selection. `tavus-auto` can change providers, so it is insufficient for the ElevenLabs exclusion. Exact account voice/provider/model selection is **pending**, not verified by the public example.
+- Classic details show `cartesia` on both Tavus Echo Audio Stream (`pipecat-stream`) and the stock Margo persona (`pe95f57e3ba3`). Margo also shows `tavus-gemma-4`, `sparrow-2` and speculative inference disabled. This verifies an explicit non-ElevenLabs engine on an available full-conversation stock configuration; it is not a live synthesis or fallback trace.
+- The unsaved TTS form permits Cartesia and lists `sonic-3.5`, `sonic-3`, `sonic-3-2026-01-12`, `sonic-3-2025-10-27` and `sonic-2`. Its external voice ID and API key fields are blank. No actual trial voice was configured or tested. Draft selections were discarded; no Save/Create/Join action occurred.
+- Proposed voice candidate: **Cartesia Skylar**, public voice ID `db6b0ed5-d5d3-463d-ae85-518a07d3c2b4`, described as a public, active English feminine voice in Cartesia's [official Get Voice example](https://docs.cartesia.ai/api-reference/voices/get). Proposed model: `sonic-3.5`, exposed by this Tavus account. This is a documented candidate, not an authenticated lookup of that voice or proof of its Tavus/model compatibility. No Cartesia account, key, synthesis request or preview was used. Failure to configure/read it back holds the test rather than silently choosing another provider.
+- The [TTS guide](https://docs.tavus.io/sections/conversational-video-interface/pal/tts) documents explicit Cartesia selection and public external voices without a separate provider key. `tavus-auto` can change providers, so it is insufficient for the ElevenLabs exclusion. No unverified fallback is permitted. Exact newly saved trial configuration remains a pre-start gate.
+
+## What approval of this proposal would authorize
+
+One isolated test PAL, the explicitly Cartesia voice candidate above, the required private full-CVI endpoint on the existing protected Render preview, and one consumed five-minute included-quota trial. Keep the start control disabled while implementing and verifying that setup. No customer routes, public deployment, new hosting plan, new provider account, real product feed or new paid model. Credential grants/storage still require any applicable action-time security approval. If an independent history authority or new hosting resource is required beyond the existing approved setup, stop and present that concrete dependency instead of silently deploying it. Sabine starts the sole live room only after the implementation/preflight is verified and the complete instructions are visible.
 
 ## Required preflight: all must pass before asking Sabine to start
 
@@ -55,4 +62,4 @@ Success establishes only observed feasibility for this configuration and script.
 
 ## Next action
 
-Finish read-only exact voice inspection after Sabine signs into the existing classic Tavus viewer. Then finalize the voice/model and any concrete compatibility/hosting gaps. Keep activation disabled and return the completed proposal for Sabine's decision. No support response is a prerequisite.
+Read-only account inspection is complete at the stated scope. Present this capped proposal for Sabine's decision. After approval, prepare and verify the exact disabled trial configuration and resolve the listed compatibility/hosting gaps before any start. No support response is a prerequisite; no new paid test is authorized by the inspection.

@@ -1,3 +1,11 @@
+## Cartesia and custom endpoint availability verified, 18 October 2026
+
+Sabine completed classic Tavus sign-in. Read-only stock details show Cartesia on both pipecat-stream and Margo (pe95f57e3ba3); Margo has ordinary full-conversation LLM/flow layers. The unsaved form exposes custom LLM model/base URL/API key/speculation controls and explicit Cartesia with sonic-3.5 plus other model choices. External voice ID/key fields were blank. No persona, credential, room or setting was saved. The form was discarded.
+
+Finalized docs/tavus-cvi-live-trial-proposal.md for scope review: one private room/start, at most five included CVI minutes, $0 additional charges, no retries/upgrades/paid OpenAI calls, existing $51 allocation and history intact. Proposed Cartesia Skylar/public ID is from the vendor's example, not a live authenticated voice lookup or Tavus playback proof. Exact saved trial voice/provider/model readback and fallback refusal remain pre-start requirements. Account features are verified, native compatibility and live outcome are not. The proposal names the private setup and implementation gates; start remains disabled until separate owner approval and verified preparation. A stock persona's permissive prompt is not the app's recommendation gate.
+
+**Exact next action:** obtain the single concrete trial-scope decision against the proposal. If approved, prepare the disabled implementation on the agreed existing protected setup, close actual admission/hosting gaps, verify locally and read back the exact provider configuration before Sabine starts one room. Do not infer activation from this read-only approval. No support wait, new spending, customer deployment or backup change.
+
 ## Tavus account inspection and capped proposal, 18 October 2026
 
 Sabine authorized read-only account/voice verification and preparation of one capped trial for a later approval, with no new spending or activation. The signed-in Maker account is Free; its current displayed allowance can cover one five-minute reservation. Its account table lists one concurrent session, five-minute conversation maximum and custom LLM features. Public pricing differs; the actual account limits govern. No PAL, room, credential, plan, provider setting or deployment was changed.

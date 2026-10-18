@@ -1,3 +1,11 @@
+## Cartesia and custom endpoint availability verified, 18 October 2026
+
+Sabine completed classic Tavus sign-in. Read-only stock details show Cartesia on both pipecat-stream and Margo (pe95f57e3ba3); Margo has ordinary full-conversation LLM/flow layers. The unsaved form exposes custom LLM model/base URL/API key/speculation controls and explicit Cartesia with sonic-3.5 plus other model choices. External voice ID/key fields were blank. No persona, credential, room or setting was saved. The form was discarded.
+
+Finalized docs/tavus-cvi-live-trial-proposal.md for scope review: one private room/start, at most five included CVI minutes, $0 additional charges, no retries/upgrades/paid OpenAI calls, existing $51 allocation and history intact. Proposed Cartesia Skylar/public ID is from the vendor's example, not a live authenticated voice lookup or Tavus playback proof. Exact saved trial voice/provider/model readback and fallback refusal remain pre-start requirements. Account features are verified, native compatibility and live outcome are not. The proposal names the private setup and implementation gates; start remains disabled until separate owner approval and verified preparation. A stock persona's permissive prompt is not the app's recommendation gate.
+
+**Exact next action:** obtain the single concrete trial-scope decision against the proposal. If approved, prepare the disabled implementation on the agreed existing protected setup, close actual admission/hosting gaps, verify locally and read back the exact provider configuration before Sabine starts one room. Do not infer activation from this read-only approval. No support wait, new spending, customer deployment or backup change.
+
 ## Database-only scheduled backups recovered, 18 October 2026
 
 The approved regular scheduled check ran attempt **3** without an operator start. It completed at **05:13:22 UTC** with a **491,691-byte encrypted snapshot**, authenticated upload/readback verification and **scope-recovery-point-verified**. The financial record is callback-completed, no attempt remains active, native execution four exited zero, and no operator hold remains. The job's verified success path requires the bounded monitor success acknowledgment before completion; this does not verify delivery of a new email. Both old consumption markers and archived holds are preserved; no budget, native setting or permanent runtime file was reset/replaced. Artifact: source-checkpoints/scheduled-backup-recovery-success-20261018.json.
@@ -2023,6 +2031,8 @@ Design: [Approved design specification v1.0](../Project%20Memory/design.md)
 Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-spec.md)
 
 ## Summary
+
+- **Next media decision:** further OpenAI/Tavus support replies are no longer expected. Read-only inspection verifies explicit Cartesia on an existing full-conversation stock persona and custom LLM controls. A single private five-minute included-quota trial with $0 additional charges is proposed; it is not activated. Exact new voice/PAL readback, admission/hosting checks and local verification must precede any start. See docs/tavus-cvi-live-trial-proposal.md.
 
 Current focus: approved local Task 8a preparation. Source 8697f9e connects explicit Wardrobe save/reuse to the original shared notebook, following first-channel repair 6aed2a0 and Profile privacy bdf0881. Reusing a saved photo requires fresh local normalization and explicit shared confirmation. 98 composed checks, 94 independent main checks, TypeScript and build pass. All real release flags remain false.
 

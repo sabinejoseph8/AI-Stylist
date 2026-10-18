@@ -1,3 +1,7 @@
+## Replacing the support wait with verified account facts, 18 October 2026
+
+When further support replies were no longer expected, I inspected the actual Tavus account instead of treating public documentation as proof of account access. I verified explicit Cartesia on an existing full-conversation stock persona and custom endpoint/model choices in an unsaved form, then discarded it. I prepared one five-minute, no-additional-charge trial with independent checks and no retry. I kept the difference between an available provider, a documented voice candidate and an actually verified live configuration explicit. No room or new charge was started.
+
 ## Completing the combined verification, 18 October 2026
 
 I waited for the existing full CI run instead of duplicating it or treating a watcher timeout as a failed test. All four jobs and every declared step passed: 2,785 foundation tests, 1,706 prototype tests, 591 operations checks, database protections, typechecks and builds. I kept four intentional browser skips visible and preserved the earlier failed operations evidence. This verifies the prepared code; it does not prove live customer, retailer or device acceptance.
