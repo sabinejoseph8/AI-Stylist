@@ -1,7 +1,7 @@
 {
   "version": 1,
-  "asOf": "2026-10-17",
-  "evidenceCommit": "bdf0881deb62ffef792769c89c7f6466412e3a1e",
+  "asOf": "2026-10-18",
+  "evidenceCommit": "1bb875556c138325d034d55cd908c2a28db8c4f8",
   "scope": "Current repository evidence map; local original-coordinator/browser and disposable SQL checks only. No fresh hosted/provider/device acceptance.",
   "acceptedProductionCriteria": 0,
   "criteriaCount": 21,
@@ -473,7 +473,7 @@
       "name": "Connect and verify the actual current-context consultation",
       "owner": "Engineering after prerequisite contracts",
       "gate": "One authoritative authenticated session across live notes, recognition, current requirements, generation, independent checking, display/speech, camera, feedback, saving and shopping.",
-      "state": "Approved local sample integration and combined Session/Wardrobe privacy are implemented. Full CI 39098253367 on 3a2d3f1 succeeded: 2,784 foundation tests / 205 suites, four intentional skips, 1,706 prototype tests, database protections, typechecks and builds. Later operations preparation has separate 591-check successful CI evidence at 1bb8755; its full foundation job remains running. Actual media, identity, products, persistence, speech and customer acceptance remain open.",
+      "state": "Approved local sample integration and combined Session/Wardrobe privacy are implemented. CI 39099380066 on 1bb8755 succeeded in all four jobs and every step: 2,785 foundation tests/205 suites, four intentional skips, 1,706 prototype tests, 591 operations checks, database protections, typechecks and builds. Actual media, identity, products, persistence, speech and customer acceptance remain open.",
       "dependsOn": [
         "B01",
         "B02",
@@ -1195,15 +1195,15 @@
     "newSpending": false
   },
   "latestIntegrationCi": {
-    "run": 39098253367,
-    "source": "3a2d3f1d6790cd1af1f3bd981c49f9a127409fd3",
+    "run": 39099380066,
+    "source": "1bb875556c138325d034d55cd908c2a28db8c4f8",
     "allJobsAndSteps": "success",
-    "foundationTests": 2784,
+    "foundationTests": 2785,
     "foundationSuites": 205,
     "intentionalSkips": 4,
     "prototypeTests": 1706,
-    "laterOperationsCi": 39099380066,
-    "laterOperationsTests": 591,
-    "laterFullWorkflowComplete": false
+    "prototypeSuites": 118,
+    "operationsTests": 591,
+    "fullWorkflowComplete": true
   }
 }

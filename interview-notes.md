@@ -1,3 +1,7 @@
+## Completing the combined verification, 18 October 2026
+
+I waited for the existing full CI run instead of duplicating it or treating a watcher timeout as a failed test. All four jobs and every declared step passed: 2,785 foundation tests, 1,706 prototype tests, 591 operations checks, database protections, typechecks and builds. I kept four intentional browser skips visible and preserved the earlier failed operations evidence. This verifies the prepared code; it does not prove live customer, retailer or device acceptance.
+
 ## Recovering the automatic backup schedule, 18 October 2026
 
 After the Mac delayed a forced start, I kept the financial history intact and prepared a single-use recovery through the regular schedule. Once approved, the native job ran without a forced restart, authenticated the encrypted snapshot after upload and readback, and completed with no active reservation or hold left. I restored only the previously approved empty-source database coverage, preserving the free-budget caps and expiry. Full customer/photo recovery still needs separate acceptance.
