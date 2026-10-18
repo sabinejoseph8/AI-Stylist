@@ -1,3 +1,7 @@
+## Collecting the full result and closing uncertain retries, 17 October 2026
+
+I collected a complete local regression with 2,732 passing tests, while retaining the earlier failed run as separate evidence. I then merged the checked consultation-slot fix and tested actual loss of the simulated browser input channel. Refreshing notes cannot restore permission to show a sample after that loss. The new increment passes 186 integration checks and independent main checks, and its complete regression is running. I kept local evidence separate from live acceptance and held the Memory update when its access setting conflicted with the private-site instruction.
+
 ## Refusing retries after uncertain database work, 17 October 2026
 
 While the full regression ran, I found that the prepared consultation-slot adapter could accept another operation after an uncertain database result. I prepared a fix that holds that adapter instance instead of assuming a timeout canceled the database work. Focused tests cover late success, malformed acknowledgments, known refusals and competing calls. The fix is still staged pending the remaining integration checks; it does not establish recovery across a restart or activate customer consultations.

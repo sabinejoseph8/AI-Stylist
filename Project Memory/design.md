@@ -1,3 +1,7 @@
+## Input connection failure behavior verified, 17 October 2026
+
+The local WebKit journey now verifies actual loopback input-channel closure. Earlier samples stay hidden and checking stays disabled after refreshing accepted notes; no automatic input reconnection occurs. Separately saved sample looks remain separate from temporary notes. All three local browser journeys pass in the composed run; approved tokens and live/device/accessibility acceptance remain unchanged.
+
 ## Shared input progress and confirmation, 17 October 2026
 
 The local shared rehearsal keeps accepted notes and the confirmed photo visible while simulated speech is checked, immediately hides the earlier sample, and permits touch editing or Clear. Partial and completed extraction remain To confirm until explicitly confirmed. A lost input connection hides samples and cannot be bypassed by refreshing notes. Background refreshes do not move focus. The three local browser journeys pass; approved visual tokens and real-device/accessibility gates remain unchanged.

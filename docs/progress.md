@@ -1,3 +1,19 @@
+## Collected full regression and final local increment, 17 October 2026
+
+The complete frozen-source regression at c895346ea773c6338ca9a88654ab32e58293b970 PASSED: **2,732 tests across 200 files**, with three intentional opt-in browser skips, original session **52085**, terminal exit zero, duration 1,877.41 seconds. All 549 frozen source/test/operations hashes matched main and the isolated run. Evidence is /private/tmp/ai-stylist-input-serial-full-20261017.log and its adjacent JSON, also saved in source-checkpoint outputs. The earlier 2,711-pass/three-failure run remains failed; isolated passes and this serialized run do not establish a definitive cause or live performance acceptance.
+
+Source **08d1e01b455a740f39d5c62e8e2721a6144d3fea** then merges the verified five-file slot/channel increment, patch SHA-256 e2177a3ea4ae8b5e11b9b6e1f096290f87a828f4cae458f68c2c9e8dec9daeb1. The prepared consultation-slot adapter captures its RPC function and holds this instance after timeout, transport failure or malformed claim/update acknowledgment; late success cannot unhold it. Known null/false results and competing-call refusal remain distinct. This is not durable restart admission or whole-host consultation capacity acceptance, and no route or hosted permission is connected.
+
+The extended local browser journey closes the actual loopback input stream and verifies that note refresh cannot re-enable sample output or reconnect the old channel. It uses **88/128 authority records** and releases zero protected outputs. All three browser journeys and affected suites pass together: **186 checks across 13 suites**, original session 17714, exit zero, /private/tmp/ai-stylist-slot-channel-composed-20261017.log. Main independently passes **62 checks across three suites**, session 76516, exit zero, /private/tmp/ai-stylist-slot-channel-main-20261017.log. TypeScript and client build pass.
+
+The standard foundation test command now uses one test-file worker, matching the collected complete regression. Explicit concurrent operations inside tests remain covered; application deadlines, signatures, identity and authority limits are unchanged. This is test scheduling, not a reduced customer concurrency requirement or a live timing claim.
+
+A NEW complete current-source regression is RUNNING in original session **77149** at /private/tmp/ai-stylist-slot-channel-final-regression-stage. Its **574 source/test/script/contract/dependency hashes** are frozen in /private/tmp/ai-stylist-slot-channel-final-full-20261017.json; log /private/tmp/ai-stylist-slot-channel-final-full-20261017.log. Collect the actual terminal result and compare hashes. Do not duplicate a healthy run or label this final source fully green before that result.
+
+**Next action:** collect session 77149 and diagnose any failure without widening limits. Website publication is held pending Sabine's audience decision: the existing Memory site currently reports public access, conflicting with the goal's private-site instruction. An asynchronous question asks whether to restore owner-only access or hold publication. Do not silently publish to public access or override the audience. Local work and GitHub source saving remain authorized independently. After the final result, continue the remaining local Task 8a requirements and report real provider/account/source/recovery/device/launch gates separately.
+
+Completion remains **5/41**, production acceptance **0/21**, allocation **$51**. The goal is active and incomplete. No paid calls, real accounts, device access, credentials, customer-host changes or backup-runtime changes occurred. Earlier dated preparation/running statements below are historical; the staged slot/channel increment is now merged.
+
 ## Shared transcript integration checkpoint, 17 October 2026
 
 Source c895346ea773c6338ca9a88654ab32e58293b970 merges the verified 14-file transcript increment (patch SHA-256 5309eac5df3fc8081792b3f17fb100efb221d52f266b83371a40cdfe77eea831). Original transcript notifications carry only ordered serial/phase values, remain bound to their exact context, and invalidate earlier sample output before extraction completes. The server refuses sample preparation throughout pending or accepted partial input. Full utterance completion closes input but does not silently confirm extracted notes. Touch confirmation remains explicit. Item feedback accepts only its own exact next input revision.
@@ -1820,14 +1836,15 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current focus: approved local Task 8a preparation. Shared transcript integration is merged with 171 composed checks across 12 suites, 134 independent main checks, TypeScript and build passing. A new complete regression runs one test file at a time in session 52085; no final result is claimed. The preceding full run remains failed with 2,711 passed, three failed and two skipped tests; all three failed cases pass separately without changes.
+Current focus: approved local Task 8a preparation. The preceding complete source passes 2,732 tests across 200 files, with three intentional browser skips and terminal exit zero. The final slot/channel increment is merged with 186 composed checks, 62 independent main checks, TypeScript and build passing. Its new complete regression runs in original session 77149; no final result is claimed yet.
 
 - **Full completion:** 5 of 41 Memory items; 0 of 21 production acceptance criteria. Local preparation does not close integrated acceptance.
-- **Verified increment:** input invalidation, partial-note holds, explicit confirmation, reference retention, failure states and initial-load refresh race protection.
+- **Verified local behavior:** shared transcript invalidation and confirmation, stable reference, feedback/save scopes, first-read refresh race protection, channel-loss refusal and per-instance uncertain database holds.
 - **Remaining gates:** provider conversation/startup, customer account and recovery-host security, approved retailer sourcing, recovery/fencing acceptance and physical-device/accessibility checks.
 - **Limits and decisions:** $51 experiment allocation; no new spending or customer-host changes. Email/password with recovery only. Domain purchase and Rakuten remain deferred.
-- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout and isolated stages.
-- **Next action:** collect original full-regression session 52085, verify all 549 frozen source hashes, then investigate failures or continue authorized local Task 8a work.
+- **Memory publication:** held for audience confirmation because current site access conflicts with the private-site instruction.
+- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout and isolated regression stages.
+- **Next action:** collect original full-regression session 77149, verify all 574 frozen hashes, then continue authorized local Task 8a work and publish Memory only to the agreed audience.
 
 ## Historical summary checkpoints
 
