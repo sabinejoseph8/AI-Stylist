@@ -407,9 +407,9 @@
       "rank": 1,
       "priority": "P0",
       "name": "Prove the live media and enforced recommendation-release contract",
-      "owner": "Provider clarification, then engineering and approved experiment",
+      "owner": "Engineering feasibility assessment, then explicitly authorized experiment",
       "gate": "A supported transcription startup or an explicitly approved alternative; enforced pre-display/pre-speech validation, neutral failure output and stale-result cancellation. Verify any Tavus full-pipeline voice excludes ElevenLabs.",
-      "state": "OpenAI minimal startup failed; latest recorded specialist reply confirms no working procedure/referral. Tavus recommends full CVI but hard validation/fallback guarantees remain unresolved.",
+      "state": "Sabine confirms no further OpenAI or Tavus support replies will arrive. Support waiting is retired. The failed OpenAI startup remains unresolved. Tavus full CVI with an app-controlled custom streaming endpoint is the prepared candidate for a bounded empirical evaluation; actual compatibility, fallback/release behavior, non-ElevenLabs voice, privacy and cleanup remain unverified. No new paid test or hosted activation is approved.",
       "dependsOn": []
     },
     {

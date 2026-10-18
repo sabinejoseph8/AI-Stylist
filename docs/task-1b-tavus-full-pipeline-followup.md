@@ -1,3 +1,9 @@
+## Support-wait dependency retired, 18 October 2026
+
+Sabine confirms no further OpenAI or Tavus replies will be received. Do not wait for, request, or send more replies as the next action. The failed OpenAI startup remains unresolved; silence from support is not technical acceptance. No paid retry, provider switch, customer activation or relaxation of recommendation checks follows from this update.
+
+Next candidate: evaluate Tavus full CVI with the app-controlled custom streaming LLM boundary already prepared locally. Current official documentation describes SSE /chat/completions, API-key authentication and configurable extra headers: https://docs.tavus.io/sections/conversational-video-interface/pal/llm. That establishes a documented integration surface, not verified request identity, cancellation, fallback speech, privacy or account entitlement. Before requesting a live-test decision, inspect existing account features and a permitted non-ElevenLabs voice read-only, identify the minimum real endpoint/correlation gaps, and prepare one bounded trial with explicit cost, activation scope, stop conditions and pass/fail criteria. Preserve all previous reservations and the $51 allocation. No new trial is funded by this update. The goal remains blocked until an actionable path is established or a needed live/security decision is approved.
+
 # Tavus full-pipeline validation follow-up
 
 Status: Sabine reports sending the prepared follow-up to Tavus on 14 October 2026. Submission is reported by Sabine, not independently verified in the support conversation. Awaiting reply. No provider configuration, paid call or architecture change.
