@@ -1,6 +1,6 @@
 # Recovery proposal for the held initial backup job
 
-Prepared 17 October 2026. No provider attempt, hold removal, scheduler change or permanent-runtime update has been performed.
+Prepared and approved 17 October 2026. The local repair is now installed and the LaunchAgent PATH reloaded; the operator hold and all private/budget records remain intact. No provider attempt or hold removal has occurred.
 
 ## Observed current state
 
@@ -26,8 +26,8 @@ Prepared 17 October 2026. No provider attempt, hold removal, scheduler change or
 - The real hold and budget files have unchanged hashes before/after inspection. No real private file was copied to the prepared public package.
 - Exact patch, two source hashes, 26-file package hashes and proof scope: source-checkpoints/backup-local-dependency-repair-prepared-20261017.json. Prepared sources are in /private/tmp/ai-stylist-backup-local-dependencies-stage; public package in /private/tmp/ai-stylist-backup-docker-repair-package.
 
-## Decision required before resuming
+## Approved resumption decision
 
-The existing policy stops on failure and prohibits an automatic retry. Ask Sabine to authorize applying the reviewed local repair, preserving/archiving the operator hold rather than destroying it, and allowing one new bounded attempt within the already approved cumulative free-budget policy. A verified success may restore the previously approved schedule; any failure must hold again without another retry.
+The existing policy stops on failure and prohibits an automatic retry. Sabine explicitly approved applying this repair and resuming within the existing limits. The reviewed local repair is installed at source 28ef0fd; no further approval is needed for the one unused bounded attempt. Preserve/archive the old hold rather than destroying it and preserve all cumulative budgets/history. Wait for original regression 39391 to finish before Docker/provider work. A verified success may restore the previously approved schedule; any failure must hold again without another retry.
 
 No new spending, limit increase, plan change, key replacement, customer/photo scope or customer deployment is proposed. Keep every earlier reservation and record. Do not remove the hold merely because the PATH is fixed. The Mac must still stay signed in, awake and online with Docker Desktop running. If the bounded attempt holds, record only fixed diagnostic categories and continue independent work.

@@ -463,7 +463,7 @@
       "name": "Complete customer/photo recovery and independent reconciliation",
       "owner": "Operations design and authorized hosted acceptance",
       "gate": "Off-Mac recoverable object inventory/latest deletion and spending authority, coordinated customer/photo snapshots, actual managed restore and deletion/financial reconciliation.",
-      "state": "Only initial empty-source database automation was accepted. Fresh local inspection finds the first scheduled attempt held since 15 October and no completed scheduled-run receipt. The installed PATH cannot resolve Docker; a two-file local dependency repair passes 42 affected operations checks but is not installed. Explicit retry/resume authorization is required before a new provider attempt, with previous history and cumulative caps preserved. Full customer/photo recovery and recovery-time targets remain unverified.",
+      "state": "Only initial empty-source database automation is accepted. Its first scheduled attempt remains held with no completed scheduled receipt observed. Sabine approved the tested local dependency repair and one new bounded attempt within existing caps. Source 28ef0fd is installed in the permanent runtime with exactly one public file changed and corrected scheduler PATH; old hold, private records and budgets remain intact. The unused provider attempt waits for original full regression 39391 to finish. Verify success before normal scheduling; hold again on any failure. Full customer/photo recovery and recovery targets remain unverified.",
       "dependsOn": []
     },
     {
@@ -1104,7 +1104,15 @@
     "fullSourceCommit": "8697f9e",
     "previousCompleteFullSource": "bdf0881deb62ffef792769c89c7f6466412e3a1e",
     "previousCompleteFullTests": 2760,
-    "previousCompleteFullSession": 64418
+    "previousCompleteFullSession": 64418,
+    "laterSeparatelyVerifiedChanges": {
+      "operationsSourceCommit": "28ef0fd",
+      "operationsTests": 42,
+      "ciPathSourceCommit": "d49d6b8",
+      "ciTests": 2,
+      "typecheckPassed": true,
+      "fullRunStillScopedTo": "8697f9e"
+    }
   },
   "localKnownIssues": [
     {
@@ -1178,10 +1186,16 @@
     "localDependencyDefectConfirmed": true,
     "historicalExceptionRetained": false,
     "repairChecksPassed": 42,
-    "repairInstalled": false,
+    "repairInstalled": true,
     "providerAttemptStarted": false,
     "proposal": "docs/backup-held-job-recovery-proposal.md",
     "artifact": "source-checkpoints/backup-local-dependency-repair-prepared-20261017.json",
-    "approvalNeededBeforeRetry": true
+    "approvalNeededBeforeRetry": false,
+    "repairSourceCommit": "28ef0fdd2cf2ca722d236bbd1199b9162ef06a2d",
+    "approvedNewAttempts": 1,
+    "approvedAttemptUsed": false,
+    "operatorHoldPreserved": true,
+    "budgetPreserved": true,
+    "installationArtifact": "source-checkpoints/backup-local-dependency-installed-held-20261017.json"
   }
 }
