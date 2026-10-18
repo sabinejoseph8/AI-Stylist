@@ -31,3 +31,8 @@ Prepared and approved 17 October 2026. The local repair is now installed and the
 The existing policy stops on failure and prohibits an automatic retry. Sabine explicitly approved applying this repair and resuming within the existing limits. The reviewed local repair is installed at source 28ef0fd; no further approval is needed for the one unused bounded attempt. Preserve/archive the old hold rather than destroying it and preserve all cumulative budgets/history. Wait for original regression 39391 to finish before Docker/provider work. A verified success may restore the previously approved schedule; any failure must hold again without another retry.
 
 No new spending, limit increase, plan change, key replacement, customer/photo scope or customer deployment is proposed. Keep every earlier reservation and record. Do not remove the hold merely because the PATH is fixed. The Mac must still stay signed in, awake and online with Docker Desktop running. If the bounded attempt holds, record only fixed diagnostic categories and continue independent work.
+
+
+## Approved attempt outcome, 18 October 2026
+
+The authorized operator start timed out before native confirmation. The previous hold is archived, the one-use marker is preserved, and a new uncertainty hold is present. The ledger still contains two attempts and no active attempt, with no new provider receipt observed. Normal scheduling remains held. Do not repeat the start or reset any history. Read-only native scheduler diagnosis is the next backup step. No new spending or customer/photo coverage was activated.

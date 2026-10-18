@@ -1,3 +1,7 @@
+## Holding an uncertain backup start, 18 October 2026
+
+I repaired the Mac job’s missing Docker path and verified the change with 42 focused checks. I also tested the one-use recovery procedure against failures and repeated starts. When macOS did not confirm the authorized start in time, I preserved the old hold and financial history, restored a safety hold and checked that no new provider attempt had been recorded. I kept the schedule held instead of reporting an unverified backup success.
+
 ## 17 October 2026: backup repair authorized and installed safely
 
 Sabine approved applying the local backup repair and resuming within the existing limits. The tested job is installed and the Mac job reloaded with the corrected Docker path. Only the reviewed job changed among the existing 26 public runtime files; the old hold, every non-log private file and the budget ledger remain intact. No provider attempt has started. I will use the single approved bounded attempt after the running app regression finishes; only a verified success restores normal scheduling. A further failure holds again without another retry. I also fixed CI path filters that omitted operations/prototype-only edits, with two regression tests and TypeScript passing. The original full run is still scoped to frozen 8697f9e and does not cover these later increments.
