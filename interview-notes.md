@@ -1,3 +1,7 @@
+## Proving separate photo scopes, 18 October 2026
+
+I extended the actual sample browser journey to export and clear Session and Wardrobe photos independently. The test proved both copies use the same normalized pixels with different identities, and clearing either scope preserves the other. I corrected a test that tried to cancel a download after its one-use export was already consumed, without weakening that privacy protection. All 56 checks passed.
+
 ## Holding an uncertain backup start, 18 October 2026
 
 I repaired the Mac job’s missing Docker path and verified the change with 42 focused checks. I also tested the one-use recovery procedure against failures and repeated starts. When macOS did not confirm the authorized start in time, I preserved the old hold and financial history, restored a safety hold and checked that no new provider attempt had been recorded. I kept the schedule held instead of reporting an unverified backup success.
