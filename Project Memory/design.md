@@ -1,3 +1,7 @@
+## Shared input progress and confirmation, 17 October 2026
+
+The local shared rehearsal keeps accepted notes and the confirmed photo visible while simulated speech is checked, immediately hides the earlier sample, and permits touch editing or Clear. Partial and completed extraction remain To confirm until explicitly confirmed. A lost input connection hides samples and cannot be bypassed by refreshing notes. Background refreshes do not move focus. The three local browser journeys pass; approved visual tokens and real-device/accessibility gates remain unchanged.
+
 ## Design memory review, 16 October 2026
 
 Reviewed principles, palette, typography, spacing, component behavior and accessibility requirements. Approved design v1.0 and all tokens remain unchanged. The shared local sample journey verifies keyboard focus, stable confirmed references, explicit saving and sign-out cleanup; this is not real-device or assistive-technology acceptance. Prepared transcript pending/unavailable wording is unmerged and its new browser check has not run. Current full-regression failures remain open in docs/progress.md.

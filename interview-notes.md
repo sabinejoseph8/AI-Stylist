@@ -1,3 +1,7 @@
+## Catching a first-load race, 17 October 2026
+
+I connected simulated transcript progress to the same notebook and sample checks used by the app rehearsal. New speech hides the earlier sample while preserving the confirmed clothing reference. I kept extracted notes tentative until explicit confirmation. A targeted test exposed a first-load race where completed input could arrive before the notebook's first read finished, leaving old values visible. I fixed it by queuing a fresh authoritative read and verified both early and late notification connections. The affected 171-check integration run and independent main checks pass; I am keeping the full regression and live acceptance gates open until their evidence is available.
+
 ## Keeping test evidence honest, 16 October 2026
 
 I reviewed all five project-memory documents and separated the local work that had passed focused checks from the latest complete test run, which had three failures. I kept those failures visible instead of treating passing sample walkthroughs as launch readiness. I also kept the new transcript changes labelled as unmerged preparation until their integration checks run. My next step is to reproduce the failures without weakening the protection limits.
