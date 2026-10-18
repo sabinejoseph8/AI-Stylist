@@ -1,3 +1,9 @@
+## Published handoff: Tavus sign-in required, 18 October 2026
+
+Source is published through 97aaa45960ad2ba675dc1f7d46e11de0c10ad1f7, with two verified 1,084-file tracked-source archives. Owner-private Memory deployment appgdep_6ad4893600688191b28e9893f9d7d93c succeeded from Site source ad3cb62a8bcb43c02bc7073fba30520a99e7494a; all 19 Memory checks pass. The dedicated unused $0 guard and matched backup schema proof are verified; read-only backup readiness is waiting with the unchanged next due/expiry and no hold. No PAL, new endpoint credential, room or trial reservation was created. No B2 upload, forced backup attempt, schedule change or added spending occurred.
+
+Human action currently required: sign back into the existing Tavus classic tab. A single asynchronous handoff is pending. Do not duplicate it. Exact next action after sign-in: prepare the approved fixed-reply PAL and protected endpoint credential with applicable action-time security approval; read back Cartesia/model/voice, custom endpoint and disabled extras; deploy and verify the guarded page on the existing Render preview; refresh actual Free quota/$0 conditions before enabling Sabine's sole Start. The original full styling path remains separate and unaccepted. Preserve the one-room/start, five-included-minute, $0 cap, all old records and $51 historical allocation. The previous goal is incomplete; no background agent work is claimed. The active local preview used only an unavailable status and no devices; it is stopped at handoff.
+
 ## Probe guard and backup schema proof verified, 18 October 2026
 
 Sabine approved and the new restricted zero-charge guard was applied. Live readback verifies the sole record is unused, customer/anonymous RPCs are denied, only the server RPC is allowed and even the server cannot directly update the table. No Tavus PAL, room, endpoint credential or trial reservation exists.
