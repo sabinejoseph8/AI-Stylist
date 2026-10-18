@@ -14,6 +14,7 @@ import sys
 import time
 import uuid
 import re
+import shutil
 from backup_runtime import DESTINATION,private_directory,read_file,write_exclusive,verify_public
 from b2_automatic_budget import MIN_INTERVAL
 from automatic_backup_runner import GATES,run_once
@@ -23,6 +24,7 @@ import backup_monitor
 
 ROOT=Path(__file__).resolve().parents[2]
 SCOPE='empty-source-database'
+LOCAL_JOB_PATH='/usr/local/bin:/opt/homebrew/bin:/Applications/Docker.app/Contents/Resources/bin:/usr/bin:/bin'
 
 
 def launch_agent(root,*,python=sys.executable):
@@ -33,13 +35,30 @@ def launch_agent(root,*,python=sys.executable):
         'ProgramArguments':[python,str(root/'tools/operations/automatic_empty_job.py'),'--run-approved-empty-database-job'],
         'WorkingDirectory':str(root),'StartInterval':900,'RunAtLoad':True,'KeepAlive':False,
         'ProcessType':'Background','LowPriorityIO':True,'ThrottleInterval':900,'Umask':63,
-        'EnvironmentVariables':{'PATH':'/usr/local/bin:/opt/homebrew/bin:/usr/bin:/bin'},
+        'EnvironmentVariables':{'PATH':LOCAL_JOB_PATH},
         'StandardOutPath':str(root/'tools/operations/.private/automatic-job.log'),
         'StandardErrorPath':'/dev/null'})
 
 
 class JobHeld(RuntimeError):
     pass
+
+
+def local_dependencies(*,which=None,node=None):
+    """Read-only local checks before credentials, budget or provider work.
+
+    This proves executable presence only, not daemon/image/network readiness.
+    The operator hold is never cleared by this check.
+    """
+    locate=shutil.which if which is None else which
+    docker=locate('docker')
+    if (not isinstance(docker,str) or not Path(docker).is_absolute() or
+            not Path(docker).is_file() or not os.access(docker,os.X_OK)):
+        raise JobHeld('job-local-docker-unavailable')
+    node=Path(snapshot.NODE if node is None else node)
+    if not node.is_absolute() or not node.is_file() or not os.access(node,os.X_OK):
+        raise JobHeld('job-local-node-unavailable')
+    return True
 
 
 def read_json(path):
@@ -90,6 +109,7 @@ def run_job(private,root,*,now=lambda:int(time.time())):
     ready=status(private,now())
     if ready['state']!='due':return ready
     manifest=verify_public(root)
+    local_dependencies()
     fingerprint=read_json(private/'automatic-restore-proof.json')['schema_fingerprint']
     config=read_json(private/'supabase-connection.json')
     password=read_file(private/'supabase-password.txt',private=True).decode().removesuffix('\n')

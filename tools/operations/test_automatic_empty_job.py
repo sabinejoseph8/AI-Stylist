@@ -69,6 +69,51 @@ class EmptyJobTests(unittest.TestCase):
         self.assertEqual(value['Umask'],63)
         self.assertNotIn('HEALTHCHECKS_PING_URL',str(value))
 
+    def test_mac_descriptor_includes_the_installed_docker_cli_directory(self):
+        value=plistlib.loads(m.launch_agent(Path('/fixture/runtime'),python='/usr/bin/python3'))
+        entries=value['EnvironmentVariables']['PATH'].split(':')
+        self.assertIn('/Applications/Docker.app/Contents/Resources/bin',entries)
+        self.assertNotIn('',entries)
+        self.assertTrue(all(Path(entry).is_absolute() for entry in entries))
+
+    def test_local_dependency_check_accepts_only_present_executables_without_running_them(self):
+        docker=self.private/'docker';node=self.private/'node'
+        for path in (docker,node):path.write_text('# fixture only');path.chmod(0o700)
+        locate=lambda command:str(docker) if command=='docker' else None
+        self.assertTrue(m.local_dependencies(which=locate,node=node))
+        for value in (None,'docker',str(self.private/'missing')):
+            with self.assertRaisesRegex(m.JobHeld,'job-local-docker-unavailable'):
+                m.local_dependencies(which=lambda _command:value,node=node)
+        docker.chmod(0o600)
+        with self.assertRaisesRegex(m.JobHeld,'job-local-docker-unavailable'):
+            m.local_dependencies(which=locate,node=node)
+        docker.chmod(0o700);node.chmod(0o600)
+        with self.assertRaisesRegex(m.JobHeld,'job-local-node-unavailable'):
+            m.local_dependencies(which=locate,node=node)
+
+    def test_missing_local_dependency_stops_before_credentials_budget_monitor_or_capture(self):
+        source=self.private/'source';ops=source/'tools/operations';ops.mkdir(parents=True)
+        (ops/'backup_runtime.py').write_text('# public fixture')
+        root=self.private/'runtime';prepare_public(source,root,'a'*40);self.ready()
+        before=m.policy_state(self.private);files=set(self.private.iterdir())
+        with patch.object(m,'local_dependencies',side_effect=m.JobHeld('job-local-docker-unavailable')),\
+             patch.object(m,'run_once') as run,patch.object(m.snapshot,'capture_current') as capture,\
+             patch.object(m.backup_monitor,'report') as report:
+            with self.assertRaisesRegex(m.JobHeld,'job-local-docker-unavailable'):
+                m.run_job(self.private,root,now=lambda:1000)
+        self.assertEqual(m.policy_state(self.private),before)
+        self.assertEqual(set(self.private.iterdir()),files)
+        run.assert_not_called();capture.assert_not_called();report.assert_not_called()
+
+    def test_existing_operator_hold_stops_before_even_the_new_local_preflight(self):
+        self.ready();write_exclusive(self.private/'automatic-operator-hold.json',b'{}')
+        before=m.policy_state(self.private)
+        with patch.object(m,'local_dependencies') as check,patch.object(m,'run_once') as run:
+            with self.assertRaises(m.JobHeld):m.run_job(self.private,Path('/unused'),now=lambda:1000)
+        check.assert_not_called();run.assert_not_called()
+        self.assertEqual(m.policy_state(self.private),before)
+        self.assertEqual((self.private/'automatic-operator-hold.json').read_bytes(),b'{}')
+
     def test_fixture_job_preserves_uploaded_locator_and_marks_limited_scope(self):
         source=self.private/'source';ops=source/'tools/operations';ops.mkdir(parents=True)
         (ops/'backup_runtime.py').write_text('# public fixture')
@@ -87,7 +132,7 @@ class EmptyJobTests(unittest.TestCase):
             uploaded(result)
             budget_guard(None,now=1000,class_b=1,class_c=1,download_bytes=len(data),operation=lambda:None)
             return result
-        with patch.object(m.snapshot.legacy.db,'validate_certificate'),patch.object(m.snapshot,'capture_current',return_value=value),\
+        with patch.object(m,'local_dependencies',return_value=True),patch.object(m.snapshot.legacy.db,'validate_certificate'),patch.object(m.snapshot,'capture_current',return_value=value),\
              patch.object(m.snapshot,'verify',return_value=True),patch.object(m.transport,'transfer',side_effect=transfer),\
              patch.object(m.snapshot.legacy.source,'inspect',return_value={'inventory_compatible':True,'account_count':0,'asset_count':0,'object_count':0}),\
              patch.object(m.backup_monitor,'report',side_effect=lambda url,status,**kw:events.append(status)):
