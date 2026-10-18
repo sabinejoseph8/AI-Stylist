@@ -1,3 +1,7 @@
+## Approval received; preflight held, 18 October 2026
+
+Sabine approved **capped private setup and one trial**. The one-room/start, five-included-minute and $0-additional-charge limits are authorized, with no retries/upgrades/paid OpenAI calls. Do not request this approval again. No trial has started and no room/reservation was created. Integration inspection found the separately protected history/receipt authority still exists as local test infrastructure, not an available hosted service. The proposal's explicit new-hosting/security hold therefore applies. See [the concrete preflight report](tavus-cvi-live-preflight-hold.md). Historical proposed wording below does not override this approval or hold.
+
 # Proposed one-attempt Tavus full-CVI feasibility trial
 
 Prepared 18 October 2026. **Ready for scope review; not approved, activated or ready to start.** Sabine approved read-only account/voice verification and preparation of this proposal only. Classic sign-in is complete. Cartesia availability is verified in an existing stock persona; a newly created trial configuration still requires its own exact readback before start. No PAL, credential, room, deployment, reservation or provider setting was created or changed.

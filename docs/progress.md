@@ -1,3 +1,9 @@
+## Approved CVI trial held at integration preflight, 18 October 2026
+
+Sabine approved one private full-CVI trial: one room/start, five included minutes, $0 additional charges, no retries/upgrades/paid OpenAI calls. No room, quota reservation, credential or provider configuration was created. Inspection of the protected original-owner path found a real missing hosted history/receipt authority; local SQLite/test issuers and the deliberately disabled PostgreSQL permission scaffold cannot replace it. The proposal explicitly requires holding at this uncovered security boundary.
+
+The concrete source evidence is in docs/tavus-cvi-live-preflight-hold.md. One scope decision is pending: retain the full styling trial and prepare the required security deployment/access plan, or explicitly replace the unused trial with a fixed-neutral-reply connection-only probe under the same cap. The probe would not establish notebook or recommendation validation. No smaller experiment is silently substituted and no second allowance is created. Cartesia/custom endpoint availability remains verified; hosted admission and full live acceptance do not. Existing ledgers, $51 allocation, backups and deferred business decisions remain unchanged. No further support reply is expected.
+
 ## Cartesia and custom endpoint availability verified, 18 October 2026
 
 Sabine completed classic Tavus sign-in. Read-only stock details show Cartesia on both pipecat-stream and Margo (pe95f57e3ba3); Margo has ordinary full-conversation LLM/flow layers. The unsaved form exposes custom LLM model/base URL/API key/speculation controls and explicit Cartesia with sonic-3.5 plus other model choices. External voice ID/key fields were blank. No persona, credential, room or setting was saved. The form was discarded.
@@ -2032,7 +2038,7 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-- **Next media decision:** further OpenAI/Tavus support replies are no longer expected. Read-only inspection verifies explicit Cartesia on an existing full-conversation stock persona and custom LLM controls. A single private five-minute included-quota trial with $0 additional charges is proposed; it is not activated. Exact new voice/PAL readback, admission/hosting checks and local verification must precede any start. See docs/tavus-cvi-live-trial-proposal.md.
+- **Current media hold:** the one-room, five-included-minute/$0-additional-charge trial is approved but unused. Integration inspection found the protected history/receipt authority is not deployed. No local fixture is mounted as a fallback. A scope decision is pending: full protected styling deployment planning or an explicitly different connection-only probe under the same cap. No room, quota reservation, provider change, second allowance or new spending occurred. See docs/tavus-cvi-live-preflight-hold.md.
 
 Current focus: approved local Task 8a preparation. Source 8697f9e connects explicit Wardrobe save/reuse to the original shared notebook, following first-channel repair 6aed2a0 and Profile privacy bdf0881. Reusing a saved photo requires fresh local normalization and explicit shared confirmation. 98 composed checks, 94 independent main checks, TypeScript and build pass. All real release flags remain false.
 

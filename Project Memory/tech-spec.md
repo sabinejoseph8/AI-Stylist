@@ -1,3 +1,9 @@
+## Approved CVI trial held at integration preflight, 18 October 2026
+
+Sabine approved one private full-CVI trial: one room/start, five included minutes, $0 additional charges, no retries/upgrades/paid OpenAI calls. No room, quota reservation, credential or provider configuration was created. Inspection of the protected original-owner path found a real missing hosted history/receipt authority; local SQLite/test issuers and the deliberately disabled PostgreSQL permission scaffold cannot replace it. The proposal explicitly requires holding at this uncovered security boundary.
+
+The concrete source evidence is in docs/tavus-cvi-live-preflight-hold.md. One scope decision is pending: retain the full styling trial and prepare the required security deployment/access plan, or explicitly replace the unused trial with a fixed-neutral-reply connection-only probe under the same cap. The probe would not establish notebook or recommendation validation. No smaller experiment is silently substituted and no second allowance is created. Cartesia/custom endpoint availability remains verified; hosted admission and full live acceptance do not. Existing ledgers, $51 allocation, backups and deferred business decisions remain unchanged. No further support reply is expected.
+
 ## Cartesia and custom endpoint availability verified, 18 October 2026
 
 Sabine completed classic Tavus sign-in. Read-only stock details show Cartesia on both pipecat-stream and Margo (pe95f57e3ba3); Margo has ordinary full-conversation LLM/flow layers. The unsaved form exposes custom LLM model/base URL/API key/speculation controls and explicit Cartesia with sonic-3.5 plus other model choices. External voice ID/key fields were blank. No persona, credential, room or setting was saved. The form was discarded.

@@ -1,3 +1,13 @@
+## Approved CVI trial held at a concrete security prerequisite, 18 October 2026
+
+Sabine approved capped private setup and one trial. Preserve that decision: one room/start, five included minutes, $0 additional charges, no retries/upgrades/paid OpenAI calls. No room, quota reservation, PAL, credential, provider setting or hosted change was created. Approval is unused, not pending or rejected.
+
+Actual integration inspection found the original protected HTTP path requires a genuine started owner backed by the captured native history/witness/database authority. The available pair is concrete local SQLite with test-bound authority ports. The hosted history SQL is outside migrations and deliberately raises history activation unavailable; the 21 installed customer migrations do not deploy that service. Real restricted principals, signing/observation/fencing issuers and independently protected restore floors are not supplied by the current preview. Substituting test proofs or a broad service key would violate the approved trial. No such fallback was introduced.
+
+The proposal explicitly holds for an uncovered hosting/security requirement, so full styling activation is held. docs/tavus-cvi-live-preflight-hold.md records source evidence and two distinct paths: retain the full styling trial and prepare its missing security deployment, or explicitly replace the unused trial with a connection-only fixed-reply probe under the same cap. The latter would not prove notebook/extraction/recommendation validation and is not silently substituted. Existing backup/runtime, $51 allocation and all old held records remain untouched.
+
+**Exact next action:** collect the single pending asynchronous scope choice using docs/tavus-cvi-live-preflight-hold.md; do not ask it again or infer a choice. No repeat trial approval, support response, new spending, paid diagnostic or customer deployment is inferred. Continue with the full-scope security deployment design unless Sabine explicitly selects the different protocol probe; sensitive provisioning waits for a concrete reviewed access plan and any required action-time authorization.
+
 ## Trial scope decision pending; preparation published, 18 October 2026
 
 The read-only Cartesia/custom-endpoint findings and concrete proposal are saved in GitHub through 7e52047, two 1,066-file tracked-source archives and owner-private Memory. Site source ec81dd40a207465e173fb21c0ca0ba45fa4aede0 deployed successfully as appgdep_6ad46ce1e0f081919d0857cc0fc331e4; 19 Site checks pass and owner-only revision-three access is preserved. Screenshot and bounded account/voice evidence receipts are in source-checkpoints. Existing full CI evidence is unchanged; no runtime app code changed.
