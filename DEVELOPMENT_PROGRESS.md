@@ -1,3 +1,9 @@
+## Verified repaired setup publication and owner handoff, 18 October 2026
+
+Repaired runtime 7394dd4 is Live on the existing Free service, deployment dep-dbaa9bom7kps7382viig. Source/progress checkpoint 7aff18f has two verified tracked-only archives (1,089 files). Owner-only Memory deployment appgdep_6ad4a55714d88191a0a101e96371c975 succeeded from Site source 856071a24e3456971957539a7221ec773154382c; all 19 checks pass. Custom owner-only access revision 3 is preserved. Sanitized setup receipt and screenshots are in the mirror source-checkpoints directory.
+
+Sabine's single pending action is to open the protected connection-probe page in Safari and leave it open without Start. No duplicate approval or sign-in request is needed. Start is deliberately disabled with persisted zero/false/expired preflight; repaired durable row unused, original row ended. When she confirms, refresh current Tavus included headroom/no-overage and zero active rooms, set and verify a fresh five-minute preflight using actual click/type/blur, then let her press Start once. Do not start for her, create another room, renew a used allowance, or infer audible success from setup checks. No B2 upload, schedule change or added spending occurred. Full completion remains 5/41 and production criteria 0/21.
+
 ## Repaired probe deployed with Start disabled, 18 October 2026
 
 The separately approved repaired runtime is Live on tested source 7394dd4. Saved readback verifies the repaired-only approval, zero headroom, false quota/concurrency flags and expired 1970 preflight. Normal clicks, typing and blur were required; the first edit did not persist and was corrected before deployment. The existing Cartesia/custom fixed-reply configuration passed startup readback; no room has started. Health is 200 and unauthenticated page/status access is 401. No new credentials, resource upgrade or added spending.
