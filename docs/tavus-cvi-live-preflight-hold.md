@@ -1,3 +1,9 @@
+## Current status after completed connection probe, 18 October 2026
+
+The connection-only replacement and separately approved repaired follow-up are consumed and verified ended. Sabine confirmed visible avatar, audible fixed reply, observed interruption and microphone indicator off after End. Both durable records are ended and current active-room count is zero. Do not request another Start or treat the historical unused-allowance passages below as current authorization. No full styling trial is approved or activated by this result.
+
+The concrete full-styling dependency described below remains: deployable protected history/receipt/witness authority and actual notebook/approval integration. The next local deliverable is its deployment/access proposal with tested real transaction bindings, exact principals, signing-key custody and restore floors. Review any hosted grants/new credential/resource/charge before applying them. No support reply is required to prepare that work, and no weakening or second probe is needed.
+
 ## Replacement approved, 18 October 2026
 
 Sabine explicitly replaced the unused full styling trial with a connection-only probe. This is the same one-room/start, five-included-minute, $0-additional-charge allowance, not an extra trial. Fixed neutral replies only; no notebook updates, extraction, outfits, shopping or recommendation-validation claims. Preserve all earlier records. No room or quota reservation has started. Current implementation and deployment gates are tracked in docs/tavus-connection-probe-setup.md. Earlier scope-choice and full-trial passages below are historical.
