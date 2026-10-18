@@ -1,3 +1,7 @@
+## Scheduled backup hold under review, 17 October 2026
+
+Fresh local inspection finds the initial scheduled database-only backup held since its first scheduled attempt, with no completed scheduled receipt. The public runtime verifies, but its LaunchAgent PATH cannot find the installed Docker CLI. A separate local repair passes 42 affected operations checks and a private-state-preserving synthetic update rehearsal; it is not installed. The historical discarded exception cannot establish that this is the only cause. The owner has been asked to authorize one new bounded attempt under existing cumulative free-budget caps, with the old hold/history preserved and normal scheduling restored only after verification. Do not auto-retry, refund counters or claim customer/photo coverage. Details: docs/backup-held-job-recovery-proposal.md. This is current operational status, not a new policy or spending decision.
+
 ## Shared Wardrobe integration verified, 17 October 2026
 
 Source **8697f9e** adds explicit browser-memory Wardrobe saving and reuse to the same shared notebook. Only a current confirmed Owned reference can supply a saved copy. A selected saved photo passes through the existing pixel normalizer again; preparing it retains the old accepted reference, clears the draft description/ownership, and requires a new explicit confirmation. Saved-copy edits/removal/deselection during decoding cancel that pending replacement without canceling a newer ordinary photo choice. Session Clear/End and editing/removing a saved copy keep the separate scopes independent.

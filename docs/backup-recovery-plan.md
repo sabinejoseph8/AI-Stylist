@@ -1,3 +1,11 @@
+## Initial scheduled backups are held; local repair prepared, 17 October 2026
+
+Fresh local-only inspection found the first scheduled receipt held since 15 October, with no completed scheduled-run receipt. The public runtime integrity check passes, but its installed scheduler PATH cannot find Docker even though the bundled CLI exists. The original discarded exception cannot prove this was the sole historical cause. Do not claim scheduled backups are healthy or that the 24-hour recovery target is met.
+
+A separate two-file repair in /private/tmp/ai-stylist-backup-local-dependencies-stage adds the Docker CLI path and a dependency-presence gate before credentials/budget/provider work. The existing operator hold remains first. Reproduction: nine tests / one expected failure. Repair: **42 affected operations checks pass**, including 12 job checks. The proposed PATH finds local executables without invoking Docker, making a provider request or changing a real hold/ledger. A curated 26-file public package replaces only the reviewed job; the other 25 remain byte-identical. A synthetic public-update rehearsal preserves private fixture history. Nothing is installed, resumed or transferred remotely.
+
+See **docs/backup-held-job-recovery-proposal.md** and source-checkpoints/backup-local-dependency-repair-prepared-20261017.json. Resuming requires Sabine's explicit decision because the accepted stop-on-failure policy prohibits an automatic retry. Do not clear the hold, reset/refund a reservation, replace keys, expand scope or start a provider attempt while waiting. Continue independent local Task 8a work: original full **39391 remains live** on 580 frozen inputs; the prepared combined-privacy browser waits for terminal collection. Completion 5/41, production 0/21, allocation $51; no new spending or hosted changes.
+
 ## Local Mac-loss recovery plan and admission tests, 15 October 2026
 
 Sabine approved local planning/tests only, with no spending or hosted changes. Added docs/mac-loss-recovery-plan.md with the recovery inventory, missing-copy gaps and ordered checks. Losing only the Mac does not justify overwriting a healthy hosted database. Production recovery still needs independently recoverable object locators and latest deletion/account/spending authority; local receipts and two local files do not establish those guarantees.
