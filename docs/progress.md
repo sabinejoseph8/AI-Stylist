@@ -1,3 +1,41 @@
+## Frozen current-source full regression active, 17 October 2026
+
+The new complete regression is **RUNNING in original session 39391**, frozen source **8697f9e**, /private/tmp/ai-stylist-8a-wardrobe-stage. Its 580 source/test/operations/dependency hashes match main. Metadata/log: /private/tmp/ai-stylist-shared-wardrobe-full-20261017.json and .log. Do not duplicate it, mutate that stage or run competing heavy native/browser/SQL jobs. Four browser opt-ins have separate executed evidence. No new complete result is claimed.
+
+Latest merged source passes 98 composed original-pair/browser/unit checks, 94 independent main checks and TypeScript/build. First-channel repair 6aed2a0 has separate actual SQL evidence. The earlier 2,760-test complete pass is for bdf0881. Next independent work: prepare the combined Session/Wardrobe privacy export and cancellation/clear-scope browser scenario in a separate tracked-source-only stage; execute its native/browser checks after 39391 is terminal. Existing approval covers this local work. No new spending, real accounts, devices or hosted customer changes. Completion remains 5/41 and production acceptance 0/21; allocation $51. Memory owner-only.
+
+## Shared Wardrobe integration verified, 17 October 2026
+
+Source **8697f9e** adds explicit browser-memory Wardrobe saving and reuse to the same shared notebook. Only a current confirmed Owned reference can supply a saved copy. A selected saved photo passes through the existing pixel normalizer again; preparing it retains the old accepted reference, clears the draft description/ownership, and requires a new explicit confirmation. Saved-copy edits/removal/deselection during decoding cancel that pending replacement without canceling a newer ordinary photo choice. Session Clear/End and editing/removing a saved copy keep the separate scopes independent.
+
+Verification: **98 affected tests/nine suites** pass (**13234, exit zero**), including the original coordinator and three WebKit journeys; **94 independent main checks/five suites** pass (**74406, exit zero**), and main TypeScript/build pass. The Wardrobe/transcript journey uses **102/128** authority records; candidate **126/128**, privacy browser **70/128**, privacy pair **40/128**, all zero protected outputs. All **580 composed frozen inputs** match executed stage and main. Preserve the earlier 46-check first Wardrobe browser result separately. Evidence: source-checkpoints/shared-wardrobe-composed-passed-20261017.json and .log.
+
+The first positive input-channel repair is committed at **6aed2a0** with 53 original-pair/browser checks, 49 main checks and the full disposable SQL rehearsal passing. Its delayed initial serial 2 triggers a fresh read and correct export. Global SQL/browser uses **84/128** records and **45 SQL calls**, one primary factory, zero competing factories, late publication refused. The earlier complete regression applies to **bdf0881**: **2,760 tests / 203 suites passed**, four intentional browser skips, original **64418 exited zero**, all 580 hashes verified. Do not attribute that complete result to later commits.
+
+No paid calls, real accounts, devices, customer deployment, backup-runtime or spending changes occurred. Full Task 8a and all production criteria remain open: **5/41 complete**, **0/21 accepted**, allocation **$51**. Memory remains owner-only. The shared sample privacy controls still need their combined Wardrobe/session export and clear-scope browser journey; existing privacy and Wardrobe journeys establish those pieces separately. Next: save the verified source, update private Memory, freeze current source for its complete regression, and prepare that combined privacy scenario separately while it runs. Do not duplicate or edit a frozen running suite.
+
+## First positive input notice repair verified, 17 October 2026
+
+The delayed initial channel repair passed **53 tests/seven suites** in original session **74753, exit zero**, including the original coordinator and WebKit journeys. The actual missed-input browser starts after the first read, receives initial serial **2**, displays the tentative missed transcript and downloads the correct JSON. It uses **98/128** authority records; candidate browser **126/128**, privacy browser **70/128** and privacy pair **40/128**, all with zero protected outputs. First-zero baseline still avoids a redundant signed read. Four hash-verified source/test files have been copied to main; no staged documents were copied.
+
+The complete disposable PostgreSQL rehearsal also passed (**17214, exit zero**), including original global admission and late-result refusal: **84/128 records**, **45 SQL calls**, one primary factory, zero competing factories and zero protected outputs. This is synthetic local SQL/browser evidence, not hosted identity/provider acceptance. Artifacts: source-checkpoints/first-channel-verified-20261017.json and adjacent browser/SQL logs. Preserve the original failing pure reproduction.
+
+The earlier full regression **64418 exited zero**, with **2,760 tests / 203 suites passed** and four intentional browser skips. All **580 frozen hashes** match source bdf0881. That full result precedes the separate verified first-channel increment; do not attribute it to later source.
+
+Wardrobe save/reuse UI and source-change protection remain separate staged preparation. Its 45 unit checks, TypeScript and build pass. Original-pair browser validation is now running in **56128** from /private/tmp/ai-stylist-8a-wardrobe-stage, log /private/tmp/ai-stylist-shared-wardrobe-browser-20261017.log. The stage includes the verified view repair, fresh pixel normalization, explicit ownership confirmation and separate-copy/Clear assertions. It is not yet merged. Prepared nine-file artifact: source-checkpoints/shared-wardrobe-composed-browser-prepared-20261017.json.
+
+**Next action:** collect the main-source pure checks and TypeScript, commit/preserve the verified first-channel increment, then collect 56128. Fix any actual Wardrobe browser failure without weakening original source/version checks, proof objects, budgets or authority caps. Keep full Task 8a and production acceptance open: **5/41**, **0/21**, allocation **$51**. No paid, customer, device or hosted action occurred. Memory stays owner-only.
+
+## Complete privacy regression passed; delayed-channel validation running, 17 October 2026
+
+Original full-regression session **64418 exited zero**: **2,760 passed tests / 203 passed suites**, with four intentional browser opt-in skips, in 1,959.06 seconds. All **580 frozen inputs** match both the executed stage and current main runtime at bdf0881. Evidence: source-checkpoints/shared-privacy-full-bdf0881.json and .log. This result does not cover unmerged increments.
+
+The prepared first-channel repair is now running its actual original-pair and WebKit checks in **session 74753**, log /private/tmp/ai-stylist-first-channel-browser-20261017.log. The delayed-registration browser has already reported first serial 2 and 98/128 authority records, but collect the exact run's terminal exit before claiming the suite passed. No cap or deadline was enlarged.
+
+The separate Wardrobe stage now has explicit shared-reference saving and selected-copy preparation controls. Saved photos pass through the existing normalizer again; shared confirmation remains separate. Editing, removing or deselecting a source during decoding cancels only that pending replacement; a newer ordinary selection is protected. **45 pure checks/two suites** pass (51777, exit zero), TypeScript and build pass. UI/native/browser acceptance is pending and none of these five files is merged. Exact patch: source-checkpoints/shared-wardrobe-ui-prepared-20261017.json.
+
+**Next action:** collect 74753, preserve hashes and actual authority counts, run the remaining affected checks/SQL rehearsal as applicable, and merge only the verified first-channel increment. Apply that verified repair to the Wardrobe stage before its actual shared-app browser review. Keep current accepted references and separately saved scopes independent. Completion remains **5/41**, production acceptance **0/21**, allocation **$51**; no paid calls, real accounts, devices or hosted changes. Memory remains owner-only.
+
 ## Independent preparation while complete regression runs, 17 October 2026
 
 The separate first-channel repair now has a delayed-registration WebKit scenario prepared and typechecked; it has not run. Its 49 pure checks do not establish original-pair/browser acceptance. Separate owned-reference copying preparation passes 40 pure checks and TypeScript, but Wardrobe save/retrieval UI is not wired or merged. Preserve the original full regression in session 64418 and its 580 frozen inputs; run the prepared heavy checks only after that run is terminal. Exact stages, patches, failed evidence and next actions are in DEVELOPMENT_PROGRESS.md. Completion remains 5/41, production acceptance 0/21 and allocation $51.
@@ -1912,17 +1950,17 @@ Technical decisions and patterns: [tech-spec.md v0.11](../Project%20Memory/tech-
 
 ## Summary
 
-Current focus: approved local Task 8a preparation. Shared Profile privacy export and confirmed scoped clearing are merged at bdf0881. Current-only projections, normalized photo download, export invalidation and separate saved scopes pass 91 composed checks and 87 independent main checks, plus TypeScript/build. The actual SQL/browser rehearsal passes separately. A complete current-source foundation regression is running, not yet passed.
+Current focus: approved local Task 8a preparation. Source 8697f9e connects explicit Wardrobe save/reuse to the original shared notebook, following first-channel repair 6aed2a0 and Profile privacy bdf0881. Reusing a saved photo requires fresh local normalization and explicit shared confirmation. 98 composed checks, 94 independent main checks, TypeScript and build pass. All real release flags remain false.
 
-- **Full completion:** 5 of 41 Memory items; 0 of 21 production acceptance criteria. Local preparation does not close integrated acceptance.
-- **Active regression:** original session 64418 in /private/tmp/ai-stylist-8a-privacy-stage, source bdf0881, 580 frozen hashes. Collect this exact run; do not duplicate or edit it. Four browser opt-ins have separate executed evidence.
-- **Verified local integration:** shared seven-field notebook, generated owned reference, illustrated candidate/checks/feedback, explicit saving and Profile sample privacy. Global SQL admission refuses a competing factory and withholds an internally prepared late sample after lease expiry. All real release flags remain false.
-- **Priority next work:** after original full run 64418 is terminal, execute the prepared delayed-channel browser repair and affected original-pair checks. Its 49 pure checks pass. A separate owned-copy helper passes 40 pure checks, with Wardrobe UI/retrieval still pending. Neither staged increment is merged.
-- **Regression limits:** the prior complete 2,741-pass result applies to source 08d1e01. The new privacy runtime is not covered by that old result; its current complete result remains pending. Keep failed runs separate.
-- **Remaining gates:** live media/release, real customer identity and recovery host/sender, permitted products, hosted recovery/fencing, physical-device/accessibility and explicit launch acceptance.
-- **Limits and decisions:** $51 experiment allocation. No new spending or customer-host changes. Email/password with recovery only; domain purchase and Rakuten remain deferred.
-- **Memory:** owner-only. Preserve its allowlist and current task records. The verified green GitHub app run remains 39089632154 at 2d17ea7; newer pushes have separate status.
-- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout, frozen stage and all failed evidence.
+- **Full completion:** 5 of 41 tasks; 0 of 21 production acceptance criteria. Local preparation does not close full integration acceptance.
+- **Complete regression:** bdf0881 passed 2,760 tests / 203 suites with four intentional browser skips; original 64418 exited zero and all 580 frozen inputs matched. Later source increments have separate executed evidence.
+- **Latest verification:** 8697f9e passes 98 affected original-pair/browser/unit checks and 94 independent main checks. Authority records: Wardrobe/input 102, candidate 126, privacy browser 70, privacy pair 40, all within the original 128 cap and zero protected outputs. The first-channel source passes the actual SQL/global browser rehearsal at 84/128 records and 45 SQL calls.
+- **Active full regression:** original session 39391, frozen source 8697f9e, 580 matching inputs. It is running, not passed. Keep the original handle and stage unchanged.
+- **Next local work:** save this checkpoint and private Memory, then prepare a separate combined Session/Wardrobe privacy export, cancellation and clear-scope browser scenario. Execute heavy checks only after 39391 is terminal.
+- **Remaining gates:** live media/release, actual customer identity and recovery host/sender, permitted products, hosted recovery/fencing, physical-device/accessibility and launch acceptance. Sample acceptance is not production acceptance.
+- **Limits:** $51 experiment allocation. No new spending or customer-host changes. Email/password with recovery only; domain and Rakuten deferred.
+- **Memory:** owner-only; preserve the allowlist, 41 task records and their five completed states.
+- **Workspace:** /private/tmp/ai-stylist-recovered-20261014. Preserve the older dirty checkout, all frozen stages, ledgers and failed evidence.
 
 ## Historical summary checkpoints
 
@@ -2359,7 +2397,7 @@ Groups 1a and 1e mainly document decisions; their checks are document consistenc
 **Goal:** A working end-to-end phone experience that meets all 21 product acceptance scenarios.  
 **Dependencies:** Phases 1–7; approved local-only exceptions cover 8a sample integration rehearsal (16 October), 8b accessibility, 8c failure/capacity and 8d operations preparation; customer integration and launch remain gated; technical baseline approval, real source access, provider privacy agreement, host/domain configuration and agreed operating/spending limits.
 **Product coverage:** A01–A21, with emphasis on A11/A12 and integrated timing/recovery.  
-**Status:** The local shared coordinator, reference, illustrated candidate/feedback, saving and Profile privacy flows are merged with 91 composed checks and 87 independent main checks. Actual global SQL admission and late-result expiry pass separately. The complete current-source regression is running in original session 64418, with 580 frozen hashes; no final result is claimed. An initial-channel missed-update race is reproduced with a separate 49-check repair pending native/browser validation. Verify it after the current complete run; sample Wardrobe save/reuse follows. Real media, accounts, sources, clocks, assistive devices, hosted recovery and launch acceptance remain open. No customer deployment is authorized.
+**Status:** Local shared coordinator, reference, illustrated candidate/feedback, saving, Profile privacy and explicit Wardrobe save/reuse are merged. Latest 98 composed and 94 independent checks pass; TypeScript/build pass. The first-channel race is repaired and passes actual browser and SQL checks. Complete bdf0881 regression passed 2,760 tests; later source increments have separate evidence and await their complete regression. Combined Session/Wardrobe privacy browser coverage is next. Real media, accounts, sources, clocks, assistive devices, hosted recovery and launch acceptance remain open. No customer deployment is authorized.
 
 ### Task groups
 

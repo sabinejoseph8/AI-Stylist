@@ -1,3 +1,11 @@
+## 17 October 2026: shared sample Wardrobe verified
+
+I connected explicit sample Wardrobe saving and reuse to the original shared notebook. The generated-photo browser confirms the saved photo is a separate copy, reuse does not replace the existing reference before explicit confirmation, and session Clear leaves the saved copy intact. All 98 affected checks and 94 independent main checks pass, with TypeScript/build. The main source is 8697f9e, following first-channel repair 6aed2a0. The earlier 2,760-pass full result covers bdf0881 only. The next local check combines session and Wardrobe privacy export/clearing through the same App. There were no provider calls, real accounts, customer hosting or new charges; full acceptance remains open.
+
+## 17 October 2026: complete local regression and explicit Wardrobe reuse preparation
+
+The shared-privacy source completed its full regression: 2,760 tests in 203 suites passed, with four opt-in browser cases skipped and separately exercised. The exact original process exited zero and all 580 frozen source inputs match main. I am validating the reproduced first-channel race through the original pair and delayed-registration browser before merging it. The new Wardrobe buttons and copy-reuse preparation are separate, unmerged work: 45 pure checks plus type checking/build pass. Photos are normalized again and never replace the accepted session reference without a new explicit confirmation. Source edits/removal during decoding cancel the pending replacement. No real accounts, paid calls or hosted changes were used. Full integration and launch acceptance remain open.
+
 ## Keeping independent preparation separate from acceptance, 17 October 2026
 
 While the complete privacy regression continued through its workers, I prepared the delayed initial-channel browser test without executing another heavy job. I also added a current-owned-reference copy source for Wardrobe, with 40 passing pure checks and TypeScript. The tests clarified that a known edit refusal plus freshly verified unchanged data should preserve the copy source, while an unknown transport outcome must hide it. I kept the failed initial expectation as evidence. Both branches remain unmerged; the copy UI/retrieval and actual delayed-channel validation still need work after the frozen run finishes.

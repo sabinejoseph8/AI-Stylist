@@ -1,3 +1,7 @@
+## Shared sample Wardrobe controls, 17 October 2026
+
+The injected notebook now shows an explicit Save shared reference to sample wardrobe button for confirmed Owned references and selected saved items with a Prepare action. Preparing a saved photo retains the previous accepted reference and asks for a description and explicit ownership confirmation. Copies remain separate when session notes clear; all sample photos clear on refresh. The actual original-coordinator WebKit save/reuse/Clear journey passes within 102/128 authority records. Main TypeScript/build and 98 affected checks pass. These are local sample controls, not account saving, recognition or production acceptance. Palette, typography and layout tokens are unchanged.
+
 ## Local shared Profile behavior checkpoint, 17 October 2026
 
 The existing sample privacy layout is reused in the injected shared-consultation preview. Category choices stay explicit; prepared downloads invalidate when their current source changes. Clear confirmation remains visible and disabled while acknowledgment is pending, with an accurate waiting status and focus returned after completion. Session clearing preserves separate saved categories. This is verified local behavior; the full current-source regression is pending. Approved palette, typography, spacing and product baseline are unchanged.

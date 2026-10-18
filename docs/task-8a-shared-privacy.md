@@ -40,6 +40,6 @@ Evidence is preserved in source-checkpoints/shared-privacy-final2-composed-20261
 
 ## Complete regression and remaining work
 
-Complete current-source regression is running in original session 64418 at /private/tmp/ai-stylist-8a-privacy-stage, with 580 frozen source/test/operations/dependency-input hashes. Log and metadata are /private/tmp/ai-stylist-shared-privacy-full-20261017.log and adjacent JSON. Collect this run; do not duplicate it or modify its frozen source. Four explicit browser opt-ins are skipped by the ordinary full run and have separate executed evidence above. No final current-source full result is claimed yet.
+The complete regression for source bdf0881 passed in original session 64418: exit zero, 2,760 tests / 203 suites passed, four intentional browser skips, 1,959.06 seconds. All 580 frozen inputs match the executed stage and main at collection. Evidence: source-checkpoints/shared-privacy-full-bdf0881.json and .log. Later source increments have separate verification; this result is scoped to bdf0881.
 
 The next independent local integration is explicitly saving a shared owned reference to sample Wardrobe, then retrieving and confirming its photo through the same original context. Shared controls currently lack that bridge. Preparation must use the separate Wardrobe stage; original-pair/browser checks wait until the active full regression is terminal. All real identity/media/source/persistence/privacy/device and launch criteria stay open. Completion remains 5/41, production acceptance 0/21 and allocation $51.
