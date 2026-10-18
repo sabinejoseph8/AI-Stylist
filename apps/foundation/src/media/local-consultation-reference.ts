@@ -1,5 +1,6 @@
 import {LocalReferenceStore} from './local-reference.ts';
 import type {LocalPhotoPorts,LocalReference,Ownership} from './local-reference.ts';
+import type {LocalWardrobe} from './local-wardrobe.ts';
 import type {LocalConsultationView} from '../session/local-consultation-view.ts';
 /** Local sample reference only. Image bytes never enter the notebook port.
  * The accepted wardrobe field revision correlates the visible photo with its
@@ -31,10 +32,22 @@ export class LocalConsultationReference {
   return !this.disposed&&!!s&&!!r&&!!b&&s.epoch===b.epoch&&s.notes.wardrobe.revision===b.revision&&s.notes.wardrobe.value===b.value&&s.notes.wardrobe.status==='confirmed'&&r.photo.id===b.photoId?r:null;
  }
  snapshot(){const p=this.store.snapshot();return Object.freeze({photos:p.photos,selected:p.selected,loading:p.loading,reset:p.reset,reference:this.accepted(),pending:this.pending,message:this.message});}
+ /** Explicit copy source, available only for the current confirmed owned reference. */
+ exportOwned(){const state=this.view.snapshot(),photo=this.store.snapshot(),accepted=this.accepted();if(!this.active()||state.inputPending||!state.inputAvailable||photo.loading||accepted?.ownership!=='owned')return null;const owned=this.store.exportOwned();return owned?.photo===accepted.photo&&owned.description===accepted.description?owned:null;}
  /** Normalized local copies only; a pending or unverified view cannot export. */
  exportPhotos(){const s=this.view.snapshot(),p=this.store.snapshot();if(!this.active()||s.inputPending||!s.inputAvailable||p.loading)throw Error('Current shared sample photos unavailable');return this.store.exportPhotos();}
  private reset(){this.generation++;this.pending=false;this.bound=null;this.store.clear();this.message='Temporary reference cleared with the shared context.';this.publish();}
  async choose(files:readonly Blob[]){if(!this.active())return false;this.message='Preparing a photo locally. The accepted reference stays separate.';const ok=await this.store.choose(files);this.message=this.store.snapshot().message;this.publish();return ok;}
+ /** Prepare a selected saved copy through the same pixel normalizer. Explicit
+  * shared confirmation remains separate; removal/edit during decode cancels it. */
+ async chooseWardrobe(wardrobe:LocalWardrobe,id:number){
+  const source=wardrobe.exportItems().find(item=>item.id===id);
+  if(!this.active()||!source||!wardrobe.snapshot().selected.includes(id))return false;
+  const valid=()=>{const item=wardrobe.exportItems().find(item=>item.id===id);return wardrobe.snapshot().selected.includes(id)&&item?.blob===source.blob&&item.description===source.description;};
+  const pending=this.choose([source.blob]),current=this.store.pendingInputGuard();
+  const stop=wardrobe.subscribe(()=>{if(!valid()&&current())this.store.cancelPending();});
+  try{const ok=await pending;if(!ok||!current()||!valid())return false;this.message='Saved photo prepared as a separate session draft. Enter its description and explicitly confirm ownership to replace the shared reference.';this.publish();return true;}finally{stop();}
+ }
  select(id:number){if(!this.active())return false;return this.store.select(id);}
  async confirm(description:string,ownership:Ownership){
   const p=this.store.snapshot(),draft=this.view.beginEdit('wardrobe');
