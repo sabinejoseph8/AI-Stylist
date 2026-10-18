@@ -1,3 +1,7 @@
+## Independent preparation while complete regression runs, 17 October 2026
+
+The separate first-channel repair now has a delayed-registration WebKit scenario prepared and typechecked; it has not run. Its 49 pure checks do not establish original-pair/browser acceptance. Separate owned-reference copying preparation passes 40 pure checks and TypeScript, but Wardrobe save/retrieval UI is not wired or merged. Preserve the original full regression in session 64418 and its 580 frozen inputs; run the prepared heavy checks only after that run is terminal. Exact stages, patches, failed evidence and next actions are in DEVELOPMENT_PROGRESS.md. Completion remains 5/41, production acceptance 0/21 and allocation $51.
+
 ## Initial input-channel race prepared, not merged, 17 October 2026
 
 Independent review reproduced a missed-update case in the existing shared view: the first input notice can arrive after the initial notebook read has completed. If that notice has a positive serial, the current code marks the channel connected without reading the missed transcript changes. The failing pure-controller run is retained: session 80828, exit one, 27 passed/one failed; the old color stayed empty instead of Emerald. No real account or provider is involved.
@@ -1913,7 +1917,7 @@ Current focus: approved local Task 8a preparation. Shared Profile privacy export
 - **Full completion:** 5 of 41 Memory items; 0 of 21 production acceptance criteria. Local preparation does not close integrated acceptance.
 - **Active regression:** original session 64418 in /private/tmp/ai-stylist-8a-privacy-stage, source bdf0881, 580 frozen hashes. Collect this exact run; do not duplicate or edit it. Four browser opt-ins have separate executed evidence.
 - **Verified local integration:** shared seven-field notebook, generated owned reference, illustrated candidate/checks/feedback, explicit saving and Profile sample privacy. Global SQL admission refuses a competing factory and withholds an internally prepared late sample after lease expiry. All real release flags remain false.
-- **Priority next work:** verify the prepared initial-channel refresh repair after the running regression is terminal. Its 49 pure checks pass, but it is not merged or browser-verified. Wardrobe save/reuse follows in the separate stage.
+- **Priority next work:** after original full run 64418 is terminal, execute the prepared delayed-channel browser repair and affected original-pair checks. Its 49 pure checks pass. A separate owned-copy helper passes 40 pure checks, with Wardrobe UI/retrieval still pending. Neither staged increment is merged.
 - **Regression limits:** the prior complete 2,741-pass result applies to source 08d1e01. The new privacy runtime is not covered by that old result; its current complete result remains pending. Keep failed runs separate.
 - **Remaining gates:** live media/release, real customer identity and recovery host/sender, permitted products, hosted recovery/fencing, physical-device/accessibility and explicit launch acceptance.
 - **Limits and decisions:** $51 experiment allocation. No new spending or customer-host changes. Email/password with recovery only; domain purchase and Rakuten remain deferred.

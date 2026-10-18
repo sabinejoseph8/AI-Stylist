@@ -1,3 +1,7 @@
+## Independent preparation while complete regression runs, 17 October 2026
+
+The separate first-channel repair now has a delayed-registration WebKit scenario prepared and typechecked; it has not run. Its 49 pure checks do not establish original-pair/browser acceptance. Separate owned-reference copying preparation passes 40 pure checks and TypeScript, but Wardrobe save/retrieval UI is not wired or merged. Preserve the original full regression in session 64418 and its 580 frozen inputs; run the prepared heavy checks only after that run is terminal. Exact stages, patches, failed evidence and next actions are in DEVELOPMENT_PROGRESS.md. Completion remains 5/41, production acceptance 0/21 and allocation $51.
+
 ## Initial input-channel race prepared, not merged, 17 October 2026
 
 Independent review reproduced a missed-update case in the existing shared view: the first input notice can arrive after the initial notebook read has completed. If that notice has a positive serial, the current code marks the channel connected without reading the missed transcript changes. The failing pure-controller run is retained: session 80828, exit one, 27 passed/one failed; the old color stayed empty instead of Emerald. No real account or provider is involved.
