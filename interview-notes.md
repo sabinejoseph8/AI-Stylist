@@ -1,3 +1,7 @@
+## Testing the backup operations in CI, 18 October 2026
+
+I confirmed the delayed Mac start ended at its safety hold without reserving another backup. I prepared a recovery path that uses the existing scheduled check and preserves a consumed authorization through crashes, then left it inactive pending the required decision. I also found that operations changes triggered CI without actually running the Python unit suite. I added a separate credential-free job after reproducing that gap; all 587 local operations checks passed.
+
 ## Proving separate photo scopes, 18 October 2026
 
 I extended the actual sample browser journey to export and clear Session and Wardrobe photos independently. The test proved both copies use the same normalized pixels with different identities, and clearing either scope preserves the other. I corrected a test that tried to cancel a download after its one-use export was already consumed, without weakening that privacy protection. All 56 checks passed.
