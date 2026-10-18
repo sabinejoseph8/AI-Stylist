@@ -3,9 +3,9 @@ export const PRIVACY_CATEGORIES=['session','preferences','wardrobe','looks','sho
 export type PrivacyCategory=typeof PRIVACY_CATEGORIES[number];
 export type ExportPhoto=Readonly<{id:string;blob:Blob}>;
 export type PrivacySource=Readonly<{data:unknown;photos:readonly ExportPhoto[]}>;
-export type PrivacyPort=Readonly<{read:()=>PrivacySource;clear:()=>void}>;
+export type PrivacyPort=Readonly<{read:()=>PrivacySource}&({clear:()=>void;clearAsync?:never}|{clear?:never;clearAsync:()=>Promise<boolean>})>;
 export type PreparedExport=Readonly<{generation:number;categories:readonly PrivacyCategory[];json:string}>;
-export type PrivacySnapshot=Readonly<{busy:boolean;ready:PreparedExport|null;message:string}>;
+export type PrivacySnapshot=Readonly<{busy:boolean;clearing:boolean;ready:PreparedExport|null;message:string}>;
 export type ExportEncoder=(blob:Blob)=>Promise<string>;
 export async function encodeExportPhoto(blob:Blob){const bytes=new Uint8Array(await blob.arrayBuffer());let binary='';for(let offset=0;offset<bytes.length;offset+=32768)binary+=String.fromCharCode(...bytes.subarray(offset,offset+32768));return btoa(binary);}
 /** Only explicit browser-memory sources. No account, credentials, provider or upload port. */
@@ -13,6 +13,7 @@ export class LocalPrivacy {
  private ports=new Map<PrivacyCategory,PrivacyPort>();
  private generation=0;
  private busy=false;
+ private clearing=false;
  private ready:PreparedExport|null=null;
  private verify:(()=>boolean)|null=null;
  private message='Choose the sample data categories to export or clear. Nothing leaves this device.';
@@ -20,14 +21,32 @@ export class LocalPrivacy {
  private readonly encode:ExportEncoder;
  constructor(encode:ExportEncoder=encodeExportPhoto){this.encode=encode;}
  subscribe(listener:()=>void){this.listeners.add(listener);return()=>{this.listeners.delete(listener);};}
- snapshot():PrivacySnapshot{return Object.freeze({busy:this.busy,ready:this.ready,message:this.message});}
+ snapshot():PrivacySnapshot{return Object.freeze({busy:this.busy||this.clearing,clearing:this.clearing,ready:this.ready,message:this.message});}
  private publish(message:string){this.message=message;for(const listener of [...this.listeners])try{listener();}catch{}}
- bind(category:PrivacyCategory,port:PrivacyPort){this.ports.set(category,port);this.invalidate();return()=>{if(this.ports.get(category)===port){this.ports.delete(category);this.invalidate();}};}
- invalidate(){++this.generation;this.busy=false;this.ready=null;this.verify=null;this.publish('Sample data changed. Prepare a fresh export if needed.');}
- cancel(){++this.generation;this.busy=false;this.ready=null;this.verify=null;this.publish('Sample export canceled. No download was started by cancellation.');}
+ bind(category:PrivacyCategory,port:PrivacyPort){if(typeof port?.read!=='function'||(typeof port.clear==='function')===(typeof port.clearAsync==='function'))throw Error('Sample privacy source unavailable');this.ports.set(category,port);this.invalidate();return()=>{if(this.ports.get(category)===port){this.ports.delete(category);this.invalidate();}};}
+ invalidate(){++this.generation;this.busy=false;this.ready=null;this.verify=null;this.publish(this.clearing?'Waiting for selected sample categories to finish clearing.':'Sample data changed. Prepare a fresh export if needed.');}
+ cancel(){++this.generation;this.busy=false;this.ready=null;this.verify=null;this.publish(this.clearing?'Waiting for selected sample categories to finish clearing.':'Sample export canceled. No download was started by cancellation.');}
  private selection(values:readonly PrivacyCategory[]){return Array.isArray(values)&&values.length>0&&values.length<=5&&new Set(values).size===values.length&&values.every(value=>PRIVACY_CATEGORIES.includes(value)&&this.ports.has(value))?PRIVACY_CATEGORIES.filter(value=>values.includes(value)):null;}
- clear(categories:readonly PrivacyCategory[]){const selected=this.selection(categories);if(!selected){this.publish('Choose available categories before clearing.');return false;}this.cancel();try{for(const category of selected)this.ports.get(category)!.clear();this.publish('Only selected sample categories were cleared. Other categories and files already downloaded are unchanged. No account or provider data was deleted.');return true;}catch{this.publish('Some sample categories could not be cleared. Review them before trying again.');return false;}}
+ clear(categories:readonly PrivacyCategory[]){const selected=this.selection(categories);if(!selected||this.clearing){this.publish('Choose available categories before clearing.');return false;}if(selected.some(category=>typeof this.ports.get(category)!.clearAsync==='function')){this.publish('This selection needs confirmed asynchronous clearing. No clearing was started.');return false;}this.cancel();try{for(const category of selected)this.ports.get(category)!.clear!();this.publish('Only selected sample categories were cleared. Other categories and files already downloaded are unchanged. No account or provider data was deleted.');return true;}catch{this.publish('Some sample categories could not be cleared. Review them before trying again.');return false;}}
+ /** Await confirmed shared-session cleanup; a timeout is not a successful clear. */
+ async clearAsync(categories:readonly PrivacyCategory[]){
+  const selected=this.selection(categories);if(!selected||this.clearing){this.publish('Choose available categories and wait for current clearing to finish.');return false;}
+  const captured=selected.map(category=>({category,port:this.ports.get(category)!}));
+  this.cancel();this.clearing=true;this.publish('Waiting for selected sample categories to finish clearing.');
+  let timer:ReturnType<typeof setTimeout>|undefined,expired=false;
+  try{
+   const work=async()=>{for(const {category,port} of captured){
+    if(expired||this.ports.get(category)!==port)throw Error();
+    if(port.clearAsync){if(await port.clearAsync()!==true)throw Error();}else port.clear!();
+    if(expired||this.ports.get(category)!==port)throw Error();
+   }};
+   await Promise.race([work(),new Promise<never>((_,reject)=>{timer=setTimeout(()=>{expired=true;reject(Error());},8000);})]);
+   this.publish('Only selected sample categories were cleared. Other categories and files already downloaded are unchanged. No account or provider data was deleted.');return true;
+  }catch{this.publish('Some selected sample clearing could not be confirmed. Review the current data; no further category was cleared automatically.');return false;}
+  finally{expired=true;if(timer!==undefined)clearTimeout(timer);this.clearing=false;for(const listener of [...this.listeners])try{listener();}catch{}}
+ }
  async prepare(categories:readonly PrivacyCategory[]){
+  if(this.clearing){this.publish('Wait for selected sample clearing to finish before exporting.');return false;}
   const selected=this.selection(categories);if(!selected){this.cancel();this.publish('Choose available categories before exporting.');return false;}
   const generation=++this.generation;this.ready=null;this.verify=null;this.busy=true;this.publish('Preparing only selected sample categories locally. You can cancel.');
   const deadline=setTimeout(()=>{if(generation===this.generation){this.cancel();this.publish('Export preparation expired. Prepare a smaller selection again.');}},30000);

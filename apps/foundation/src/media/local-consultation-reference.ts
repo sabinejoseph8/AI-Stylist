@@ -31,6 +31,8 @@ export class LocalConsultationReference {
   return !this.disposed&&!!s&&!!r&&!!b&&s.epoch===b.epoch&&s.notes.wardrobe.revision===b.revision&&s.notes.wardrobe.value===b.value&&s.notes.wardrobe.status==='confirmed'&&r.photo.id===b.photoId?r:null;
  }
  snapshot(){const p=this.store.snapshot();return Object.freeze({photos:p.photos,selected:p.selected,loading:p.loading,reset:p.reset,reference:this.accepted(),pending:this.pending,message:this.message});}
+ /** Normalized local copies only; a pending or unverified view cannot export. */
+ exportPhotos(){const s=this.view.snapshot(),p=this.store.snapshot();if(!this.active()||s.inputPending||!s.inputAvailable||p.loading)throw Error('Current shared sample photos unavailable');return this.store.exportPhotos();}
  private reset(){this.generation++;this.pending=false;this.bound=null;this.store.clear();this.message='Temporary reference cleared with the shared context.';this.publish();}
  async choose(files:readonly Blob[]){if(!this.active())return false;this.message='Preparing a photo locally. The accepted reference stays separate.';const ok=await this.store.choose(files);this.message=this.store.snapshot().message;this.publish();return ok;}
  select(id:number){if(!this.active())return false;return this.store.select(id);}
