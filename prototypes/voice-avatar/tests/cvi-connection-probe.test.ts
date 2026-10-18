@@ -83,3 +83,5 @@ it('accepts the documented Get PAL language omission while the conversation pins
 it('refuses an explicit conflicting PAL language list',()=>expect(()=>verifyProbePal({...config(),pal_id:'pal',languages:['es']},config(),'pal')).toThrow());
 
 it('refuses a substituted custom-endpoint credential before room creation',()=>{const c=config();expect(()=>verifyProbePal({...c,pal_id:'pal',layers:{...c.layers,llm:{...c.layers.llm,api_key:'other-secret'}}},c,'pal')).toThrow();});
+
+it('classifies redacted credentials and empty languages without accepting either',()=>{const c=config();const value={...c,pal_id:'pal',languages:[],layers:{...c.layers,llm:{...c.layers.llm,api_key:'<redacted>'}}};const report=probePalReadbackSummary(value,c,'pal');expect(report.languagesEmpty).toBe(true);expect(report.credentialRedacted).toBe(true);expect(report.credentialMatches).toBe(false);expect(()=>verifyProbePal(value,c,'pal')).toThrow();});
