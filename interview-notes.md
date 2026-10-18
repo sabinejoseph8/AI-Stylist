@@ -1,3 +1,11 @@
+## Keeping independent preparation separate from acceptance, 17 October 2026
+
+While the complete privacy regression continued through its workers, I prepared the delayed initial-channel browser test without executing another heavy job. I also added a current-owned-reference copy source for Wardrobe, with 40 passing pure checks and TypeScript. The tests clarified that a known edit refusal plus freshly verified unchanged data should preserve the copy source, while an unknown transport outcome must hide it. I kept the failed initial expectation as evidence. Both branches remain unmerged; the copy UI/retrieval and actual delayed-channel validation still need work after the frozen run finishes.
+
+## Preparing independent work without invalidating regression evidence, 17 October 2026
+
+I left the complete privacy source frozen while adding a delayed-channel browser scenario in its separate repair stage. I also prepared the explicit owned-copy source for Wardrobe. Forty pure cases pass, including copy lifetime and the difference between a known rejected edit with unchanged verified data and a genuinely uncertain transport outcome. I preserved the initial incorrect test expectation as failed evidence. The copy UI/retrieval and the native/browser repair checks remain unfinished, so I recorded those limits instead of treating controller preparation as integrated acceptance.
+
 ## Finding a missed first-channel update, 17 October 2026
 
 While the complete privacy regression ran, I reproduced a separate race: the first input notification could arrive after the initial notebook read, leaving an old value visible. I prepared a small view repair and tested both first partial and settled notices, export freshness, and the zero-serial baseline that must avoid an unnecessary signed read. The 49 focused cases and TypeScript pass; original coordinator/browser validation must wait until the frozen full run finishes. I preserved the failing case and did not edit the source under regression or claim the follow-up is merged.
