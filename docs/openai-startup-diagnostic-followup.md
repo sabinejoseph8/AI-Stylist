@@ -59,3 +59,10 @@ Sabine explicitly asked to resend the support request. Reopened the existing Ope
 ## Review of both supplied replies, 13 October 2026
 
 Both replies repeat the conversation-model bootstrap, transcription session.update and low-delay/language support position. Neither identifies the rejected parameter or establishes account-specific access. The second states no relevant public incident; this remains an attributed statement, not a diagnosis. The guide/reference mismatch still does not identify the failing field. Inspection confirmed the diagnostic already captured allowlisted parameter names, but conflated missing, null, unrecognized and malformed values. Local fixed categories now distinguish those cases. Historical raw errors cannot be recovered, and the old result cannot be retroactively classified. No additional paid experiment is authorized by these replies.
+
+
+## Free official-documentation recheck, 18 October 2026
+
+The [transcription guide](https://developers.openai.com/api/docs/guides/realtime-transcription) still shows the selected model, transcription session update and low delay. The [client-event reference](https://developers.openai.com/api/reference/resources/realtime/client-events) still restricts delay to a different model. The [WebSocket guide](https://developers.openai.com/api/docs/guides/voice-websockets) gives the conversational bootstrap example; the [connect reference](https://developers.openai.com/api/reference/resources/realtime/methods/connect) gives the generic endpoint without resolving the selected-model startup. The old [transcription-session token endpoint](https://developers.openai.com/api/reference/resources/realtime/subresources/transcription_sessions/methods/create) is explicitly deprecated.
+
+These fetched public pages do not identify our rejected parameter or establish account access or a working conversion. No code, model, held allowance, activation or provider configuration changed. No API request, paid diagnostic or support message was made. This recheck does not justify another attempt or substituting a legacy connection.
