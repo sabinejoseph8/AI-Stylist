@@ -37,9 +37,10 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
  const firstSlot=createConsultationSlot(primary.ownerId,rpc),secondSlot=createConsultationSlot(other.ownerId,rpc);
  let lease:ConsultationLease|null=null,x:Awaited<ReturnType<typeof pairedOwnerFixture>>|undefined,port:ReturnType<typeof createLocalCviViewPort>|undefined;
  let firstFactories=0,secondFactories=0,reserved=false,closed=false,origin='';
- let holdInput=false,inputStarted=false,finishInput=()=>{};
+ let holdInput=false,inputStarted=false,finishInput=()=>{},factsStarted=false,finishFacts=()=>{},latePublicationDenied=false;
+ let illustrations:ReturnType<typeof candidateIllustrationPorts>|undefined,latePreparedState:unknown=null;
  let run:Awaited<ReturnType<Awaited<ReturnType<typeof pairedOwnerFixture>>['start']>>|undefined,candidate:ReturnType<typeof createLocalCviCandidateRehearsal>|undefined;
- const inputStreams=new Set<ServerResponse>();
+ const inputStreams=new Set<ServerResponse>(),candidateReplies:string[]=[];
  let release=()=>{};const barrier=new Promise<void>(r=>{release=r;});
  const tasks=new Set<Promise<void>>();let server:Awaited<ReturnType<typeof createServer>>|undefined,browser:any;
  const request=()=>new Request('https://app.example.test/notebook',{headers:{authorization:'Bearer fixture-customer'}});
@@ -72,11 +73,12 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
       if(closed){reply(res,503,{state:'held'});return;}
       firstFactories++;x=await pairedOwnerFixture(undefined,{extract:async({text},s)=>{if(holdInput){inputStarted=true;await new Promise<void>(r=>{finishInput=r;});if(s.aborted)throw Error('Synthetic input canceled');}return[{field:'style',value:text}];}});run=await x.start();
       for(const [field] of FIELDS)expect(await x.context.edit(request(),{action:'edit',id:'global_setup_'+field,epoch:1,field,baseRevision:0,sequence:0,value:candidateNoteFixture[field]},signal())).toBe('applied');
-      port=createLocalCviViewPort(x.context,request());candidate=createLocalCviCandidateRehearsal({simulation:true,context:x.context,request:request(),clock:x.clock,...candidateIllustrationPorts(x.clock)});reply(res,200,{state:'ready'});return;
+      port=createLocalCviViewPort(x.context,request());illustrations=candidateIllustrationPorts(x.clock);candidate=createLocalCviCandidateRehearsal({simulation:true,context:x.context,request:request(),clock:x.clock,...illustrations});reply(res,200,{state:'ready'});return;
      }
      if((keys!=='action'&&keys!=='action,command')||!port||!lease){reply(res,400,{});return;}
      const current=()=>firstSlot.update(lease!,'check');
-     if(!await current()){await port.end(signal());reply(res,200,null);return;}
+     const respond=(status:number,value:unknown)=>{if(c.action==='candidatePrepare')candidateReplies.push(JSON.stringify(value));reply(res,status,value);};
+     if(!await current()){await port.end(signal());respond(200,null);return;}
      let value:unknown;
      if(c.action==='snapshot'&&keys==='action')value=await port.snapshot(signal());
      else if(c.action==='edit'&&keys==='action,command')value=await port.edit(c.command,signal());
@@ -86,8 +88,9 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
      else if(c.action==='candidatePrepare'&&keys==='action,command')value=await candidate!.prepare(c.command,signal());
      else if(c.action==='candidateFeedback'&&keys==='action,command')value=await candidate!.feedback(c.command,signal());
      else throw Error('Unsupported fixture action');
-     if(!await current()){await port.end(signal());reply(res,200,null);return;}
-     reply(res,200,value);
+     if(c.action==='candidatePrepare'&&factsStarted)latePreparedState=(value as {state?:unknown}|null)?.state;
+     if(!await current()){await port.end(signal());respond(200,null);return;}
+     respond(200,value);
     })().catch(()=>reply(res,503,{state:'held'}));
     tasks.add(task);void task.finally(()=>tasks.delete(task));
    });
@@ -129,15 +132,25 @@ it.skipIf(!enabled)('actual global SQL admission refuses a separate start before
   // Preserve the failed check, then explicitly correct the note and check again.
   await page.getByRole('button',{name:'Edit style',exact:true}).click();await page.getByLabel('Edit Style',{exact:true}).fill('Long sleeves');await page.getByRole('button',{name:'Save',exact:true}).click();await page.getByText('Shared notebook updated. Ambiguous budgets remain To confirm.',{exact:true}).waitFor();
   await check.click();await page.getByRole('button',{name:'Save shared sample look',exact:true}).waitFor();expect(await page.locator('.confirmed-reference img').getAttribute('src')).toBe(confirmedURL);
+  // Hold facts only after this candidate has passed its first actual SQL check.
+  // The fact contents and original eight-second operation deadline stay unchanged.
+  const originalFacts=illustrations!.facts.getMockImplementation()!;
+  illustrations!.facts.mockImplementationOnce(async look=>{factsStarted=true;await new Promise<void>(r=>{finishFacts=r;});return originalFacts(look);});
+  const repliesBefore=candidateReplies.length;
+  await check.click();await vi.waitFor(()=>expect(factsStarted).toBe(true));
+  expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);
+  expect(sql('select state from stylist_private.consultation_slot where slot=1;')).toBe('provider');
   // Trusted fixture SQL, never a browser-selected clock or cleanup flag.
   sql("update stylist_private.consultation_slot set expires_at=clock_timestamp()-interval '1 second' where slot=1;");
+  finishFacts();await vi.waitFor(()=>expect(candidateReplies.length).toBe(repliesBefore+1));expect(latePreparedState).toBe('sample');expect(candidateReplies.at(-1)).toBe('null');latePublicationDenied=true;
+  expect(await candidate!.snapshot(signal())).toBeNull();expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);
   await page.getByRole('button',{name:'Refresh shared notes',exact:true}).click();await page.getByText('Shared notes could not be verified. No old notes are displayed.',{exact:true}).waitFor();
   expect(await panel.locator('dd').filter({hasText:'Long sleeves'}).count()).toBe(0);expect(await page.getByRole('button',{name:'Save shared sample look',exact:true}).count()).toBe(0);expect(await start('competitor')).toEqual({status:409,body:{state:'busy'}});expect(secondFactories).toBe(0);
   expect(sql('select state from stylist_private.consultation_slot where slot=1;')).toBe('provider');
   const records=(await x!.f.x.inspect()).requests.length;expect(records).toBeLessThanOrEqual(128);expect(await x!.records()).toHaveLength(0);expect(x!.draft).not.toHaveBeenCalled();expect(errors).toEqual([]);expect(external).toEqual([]);expect(await page.evaluate(()=>localStorage.length+sessionStorage.length)).toBe(0);
-  process.stdout.write(JSON.stringify({scope:'global-sql-original-pair-browser',firstFactories,secondFactories,sqlCalls,authorityRecords:records,authorityRecordCap:128,protectedOutputs:0})+'\n');await context.close();
+  process.stdout.write(JSON.stringify({scope:'global-sql-original-pair-browser',firstFactories,secondFactories,sqlCalls,authorityRecords:records,authorityRecordCap:128,latePublicationDenied,protectedOutputs:0})+'\n');await context.close();
  }finally{
-  closed=true;release();finishInput();for(const stream of inputStreams)stream.end();await browser?.close();candidate?.close();await Promise.allSettled([...tasks]);await x?.close();await server?.close();
+  closed=true;release();finishInput();finishFacts();for(const stream of inputStreams)stream.end();await browser?.close();candidate?.close();await Promise.allSettled([...tasks]);await x?.close();await server?.close();
   // Fixture-only cleanup after every local resource closes; no real provider exists.
   if(lease)await firstSlot.update(lease,'end',true);
  }
